@@ -1,0 +1,56 @@
+# LV2 OSC Messages Extension
+# Copyright (C) 2007 David Robillard <d@drobilla.net>
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix osc:  <http://lv2plug.in/ns/ext/osc#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<http://lv2plug.in/ns/ext/osc> a lv2:Specification ;
+	doap:license <http://usefulinc.com/doap/licenses/mit> ;
+	doap:name "LV2 OSC Events" ;
+	rdfs:comment "Defines an LV2 event type for standard raw OSC" ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
+	] .
+
+
+#######################
+## Plugin Properties ##
+#######################
+
+osc:interfacePort a rdf:Property ;
+	rdfs:domain  lv2:Plugin ;
+	rdfs:range   lv2:Port ;
+	rdfs:label   "Has a main OSC control port" ;
+	rdfs:comment """
+Specifies a port that can be used as the OSC interface for the plugin as a
+whole.  For example, if a host is providing an OSC interface to a plugin at
+/some/osc/path/someplugin and a message /some/osc/path/someplugin/foo is
+received, the message /foo should be sent to this port.
+""" .
+

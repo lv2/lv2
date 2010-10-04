@@ -1,0 +1,30 @@
+LV2
+---
+
+LV2 is a standard for plugins and matching host applications, primarily
+targeted at audio processing and generation.
+
+LV2 is a successor to LADSPA, created to address the limitations of LADSPA
+which many applications have outgrown.  Compared to LADSPA, all plugin data
+is moved from the code to a separate data file, and the code has been made as
+generic as possible.  As a result, LV2 can be independently extended
+(retaining compatibility wherever possible), and virtually any feasible
+plugin features can be implemented in an LV2 plugin.
+
+More information about LV2 can be found at <http://lv2plug.in>.
+
+This package is the "core" LV2 specification in usual source package form.
+The major version of this package refers to the LV2 specification revision
+contained, while the minor version refers only to this package.
+
+Application authors aren't required to depend on this package (including lv2.h
+in source distributions is acceptable) but any system with LV2 plugins should
+have the LV2 bundle contained in this package installed somewhere in the LV2
+path (it contains plugin classes and other useful information).
+
+Please see README file for installation instructions (this package doesn't
+really fit into the usual 'library', 'program', etc. categories).
+
+Distributions are encouraged to include this package.
+
+ -- David Robillard <d@drobilla.net>

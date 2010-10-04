@@ -1,0 +1,350 @@
+# LV2 Units Extension
+# Copyright (C) 2007 Steve Harris
+# Copyright (C) 2009 David Robillard
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<http://lv2plug.in/ns/extensions/units>
+    a lv2:Specification ;
+    doap:created "2007-02-06" ;
+    doap:homepage <http://lv2plug.in/ns/extensions/units> ;
+    doap:release [
+        doap:revision "5" ;
+        doap:created "2009-11-10"
+    ] ;
+    doap:maintainer [
+        a foaf:Person ;
+        rdfs:seeAlso <http://plugin.org.uk/swh.xrdf> ;
+        foaf:homepage <http://plugin.org.uk/> ;
+        foaf:mbox_sha1sum "44bc4fed584a2d1ac8fc55206db67656165d67fd" ;
+        foaf:name "Steve Harris"
+    ], [
+        a foaf:Person ;
+        rdfs:seeAlso <http://drobilla.net/drobilla.rdf> ;
+        foaf:homepage <http://drobilla.net/> ;
+        foaf:name "David Robillard"
+    ] ;
+    doap:name "LV2 Units extension" ;
+    rdfs:comment """
+This extension defines a number of units for use in audio processing.
+
+For example, to say that the port use the gain unit defined as units:db (decibels):
+<pre>
+@prefix : &lt;http://lv2plug.in/ns/extensions/units#&gt; .
+
+lv2:port [
+    a            lv2:ControlRateInputPort ;
+    lv2:datatype lv2:Float ;
+    lv2:index    0 ;
+    lv2:symbol   "gain" ;
+    lv2:name     "gain" ;
+    :unit        :db
+]
+</pre>
+
+Using the same form, plugins may also specify one-off units inline, to give
+better display hints to hosts:
+<pre>
+lv2:port [
+    a            lv2:ControlRateInputPort ;
+    lv2:datatype lv2:Float ;
+    lv2:index    0 ;
+    lv2:symbol   "frob" ;
+    lv2:name     "frob level" ;
+    units:unit [
+        a            units:NonSIUnit ;
+        units:name   "frobnication" ;
+        units:symbol "fr" ;
+        units:render "%f f"
+    ]
+]
+</pre>
+Units are defined by a number of properties:
+
+<dl>
+<dt>units:name</dt>
+<dd>A display name for the unit (eg. decibels)</dd>
+<dt>units:symbol</dt>
+<dd>The abbreviated symbol for the unit (eg. dB)</dd>
+<dt>units:render</dt>
+<dd>A printf(3) string to be used to render the numerical value (eg. \"%f dB\")</dd>
+<dt>units:conversion</dt>
+<dd>Defines a conversion into another unit, commonly the SI unit for the
+unit class (eg. units:conversion [ units:to units:m ; units:factor 1000 ]).
+conversions are expressed as either factors (multiplicand for the conversion)
+or offsets (addend for the conversion).</dd>
+</dl>
+""" ^^ lv2:basicXHTML .
+
+units:Unit a rdfs:Class ;
+    rdfs:comment "A unit for LV2 port data" .
+
+units:unit
+    a rdf:Property ;
+    rdfs:domain lv2:Port ;
+    rdfs:range units:Unit ;
+    rdfs:comment "Relates a port to the unit of its data" .
+
+units:s a units:Unit ;
+    units:conversion [
+        units:factor 0.0166666666 ;
+        units:to units:min
+    ] ;
+    units:name "second" ;
+    units:prefixConversion [
+        units:factor 1000 ;
+        units:to units:ms
+    ] ;
+    units:render "%f s" ;
+    units:symbol "s" .
+
+units:ms a units:Unit ;
+    units:name "millisecond" ;
+    units:prefixConversion [
+        units:factor 0.001 ;
+        units:to units:s
+    ] ;
+    units:render "%f ms" ;
+    units:symbol "ms" .
+
+units:min a units:Unit ;
+    units:conversion [
+        units:factor 60.0 ;
+        units:to units:s
+    ] ;
+    units:name "minute" ;
+    units:render "%f mins" ;
+    units:symbol "min" .
+
+units:bar a units:Unit ;
+    units:name "bar" ;
+    units:render "%f bars" ;
+    units:symbol "bars" .
+
+units:beat a units:Unit ;
+    units:name "beat" ;
+    units:render "%f beats" ;
+    units:symbol "beats" .
+
+units:m a units:Unit ;
+    units:conversion [
+        units:factor 39.37 ;
+        units:to units:inch
+    ] ;
+    units:name "metre" ;
+    units:prefixConversion [
+        units:factor 100 ;
+        units:to units:cm
+    ], [
+        units:factor 1000 ;
+        units:to units:mm
+    ], [
+        units:factor 0.001 ;
+        units:to units:km
+    ] ;
+    units:render "%f m" ;
+    units:symbol "m" .
+
+units:cm a units:Unit ;
+    units:conversion [
+        units:factor 0.3937 ;
+        units:to units:inch
+    ] ;
+    units:name "centimetre" ;
+    units:prefixConversion [
+        units:factor 0.01 ;
+        units:to units:m
+    ], [
+        units:factor 10 ;
+        units:to units:mm
+    ], [
+        units:factor 0.00001 ;
+        units:to units:km
+    ] ;
+    units:render "%f cm" ;
+    units:symbol "cm" .
+
+units:mm a units:Unit ;
+    units:conversion [
+        units:factor 0.03937 ;
+        units:to units:inch
+    ] ;
+    units:name "millimetre" ;
+    units:prefixConversion [
+        units:factor 0.001 ;
+        units:to units:m
+    ], [
+        units:factor 0.1 ;
+        units:to units:cm
+    ], [
+        units:factor 0.000001 ;
+        units:to units:km
+    ] ;
+    units:render "%f mm" ;
+    units:symbol "mm" .
+
+units:km a units:Unit ;
+    units:conversion [
+        units:factor 0.62138818 ;
+        units:to units:mile
+    ] ;
+    units:name "kilometre" ;
+    units:prefixConversion [
+        units:factor 1000 ;
+        units:to units:m
+    ], [
+        units:factor 100000 ;
+        units:to units:cm
+    ], [
+        units:factor 1000000 ;
+        units:to units:mm
+    ] ;
+    units:render "%f km" ;
+    units:symbol "km" .
+
+units:inch a units:Unit ;
+    units:conversion [
+        units:factor 2.54 ;
+        units:to units:cm
+    ] ;
+    units:name "inch" ;
+    units:render "%f\"" ;
+    units:symbol "in" .
+
+units:mile a units:Unit ;
+    units:conversion [
+        units:factor 1.6093 ;
+        units:to units:km
+    ] ;
+    units:name "mile" ;
+    units:render "%f mi" ;
+    units:symbol "mi" .
+
+units:db a units:Unit ;
+    units:name "decibel" ;
+    units:render "%f dB" ;
+    units:symbol "dB" .
+
+units:pc a units:Unit ;
+    units:conversion [
+        units:factor 0.01 ;
+        units:to units:coef
+    ] ;
+    units:name "percent" ;
+    units:render "%f%%" ;
+    units:symbol "%" .
+
+units:coef a units:Unit ;
+    units:conversion [
+        units:factor 100 ;
+        units:to units:pc
+    ] ;
+    units:name "coefficient" ;
+    units:render "* %f" ;
+    units:symbol "" .
+
+units:hz a units:Unit ;
+    units:name "hertz" ;
+    units:prefixConversion [
+        units:factor 0.001 ;
+        units:to units:khz
+    ], [
+        units:factor 0.000001 ;
+        units:to units:mhz
+    ] ;
+    units:render "%f Hz" ;
+    units:symbol "Hz" .
+
+units:khz a units:Unit ;
+    units:name "kilohertz" ;
+    units:prefixConversion [
+        units:factor 1000 ;
+        units:to units:hz
+    ], [
+        units:factor 0.001 ;
+        units:to units:mhz
+    ] ;
+    units:render "%f kHz" ;
+    units:symbol "kHz" .
+
+units:mhz a units:Unit ;
+    units:name "megahertz" ;
+    units:prefixConversion [
+        units:factor 1000000 ;
+        units:to units:hz
+    ], [
+        units:factor 0.001 ;
+        units:to units:khz
+    ] ;
+    units:render "%f MHz" ;
+    units:symbol "MHz" .
+
+units:bpm a units:Unit ;
+    units:name "beats per minute" ;
+    units:prefixConversion [
+        units:factor 0.0166666666 ;
+        units:to units:hz
+    ] ;
+    units:render "%f BPM" ;
+    units:symbol "BPM" .
+
+units:oct a units:Unit ;
+    units:conversion [
+        units:factor 12.0 ;
+        units:to units:semitone12TET
+    ] ;
+    units:name "octaves" ;
+    units:render "%f octaves" ;
+    units:symbol "oct" .
+
+units:cent a units:Unit ;
+    units:conversion [
+        units:factor 0.01 ;
+        units:to units:semitone12TET
+    ] ;
+    units:name "cent" ;
+    units:render "%f ct" ;
+    units:symbol "ct" .
+
+units:semitone12TET a units:Unit ;
+    units:conversion [
+        units:factor 0.083333333 ;
+        units:to units:oct
+    ] ;
+    units:name "semitone" ;
+    units:render "%f semi" ;
+    units:symbol "semi" .
+
+units:degree a units:Unit ;
+    units:name "degree" ;
+    units:render "%f deg" ;
+    units:symbol "deg" .
+
+units:midiNote a units:Unit ;
+    units:name "MIDI note" ;
+    units:render "MIDI note %d" ;
+    units:symbol "note" .
+

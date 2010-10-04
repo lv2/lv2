@@ -1,0 +1,489 @@
+# LV2 Port Groups Extension
+# PROVISIONAL
+# Copyright (C) 2009 David Robillard <d@drobilla.net>
+# Copyright (C) 2008-2009 Lars Luthman <lars.luthman@gmail.com>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix pg:   <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix amb:  <http://ambisonics.ch/standards/channels/> .
+
+<http://lv2plug.in/ns/ext/port-groups> a lv2:Specification ;
+	doap:license <http://usefulinc.com/doap/licenses/mit> ;
+	doap:name    "LV2 Port Groups" ;
+	rdfs:comment "Defines semantic groupings of LV2 ports" ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "Lars Luthman" ;
+		foaf:mbox <mailto:lars.luthman@gmail.com>
+	] , [
+		a foaf:Person ;
+		foaf:name     "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
+	] .
+
+
+## Core Classes / Properties
+
+pg:Group a rdfs:Class ;
+	rdfs:label "LV2 Port Group" ;
+	rdfs:subClassOf [ a owl:Restriction ;
+		owl:onProperty     lv2:symbol ;
+		owl:someValuesFrom xsd:string ;
+		owl:cardinality    1 ;
+        rdfs:comment   """
+A pg:Group MUST have exactly one string lv2:symbol.  This symbol must be
+unique according to the same rules as the lv2:symbol for an lv2:Port, where
+group symbols and port symbols reside in the same namespace.  In other words,
+a group on a plugin MUST NOT have the same symbol as another group or a port
+on that plugin.  Rationale: Hosts or bindings may find it useful to construct
+an identifier to refer to groups for the same reasons this is useful for ports.
+"""
+	] ;
+	rdfs:subClassOf [ a owl:Restriction ;
+		owl:onProperty     pg:hasRole ;
+		owl:someValuesFrom pg:RoleAssignment ;
+		owl:minCardinality 1 ;
+        rdfs:comment   "A Group MUST have at least one role assignment"
+	] ;
+	rdfs:comment """
+A grouping of ports that can be logically considered a single "stream", e.g.
+two audio ports in a group may form a stereo stream.  The pg:source predicate
+can also be used to describe this correspondence between separate ports/groups.
+""" .
+
+pg:index a rdf:Property ;
+    rdfs:domain  pg:RoleAssignment ;
+    rdfs:range   xsd:nonNegativeInteger ;
+    rdfs:label   "index" ;
+    rdfs:comment "Index of a role within some group" .
+
+pg:RoleAssignment a rdfs:Class ;
+	rdfs:label "Role Assignment" ;
+	rdfs:comment "A numbered role within some Group." ;
+	rdfs:subClassOf [ a owl:Restriction ;
+		owl:onProperty     pg:index ;
+		owl:cardinality    1 ;
+        rdfs:comment """
+A RoleAssignment MUST have exactly one index.
+""" ] ;
+	rdfs:subClassOf [ a owl:Restriction ;
+		owl:onProperty     pg:role ;
+		owl:cardinality    1 ;
+        rdfs:comment """
+A RoleAssignment MUST have exactly one role.
+""" ] ;
+    rdfs:comment """
+All group definitions MUST define the order of channels.  Note that this
+does not have anything to do with port indices, this information is only
+defined here for use by other extensions.  For simply assigning groups
+and roles to a basic LV2 plugin, index is irrelevant.
+""" .
+
+pg:hasChannel a rdf:Property ;
+	rdfs:domain  pg:Group ;
+	rdfs:range   pg:Channel ;
+	rdfs:label   "Has port with role" ;
+	rdfs:comment """
+Indicates that a group always has a port with a particular role.
+""" .
+
+pg:sideChainOf a rdf:Property ;
+	rdfs:domain  pg:Group , lv2:Port ;
+	rdfs:range   pg:Group , lv2:Port ;
+	rdfs:label   "Side-chain of" ;
+	rdfs:comment """
+Indicates that this port or group should be considered a "side chain" of
+some other port or group.  The precise definition of "side chain" depends
+on the plugin, but in general this group should be considered a modifier to
+some other group, rather than an independent input itself.
+""" .
+
+pg:subGroupOf a rdf:Property ;
+	rdfs:domain  pg:Group ;
+	rdfs:range   pg:Group ;
+	rdfs:label   "Sub-group of" ;
+	rdfs:comment """
+Indicates that this group is a child of another group.  This property has
+no meaning with respect to plugin execution, but the host may find this
+information useful (e.g. to provide a compact user interface).  Note that
+all groups on a plugin MUST have a unique symbol with respect to the plugin
+as documented for pg:Group, i.e. sub-groups must have a unique symbol among
+all groups and ports on the plugin.
+""" .
+
+pg:source a rdf:Property ;
+	rdfs:domain  pg:Group , lv2:Port ;
+	rdfs:range   pg:Group , lv2:Port ;
+	rdfs:label   "Source group" ;
+	rdfs:comment """
+Indicates that this port or group should be considered the "result" of
+some other port or group.  This property only makes sense on groups with
+outputs when the source is a group with inputs.  This can be used to convey
+a relationship between corresponding input and output groups with different
+types, e.g.  a mono->stereo plugin.
+""" .
+
+pg:mainGroup a rdf:Property ;
+	rdfs:domain  lv2:Plugin ;
+	rdfs:range   pg:Group ;
+	rdfs:label   "Main port group" ;
+	rdfs:comment """
+Indicates that this group should be considered the "main" inputs/outputs of
+the plugin, e.g. it probably makes sense to just connect main groups and set
+some controls.  A plugin MUST NOT have more than one :mainGroup property.
+High-level hosts that simply want to insert an plugin in a given stream
+should use this property to determine where the plugin 'fits'.
+""" .
+
+pg:inGroup a rdf:Property ;
+	rdfs:domain  lv2:Port ;
+	rdfs:range   pg:Group ;
+	rdfs:label   "In port group" ;
+	rdfs:comment """
+Indicates that this port is a part of a group of ports on the plugin.
+Ports that have a meaningful "role" that may be useful to hosts SHOULD also
+have a :role property, otherwise ports in the group have no meaningful order.
+""" .
+
+pg:Role a rdfs:Class ;
+	rdfs:label   "Port role" ;
+	rdfs:comment """
+The role of a port with respect to its plugin or group.  If the port is a
+member of a group (has an :inGroup property) the role is relevant with respect
+to that group.  Otherwise the role is relevant with respect to the plugin.
+""" .
+
+pg:role a rdf:Property ;
+	rdfs:domain  pg:Port , pg:RoleAssignment;
+	rdfs:range   pg:Role ;
+	rdfs:label   "Role" ;
+	rdfs:comment """
+Indicates that this port has a particular role with respect to its enclosing
+plugin or group (whichever is smaller).  A port may have several roles if it
+makes sense to do so (though some Role or Group definition may forbid this).
+""" .
+
+
+# Discrete
+
+pg:DiscreteGroup a rdfs:Class ;
+	rdfs:subClassOf pg:Group ;
+	rdfs:comment """
+"Discrete" channel configurations.  These groups are divided into channels
+where each represents a particular speaker location.  The position of sound
+in one of these groups depends on a particular speaker configuration.
+""" .
+
+pg:leftChannel        a pg:Role ; rdfs:label "Left" .
+pg:rightChannel       a pg:Role ; rdfs:label "Right" .
+pg:centerChannel      a pg:Role ; rdfs:label "Center" .
+pg:sideChannel        a pg:Role ; rdfs:label "Side" .
+pg:centerLeftChannel  a pg:Role ; rdfs:label "Center Left" .
+pg:centerRightChannel a pg:Role ; rdfs:label "Center Right" .
+pg:sideLeftChannel    a pg:Role ; rdfs:label "Side Left" .
+pg:sideRightChannel   a pg:Role ; rdfs:label "Side Right" .
+pg:rearLeftChannel    a pg:Role ; rdfs:label "Rear Left" .
+pg:rearRightChannel   a pg:Role ; rdfs:label "Rear Right" .
+pg:rearCenterChannel  a pg:Role ; rdfs:label "Rear Center" .
+pg:lfeChannel         a pg:Role ; rdfs:label "Sub (LFE)" .
+
+pg:MonoGroup a rdfs:Class ;
+	rdfs:subClassOf pg:DiscreteGroup ;
+	rdfs:label "Mono" ;
+	pg:hasRole [ pg:index 0; pg:role pg:centerChannel ] .
+
+pg:StereoGroup a rdfs:Class ;
+	rdfs:subClassOf pg:DiscreteGroup ;
+	rdfs:label "Stereo" ;
+	pg:hasRole [ pg:index 0; pg:role pg:leftChannel ] ;
+	pg:hasRole [ pg:index 1; pg:role pg:rightChannel ] .
+
+pg:MidSideGroup a rdfs:Class ;
+	rdfs:subClassOf pg:DiscreteGroup ;
+	rdfs:label "Mid-Side Stereo" ;
+	pg:hasRole [ pg:index 0; pg:role pg:centerChannel ] ;
+	pg:hasRole [ pg:index 1; pg:role pg:sideChannel ] .
+
+pg:ThreePointZeroGroup a rdfs:Class ;
+	rdfs:subClassOf pg:DiscreteGroup ;
+	rdfs:label "3.0 Surround" ;
+	pg:hasRole [ pg:index 0; pg:role pg:leftChannel ] ;
+	pg:hasRole [ pg:index 1; pg:role pg:rightChannel ] ;
+	pg:hasRole [ pg:index 2; pg:role pg:rearCenterChannel ] .
+
+pg:FourPointZeroGroup a rdfs:Class ;
+	rdfs:subClassOf pg:DiscreteGroup ;
+	rdfs:label "4.0 Surround (Quadraphonic)" ;
+	pg:hasRole [ pg:index 0; pg:role pg:leftChannel ] ;
+	pg:hasRole [ pg:index 1; pg:role pg:centerChannel ] ;
+	pg:hasRole [ pg:index 2; pg:role pg:rightChannel ] ;
+	pg:hasRole [ pg:index 3; pg:role pg:rearCenterChannel ] .
+
+pg:FivePointZeroGroup a rdfs:Class ;
+	rdfs:subClassOf pg:DiscreteGroup ;
+	rdfs:label "5.0 Surround (3-2 stereo)" ;
+	pg:hasRole [ pg:index 0; pg:role pg:leftChannel ] ;
+	pg:hasRole [ pg:index 1; pg:role pg:centerChannel ] ;
+	pg:hasRole [ pg:index 2; pg:role pg:rightChannel ] ;
+	pg:hasRole [ pg:index 3; pg:role pg:rearLeftChannel ] ;
+	pg:hasRole [ pg:index 4; pg:role pg:rearRightChannel ] .
+
+pg:FivePointOneGroup a rdfs:Class ;
+	rdfs:subClassOf pg:DiscreteGroup ;
+	rdfs:label "5.1 Surround (3-2 stereo)" ;
+	pg:hasRole [ pg:index 0; pg:role pg:leftChannel ] ;
+	pg:hasRole [ pg:index 1; pg:role pg:centerChannel ] ;
+	pg:hasRole [ pg:index 2; pg:role pg:rightChannel ] ;
+	pg:hasRole [ pg:index 3; pg:role pg:rearLeftChannel ] ;
+	pg:hasRole [ pg:index 4; pg:role pg:rearRightChannel ] ;
+	pg:hasRole [ pg:index 5; pg:role pg:lfeChannel ] .
+
+pg:SixPointOneGroup a rdfs:Class ;
+	rdfs:subClassOf pg:DiscreteGroup ;
+	rdfs:label "6.1 Surround" ;
+	pg:hasRole [ pg:index 0; pg:role pg:leftChannel ] ;
+	pg:hasRole [ pg:index 1; pg:role pg:centerChannel ] ;
+	pg:hasRole [ pg:index 2; pg:role pg:rightChannel ] ;
+	pg:hasRole [ pg:index 3; pg:role pg:sideLeftChannel ] ;
+	pg:hasRole [ pg:index 4; pg:role pg:sideRightChannel ] ;
+	pg:hasRole [ pg:index 5; pg:role pg:rearCenterChannel ] ;
+	pg:hasRole [ pg:index 6; pg:role pg:lfeChannel ] .
+
+pg:SevenPointOneGroup a rdfs:Class ;
+	rdfs:subClassOf pg:DiscreteGroup ;
+	rdfs:label "7.1 Surround" ;
+	pg:hasRole [ pg:index 0; pg:role pg:leftChannel ] ;
+	pg:hasRole [ pg:index 1; pg:role pg:centerChannel ] ;
+	pg:hasRole [ pg:index 2; pg:role pg:rightChannel ] ;
+	pg:hasRole [ pg:index 3; pg:role pg:sideLeftChannel ] ;
+	pg:hasRole [ pg:index 4; pg:role pg:sideRightChannel ] ;
+	pg:hasRole [ pg:index 5; pg:role pg:rearLeftChannel ] ;
+	pg:hasRole [ pg:index 6; pg:role pg:rearRightChannel ] ;
+	pg:hasRole [ pg:index 7; pg:role pg:lfeChannel ] .
+
+pg:SevenPointOneWideGroup a rdfs:Class ;
+	rdfs:subClassOf pg:DiscreteGroup ;
+	rdfs:label "7.1 Surround (Wide)" ;
+	pg:hasRole [ pg:index 0; pg:role pg:leftChannel ] ;
+	pg:hasRole [ pg:index 1; pg:role pg:centerLeftChannel ] ;
+	pg:hasRole [ pg:index 2; pg:role pg:centerChannel ] ;
+	pg:hasRole [ pg:index 3; pg:role pg:centerRightChannel ] ;
+	pg:hasRole [ pg:index 4; pg:role pg:rightChannel ] ;
+	pg:hasRole [ pg:index 5; pg:role pg:leftRearChannel ] ;
+	pg:hasRole [ pg:index 6; pg:role pg:rightRearChannel ] ;
+	pg:hasRole [ pg:index 7; pg:role pg:lfeChannel ] .
+
+
+# Ambisonic
+
+pg:AmbisonicGroup a rdfs:Class ;
+	rdfs:subClassOf pg:Group ;
+	rdfs:comment """
+"Ambisonic" channel configurations.  These groups are divided into channels
+which together represent a position in an abstract n-dimensional space.
+The position of sound in one of these groups does not depend on a particular
+speaker configuration; a decoder can be used to convert an ambisonic stream
+for any speaker configuration.
+""" .
+
+#amb:ACN0  a pg:Role ; rdfs:label "ACN 0 (W)" .
+#amb:ACN1  a pg:Role ; rdfs:label "ACN 1 (Y)" .
+#amb:ACN2  a pg:Role ; rdfs:label "ACN 2 (Z)" .
+#amb:ACN3  a pg:Role ; rdfs:label "ACN 3 (X)" .
+#amb:ACN4  a pg:Role ; rdfs:label "ACN 4 (V)" .
+#amb:ACN5  a pg:Role ; rdfs:label "ACN 5 (T)" .
+#amb:ACN6  a pg:Role ; rdfs:label "ACN 6 (R)" .
+#amb:ACN7  a pg:Role ; rdfs:label "ACN 7 (S)" .
+#amb:ACN8  a pg:Role ; rdfs:label "ACN 8 (U)" .
+#amb:ACN9  a pg:Role ; rdfs:label "ACN 9 (Q)" .
+#amb:ACN10 a pg:Role ; rdfs:label "ACN 10 (O)" .
+#amb:ACN11 a pg:Role ; rdfs:label "ACN 11 (M)" .
+#amb:ACN12 a pg:Role ; rdfs:label "ACN 12 (K)" .
+#amb:ACN13 a pg:Role ; rdfs:label "ACN 13 (L)" .
+#amb:ACN14 a pg:Role ; rdfs:label "ACN 14 (N)" .
+#amb:ACN15 a pg:Role ; rdfs:label "ACN 15 (P)" .
+
+pg:AmbisonicBH1P0Group a rdfs:Class ;
+	rdfs:subClassOf pg:AmbisonicGroup ;
+	rdfs:label "Ambisonic B stream of horizontal order 1 and peripheral order 0." ;
+	pg:hasRole [ pg:index 0; pg:role amb:ACN0 ] ;
+	pg:hasRole [ pg:index 1; pg:role amb:ACN1 ] ;
+	pg:hasRole [ pg:index 2; pg:role amb:ACN3 ] .
+
+pg:AmbisonicBH1P1Group a rdfs:Class ;
+	rdfs:subClassOf pg:AmbisonicGroup ;
+	rdfs:label "Ambisonic B stream of horizontal order 1 and peripheral order 1." ;
+	pg:hasRole [ pg:index 0; pg:role amb:ACN0 ] ;
+	pg:hasRole [ pg:index 1; pg:role amb:ACN1 ] ;
+	pg:hasRole [ pg:index 2; pg:role amb:ACN2 ] ;
+	pg:hasRole [ pg:index 3; pg:role amb:ACN3 ] .
+
+pg:AmbisonicBH2P0Group a rdfs:Class ;
+	rdfs:subClassOf pg:AmbisonicGroup ;
+	rdfs:label "Ambisonic B stream of horizontal order 2 and peripheral order 0." ;
+	pg:hasRole [ pg:index 0; pg:role amb:ACN0 ] ;
+	pg:hasRole [ pg:index 1; pg:role amb:ACN1 ] ;
+	pg:hasRole [ pg:index 2; pg:role amb:ACN3 ] ;
+	pg:hasRole [ pg:index 3; pg:role amb:ACN4 ] ;
+	pg:hasRole [ pg:index 4; pg:role amb:ACN8 ] .
+
+pg:AmbisonicBH2P1Group a rdfs:Class ;
+	rdfs:subClassOf pg:AmbisonicGroup ;
+	rdfs:label "Ambisonic B stream of horizontal order 2 and peripheral order 1." ;
+	pg:hasRole [ pg:index 0; pg:role amb:ACN0 ] ;
+	pg:hasRole [ pg:index 1; pg:role amb:ACN1 ] ;
+	pg:hasRole [ pg:index 2; pg:role amb:ACN2 ] ;
+	pg:hasRole [ pg:index 3; pg:role amb:ACN3 ] ;
+	pg:hasRole [ pg:index 4; pg:role amb:ACN4 ] ;
+	pg:hasRole [ pg:index 5; pg:role amb:ACN8 ] .
+
+pg:AmbisonicBH2P2Group a rdfs:Class ;
+	rdfs:subClassOf pg:AmbisonicGroup ;
+	rdfs:label "Ambisonic B stream of horizontal order 2 and peripheral order 2." ;
+	pg:hasRole [ pg:index 0; pg:role amb:ACN0 ] ;
+	pg:hasRole [ pg:index 1; pg:role amb:ACN1 ] ;
+	pg:hasRole [ pg:index 2; pg:role amb:ACN2 ] ;
+	pg:hasRole [ pg:index 3; pg:role amb:ACN3 ] ;
+	pg:hasRole [ pg:index 4; pg:role amb:ACN4 ] ;
+	pg:hasRole [ pg:index 5; pg:role amb:ACN5 ] ;
+	pg:hasRole [ pg:index 6; pg:role amb:ACN6 ] ;
+	pg:hasRole [ pg:index 7; pg:role amb:ACN7 ] ;
+	pg:hasRole [ pg:index 8; pg:role amb:ACN8 ] .
+
+pg:AmbisonicBH3P0Group a rdfs:Class ;
+	rdfs:subClassOf pg:AmbisonicGroup ;
+	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 0." ;
+	pg:hasRole [ pg:index 0; pg:role amb:ACN0 ] ;
+	pg:hasRole [ pg:index 1; pg:role amb:ACN1 ] ;
+	pg:hasRole [ pg:index 2; pg:role amb:ACN3 ] ;
+	pg:hasRole [ pg:index 3; pg:role amb:ACN4 ] ;
+	pg:hasRole [ pg:index 4; pg:role amb:ACN8 ] ;
+	pg:hasRole [ pg:index 5; pg:role amb:ACN9 ] ;
+	pg:hasRole [ pg:index 6; pg:role amb:ACN15 ] .
+
+pg:AmbisonicBH3P1Group a rdfs:Class ;
+	rdfs:subClassOf pg:AmbisonicGroup ;
+	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 1." ;
+	pg:hasRole [ pg:index 0; pg:role amb:ACN0 ] ;
+	pg:hasRole [ pg:index 1; pg:role amb:ACN1 ] ;
+	pg:hasRole [ pg:index 2; pg:role amb:ACN2 ] ;
+	pg:hasRole [ pg:index 3; pg:role amb:ACN3 ] ;
+	pg:hasRole [ pg:index 4; pg:role amb:ACN4 ] ;
+	pg:hasRole [ pg:index 5; pg:role amb:ACN8 ] ;
+	pg:hasRole [ pg:index 6; pg:role amb:ACN9 ] ;
+	pg:hasRole [ pg:index 7; pg:role amb:ACN15 ] .
+
+pg:AmbisonicBH3P2Group a rdfs:Class ;
+	rdfs:subClassOf pg:AmbisonicGroup ;
+	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 2." ;
+	pg:hasRole [ pg:index 0;  pg:role amb:ACN0 ] ;
+	pg:hasRole [ pg:index 1;  pg:role amb:ACN1 ] ;
+	pg:hasRole [ pg:index 2;  pg:role amb:ACN2 ] ;
+	pg:hasRole [ pg:index 3;  pg:role amb:ACN3 ] ;
+	pg:hasRole [ pg:index 4;  pg:role amb:ACN4 ] ;
+	pg:hasRole [ pg:index 5;  pg:role amb:ACN5 ] ;
+	pg:hasRole [ pg:index 6;  pg:role amb:ACN6 ] ;
+	pg:hasRole [ pg:index 7;  pg:role amb:ACN7 ] ;
+	pg:hasRole [ pg:index 8;  pg:role amb:ACN8 ] ;
+	pg:hasRole [ pg:index 9;  pg:role amb:ACN9 ] ;
+	pg:hasRole [ pg:index 10; pg:role amb:ACN15 ] .
+
+pg:AmbisonicBH3P3Group a rdfs:Class ;
+	rdfs:subClassOf pg:AmbisonicGroup ;
+	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 3." ;
+	pg:hasRole [ pg:index 0;  pg:role amb:ACN0 ] ;
+	pg:hasRole [ pg:index 1;  pg:role amb:ACN1 ] ;
+	pg:hasRole [ pg:index 2;  pg:role amb:ACN2 ] ;
+	pg:hasRole [ pg:index 3;  pg:role amb:ACN3 ] ;
+	pg:hasRole [ pg:index 4;  pg:role amb:ACN4 ] ;
+	pg:hasRole [ pg:index 5;  pg:role amb:ACN5 ] ;
+	pg:hasRole [ pg:index 6;  pg:role amb:ACN6 ] ;
+	pg:hasRole [ pg:index 7;  pg:role amb:ACN7 ] ;
+	pg:hasRole [ pg:index 8;  pg:role amb:ACN8 ] ;
+	pg:hasRole [ pg:index 9;  pg:role amb:ACN9 ] ;
+	pg:hasRole [ pg:index 10; pg:role amb:ACN10 ] ;
+	pg:hasRole [ pg:index 11; pg:role amb:ACN11 ] ;
+	pg:hasRole [ pg:index 12; pg:role amb:ACN12 ] ;
+	pg:hasRole [ pg:index 13; pg:role amb:ACN13 ] ;
+	pg:hasRole [ pg:index 14; pg:role amb:ACN14 ] ;
+	pg:hasRole [ pg:index 15; pg:role amb:ACN15 ] .
+
+
+# Controls
+
+pg:ControlGroup a rdfs:Class ;
+	rdfs:subClassOf pg:Group ;
+	rdfs:comment """
+A group representing a set of associated controls.
+""" .
+
+pg:amplitude          a pg:Role ; rdfs:label "Amplitude" .
+pg:attack             a pg:Role ; rdfs:label "Attack" .
+pg:cutoffFrequency    a pg:Role ; rdfs:label "Cutoff Frequency" .
+pg:decay              a pg:Role ; rdfs:label "Decay" .
+pg:delay              a pg:Role ; rdfs:label "Delay" .
+pg:frequency          a pg:Role ; rdfs:label "Frequency" .
+pg:hold               a pg:Role ; rdfs:label "Hold" .
+pg:pulseWidth         a pg:Role ; rdfs:label "Pulse Width" .
+pg:ratio              a pg:Role ; rdfs:label "Ratio" .
+pg:release            a pg:Role ; rdfs:label "Release" .
+pg:resonance          a pg:Role ; rdfs:label "Resonance" .
+pg:sustain            a pg:Role ; rdfs:label "Sustain" .
+pg:threshold          a pg:Role ; rdfs:label "Threshold" .
+pg:waveform           a pg:Role ; rdfs:label "Waveform" .
+
+pg:EnvelopeControlGroup a rdfs:Class ;
+	rdfs:subClassOf pg:ControlGroup ;
+	rdfs:label "Controls for a DAHDSR envelope." ;
+	pg:mayHavePort pg:delay ;
+	pg:mayHavePort pg:attack ;
+	pg:mayHavePort pg:hold ;
+	pg:mayHavePort pg:decay ;
+	pg:mayHavePort pg:sustain ;
+	pg:mayHavePort pg:release .
+
+pg:OscillatorControlGroup a rdfs:Class ;
+	rdfs:subClassOf pg:ControlGroup ;
+	rdfs:label "Controls for an oscillator." ;
+	pg:mayHavePort pg:frequency ;
+	pg:mayHavePort pg:amplitude ;
+	pg:mayHavePort pg:waveform ;
+	pg:mayHavePort pg:pulseWidth .
+
+pg:FilterControlGroup a rdfs:Class ;
+	rdfs:subClassOf pg:ControlGroup ;
+	rdfs:label "Controls for a filter." ;
+	pg:mayHavePort pg:cutoffFrequency ;
+	pg:mayHavePort pg:resonance .
+
+pg:CompressorControlGroup a rdfs:Class ;
+	rdfs:subClassOf pg:ControlGroup ;
+	rdfs:label "Controls for a compressor." ;
+	pg:mayHavePort pg:threshold ;
+	pg:mayHavePort pg:ratio .
+

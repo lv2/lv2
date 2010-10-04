@@ -1,0 +1,52 @@
+This software requires only Python to build.
+
+= LV2 Core package instructions =
+
+This package contains a header file, pkg-config file, and an LV2 bundle;
+there is no code that requires compiling (i.e. this is NOT a library).
+Accordingly, the versioning scheme is simpler than a library: the major
+number is the version number of the LV2 specification, and the minor
+number is the version of this package.  There is no 'micro' number.
+
+The configure option --bundle-only can be used to install only the bundle.
+This can be used in conjunction with the --lv2-user option to install
+only the bundle to the user-specific (i.e. in your home directory) LV2
+path, if you do not have write access to the system.
+
+Distribution packages should install everything, as apps may depend
+on 'lv2core' (via pkg-config) to ensure both the header and data
+bundle are present.
+
+
+= Generic waf instructions =
+
+Like an auto* project, building has three phases:
+
+
+* Configure:       ./waf configure [OPTIONS]
+
+  Example:
+    ./waf configure --prefix=/some/where
+
+  The default prefix is /usr/local
+
+
+* Build:           ./waf [OPTIONS]
+
+  Example:
+    ./waf
+
+
+* Install:         ./waf install [OPTIONS]
+
+  The environment variable DESTDIR can be used to add any prefix to
+  the install paths (useful for packaging).  Example:
+
+  DESTDIR=/home/drobilla/packages ./waf install
+
+
+*** IMPORTANT: You must use absolute paths everywhere
+
+
+Run './waf --help' for detailed option information.
+

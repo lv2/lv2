@@ -1,0 +1,54 @@
+# LV2 Data Access Extension
+# Copyright (C) 2008 David Robillard <d@drobilla.net>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix umap:  <http://lv2plug.in/ns/ext/uri-map#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix lv2ev: <http://lv2plug.in/ns/ext/event#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<http://lv2plug.in/ns/ext/uri-map> a lv2:Specification ;
+	doap:license <http://usefulinc.com/doap/licenses/mit> ;
+	doap:name "LV2 URI Map" ;
+    doap:release [
+        doap:revision "1" ;
+        doap:created "2008-04-16"
+    ] ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
+	] , [
+		a foaf:Person ;
+		foaf:name "Lars Luthman" ;
+	] ;
+    rdfs:comment """
+This extension defines a simple mechanism for plugins to map URIs to integers,
+usually for performance reasons (e.g. processing events typed by URIs in
+real time).  The expected use case is for plugins to map URIs to integers for
+things they 'understand' at instantiation time, and store those values for
+use in the audio thread without doing any string comparison.  This allows
+the extensibility of RDF with the performance of integers (or centrally
+defined enumerations).
+""" .

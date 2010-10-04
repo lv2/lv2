@@ -1,0 +1,272 @@
+# LV2 Atom Extension
+# Copyright (C) 2007-2010 David Robillard <d@drobilla.net>
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema> .
+
+<http://lv2plug.in/ns/ext/atom>
+	a lv2:Specification ;
+    doap:name "LV2 Atom" ;
+    doap:maintainer [
+        a foaf:Person ;
+        foaf:name     "David Robillard" ;
+        foaf:homepage <http://drobilla.net/> ;
+        rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
+    ] ;
+	rdfs:comment """
+This extension defines a generic format for a typed piece of data, called an
+"atom" (e.g. integers, strings, buffers, data structures, etc).  Atoms allow
+LV2 plugins and host to communicate and store values of any type and size via
+a generic mechanism (e.g. port buffers, event payloads, shared data, etc.).
+Atoms are simple a chunk of memory with a type and a size, and are (with
+one exception) Plain Old Data (POD) and may be safely copied (e.g. with a
+simple call to <code>memcpy</code>).  Because they are POD, hosts and plugins
+can communicate atoms of any type, even if they do not understand that type.
+This allows two plugins that both understand some type to be used together in
+a host that does not itself understand that type, or allows a host to send
+atoms "through" a plugin that does not understand them (for e.g. routing,
+delaying, or buffering plugins).
+
+Atoms as defined by this extension can be trivially constructed in-place
+from events as defined by the <a href="http://lv2plug.in/ns/ext/event">LV2
+Event</a> extension.  A valid LV2_Atom (see atom.h) is contained within
+any valid LV2_Event (see event.h).  An LV2_Event is simply an LV2_Atom
+with a time stamp header prepended.  Atoms should be used anywhere a "value"
+needs to be stored or communicated, which allows implementations to be
+polymorphic and extensible.
+
+Optionally, the host MAY support "Blobs", which are dynamically allocated
+chunks of memory that (unlike Atoms) are not necessarily POD.  Blobs are
+accessed via references, which are a special case of Atom that always have
+type 0, are not POD, and can only be copied using host provided functions.
+This allows plugins and hosts to work with data of any type at all.
+Blob data MUST NOT be used in any way by an implementation that does not
+understand that blob type (meaningful type-oblivious use is impossible,
+e.g. the blob pointer may not point to actual memory).
+
+This extension requires the host to support the <a
+href="http://lv2plug.in/ns/ext/uri-map">LV2 URI Map</a> extension.
+""" .
+
+
+atom:AtomType a rdfs:Class ;
+	rdfs:label   "LV2 Atom Type" ;
+	rdfs:comment """
+Base class for all types of LV2 Atom.
+
+All Atom types (instances of this class, which are themselves classes)
+must define a precise binary layout for that type of atom, which dictates
+the format of the data following the LV2_Atom header.  Pedantically, this
+class refers to the type of memory starting where the LV2_Atom header starts,
+i.e. a chunk of memory with any type that is a subClassOf atom:AtomType by
+definition starts with an LV2_Atom.  The area after the header is referred
+to as the atom's "body".
+
+The URIs of subclasses of atom:AtomType are mapped to integers and used as
+the type field of an LV2_Atom.  If a plugin or host does not understand
+the type of an LV2_Atom, that atom SHOULD simply be ignored (though it
+MAY be simply copied if it is not a reference).
+
+All atoms are POD by definition, except references, which have type 0.
+An atom MUST NOT contain a reference.  It is safe to copy any type of
+atom except type 0 with a simple memcpy using the size field, even if the
+implementation does not understand the actual type of that atom.
+""" .
+
+
+atom:Reference a atom:AtomType ;
+	rdfs:label   "Reference" ;
+	rdfs:comment """
+Reference to a blob.  The actual contents of a reference are opaque and host
+specific, and must not be copied, serialized, or otherwise interpreted by
+a plugin, except by using functions provided by the host.
+
+References are a special case: a reference atom always has type 0.
+The NULL reference is the unique atom with type 0 and size 0.
+""" .
+
+
+atom:String a atom:AtomType ;
+	rdfs:label "String" ;
+	rdfs:comment """
+A UTF-8 encoded string, where LV2_Atom.size refers to the length of the
+string in bytes (not characters).
+""" .
+
+
+atom:URIInt a atom:AtomType ;
+	rdfs:label "URI mapped to an integer" ;
+	rdfs:comment """
+A uint32_t interpreted as a URI mapped to an integer using the LV2
+URI map extension &lt;http://lv2plug.in/ns/ext/uri-map&gt;.  Size is
+always 4.
+""" .
+
+
+atom:Message a atom:AtomType ;
+	rdfs:label "Message" ;
+	rdfs:comment """
+A message is a communication from one component to another.  Messages
+consist of a selector URI, and a set of RDF triples.  The selector URI
+dictates how the triples are to be interpreted (e.g. the selector can
+be used as a "verb" to build commands).
+
+The payload of a message is always an atom:Triples so hosts and plugins can
+always work with message data (e.g. to serialise for saved state or an undo
+stack), even if they do not specifically understand a particular message.
+
+In memory, a Message is simply a uint32_t selector (a URI mapped integer)
+followed by an atom:Triples.
+""" .
+
+
+atom:Vector a atom:AtomType ;
+	rdfs:label "Vector" ;
+	rdfs:comment """
+A POD homogeneous sequence of atoms with equivalent type and size.
+
+The body of a vector begins with
+<pre>
+uint16_t elem_count; // The number of elements in the vector
+uint16_t elem_type;  // The type of each element
+</pre>
+followed by <code>elem_count</code> bodies of atoms of type
+<code>elem_type</code>, each with equivalent size.  For variably sized
+content types, this size can be calculated using the total byte size of the
+vector, e.g.
+<pre>
+uint16_t elem_size = (vector.size - (2 * sizeof(uint16_t))) / vector.count);
+</pre>
+Note that it is possible to construct a valid Atom for each element of the
+vector, even by an implementation which does not understand <code>type</code>.
+
+For example, an atom:Vector containing 42 elements of type atom:Int32 looks
+like this in memory:
+<pre>
+uint16_t atom_type    = uri_map(atom:Vector)
+uint16_t atom_size    = (2 * sizeof(uint16_t)) + (42 * sizeof(int32_t))
+uint16_t elem_count   = 42
+uint16_t elem_type    = uri_map(atom:Int32)
+int32_t  contents[42] = ...
+</pre>
+""" .
+
+
+atom:Triple a atom:AtomType ;
+	rdfs:label "RDF triple" ;
+	rdfs:comment """
+A single RDF triple.
+
+The subject and predicate of an RDF triple are implicitly URIs, this in an
+atom:Triple they are stored as URI mapped integers with type tags and sizes
+omitted.
+
+An atom:Triple in memory is two uint32_t's followed by an LV2_Atom:
+<pre>
+uint32_t subject;
+uint32_t predicate;
+LV2_Atom object;
+</pre>
+""" .
+
+
+atom:Triples a atom:AtomType ;
+	rdfs:label "RDF triple set" ;
+	rdfs:comment """
+A description in RDF (i.e. a set of triples).
+
+An atom:Triples contains any number of RDF triples, describing one or
+several resources.  The subject and predicate of all triples are implicitly
+URI mapped integers, type tags are omitted.  The object of triples may be
+any atom.
+
+An atom:Triples in memory is a sequence of atom:Triple where each atom:Triple
+is immediately followed by the next (without time stamps or sizes), with
+padding to ensure each subject is 32-bit aligned, e.g.:
+<pre>
+uint32_t subject1;
+uint32_t predicate1;
+LV2_Atom object1;
+uint8_t  pad[1]; /* e.g. if object1.size == 3 */
+uint32_t subject2;
+uint32_t predicate2;
+LV2_Atom object2;
+...
+</pre>
+""" .
+
+
+atom:Blank a atom:AtomType ;
+	rdfs:label "Blank (anonymous resource)" ;
+	rdfs:comment """
+A description of an RDF resource with no URI (a resource with blank node
+ID), e.g. the resource of type ex:Foo in the following Turtle description:
+<code>&lt;&gt; ex:hasThing [ a ex:Thing ]</code>
+
+An atom:Blank is conceptually a dictionary where keys (RDF predicates) are
+URI mapped integers, and values (RDF objects) are any atom.
+
+An atom:Blank in memory is like an atom:Triples, but with subjects omitted:
+<pre>
+uint32_t predicate1;
+LV2_Atom object1;
+uint32_t predicate2;
+LV2_Atom object2;
+...
+</pre>
+""" .
+
+
+atom:Bang    a atom:AtomType ; rdfs:label "Bang (generic activity), size=0" .
+atom:Byte    a atom:AtomType ; rdfs:label "A byte" .
+atom:Int32   a atom:AtomType ; rdfs:label "Signed 32-bit Integer" .
+atom:Bool    a atom:AtomType ; rdfs:label "atom:Int32 where 0=false, 1=true" .
+atom:Float32 a atom:AtomType ; rdfs:label "32-bit Floating Point Number" .
+atom:Float64 a atom:AtomType ; rdfs:label "64-bit Floating Point Number" .
+
+
+atom:blobSupport a lv2:Feature ;
+	rdfs:label "Blob support" ;
+	rdfs:comment """
+Support for dynamically allocated blobs.  If a host supports this feature, it
+MUST pass an LV2_Feature with URI http://lv2plug.in/ns/ext/atom#blobSupport
+and a pointer to LV2_Blob_Support as data to the plugin's instantiate method.
+See atom.h for details.
+""" .
+
+
+atom:BlobType a rdfs:Class ;
+	rdfs:label      "Blob Type" ;
+	rdfs:comment    """
+Base class for all types of dynamically allocated LV2 blobs.  Blobs can be of
+any type at all, there are no restrictions on the binary format or contents
+of a blob.  Blobs are dynamically allocated by the host (or a plugin via
+the host), and unlike Atoms are not necessarily POD.
+
+The type of a blob MAY be a atom:AtomType, in which case the start of the
+blob data is the start of the Atom header (LV2_Atom).
+""" .
+

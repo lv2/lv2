@@ -1,0 +1,87 @@
+# LV2 MIDI Extension
+# Copyright (C) 2008 David Robillard <d@drobilla.net>
+#
+# Based on lv2-midiport.h:
+#     Copyright (C) 2006 Lars Luthman <lars.luthman@gmail.com>
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix midi:  <http://lv2plug.in/ns/ext/midi#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix lv2ev: <http://lv2plug.in/ns/ext/events#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<http://lv2plug.in/ns/ext/midi> a lv2:Specification ;
+	doap:license <http://usefulinc.com/doap/licenses/mit> ;
+	doap:name "LV2 MIDI Events" ;
+	rdfs:comment "Defines an LV2 event type for standard raw MIDI" ;
+    doap:release [
+        doap:revision "1" ;
+        doap:created "2008-08-11" ;
+    ] ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
+	] , [
+		a foaf:Person ;
+		foaf:name "Lars Luthman" ;
+	] .
+
+
+midi:MidiEvent a rdfs:Class ;
+	rdfs:label      "LV2 MIDI event" ;
+	rdfs:subClassOf lv2ev:Event ;
+	rdfs:comment    """
+A single raw (sequence of bytes) MIDI event.
+
+These events are equivalent to standard MIDI events, with the following
+restrictions to ease the burden on plugin authors:
+<ul>
+  <li>Running status is not allowed. Every event must have its own status
+    byte.</li>
+  
+  <li>Note On events with velocity 0 are not allowed. These events are
+  equivalent to Note Off in standard MIDI streams, but in order to make
+  plugins and hosts easier to write, as well as more efficient, only proper
+  Note Off events are allowed as Note Off.</li>
+  
+  <li>"Realtime events" (status bytes 0xF8 to 0xFF) are allowed, but may
+  not occur inside other events like they are allowed to in hardware MIDI
+  streams.</li>
+  
+  <li>All events must be fully contained in a single data buffer, i.e. events
+  may not "wrap around" by storing the first few bytes in one buffer and
+  then wait for the next run() call to store the rest of the event. If
+  there isn't enough space in the current data buffer to store an event,
+  the event will either have to wait until next run() call, be ignored,
+  or compensated for in some more clever way.</li>
+  
+  <li>All events must be valid MIDI events. This means for example that
+  only the first byte in each event (the status byte) may have the eighth
+  bit set, that Note On and Note Off events are always 3 bytes long etc.
+  The MIDI writer (host or plugin) is responsible for writing valid MIDI
+  events to the buffer, and the MIDI reader (plugin or host) can assume that
+  all events are valid.</li>
+</ul>
+"""^^lv2:basicXHTML .
+

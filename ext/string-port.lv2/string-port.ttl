@@ -1,0 +1,105 @@
+# LV2 String Port Extension.
+# Draft Revision 3
+# Copyright (C) 2008 Krzysztof Foltman
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix sp:   <http://lv2plug.in/ns/ext/string-port#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<http://lv2plug.in/ns/ext/string-port> a lv2:Specification ;
+	doap:license <http://usefulinc.com/doap/licenses/mit> ;
+	doap:name    "LV2 String Ports" ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "Krzysztof Foltman" ;
+	] ;
+	rdfs:comment """
+Defines ports which contain string data.
+
+<h4>UI issues</h4>
+When using port_event / write_port (and possible other communication
+mechanisms), the format parameter should contain the numeric value of URI
+LV2_STRING_PORT_URI (mapped with http://lv2plug.in/ns/extensions/ui specified
+as map URI).
+
+It's probably possible to use ports belonging to message context
+&lt;http://lv2plug.in/ns/ext/contexts#MessageContext&gt; for transfer. However,
+contexts mechanism does not offer any way to notify the message recipient
+about which ports have been changed. To remedy that, this extension defines
+a flag LV2_STRING_DATA_CHANGED_FLAG that carries that information inside a
+port value structure.
+
+<h4>Storage</h4>
+The value of string port are assumed to be "persistent": if a host saves
+and restores a state of a plugin (e.g. control port values), the values
+of input string ports should also be assumed to belong to that state. This
+also applies to message context: if a session is being restored, the host
+MUST resend the last value that was sent to the port before session has been
+saved. In other words, string port values "stick" to message ports.
+""" .
+
+sp:StringTransfer a lv2:Feature ;
+   rdfs:label "String data transfer via LV2_String_Data" .
+
+sp:StringPort a lv2:Port ;
+   rdfs:label "String port" ;
+   rdfs:comment """
+Indicates that the port data points to a LV2_String_Data structure
+as defined in accompanying header file.
+
+<h4>Input Port Semantics</h4>
+If the port does not have a context specified (it runs in the default,
+realtime audio processing context), the values in the structure and the actual
+string data MUST remain unchanged for the time a run() function of a plugin
+is executed. However, if the port belongs to a different context, the same
+data MUST remain unchanged only for the time a run() or message_process()
+function of a given context is executed.
+
+<h4>Output Port Semantics</h4>
+The plugin may only change the string or length in a run() function (if
+the port belongs to default context) or in context-defined counterparts
+(if the port belongs to another context). Because of that, using default
+context output string ports is contraindicated for longer strings.
+""" .
+
+sp:default a rdf:Property ;
+   rdfs:label "Default value" ;
+   rdfs:domain sp:StringPort ;
+   rdfs:range xsd:string ;
+   rdfs:comment """
+Gives a default value for a string port.
+""" .
+
+sp:requiredSpace a rdf:Property ;
+   rdfs:label "Required storage space in bytes" ;
+   rdfs:domain sp:StringPort ;
+   rdfs:range xsd:nonNegativeInteger ;
+   rdfs:comment """
+Specifies required buffer space for output string ports and those of
+input string ports that are meant to be GUI-controlled. The host MUST
+allocate a buffer of at least required size to accommodate for all values
+that can be produced by the plugin.
+""" .
+

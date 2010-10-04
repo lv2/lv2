@@ -1,0 +1,180 @@
+body {
+	color: black;
+	background: white;
+	margin: 0;
+}
+
+:link {
+	 color: #00C;
+	 background: transparent;
+}
+
+:visited {
+	 color: #609;
+	 background: transparent;
+}
+
+a:active {
+	 color: #C00;
+	 background: transparent;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	 text-align: left;
+}
+
+h1, h2 {
+	 background-color: #f2f2f2;
+	 margin-top: 0;
+	 color: #000;
+	 border-bottom: 1px solid #cccccc;
+}
+
+h1 {
+	 padding: 1ex;
+	 margin-bottom: 0;
+}
+
+h2 {
+	 border-bottom: 1px solid #b2c0dd;
+	 padding: 0.5ex;
+}
+
+h3, h4, h5, h6 {
+	 padding: 0;
+	 margin: 0 0 0.75ex 0;
+}
+
+h2 {
+	 margin: 3ex 0 1ex 0;
+}
+
+ul, ol {
+	 margin: 0 1ex 2ex 1ex;
+}
+
+.content {
+	 margin-left: 1.5em;
+	 margin-right: 1.5em;
+}
+
+.label {
+	 font-style: italic;
+	 margin: 1ex 0 1ex 0;
+	 }
+
+.index {
+	 margin-left: 1em;
+}
+
+.restriction {
+	 margin: 0.5ex 0 2ex 4ex;
+	 background-color: #eee;
+	 padding: 0.25ex;
+	 border: 1px solid #ddd;
+}
+
+.description {
+	 margin-bottom: 2ex;
+}
+
+.blankdesc {
+	 background-color: #eee;
+	 margin: 0.5em;
+	 border: 1px solid #ddd;
+}
+
+.blankterm {
+	 padding-right: 0.5em;
+}
+
+.specterm {
+	 margin-top: 1ex;
+	 padding: 1ex;
+	 background-color: #fafafa;
+	 border: 1px solid #ddd;
+}
+
+.footer {
+	margin-top: 3ex;
+	padding: 1ex;
+	border-top: solid #4a6aaa 1px;
+	text-align: right;
+}
+
+.footer-text {
+	 font-size: small;
+	 color: #2a3c61;
+	 vertical-align: top;
+}
+
+dl {
+	 padding: 0;
+	 margin: 0;
+}
+
+dt {
+	 font-weight: bold ;
+	 margin-top: 0.75ex;
+}
+
+hr {
+	color: silver;
+	background-color: silver;
+	height: 1px;
+	border: 0;
+	margin-top: 1.5ex;
+	margin-bottom: 1.5ex;
+}
+
+div.head {
+	 margin-bottom: 1em;
+}
+
+div.head h1 {
+	 margin-top: 2em;
+	 clear: both;
+}
+
+div.head table {
+	 margin-left: 2em;
+	 margin-top: 2em;
+}
+
+th {
+	 text-align: left;
+}
+
+td {
+	 padding-right: 2ex;
+}
+
+.meta {
+	background-color: #f9fafc;
+	font-size: small;
+	margin: 0 0 2ex 0;
+	padding: 1ex 0 1ex 2ex;
+	border-bottom: 1px solid #c4cfe5;
+}
+
+.metahead {
+	 padding-right: 1ex;
+}
+
+pre {
+	 margin-left: 2em;
+	 color: #373;
+}
+
+code {
+	 color: #373;
+}
+
+@media aural {
+	dt {
+		pause-before: 20%
+	}
+	pre {
+		speak-punctuation: code
+	}
+}

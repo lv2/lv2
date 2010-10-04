@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html about="@URI@"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:dc="http://purl.org/dc/elements/1.1/"
+      xmlns:dct="http://purl.org/dc/terms/"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+      xmlns:lv2="http://lv2plug.in/ns/lv2core#"
+      @XMLNS@
+      xml:lang="en">
+  <head>
+    <title>@NAME@</title>
+    <meta http-equiv="content-type" content="text/xhtml+xml; charset=utf-8" />
+    <meta name="generator" content="lv2specgen" />
+    <style type="text/css">
+@STYLE@
+    </style>
+  </head>
+  <body>
+  <h1 id="title">@NAME@</h1>
+  <div class="meta">
+  <table>
+    <tr><th class="metahead">URI</th><td><a href="@URI@">@URI@</a></td></tr>
+    <tr><th class="metahead">Revision</th><td>@REVISION@</td></tr>
+    <tr><th class="metahead">Maintainer(s)</th><td>@MAINTAINERS@</td></tr>
+    <tr><th class="metahead">Namespaces</th><td>@PREFIXES@</td></tr>
+  </table>
+  </div>
+  
+  
+  <!-- META -->
+
+  <div class="content">
+  <p>This document describes <a href="@URI@">@NAME@</a>,
+  an <a href="http://lv2plug.in/ns/lv2core">LV2</a> extension.
+  Comments are welcome, please direct discussion to <a
+  href="mailto:@MAIL@">@MAIL@</a>.</p>
+  </div>
+
+  <h2 id="contents">Contents</h2>
+  <div class="content">
+    <h3>This Document</h3>
+    <ol id="toc">
+      <li><a href="#sec-description">Description</a></li>
+      <li><a href="#sec-index">Index</a></li>
+      <li><a href="#sec-documentation">Documentation</a></li>
+      <li><a href="#sec-references">References</a></li>
+    </ol>
+    <h3>Other Resources</h3>
+	<ul>
+	@FILES@
+	</ul>
+  </div>
+
+
+  <!-- DESCRIPTION -->
+
+  <h2 id="sec-description">1. Description</h2>
+  <div class="content">@COMMENT@</div>
+
+
+  <!-- INDEX -->
+
+  <h2 id="sec-index">2. Index</h2>
+  <div class="content">
+  @INDEX@
+  </div>
+
+
+  <!-- REFERENCE -->
+
+  <h2 id="sec-documentation">3. Documentation</h2>
+  <div class="content">
+  @REFERENCE@
+  </div>
+
+  <!-- REFERENCES -->
+
+  <h2 id="sec-references">4. References</h2>
+  <div class="content">
+  <dl>
+    <dt class="label" id="ref-rfc2119">IETF RFC 2119</dt>
+    <dd>
+      <em>
+        <a href="http://www.ietf.org/rfc/rfc2119.txt">
+          RFC 2119: Key words for use in RFCs to Indicate Requirement Levels</a>
+      </em>.  Internet Engineering Task Force, 1997.
+    </dd>
+  </dl>
+  </div>
+
+
+  <!-- FOOTER -->
+
+  <div class="footer">
+	<span class="footer-text">Generated on @TIME@ from <a href="./@FILENAME@" class="footer-text">@FILENAME@</a> by <a href="http://drobilla.net/software/lv2specgen" class="footer-text">lv2specgen</a></span>
+	@FOOTER@
+  </div>
+
+  </body>
+</html>
+

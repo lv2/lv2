@@ -1,0 +1,85 @@
+# LV2 Contexts Extension
+#
+# Allows for an LV2 plugin to have several independent contexts, each with its
+# own run callback and associated ports.
+#
+# Copyright (C) 2007 David Robillard
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix rsz:  <http://lv2plug.in/ns/ext/resize-port#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<http://lv2plug.in/ns/ext/resize-port>
+	a lv2:Specification ;
+	a lv2:Feature ;
+    doap:name "LV2 Resize Port Extension" ;
+	rdfs:comment """
+An extension that allows LV2 plugins to request a resize of an output port.
+
+Any host which supports this extension must pass an LV2_Feature to
+the plugin's instantiate method with URI http://lv2plug.in/ns/ext/resize-port
+and a pointer to a
+<pre>
+struct {
+	void* host_handle;
+	void (*resize_port)(void* host_handle, uint32_t index);
+}
+</pre>
+where the plugin may call resize_port with the given host_handle from any
+context to demand the resize of an output port buffer.  The plugin MUST call
+this function from the context of the given port.
+
+This function MAY return NULL at any time, plugins MUST gracefully handle
+this situation.
+""" .
+
+rsz:asLargeAs a rdf:Property ;
+    rdfs:domain  lv2:Port ;
+    rdfs:range   lv2:Symbol ;
+    rdfs:label   "as large as" ;
+    rdfs:comment """
+Indicates that a port requires at least as much buffer space as the port
+with the given symbol on the same plugin instance.  This may be used for
+any ports, but is generally most useful to indicate an output port must
+be at least as large as some input port (because it will copy from it).
+If a port is asLargeAs several ports, it is asLargeAs the largest such port
+(not the sum of those ports' sizes).
+
+The host guarantees that whenever an ObjectPort's run method is called,
+any output O that is obj:asLargeAs an input I is connected to a buffer large
+enough to copy I, or NULL if the port is lv2:connectionOptional.
+""" .
+
+rsz:minimumSize a rdf:Property ;
+    rdfs:domain  lv2:Port ;
+    rdfs:range   lv2:Symbol ;
+    rdfs:label   "minimum size" ;
+    rdfs:comment """
+Indicates that a port requires a buffer at least this large, in bytes.
+Any host that supports the resize-port feature MUST connect any port with a
+minimumSize specified to a buffer at least as large as the value given for
+this property.  Any host, especially those that do NOT support dynamic port
+resizing, SHOULD do so or reduced functionality may result.
+""" .

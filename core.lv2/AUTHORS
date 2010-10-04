@@ -1,0 +1,8 @@
+The LV2 header (lv2.h) and core bundle (lv2core.lv2) are maintained by
+
+David Robillard <d@drobilla.net>
+Steve Harris <steve@plugin.org.uk>
+
+with the input and help of many others.
+
+Thanks to all members of the free software community who made LV2 possible.

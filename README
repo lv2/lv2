@@ -1,0 +1,36 @@
+This is a repository of all the extensions, scripts, and other useful LV2
+related tools at <http://lv2plug.in/>.  Contributions are welcome, please
+send patches to the LV2 mailing list (see admin page at
+<http://lists.lv2plug.in/> to subscribe or browse archives).
+
+Note that many components of this repository are experimental, and NOT
+suitable for release or packaging.
+
+The build system and documentation generation requires only Python
+and Doxygen.
+
+
+** Installing Core/Extension Bundles **
+
+./waf configure
+./waf
+sudo ./waf install
+
+The installation directory can be modified with the --lv2-dir or
+--lv2-user options to ./waf configure, e.g.:
+
+./waf configure --lv2-dir /path/to/dir/to/place/bundles/under
+
+or
+
+./waf configure --lv2-user
+
+which will install to the default user LV2 directory (e.g. ~/.lv2).
+
+
+
+** Generating Core/Extension Documentation **
+
+./gendoc.py
+
+Documentation output will be in build/default/doc.

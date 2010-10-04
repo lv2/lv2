@@ -1,0 +1,110 @@
+# LV2 Parameter Extension
+# Copyright (C) 2010 David Robillard <d@drobilla.net>
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameter#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema> .
+
+<http://lv2plug.in/ns/ext/parameter>
+	a lv2:Specification ;
+    doap:name "LV2 Parameter" ;
+    doap:maintainer [
+        a foaf:Person ;
+        foaf:name     "David Robillard" ;
+        foaf:homepage <http://drobilla.net/> ;
+        rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
+    ] ;
+	rdfs:comment """
+""" .
+
+
+param:Parameter a rdfs:Class ; a lv2:Resource ;
+    rdfs:label   "Parameter" ;
+    rdfs:comment """
+A parameter on an LV2 plugin.  Parameters can be manipulated to alter the
+behaviour or output of a plugin.  Unlike lv2:ControlPort:
+<ul>
+<li>A parameter may have any data type</li>
+<li>Parameters can be dynamically added or removed</li>
+<li>Parameter values can be manipulated by the plugin</li>
+</ul>
+
+Note that plugins are not required to support this potential functionality,
+parameters can be used to provide a basic LADSPA-like set of floating point
+parameters in a more extensible manner.
+
+Parameters are essentially controls that are not 1:1 associated with ports
+(manipulation of parameters can be accomplished by e.g. sending messages
+to a command port).
+""" .
+
+
+param:supportsType a rdf:Property ;
+    rdfs:domain  param:Parameter ;
+    rdfs:range   atom:AtomType ;
+    rdfs:label   "supports type" ;
+    rdfs:comment """
+Indicates that a Parameter has values of a particular type.  A Parameter
+may support many types.  Parameter values are always LV2 Atoms as defined
+by the LV2 Atom Extension &lthttp://lv2plug.in/ns/ext/atom#&gt;.  Any type
+of LV2 Atom may be used as a parameter value.
+""" .
+
+
+param:value a rdf:Property ;
+	rdfs:domain param:Parameter ;
+	rdfs:label "value" ;
+	rdfs:comment """
+Indicates that a Parameter has a certain value.  A Parameter has at most
+one value at any given time.  The type of the value specified must be
+one of the types specified by param:supportsType.  When used in a plugin
+data file this property specifies the default value of a parameter.
+""" .
+
+
+param:minimum a rdf:Property ;
+	rdfs:domain param:Parameter ;
+	rdfs:label "minimum" ;
+	rdfs:comment """
+Specifies the minimum value of a Parameter (for Parameters with comparable
+types for which this makes sense).  The type of the minimum must be one of
+the types specified by param:supportsType.  The host MAY attempt to set a
+parameter to any value (of a legal type), i.e. the plugin MUST NOT assume
+attempts to change a parameter are within range and SHOULD clamp accordingly.
+""" .
+
+
+param:maximum a rdf:Property ;
+	rdfs:domain param:Parameter ;
+	rdfs:label "maximum" ;
+	rdfs:comment """
+Specifies the maximum value of a Parameter (for Parameters with comparable
+types for which this makes sense).  The type of the maximum must be one of
+the types specified by param:supportsType.  The host MAY attempt to set a
+parameter to any value (of a legal type), i.e. the plugin MUST NOT assume
+attempts to change a parameter are within range and SHOULD clamp accordingly.
+""" .
+

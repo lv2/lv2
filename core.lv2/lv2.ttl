@@ -1,0 +1,744 @@
+# RDF Schema for LV2 plugins
+# PROVISIONAL Revision 4
+#
+# This document describes the classes and properties that are defined by the
+# core LV2 specification.  See <http://lv2plug.in> for more information.
+# 
+# Copyright (C) 2006-2009 Steve Harris, David Robillard
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+####################
+## Resource Class ##
+####################
+
+lv2:Resource a rdfs:Class ;
+    rdfs:comment """
+An LV2 Resource (e.g. plugin, specification, or any other LV2 related thing)
+""" .
+
+
+#########################
+## Specification Class ##
+#########################
+
+lv2:Specification a rdfs:Class ;
+    rdfs:subClassOf lv2:Resource ;
+    rdfs:comment """
+An LV2 specification (i.e. this specification, or an LV2 "extension").
+
+Specification data, like plugin data, is distributed in standardized bundles
+so hosts may discover all present LV2 data.  See http://lv2plug.in/docs for
+more details.
+""" .
+
+
+#######################
+## LV2 Specification ##
+#######################
+
+<http://lv2plug.in/ns/lv2core>
+    a doap:Project , lv2:Specification ;
+    doap:license <http://usefulinc.com/doap/licenses/mit> ;
+    doap:name "LV2" ;
+    doap:homepage <http://lv2plug.in> ;
+    doap:created "2004-04-21" ;
+    doap:shortdesc "An audio processing plugin specification" ;
+    doap:programming-language "C" ;
+    doap:release [
+        doap:revision "4" ;
+        doap:created "2009-08-16"
+    ] ;
+    doap:maintainer [
+        a foaf:Person ;
+        foaf:name "Steve Harris" ;
+        foaf:homepage <http://plugin.org.uk/> ;
+        rdfs:seeAlso <http://plugin.org.uk/swh.xrdf>
+    ] , [
+        a foaf:Person ;
+        foaf:name "David Robillard" ;
+        foaf:homepage <http://drobilla.net/> ;
+        rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
+    ] .
+
+
+
+#############################
+## Template/Plugin Classes ##
+#############################
+
+lv2:Template a rdfs:Class ;
+    rdfs:subClassOf lv2:Resource ;
+    rdfs:comment """
+An abstract plugin-like resource that may not actually be an LV2 plugin
+(e.g. may not actually have a plugin binary).  A Template is a Resource
+that may have ports, and otherwise mimic the structure of a plugin.
+This should be subclassed by extensions that define such things.
+""" .
+    
+lv2:Plugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Template ;
+    rdfs:label "Plugin" ;
+    rdfs:subClassOf [
+        a                  owl:Restriction ;
+        owl:onProperty     rdf:type ;
+        owl:hasValue       lv2:Plugin ;
+        rdfs:comment """
+A Plugin MUST have at least one rdf:type that is lv2:Plugin.
+""" ] , [
+        a                  owl:Restriction ;
+        owl:onProperty     doap:name ;
+        owl:someValuesFrom xsd:string ;
+        rdfs:comment """
+A Plugin MUST have at least one doap:name that is a string
+with no language tag.
+""" ] ;
+    rdfs:comment """
+The class which represents an LV2 plugin.
+
+Plugins SHOULD have a doap:license property whenever possible.
+The doap:name property should be at most a few words in length using title
+capitalization, e.g. "Tape Delay Unit".  Use doap:shortdesc or
+doap:description for more detailed descriptions.
+""" .
+
+
+
+##################
+## Port Classes ##
+##################
+
+lv2:Port a rdfs:Class ;
+    rdfs:subClassOf lv2:Resource ;
+    rdfs:label   "Port" ;
+    rdfs:subClassOf [
+        a                  owl:Restriction ;
+        owl:onProperty     rdf:type ;
+        owl:someValuesFrom [
+            a         owl:DataRange ;
+            owl:oneOf ( lv2:Port lv2:InputPort lv2:OutputPort )
+        ] ;
+        rdfs:comment """
+A Port MUST have at least one rdf:type with object either lv2:Port,
+lv2:InputPort, or lv2:OutputPort.
+""" ] , [
+        a                  owl:Restriction ;
+        owl:onProperty     rdf:type ;
+        owl:minCardinality 2 ;
+        rdfs:comment """
+A Port MUST have at least two rdf:type properties with objects that are some
+subclass of lv2:Port (one for lv2:Port, lv2:InputPort, or lv2:OutputPort,
+and another to describe the specific data type, e.g. lv2:AudioPort).
+"""  ] , [
+         a                  owl:Restriction ;
+         owl:onProperty     lv2:index ;
+         owl:someValuesFrom xsd:decimal ;
+         owl:cardinality    1 ;
+         rdfs:comment """
+A port MUST have a single lv2:index which is of type xsd:decimal (e.g. a
+literal integer in Turtle).
+"""  ] , [
+         a                  owl:Restriction ;
+         owl:onProperty     lv2:symbol ;
+         owl:someValuesFrom xsd:string ;
+         rdfs:comment """
+A port MUST have a single lv2:symbol which is of type xsd:string with no
+language tag.
+"""  ] , [
+         a                  owl:Restriction ;
+         owl:onProperty     lv2:name ;
+         owl:someValuesFrom xsd:string ;
+         rdfs:comment """
+A port MUST have at least one lv2:name which is of type xsd:string.
+""" ] ;
+    rdfs:comment """
+The class which represents an LV2 port.
+
+In order for it to be used by a host it MUST have at least 
+the following properties:
+    rdf:type (with object one of lv2:Port, lv2:InputPort, lv2:OutputPort)
+    rdf:type (more specific port class, see below)
+    lv2:index
+    lv2:symbol
+    lv2:name
+
+All LV2 port descriptions MUST have a property rdf:type where the object is
+one of lv2:Port lv2:InputPort or lv2:OutputPort.  Additionally there MUST
+be at least one other rdf:type property which more specifically describes
+type of the port (e.g. lv2:AudioPort).
+
+Hosts that do not support a specific port class MUST NOT instantiate the
+plugin, unless that port has the connectionOptional property set (in which case
+the host can simply "connect" that port to NULL).  If a host is interested
+in plugins to insert in a certain signal path (e.g. stereo audio), it SHOULD
+consider all the classes of a port to determine which ports are most suitable
+for connection (e.g. by ignoring ports with additional classes the host does
+not recognize).
+
+A port has two identifiers - a (numeric) index, and a (textual) symbol.
+The index can be used as an identifier at run-time, but persistent references
+to ports (e.g. in a saved preset) MUST use the symbol.  A symbol is guaranteed
+to refer to the same port on all plugins with a given URI.  An index does NOT
+necessarily refer to the same port on all plugins with a given URI (i.e. the
+index for a port may differ between plugin binaries).
+""" .
+
+lv2:InputPort a rdfs:Class ;
+    rdfs:subClassOf lv2:Port ;
+    rdfs:label      "Input port" ;
+    rdfs:comment    """
+Ports of this type will be connected to a pointer to some value, which will
+be read by the plugin during their run method.
+""" .
+
+lv2:OutputPort a rdfs:Class ;
+    rdfs:subClassOf lv2:Port ;
+    rdfs:label      "Output port" ;
+    rdfs:comment    """
+Ports of this type will be connected to a pointer to some value, which will
+be written to by the plugin during their run method.
+""" .
+
+lv2:ControlPort a rdfs:Class ;
+    rdfs:subClassOf lv2:Port ;
+    rdfs:label      "Control port" ;
+    rdfs:comment    """
+Ports of this type will be connected to a pointer to a single value conforming
+to the 32bit IEEE-754 floating point specification.
+""" .
+
+lv2:AudioPort a rdfs:Class ;
+    rdfs:subClassOf lv2:Port ;
+    rdfs:label      "Audio port" ;
+    rdfs:comment    """
+Ports of this type will be connected to an array of length SampleCount
+conforming to the 32bit IEEE-754 floating point specification.
+""" .
+
+
+#####################################
+## Mandatory Plugin RDF Properties ##
+#####################################
+
+lv2:port a rdf:Property ;
+    rdfs:domain  lv2:Template ;
+    rdfs:range   lv2:Port ;
+    rdfs:label   "port" ;
+    rdfs:comment "Relates a Template or Plugin to the Ports it contains" .
+
+lv2:revision a rdf:Property ;
+    rdfs:domain lv2:Resource ;
+    rdfs:range  xsd:nonNegativeInteger ;
+    rdfs:label  "revision" ;
+    rdfs:comment """
+The revision of an LV2 Resource.  If a plugin's port indices change, the
+revision of the plugin MUST be increased.  Note that if port symbols
+change or are removed, the plugin URI MUST be changed, the revision acts
+as a 'minor version' to distinguish otherwise compatible revisions of
+a plugin.  A plugin that has changed indices MUST have a lv2:revision
+property, if a plugin has no revision property it is assumed to be 0.
+
+Anything that refers to a specific revision of a plugin (e.g. a serialisation
+that depends on specific port indices) MUST refer to the plugin by URI along
+with the revision.
+
+This property may be used for other objects, in this case it should be
+used in a similar way to represent a 'minor version', and NOT as a major
+version to distinguish incompatible objects (use the URI for that).
+""" .
+
+
+####################################
+## Optional Plugin RDF Properties ##
+####################################
+
+lv2:basicXHTML a rdfs:Class ;
+    rdfs:seeAlso <http://www.w3.org/TR/xhtml1/> ;
+    rdfs:seeAlso <http://www.w3.org/TR/xhtml-modularization/> ;
+    rdfs:comment """
+A very basic subset of XHTML for use with lv2:documentation, intended to be
+reasonable for hosts to support for styled inline documentation.
+
+A literal with this data type is an XHTML 1.0 fragment containing only
+tags from the following XHTML modules: text, hypertext, list, basic tables,
+image, presentation.  See the XHTML and XHTML Modularization specifications
+for details.  A literal with this data type must be legal to insert as the
+body of a &lt;div&gt; tag (free text is allowed).
+
+If only basicXHTML documentation is given but a host has no facilities for
+handling tags, simply stripping tags and inserting newlines after appropriate
+tags will yield a somewhat readable plain text version of the documentation.
+""" .
+
+lv2:documentation a rdf:Property ;
+    rdfs:domain  lv2:Resource ;
+    rdfs:label   "documentation" ;
+    rdfs:comment """
+Relates a Plugin to some text/audio/video documentation either online or
+included with the plugin package.  The value of this property may be either a
+URL, or a literal of any type.  Literal documentation SHOULD be either plain
+text, or lv2:basicXHTML.  More advanced documentation should be linked to instead.
+""" .
+
+
+
+###################################
+## Mandatory Port RDF Properties ##
+###################################
+
+lv2:index a rdf:Property ;
+    rdfs:domain  lv2:Port ;
+    rdfs:range   xsd:nonNegativeInteger ;
+    rdfs:label   "index" ;
+    rdfs:comment """
+Specifies the index of the port, passed as an argument to the connect port
+function. The index uniqely identifies the port on an instance of the plugin.
+""" .
+
+lv2:symbol a rdf:Property ;
+    rdfs:domain  lv2:Resource ;
+    rdfs:label   "symbol" ;
+    rdfs:comment """
+A short name used as a machine and human readable identifier.
+
+The first character must be one of _, a-z or A-Z and subsequenct characters can
+be from _, a-z, A-Z and 0-9.
+
+A language tag MUST NOT be used on this property.  The symbol uniquely
+identifies the port on a plugin with a given URI (i.e. the plugin author MUST
+change the plugin URI if a port symbol is changed or removed).
+""" .
+
+lv2:name a rdf:Property ;
+    rdfs:domain  lv2:Port ;
+    rdfs:label   "name" ;
+    rdfs:comment """
+A display name for labeling the Port in a user interface.
+
+This property is required for Ports, but MUST NOT be used by the host for
+port identification. The plugin author may change the values of this
+property without changing the Plugin URI.
+""" .
+
+
+
+##################################
+## Optional Port RDF Properties ##
+##################################
+
+lv2:Point a rdfs:Class ;
+    rdfs:label   "Port value point" ;
+    rdfs:comment """
+Used to describe interesting values in a Port's range.  To be valid it
+requires two properties: rdfs:label and rdf:value.
+
+There are 3 specially defined Points in the LV2 specification (default,
+minimum, and maximum), though future extensions may define more.
+""" .
+
+lv2:ScalePoint a rdfs:Class ;
+    rdfs:subClassOf lv2:Point ;
+    rdfs:comment "A single lv2:float Point (for control inputs)" .
+
+lv2:scalePoint a rdf:Property ;
+    rdfs:domain  lv2:Port ;
+    rdfs:range   lv2:ScalePoint ;
+    rdfs:label   "Scale point" ;
+    rdfs:comment "Relates a Port to its ScalePoints." .
+
+lv2:default a rdf:Property ;
+    rdfs:subPropertyOf lv2:scalePoint ;
+    rdfs:label         "Default value" ;
+    rdfs:comment """
+The default value that the host SHOULD set this port to when there is no
+other information available.
+""" .
+
+lv2:minimum a rdf:Property ;
+    rdfs:subPropertyOf lv2:scalePoint ;
+    rdfs:label         "Minimum value" ;
+    rdfs:comment """
+A hint to the host for the minimum useful value that the port will use.
+This is a "soft" limit - the plugin is required to gracefully accept all
+values in the range of lv2:float.
+""" .
+
+lv2:maximum a rdf:Property ;
+    rdfs:subPropertyOf lv2:scalePoint ;
+    rdfs:label         "Maximum value" ;
+    rdfs:comment """
+A hint to the host for the maximum useful value that the port will use.
+This is a "soft" limit - the plugin is required to gracefully accept all
+values in the range of lv2:float.
+""" .
+
+
+
+##############
+## Features ##
+##############
+
+lv2:Feature a rdfs:Class ;
+    rdfs:subClassOf lv2:Resource ;
+    rdfs:label   "Feature" ;
+    rdfs:comment "An additional feature which a plugin may use or require.".
+
+lv2:optionalFeature a rdf:Property ;
+    rdfs:domain  lv2:Resource ;
+    rdfs:range   lv2:Feature ;
+    rdfs:label   "Optional feature" ;
+    rdfs:comment """
+Signifies that a plugin or other resource supports a certain features.
+If the host supports this feature, it MUST pass its URI and any additional
+data to the plugin in the instantiate() function. The plugin MUST NOT fail to
+instantiate if an optional feature is not supported by the host.
+This predicate may be used by extensions for any type of subject.
+""" .
+
+lv2:requiredFeature a rdf:Property ;
+    rdfs:domain  lv2:Resource ;
+    rdfs:range   lv2:Feature ;
+    rdfs:label   "Required feature" ;
+    rdfs:comment """
+Signifies that a plugin or other resource requires a certain feature.
+If the host supports this feature, it MUST pass its URI and any additional
+data to the plugin in the instantiate() function. The plugin MUST fail to 
+instantiate if a required feature is not present; hosts SHOULD always check 
+this before attempting to instantiate a plugin (i.e. discovery by attempting 
+to instantiate is strongly discouraged).
+This predicate may be used by extensions for any type of subject.
+""" .
+
+
+####################
+## PortProperties ##
+####################
+
+lv2:PortProperty a rdfs:Class ;
+    rdfs:label "Port property" ;
+    rdfs:comment """
+A port property - a useful piece of information that allows a host to make more
+sensible decisions (e.g. to provide a better interface).
+""" .
+
+lv2:portProperty a rdf:Property ;
+    rdfs:domain  lv2:Port ;
+    rdfs:range   lv2:PortProperty ;
+    rdfs:label   "Port property" ;
+    rdfs:comment """
+Relates Ports to PortProperties. The PortProperty may be ignored without 
+catastrophic effects, though it may be useful e.g. for providing a sensible
+interface for the port.
+""" .
+
+
+#######################
+## Standard Features ##
+#######################
+
+lv2:isLive a lv2:Feature ;
+    rdfs:label   "Has a live (realtime) dependency" ;
+    rdfs:comment """
+Indicates that the plugin has a real-time dependency (e.g. queues data from
+a socket) and so its output must not be cached or subject to significant
+latency, and calls to the run method should be done in rapid succession.
+This property is not related to "hard real-time" execution requirements
+(see lv2:hardRTCapable).
+""" .
+
+lv2:inPlaceBroken a lv2:Feature ;
+    rdfs:label   "in-place broken" ;
+    rdfs:comment """
+Indicates that the plugin may cease to work correctly if the host elects
+to use the same data location for both audio input and audio output.
+Plugins that will fail to work correctly if ANY input buffer for a port of
+the class lv2:AudioPort is set to the same location as ANY output buffer for
+a port of the same class (with connect_port()) MUST require this Feature.
+Doing so should be avoided as it makes it impossible for hosts to use the
+plugin to process audio "in-place".
+""" .
+
+lv2:hardRTCapable a lv2:Feature ;
+    rdfs:label   "Hard realtime capable" ;
+    rdfs:comment """
+Indicates that the plugin is capable of running not only in a conventional host
+but also in a "hard real-time" environment. To qualify for this the plugin MUST
+satisfy all of the following:
+
+    (1) The plugin must not use malloc(), free() or other heap memory
+    management within its Audio class functions. All new memory used in 
+    Audio class functions must be managed via the stack. These restrictions 
+    only apply to the Audio class functions.
+
+    (2) The plugin will not attempt to make use of any library
+    functions in its Audio class functions, with the exceptions of functions 
+    in the ANSI standard C and C maths libraries, which the host is expected to
+    provide.
+
+    (3) The plugin will not access files, devices, pipes, sockets, IPC
+    or any other mechanism that might result in process or thread
+    blocking within its Audio class functions.
+      
+    (4) The plugin will take an amount of time to execute a run() call 
+    approximately of form (A+B*SampleCount) where A and B depend on the 
+    machine and host in use. This amount of time may not depend on input
+    signals or plugin state. The host is left the responsibility to perform 
+    timings to estimate upper bounds for A and B. The plugin will also take an
+    approximately constant amount of time to execute a connect_port() call.
+""" .
+
+
+#############################
+## Standard PortProperties ##
+#############################
+
+lv2:connectionOptional a lv2:PortProperty ;
+    rdfs:label   "Optionally connected port" ;
+    rdfs:comment """
+Indicates that this port does not have to be connected to valid data by the
+host. If it is to be disconnected then the port MUST set to NULL with a call
+to the connectPort method.
+""" .
+
+lv2:reportsLatency a lv2:PortProperty ;
+    rdfs:label   "Latency reporting port" ;
+    rdfs:comment """
+Indicates that the port is used to express the processing latency incurred by
+the plugin, expressed in samples.  The latency may be affected by the current
+sample rate, plugin settings, or other factors, and may be changed by the
+plugin at any time.  Where the latency is frequency dependent the plugin may
+choose any appropriate value.  If a plugin introduces latency it MUST provide
+EXACTLY ONE port with this property set which informs the host of the "correct" 
+latency.  In "fuzzy" cases the value output should be the most reasonable based
+on user expectation of input/output alignment (eg. musical delay/echo plugins
+should not report their delay as latency, as it is an intentional effect).
+""" .
+
+lv2:toggled a lv2:PortProperty ;
+    rdfs:label   "Toggled" ;
+    rdfs:comment """
+Indicates that the data item should be considered a Boolean toggle. Data less
+than or equal to zero should be considered "off" or "false", and data above
+zero should be considered "on" or "true".
+""" .
+
+lv2:sampleRate a lv2:PortProperty ;
+    rdfs:label   "Sample rate" ;
+    rdfs:comment """
+Indicates that any bounds specified should be interpreted as multiples of the
+sample rate. For instance, a frequency range from 0Hz to the Nyquist frequency
+(half the sample rate) could be requested by this property in conjunction with
+lv2:minimum 0.0 and lv2:maximum 0.5.
+Hosts that support bounds at all MUST support this property.
+""" .
+
+lv2:integer a lv2:PortProperty ;
+    rdfs:label   "Integer" ;
+    rdfs:comment """
+Indicates that a port's reasonable values are integers (eg. a user interface
+would likely wish to provide a stepped control allowing only integer input).
+A plugin MUST operate reasonably even if such a port has a non-integer input.
+""" .
+
+lv2:enumeration a lv2:PortProperty ;
+    rdfs:label   "Enumeration" ;
+    rdfs:comment """
+Indicates that a port's only reasonable values are the scale points defined for
+that port.  Though a host SHOULD NOT allow a user to set the value of such a 
+port to anything other than a scale point.  A plugin MUST operate reasonably
+even if such a port has an input that is not a scale point, preferably by
+simply choosing the largest enumeration value less than or equal to the
+actual input value (i.e. round the input value down).
+""" .
+
+
+
+####################
+## Plugin Classes ##
+####################
+
+lv2:GeneratorPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Generator" ;
+    rdfs:comment """
+Any plugin that generates sound internally, rather than processing its input.
+""" .
+
+lv2:InstrumentPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:GeneratorPlugin ;
+    rdfs:label "Instrument" ;
+    rdfs:comment """
+Any plugin that is intended to be played as a musical instrument.
+""" .
+
+lv2:OscillatorPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:GeneratorPlugin ;
+    rdfs:label "Oscillator" .
+
+lv2:UtilityPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Utility" ;
+    rdfs:comment """
+Includes things like mathematical functions and non-musical delays.
+""" .
+
+lv2:ConverterPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:UtilityPlugin ;
+    rdfs:label "Converter" ;
+    rdfs:comment """
+Any plugin that converts some form of input into a different form of output.
+""" .
+
+lv2:AnalyserPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:UtilityPlugin ;
+    rdfs:label "Analyser" ;
+    rdfs:comment """
+Any plugin that analyses input to output some useful information.
+""" .
+
+lv2:MixerPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:UtilityPlugin ;
+    rdfs:label "Mixer" ;
+    rdfs:comment """
+A plugin which mixes some number of inputs into some number of outputs.
+""" .
+
+lv2:SimulatorPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Simulator" ;
+    rdfs:comment """
+Plugins that aim to duplicate the effect of some environmental effect or
+musical equipment.
+""" .
+
+lv2:DelayPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Delay" ;
+    rdfs:comment """
+Plugins that intentionally delay their input signal as an effect.
+""" .
+
+lv2:ModulatorPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Modulator" .
+
+lv2:ReverbPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:subClassOf lv2:SimulatorPlugin ;
+    rdfs:subClassOf lv2:DelayPlugin ;
+    rdfs:label "Reverb" .
+
+lv2:PhaserPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:ModulatorPlugin ;
+    rdfs:label "Phaser" .
+
+lv2:FlangerPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:ModulatorPlugin ;
+    rdfs:label "Flanger" .
+
+lv2:ChorusPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:ModulatorPlugin ;
+    rdfs:label "Chorus" .
+
+lv2:FilterPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Filter" .
+
+lv2:LowpassPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:FilterPlugin ;
+    rdfs:label "Lowpass" .
+
+lv2:BandpassPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:FilterPlugin ;
+    rdfs:label "Bandpass" .
+
+lv2:HighpassPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:FilterPlugin ;
+    rdfs:label "Highpass" .
+
+lv2:CombPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:FilterPlugin ;
+    rdfs:label "Comb" .
+
+lv2:AllpassPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:FilterPlugin ;
+    rdfs:label "Allpass" .
+
+lv2:EQPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:FilterPlugin ;
+    rdfs:label "Equaliser" .
+
+lv2:ParaEQPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:EQPlugin ;
+    rdfs:label "Parametric" .
+
+lv2:MultiEQPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:EQPlugin ;
+    rdfs:label "Multiband" .
+
+lv2:SpectralPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Spectral Processor" .
+
+lv2:PitchPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:SpectralPlugin ;
+    rdfs:label "Pitch Shifter" .
+
+lv2:AmplifierPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Amplifier" .
+
+lv2:DistortionPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Distortion" .
+
+lv2:WaveshaperPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:DistortionPlugin ;
+    rdfs:label "Waveshaper" .
+
+lv2:DynamicsPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Dynamics Processor" ;
+    rdfs:comment """
+Plugins that alter the envelope or dynamic range of the processed audio.
+""" .
+
+lv2:CompressorPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:DynamicsPlugin ;
+    rdfs:label "Compressor" .
+
+lv2:ExpanderPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:DynamicsPlugin ;
+    rdfs:label "Expander" .
+
+lv2:LimiterPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:DynamicsPlugin ;
+    rdfs:label "Limiter" .
+
+lv2:GatePlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:DynamicsPlugin ;
+    rdfs:label "Gate" .

@@ -1,0 +1,88 @@
+# LV2 Presets Extension
+# PROVISIONAL
+# Copyright (C) 2009 David Robillard <d@drobilla.net>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<http://lv2plug.in/ns/ext/presets> a lv2:Specification ;
+	doap:license <http://usefulinc.com/doap/licenses/mit> ;
+	doap:name    "LV2 Presets" ;
+	doap:release [
+		doap:revision "2" ;
+		doap:created "2010-03-02"
+	] ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name     "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
+	] ;
+	rdfs:comment """
+Defines presets (e.g. named sets of control values) for LV2 plugins.
+""" .
+
+pset:Preset a rdfs:Class ;
+    rdfs:subClassOf lv2:Template ;
+	rdfs:label "LV2 Preset" ;
+	rdfs:comment """
+A Preset for an LV2 Plugin.  A preset can be considered an "overlay" on a
+Plugin.  Rather than attempting to define all valid predicates for a Preset
+(which is not possible since presets may need to specify values for things
+defined in other extensions), the presets extension simply provides this
+class which can be augmented with any data in the exact same fashion as the
+definition of a Plugin.
+
+A Preset SHOULD have at least one pset:appliesTo property.
+Each Port on a Preset MUST have at least a lv2:symbol property and a
+pset:value property.
+""" .
+
+pset:appliesTo a rdf:Property ;
+	rdfs:domain  pset:Preset ;
+	rdfs:range   lv2:Plugin ;
+	rdfs:label   "Applies to" ;
+	rdfs:comment """
+Specifies the Plugin(s) a Preset may be applied to.  When a Preset applies
+to a Plugin, that Preset SHOULD have ports for every control port on that
+plugin, each of which SHOULD have a pset:value property.  If the Preset is
+missing ports, or refers to ports which do not exist on the Plugin, then
+the host SHOULD apply all the values in the preset that do match the Plugin.
+
+The Preset MAY have any other values that should be applied to the Plugin
+in some way.  The host SHOULD simply ignore any values on a Preset it does
+not understand.
+""" .
+
+pset:value a rdf:Property ;
+	rdfs:domain  lv2:Port ;
+	rdfs:label   "Has value" ;
+	rdfs:comment """
+Specifies the value of a Port on some Preset.  This property is used
+in a similar way to e.g. lv2:default.
+""" .
+

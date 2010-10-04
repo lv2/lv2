@@ -1,0 +1,116 @@
+# LV2 Host Info Extension
+# PROVISIONAL
+# Copyright (C) 2009 David Robillard <d@drobilla.net>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix hi:   <http://lv2plug.in/ns/ext/host-info#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix amb:  <http://ambisonics.ch/standards/channels/> .
+
+<http://lv2plug.in/ns/ext/host-info> a lv2:Specification ;
+	doap:license <http://usefulinc.com/doap/licenses/mit> ;
+	doap:name    "LV2 Host Info" ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name     "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
+	] ;
+	rdfs:comment """
+This specification defines various properties to represent useful information
+about LV2 hosts.  Currently, the primary use of this specification is to describe which
+extensions are supported by a given host.
+
+The extensions supported by a host can be described like this:
+<pre>
+@prefix hi: &lt;http://lv2plug.in/ns/ext/host-info#&gt; .
+
+&lt;http://example.org/some-host&gt; a hi:Host ;
+	doap:name "Foo Rack" ;
+	hi:supportsExtension [
+		hi:extension &lt;http://example.org/some-extension&gt; ;
+		hi:sinceVersion "1.2.0"
+	] .
+</pre>
+"""^^lv2:basicXHTML .
+
+
+## Core Classes / Properties
+
+hi:Host a rdfs:Class ;
+	rdfs:label "LV2 Host" ;
+	rdfs:subClassOf [ a owl:Restriction ;
+		owl:onProperty     doap:name ;
+		owl:someValuesFrom xsd:string ;
+		owl:minCardinality 1 ;
+		rdfs:comment "A hi:Host MUST have at least one string doap:name"
+	] ;
+	rdfs:comment """
+An application that supports loading LV2 plugins, or performs other
+LV2 related functionality.
+""" .
+
+hi:supportsExtension a rdf:Property ;
+	rdfs:domain  hi:Host ;
+	rdfs:range   hi:ExtensionSupport ;
+	rdfs:label   "supports extension" ;
+	rdfs:comment "Relates a Host to its ExtensionSupport" .
+
+hi:ExtensionSupport a rdfs:Class ;
+	rdfs:label "Extension Support" ;
+	rdfs:subClassOf [ a owl:Restriction ;
+		owl:onProperty     hi:sinceVersion ;
+		owl:someValuesFrom xsd:string ;
+		owl:minCardinality 1 ;
+		rdfs:comment """
+A hi:ExtensionSupport MUST have at least one string hi:sinceVersion
+""" ] ;
+	rdfs:comment "A description of the support for an extension by a Host" .
+
+hi:extension a rdf:Property ;
+	rdfs:domain  hi:ExtensionSupport ;
+	rdfs:range   lv2:Specification ;
+	rdfs:label   "extension" ;
+	rdfs:comment "Indicates the extension supported by a host." .
+
+hi:sinceVersion a rdf:Property ;
+	rdfs:domain  hi:ExtensionSupport ;
+	rdfs:range   xsd:string ;
+	rdfs:label   "since version" ;
+	rdfs:comment """
+The initial version of a host which supported an extension.
+This property MUST always be given
+""" .
+
+hi:untilVersion a rdf:Property ;
+	rdfs:domain  hi:ExtensionSupport ;
+	rdfs:range   xsd:string ;
+	rdfs:label   "until version" ;
+	rdfs:comment """
+The final version of a host which supported an extension.  This property can
+be used if support for an extension was discontinued in a host for some reason.
+""" .
+

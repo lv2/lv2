@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: lv2core
+Version: @LV2CORE_VERSION@
+Description: LV2 plugin header and core bundle
+Libs:
+Cflags: -I${includedir}

@@ -1,0 +1,71 @@
+# LV2 Polymorphic Port Extension
+# Copyright (C) 2008 David Robillard <d@drobilla.net>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix polym: <http://lv2plug.in/ns/ext/polymorphic-port#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<http://lv2plug.in/ns/ext/polymorphic-port> a lv2:Specification ;
+	doap:license <http://usefulinc.com/doap/licenses/mit> ;
+	doap:name "LV2 Polymorphic Ports" ;
+	rdfs:comment "Defines LV2 ports which can dynamically change type" ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
+	] .
+
+
+polym:PolymorphicPort a rdfs:Class ;
+    rdfs:label      "Polymorphic port" ;
+    rdfs:subClassOf lv2:Port ;
+    rdfs:comment    """
+Ports of this type may be connected to buffers of several types.  The plugin
+provides a set_type function for the host to specify which type a port is
+currently connected to.
+
+A Port specifies the types it supports using the :supportsType property.
+The type specific in the normal LV2 manner (&lt;port&gt; a &lt;sometype&gt;)
+is the "default type".  If the port is connected without set_type being called
+for that port, the type of the buffer is assumed to be the default type.
+In this way polymorphic plugins are backwards compatible and may be used by
+hosts which are not aware of the polymorphic port extension.
+""" .
+
+polym:generic a lv2:PortProperty ;
+	rdfs:label "Generic polymorphic port" ;
+	rdfs:comment """
+Indicates that this port can be connected to a buffer of any type.
+""" .
+
+polym:supportsType a rdf:Property ;
+	rdfs:domain  lv2:Port ;
+    rdfs:label   "Supports data type" ;
+    rdfs:comment """
+Indicates that this port supports or "understands" a certain data type.
+Hosts MUST NOT connect a port to a buffer unless the port is :generic,
+or is described as supporting the type of that buffer with this property.
+""" .
+

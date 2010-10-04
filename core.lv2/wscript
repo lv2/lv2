@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+import sys
+import autowaf
+import Options
+
+# Version of this package (even if built as a child)
+LV2CORE_VERSION = '4.0'
+
+# Variables for 'waf dist'
+APPNAME = 'lv2core'
+VERSION = LV2CORE_VERSION
+
+# Mandatory variables
+srcdir = '.'
+blddir = 'build'
+
+def set_options(opt):
+	opt.add_option('--bundle-only', action='store_true', default=False, dest='bundle_only',
+			help="Only install LV2 bundle (not header or pkg-config file)")
+	autowaf.set_options(opt)
+
+def configure(conf):
+	autowaf.configure(conf)
+
+def build(bld):
+	# Header "library"
+	obj = bld.new_task_gen()
+	obj.export_incdirs = ['.']
+	obj.name           = 'liblv2core'
+	obj.target         = 'lv2core'
+
+	if not Options.options.bundle_only:
+		# Header
+		bld.install_files('${INCLUDEDIR}', 'lv2.h')
+
+		# Pkgconfig file
+		autowaf.build_pc(bld, 'LV2CORE', LV2CORE_VERSION, [])
+
+	# Bundle (data)
+	bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.ttl manifest.ttl')
+
