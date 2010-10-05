@@ -12,6 +12,7 @@ __date__    = '2010-10-05'
 import errno
 import glob
 import os
+import stat
 import sys
 
 import RDF
@@ -46,9 +47,9 @@ def usage():
 Example:
     %s /usr/local/include/lv2
 """ % (script, script)
-    sys.exit(-1)
 
 def mkdir_p(path):
+    "Equivalent of UNIX mkdir -p"
     try:
         os.makedirs(path)
     except OSError as e:
@@ -58,6 +59,8 @@ def mkdir_p(path):
             raise
 
 def lv2includegen(bundles):
+    """Build a directory tree of symlinks to LV2 extension bundles
+    for including header files using URI-like paths."""
     for bundle in bundles:
         # Load manifest into model
         manifest = RDF.Model()
@@ -67,20 +70,29 @@ def lv2includegen(bundles):
         # Query extension URI
         results = manifest.find_statements(RDF.Statement(None, rdf.type, lv2.Specification))
         for r in results:
-            ext_uri        = str(r.subject.uri)
-            ext_path       = os.path.normpath(ext_uri[ext_uri.find(':') + 1:].lstrip('/'))
-            ext_parent_dir = os.path.join(outdir, os.path.dirname(ext_path))
-            ext_dir        = os.path.basename(ext_path)
+            ext_uri  = str(r.subject.uri)
+            ext_path = os.path.normpath(ext_uri[ext_uri.find(':') + 1:].lstrip('/'))
+            ext_dir  = os.path.join(outdir, ext_path)
+
+            # Make parent directories
+            mkdir_p(os.path.dirname(ext_dir))
+
+            # Remove existing symlink if necessary
+            if os.access(ext_dir, os.F_OK):
+                mode = os.lstat(ext_dir)[stat.ST_MODE]
+                if stat.S_ISLNK(mode):
+                    os.remove(ext_dir)
+                else:
+                    raise Exception(ext_dir + " exists and is not a link")
 
             # Make symlink to bundle directory
-            mkdir_p(ext_parent_dir)
-            os.symlink(bundle, os.path.join(ext_parent_dir, ext_dir))
-
+            os.symlink(bundle, ext_dir)
+            
 if __name__ == "__main__":
     args = sys.argv[1:]
     if len(args) != 1:
         usage()
-        exit(1)
+        sys.exit(1)
 
     outdir = args[0]
     print "Building LV2 include tree at", outdir
