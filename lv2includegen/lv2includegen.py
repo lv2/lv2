@@ -57,16 +57,8 @@ def mkdir_p(path):
         else:
             raise
 
-if __name__ == "__main__":
-    args = sys.argv[1:]
-    if len(args) != 1:
-        usage()
-        exit(1)
-
-    outdir = args[0]
-    print "Building LV2 include tree at", outdir
-    
-    for bundle in lv2_bundles(lv2_path()):
+def lv2includegen(bundles):
+    for bundle in bundles:
         # Load manifest into model
         manifest = RDF.Model()
         parser = RDF.Parser(name="guess")
@@ -83,3 +75,14 @@ if __name__ == "__main__":
             # Make symlink to bundle directory
             mkdir_p(ext_parent_dir)
             os.symlink(bundle, os.path.join(ext_parent_dir, ext_dir))
+
+if __name__ == "__main__":
+    args = sys.argv[1:]
+    if len(args) != 1:
+        usage()
+        exit(1)
+
+    outdir = args[0]
+    print "Building LV2 include tree at", outdir
+
+    lv2includegen(lv2_bundles(lv2_path()))
