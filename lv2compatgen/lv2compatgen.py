@@ -43,9 +43,8 @@ lv2  = RDF.NS('http://lv2plug.in/ns/lv2core#')
 doap = RDF.NS('http://usefulinc.com/ns/doap#')
 foaf = RDF.NS('http://xmlns.com/foaf/0.1/')
 
-def print_usage():
-	print """
-Usage: lv2compatgen.py DATA
+def usage():
+	print """Usage: lv2compatgen.py DATA
 
 DATA must be a Redland RDF store containing all relevant LV2 data
 (a file would be too slow to parse).

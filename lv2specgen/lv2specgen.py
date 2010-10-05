@@ -783,8 +783,7 @@ def getOntologyNS(m):
 
 def usage():
     script = os.path.basename(sys.argv[0])
-    print """Usage: 
-    %s ONTOLOGY TEMPLATE STYLE OUTPUT [FLAGS]
+    print """Usage: %s ONTOLOGY TEMPLATE STYLE OUTPUT [FLAGS]
 
         ONTOLOGY : Path to ontology file
         TEMPLATE : HTML template path
@@ -798,7 +797,6 @@ def usage():
 
 Example:
     %s lv2_foos.ttl template.html style.css lv2_foos.html ../docs -i -p foos
-
 """ % (script, script)
     sys.exit(-1)
 
