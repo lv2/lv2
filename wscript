@@ -57,8 +57,10 @@ def build_plugin(bld, lang, name):
 def build_extension(bld, name, dir):
 	data_file     = '%s/%s.lv2/%s.ttl' % (dir, name, name)
 	manifest_file = '%s/%s.lv2/manifest.ttl' % (dir, name)
+	header_files  = '%s/%s.lv2/*.h' % (dir, name)
 	bld.install_files('${LV2DIR}/' + name + '.lv2', data_file)
 	bld.install_files('${LV2DIR}/' + name + '.lv2', manifest_file)
+	bld.install_files('${LV2DIR}/' + name + '.lv2', header_files)
 
 def build(bld):
 	ext = '''
