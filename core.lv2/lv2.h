@@ -1,9 +1,9 @@
-/* LV2 - LADSPA (Linux Audio Developer's Simple Plugin API) Version 2
- * Revision 1
+/* LV2 - An audio plugin interface specification
+ * Revision 4
  *
  * Copyright (C) 2000-2002 Richard W.E. Furse, Paul Barton-Davis,
  *                         Stefan Westerfeld.
- * Copyright (C) 2006-2008 Steve Harris, David Robillard.
+ * Copyright (C) 2006-2010 Steve Harris, David Robillard.
  *
  * This header is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -21,6 +21,11 @@
  * USA.
  */
 
+/** @file lv2.h
+ * C header for the LV2 specification <http://lv2plug.in/ns/lv2core>.
+ * Revision: 4
+ */
+
 #ifndef LV2_H_INCLUDED
 #define LV2_H_INCLUDED
 
@@ -30,85 +35,7 @@
 extern "C" {
 #endif
 
-
-/* ************************************************************************* */
-
-
-/** @file lv2.h
- * C header for the LV2 specification <http://lv2plug.in/ns/lv2core>.
- * Revision: 1
- *
- * == Overview ==
- *
- * There are a large number of open source and free software synthesis
- * packages in use or development at this time. This API ('LV2')
- * attempts to give programmers the ability to write simple 'plugin'
- * audio processors in C/C++ and link them dynamically ('plug') into
- * a range of these packages ('hosts').  It should be possible for any
- * host and any plugin to communicate completely through this interface.
- *
- * This API is deliberately as short and simple as possible.
- * The information required to use a plugin is in a companion data
- * (RDF) file.  The shared library portion of the API (defined in this
- * header) does not contain enough information to make use of the plugin
- * possible - the data file is mandatory.
- *
- * Plugins are expected to distinguish between control rate and audio
- * rate data (or other types of data defined by extensions). Plugins have
- * 'ports' that are inputs or outputs and each plugin is 'run' for a 'block'
- * corresponding to a short time interval measured in samples. Audio rate
- * data is communicated using arrays with one element per sample processed,
- * allowing a block of audio to be processed by the plugin in a single
- * pass. Control rate data is communicated using single values. Control
- * rate data has a single value at the start of a call to the 'run()'
- * function, and may be considered to remain this value for its duration.
- * Thus the 'control rate' is determined by the block size, controlled by
- * the host.  The plugin may assume that all its input and output ports have
- * been connected to the relevant data location (see the 'connect_port()'
- * function below) before it is asked to run, unless the port has been set
- * 'connection optional' in the plugin's data file.
- *
- * Plugins will reside in shared object files suitable for dynamic linking
- * by dlopen() and family. The file will provide a number of 'plugin
- * types' that can be used to instantiate actual plugins (sometimes known
- * as 'plugin instances') that can be connected together to perform tasks.
- * The host can access these plugin types using the lv2_descriptor()
- * function.
- *
- * This API contains very limited error-handling.
- *
- * == Threading rules ==
- *
- * Certain hosts may need to call the functions provided by a plugin from
- * multiple threads. For this to be safe, the plugin must be written so that
- * those functions can be executed simultaneously without problems.
- * To facilitate this, the functions provided by a plugin are divided into
- * classes:
- *
- *  - Discovery class:     lv2_descriptor(), extension_data()
- *  - Instantiation class: instantiate(), cleanup(), activate(), deactivate()
- *  - Audio class:         run(), connect_port()
- *
- * Extensions to this specification which add new functions MUST declare in
- * which of these classes the functions belong, or define new classes for them.
- * The rules that hosts must follow are these:
- *
- *  - When a function from the Discovery class is running, no other
- *    functions in the same shared object file may run.
- *  - When a function from the Instantiation class is running for a plugin
- *    instance, no other functions for that instance may run.
- *  - When a function is running for a plugin instance, no other
- *    function in the same class may run for that instance.
- *
- * Any simultaneous calls that are not explicitly forbidden by these rules
- * are allowed. For example, a host may call run() for two different plugin
- * instances simultaneously.
- */
-
-
-/* ************************************************************************* */
-
-
+	
 /** Plugin Handle.
  *
  * This plugin handle indicates a particular instance of the plugin
@@ -117,10 +44,7 @@ extern "C" {
  * may use it to reference internal instance data. */
 typedef void * LV2_Handle;
 
-
-/* ************************************************************************* */
-
-
+	
 /** Feature data.
  *
  * These are passed to a plugin's instantiate method to represent a special
@@ -130,6 +54,7 @@ typedef void * LV2_Handle;
  * LV2 specification does not define any features; hosts are not required
  * to use this facility. */
 typedef struct _LV2_Feature {
+	
 	/** A globally unique, case-sensitive identifier for this feature.
 	 *
 	 * This MUST be defined in the specification of any LV2 extension which
@@ -145,13 +70,11 @@ typedef struct _LV2_Feature {
 	 * this feature.
 	 * If no data is required, this may be set to NULL. */
 	void * data;
+	
 } LV2_Feature;
 
 
-/* ************************************************************************* */
-
-
-/** Descriptor for a Type of Plugin.
+/** Descriptor for a Plugin.
  *
  * This structure is used to describe a plugin type. It provides a number
  * of functions to instantiate it, link it to buffers and run it. */
@@ -335,33 +258,28 @@ typedef struct _LV2_Descriptor {
 } LV2_Descriptor;
 
 
-/* ****************************************************************** */
-
-
-/** Accessing Plugin Types.
+/** Accessing Plugins.
  *
- * The exact mechanism by which plugins are loaded is host-dependent,
- * however all most hosts will need to know is the URI of the plugin they
- * wish to load.  The environment variable LV2_PATH, if present, should
- * contain a colon-separated path indicating directories (containing
- * plugin bundle subdirectories) that should be searched (in order)
- * for plugins.  It is expected that hosts will use a library to provide
- * this functionality.
+ * The exact mechanism by which plugins are loaded is host and system
+ * dependent, however all hosts need to know is the URI of the plugin they
+ * wish to load.  Documentation on best practices for plugin discovery can
+ * be found at <http://lv2plug.in>, however it is expected that hosts use
+ * a library to provide this functionality.
  *
- * A plugin programmer must include a function called "lv2_descriptor"
+ * A plugin programmer MUST include a function called "lv2_descriptor"
  * with the following function prototype within the shared object
  * file. This function will have C-style linkage (if you are using
  * C++ this is taken care of by the 'extern "C"' clause at the top of
- * the file).
+ * this file).
  *
  * A host will find the plugin shared object file by one means or another,
  * find the lv2_descriptor() function, call it, and proceed from there.
  *
  * Plugin types are accessed by index (not ID) using values from 0
- * upwards. Out of range indexes must result in this function returning
+ * upwards. Out of range indexes MUST result in this function returning
  * NULL, so the plugin count can be determined by checking for the least
  * index that results in NULL being returned.  Index has no meaning,
- * hosts MUST NOT depend on it remaining constant (ie when serialising)
+ * hosts MUST NOT depend on it remaining constant (e.g. when serialising)
  * in any way. */
 const LV2_Descriptor * lv2_descriptor(uint32_t index);
 
@@ -371,12 +289,8 @@ typedef const LV2_Descriptor *
 (*LV2_Descriptor_Function)(uint32_t index);
 
 
-/* ******************************************************************** */
-
-
 /* Put this (LV2_SYMBOL_EXPORT) before any functions that are to be loaded
- * by the host as a symbol from the dynamic library.
- */
+ * by the host as a symbol from the dynamic library. */
 #ifdef WIN32
 #define LV2_SYMBOL_EXPORT __declspec(dllexport)
 #else
@@ -389,4 +303,3 @@ typedef const LV2_Descriptor *
 #endif
 
 #endif /* LV2_H_INCLUDED */
-
