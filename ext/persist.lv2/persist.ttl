@@ -106,7 +106,7 @@ Note that the domain of this property is unspecified, since LV2 does not
 define any RDF class for plugin instance.  This predicate may be used
 wherever it makes sense to do so, e.g.:
 <pre>
-@prefix eg: &lt;http://example.org/&gt .
+@prefix eg: &lt;http://example.org/&gt; .
 
 &lt;plugininstance&gt; persist:instanceState [
     eg:somekey "some value" ;
