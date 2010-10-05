@@ -59,7 +59,7 @@ rdfproc ./data parse lv2_all.ttl turtle
 """
 
 if len(sys.argv) != 2:
-	print_usage()
+	usage()
 	sys.exit(1)
 
 store_name = sys.argv[1]
