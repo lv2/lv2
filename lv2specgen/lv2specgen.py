@@ -549,10 +549,25 @@ def specProperties(m, subject, predicate):
 
 def specAuthors(m, subject):
     "Return an HTML description of the authors of the spec."
-    ret = ''
+    dev = ''
+    for i in m.find_statements(RDF.Statement(None, doap.developer, None)):
+        for j in m.find_statements(RDF.Statement(i.object, foaf.name, None)):
+            dev += '<div class="author" property="doap:developer">%s</div>' % j.object.literal_value['string']
+
+    maint = ''
     for i in m.find_statements(RDF.Statement(None, doap.maintainer, None)):
         for j in m.find_statements(RDF.Statement(i.object, foaf.name, None)):
-            ret += '<div class="author" property="dc:creator">' + j.object.literal_value['string'] + '</div>'
+            maint += '<div class="author" property="doap:maintainer">%s</div>' %  j.object.literal_value['string']
+
+    if dev == '' and maint == '':
+        return ''
+
+    ret = ''
+    if dev != '':
+        ret += '<tr><th class="metahead">Developer(s)</th><td>' + dev + '</td></tr>'
+    if maint != '':
+        ret += '<tr><th class="metahead">Maintainer(s)</th><td>' + maint + '</td></tr>'
+
     return ret
 
 
@@ -683,7 +698,7 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
     
     template = template.replace('@PREFIXES@', str(prefixes_html))
     template = template.replace('@BASE@', spec_ns_str)
-    template = template.replace('@MAINTAINERS@', specAuthors(m, spec_url))
+    template = template.replace('@AUTHORS@', specAuthors(m, spec_url))
     template = template.replace('@INDEX@', azlist)
     template = template.replace('@REFERENCE@', termlist.encode("utf-8"))
     template = template.replace('@FILENAME@', filename)
