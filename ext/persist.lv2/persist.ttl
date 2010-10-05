@@ -31,6 +31,11 @@
 <http://lv2plug.in/ns/ext/persist>
 	a lv2:Specification ;
     doap:name "LV2 Persist" ;
+    doap:developer [
+        a foaf:Person ;
+        foaf:name "Leonard Ritter" ;
+        foaf:homepage <http://paniq.org> ;
+    ] ;
     doap:maintainer [
         a foaf:Person ;
         foaf:name     "David Robillard" ;
