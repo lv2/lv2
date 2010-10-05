@@ -54,8 +54,8 @@ Atoms as defined by this extension can be trivially constructed in-place
 from events as defined by the <a href="http://lv2plug.in/ns/ext/event">LV2
 Event</a> extension.  A valid LV2_Atom (see atom.h) is contained within
 any valid LV2_Event (see event.h).  An LV2_Event is simply an LV2_Atom
-with a time stamp header prepended.  Atoms should be used anywhere a "value"
-needs to be stored or communicated, which allows implementations to be
+with a time stamp header prepended.  Atoms SHOULD be used anywhere a "value"
+needs to be stored or communicated, to allow implementations to be
 polymorphic and extensible.
 
 Optionally, the host MAY support "Blobs", which are dynamically allocated
@@ -64,8 +64,8 @@ accessed via references, which are a special case of Atom that always have
 type 0, are not POD, and can only be copied using host provided functions.
 This allows plugins and hosts to work with data of any type at all.
 Blob data MUST NOT be used in any way by an implementation that does not
-understand that blob type (meaningful type-oblivious use is impossible,
-e.g. the blob pointer may not point to actual memory).
+understand that blob type (unlike other Atoms, meaningful type-oblivious use
+of a Blob is impossible).
 
 This extension requires the host to support the <a
 href="http://lv2plug.in/ns/ext/uri-map">LV2 URI Map</a> extension.
@@ -79,11 +79,7 @@ Base class for all types of LV2 Atom.
 
 All Atom types (instances of this class, which are themselves classes)
 must define a precise binary layout for that type of atom, which dictates
-the format of the data following the LV2_Atom header.  Pedantically, this
-class refers to the type of memory starting where the LV2_Atom header starts,
-i.e. a chunk of memory with any type that is a subClassOf atom:AtomType by
-definition starts with an LV2_Atom.  The area after the header is referred
-to as the atom's "body".
+the format of the data following the LV2_Atom header.
 
 The URIs of subclasses of atom:AtomType are mapped to integers and used as
 the type field of an LV2_Atom.  If a plugin or host does not understand
@@ -180,7 +176,7 @@ atom:Triple a atom:AtomType ;
 	rdfs:comment """
 A single RDF triple.
 
-The subject and predicate of an RDF triple are implicitly URIs, this in an
+The subject and predicate of an RDF triple are implicitly URIs, thus in an
 atom:Triple they are stored as URI mapped integers with type tags and sizes
 omitted.
 
@@ -223,7 +219,7 @@ atom:Blank a atom:AtomType ;
 	rdfs:label "Blank (anonymous resource)" ;
 	rdfs:comment """
 A description of an RDF resource with no URI (a resource with blank node
-ID), e.g. the resource of type ex:Foo in the following Turtle description:
+ID), e.g. the resource of type ex:Thing in the following Turtle description:
 <code>&lt;&gt; ex:hasThing [ a ex:Thing ]</code>
 
 An atom:Blank is conceptually a dictionary where keys (RDF predicates) are

@@ -29,7 +29,7 @@
 #ifndef LV2_ATOM_H
 #define LV2_ATOM_H
 
-#define LV2_ATOM_URI       "http://lv2plug.in/ns/ext/atom"
+#define LV2_ATOM_URI         "http://lv2plug.in/ns/ext/atom"
 #define LV2_BLOB_SUPPORT_URI "http://lv2plug.in/ns/ext/atom#blobSupport"
 
 #define LV2_ATOM_REFERENCE_TYPE 0
