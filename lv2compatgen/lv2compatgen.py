@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # lv2compatgen
 # Generates compatiblity documentation for LV2 hosts and plugins.
