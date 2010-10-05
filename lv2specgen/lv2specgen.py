@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # lv2specgen, an LV2 extension specification page generator
 # Copyright (c) 2009 David Robillard <d@drobilla.net>
@@ -557,7 +557,7 @@ def specAuthors(m, subject):
     maint = ''
     for i in m.find_statements(RDF.Statement(None, doap.maintainer, None)):
         for j in m.find_statements(RDF.Statement(i.object, foaf.name, None)):
-            maint += '<div class="author" property="doap:maintainer">%s</div>' %  j.object.literal_value['string']
+            maint += '<div class="author" property="doap:maintainer">%s</div>' % j.object.literal_value['string']
 
     if dev == '' and maint == '':
         return ''
