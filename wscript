@@ -84,12 +84,12 @@ def build(bld):
 		variables
 	'''
 	for e in ext.split():
-		build_extension(bld, e, './ext')
+		build_extension(bld, e, 'ext')
 	
 	extensions = '''
 		ui
 		units
 	'''
 	for e in extensions.split():
-		build_extension(bld, e, './extensions')
+		build_extension(bld, e, 'extensions')
 
