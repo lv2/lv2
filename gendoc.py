@@ -8,7 +8,6 @@ import re
 import datetime
 
 out_base = os.path.join('build', 'default', 'doc')
-
 try:
     shutil.rmtree(out_base)
 except:
@@ -18,6 +17,12 @@ os.makedirs(out_base)
 
 URIPREFIX  = 'http://lv2plug.in/ns/'
 SPECGENDIR = './specgen'
+
+release_dir = os.path.join('build', 'default', 'spec')
+try:
+    os.mkdir(release_dir)
+except:
+    pass
 
 print '** Generating core documentation'
 
@@ -51,7 +56,6 @@ for dir in ['ext', 'extensions']:
     outdir = os.path.join(out_base, dir)
 
     shutil.copytree(dir, outdir, ignore = lambda src, names: '.svn')
-    os.mkdir(os.path.join(outdir, 'releases'))
 
     index_html = """<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
@@ -103,10 +107,9 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
         else:
             rev = '0'
 
-
         if rev != '0':
-            subprocess.call(['tar', '-czf', outdir + '/releases/lv2-%s-%s.tar.gz' % (b, rev),
-                             outdir + '/%s.lv2' % b])
+            path = os.path.join(release_dir, 'lv2-%s-%s.tar.gz' % (b, rev))
+            subprocess.call(['tar', '-czf', path, os.path.join(outdir, '%s.lv2' % b)])
 
         specgendir = '../../../../lv2specgen/'
         if (os.access(outdir + '/%s.lv2/%s.ttl' % (b, b), os.R_OK)):
