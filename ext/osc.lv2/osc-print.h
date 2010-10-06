@@ -23,7 +23,7 @@
 #ifndef LV2_OSC_PRINT_H
 #define LV2_OSC_PRINT_H
 
-#include "ext/osc.lv2/osc.h"
+#include "lv2/http/lv2plug.in/ns/ext/osc/osc.h"
 
 #ifdef __cplusplus
 extern "C" {
