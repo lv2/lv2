@@ -108,7 +108,7 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
             rev = '0'
 
         if rev != '0':
-            path = os.path.join(release_dir, 'lv2-%s-%s.tar.gz' % (b, rev))
+            path = os.path.join(release_dir, 'lv2-%s-%s.0.tar.gz' % (b, rev))
             subprocess.call(['tar', '-czf', path, os.path.join(outdir, '%s.lv2' % b)])
 
         specgendir = '../../../../lv2specgen/'
@@ -140,7 +140,6 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
         index_html += i + '\n'
     
     index_html += '</ul>\n'
-    index_html += '<div class="content"><a href="./releases">Releases</a></div>\n'
 
     index_html += '<div class="footer">'
     index_html += '<span class="footer-text">Generated on '
