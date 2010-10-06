@@ -88,9 +88,10 @@ def build_tree(search_path, outdir):
         # Query extension URI
         results = manifest.find_statements(RDF.Statement(None, rdf.type, lv2.Specification))
         for r in results:
-            ext_uri  = str(r.subject.uri)
-            ext_path = os.path.normpath(ext_uri[ext_uri.find(':') + 1:].lstrip('/'))
-            ext_dir  = os.path.join(outdir, ext_path)
+            ext_uri    = str(r.subject.uri)
+            ext_scheme = ext_uri[0:ext_uri.find(':')] 
+            ext_path   = os.path.normpath(ext_uri[ext_uri.find(':') + 1:].lstrip('/'))
+            ext_dir    = os.path.join(outdir, ext_scheme, ext_path)
 
             # Make parent directories
             __mkdir_p(os.path.dirname(ext_dir))
