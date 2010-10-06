@@ -714,7 +714,7 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
     bundle_path = os.path.split(specloc[specloc.find(':')+1:])[0]
     header_path = bundle_path + '/' + basename + '.h'
 
-    other_files = '<li><a href=".">Online Bundle</a></li>\n'
+    other_files = ''
     if revision and revision[0] != '0':
         release_name = "lv2-" + basename
         if basename == "lv2":
