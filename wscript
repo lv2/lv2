@@ -1,11 +1,13 @@
 #!/usr/bin/env python
+import datetime
+import os
 import autowaf
 
 # Version of this package (even if built as a child)
-LV2EXT_VERSION = '0.0.0'
+LV2EXT_VERSION = datetime.date.isoformat(datetime.datetime.now()).replace('-', '.')
 
 # Variables for 'waf dist'
-APPNAME = 'lv2ext'
+APPNAME = 'lv2plug.in'
 VERSION = LV2EXT_VERSION
 
 # Mandatory variables
