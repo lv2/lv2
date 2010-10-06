@@ -4,7 +4,8 @@ send patches to the LV2 mailing list (see admin page at
 <http://lists.lv2plug.in/> to subscribe or browse archives).
 
 Note that many components of this repository are experimental, and NOT
-suitable for release or packaging.
+suitable for release or packaging.  Release tarballs suitable for
+distribution can be found in build/default/spec after running gendoc.py.
 
 The build system and documentation generation requires only Python
 and Doxygen.
