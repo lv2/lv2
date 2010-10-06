@@ -46,7 +46,7 @@ def lv2_path():
         print 'LV2_PATH unset, using default ' + ret
         return ret
 
-def bundles(search_path):
+def __bundles(search_path):
     "Return a list of all LV2 bundles found in search_path."
     dirs = search_path.split(os.pathsep)
     bundles = []
@@ -75,11 +75,11 @@ def __mkdir_p(path):
         else:
             raise
 
-def gen(bundles, outdir):
+def build_tree(search_path, outdir):
     """Build a directory tree under outdir containing symlinks to all LV2
-    extensions found in bundles, such that the symlink paths correspond to
+    extensions found in search_path, such that the symlink paths correspond to
     the extension URIs."""
-    for bundle in bundles:
+    for bundle in __bundles(search_path):
         # Load manifest into model
         manifest = RDF.Model()
         parser = RDF.Parser(name="guess")
@@ -115,4 +115,4 @@ if __name__ == "__main__":
     outdir = args[0]
     print "Building LV2 include tree at", outdir
 
-    gen(bundles(lv2_path()), outdir)
+    build_tree(lv2_path(), outdir)
