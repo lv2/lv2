@@ -39,3 +39,7 @@ def build(bld):
 	# Bundle (data)
 	bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.ttl manifest.ttl')
 
+def dist():
+        import Scripting
+        Scripting.g_gz = 'gz'
+	Scripting.dist()
