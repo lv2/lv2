@@ -110,7 +110,7 @@ def build_tree(search_path, outdir):
 if __name__ == "__main__":
     args = sys.argv[1:]
     if len(args) != 1:
-        usage()
+        __usage()
         sys.exit(1)
 
     outdir = args[0]
