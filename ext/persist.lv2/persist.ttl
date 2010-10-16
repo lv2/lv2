@@ -47,38 +47,97 @@ This extension provides a mechanism for plugins to save and restore state
 across instances, allowing hosts to save configuration/state/data with a
 project or fully clone a plugin instance (including internal state).
 
-The motivating idea behind this extension is that a plugin instance's state
-is entirely represented by port values and a single key/value dictionary.
-This makes state well-defined and easily manageable by hosts.  Keys are URIs,
-avoiding conflicts and allowing the same dictionary to be used to store plugin
-state in any context.  Values are typed tagged (by URI mapped integers),
-but otherwise are simple binary blobs.
+Unlike ports, this extension allows plugins to save private state data.
+The motivating ideal behind this extension is for the state of a plugin
+instance to be entirely described by port values (as with all LV2 plugins) and
+a key/value dictionary as defined by this extension.  This mechanism is simple,
+yet sufficiently powerful to describe the state of very advanced plugins.
 
-This extension defines plugin instance state and provides a mechanism
-for saving/restoring it, but otherwise makes no restrictions on how a
-plugin works with state.  For example, other extensions may define dynamic
-ways to control plugin state at runtime.  The idea is that <em>all</em>
-plugin state can be represented with a single (conceptual) dictionary.
-This state representation is tried-and-true, universal, and works well with
-many existing technologies.  Accordingly, plugins/extensions that deal with
-instance state in any way SHOULD represent it in a way compatible with this
-extension, i.e. URI keys with URI-typed values.  Similarly, plugins SHOULD NOT
-use any other mechanism to store/restore state; this <strong>will</strong>
-cause serious problems, don't do it!  Note that you can store values of any
-format whatsoever, so if you have an existing state representation to use
-(e.g. XML), simply store it as a single value under some key.
+The "state" described by this extension is conceptually a single key/value
+dictionary.  Keys are URIs, and values are typed-tagged blobs of any type.
+The plugin provides a save and restore method for saving and restoring state.
+To initiate a save or restore, the host calls these methods, passing a callback
+to be used for saving or restoring a single key/value pair.  In this way, the
+actual mechanism of saving and restoring state is completely abstract from the
+plugin's perspective.
 
-Files may be persisted using this extension in conjunction with the
-<a href="http://lv2plug.in/ns/ext/files">LV2 Files</a> extension.
+Because the state is a simple dictionary, hosts and plugins can work with state
+easily (virtually all programming languages have an appropriate dictionary
+type available).  Additionally, this format is simple and terse to serialise
+in many formats (e.g. any RDF syntax, JSON, XML, key/value databases such as
+BDB, etc.).  In particular, state can be elegantly described in a plugin's
+Turtle description, which is useful for presets (among other things).
+Note that these are all simply possibilities enabled by this simple data
+model.  This extension defines only a few function prototypes and does not
+impose any requirement to use a particular syntax, data structure, library,
+or other implementation detail.  Hosts are free to work with plugin state
+in whatever way is most appropriate for that host.
 
-Instance state as defined by this extension is RDF compatible, allowing for
-simple and seamless integration with existing technology (LV2 or otherwise).
-An obvious benefit of this is that plugin state can be elegantly described
-in Turtle files; the persist:instanceState predicate is provided for this
-purpose.  RDF compatibility is also convenient since LV2 hosts are likely
-to already have mechanisms for working with RDF-style data.  Note, however,
-that hosts may store state in any way, and are not required to use any
-specific technology or file format to support this extension.
+This extension makes it possible for plugins to save private data, but state is
+not necessarily private, e.g. a plugin could have a public interface via ports
+for manipulating internal state, which would be saved using this extension.
+Plugins are strongly encouraged to represent all state change as modifications
+of such key/value variables, to minimize implementation burden and enable
+the many benefits of having a universal model for describing plugin state.
+The use of URI keys prevents conflict and allows unrelated plugins to
+meaningfully describe state changes.  Future extensions will describe a
+dynamic mechanism for manipulating plugin state, as well as define various
+keys likely to be useful to a wide range of plugins.
+
+In pseudo code, a typical use case in a plugin is:
+<pre>
+static const char* const KEY_GREETING = "http://example.org/greeting";
+
+void my_save(LV2_Handle                 instance,
+             LV2_Persist_Store_Function store,
+             void*                      callback_data)
+{
+    MyPlugin*   plugin   = (MyPlugin*)instance;
+    const char* greeting = plugin->state->greeting;
+    
+    store(callback_data, KEY_GREETING,
+        greeting, strlen(greeting) + 1,
+        lv2_uri_map("http://lv2plug.in/ns/ext/atom#String"));
+}
+
+void my_restore(LV2_Handle                    instance,
+                LV2_Persist_Retrieve_Function retrieve,
+                void*                         callback_data)
+{
+    MyPlugin* plugin = (MyPlugin*)instance;
+
+    size_t      size;
+    uint32_t    type;
+    const char* greeting = retrieve(callback_data, KEY_GREETING, &size, &type);
+
+    if (greeting)
+        plugin->state->greeting = greeting;
+    else
+        plugin->state->greeting = "Hello";
+ 
+}
+</pre>
+
+Similarly, a typical use case in a host is:
+<pre>
+void store_callback(void*       callback_data,
+                    const char* key,
+                    const void* value,
+                    size_t      size,
+                    uint32_t    type)
+{
+    Map* state_map = (Map*)callback_data;
+    state_map->insert(key, Value(value, size, type));
+}
+
+Map get_plugin_state(LV2_Handle instance)
+{
+    LV2_Persist* persist = instance.extension_data("http://lv2plug.in/ns/ext/persist");
+    Map state_map;
+    persist.save(instance, store_callback, &state_map);
+    return state_map;
+}
+</pre>
 """ .
 
 persist:InstanceState
