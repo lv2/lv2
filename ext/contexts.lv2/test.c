@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include <limits.h>
 #include <assert.h>
 #include <unistd.h>
-#include "lv2_contexts.h"
+#include "contexts.h"
 
 #define TEST_ASSERT(check) do {\
 	if (!(check)) {\
