@@ -62,9 +62,9 @@ typedef struct {
 	 * iff the value at that port has changed.
 	 * The plugin must return 1 if outputs have been written, 0 otherwise.
 	 */
-	uint32_t (*message_run)(LV2_Handle  instance,
-	                        const void* valid_inputs,
-	                        void*       valid_outputs);
+	uint32_t (*run)(LV2_Handle  instance,
+	                const void* valid_inputs,
+	                void*       valid_outputs);
 
 } LV2_Contexts_MessageContext;
 
