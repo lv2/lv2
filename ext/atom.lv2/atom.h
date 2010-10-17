@@ -75,46 +75,29 @@ typedef struct _LV2_Atom {
 } LV2_Atom;
 
 /** Reference, an LV2_Atom with type 0 */
-typedef LV2_Atom LV2_Reference;
+typedef LV2_Atom LV2_Atom_Reference;
 
-/** The body of an LV2_Atom with type atom:Vector
- */
-typedef struct _LV2_Vector_Body {
+/** The body of an LV2_Atom with type atom:Vector */
+typedef struct _LV2_Atom_Vector {
+	uint16_t elem_count; /**< The size of each element in the vector */
+	uint16_t elem_type;  /**< The type of each element in the vector */
+	uint8_t  elems[];    /**< Elements follow here */
+} LV2_Atom_Vector;
 
-	/** The size of each element in the vector */
-	uint16_t elem_count;
+/** The body of an LV2_Atom with type atom:Property */
+typedef struct _LV2_Atom_Property {
+	uint32_t predicate; /**< Predicate (key) of RDF triple (URI mapped int) */
+	LV2_Atom object;    /**< Object (value) of RDF triple */
+} LV2_Atom_Property;
 
-	/** The type of each element in the vector */
-	uint16_t elem_type;
-
-	/** Elements follow here */
-	uint8_t elems[];
-
-} LV2_Vector_Body;
-
-
-/** The body of an LV2_Atom with type atom:Triple
- */
-typedef struct _LV2_Triple_Body {
-	uint32_t subject;
-	uint32_t predicate;
-	LV2_Atom object;
-} LV2_Triple_Body;
+/** The body of an LV2_Atom with type atom:Triple */
+typedef struct _LV2_Atom_Triple {
+	uint32_t          subject;  /**< Subject of RDF triple (URI mapped integer) */
+	LV2_Atom_Property property; /** Property (predicate and object) of subject */
+} LV2_Atom_Triple;
 
 
-/** The body of an LV2_Atom with type atom:Message
- */
-typedef struct _LV2_Message_Body {
-	uint32_t selector; /***< Selector URI mapped to integer */
-	LV2_Atom triples; /***< Always an atom:Triples */
-} LV2_Message_Body;
-
-
-/* Everything below here is related to blobs, which are dynamically allocated
- * atoms that are not necessarily POD.  This functionality is optional,
- * hosts may support atoms without implementing blob support.
- * Blob support is an LV2 Feature.
- */
+/* Optional Blob Support */
 
 
 typedef void* LV2_Blob_Data;
@@ -122,16 +105,16 @@ typedef void* LV2_Blob_Data;
 /** Dynamically Allocated LV2 Blob.
  *
  * This is a blob of data of any type, dynamically allocated in memory.
- * Unlike an LV2_Atom, a blob is not necessarily POD.  Plugins may only
+ * Unlike an LV2_Atom, a blob is not necessarily POD.  Plugins MUST only
  * refer to blobs via a Reference (an LV2_Atom with type 0), there is no
- * way for a plugin to directly create, copy, or destroy a Blob.
+ * way for a plugin to directly copy or destroy a Blob.
  */
 typedef struct _LV2_Blob {
 
 	/** Pointer to opaque data.
 	 *
 	 * Plugins MUST NOT interpret this data in any way.  Hosts may store
-	 * whatever information they need to associate with references here.
+	 * whatever information they need to associate with blobs here.
 	 */
 	LV2_Blob_Data data;
 
@@ -159,72 +142,88 @@ typedef void* LV2_Blob_Support_Data;
 
 typedef void (*LV2_Blob_Destroy)(LV2_Blob* blob);
 
-/** The data field of the LV2_Feature for the LV2 Atom extension.
+/** The data field of the LV2_Feature for atom:BlobSupport.
  *
- * A host which supports this extension must pass an LV2_Feature struct to the
- * plugin's instantiate method with 'URI' "http://lv2plug.in/ns/ext/atom" and
- * 'data' pointing to an instance of this struct.  All fields of this struct,
- * MUST be set to non-NULL values by the host (except possibly data).
+ * A host which supports blobs must pass an LV2_Feature struct to the
+ * plugin's instantiate method with 'URI' equal to
+ * "http://lv2plug.in/ns/ext/atom#BlobSupport" and 'data' pointing to an
+ * instance of this struct.  All fields of this struct MUST be set to
+ * non-NULL values by the host, except possibly 'data'.
  */
 typedef struct {
 
-	/** Pointer to opaque data.
+	/** Pointer to opaque host data.
 	 *
 	 * The plugin MUST pass this to any call to functions in this struct.
-	 * Otherwise, it must not be interpreted in any way.
+	 * Otherwise, the plugin MUST NOT interpret this value in any way.
 	 */
 	LV2_Blob_Support_Data data;
 
 	/** The size of a reference, in bytes.
 	 *
 	 * This value is provided by the host so plugins can allocate large
-	 * enough chunks of memory to store references.
+	 * enough chunks of memory to store references.  Note a reference is
+	 * an LV2_Atom with type atom:Reference, hence ref_size is a
+	 * uint16, like LV2_Atom.size.
 	 */
-	size_t reference_size;
+	uint16_t ref_size;
 
 	/** Initialize a reference to point to a newly allocated Blob.
 	 *
 	 * @param data Must be the data member of this struct.
-	 * @param reference Pointer to an area of memory at least as large as
-	 *     the reference_size field of this struct.  On return, this will
-	 *     be the unique reference to the new blob which is owned by the
-	 *     caller.  Caller MUST NOT pass a valid reference.
-	 * @param destroy Function to destroy a blob of this type.  This function
+	 * @param ref Pointer to an area of memory at least as large as
+	 *     the ref_size field of this struct.  On return, this will
+	 *     be the unique reference to the new blob, which is owned by the
+	 *     caller.  Assumed to be uninitialised, i.e. the caller MUST NOT
+	 *     pass a valid (owned) reference since this could cause a memory leak.
+	 * @param destroy Function to destroy this blob.  This function
 	 *     MUST clean up any resources contained in the blob, but MUST NOT
-	 *     attempt to free the memory pointed to by its LV2_Blob* parameter.
+	 *     attempt to free the memory pointed to by its LV2_Blob* parameter
+	 *     (since this is allocated by the host).
 	 * @param type Type of blob to allocate (URI mapped integer).
 	 * @param size Size of blob to allocate in bytes.
 	 */
-	void (*lv2_blob_new)(LV2_Blob_Support_Data data,
-	                     LV2_Reference*        reference,
-	                     LV2_Blob_Destroy      destroy_func,
-	                     uint32_t              type,
-	                     size_t                size);
+	void (*blob_new)(LV2_Blob_Support_Data data,
+	                 LV2_Atom_Reference*   ref,
+	                 LV2_Blob_Destroy      destroy,
+	                 uint32_t              type,
+	                 size_t                size);
 
 	/** Return a pointer to the Blob referred to by @a ref.
 	 *
 	 * The returned value MUST NOT be used in any way other than by calling
 	 * methods defined in LV2_Blob (e.g. it MUST NOT be copied or destroyed).
 	 */
-	LV2_Blob* (*lv2_reference_get)(LV2_Blob_Support_Data data,
-	                               LV2_Reference*        ref);
+	LV2_Blob* (*ref_get)(LV2_Blob_Support_Data data,
+	                     LV2_Atom_Reference*   ref);
 
 	/** Copy a reference.
 	 * This copies a reference but not the blob it refers to,
 	 * i.e. after this call @a dst and @a src refer to the same LV2_Blob.
 	 */
-	void (*lv2_reference_copy)(LV2_Blob_Support_Data data,
-	                           LV2_Reference*        dst,
-	                           LV2_Reference*        src);
+	void (*ref_copy)(LV2_Blob_Support_Data data,
+	                 LV2_Atom_Reference*   dst,
+	                 LV2_Atom_Reference*   src);
 
 	/** Reset (release) a reference.
-	 * After this call, @a ref is invalid.  Use of this function is only
-	 * necessary if a plugin makes a copy of a reference it does not later
-	 * send to an output (which transfers ownership to the host).
+	 * After this call, @a ref is invalid.  Implementations must be sure to
+	 * call this function when necessary, or memory leaks will result.  The
+	 * specific times this is necessary MUST be defined by any extensions that
+	 * define a mechanism for transporting atoms.  The standard semantics are:
+	 * <ul><li>Whenever passed a Reference (e.g. via a Port) and run, the
+	 * plugin owns that reference.</li>
+	 * <li>The plugin owns any reference it creates (e.g. by using blob_new or
+	 * ref_copy).</li>
+	 * <li>For any reference it owns, the plugin MUST either:
+	 *   <ul><li>Copy the reference and store it (to be used in future runs and
+	 *   released later).</li>
+	 *   <li>Copy the reference to an output port exactly once.</li>
+	 *   <li>Release it with ref_reset.</li></ul></li>
+	 * </ul>
 	 */
-	void (*lv2_reference_reset)(LV2_Blob_Support_Data data,
-	                            LV2_Reference*        ref);
-
+	void (*ref_reset)(LV2_Blob_Support_Data data,
+	                  LV2_Atom_Reference*   ref);
+	
 } LV2_Blob_Support;
 
 

@@ -1,3 +1,4 @@
+
 # LV2 Atom Extension
 # Copyright (C) 2007-2010 David Robillard <d@drobilla.net>
 # 
@@ -122,23 +123,6 @@ always 4.
 """ .
 
 
-atom:Message a atom:AtomType ;
-	rdfs:label "Message" ;
-	rdfs:comment """
-A message is a communication from one component to another.  Messages
-consist of a selector URI, and a set of RDF triples.  The selector URI
-dictates how the triples are to be interpreted (e.g. the selector can
-be used as a "verb" to build commands).
-
-The payload of a message is always an atom:Triples so hosts and plugins can
-always work with message data (e.g. to serialise for saved state or an undo
-stack), even if they do not specifically understand a particular message.
-
-In memory, a Message is simply a uint32_t selector (a URI mapped integer)
-followed by an atom:Triples.
-""" .
-
-
 atom:Vector a atom:AtomType ;
 	rdfs:label "Vector" ;
 	rdfs:comment """
@@ -171,14 +155,28 @@ int32_t  contents[42] = ...
 """ .
 
 
+atom:Property a atom:AtomType ;
+	rdfs:label "RDF property of some object" ;
+	rdfs:comment """
+A description in RDF of a single property for some object (i.e. an RDF
+statement with only predicate and object defined).
+<pre>
+uint32_t predicate;
+LV2_Atom object;
+</pre>
+""" .
+
+
 atom:Triple a atom:AtomType ;
 	rdfs:label "RDF triple" ;
 	rdfs:comment """
 A single RDF triple.
 
-The subject and predicate of an RDF triple are implicitly URIs, thus in an
-atom:Triple they are stored as URI mapped integers with type tags and sizes
-omitted.
+The subject and predicate of a Triple are implicitly URIs, thus they are stored
+as URI mapped integers with type and size ommitted (i.e. a single uint32_t).
+
+An atom:Triple is memory is a uint32_t subject immediately followed by the
+body of an atom:Property.
 
 An atom:Triple in memory is two uint32_t's followed by an LV2_Atom:
 <pre>
@@ -247,6 +245,7 @@ atom:Float64 a atom:AtomType ; rdfs:label "64-bit Floating Point Number" .
 atom:blobSupport a lv2:Feature ;
 	rdfs:label "Blob support" ;
 	rdfs:comment """
+    
 Support for dynamically allocated blobs.  If a host supports this feature, it
 MUST pass an LV2_Feature with URI http://lv2plug.in/ns/ext/atom#blobSupport
 and a pointer to LV2_Blob_Support as data to the plugin's instantiate method.
