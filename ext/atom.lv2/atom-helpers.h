@@ -53,7 +53,7 @@ lv2_atom_dict_get_iter(LV2_Atom_Property* prop)
 }
 
 static inline bool
-lv2_atom_dict_iter_is_end(LV2_Atom* dict, LV2_Atom_Dict_Iter iter)
+lv2_atom_dict_iter_is_end(const LV2_Atom* dict, LV2_Atom_Dict_Iter iter)
 {
 	return (uint8_t*)iter >= (dict->body + dict->size);
 }
