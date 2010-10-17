@@ -155,6 +155,16 @@ int32_t  contents[42] = ...
 """ .
 
 
+atom:Array a atom:AtomType ;
+	rdfs:label "Array" ;
+    rdfs:comment """
+A POD sequence of atoms with varying types and sizes.
+
+The body of an array is simply a series of complete atoms, aligned to
+32 bits.
+""" .
+
+
 atom:Property a atom:AtomType ;
 	rdfs:label "RDF property of some object" ;
 	rdfs:comment """
