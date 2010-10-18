@@ -83,6 +83,7 @@ def build(bld):
 		presets
 		string-port
 		uri-map
+		uri-unmap
 		variables
 	'''
 	for e in ext.split():
