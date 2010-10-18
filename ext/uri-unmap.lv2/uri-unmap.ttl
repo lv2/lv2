@@ -27,7 +27,7 @@
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 
-<http://lv2plug.in/ns/ext/uri-unmap> a lv2:Specification ;
+<http://lv2plug.in/ns/ext/uri-unmap> a lv2:Specification , lv2:Feature ;
 	doap:license <http://usefulinc.com/doap/licenses/mit> ;
 	doap:name "LV2 URI Unmap" ;
     doap:release [
