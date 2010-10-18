@@ -581,6 +581,7 @@ INPUT =  \
 	ext/polymorphic-port.lv2/polymorphic-port.h \
 	ext/string-port.lv2/string-port.h \
 	ext/uri-map.lv2/uri-map.h \
+	ext/uri-unmap.lv2/uri-unmap.h \
 	extensions/ui.lv2/ui.h
 
 # This tag can be used to specify the character encoding of the source files 
