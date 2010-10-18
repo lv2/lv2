@@ -30,7 +30,7 @@
 
 
 /** Opaque pointer to host data. */
-typedef void* LV2_Uri_Unmap_Callback_Data;
+typedef void* LV2_URI_Unmap_Callback_Data;
 
 
 /** The data field of the LV2_Feature for the URI Unmap extension.
@@ -46,7 +46,7 @@ typedef struct {
 	 * The plugin MUST pass this to any call to functions in this struct.
 	 * Otherwise, it must not be interpreted in any way.
 	 */
-	LV2_Uri_Unmap_Callback_Data callback_data;
+	LV2_URI_Unmap_Callback_Data callback_data;
 
 	/** Get the numeric ID of a URI from the host.
 	 *
@@ -67,11 +67,11 @@ typedef struct {
 	 * of a plugin instance (though the same ID may return different values
 	 * with a different map parameter).
 	 */
-	const char* (*id_to_uri)(LV2_Uri_Unmap_Callback_Data callback_data,
+	const char* (*id_to_uri)(LV2_URI_Unmap_Callback_Data callback_data,
 	                         const char*                 map,
 	                         uint32_t                    id);
 
-} LV2_Uri_Unmap_Feature;
+} LV2_URI_Unmap_Feature;
 
 
 #endif /* LV2_URI_UNMAP_H */
