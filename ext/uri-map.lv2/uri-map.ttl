@@ -1,4 +1,4 @@
-# LV2 Data Access Extension
+# LV2 URI Map Extension
 # Copyright (C) 2008 David Robillard <d@drobilla.net>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
