@@ -35,6 +35,16 @@ typedef struct {
 	 * This function MAY return false, in which case the port buffer was
 	 * not resized and the port is still connected to the same location.
 	 * Plugins MUST gracefully handle this situation.
+	 *
+	 * This function MUST NOT be called from any context other than
+	 * the context associated with the port of the given index.
+	 *
+	 * The host MUST preserve the contents of the port buffer when
+	 * resizing.
+	 *
+	 * Plugins MAY resize a port many times in a single run callback.
+	 * Hosts SHOULD make this an inexpensive as possible (i.e. plugins
+	 * can liberally use this function in a similar way to realloc).
 	 */
 	bool (*resize_port)(LV2_Resize_Port_Feature_Data data,
 	                    uint32_t                     index,

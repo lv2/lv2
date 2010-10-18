@@ -40,19 +40,13 @@ An extension that allows LV2 plugins to request a resize of an output port.
 
 Any host which supports this extension must pass an LV2_Feature to
 the plugin's instantiate method with URI http://lv2plug.in/ns/ext/resize-port
-and a pointer to a
-<pre>
-struct {
-	void* host_handle;
-	void (*resize_port)(void* host_handle, uint32_t index);
-}
-</pre>
-where the plugin may call resize_port with the given host_handle from any
-context to demand the resize of an output port buffer.  The plugin MUST call
-this function from the context of the given port.
+and a pointer to a LV2_Resize_Port_Feature structure (see
+<a href="resize-port.h">resize-port.h</a> for details).  This structure
+provides a resize_port function which plugins may use to resize output
+port buffers as necessary.
 
-This function MAY return NULL at any time, plugins MUST gracefully handle
-this situation.
+This extension also defines several predicates useful for describing the
+amount of space required for a particular port buffer.
 """ .
 
 rsz:asLargeAs a rdf:Property ;
