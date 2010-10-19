@@ -68,7 +68,6 @@ def build(bld):
 	ext = '''
 		atom
 		atom-port
-		command
 		contexts
 		data-access
 		dyn-manifest
