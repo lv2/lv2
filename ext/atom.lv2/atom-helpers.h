@@ -37,11 +37,11 @@
  */
 
 
-/** Pad a size to 64 bits (for atom sizes) */
+/** Pad a size to 4 bytes (32 bits) */
 static inline uint16_t
 lv2_atom_pad_size(uint16_t size)
 {
-	return (size + 7) & (~7);
+	return (size + 3) & (~3);
 }
 
 typedef LV2_Atom_Property* LV2_Atom_Dict_Iter;

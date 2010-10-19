@@ -59,6 +59,8 @@ with a time stamp header prepended.  Atoms SHOULD be used anywhere a "value"
 needs to be stored or communicated, to allow implementations to be
 polymorphic and extensible.
 
+Atoms (the beginning of the LV2_Atom header) MUST be 32-bit aligned.
+
 Optionally, the host MAY support "Blobs", which are dynamically allocated
 chunks of memory that (unlike Atoms) are not necessarily POD.  Blobs are
 accessed via references, which are a special case of Atom that always have
