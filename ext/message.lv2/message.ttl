@@ -19,14 +19,14 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-@prefix message: <http://lv2plug.in/ns/ext/message#> .
-@prefix atom:    <http://lv2plug.in/ns/ext/atom#> .
-@prefix doap:    <http://usefulinc.com/ns/doap#> .
-@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
-@prefix lv2:     <http://lv2plug.in/ns/lv2core#> .
-@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:     <http://www.w3.org/2001/XMLSchema> .
+@prefix msg:  <http://lv2plug.in/ns/ext/message#> .
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema> .
 
 <http://lv2plug.in/ns/ext/message>
 	a lv2:Specification ;
@@ -48,7 +48,7 @@ href="http://lv2plug.in/ns/ext/uri-map">LV2 URI Map</a> extension, and the
 """ .
 
 
-message:MessageType a rdfs:Class ;
+msg:MessageType a rdfs:Class ;
 	rdfs:label   "LV2 Message Type" ;
 	rdfs:comment """
 Base class for all types of LV2 Message.
@@ -59,16 +59,16 @@ interpret the meaning of messages (e.g. which components are present).
 
 A message in memory is simply an <a href="http://lv2plug.in/ns/ext/atom#Dict"
 >atom:Dict</a> with at least one rdf:type that is a rdfs:subClassOf
-message:MessageType.  The definitions of various message types define what
+msg:MessageType.  The definitions of various message types define what
 other key/value pairs can be expected in the message.
 """ .
 
-cmd:ControlPort a rdfs:Class ;
+msg:ControlPort a rdfs:Class ;
     rdfs:label      "Control Port" ;
     rdfs:subClassOf lv2:Port ;
     rdfs:comment    """
 An input port used to control a plugin instance.  A plugin has
-at most 1 cmd:ControlPort.  A ControlPort is always an lv2:InputPort.  Hosts
+at most 1 msg:ControlPort.  A ControlPort is always an lv2:InputPort.  Hosts
 can send messages to the control port in order to investigate or manipulate
 a plugin instance (possibly on behalf of a UI or another plugin instance).
 
@@ -80,12 +80,12 @@ of the port buffer contents (likely candidates are
 or <a href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>).
 """ .
 
-cmd:ResponsePort a rdfs:Class ;
+msg:ResponsePort a rdfs:Class ;
     rdfs:label      "Response Port" ;
     rdfs:subClassOf lv2:Port ;
     rdfs:comment    """
 An output port used to notify the host about changes to a plugin instance
-or respond to messages send to its cmd:ControlPort.  A plugin has at most
+or respond to messages send to its msg:ControlPort.  A plugin has at most
 1 StatusPort.  A StatusPort is always an lv2:OutputPort.  Any response to a
 command sent to the CommandPort of the plugin will appear in the StatusPort
 output.  The plugin may also emit other messages (i.e. the contents of a
