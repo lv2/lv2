@@ -78,7 +78,6 @@ def build(bld):
 		midi
 		osc
 		parameter
-		polymorphic-port
 		port-groups
 		presets
 		string-port
