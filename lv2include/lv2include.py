@@ -32,26 +32,49 @@ import os
 import stat
 import sys
 
-import RDF
+redland = True
+
+try:
+    import RDF # Attempt to import Redland
+except:
+    try:
+        import rdflib # Attempt to import RDFLib
+        redland = False
+    except:
+        print >> sys.stderr, "Failed to import RDF (Redland) or rdflib" 
+
+def rdf_namespace(uri):
+    "Create a new RDF namespace"
+    if redland:
+        return RDF.NS(uri)
+    else:
+        return rdflib.Namespace(uri)
 
 def rdf_load(uri):
     "Load an RDF model"
-    model = RDF.Model()
-    parser = RDF.Parser(name="guess")
-    parser.parse_into_model(model, uri)
+    if redland:
+        model = RDF.Model()
+        parser = RDF.Parser(name="turtle")
+        parser.parse_into_model(model, uri)
+    else:
+        model = rdflib.ConjunctiveGraph()
+        model.parse(uri, format="n3")
     return model
 
 def rdf_find_type(model, rdf_type):
     "Return a list of the URIs of all resources in model with a given type"
-    results = model.find_statements(RDF.Statement(None, rdf.type, rdf_type))
-    ret = []
-    for r in results:
-        ret.append(str(r.subject.uri))
-    return ret
-
-def rdf_namespace(uri):
-    "Create a new RDF namespace"
-    return RDF.NS(uri)
+    if redland:
+        results = model.find_statements(RDF.Statement(None, rdf.type, rdf_type))
+        ret = []
+        for r in results:
+            ret.append(str(r.subject.uri))
+        return ret
+    else:
+        results = model.triples([None, rdf.type, rdf_type])
+        ret = []
+        for r in results:
+            ret.append(r[0])
+        return ret
 
 rdf = rdf_namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 lv2 = rdf_namespace('http://lv2plug.in/ns/lv2core#')
