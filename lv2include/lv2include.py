@@ -35,15 +35,22 @@ import sys
 import RDF
 
 def rdf_load(uri):
+    "Load an RDF model"
     model = RDF.Model()
     parser = RDF.Parser(name="guess")
     parser.parse_into_model(model, uri)
     return model
 
-def rdf_find(model, s, p, o):
-    return model.find_statements(RDF.Statement(s, p, o))
+def rdf_find_type(model, rdf_type):
+    "Return a list of the URIs of all resources in model with a given type"
+    results = model.find_statements(RDF.Statement(None, rdf.type, rdf_type))
+    ret = []
+    for r in results:
+        ret.append(str(r.subject.uri))
+    return ret
 
 def rdf_namespace(uri):
+    "Create a new RDF namespace"
     return RDF.NS(uri)
 
 rdf = rdf_namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
@@ -96,9 +103,8 @@ def build_tree(search_path, outdir):
         manifest = rdf_load('file://' + os.path.join(bundle, 'manifest.ttl'))
 
         # Query extension URI
-        results = rdf_find(manifest, None, rdf.type, lv2.Specification)
-        for r in results:
-            ext_uri    = str(r.subject.uri)
+        specs = rdf_find_type(manifest, lv2.Specification)
+        for ext_uri in specs:
             ext_scheme = ext_uri[0:ext_uri.find(':')] 
             ext_path   = os.path.normpath(ext_uri[ext_uri.find(':') + 1:].lstrip('/'))
             ext_dir    = os.path.join(outdir, ext_scheme, ext_path)
