@@ -41,7 +41,9 @@ except:
         import rdflib # Attempt to import RDFLib
         redland = False
     except:
-        print >> sys.stderr, "Failed to import RDF (Redland) or rdflib" 
+        print >> sys.stderr, """Failed to import `RDF' (Redland) or `rdflib'.
+(Please install either package, likely `python-librdf' or `python-rdflib')"""
+        sys.exit(1)
 
 def rdf_namespace(uri):
     "Create a new RDF namespace"
