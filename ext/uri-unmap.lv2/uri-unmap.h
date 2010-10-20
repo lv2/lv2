@@ -66,6 +66,9 @@ typedef struct {
 	 * the same arguments is guaranteed to return the same value over the life
 	 * of a plugin instance (though the same ID may return different values
 	 * with a different map parameter).
+	 *
+	 * This function may be called from any non-realtime thread, possibly
+	 * concurrently (hosts may simply use a mutex to meet these requirements).
 	 */
 	const char* (*id_to_uri)(LV2_URI_Unmap_Callback_Data callback_data,
 	                         const char*                 map,
