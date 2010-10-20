@@ -34,8 +34,20 @@ import sys
 
 import RDF
 
-rdf  = RDF.NS('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-lv2  = RDF.NS('http://lv2plug.in/ns/lv2core#')
+def rdf_load(uri):
+    model = RDF.Model()
+    parser = RDF.Parser(name="guess")
+    parser.parse_into_model(model, uri)
+    return model
+
+def rdf_find(model, s, p, o):
+    return model.find_statements(RDF.Statement(s, p, o))
+
+def rdf_namespace(uri):
+    return RDF.NS(uri)
+
+rdf = rdf_namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+lv2 = rdf_namespace('http://lv2plug.in/ns/lv2core#')
 
 def lv2_path():
     "Return the LV2 search path (LV2_PATH in the environment, or a default)."
@@ -81,12 +93,10 @@ def build_tree(search_path, outdir):
     the extension URIs."""
     for bundle in __bundles(search_path):
         # Load manifest into model
-        manifest = RDF.Model()
-        parser = RDF.Parser(name="guess")
-        parser.parse_into_model(manifest, 'file://' + os.path.join(bundle, 'manifest.ttl'))
+        manifest = rdf_load('file://' + os.path.join(bundle, 'manifest.ttl'))
 
         # Query extension URI
-        results = manifest.find_statements(RDF.Statement(None, rdf.type, lv2.Specification))
+        results = rdf_find(manifest, None, rdf.type, lv2.Specification)
         for r in results:
             ext_uri    = str(r.subject.uri)
             ext_scheme = ext_uri[0:ext_uri.find(':')] 
