@@ -80,11 +80,11 @@ lv2_atom_object_iter_get(LV2_Atom_Object_Iter iter)
 /** Append a Property body to an Atom that contains properties (e.g. atom:Object).
  * This function will write the property body (not including an LV2_Object
  * header) at lv2_atom_pad_size(body + size).  Thus, it can be used with any
- * Atom type that contains headerless 64-bit aligned properties.
+ * Atom type that contains headerless 32-bit aligned properties.
  * @param object Pointer to the atom that contains the property to add.  object.size
  *        must be valid, but object.type is ignored.
  * @param size Must point to the size field of the container atom, and will be
- *        padded up to 64 bits then increased by @a value_size.
+ *        padded up to 32 bits then increased by @a value_size.
  * @param body Must point to the body of the container atom.
  * @return a pointer to the new LV2_Atom_Property in @a body.
  */
@@ -105,5 +105,54 @@ lv2_atom_append_property(LV2_Atom*   object,
 	return prop;
 }
 
+static inline bool
+lv2_atom_is_null(LV2_Atom* atom)
+{
+	return !atom || (atom->type == 0 && atom->size == 0);
+}
+
+static inline bool
+lv2_atom_is_a(LV2_Atom* object,
+              uint32_t  rdf_type,
+              uint32_t  atom_URIInt,
+              uint32_t  atom_Object,
+              uint32_t  type)
+{
+	if (lv2_atom_is_null(object)) {
+		printf("is-a null\n");
+		return false;
+	}
+	
+	if (object->type == type) {
+		printf("is-a exact type\n");
+		return true;
+	}
+
+	printf("is-a rdf-type: %d int: %d object: %d type: %d\n", rdf_type, atom_URIInt, atom_Object, type);
+	
+	if (object->type == atom_Object) {
+		for (LV2_Atom_Object_Iter i = lv2_atom_object_get_iter((LV2_Atom_Property*)object->body);
+		     !lv2_atom_object_iter_is_end(object, i);
+		     i = lv2_atom_object_iter_next(i)) {
+			LV2_Atom_Property* prop = lv2_atom_object_iter_get(i);
+			printf("is-a prop %d\n", prop->predicate);
+			if (prop->predicate == rdf_type) {
+				printf("is-a rdf:type [ type: %u size: %u ]\n", prop->object.type, prop->object.size);
+				if (prop->object.type == atom_URIInt) {
+					const uint32_t object_type = *(uint32_t*)prop->object.body;
+					printf("rdf:type is-a URIInt type: %u\n", object_type);
+					if (object_type == type)
+						return true;
+				} else {
+					fprintf(stderr, "error: rdf:type is not a URIInt\n");
+				}
+
+			}
+		}
+	}
+
+	return false;
+}
+	
 #endif /* LV2_ATOM_HELPERS_H */
 
