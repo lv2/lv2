@@ -44,64 +44,64 @@ lv2_atom_pad_size(uint16_t size)
 	return (size + 3) & (~3);
 }
 
-typedef LV2_Atom_Property* LV2_Atom_Dict_Iter;
+typedef LV2_Atom_Property* LV2_Atom_Object_Iter;
 
-static inline LV2_Atom_Dict_Iter
-lv2_atom_dict_get_iter(LV2_Atom_Property* prop)
+static inline LV2_Atom_Object_Iter
+lv2_atom_object_get_iter(LV2_Atom_Property* prop)
 {
-	return (LV2_Atom_Dict_Iter)prop;
+	return (LV2_Atom_Object_Iter)prop;
 }
 
 static inline bool
-lv2_atom_dict_iter_is_end(const LV2_Atom* dict, LV2_Atom_Dict_Iter iter)
+lv2_atom_object_iter_is_end(const LV2_Atom* object, LV2_Atom_Object_Iter iter)
 {
-	return (uint8_t*)iter >= (dict->body + dict->size);
+	return (uint8_t*)iter >= (object->body + object->size);
 }
 
 static inline bool
-lv2_atom_dict_iter_equals(const LV2_Atom_Dict_Iter l, const LV2_Atom_Dict_Iter r)
+lv2_atom_object_iter_equals(const LV2_Atom_Object_Iter l, const LV2_Atom_Object_Iter r)
 {
 	return l == r;
 }
 
-static inline LV2_Atom_Dict_Iter
-lv2_atom_dict_iter_next(const LV2_Atom_Dict_Iter iter)
+static inline LV2_Atom_Object_Iter
+lv2_atom_object_iter_next(const LV2_Atom_Object_Iter iter)
 {
-	return (LV2_Atom_Dict_Iter)(
+	return (LV2_Atom_Object_Iter)(
 		(uint8_t*)iter + sizeof(LV2_Atom_Property) + lv2_atom_pad_size(iter->object.size));
 }
 
 static inline LV2_Atom_Property*
-lv2_atom_dict_iter_get(LV2_Atom_Dict_Iter iter)
+lv2_atom_object_iter_get(LV2_Atom_Object_Iter iter)
 {
 	return (LV2_Atom_Property*)iter;
 }
 
-/** Append a Property body to an Atom that contains properties (e.g. atom:Dict).
+/** Append a Property body to an Atom that contains properties (e.g. atom:Object).
  * This function will write the property body (not including an LV2_Object
  * header) at lv2_atom_pad_size(body + size).  Thus, it can be used with any
  * Atom type that contains headerless 64-bit aligned properties.
- * @param dict Pointer to the atom that contains the property to add.  dict.size
- *        must be valid, but dict.type is ignored.
+ * @param object Pointer to the atom that contains the property to add.  object.size
+ *        must be valid, but object.type is ignored.
  * @param size Must point to the size field of the container atom, and will be
  *        padded up to 64 bits then increased by @a value_size.
  * @param body Must point to the body of the container atom.
  * @return a pointer to the new LV2_Atom_Property in @a body.
  */
 static inline LV2_Atom_Property*
-lv2_atom_append_property(LV2_Atom*   dict,
+lv2_atom_append_property(LV2_Atom*   object,
                          uint32_t    key,
                          uint16_t    value_type,
                          uint16_t    value_size,
                          const char* value_body)
 {
-	dict->size = lv2_atom_pad_size(dict->size);
-	LV2_Atom_Property* prop = (LV2_Atom_Property*)(dict->body + dict->size);
+	object->size = lv2_atom_pad_size(object->size);
+	LV2_Atom_Property* prop = (LV2_Atom_Property*)(object->body + object->size);
 	prop->predicate = key;
 	prop->object.type = value_type;
 	prop->object.size = value_size;
 	memcpy(prop->object.body, value_body, value_size);
-	dict->size += sizeof(uint32_t) + sizeof(LV2_Atom_Property) + value_size;
+	object->size += sizeof(uint32_t) + sizeof(LV2_Atom_Property) + value_size;
 	return prop;
 }
 

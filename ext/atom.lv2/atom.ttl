@@ -142,11 +142,16 @@ vector, e.g.
 <pre>
 uint16_t elem_size = (vector.size - (2 * sizeof(uint16_t))) / vector.count);
 </pre>
-Note that it is possible to construct a valid Atom for each element of the
-vector, even by an implementation which does not understand <code>type</code>.
+Note that it is possible to construct a valid Atom for each element
+of the vector, even by an implementation which does not understand
+<code>elem_type</code>.
+
+Note that an Atom is 32-bit aligned by definition, and both the Atom and
+Vector headers are 32-bits each, therefore the first element of a Vector is
+64-bit aligned.
 
 For example, an atom:Vector containing 42 elements of type atom:Int32 looks
-like this in memory:
+like this in memory (including the Atom header):
 <pre>
 uint16_t atom_type    = uri_map(atom:Vector)
 uint16_t atom_size    = (2 * sizeof(uint16_t)) + (42 * sizeof(int32_t))
@@ -157,12 +162,12 @@ int32_t  contents[42] = ...
 """ .
 
 
-atom:Array a atom:AtomType ;
-	rdfs:label "Array" ;
+atom:Tuple a atom:AtomType ;
+	rdfs:label "Tuple" ;
     rdfs:comment """
 A POD sequence of atoms with varying types and sizes.
 
-The body of an array is simply a series of complete atoms, aligned to
+The body of a tuple is simply a series of complete atoms, aligned to
 32 bits.
 """ .
 
