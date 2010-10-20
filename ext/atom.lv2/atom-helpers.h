@@ -119,28 +119,21 @@ lv2_atom_is_a(LV2_Atom* object,
               uint32_t  type)
 {
 	if (lv2_atom_is_null(object)) {
-		printf("is-a null\n");
 		return false;
 	}
 	
 	if (object->type == type) {
-		printf("is-a exact type\n");
 		return true;
 	}
 
-	printf("is-a rdf-type: %d int: %d object: %d type: %d\n", rdf_type, atom_URIInt, atom_Object, type);
-	
 	if (object->type == atom_Object) {
 		for (LV2_Atom_Object_Iter i = lv2_atom_object_get_iter((LV2_Atom_Property*)object->body);
 		     !lv2_atom_object_iter_is_end(object, i);
 		     i = lv2_atom_object_iter_next(i)) {
 			LV2_Atom_Property* prop = lv2_atom_object_iter_get(i);
-			printf("is-a prop %d\n", prop->predicate);
 			if (prop->predicate == rdf_type) {
-				printf("is-a rdf:type [ type: %u size: %u ]\n", prop->object.type, prop->object.size);
 				if (prop->object.type == atom_URIInt) {
 					const uint32_t object_type = *(uint32_t*)prop->object.body;
-					printf("rdf:type is-a URIInt type: %u\n", object_type);
 					if (object_type == type)
 						return true;
 				} else {
