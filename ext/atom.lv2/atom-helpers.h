@@ -68,7 +68,7 @@ static inline LV2_Atom_Object_Iter
 lv2_atom_object_iter_next(const LV2_Atom_Object_Iter iter)
 {
 	return (LV2_Atom_Object_Iter)(
-		(uint8_t*)iter + sizeof(LV2_Atom_Property) + lv2_atom_pad_size(iter->object.size));
+		(uint8_t*)iter + sizeof(LV2_Atom_Property) + lv2_atom_pad_size(iter->value.size));
 }
 
 static inline LV2_Atom_Property*
@@ -112,7 +112,7 @@ lv2_atom_append_property(LV2_Atom*   object,
 {
 	object->size = lv2_atom_pad_size(object->size);
 	LV2_Atom_Property* prop = (LV2_Atom_Property*)(object->body + object->size);
-	prop->predicate = key;
+	prop->key = key;
 	prop->object.type = value_type;
 	prop->object.size = value_size;
 	memcpy(prop->object.body, value_body, value_size);
@@ -146,7 +146,7 @@ lv2_atom_is_a(LV2_Atom* object,
 		     !lv2_atom_object_iter_is_end(object, i);
 		     i = lv2_atom_object_iter_next(i)) {
 			LV2_Atom_Property* prop = lv2_atom_object_iter_get(i);
-			if (prop->predicate == rdf_type) {
+			if (prop->key == rdf_type) {
 				if (prop->object.type == atom_URIInt) {
 					const uint32_t object_type = *(uint32_t*)prop->object.body;
 					if (object_type == type)
@@ -188,8 +188,8 @@ lv2_atom_object_query(LV2_Atom* object, LV2_Atom_Object_Query* query)
 	LV2_OBJECT_FOREACH(object, o) {
 		LV2_Atom_Property* prop = lv2_atom_object_iter_get(o);
 		for (LV2_Atom_Object_Query* q = query; q->key; ++q) {
-			if (q->key == prop->predicate && !q->value) {
-				q->value = &prop->object;
+			if (q->key == prop->key && !q->value) {
+				q->value = &prop->value;
 				if (++matches == n_queries)
 					return matches;
 				break;

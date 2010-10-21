@@ -175,11 +175,11 @@ The body of a tuple is simply a series of complete atoms, aligned to
 atom:Property a atom:AtomType ;
 	rdfs:label "RDF property of some object" ;
 	rdfs:comment """
-A description in RDF of a single property for some object (i.e. an RDF
-statement with only predicate and object defined).
+A description of a single property for some object (i.e. an RDF
+statement with only predicate (key) and object (value) defined).
 <pre>
-uint32_t predicate;
-LV2_Atom object;
+uint32_t key;
+LV2_Atom value;
 </pre>
 """ .
 

@@ -86,8 +86,8 @@ typedef struct _LV2_Atom_Vector {
 
 /** The body of an LV2_Atom with type atom:Property */
 typedef struct _LV2_Atom_Property {
-	uint32_t predicate; /**< Predicate (key) of RDF triple (URI mapped int) */
-	LV2_Atom object;    /**< Object (value) of RDF triple */
+	uint32_t key;   /**< Key (predicate) of Object or RDF triple (URIInt) */
+	LV2_Atom value; /**< Value (object) of Object or RDF triple */
 } LV2_Atom_Property;
 
 /** The body of an LV2_Atom with type atom:Triple */
