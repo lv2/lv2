@@ -77,6 +77,21 @@ lv2_atom_object_iter_get(LV2_Atom_Object_Iter iter)
 	return (LV2_Atom_Property*)iter;
 }
 
+/** A macro for iterating over all properties of an Object.
+ * @param obj  The object to iterate over
+ * @param iter The name of the iterator
+ * This macro is used similarly to a for loop (which it expands to), e.g.:
+ * <pre>
+ * LV2_OBJECT_FOREACH(object, i) {
+ *    LV2_Atom_Property* prop = lv2_atom_object_iter_get(i);
+ *    // Do things with prop here...
+ * }
+ */
+#define LV2_OBJECT_FOREACH(obj, iter) \
+	for (LV2_Atom_Object_Iter (iter) = lv2_atom_object_get_iter((LV2_Atom_Property*)(obj)->body); \
+	     !lv2_atom_object_iter_is_end(obj, (iter)); \
+	     (iter) = lv2_atom_object_iter_next(iter))
+
 /** Append a Property body to an Atom that contains properties (e.g. atom:Object).
  * This function will write the property body (not including an LV2_Object
  * header) at lv2_atom_pad_size(body + size).  Thus, it can be used with any
@@ -146,6 +161,43 @@ lv2_atom_is_a(LV2_Atom* object,
 
 	return false;
 }
+
+/** A single entry in an Object query. */
+typedef struct {
+	uint32_t  key;   ///< Set by the user to the desired key to query.
+	LV2_Atom* value; ///< Possibly set by query function to the found value
+} LV2_Atom_Object_Query;
+
+/** "Query" an object, getting a pointer to the values for various keys.
+ * The value pointer of each item in @a q will be set to the location of
+ * the corresponding value in @a object.  Every value pointer in @a query
+ * MUST be initialised to NULL.  This function reads @a object in a single
+ * linear sweep.  By allocating @a q on the stack, objects can be "queried"
+ * quickly without allocating any memory.  This function is realtime safe.
+ */
+int
+lv2_atom_object_query(LV2_Atom* object, LV2_Atom_Object_Query* query)
+{
+	int matches   = 0;
+	int n_queries = 0;
+
+	// Count number of query keys so we can short-circuit when done
+	for (LV2_Atom_Object_Query* q = query; q->key; ++q)
+		++n_queries;
 	
+	LV2_OBJECT_FOREACH(object, o) {
+		LV2_Atom_Property* prop = lv2_atom_object_iter_get(o);
+		for (LV2_Atom_Object_Query* q = query; q->key; ++q) {
+			if (q->key == prop->predicate && !q->value) {
+				q->value = &prop->object;
+				if (++matches == n_queries)
+					return matches;
+				break;
+			}
+		}
+	}
+	return matches;
+}
+
 #endif /* LV2_ATOM_HELPERS_H */
 
