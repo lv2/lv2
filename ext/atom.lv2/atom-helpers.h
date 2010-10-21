@@ -44,35 +44,35 @@ lv2_atom_pad_size(uint16_t size)
 	return (size + 3) & (~3);
 }
 
-typedef LV2_Atom_Property* LV2_Atom_Object_Iter;
+typedef LV2_Atom_Property* LV2_Object_Iter;
 
-static inline LV2_Atom_Object_Iter
-lv2_atom_object_get_iter(LV2_Atom_Property* prop)
+static inline LV2_Object_Iter
+lv2_object_get_iter(LV2_Atom_Property* prop)
 {
-	return (LV2_Atom_Object_Iter)prop;
+	return (LV2_Object_Iter)prop;
 }
 
 static inline bool
-lv2_atom_object_iter_is_end(const LV2_Atom* object, LV2_Atom_Object_Iter iter)
+lv2_object_iter_is_end(const LV2_Atom* object, LV2_Object_Iter iter)
 {
 	return (uint8_t*)iter >= (object->body + object->size);
 }
 
 static inline bool
-lv2_atom_object_iter_equals(const LV2_Atom_Object_Iter l, const LV2_Atom_Object_Iter r)
+lv2_object_iter_equals(const LV2_Object_Iter l, const LV2_Object_Iter r)
 {
 	return l == r;
 }
 
-static inline LV2_Atom_Object_Iter
-lv2_atom_object_iter_next(const LV2_Atom_Object_Iter iter)
+static inline LV2_Object_Iter
+lv2_object_iter_next(const LV2_Object_Iter iter)
 {
-	return (LV2_Atom_Object_Iter)(
+	return (LV2_Object_Iter)(
 		(uint8_t*)iter + sizeof(LV2_Atom_Property) + lv2_atom_pad_size(iter->value.size));
 }
 
 static inline LV2_Atom_Property*
-lv2_atom_object_iter_get(LV2_Atom_Object_Iter iter)
+lv2_object_iter_get(LV2_Object_Iter iter)
 {
 	return (LV2_Atom_Property*)iter;
 }
@@ -83,14 +83,14 @@ lv2_atom_object_iter_get(LV2_Atom_Object_Iter iter)
  * This macro is used similarly to a for loop (which it expands to), e.g.:
  * <pre>
  * LV2_OBJECT_FOREACH(object, i) {
- *    LV2_Atom_Property* prop = lv2_atom_object_iter_get(i);
+ *    LV2_Atom_Property* prop = lv2_object_iter_get(i);
  *    // Do things with prop here...
  * }
  */
 #define LV2_OBJECT_FOREACH(obj, iter) \
-	for (LV2_Atom_Object_Iter (iter) = lv2_atom_object_get_iter((LV2_Atom_Property*)(obj)->body); \
-	     !lv2_atom_object_iter_is_end(obj, (iter)); \
-	     (iter) = lv2_atom_object_iter_next(iter))
+	for (LV2_Object_Iter (iter) = lv2_object_get_iter((LV2_Atom_Property*)(obj)->body); \
+	     !lv2_object_iter_is_end(obj, (iter)); \
+	     (iter) = lv2_object_iter_next(iter))
 
 /** Append a Property body to an Atom that contains properties (e.g. atom:Object).
  * This function will write the property body (not including an LV2_Object
@@ -113,9 +113,9 @@ lv2_atom_append_property(LV2_Atom*   object,
 	object->size = lv2_atom_pad_size(object->size);
 	LV2_Atom_Property* prop = (LV2_Atom_Property*)(object->body + object->size);
 	prop->key = key;
-	prop->object.type = value_type;
-	prop->object.size = value_size;
-	memcpy(prop->object.body, value_body, value_size);
+	prop->value.type = value_type;
+	prop->value.size = value_size;
+	memcpy(prop->value.body, value_body, value_size);
 	object->size += sizeof(uint32_t) + sizeof(LV2_Atom_Property) + value_size;
 	return prop;
 }
@@ -133,22 +133,20 @@ lv2_atom_is_a(LV2_Atom* object,
               uint32_t  atom_Object,
               uint32_t  type)
 {
-	if (lv2_atom_is_null(object)) {
+	if (lv2_atom_is_null(object))
 		return false;
-	}
 	
-	if (object->type == type) {
+	if (object->type == type)
 		return true;
-	}
 
 	if (object->type == atom_Object) {
-		for (LV2_Atom_Object_Iter i = lv2_atom_object_get_iter((LV2_Atom_Property*)object->body);
-		     !lv2_atom_object_iter_is_end(object, i);
-		     i = lv2_atom_object_iter_next(i)) {
-			LV2_Atom_Property* prop = lv2_atom_object_iter_get(i);
+		for (LV2_Object_Iter i = lv2_object_get_iter((LV2_Atom_Property*)object->body);
+		     !lv2_object_iter_is_end(object, i);
+		     i = lv2_object_iter_next(i)) {
+			LV2_Atom_Property* prop = lv2_object_iter_get(i);
 			if (prop->key == rdf_type) {
-				if (prop->object.type == atom_URIInt) {
-					const uint32_t object_type = *(uint32_t*)prop->object.body;
+				if (prop->value.type == atom_URIInt) {
+					const uint32_t object_type = *(uint32_t*)prop->value.body;
 					if (object_type == type)
 						return true;
 				} else {
@@ -166,7 +164,7 @@ lv2_atom_is_a(LV2_Atom* object,
 typedef struct {
 	uint32_t  key;   ///< Set by the user to the desired key to query.
 	LV2_Atom* value; ///< Possibly set by query function to the found value
-} LV2_Atom_Object_Query;
+} LV2_Object_Query;
 
 /** "Query" an object, getting a pointer to the values for various keys.
  * The value pointer of each item in @a q will be set to the location of
@@ -176,18 +174,18 @@ typedef struct {
  * quickly without allocating any memory.  This function is realtime safe.
  */
 int
-lv2_atom_object_query(LV2_Atom* object, LV2_Atom_Object_Query* query)
+lv2_object_query(LV2_Atom* object, LV2_Object_Query* query)
 {
 	int matches   = 0;
 	int n_queries = 0;
 
 	// Count number of query keys so we can short-circuit when done
-	for (LV2_Atom_Object_Query* q = query; q->key; ++q)
+	for (LV2_Object_Query* q = query; q->key; ++q)
 		++n_queries;
 	
 	LV2_OBJECT_FOREACH(object, o) {
-		LV2_Atom_Property* prop = lv2_atom_object_iter_get(o);
-		for (LV2_Atom_Object_Query* q = query; q->key; ++q) {
+		LV2_Atom_Property* prop = lv2_object_iter_get(o);
+		for (LV2_Object_Query* q = query; q->key; ++q) {
 			if (q->key == prop->key && !q->value) {
 				q->value = &prop->value;
 				if (++matches == n_queries)
