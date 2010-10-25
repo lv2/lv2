@@ -405,7 +405,14 @@ def docTerms(category, list, m):
         if label!='':
             doc += "<div property=\"rdfs:label\" class=\"label\">%s</div>" % label
         if comment!='':
-            doc += "<div property=\"rdfs:comment\">%s</div>" % comment.replace('\n\n', '<br /><br />')
+            comment = comment.replace('\n\n', '<br /><br />')
+            matches = re.findall('href="urn:struct:([^"]*)"', comment)
+            if matches:
+                for match in matches:
+                    struct_uri = "../../doc/html/struct" + match.replace('_', '__') + '.html'
+                    comment = comment.replace('href="urn:struct:' + match + '"',
+                                              'href="' + struct_uri + '"')
+            doc += "<div property=\"rdfs:comment\">%s</div>" % comment
         if label!='' or comment != '':
             doc += "</div>"
         terminfo = ""
