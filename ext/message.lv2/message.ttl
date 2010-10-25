@@ -76,7 +76,7 @@ This is an abstract port class, the actual format and semantics
 of the port buffer (and messages) are defined by some other port type, i.e.
 a cmdControlPort MUST have another type which defines the format and semantics
 of the port buffer contents (likely candidates are
-<a href="http://lv2plug.in/ns/ext/atom-port#MessagePort">atom-port:MessagePort</a>
+<a href="http://lv2plug.in/ns/ext/atom#MessagePort">atom:MessagePort</a>
 or <a href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>).
 """ .
 
@@ -95,7 +95,7 @@ This is an abstract port class, the actual format and semantics
 of the port buffer (and messages) are defined by some other port type, i.e.
 a cmdControlPort MUST have another type which defines the format and semantics
 of the port buffer contents (likely candidates are
-<a href="http://lv2plug.in/ns/ext/atom-port#MessagePort">atom-port:MessagePort</a>
+<a href="http://lv2plug.in/ns/ext/atom#MessagePort">atom:MessagePort</a>
 or <a href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>).
 """ .
 

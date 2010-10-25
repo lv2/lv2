@@ -46,24 +46,28 @@ lv2_atom_pad_size(uint16_t size)
 
 typedef LV2_Atom_Property* LV2_Object_Iter;
 
+/** Get an iterator pointing to @a prop in some LV2_Object */
 static inline LV2_Object_Iter
 lv2_object_get_iter(LV2_Atom_Property* prop)
 {
 	return (LV2_Object_Iter)prop;
 }
 
+/** Return true iff @a iter has reached the end of @a object */
 static inline bool
 lv2_object_iter_is_end(const LV2_Atom* object, LV2_Object_Iter iter)
 {
 	return (uint8_t*)iter >= (object->body + object->size);
 }
 
+/** Return true iff @a l points to the same property as @a r */
 static inline bool
 lv2_object_iter_equals(const LV2_Object_Iter l, const LV2_Object_Iter r)
 {
 	return l == r;
 }
 
+/** Return an iterator to the property following @a iter */
 static inline LV2_Object_Iter
 lv2_object_iter_next(const LV2_Object_Iter iter)
 {
@@ -71,6 +75,7 @@ lv2_object_iter_next(const LV2_Object_Iter iter)
 		(uint8_t*)iter + sizeof(LV2_Atom_Property) + lv2_atom_pad_size(iter->value.size));
 }
 
+/** Return the property pointed to by @a iter */
 static inline LV2_Atom_Property*
 lv2_object_iter_get(LV2_Object_Iter iter)
 {
@@ -86,6 +91,7 @@ lv2_object_iter_get(LV2_Object_Iter iter)
  *    LV2_Atom_Property* prop = lv2_object_iter_get(i);
  *    // Do things with prop here...
  * }
+ * </pre>
  */
 #define LV2_OBJECT_FOREACH(obj, iter) \
 	for (LV2_Object_Iter (iter) = lv2_object_get_iter((LV2_Atom_Property*)(obj)->body); \
@@ -98,17 +104,18 @@ lv2_object_iter_get(LV2_Object_Iter iter)
  * Atom type that contains headerless 32-bit aligned properties.
  * @param object Pointer to the atom that contains the property to add.  object.size
  *        must be valid, but object.type is ignored.
- * @param size Must point to the size field of the container atom, and will be
- *        padded up to 32 bits then increased by @a value_size.
- * @param body Must point to the body of the container atom.
+ * @param key The key of the new property
+ * @param value_type The type of the new value
+ * @param value_size The size of the new value
+ * @param value_body Pointer to the new value's data
  * @return a pointer to the new LV2_Atom_Property in @a body.
  */
 static inline LV2_Atom_Property*
-lv2_atom_append_property(LV2_Atom*   object,
-                         uint32_t    key,
-                         uint16_t    value_type,
-                         uint16_t    value_size,
-                         const char* value_body)
+lv2_atom_append_property(LV2_Atom*      object,
+                         uint32_t       key,
+                         uint16_t       value_type,
+                         uint16_t       value_size,
+                         const uint8_t* value_body)
 {
 	object->size = lv2_atom_pad_size(object->size);
 	LV2_Atom_Property* prop = (LV2_Atom_Property*)(object->body + object->size);
@@ -120,12 +127,14 @@ lv2_atom_append_property(LV2_Atom*   object,
 	return prop;
 }
 
+/** Return true iff @a atom is NULL */
 static inline bool
 lv2_atom_is_null(LV2_Atom* atom)
 {
 	return !atom || (atom->type == 0 && atom->size == 0);
 }
 
+/** Return true iff @a object has rdf:type @a type */
 static inline bool
 lv2_atom_is_a(LV2_Atom* object,
               uint32_t  rdf_type,
@@ -173,7 +182,7 @@ typedef struct {
  * linear sweep.  By allocating @a q on the stack, objects can be "queried"
  * quickly without allocating any memory.  This function is realtime safe.
  */
-int
+static inline int
 lv2_object_query(LV2_Atom* object, LV2_Object_Query* query)
 {
 	int matches   = 0;

@@ -51,16 +51,16 @@
  *
  * Note that an LV2_Atom is the latter two fields of an LV2_Event as defined
  * by the <a href="http://lv2plug.in/ns/ext/event">LV2 events extension</a>.
- * The host MAY marshal an Event to an Atom simply by pointing to the offset
- * of the 'type' field of the LV2_Event, which is also the type field (i.e. start)
- * of a valid LV2_Atom.  The macro LV2_ATOM_FROM_EVENT is provided in this
- * header for this purpose.
+ * The host MAY marshal an <a href="urn:struct:LV2_Event">LV2_Event</a> to
+ * an <a href="urn:struct:LV2_Atom">LV2_Atom</a> by simply pointing to the
+ * offset of <code>type</code>.  The macro LV2_ATOM_FROM_EVENT is provided
+ * in this header for this purpose.
  */
 typedef struct _LV2_Atom {
 
-	/** The type of this atom.  This number represents a URI, mapped to an
-	 * integer using the extension <http://lv2plug.in/ns/ext/uri-map>
-	 * with "http://lv2plug.in/ns/ext/atom" as the 'map' argument.
+	/** The type of this atom.  This number is mapped from a URI using
+	 * the extension <http://lv2plug.in/ns/ext/uri-map>
+	 * with 'map' = "http://lv2plug.in/ns/ext/atom".
 	 * Type 0 is a special case which indicates this atom
 	 * is a reference and MUST NOT be copied manually.
 	 */
@@ -77,66 +77,47 @@ typedef struct _LV2_Atom {
 /** Reference, an LV2_Atom with type 0 */
 typedef LV2_Atom LV2_Atom_Reference;
 
-/** The body of an LV2_Atom with type atom:Vector */
+/** The body of an atom:String */
+typedef struct _LV2_Atom_String {
+	uint32_t lang; /**< The ID of the language of this string */
+	char*    str;  /**< Null-terminated string data in UTF-8 encoding */
+} LV2_Atom_String;
+
+/** The body of an atom:Vector */
 typedef struct _LV2_Atom_Vector {
-	uint16_t elem_count; /**< The size of each element in the vector */
+	uint16_t elem_count; /**< The number of elements in the vector */
 	uint16_t elem_type;  /**< The type of each element in the vector */
-	uint8_t  elems[];    /**< Elements follow here */
+	uint8_t  elems[];    /**< Sequence of element bodies */
 } LV2_Atom_Vector;
 
-/** The body of an LV2_Atom with type atom:Property */
+/** The body of an atom:Property */
 typedef struct _LV2_Atom_Property {
-	uint32_t key;   /**< Key (predicate) of Object or RDF triple (URIInt) */
-	LV2_Atom value; /**< Value (object) of Object or RDF triple */
+	uint32_t key;   /**< ID of key (predicate) */
+	LV2_Atom value; /**< Value (object) */
 } LV2_Atom_Property;
 
-/** The body of an LV2_Atom with type atom:Triple */
-typedef struct _LV2_Atom_Triple {
-	uint32_t          subject;  /**< Subject of RDF triple (URI mapped integer) */
-	LV2_Atom_Property property; /** Property (predicate and object) of subject */
-} LV2_Atom_Triple;
+/** The body of an atom:Resource or atom:Blank */
+typedef struct _LV2_Atom_Object {
+	uint32_t context;      /**< ID of context graph, or 0 for the default context */
+	uint32_t id;           /**< ID for atom:Resource or blank ID for atom:Blank */
+	uint8_t  properties[]; /**< Sequence of LV2_Atom_Property */
+} LV2_Atom_Object;
 
 
 /* Optional Blob Support */
 
-
-typedef void* LV2_Blob_Data;
-
 /** Dynamically Allocated LV2 Blob.
  *
- * This is a blob of data of any type, dynamically allocated in memory.
+ * This is an opaque blob of data of any type, dynamically allocated in memory.
  * Unlike an LV2_Atom, a blob is not necessarily POD.  Plugins MUST only
  * refer to blobs via a Reference (an LV2_Atom with type 0), there is no
  * way for a plugin to directly copy or destroy a Blob.
+ *
+ * This is a pointer to host data which is opaque to the plugin.
+ * Plugins MUST NOT interpret this data in any way, except via host-provided
+ * functions in LV2_Blob_Support.
  */
-typedef struct _LV2_Blob {
-
-	/** Pointer to opaque data.
-	 *
-	 * Plugins MUST NOT interpret this data in any way.  Hosts may store
-	 * whatever information they need to associate with blobs here.
-	 */
-	LV2_Blob_Data data;
-
-	/** Get blob's type as a URI mapped to an integer.
-	 *
-	 * The return value may be any type URI, mapped to an integer with the
-	 * URI Map extension.  If this type is an LV2_Atom type, get returns
-	 * a pointer to the LV2_Atom header (e.g. a blob with type atom:Int32
-	 * does NOT return a pointer to a int32_t).
-	 */
-	uint32_t (*type)(struct _LV2_Blob* blob);
-
-	/** Get blob's body.
-	 *
-	 * Returns a pointer to the start of the blob data.  The format of this
-	 * data is defined by the return value of the type method.  It MUST NOT
-	 * be used in any way by code which does not understand that type.
-	 */
-	void* (*get)(struct _LV2_Blob* blob);
-
-} LV2_Blob;
-
+typedef void* LV2_Blob;
 
 typedef void* LV2_Blob_Support_Data;
 
@@ -144,11 +125,10 @@ typedef void (*LV2_Blob_Destroy)(LV2_Blob* blob);
 
 /** The data field of the LV2_Feature for atom:BlobSupport.
  *
- * A host which supports blobs must pass an LV2_Feature struct to the
- * plugin's instantiate method with 'URI' equal to
- * "http://lv2plug.in/ns/ext/atom#BlobSupport" and 'data' pointing to an
- * instance of this struct.  All fields of this struct MUST be set to
- * non-NULL values by the host, except possibly 'data'.
+ * A host which supports blobs must pass an LV2_Feature to the plugin's
+ * instantiate method with 'URI' = "http://lv2plug.in/ns/ext/atom#BlobSupport"
+ * and 'data' pointing to an instance of this struct.  All fields of this
+ * struct MUST be set to non-NULL values by the host, except possibly 'data'.
  */
 typedef struct {
 
@@ -167,35 +147,16 @@ typedef struct {
 	 * uint16, like LV2_Atom.size.
 	 */
 	uint16_t ref_size;
-
-	/** Initialize a reference to point to a newly allocated Blob.
-	 *
-	 * @param data Must be the data member of this struct.
-	 * @param ref Pointer to an area of memory at least as large as
-	 *     the ref_size field of this struct.  On return, this will
-	 *     be the unique reference to the new blob, which is owned by the
-	 *     caller.  Assumed to be uninitialised, i.e. the caller MUST NOT
-	 *     pass a valid (owned) reference since this could cause a memory leak.
-	 * @param destroy Function to destroy this blob.  This function
-	 *     MUST clean up any resources contained in the blob, but MUST NOT
-	 *     attempt to free the memory pointed to by its LV2_Blob* parameter
-	 *     (since this is allocated by the host).
-	 * @param type Type of blob to allocate (URI mapped integer).
-	 * @param size Size of blob to allocate in bytes.
-	 */
-	void (*blob_new)(LV2_Blob_Support_Data data,
-	                 LV2_Atom_Reference*   ref,
-	                 LV2_Blob_Destroy      destroy,
-	                 uint32_t              type,
-	                 size_t                size);
-
-	/** Return a pointer to the Blob referred to by @a ref.
+	
+	/** Return the Blob referred to by @a ref.
 	 *
 	 * The returned value MUST NOT be used in any way other than by calling
-	 * methods defined in LV2_Blob (e.g. it MUST NOT be copied or destroyed).
+	 * methods defined in LV2_Blob_Support (e.g. it MUST NOT be directly
+	 * accessed, copied, or destroyed).  The actual payload of the blob can
+	 * be accessed with LV2_Blob_Support.blob_get.
 	 */
-	LV2_Blob* (*ref_get)(LV2_Blob_Support_Data data,
-	                     LV2_Atom_Reference*   ref);
+	LV2_Blob (*ref_get)(LV2_Blob_Support_Data data,
+	                    LV2_Atom_Reference*   ref);
 
 	/** Copy a reference.
 	 * This copies a reference but not the blob it refers to,
@@ -223,6 +184,42 @@ typedef struct {
 	 */
 	void (*ref_reset)(LV2_Blob_Support_Data data,
 	                  LV2_Atom_Reference*   ref);
+
+	/** Initialize a reference to point to a newly allocated Blob.
+	 *
+	 * @param data Must be the data member of this struct.
+	 * @param ref Pointer to an area of memory at least as large as
+	 *     the ref_size field of this struct.  On return, this will
+	 *     be the unique reference to the new blob, which is owned by the
+	 *     caller.  Assumed to be uninitialised, i.e. the caller MUST NOT
+	 *     pass a valid reference since this could cause a memory leak.
+	 * @param destroy Function to destroy this blob.  This function
+	 *     MUST clean up any resources contained in the blob, but MUST NOT
+	 *     attempt to free the memory pointed to by its LV2_Blob* parameter
+	 *     (since this is allocated by the host).
+	 * @param type ID of type of blob to allocate.
+	 * @param size Size of blob to allocate in bytes.
+	 */
+	void (*blob_new)(LV2_Blob_Support_Data data,
+	                 LV2_Atom_Reference*   ref,
+	                 LV2_Blob_Destroy      destroy,
+	                 uint32_t              type,
+	                 size_t                size);
+	
+	/** Get blob's type as an ID.
+	 *
+	 * The return value may be any type URI, mapped to an integer with the
+	 * URI Map extension with <code>context = NULL</code>.
+	 */
+	uint32_t (*blob_type)(LV2_Blob blob);
+
+	/** Get blob's body.
+	 *
+	 * Returns a pointer to the start of the blob data.  The format of this
+	 * data is defined by the return value of the type method.  It MUST NOT
+	 * be used in any way by code which does not understand that type.
+	 */
+	void* (*blob_data)(LV2_Blob blob);
 	
 } LV2_Blob_Support;
 

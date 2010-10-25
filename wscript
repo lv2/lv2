@@ -67,7 +67,6 @@ def build_extension(bld, name, dir):
 def build(bld):
 	ext = '''
 		atom
-		atom-port
 		contexts
 		data-access
 		dyn-manifest
