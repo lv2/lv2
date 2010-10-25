@@ -241,7 +241,7 @@ atom:Object a rdfs:Class ;
 	rdfs:comment """
 Abstract base class for an "Object", i.e. an <a href="#Atom">Atom</a>
 with a number of <a href="#Property">properties</a>.  An <a
-href="urn:struct:LV2_Atom_Object" >LV2_Atom_Object</a> is an unsigned 32-bit
+href="urn:struct:LV2_Object">LV2_Object</a> is an unsigned 32-bit
 integer <code>context</code> and <code>id</code> followed by a sequence of
 <a href="urn:struct:LV2_Atom_Property" >properties</a>.
 

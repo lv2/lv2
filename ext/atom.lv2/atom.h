@@ -79,8 +79,8 @@ typedef LV2_Atom LV2_Atom_Reference;
 
 /** The body of an atom:String */
 typedef struct _LV2_Atom_String {
-	uint32_t lang; /**< The ID of the language of this string */
-	char*    str;  /**< Null-terminated string data in UTF-8 encoding */
+	uint32_t lang;  /**< The ID of the language of this string */
+	uint8_t  str[]; /**< Null-terminated string data in UTF-8 encoding */
 } LV2_Atom_String;
 
 /** The body of an atom:Vector */
@@ -97,11 +97,11 @@ typedef struct _LV2_Atom_Property {
 } LV2_Atom_Property;
 
 /** The body of an atom:Resource or atom:Blank */
-typedef struct _LV2_Atom_Object {
+typedef struct _LV2_Object {
 	uint32_t context;      /**< ID of context graph, or 0 for the default context */
 	uint32_t id;           /**< ID for atom:Resource or blank ID for atom:Blank */
 	uint8_t  properties[]; /**< Sequence of LV2_Atom_Property */
-} LV2_Atom_Object;
+} LV2_Object;
 
 
 /* Optional Blob Support */
