@@ -123,6 +123,10 @@ def build_tree(search_path, outdir):
     """Build a directory tree under outdir containing symlinks to all LV2
     extensions found in search_path, such that the symlink paths correspond to
     the extension URIs."""
+    print "Building LV2 include tree at", outdir, "for", search_path
+    if os.access(outdir, os.F_OK) and not os.access(outdir, os.W_OK):
+        print >> sys.stderr, "lv2include.py: cannot build  `%s': Permission denied" % outdir
+        sys.exit(1)
     for bundle in __bundles(search_path):
         # Load manifest into model
         manifest = rdf_load('file://' + os.path.join(bundle, 'manifest.ttl'))
@@ -150,11 +154,15 @@ def build_tree(search_path, outdir):
             
 if __name__ == "__main__":
     args = sys.argv[1:]
-    if len(args) != 1:
+
+    if len(args) == 0:
+        build_tree('/usr/local/lib/lv2', '/usr/local/include/lv2')
+        build_tree('/usr/lib/lv2',       '/usr/include/lv2')
+        sys.exit(0)
+
+    elif len(args) != 1:
         __usage()
         sys.exit(1)
 
-    outdir = args[0]
-    print "Building LV2 include tree at", outdir
-
-    build_tree(lv2_path(), outdir)
+    else:
+        build_tree(lv2_path(), args[1])
