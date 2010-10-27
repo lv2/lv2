@@ -165,12 +165,23 @@ char     str[] = "&lt;http://example.org/foo&gt; a &lt;http://example.org/Thing&
 
 atom:ID a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label      "Integer ID mapped from a URI" ;
+	rdfs:label   "Integer ID mapped from a URI" ;
 	rdfs:comment """
 An unsigned 32-bit integer mapped from a URI using the
 <a href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's
 <a href="urn:struct:LV2_URI_Map_Feature">LV2_URI_Map_Feature</a>::uri_to_id
 with <code>map = NULL</code>.
+""" .
+
+
+atom:BlankID a rdfs:Class ;
+	rdfs:subClassOf atom:Atom ;
+	rdfs:label   "Integer ID for a blank node" ;
+	rdfs:comment """
+An unsigned 32-bit integer identifier for a blank node.  A BlankID is only
+meaningful within a limited scope (e.g. the Atom in which it appears), and
+MUST NOT be used as a global identifier.  In particular, a BlankID is NOT an
+ID, and can not be mapped to/from a URI.
 """ .
 
 

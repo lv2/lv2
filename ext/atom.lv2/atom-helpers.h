@@ -48,9 +48,9 @@ typedef LV2_Atom_Property* LV2_Object_Iter;
 
 /** Get an iterator pointing to @a prop in some LV2_Object */
 static inline LV2_Object_Iter
-lv2_object_get_iter(LV2_Atom_Property* prop)
+lv2_object_begin(LV2_Atom* obj)
 {
-	return (LV2_Object_Iter)prop;
+	return (LV2_Object_Iter)(((LV2_Object*)obj->body)->properties);
 }
 
 /** Return true iff @a iter has reached the end of @a object */
@@ -94,7 +94,7 @@ lv2_object_iter_get(LV2_Object_Iter iter)
  * </pre>
  */
 #define LV2_OBJECT_FOREACH(obj, iter) \
-	for (LV2_Object_Iter (iter) = lv2_object_get_iter((LV2_Atom_Property*)(obj)->body); \
+	for (LV2_Object_Iter (iter) = lv2_object_begin(obj); \
 	     !lv2_object_iter_is_end(obj, (iter)); \
 	     (iter) = lv2_object_iter_next(iter))
 
@@ -149,10 +149,8 @@ lv2_atom_is_a(LV2_Atom* object,
 		return true;
 
 	if (object->type == atom_Object) {
-		for (LV2_Object_Iter i = lv2_object_get_iter((LV2_Atom_Property*)object->body);
-		     !lv2_object_iter_is_end(object, i);
-		     i = lv2_object_iter_next(i)) {
-			LV2_Atom_Property* prop = lv2_object_iter_get(i);
+		LV2_OBJECT_FOREACH(object, o) {
+			LV2_Atom_Property* prop = lv2_object_iter_get(o);
 			if (prop->key == rdf_type) {
 				if (prop->value.type == atom_URIInt) {
 					const uint32_t object_type = *(uint32_t*)prop->value.body;
@@ -161,7 +159,6 @@ lv2_atom_is_a(LV2_Atom* object,
 				} else {
 					fprintf(stderr, "error: rdf:type is not a URIInt\n");
 				}
-
 			}
 		}
 	}
