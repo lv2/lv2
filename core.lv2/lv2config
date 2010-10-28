@@ -102,7 +102,7 @@ def __mkdir_p(path):
     "Equivalent of UNIX mkdir -p"
     try:
         os.makedirs(path)
-    except OSError as e:
+    except OSError, e:
         if e.errno == errno.EEXIST:
             pass
         else:
