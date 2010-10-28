@@ -114,7 +114,7 @@ def build_tree(search_path, outdir):
     the extension URIs."""
     print "Building LV2 include tree at", outdir, "for", search_path
     if os.access(outdir, os.F_OK) and not os.access(outdir, os.W_OK):
-        print >> sys.stderr, "lv2include.py: cannot build  `%s': Permission denied" % outdir
+        print >> sys.stderr, "lv2config: cannot build  `%s': Permission denied" % outdir
         sys.exit(1)
     for bundle in __bundles(search_path):
         # Load manifest into model
