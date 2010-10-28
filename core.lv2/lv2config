@@ -159,7 +159,7 @@ if __name__ == "__main__":
     if len(args) == 0:
         build_tree('/usr/local/lib/lv2',          '/usr/local/include/lv2')
         build_tree('/usr/lib/lv2',                '/usr/include/lv2')
-        build_tree('/Library/Plug-Ins/Audio/LV2', '/Developer/Headers/lv2')
+        build_tree('/Library/Audio/Plug-Ins/LV2', '/Developer/Headers/lv2')
 
     elif '--help' in args or '-h' in args:
         __usage()
