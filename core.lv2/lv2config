@@ -159,8 +159,6 @@ Usage: %s BUNDLESDIR INCLUDEDIR
 if __name__ == "__main__":
     args = sys.argv[1:]
 
-    print args
-
     if len(args) == 0:
         build_tree('/usr/local/lib/lv2', '/usr/local/include/lv2')
         build_tree('/usr/lib/lv2',       '/usr/include/lv2')
