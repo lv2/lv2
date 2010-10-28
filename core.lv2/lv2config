@@ -90,14 +90,6 @@ def lv2_path():
         print 'LV2_PATH unset, using default ' + ret
         return ret
 
-def __bundles(search_path):
-    "Return a list of all LV2 bundles found in search_path."
-    dirs = search_path.split(os.pathsep)
-    bundles = []
-    for dir in dirs:
-        bundles += glob.glob(os.path.join(dir, '*.lv2'))
-    return bundles
-
 def __mkdir_p(path):
     "Equivalent of UNIX mkdir -p"
     try:
@@ -112,34 +104,39 @@ def build_tree(search_path, outdir):
     """Build a directory tree under outdir containing symlinks to all LV2
     extensions found in search_path, such that the symlink paths correspond to
     the extension URIs."""
-    print "Building LV2 include tree at", outdir, "for", search_path
     if os.access(outdir, os.F_OK) and not os.access(outdir, os.W_OK):
-        print >> sys.stderr, "lv2config: cannot build  `%s': Permission denied" % outdir
+        print >> sys.stderr, "lv2config: cannot build `%s': Permission denied" % outdir
         sys.exit(1)
-    for bundle in __bundles(search_path):
-        # Load manifest into model
-        manifest = rdf_load('file://' + os.path.join(bundle, 'manifest.ttl'))
 
-        # Query extension URI
-        specs = rdf_find_type(manifest, lv2.Specification)
-        for ext_uri in specs:
-            ext_scheme = ext_uri[0:ext_uri.find(':')] 
-            ext_path   = os.path.normpath(ext_uri[ext_uri.find(':') + 1:].lstrip('/'))
-            ext_dir    = os.path.join(outdir, ext_scheme, ext_path)
+    for dir in search_path.split(os.pathsep):
+        if not os.access(dir, os.F_OK):
+            continue
 
-            # Make parent directories
-            __mkdir_p(os.path.dirname(ext_dir))
+        print 'Building includes in %s for %s/*.lv2' % (outdir, dir)
+        for bundle in glob.glob(os.path.join(dir, '*.lv2')):
+            # Load manifest into model
+            manifest = rdf_load('file://' + os.path.join(bundle, 'manifest.ttl'))
 
-            # Remove existing symlink if necessary
-            if os.access(ext_dir, os.F_OK):
-                mode = os.lstat(ext_dir)[stat.ST_MODE]
-                if stat.S_ISLNK(mode):
-                    os.remove(ext_dir)
-                else:
-                    raise Exception(ext_dir + " exists and is not a link")
-
-            # Make symlink to bundle directory
-            os.symlink(bundle, ext_dir)
+            # Query extension URI
+            specs = rdf_find_type(manifest, lv2.Specification)
+            for ext_uri in specs:
+                ext_scheme = ext_uri[0:ext_uri.find(':')] 
+                ext_path   = os.path.normpath(ext_uri[ext_uri.find(':') + 1:].lstrip('/'))
+                ext_dir    = os.path.join(outdir, ext_scheme, ext_path)
+    
+                # Make parent directories
+                __mkdir_p(os.path.dirname(ext_dir))
+    
+                # Remove existing symlink if necessary
+                if os.access(ext_dir, os.F_OK):
+                    mode = os.lstat(ext_dir)[stat.ST_MODE]
+                    if stat.S_ISLNK(mode):
+                        os.remove(ext_dir)
+                    else:
+                        raise Exception(ext_dir + " exists and is not a link")
+    
+                # Make symlink to bundle directory
+                os.symlink(bundle, ext_dir)
             
 def __usage():
     script = os.path.basename(sys.argv[0])
@@ -160,8 +157,9 @@ if __name__ == "__main__":
     args = sys.argv[1:]
 
     if len(args) == 0:
-        build_tree('/usr/local/lib/lv2', '/usr/local/include/lv2')
-        build_tree('/usr/lib/lv2',       '/usr/include/lv2')
+        build_tree('/usr/local/lib/lv2',          '/usr/local/include/lv2')
+        build_tree('/usr/lib/lv2',                '/usr/include/lv2')
+        build_tree('/Library/Plug-Ins/Audio/LV2', '/Developer/Headers/lv2')
 
     elif '--help' in args or '-h' in args:
         __usage()
