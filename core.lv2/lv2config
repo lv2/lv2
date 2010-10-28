@@ -8,14 +8,14 @@ the bundle name.  Including extension headers in this way is much better,
 since there is no dependency on the (meaningless and non-persistent) bundle
 name in the code using the header.
 
-For example, after running lv2includegen (and setting the compiler include
+For example, after running lv2config (and setting the compiler include
 path appropriately), LV2 headers could be included like so:
 
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 #include "lv2/lv2plug.in/ns/ext/event/event.h"
 #include "lv2/example.org/foo/foo.h"
 
-Where the initial "lv2" is arbitrary; in this case lv2includegen's output
+Where the initial "lv2" is arbitrary; in this case lv2config's output
 directory was "lv2", and that directory's parent was added to the compiler
 include search path.  It is a good idea to use such a prefix directory so
 domain names do not conflict with anything else in the include path.
@@ -98,17 +98,6 @@ def __bundles(search_path):
         bundles += glob.glob(os.path.join(dir, '*.lv2'))
     return bundles
 
-def __usage():
-    script = os.path.basename(sys.argv[0])
-    print """Usage: 
-    %s OUTDIR
-
-        OUTDIR : Directory to build include tree
-
-Example:
-    %s /usr/local/include/lv2
-""" % (script, script)
-
 def __mkdir_p(path):
     "Equivalent of UNIX mkdir -p"
     try:
@@ -152,17 +141,39 @@ def build_tree(search_path, outdir):
             # Make symlink to bundle directory
             os.symlink(bundle, ext_dir)
             
+def __usage():
+    script = os.path.basename(sys.argv[0])
+    print """Usage: %s
+    Build the default system lv2 include directories,
+    /usr/include/lv2 and /usr/local/include/lv2
+
+Usage: %s INCLUDEDIR
+    Build an lv2 include directory tree at INCLUDEDIR
+    for all extensions found in $LV2_PATH.
+
+Usage: %s BUNDLESDIR INCLUDEDIR
+    Build an lv2 include directory tree at INCLUDEDIR
+    for all extensions found in bundles under BUNDLESDIR.
+""" % (script, script, script)
+
 if __name__ == "__main__":
     args = sys.argv[1:]
+
+    print args
 
     if len(args) == 0:
         build_tree('/usr/local/lib/lv2', '/usr/local/include/lv2')
         build_tree('/usr/lib/lv2',       '/usr/include/lv2')
-        sys.exit(0)
 
-    elif len(args) != 1:
+    elif '--help' in args or '-h' in args:
+        __usage()
+
+    elif len(args) == 1:
+        build_tree(lv2_path(), args[0])
+
+    elif len(args) == 2:
+        build_tree(args[0], args[1])
+        
+    else:
         __usage()
         sys.exit(1)
-
-    else:
-        build_tree(lv2_path(), args[1])
