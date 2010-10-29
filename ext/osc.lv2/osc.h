@@ -27,11 +27,7 @@ extern "C" {
 
 /** @file
  * C header for the LV2 OSC extension <http://lv2plug.in/ns/ext/osc>.
- * This extension uses (raw) OSC messages
- * and a buffer format which contains a sequence of timestamped messages.
- * Additional (ie beyond raw OSC) indexing information is stored in the buffer
- * for performance, so that accessors for messages and arguments are very fast:
- * O(1) and realtime safe, unless otherwise noted.
+ * This extension defines a format for (raw) OSC messages/events.
  */
 
 

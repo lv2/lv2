@@ -83,6 +83,7 @@ lv2_osc_arg_size(char type, const LV2_OSC_Argument* arg)
 	case 'c':
 	case 'i':
 	case 'f':
+    case 'S': // Symbol (URI-mapped integer)
 		return 4;
 
 	case 'h':
@@ -91,9 +92,6 @@ lv2_osc_arg_size(char type, const LV2_OSC_Argument* arg)
 
 	case 's':
 		return lv2_osc_string_size(&arg->s);
-
-	/*case 'S':
-		return lv2_osc_string_size(&arg->S);*/
 
 	case 'b':
 		return lv2_osc_blob_size(&arg->b);
@@ -238,77 +236,3 @@ lv2_osc_message_from_raw(uint32_t out_buf_size,
 
 	return write_loc;
 }
-
-
-#if 0
-/** Allocate a new LV2OSCBuffer.
- *
- * This function is NOT realtime safe.
- */
-LV2_OSCBuffer*
-lv2_osc_buffer_new(uint32_t capacity)
-{
-	LV2OSCBuffer* buf = (LV2OSCBuffer*)malloc((sizeof(uint32_t) * 3) + capacity);
-	buf->capacity = capacity;
-	buf->size = 0;
-	buf->message_count = 0;
-	memset(&buf->data, 0, capacity);
-	return buf;
-}
-
-
-void
-lv2_osc_buffer_clear(LV2OSCBuffer* buf)
-{
-	buf->size = 0;
-	buf->message_count = 0;
-}
-
-int
-lv2_osc_buffer_append_message(LV2OSCBuffer* buf, LV2_OSC_Event* msg)
-{
-	const uint32_t msg_size = lv2_message_get_size(msg);
-
-	if (buf->capacity - buf->size - ((buf->message_count + 1) * sizeof(uint32_t)) < msg_size)
-		return ENOBUFS;
-
-	char* write_loc = &buf->data + buf->size;
-
-	memcpy(write_loc, msg, msg_size);
-
-	// Index is written backwards, starting at end of data
-	uint32_t* index_end = (uint32_t*)(&buf->data + buf->capacity - sizeof(uint32_t));
-	*(index_end - buf->message_count) = buf->size;
-
-	++buf->message_count;
-
-	buf->size += msg_size;
-
-	return 0;
-}
-
-int
-lv2_osc_buffer_append(LV2OSCBuffer* buf, double time, const char* path, const char* types, ...)
-{
-	// FIXME: crazy unsafe
-	LV2_OSC_Event* write_msg = (LV2_OSC_Event*)(&buf->data + buf->size);
-
-	write_msg->time = time;
-	write_msg->data_size = 0;
-	write_msg->argument_count = 0;
-	write_msg->types_offset = strlen(path) + 1;
-
-	memcpy(&write_msg->data, path, write_msg->types_offset);
-
-	/*fprintf(stderr, "Append message:\n");
-	lv2_osc_message_print(write_msg);
-	fprintf(stderr, "\n");*/
-
-	uint32_t msg_size = lv2_message_get_size(write_msg);
-	buf->size += msg_size;
-	buf->message_count++;
-
-	return 0;
-}
-#endif
-
