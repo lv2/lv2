@@ -19,8 +19,9 @@
 #ifndef LV2_RESIZE_PORT_H
 #define LV2_RESIZE_PORT_H
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #define LV2_RESIZE_PORT_URI "http://lv2plug.in/ns/ext/resize-port"
 
