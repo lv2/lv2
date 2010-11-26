@@ -32,6 +32,7 @@ def build(bld):
 	if not Options.options.bundle_only:
 		# Header
 		bld.install_files('${INCLUDEDIR}', 'lv2.h')
+		bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.h')
 
 		# Pkgconfig file
 		autowaf.build_pc(bld, 'LV2CORE', LV2CORE_VERSION, [])

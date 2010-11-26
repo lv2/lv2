@@ -18,11 +18,13 @@ def set_options(opt):
 	autowaf.set_options(opt)
 	opt.tool_options('compiler_cc')
 	opt.tool_options('compiler_cxx')
+	opt.sub_options('core.lv2')
+
 
 def configure(conf):
 	autowaf.set_recursive()
-	conf.sub_config('core.lv2');
 	autowaf.configure(conf)
+	conf.sub_config('core.lv2');
 	conf.check_tool('compiler_cc')
 	conf.check_tool('compiler_cxx')
 	conf.env.append_value('CCFLAGS', '-std=c99')
@@ -68,6 +70,7 @@ def build_extension(bld, name, dir):
 
 def build(bld):
 	autowaf.set_recursive()
+	bld.add_subdirs('core.lv2')
 	ext = '''
 		atom
 		contexts
@@ -81,6 +84,7 @@ def build(bld):
 		parameter
 		port-groups
 		presets
+		resize-port
 		string-port
 		uri-map
 		uri-unmap
