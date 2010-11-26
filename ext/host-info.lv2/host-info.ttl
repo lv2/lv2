@@ -39,12 +39,12 @@
 		foaf:homepage <http://drobilla.net/> ;
 		rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
 	] ;
-	rdfs:comment """
-This specification defines various properties to represent useful information
+	lv2:documentation """
+<p>This specification defines various properties to represent useful information
 about LV2 hosts.  Currently, the primary use of this specification is to describe which
-extensions are supported by a given host.
+extensions are supported by a given host.</p>
 
-The extensions supported by a host can be described like this:
+<p>The extensions supported by a host can be described like this:</p>
 <pre>
 @prefix hi: &lt;http://lv2plug.in/ns/ext/host-info#&gt; .
 
@@ -55,7 +55,7 @@ The extensions supported by a host can be described like this:
 		hi:sinceVersion "1.2.0"
 	] .
 </pre>
-"""^^lv2:basicXHTML .
+""" .
 
 
 ## Core Classes / Properties

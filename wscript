@@ -20,6 +20,8 @@ def set_options(opt):
 	opt.tool_options('compiler_cxx')
 
 def configure(conf):
+	autowaf.set_recursive()
+	conf.sub_config('core.lv2');
 	autowaf.configure(conf)
 	conf.check_tool('compiler_cc')
 	conf.check_tool('compiler_cxx')
@@ -65,6 +67,7 @@ def build_extension(bld, name, dir):
 	bld.install_files('${LV2DIR}/' + name + '.lv2', header_files)
 
 def build(bld):
+	autowaf.set_recursive()
 	ext = '''
 		atom
 		contexts

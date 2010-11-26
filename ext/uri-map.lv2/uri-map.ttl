@@ -31,8 +31,8 @@
 	doap:license <http://usefulinc.com/doap/licenses/mit> ;
 	doap:name "LV2 URI Map" ;
     doap:release [
-        doap:revision "1" ;
-        doap:created "2008-04-16"
+        doap:revision "1.1pre1" ;
+        doap:created "2010-10-29"
     ] ;
 	doap:maintainer [
 		a foaf:Person ;

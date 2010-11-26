@@ -34,8 +34,8 @@
 	doap:name "LV2 MIDI Events" ;
 	rdfs:comment "Defines an LV2 event type for standard raw MIDI" ;
     doap:release [
-        doap:revision "1" ;
-        doap:created "2008-08-11" ;
+        doap:revision "1.1pre1" ;
+        doap:created "2010-10-29"
     ] ;
 	doap:maintainer [
 		a foaf:Person ;
@@ -51,11 +51,11 @@
 midi:MidiEvent a rdfs:Class ;
 	rdfs:label      "LV2 MIDI event" ;
 	rdfs:subClassOf lv2ev:Event ;
-	rdfs:comment    """
-A single raw (sequence of bytes) MIDI event.
+	lv2:documentation """
+<p>A single raw (sequence of bytes) MIDI event.</p>
 
-These events are equivalent to standard MIDI events, with the following
-restrictions to ease the burden on plugin authors:
+<p>These events are equivalent to standard MIDI events, with the following
+restrictions to ease the burden on plugin authors:</p>
 <ul>
   <li>Running status is not allowed. Every event must have its own status
     byte.</li>
@@ -83,5 +83,5 @@ restrictions to ease the burden on plugin authors:
   events to the buffer, and the MIDI reader (plugin or host) can assume that
   all events are valid.</li>
 </ul>
-"""^^lv2:basicXHTML .
+""" .
 

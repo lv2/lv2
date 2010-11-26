@@ -37,65 +37,65 @@
         foaf:homepage <http://drobilla.net/> ;
         rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
     ] ;
-	rdfs:comment """
-This extension defines a standard for LV2 "messages" which allow dynamic
+	lv2:documentation """
+<p>This extension defines a standard for LV2 "messages" which allow dynamic
 control and investigation of plugin instances, by both hosts and other
-plugins.
+plugins.</p>
 
-This extension requires the host to support the <a
+<p>This extension requires the host to support the <a
 href="http://lv2plug.in/ns/ext/uri-map">LV2 URI Map</a> extension, and the
-<a href="http://lv2plug.in/ns/ext/atom">LV2 Atom</a> extension.
+<a href="http://lv2plug.in/ns/ext/atom">LV2 Atom</a> extension.</p>
 """ .
 
 
 msg:MessageType a rdfs:Class ;
 	rdfs:label   "LV2 Message Type" ;
-	rdfs:comment """
-Base class for all types of LV2 Message.
+	lv2:documentation """
+<p>Base class for all types of LV2 Message.</p>
 
-A type of message, which must be a resource (i.e. have a URI).  This URI
+<p>A type of message, which must be a resource (i.e. have a URI).  This URI
 is used as the selector component of a Message and is used by receivers to
-interpret the meaning of messages (e.g. which components are present).
+interpret the meaning of messages (e.g. which components are present).</p>
 
-A message in memory is simply an <a href="http://lv2plug.in/ns/ext/atom#Dict"
+<p>A message in memory is simply an <a href="http://lv2plug.in/ns/ext/atom#Dict"
 >atom:Dict</a> with at least one rdf:type that is a rdfs:subClassOf
 msg:MessageType.  The definitions of various message types define what
-other key/value pairs can be expected in the message.
+other key/value pairs can be expected in the message.</p>
 """ .
 
 msg:ControlPort a rdfs:Class ;
     rdfs:label      "Control Port" ;
     rdfs:subClassOf lv2:Port ;
-    rdfs:comment    """
-An input port used to control a plugin instance.  A plugin has
+    lv2:documentation    """
+<p>An input port used to control a plugin instance.  A plugin has
 at most 1 msg:ControlPort.  A ControlPort is always an lv2:InputPort.  Hosts
 can send messages to the control port in order to investigate or manipulate
-a plugin instance (possibly on behalf of a UI or another plugin instance).
+a plugin instance (possibly on behalf of a UI or another plugin instance).</p>
 
-This is an abstract port class, the actual format and semantics
+<p>This is an abstract port class, the actual format and semantics
 of the port buffer (and messages) are defined by some other port type, i.e.
 a cmdControlPort MUST have another type which defines the format and semantics
 of the port buffer contents (likely candidates are
 <a href="http://lv2plug.in/ns/ext/atom#MessagePort">atom:MessagePort</a>
-or <a href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>).
+or <a href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>).</p>
 """ .
 
 msg:ResponsePort a rdfs:Class ;
     rdfs:label      "Response Port" ;
     rdfs:subClassOf lv2:Port ;
-    rdfs:comment    """
-An output port used to notify the host about changes to a plugin instance
+    lv2:documentation """
+<p>An output port used to notify the host about changes to a plugin instance
 or respond to messages send to its msg:ControlPort.  A plugin has at most
 1 StatusPort.  A StatusPort is always an lv2:OutputPort.  Any response to a
 command sent to the CommandPort of the plugin will appear in the StatusPort
 output.  The plugin may also emit other messages (i.e. the contents of a
-StatusPort are not necessarily responses to commands).
+StatusPort are not necessarily responses to commands).</p>
 
-This is an abstract port class, the actual format and semantics
+<p>This is an abstract port class, the actual format and semantics
 of the port buffer (and messages) are defined by some other port type, i.e.
 a cmdControlPort MUST have another type which defines the format and semantics
 of the port buffer contents (likely candidates are
 <a href="http://lv2plug.in/ns/ext/atom#MessagePort">atom:MessagePort</a>
-or <a href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>).
+or <a href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>).</p>
 """ .
 

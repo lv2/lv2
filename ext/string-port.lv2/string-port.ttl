@@ -35,7 +35,7 @@
 		a foaf:Person ;
 		foaf:name "Krzysztof Foltman" ;
 	] ;
-	rdfs:comment """
+	lv2:documentation """
 Defines ports which contain string data.
 
 <h4>UI issues</h4>
@@ -65,7 +65,7 @@ sp:StringTransfer a lv2:Feature ;
 
 sp:StringPort a lv2:Port ;
    rdfs:label "String port" ;
-   rdfs:comment """
+   lv2:documentation """
 Indicates that the port data points to a LV2_String_Data structure
 as defined in accompanying header file.
 

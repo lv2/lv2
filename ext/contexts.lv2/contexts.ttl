@@ -35,32 +35,32 @@
 	a lv2:Specification ;
 	a lv2:Feature ;
 	doap:name "LV2 Contexts" ;
-	rdfs:comment """
-An extension for LV2 plugins which have several execution contexts.
+	lv2:documentation """
+<p>An extension for LV2 plugins which have several execution contexts.</p>
 
-Contexts allow plugins to run several tasks in parallel and process port
+<p>Contexts allow plugins to run several tasks in parallel and process port
 input/output in multiple threads.  Contexts can be used to add non-realtime
 functionality to a plugin while still keeping the audio run() method
-realtime safe.
+realtime safe.</p>
 
-Any host which supports this extension must pass an LV2_Feature to
+<p>Any host which supports this extension must pass an LV2_Feature to
 the plugin's instantiate method with URI http://lv2plug.in/ns/ext/contexts
-and a pointer to a
+and a pointer to a</p>
 <pre>
 struct {
     void* host_handle;
     void (*request_run)(void* host_handle, const char* context_uri);
 }
 </pre>
-where the plugin may call request_run with the given host_handle (from any
-context) to demand immediate execution of the context specified.
+<p>where the plugin may call request_run with the given host_handle (from any
+context) to demand immediate execution of the context specified.</p>
 
-If the host does not support blocking contexts, request_run may be set to NULL,
-but plugins which have a :BlockingContext which is :mandatory MUST NOT be
-instantiated.  If the plugin has ANY context which is :hardRTCapable,
-request_run must be realtime safe (as defined by lv2:hardRTCapable).
+<p>If the host does not support blocking contexts, request_run may be set to
+NULL, but plugins which have a :BlockingContext which is :mandatory MUST NOT
+be instantiated.  If the plugin has ANY context which is :hardRTCapable,
+request_run must be realtime safe (as defined by lv2:hardRTCapable).</p>
 
-Unless otherwise stated, each context (defined by some URI) adds a new
+<p>Unless otherwise stated, each context (defined by some URI) adds a new
 threading class similar to the Audio class defined by LV2.  Each context has a
 run callback and a connect_port callback both in the same class (i.e. can't be
 called concurrently), but may be called concurrently with functions for other
@@ -68,8 +68,8 @@ contexts (excluding the Instantiation class).  Context properties such as
 ctx:hardRTCapable apply to both functions.
 The host MUST only call the correct connect_port function associated with the
 context for that port, i.e. it is an error to use the main LV2 connect_port
-function on a port with a context other than the main LV2 run function.
-"""^^lv2:basicXHTML .
+function on a port with a context other than the main LV2 run function.</p>
+""" .
 
 
 ##########################
@@ -78,21 +78,21 @@ function on a port with a context other than the main LV2 run function.
 
 ctx:Context a rdfs:Class ;
 	rdfs:label "LV2 Context" ;
-	rdfs:comment """
-A potentially concurrent context (callback) on a plugin.
+	lv2:documentation """
+<p>A potentially concurrent context (callback) on a plugin.</p>
 
-Ports are always associated with a context.  If a port has no explicit context
-property, then its context is ctx:AudioContext (the default LV2 run() context).
+<p>Ports are always associated with a context.  If a port has no explicit context
+property, then its context is ctx:AudioContext (the default LV2 run() context).</p>
 
-A plugin indicates support for a context by supporting an LV2 Feature with
+<p>A plugin indicates support for a context by supporting an LV2 Feature with
 that context's URI.  If a plugin optionally supports a context (e.g.
 <code>&lt;plugin&gt; lv2:optionalFeature ctx:IdleContext .</code>), then
 all ports associated with that context MUST be lv2:connectionOptional.  Thus,
 hosts that do not support contexts will connect such ports to NULL and the
-plugin can run with only a standard LV2 run() context.
+plugin can run with only a standard LV2 run() context.</p>
 
-Any plugin that supports any context (optionally or mandatorily) MUST adhere
-to the following additional threading rules for LV2_Descriptor.connect_port:
+<p>Any plugin that supports any context (optionally or mandatorily) MUST adhere
+to the following additional threading rules for LV2_Descriptor.connect_port:</p>
 <ul>
 <li>connect_port MUST only be called for a given port from the context
 associated with that port</li>
@@ -100,16 +100,16 @@ associated with that port</li>
 contexts (but MUST NOT be called concurrently for multiple ports in the
 same context)</li>
 </ul>
-Note this implies that any shared data access in connect_port may be
+<p>Note this implies that any shared data access in connect_port may be
 accessed concurrently.  The plugin is responsible for any synchronisation
-or locking necessary to make this possible.
+or locking necessary to make this possible.</p>
 """ .
 
 ctx:AudioContext a ctx:Context , lv2:Feature ;
 	rdfs:comment """The context of LV2_Descriptor.run().""" .
 
 ctx:MessageContext a ctx:Context , lv2:Feature ;
-	rdfs:comment """
+	lv2:documentation """
 A non-realtime context for plugin control via message passing.  This context
 has a run method which takes a bitset of flags for parameters specifying which
 input and output ports are valid before and after the run method has executed,

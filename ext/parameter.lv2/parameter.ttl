@@ -43,22 +43,22 @@
 
 param:Parameter a rdfs:Class ; a lv2:Resource ;
     rdfs:label   "Parameter" ;
-    rdfs:comment """
-A parameter on an LV2 plugin.  Parameters can be manipulated to alter the
-behaviour or output of a plugin.  Unlike lv2:ControlPort:
+    lv2:documentation """
+<p>A parameter on an LV2 plugin.  Parameters can be manipulated to alter
+the behaviour or output of a plugin.  Unlike lv2:ControlPort:</p>
 <ul>
 <li>A parameter may have any data type</li>
 <li>Parameters can be dynamically added or removed</li>
 <li>Parameter values can be manipulated by the plugin</li>
 </ul>
 
-Note that plugins are not required to support this potential functionality,
+<p>Note that plugins are not required to support this potential functionality,
 parameters can be used to provide a basic LADSPA-like set of floating point
-parameters in a more extensible manner.
+parameters in a more extensible manner.</p>
 
-Parameters are essentially controls that are not 1:1 associated with ports
+<p>Parameters are essentially controls that are not 1:1 associated with ports
 (manipulation of parameters can be accomplished by e.g. sending messages
-to a command port).
+to a command port).</p>
 """ .
 
 
@@ -66,11 +66,11 @@ param:supportsType a rdf:Property ;
     rdfs:domain  param:Parameter ;
     rdfs:range   atom:AtomType ;
     rdfs:label   "supports type" ;
-    rdfs:comment """
+    lv2:documentation """
 Indicates that a Parameter has values of a particular type.  A Parameter
 may support many types.  Parameter values are always LV2 Atoms as defined
-by the LV2 Atom Extension &lthttp://lv2plug.in/ns/ext/atom#&gt;.  Any type
-of LV2 Atom may be used as a parameter value.
+by the <a href="http://lv2plug.in/ns/ext/atom">LV2 Atom</a> Extension
+Any type of LV2 Atom may be used as a parameter value.
 """ .
 
 

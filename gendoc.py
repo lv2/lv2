@@ -7,7 +7,7 @@ import glob
 import re
 import datetime
 
-out_base = os.path.join('build', 'default', 'doc')
+out_base = os.path.join('build', 'default', 'ns')
 try:
     shutil.rmtree(out_base)
 except:
@@ -17,6 +17,7 @@ os.makedirs(out_base)
 
 URIPREFIX  = 'http://lv2plug.in/ns/'
 SPECGENDIR = './specgen'
+STYLEURI   = os.path.join('aux', 'style.css')
 
 release_dir = os.path.join('build', 'default', 'spec')
 try:
@@ -39,14 +40,13 @@ def gendoc(specgen_dir, bundle_dir, ttl_filename, html_filename):
     subprocess.call([os.path.join(specgen_dir, 'lv2specgen.py'),
               os.path.join(bundle_dir, ttl_filename),
               os.path.join(specgen_dir, 'template.html'),
-              os.path.join(specgen_dir, 'style.css'),
+              STYLEURI,
               os.path.join(out_base, html_filename),
-              os.path.join('..', 'doc'),
+              os.path.join('..', '..'),
               '-i'])
 
 gendoc('./lv2specgen', 'core.lv2', 'lv2.ttl', 'lv2core/lv2core.html')
 
-style = open('./lv2specgen/style.css', 'r')
 footer = open('./lv2specgen/footer.html', 'r')
 
 # Generate main (ontology) documentation and indices
@@ -61,16 +61,13 @@ for dir in ['ext', 'extensions']:
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8"/>
+<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8" />
 <title>LV2 Extensions</title>
-<style type="text/css">
-"""
-
-    index_html += style.read()
-
-    index_html += """
-</style></head>
-<body><h1>LV2 Extensions</h1>
+<link rel="stylesheet" type="text/css" href="../../""" + STYLEURI + """\" />
+</head>
+<body>
+<div id="titleheader"><h1 id="title">LV2 Extensions</h1></div>
+<div class="content">
 <h2>""" + URIPREFIX + dir + "/</h2><ul>\n"
 
     extensions = []
@@ -107,8 +104,8 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
         else:
             rev = '0'
 
-        if rev != '0':
-            path = os.path.join(os.path.abspath(release_dir), 'lv2-%s-%s.0.tar.gz' % (b, rev))
+        if rev != '0' and rev.find('pre') == -1:
+            path = os.path.join(os.path.abspath(release_dir), 'lv2-%s-%s.tar.gz' % (b, rev))
             subprocess.call(['tar', '--exclude-vcs', '-czf', path,
                              bundle[bundle.find('/') + 1:]], cwd=dir)
 
@@ -118,9 +115,9 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
             subprocess.call([specgendir + 'lv2specgen.py',
                              '%s.lv2/%s.ttl' % (b, b),
                              specgendir + 'template.html',
-                             specgendir + 'style.css',
+                             STYLEURI,
                              '%s.lv2/%s.html' % (b, b),
-                             os.path.join('..', '..', 'doc'),
+                             os.path.join('..', '..', '..'),
                              '-i'], cwd=outdir);
 
             li = '<li>'
@@ -140,12 +137,12 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
     for i in extensions:
         index_html += i + '\n'
     
-    index_html += '</ul>\n'
+    index_html += '</ul>\n</div>\n'
 
-    index_html += '<div class="footer">'
+    index_html += '<div id="footer">'
     index_html += '<span class="footer-text">Generated on '
     index_html += datetime.datetime.utcnow().strftime('%F %H:%M UTC')
-    index_html += ' by LV2 gendoc.py</span>'
+    index_html += ' by gendoc.py</span>&nbsp;'
     index_html += footer.read() + '</div>'
 
     index_html += '</body></html>\n'
@@ -154,6 +151,13 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
     print >>index_file, index_html
     index_file.close()
 
+# Copy stylesheet
+try:
+    os.mkdir(os.path.join('build', 'default', 'aux'))
+except:
+    pass
+shutil.copy('lv2specgen/style.css', os.path.join('build', 'default', STYLEURI))
+
 # Generate code (headers) documentation
 print "** Generating header documentation"
 #shutil.copy('Doxyfile', os.path.join('upload', 'Doxyfile'))
@@ -161,5 +165,4 @@ print ' * Calling doxygen in ' + os.getcwd()
 subprocess.call('doxygen', stdout=devnull)
 
 devnull.close()
-style.close()
 footer.close()

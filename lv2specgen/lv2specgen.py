@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # lv2specgen, an LV2 extension specification page generator
-# Copyright (c) 2009 David Robillard <d@drobilla.net>
+# Copyright (c) 2009-2010 David Robillard <d@drobilla.net>
 #
 # Based on SpecGen:
 # <http://forge.morfeo-project.org/wiki_en/index.php/SpecGen>
@@ -41,6 +41,7 @@ import sys
 import datetime
 import re
 import urllib
+import xml.sax.saxutils
 
 try:
     import RDF
@@ -85,6 +86,7 @@ lv2  = RDF.NS('http://lv2plug.in/ns/lv2core#')
 doap = RDF.NS('http://usefulinc.com/ns/doap#')
 foaf = RDF.NS('http://xmlns.com/foaf/0.1/')
 
+doc_base = '.'
 
 def niceName(uri):
     regexp = re.compile( "^(.*[/#])([^/#]+)$" )
@@ -102,20 +104,39 @@ def return_name(m, urinode):
     "Trims the namespace out of a term to give a name to the term."
     return str(urinode.uri).replace(spec_ns_str, "")
 
-
-def get_rdfs(m, urinode):
-    "Returns label and comment given an RDF.Node with a URI in it"
-    comment = ''
-    label = ''
-    if (type(urinode)==str):
+def getLabel(m, urinode):
+    if (type(urinode) == str):
         urinode = RDF.Uri(urinode)
     l = m.find_statements(RDF.Statement(urinode, rdfs.label, None))
     if l.current():
-        label = l.current().object.literal_value['string']
+        return l.current().object.literal_value['string']
+    else:
+        return ''
+
+def getComment(m, urinode):
+    if (type(urinode) == str):
+        urinode = RDF.Uri(urinode)
+    c = m.find_statements(RDF.Statement(urinode, lv2.documentation, None))
+    if c.current():
+        markup = c.current().object.literal_value['string']
+
+        # Replace urn:struct links with links to code documentation
+        matches = re.findall('href="urn:struct:([^"]*)"', markup)
+        if matches:
+            for match in matches:
+                struct_uri = os.path.join(doc_base, 'ns', 'doc', 'html',
+                                          'struct' + match.replace('_', '__') + '.html')
+                markup = markup.replace('href="urn:struct:' + match + '"',
+                                        'href="' + struct_uri + '"')
+                
+        return markup
+
     c = m.find_statements(RDF.Statement(urinode, rdfs.comment, None))
     if c.current():
-        comment = c.current().object.literal_value['string']
-    return label, comment
+        text = c.current().object.literal_value['string']
+        return xml.sax.saxutils.escape(text)
+
+    return ''
 
 
 def owlVersionInfo(m):
@@ -242,12 +263,12 @@ def rdfsClassInfo(term,m):
             doc += '<dt>Restriction on property %s</dt>\n' % getTermLink(onProp.uri)
             doc += '<dd class="restriction">\n'
             if comment != None:
-                doc += "<p>%s</p>\n" % comment
+                doc += "<span>%s</span>\n" % comment.literal_value['string']
 
             prop_str = ''
             for p in m.find_statements(RDF.Statement(r, None, None)):
                 if p.predicate != owl.onProperty and p.predicate != rdfs.comment and not(
-                        p.predicate == rdf.type and p.object == owl.Restriction):
+                        p.predicate == rdf.type and p.object == owl.Restriction) and p.predicate != lv2.documentation:
                     if p.object.is_resource():
                         prop_str += '\n<dt>%s</dt><dd>%s</dd>\n' % (
                                 getTermLink(p.predicate.uri), getTermLink(p.object.uri))
@@ -279,7 +300,7 @@ def rdfsClassInfo(term,m):
 
 def isSpecial(pred):
     """Return True if the predicate is "special" and shouldn't be emitted generically"""
-    return pred == rdf.type or pred == rdfs.range or pred == rdfs.domain or pred == rdfs.label or pred == rdfs.comment or pred == rdfs.subClassOf
+    return pred in [rdf.type, rdfs.range, rdfs.domain, rdfs.label, rdfs.comment, rdfs.subClassOf, lv2.documentation]
 
 
 def blankNodeDesc(node,m):
@@ -399,22 +420,21 @@ def docTerms(category, list, m):
         
         doc += """<div class="specterm" id="%s" about="%s">\n<h3>%s <a href="%s">%s</a></h3>\n""" % (t, term_uri, category, term_uri, curie)
 
-        label, comment = get_rdfs(m, term)    
+        label = getLabel(m, term)
+        comment = getComment(m, term)
+        
         if label!='' or comment != '':
             doc += '<div class="description">'
+
         if label!='':
             doc += "<div property=\"rdfs:label\" class=\"label\">%s</div>" % label
+
         if comment!='':
-            comment = comment.replace('\n\n', '<br /><br />')
-            matches = re.findall('href="urn:struct:([^"]*)"', comment)
-            if matches:
-                for match in matches:
-                    struct_uri = "../../doc/html/struct" + match.replace('_', '__') + '.html'
-                    comment = comment.replace('href="urn:struct:' + match + '"',
-                                              'href="' + struct_uri + '"')
             doc += "<div property=\"rdfs:comment\">%s</div>" % comment
+
         if label!='' or comment != '':
             doc += "</div>"
+        
         terminfo = ""
         if category=='Property':
             terminfo += owlInfo(term,m)
@@ -628,7 +648,7 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
     global spec_ns
     global spec_pre
     global ns_list
-        
+
     m = RDF.Model()
     p = RDF.Parser(name="guess")
     try:
@@ -713,7 +733,7 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
     template = template.replace('@MAIL@', 'devel@lists.lv2plug.in')
 
     revision = specRevision(m, spec_url) # (revision, date)
-    if revision:
+    if revision and revision[0] != '0':
         template = template.replace('@REVISION@', revision[0] + " (" + revision[1] + ")")
     else:
         template = template.replace('@REVISION@', '<span style="color: red; font-weight: bold">EXPERIMENTAL</span>')
@@ -726,7 +746,7 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
         release_name = "lv2-" + basename
         if basename == "lv2":
             release_name = "lv2core"
-        other_files += '<li><a href="http://lv2plug.in/spec/%s-%s.0.tar.gz">Release</a> (<a href="http://lv2plug.in/spec">all releases</a>)</li>\n' % (release_name, revision[0])
+        other_files += '<li><a href="http://lv2plug.in/spec/%s-%s.tar.gz">Release</a> (<a href="http://lv2plug.in/spec">all releases</a>)</li>\n' % (release_name, revision[0])
     if os.path.exists(os.path.abspath(header_path)):
         other_files += '<li><a href="' + docdir + '/html/%s">Header Documentation</a></li>\n' % (
             basename + '_8h.html')
@@ -737,16 +757,19 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
 
     see_also_files = specProperties(m, spec_url, rdfs.seeAlso)
     for f in see_also_files:
-        other_files += '<li><a href="%s">%s</a></li>' % (f, f)
+        uri = str(f.uri)
+        if uri[0:5] == 'file:':
+            uri = uri[5:]
+
+        other_files += '<li><a href="%s">%s</a></li>' % (uri, uri)
 
     template = template.replace('@FILES@', other_files);
 
-    comment = specProperty(m, spec_url, rdfs.comment)
-    if not comment:
-        comment = specProperty(m, spec_url, doap.shortdesc)
-    #template = template.replace('@COMMENT@', '<p>' + comment.strip().replace('\n\n', '</p><p>') + '</p>')
-    template = template.replace('@COMMENT@', comment.strip().replace('\n\n', '<br /><br />'))
-    #template = template.replace('@COMMENT@', comment)
+    comment = getComment(m, spec_url)
+    if comment != '':
+        template = template.replace('@COMMENT@', comment)
+    else:
+        template = template.replace('@COMMENT@', '')
 
     template = template.replace('@TIME@', datetime.datetime.utcnow().strftime('%F %H:%M UTC'))
 
@@ -800,7 +823,7 @@ def usage():
         TEMPLATE : HTML template path
         STYLE    : CSS style path
         OUTPUT   : HTML output path
-        DOCDIR   : Doxygen documentation directory
+        BASE     : Documentation output base URI
 
         Optional flags:
                 -i        : Document class/property instances (disabled by default)
@@ -846,22 +869,17 @@ if __name__ == "__main__":
         template = template.replace('@FOOTER@', footer)
         
         # Style
-        styleloc = args[2]
-        style = ''
-        try:
-            f = open(styleloc, "r")
-            style = f.read()
-        except Exception, e:
-            print "Error reading from style \"" + styleloc + "\": " + str(e)
-            usage()
-
-        template = template.replace('@STYLE@', style)
+        style_uri = args[2]
 
         # Destination
         dest = args[3]
 
         # Doxygen documentation directory
-        docdir = args[4]
+        doc_base = args[4]
+
+        template = template.replace('@STYLE_URI@', os.path.join(doc_base, style_uri))
+
+        docdir = os.path.join(doc_base, 'ns', 'doc')
         
         # Flags
         instances = False

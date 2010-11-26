@@ -32,8 +32,8 @@
     doap:created "2007-02-06" ;
     doap:homepage <http://lv2plug.in/ns/extensions/units> ;
     doap:release [
-        doap:revision "5" ;
-        doap:created "2009-11-10"
+        doap:revision "5.1pre1" ;
+        doap:created "2010-10-29"
     ] ;
     doap:maintainer [
         a foaf:Person ;
@@ -48,10 +48,11 @@
         foaf:name "David Robillard"
     ] ;
     doap:name "LV2 Units extension" ;
-    rdfs:comment """
-This extension defines a number of units for use in audio processing.
+    lv2:documentation """
+<p>This extension defines a number of units for use in audio processing.</p>
 
-For example, to say that the port use the gain unit defined as units:db (decibels):
+<p>For example, to say that the port use the gain unit defined as units:db
+(decibels):</p>
 <pre>
 @prefix : &lt;http://lv2plug.in/ns/extensions/units#&gt; .
 
@@ -65,8 +66,8 @@ lv2:port [
 ]
 </pre>
 
-Using the same form, plugins may also specify one-off units inline, to give
-better display hints to hosts:
+<p>Using the same form, plugins may also specify one-off units inline, to give
+better display hints to hosts:</p>
 <pre>
 lv2:port [
     a            lv2:ControlRateInputPort ;
@@ -82,8 +83,8 @@ lv2:port [
     ]
 ]
 </pre>
-Units are defined by a number of properties:
 
+<p>Units are defined by a number of properties:</p>
 <dl>
 <dt>units:name</dt>
 <dd>A display name for the unit (eg. decibels)</dd>
@@ -97,7 +98,7 @@ unit class (eg. units:conversion [ units:to units:m ; units:factor 1000 ]).
 conversions are expressed as either factors (multiplicand for the conversion)
 or offsets (addend for the conversion).</dd>
 </dl>
-""" ^^ lv2:basicXHTML .
+""" .
 
 units:Unit a rdfs:Class ;
     rdfs:comment "A unit for LV2 port data" .

@@ -12,32 +12,31 @@
     <title>@NAME@</title>
     <meta http-equiv="content-type" content="text/xhtml+xml; charset=utf-8" />
     <meta name="generator" content="lv2specgen" />
-    <style type="text/css">
-@STYLE@
-    </style>
+    <link href="@STYLE_URI@" rel="stylesheet" type="text/css" />
   </head>
   <body>
-  <h1 id="title">@NAME@</h1>
-  <div class="meta">
-  <table>
-    <tr><th class="metahead">URI</th><td><a href="@URI@">@URI@</a></td></tr>
-    <tr><th class="metahead">Revision</th><td>@REVISION@</td></tr>
-	<tr><th class="metahead">Namespaces</th><td>@PREFIXES@</td></tr>
-	@AUTHORS@
-  </table>
+  <div id="titleheader">
+    <h1 id="title">@NAME@</h1>
+    <div class="meta">
+    <table>
+      <tr><th class="metahead">URI</th><td><a href="@URI@">@URI@</a></td></tr>
+      <tr><th class="metahead">Revision</th><td>@REVISION@</td></tr>
+      <tr><th class="metahead">Namespaces</th><td>@PREFIXES@</td></tr>
+      @AUTHORS@
+    </table>
+    </div>
   </div>
-  
   
   <!-- META -->
 
   <div class="content">
-  <p>This document describes <a href="@URI@">@NAME@</a>,
-  an <a href="http://lv2plug.in/">LV2</a> related specification.
-  Comments are welcome, please direct discussion to <a
+  <p>This document is generated from <a href="@FILENAME@">@FILENAME@</a>, which
+  describes <a href="@URI@">@NAME@</a> (an <a href="http://lv2plug.in/">LV2</a>
+  specification).  Comments are welcome, please direct discussion to <a
   href="mailto:@MAIL@">@MAIL@</a>.</p>
   </div>
 
-  <h2 id="contents">Contents</h2>
+  <h2 class="sec" id="contents">Contents</h2>
   <div class="content">
     <h3>This Document</h3>
     <ol id="toc">
@@ -55,13 +54,13 @@
 
   <!-- DESCRIPTION -->
 
-  <h2 id="sec-description">1. Description</h2>
+  <h2 class="sec" id="sec-description">1. Description</h2>
   <div class="content">@COMMENT@</div>
 
 
   <!-- INDEX -->
 
-  <h2 id="sec-index">2. Index</h2>
+  <h2 class="sec" id="sec-index">2. Index</h2>
   <div class="content">
   @INDEX@
   </div>
@@ -69,14 +68,14 @@
 
   <!-- REFERENCE -->
 
-  <h2 id="sec-documentation">3. Documentation</h2>
+  <h2 class="sec" id="sec-documentation">3. Documentation</h2>
   <div class="content">
   @REFERENCE@
   </div>
 
   <!-- REFERENCES -->
 
-  <h2 id="sec-references">4. References</h2>
+  <h2 class="sec" id="sec-references">4. References</h2>
   <div class="content">
   <dl>
     <dt class="label" id="ref-rfc2119">IETF RFC 2119</dt>
@@ -92,7 +91,7 @@
 
   <!-- FOOTER -->
 
-  <div class="footer">
+  <div id="footer">
 	<span class="footer-text">Generated on @TIME@ from <a href="./@FILENAME@" class="footer-text">@FILENAME@</a> by <a href="http://drobilla.net/software/lv2specgen" class="footer-text">lv2specgen</a></span>
 	@FOOTER@
   </div>

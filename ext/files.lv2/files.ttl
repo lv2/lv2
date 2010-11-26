@@ -38,51 +38,50 @@
         foaf:homepage <http://drobilla.net/> ;
         rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
     ] ;
-	rdfs:comment """
-This extension provides a mechanism for plugins to create new files for
+	lv2:documentation """
+<p>This extension provides a mechanism for plugins to create new files for
 storing arbitrary data (e.g. waveforms), which can be persisted using
 the <a href="http://lv2plug.in/ns/ext/persist">LV2 Persist</a> extension.
 This allows plugins to work with potentially very large data via files,
-and save/restore these files.
+and save/restore these files.</p>
 
-The motivating idea behind this extension is that all details of file
+<p>The motivating idea behind this extension is that all details of file
 management must be handled by the host in whatever way is most appropriate for
 that host.  Plugins MUST NOT make any assumption about filesystem locations
-beyond what is explicitly guaranteed by this extension.
+beyond what is explicitly guaranteed by this extension.</p>
 
-To create a new file, plugins request a filename from the host.  This way,
+<p>To create a new file, plugins request a filename from the host.  This way,
 the host is aware of files used by the plugin and can use an appropriate
 location for them that the plugin alone could not know (e.g. using an
-appropriate disk volume for recording).
+appropriate disk volume for recording).</p>
 
-Plugins may also use pre-existing files from elsewhere on the filesystem.
+<p>Plugins may also use pre-existing files from elsewhere on the filesystem.
 Using the LV2 Persist extension, the host can save both these types of files
 in an appropriate way (by e.g. storing a link, or copying the file to export
-or archive a project).
-
+or archive a project).</p>
 """ .
 
 files:fileSupport a lv2:Feature ;
    rdfs:label "Support for plugin-created files" ;
-   rdfs:comment """
-This feature allows plugins to use pre-existing or newly created files,
+   lv2:documentation """
+<p>This feature allows plugins to use pre-existing or newly created files,
 and files them (e.g. across project saves and restores).  If a host supports
 this feature it passes a LV2_Files_FileSupport structure to the plugins
 instantiate method as a feature (with URI
 http://lv2plug.in/ns/ext/files#FileSupport).  This structure provides
 a function the plugin can use to create new file names.  If and only if the
 host supports this feature, the plugin MAY files and restore values of
-type LV2_FILES_FILENAME.
+type LV2_FILES_FILENAME.</p>
 
-A plugin SHOULD use this facility to create any new files it may need
+<p>A plugin SHOULD use this facility to create any new files it may need
 (e.g. samples, waveforms for recording).  Plugins MUST NOT expect their
 state to be correctly restored if they do not use this mechanism to
-create new files.
+create new files.</p>
 """ .
 
 files:FilePath a atom:AtomType ;
     rdfs:label "File Path" ;
-    rdfs:comment """
+    lv2:documentation """
 The full path to a file on the local filesystem.  The format of a
 files:filePath is a C string (escaped or otherwise restricted in whatever way
 necessary for the system).  This URI (http://lv2plug.in/ns/ext/files#FilePath),

@@ -42,49 +42,49 @@
         foaf:homepage <http://drobilla.net/> ;
         rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
     ] ;
-	rdfs:comment """
-This extension provides a mechanism for plugins to save and restore state
+	lv2:documentation """
+<p>This extension provides a mechanism for plugins to save and restore state
 across instances, allowing hosts to save configuration/state/data with a
-project or fully clone a plugin instance (including internal state).
+project or fully clone a plugin instance (including internal state).</p>
 
-Unlike ports, this extension allows plugins to save private state data.
+<p>Unlike ports, this extension allows plugins to save private state data.
 The motivating ideal behind this extension is for the state of a plugin
 instance to be entirely described by port values (as with all LV2 plugins) and
 a key/value dictionary as defined by this extension.  This mechanism is simple,
-yet sufficiently powerful to describe the state of very advanced plugins.
+yet sufficiently powerful to describe the state of very advanced plugins.</p>
 
-The "state" described by this extension is conceptually a single key/value
+<p>The "state" described by this extension is conceptually a single key/value
 dictionary.  Keys are URIs, and values are typed-tagged blobs of any type.
 The plugin provides a save and restore method for saving and restoring state.
 To initiate a save or restore, the host calls these methods, passing a callback
-to be used for saving or restoring a single key/value pair.  In this way, the
-actual mechanism of saving and restoring state is completely abstract from the
-plugin's perspective.
+to be used for saving or restoring a single key/value pair.  In this way,
+the actual mechanism of saving and restoring state is completely abstract
+from the plugin's perspective.</p>
 
-Because the state is a simple dictionary, hosts and plugins can work with state
-easily (virtually all programming languages have an appropriate dictionary
-type available).  Additionally, this format is simple and terse to serialise
-in many formats (e.g. any RDF syntax, JSON, XML, key/value databases such as
-BDB, etc.).  In particular, state can be elegantly described in a plugin's
-Turtle description, which is useful for presets (among other things).
+<p>Because the state is a simple dictionary, hosts and plugins can work
+with state easily (virtually all programming languages have an appropriate
+dictionary type available).  Additionally, this format is simple and terse to
+serialise in many formats (e.g. any RDF syntax, JSON, XML, key/value databases
+such as BDB, etc.).  In particular, state can be elegantly described in a
+plugin's Turtle description, which is useful for presets (among other things).
 Note that these are all simply possibilities enabled by this simple data
 model.  This extension defines only a few function prototypes and does not
 impose any requirement to use a particular syntax, data structure, library,
 or other implementation detail.  Hosts are free to work with plugin state
-in whatever way is most appropriate for that host.
+in whatever way is most appropriate for that host.</p>
 
-This extension makes it possible for plugins to save private data, but state is
-not necessarily private, e.g. a plugin could have a public interface via ports
-for manipulating internal state, which would be saved using this extension.
-Plugins are strongly encouraged to represent all state change as modifications
-of such key/value variables, to minimize implementation burden and enable
-the many benefits of having a universal model for describing plugin state.
-The use of URI keys prevents conflict and allows unrelated plugins to
-meaningfully describe state changes.  Future extensions will describe a
-dynamic mechanism for manipulating plugin state, as well as define various
-keys likely to be useful to a wide range of plugins.
+<p>This extension makes it possible for plugins to save private data, but
+state is not necessarily private, e.g. a plugin could have a public interface
+via ports for manipulating internal state, which would be saved using this
+extension.  Plugins are strongly encouraged to represent all state change as
+modifications of such key/value variables, to minimize implementation burden
+and enable the many benefits of having a universal model for describing
+plugin state.  The use of URI keys prevents conflict and allows unrelated
+plugins to meaningfully describe state changes.  Future extensions will
+describe a dynamic mechanism for manipulating plugin state, as well as define
+various keys likely to be useful to a wide range of plugins.</p>
 
-In pseudo code, a typical use case in a plugin is:
+<p>In pseudo code, a typical use case in a plugin is:</p>
 <pre>
 static const char* const KEY_GREETING = "http://example.org/greeting";
 
@@ -108,7 +108,7 @@ void my_restore(LV2_Handle                    instance,
 
     size_t      size;
     uint32_t    type;
-    const char* greeting = retrieve(callback_data, KEY_GREETING, &size, &type);
+    const char* greeting = retrieve(callback_data, KEY_GREETING, &amp;size, &amp;type);
 
     if (greeting)
         plugin->state->greeting = greeting;
@@ -118,7 +118,7 @@ void my_restore(LV2_Handle                    instance,
 }
 </pre>
 
-Similarly, a typical use case in a host is:
+<p>Similarly, a typical use case in a host is:</p>
 <pre>
 void store_callback(void*       callback_data,
                     const char* key,
@@ -134,7 +134,7 @@ Map get_plugin_state(LV2_Handle instance)
 {
     LV2_Persist* persist = instance.extension_data("http://lv2plug.in/ns/ext/persist");
     Map state_map;
-    persist.save(instance, store_callback, &state_map);
+    persist.save(instance, store_callback, &amp;state_map);
     return state_map;
 }
 </pre>
@@ -158,7 +158,7 @@ but its use is not required to support the LV2 Persist extension.
 persist:instanceState
     a rdf:Property ;
     rdfs:range persist:InstanceState ;
-    rdfs:comment """
+    lv2:documentation """
 Predicate to relate a plugin instance to an InstanceState.  This may be used
 wherever the state of a particular plugin instance needs to be represented.
 Note that the domain of this property is unspecified, since LV2 does not
