@@ -22,7 +22,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "lv2/http/lv2plug.in/ns/ext/atom/atom.h"
+#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 
 /** @file
  * Helper functions for the LV2 Atom extension

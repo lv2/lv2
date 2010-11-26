@@ -28,7 +28,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include "lv2/http/lv2plug.in/ns/ext/atom/atom.h"
+#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 
 /** An LV2 Message.
  *

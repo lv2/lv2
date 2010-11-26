@@ -104,6 +104,10 @@ def build_tree(search_path, outdir):
     """Build a directory tree under outdir containing symlinks to all LV2
     extensions found in search_path, such that the symlink paths correspond to
     the extension URIs."""
+    if os.path.basename(outdir) != 'lv2':
+        print >> sys.stderr, "lv2config: output dir must be named `lv2'"
+        sys.exit(1)
+        
     if os.access(outdir, os.F_OK) and not os.access(outdir, os.W_OK):
         print >> sys.stderr, "lv2config: cannot build `%s': Permission denied" % outdir
         sys.exit(1)
@@ -120,9 +124,8 @@ def build_tree(search_path, outdir):
             # Query extension URI
             specs = rdf_find_type(manifest, lv2.Specification)
             for ext_uri in specs:
-                ext_scheme = ext_uri[0:ext_uri.find(':')] 
                 ext_path   = os.path.normpath(ext_uri[ext_uri.find(':') + 1:].lstrip('/'))
-                ext_dir    = os.path.join(outdir, ext_scheme, ext_path)
+                ext_dir    = os.path.join(outdir, ext_path)
     
                 # Make parent directories
                 __mkdir_p(os.path.dirname(ext_dir))
