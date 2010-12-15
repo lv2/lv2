@@ -25,9 +25,9 @@ def configure(conf):
 def build(bld):
 	# Header "library"
 	obj = bld.new_task_gen()
-	obj.export_incdirs = ['.']
-	obj.name           = 'liblv2core'
-	obj.target         = 'lv2core'
+	obj.export_includes = ['.']
+	obj.name            = 'liblv2core'
+	obj.target          = 'lv2core'
 
 	if not Options.options.bundle_only:
 		# Header
