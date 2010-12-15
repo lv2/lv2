@@ -11,10 +11,10 @@ APPNAME = 'lv2plug.in'
 VERSION = LV2EXT_VERSION
 
 # Mandatory variables
-srcdir = '.'
-blddir = 'build'
+top = '.'
+out = 'build'
 
-def set_options(opt):
+def options(opt):
 	autowaf.set_options(opt)
 	opt.tool_options('compiler_cc')
 	opt.tool_options('compiler_cxx')
@@ -28,15 +28,15 @@ def configure(conf):
 	conf.check_tool('compiler_cc')
 	conf.check_tool('compiler_cxx')
 	conf.env.append_value('CCFLAGS', '-std=c99')
-	pat = conf.env['shlib_PATTERN']
+	pat = conf.env['cshlib_PATTERN']
 	ext = pat[pat.rfind('.'):]
-	conf.env.append_value('shlib_EXTENSION', ext)
-	
+	conf.env.append_value('cshlib_EXTENSION', ext)
+
 def build_plugin(bld, lang, name):
-	ext = bld.env['shlib_EXTENSION'][0]
+	ext = bld.env['cshlib_EXTENSION'][0]
 
 	penv = bld.env.copy()
-	penv['shlib_PATTERN'] = '%s' + ext
+	penv['cshlib_PATTERN'] = '%s' + ext
 
 	# Library
 	ext = 'c'
@@ -91,7 +91,7 @@ def build(bld):
 	'''
 	for e in ext.split():
 		build_extension(bld, e, 'ext')
-	
+
 	extensions = '''
 		ui
 		units
