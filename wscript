@@ -27,7 +27,7 @@ def configure(conf):
 	conf.sub_config('core.lv2');
 	conf.check_tool('compiler_cc')
 	conf.check_tool('compiler_cxx')
-	conf.env.append_value('CCFLAGS', '-std=c99')
+	conf.env.append_value('CFLAGS', '-std=c99')
 	pat = conf.env['cshlib_PATTERN']
 	ext = pat[pat.rfind('.'):]
 	conf.env.append_value('cshlib_EXTENSION', ext)
