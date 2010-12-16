@@ -1,7 +1,9 @@
 #!/usr/bin/env python
+import autowaf
 import datetime
 import os
-import autowaf
+
+import Logs
 
 # Version of this package (even if built as a child)
 LV2EXT_VERSION = datetime.date.isoformat(datetime.datetime.now()).replace('-', '.')
@@ -99,3 +101,15 @@ def build(bld):
 	for e in extensions.split():
 		build_extension(bld, e, 'extensions')
 
+	bld.add_post_fun(warn_lv2config)
+
+def warn_lv2config(ctx):
+	if ctx.cmd == 'install':
+		Logs.pprint('BOLD', '''
+***************************************************************************
+* LV2 Extension(s) Installed                                              *
+* You need to run lv2config to compile against extension headers          *
+* e.g. $ sudo ldconfig                                                    *
+* (If you are packaging, extension packages MUST do this on installation) *
+***************************************************************************
+''')
