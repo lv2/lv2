@@ -26,6 +26,8 @@
 
 #include <stdint.h>
 
+#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+
 #define LV2_CONTEXTS_URI "http://lv2plug.in/ns/ext/contexts"
 
 #define LV2_CONTEXT_MESSAGE "http://lv2plug.in/ns/ext/contexts#MessageContext"
@@ -44,9 +46,6 @@ static inline int
 lv2_contexts_port_is_valid(const void* flags, uint32_t index) {
 	return (((uint8_t*)flags)[index / 8] & (1 << (index % 8))) != 0;
 }
-
-#include "lv2.h"
-
 
 typedef struct {
 

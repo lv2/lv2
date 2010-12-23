@@ -22,6 +22,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdio.h>
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 
 /** @file
@@ -144,7 +145,7 @@ lv2_atom_is_a(LV2_Atom* object,
 {
 	if (lv2_atom_is_null(object))
 		return false;
-	
+
 	if (object->type == type)
 		return true;
 
