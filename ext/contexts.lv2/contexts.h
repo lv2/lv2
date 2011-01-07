@@ -30,8 +30,6 @@
 
 #define LV2_CONTEXTS_URI "http://lv2plug.in/ns/ext/contexts"
 
-#define LV2_CONTEXT_MESSAGE "http://lv2plug.in/ns/ext/contexts#MessageContext"
-
 static inline void
 lv2_contexts_set_port_valid(void* flags, uint32_t index) {
 	((uint8_t*)flags)[index / 8] |= 1 << (index % 8);
@@ -66,6 +64,19 @@ typedef struct {
 	                void*       valid_outputs);
 
 } LV2_Contexts_MessageContext;
+
+typedef void* LV2_Contexts_Request_Run_Data;
+
+typedef struct {
+
+	/** Pointer to opaque host data (to be passed to request_run) */
+	LV2_Contexts_Request_Run_Data data;
+
+	/** Request the host execute the context with the given URI */
+	void (*request_run)(LV2_Contexts_Request_Run_Data host_handle,
+	                    uint32_t                      context_uri);
+
+} LV2_Contexts_Request_Run_Feature;
 
 #endif /* LV2_CONTEXTS_H */
 

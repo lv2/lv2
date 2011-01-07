@@ -38,27 +38,13 @@
 	lv2:documentation """
 <p>An extension for LV2 plugins which have several execution contexts.</p>
 
-<p>Contexts allow plugins to run several tasks in parallel and process port
-input/output in multiple threads.  Contexts can be used to add non-realtime
-functionality to a plugin while still keeping the audio run() method
-realtime safe.</p>
+<p>Contexts allow plugins to run tasks and/or process input/output in
+multiple threads.  Contexts can be used to add non-realtime functionality
+to a plugin while still keeping the audio run() method realtime safe.</p>
 
-<p>Any host which supports this extension must pass an LV2_Feature to
-the plugin's instantiate method with URI http://lv2plug.in/ns/ext/contexts
-and a pointer to a</p>
-<pre>
-struct {
-    void* host_handle;
-    void (*request_run)(void* host_handle, const char* context_uri);
-}
-</pre>
-<p>where the plugin may call request_run with the given host_handle (from any
-context) to demand immediate execution of the context specified.</p>
-
-<p>If the host does not support blocking contexts, request_run may be set to
-NULL, but plugins which have a :BlockingContext which is :mandatory MUST NOT
-be instantiated.  If the plugin has ANY context which is :hardRTCapable,
-request_run must be realtime safe (as defined by lv2:hardRTCapable).</p>
+<p>A context is an LV2 feature, so the usual LV2 feature mechanism is used
+to determine whether a plugin has a given context, and whether or not it is
+mandatory.</p>
 
 <p>Unless otherwise stated, each context (defined by some URI) adds a new
 threading class similar to the Audio class defined by LV2.  Each context has a
@@ -113,13 +99,27 @@ ctx:MessageContext a ctx:Context , lv2:Feature ;
 A non-realtime context for plugin control via message passing.  This context
 has a run method which takes a bitset of flags for parameters specifying which
 input and output ports are valid before and after the run method has executed,
-respectively (see <a href="context.h#LV2_Context_MessageContext"
->LV2_Context_MessageContext</a>).
+respectively (see <a href="urn:struct:LV2_Contexts_MessageContext"
+>LV2_Contexts_MessageContext</a>).
 """ .
 
 ctx:IdleContext a ctx:Context , lv2:Feature ;
 	rdfs:comment """
 A non-realtime idle context, periodically run by the host roughly every second.
+This context never has any ports.
+""" .
+
+ctx:RequestRunFeature a lv2:Feature ;
+	lv2:documentation """
+A feature allowing the plugin to request the execution of a particular context
+at an arbitrary time.  To support this feature, the host MUST pass an <a href=
+"urn:struct:LV2_Feature">LV2_Feature</a> to <code>instantiate</code> with
+<code>data</code> pointing to a <a href="urn:struct:LV2_Contexts_Request_Run_Feature"
+>LV2_Contexts_Request_Run_Feature</a>.
+
+<p>The plugin MAY call <code>request_run</code> with the given
+<code>data</code> from any non-realtime context to demand soon-as-possible execution
+of the specified context.</p>
 """ .
 
 ctx:context a rdf:Property ;
