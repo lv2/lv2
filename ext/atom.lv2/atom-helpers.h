@@ -49,9 +49,9 @@ typedef LV2_Atom_Property* LV2_Object_Iter;
 
 /** Get an iterator pointing to @a prop in some LV2_Object */
 static inline LV2_Object_Iter
-lv2_object_begin(LV2_Atom* obj)
+lv2_object_begin(const LV2_Atom* obj)
 {
-	return (LV2_Object_Iter)(((LV2_Object*)obj->body)->properties);
+	return (LV2_Object_Iter)(((const LV2_Object*)obj->body)->properties);
 }
 
 /** Return true iff @a iter has reached the end of @a object */
@@ -169,8 +169,8 @@ lv2_atom_is_a(LV2_Atom* object,
 
 /** A single entry in an Object query. */
 typedef struct {
-	uint32_t  key;   ///< Set by the user to the desired key to query.
-	LV2_Atom* value; ///< Possibly set by query function to the found value
+	uint32_t        key;   ///< Set by the user to the desired key to query.
+	const LV2_Atom* value; ///< Possibly set by query function to the found value
 } LV2_Object_Query;
 
 /** "Query" an object, getting a pointer to the values for various keys.
@@ -181,7 +181,7 @@ typedef struct {
  * quickly without allocating any memory.  This function is realtime safe.
  */
 static inline int
-lv2_object_query(LV2_Atom* object, LV2_Object_Query* query)
+lv2_object_query(const LV2_Atom* object, LV2_Object_Query* query)
 {
 	int matches   = 0;
 	int n_queries = 0;
@@ -191,7 +191,7 @@ lv2_object_query(LV2_Atom* object, LV2_Object_Query* query)
 		++n_queries;
 	
 	LV2_OBJECT_FOREACH(object, o) {
-		LV2_Atom_Property* prop = lv2_object_iter_get(o);
+		const LV2_Atom_Property* prop = lv2_object_iter_get(o);
 		for (LV2_Object_Query* q = query; q->key; ++q) {
 			if (q->key == prop->key && !q->value) {
 				q->value = &prop->value;
