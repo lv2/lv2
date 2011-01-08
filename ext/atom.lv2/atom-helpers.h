@@ -58,7 +58,7 @@ lv2_object_begin(LV2_Atom* obj)
 static inline bool
 lv2_object_iter_is_end(const LV2_Atom* object, LV2_Object_Iter iter)
 {
-	return (uint8_t*)iter >= (object->body + object->size);
+	return (uint8_t*)iter >= ((uint8_t*)object->body + object->size);
 }
 
 /** Return true iff @a l points to the same property as @a r */
@@ -124,7 +124,7 @@ lv2_atom_append_property(LV2_Atom*      object,
 	prop->value.type = value_type;
 	prop->value.size = value_size;
 	memcpy(prop->value.body, value_body, value_size);
-	object->size += sizeof(uint32_t) + sizeof(LV2_Atom_Property) + value_size;
+	object->size += sizeof(LV2_Atom_Property) + value_size;
 	return prop;
 }
 
