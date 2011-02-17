@@ -21,6 +21,8 @@ include search path.  It is a good idea to use such a prefix directory so
 domain names do not conflict with anything else in the include path.
 """
 
+from __future__ import print_function
+
 __authors__ = 'David Robillard'
 __license   = 'GNU GPL v3 or later <http://www.gnu.org/licenses/gpl.html>'
 __contact__ = 'devel@lists.lv2plug.in'
@@ -41,8 +43,8 @@ except:
         import rdflib # Attempt to import RDFLib
         redland = False
     except:
-        print >> sys.stderr, """Failed to import `RDF' (Redland) or `rdflib'.
-(Please install either package, likely `python-librdf' or `python-rdflib')"""
+        print("""Failed to import `RDF' (Redland) or `rdflib'.
+(Please install either package, likely `python-librdf' or `python-rdflib')""",file=sys.stderr)
         sys.exit(1)
 
 def rdf_namespace(uri):
@@ -87,7 +89,7 @@ def lv2_path():
         return os.environ['LV2_PATH']
     else:
         ret = '/usr/lib/lv2' + os.pathsep + '/usr/local/lib/lv2'
-        print 'LV2_PATH unset, using default ' + ret
+        print('LV2_PATH unset, using default', ret)
         return ret
 
 def __mkdir_p(path):
@@ -109,14 +111,14 @@ def build_tree(search_path, outdir):
         sys.exit(1)
         
     if os.access(outdir, os.F_OK) and not os.access(outdir, os.W_OK):
-        print >> sys.stderr, "lv2config: cannot build `%s': Permission denied" % outdir
+        print ("lv2config: cannot build `%s': Permission denied" % outdir, file=sys.stderr)
         sys.exit(1)
 
     for dir in search_path.split(os.pathsep):
         if not os.access(dir, os.F_OK):
             continue
 
-        print 'Building includes in %s for %s/*.lv2' % (outdir, dir)
+        print('Building includes in %s for %s/*.lv2' % (outdir, dir))
         for bundle in glob.glob(os.path.join(dir, '*.lv2')):
             # Load manifest into model
             manifest = rdf_load('file://' + os.path.join(bundle, 'manifest.ttl'))
@@ -143,18 +145,18 @@ def build_tree(search_path, outdir):
             
 def __usage():
     script = os.path.basename(sys.argv[0])
-    print """Usage: %s
+    print("""Usage: %(script)s
     Build the default system lv2 include directories,
     /usr/include/lv2 and /usr/local/include/lv2
 
-Usage: %s INCLUDEDIR
+Usage: %(script)s INCLUDEDIR
     Build an lv2 include directory tree at INCLUDEDIR
     for all extensions found in $LV2_PATH.
 
-Usage: %s BUNDLESDIR INCLUDEDIR
+Usage: %(script)s BUNDLESDIR INCLUDEDIR
     Build an lv2 include directory tree at INCLUDEDIR
     for all extensions found in bundles under BUNDLESDIR.
-""" % (script, script, script)
+""" % {'script' : script})
 
 if __name__ == "__main__":
     args = sys.argv[1:]
