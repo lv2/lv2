@@ -192,7 +192,7 @@ int lv2_dyn_manifest_open(LV2_Dyn_Manifest_Handle *  handle,
  * example, if the library exposes a regular LV2 plugin, it should output only a
  * triple like the following:
  *
- *   <http://www.example.com/plugin/uri> a lv2:Plugin;
+ *   <http://www.example.com/plugin/uri> a lv2:Plugin .
  *
  * This function MUST return 0 on success, otherwise a non-zero error code.
  */
