@@ -345,6 +345,19 @@ used in a similar way to represent a 'minor version', and NOT as a major
 version to distinguish incompatible objects (use the URI for that).
 """ .
 
+lv2:binary a rdf:Property ;
+    rdfs:domain lv2:Resource ;
+    rdfs:range  rdfs:Resource ;
+    rdfs:label  "binary" ;
+    rdfs:comment """
+The binary of an LV2 resource. The value of this property must be a URI to
+a shared library object. The actual type of this object is system specific.
+
+This is a required property of an lv2:Plugin. The lv2:binary of an lv2:Plugin
+is the shared object containing the lv2_descriptor function which can be used
+to access the descriptor for that plugin.
+""" .
+
 
 ####################################
 ## Documentation                  ##
