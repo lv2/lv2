@@ -7,7 +7,7 @@ import glob
 import re
 import datetime
 
-out_base = os.path.join('build', 'default', 'ns')
+out_base = os.path.join('build', 'ns')
 try:
     shutil.rmtree(out_base)
 except:
@@ -19,7 +19,7 @@ URIPREFIX  = 'http://lv2plug.in/ns/'
 SPECGENDIR = './specgen'
 STYLEURI   = os.path.join('aux', 'style.css')
 
-release_dir = os.path.join('build', 'default', 'spec')
+release_dir = os.path.join('build', 'spec')
 try:
     os.mkdir(release_dir)
 except:
@@ -109,7 +109,7 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
             subprocess.call(['tar', '--exclude-vcs', '-czf', path,
                              bundle[bundle.find('/') + 1:]], cwd=dir)
 
-        specgendir = '../../../../lv2specgen/'
+        specgendir = '../../../lv2specgen/'
         if (os.access(outdir + '/%s.lv2/%s.ttl' % (b, b), os.R_OK)):
             print ' * Calling lv2specgen for %s%s/%s' %(URIPREFIX, dir, b)
             subprocess.call([specgendir + 'lv2specgen.py',
@@ -153,10 +153,10 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
 
 # Copy stylesheet
 try:
-    os.mkdir(os.path.join('build', 'default', 'aux'))
+    os.mkdir(os.path.join('build', 'aux'))
 except:
     pass
-shutil.copy('lv2specgen/style.css', os.path.join('build', 'default', STYLEURI))
+shutil.copy('lv2specgen/style.css', os.path.join('build', STYLEURI))
 
 # Generate code (headers) documentation
 print "** Generating header documentation"
