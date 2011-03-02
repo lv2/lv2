@@ -29,7 +29,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "serd/serd.h"
+#include "serd-0.1.0.h"
 
 /** A dynamic stack in memory. */
 typedef struct {
@@ -1823,6 +1823,7 @@ serd_reader_read_string(SerdReader me, const uint8_t* utf8)
 	me->read_head = 0;
 	me->cur       = cur;
 	me->from_file = false;
+	me->eof       = false;
 
 	const bool ret = read_turtleDoc(me);
 
