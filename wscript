@@ -32,6 +32,7 @@ def configure(conf):
 	pat = conf.env['cshlib_PATTERN']
 	ext = pat[pat.rfind('.'):]
 	conf.env.append_value('cshlib_EXTENSION', ext)
+	conf.write_config_header('lv2-config.h', remove=False)
 
 def build_extension(bld, name, dir):
 	data_file     = '%s/%s.lv2/%s.ttl' % (dir, name, name)
