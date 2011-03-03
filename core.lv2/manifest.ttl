@@ -2,6 +2,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 
 <http://lv2plug.in/ns/lv2core>
-	a            lv2:Specification ;
-	rdfs:seeAlso <lv2.ttl> .
+	a             lv2:Specification ;
+	lv2:revision "4.0pre2" ;
+	rdfs:seeAlso  <lv2.ttl> .
 

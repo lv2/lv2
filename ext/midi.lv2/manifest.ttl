@@ -3,5 +3,6 @@
 
 <http://lv2plug.in/ns/ext/midi>
 	a lv2:Specification ;
+	lv2:revision "1.1pre1" ;
 	rdfs:seeAlso <midi.ttl> .
 

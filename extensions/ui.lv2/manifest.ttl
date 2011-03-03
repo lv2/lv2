@@ -3,5 +3,6 @@
 
 <http://lv2plug.in/ns/extensions/ui>
 	a lv2:Specification ;
+	lv2:revision "2.1pre1" ;
 	rdfs:seeAlso <ui.ttl> .
 
