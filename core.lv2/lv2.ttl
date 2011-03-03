@@ -641,13 +641,13 @@ A plugin MUST operate reasonably even if such a port has a non-integer input.
 
 lv2:enumeration a lv2:PortProperty ;
     rdfs:label   "Enumeration" ;
-    rdfs:comment """
+    rdfs:comment """  
 Indicates that a port's only reasonable values are the scale points defined for
-that port. Though a host SHOULD NOT allow a user to set the value of such a 
-port to anything other than a scale point. A plugin MUST operate reasonably
+that port. A host SHOULD NOT allow a user to set the value of such a port to
+anything other than a scale point. However, a plugin MUST operate reasonably
 even if such a port has an input that is not a scale point, preferably by
-simply choosing the largest enumeration value less than or equal to the
-actual input value (i.e. round the input value down).
+simply choosing the largest enumeration value less than or equal to the actual
+input value (i.e. round the input value down).
 """ .
 
 
