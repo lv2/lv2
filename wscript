@@ -77,11 +77,7 @@ def build(bld):
 
 def warn_lv2config(ctx):
 	if ctx.cmd == 'install':
-		Logs.pprint('BOLD', '''
-***************************************************************************
-* LV2 Extension(s) Installed                                              *
-* You need to run lv2config to compile against extension headers          *
-* e.g. $ sudo ldconfig                                                    *
-* (If you are packaging, extension packages MUST do this on installation) *
-***************************************************************************
+		Logs.warn('''
+ * LV2 Extension(s) Installed
+ * You need to run lv2config to update extension headers
 ''')
