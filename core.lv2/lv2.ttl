@@ -139,17 +139,19 @@ the functions provided by a plugin are divided into classes:</p>
 <dd>run(), connect_port()</dd>
 </dl>
 
-<p>Extensions to this specification which add new functions MUST declare in
-which of these classes the functions belong, or define new classes for them.
-The rules that hosts MUST follow are:</p>
+<p>Extensions to this specification which add new plugin functions MUST declare in
+which of these classes the functions belong, or define new classes for them. Extensions
+which add new host-provided functions MUST declare from which of these classes the
+functions may be called, or otherwise precisely describe their threading rules.</p>
 
+<p>The rules that hosts MUST follow are:</p>
 <ul>
-<li>When a function is running for a plugin instance,
+<li>When any function is running for a plugin instance,
 no other function in the same class may run for that instance.</li>
-<li>When a function from the Discovery class is running,
+<li>When a <em>Discovery</em> function is running,
 no other functions in the same shared object file may run.</li>
-<li>When a function from the Instantiation class is running for a plugin
-instance, no other functions for that instance may run.</li>
+<li>When an <em>Instantiation</em> function is running for a plugin instance,
+no other functions for that instance may run.</li>
 </ul>
 
 <p>Any simultaneous calls that are not explicitly forbidden by these rules are
