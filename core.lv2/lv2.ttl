@@ -326,58 +326,96 @@ lv2:port a rdf:Property ;
     rdfs:label   "port" ;
     rdfs:comment "Relates a Template or Plugin to the Ports it contains" .
 
-lv2:revision a rdf:Property ;
+lv2:minorVersion a rdf:Property ;
     rdfs:domain lv2:Resource ;
-    rdfs:range  xsd:string ;
-    rdfs:label  "revision" ;
-    lv2:documentation """  
-<p>The revision of an LV2 Resource. This property is used by hosts to
-distinguish different revisions of a compatible resource, e.g. to load only the
-bundle with the most recent revision.</p>
+    rdfs:range  xsd:nonNegativeInteger ;
+    rdfs:label  "minor version" ;
+    lv2:documentation """
+<p>The minor version of an LV2 Resource. This property is used (along with
+lv2:microVersion) by hosts to distinguish different versions of a compatible
+resource, e.g. to load only the bundle with the most recent version.</p>
 
-<p>An LV2 revision is a string conforming to the <a
-href="http://semver.org">SemVer</a> specification, except with the major
-version number omitted. In other words, an LV2 revision is of the form Y.Z
-where Y and Z are integers, with an optional special version suffix which "MUST
-be comprised of only alphanumerics plus dash [0-9A-Za-z-] and MUST begin with
-an alpha character [A-Za-z]". For example, "1.3" or "2.0beta2". In contexts
-where a full version number is required, the major version number of any
-released LV2 resource is 1. Unreleased resources (with no revision property, or
-equivalently, revision 0) have full version "0.0.0".</p>
-
-<p>All LV2 plugins and extensions SHOULD have an explicit revision. The
-revision property of a Plugin or Specification MUST be located in the
-<tt>manifest.ttl</tt> file (since it is required by the host for
-discovery). Revisions act as a minor version number, i.e. they are used to
-distinguish revisions of a <em>compatible</em> resource, not to distinguish
-incompatible successors of a resource. More precisely:</p>
+<p>The version of an LV2 resource is composed of two fields: minor version,
+and micro version. These have the usual semantics:</p>
 
 <ul>
-<li>All revisions of a plugin with a given URI MUST have the same set of
-mandatory (i.e. not lv2:connectionOptional) ports with respect to
-lv2:symbol.</li>
-<li>All revisions of a plugin MUST have at least the rdf:type properties of
-previous revisions.</li>
-<li>All revisions of an extension MUST be compatible in the sense that it can
-interoperate with an implementation of any previous revision.</li>
+<li>The minor version MUST be incremented when backwards (but not
+forwards) compatible additions are made, e.g. the addition of a port to a
+plugin.
+
+<li>The micro version is incremented for changes which do not affect
+compatibility at all, e.g. bug fixes or documentation updates.</li>
 </ul>
 
-<p>This list may not exhaustively cover all cases. In general the rule is:
-replacing a resource with a new revision must not break anything.</p>
+<p>Note there is deliberately no concept of a major version: all versions of an
+LV2 resource with a given URI are by definition backwards compatible. More
+precisely, a new version of a resource MUST be able to replace an older version
+without breaking anything. If a change is made which breaks this rule, the URI
+of the resource MUST be changed. In contexts where a full (e.g. <a
+href="http://semver.org">SemVer</a> conformant) version number is required, the
+major version of all released LV2 resources is 1.</p>
 
-<p>A resource with no revision may be considered to have revision 0.</p>
+<p>Plugins and extensions must adhere to the following rules:</p>
+<ul>
+<li>All versions of a plugin with a given URI MUST have the "same" set of
+mandatory (i.e. not lv2:connectionOptional) ports with respect to lv2:symbol
+and rdf:type. In other words, every port on a specific version of a plugin has
+a lv2:symbol and a set of rdf:types; all future versions of that plugin are
+guaranteed to have a port with the same lv2:symbol and at least those
+rdf:types. New types may be added only if doing so does not break
+compatibility, i.e. if old hosts will continue to work correctly with the new
+plugin.</li>
 
-<p>Anything that depends on a specific revision of a plugin (e.g. a
-serialisation that depends on specific port indices) MUST refer to the plugin
-by both URI and revision.  However, implementations should be tolerant and
-extensions should be designed so that there is no need to do this.</p>
+<li>New ports MAY be added without changing the plugin URI if and only if they
+are lv2:connectionOptional and the minor version is incremented.</li>
 
-<p>When hosts discover several installed revisions of a resource, they SHOULD
-warn the user and load only the most recent revision. The special revision
-"all" indicates that a (partial) description of a resource should be loaded
-regardless of the revision of any other bundles discovered. This revision
-SHOULD be used by bundles that contain additional data for a resource, but not
-the main description of that resource (e.g. plugin presets).</p>""" .
+<li>The minor version MUST be incremented if the index of a particular port
+(identified by its symbol) is changed.</li>
+
+<li>All versions of an extension MUST be compatible in the sense that an
+implementation of the new version can interoperate with an implementation of
+any previous version.</li>
+</ul>
+
+<p>These rules are an attempt to rigorously define the necessary best
+practices, but may not exhaustively cover all cases. In general the rule is:
+replacing a resource with a new version of that resource MUST NOT break
+anything.</p>
+
+<p>Anything that depends on a specific version of a plugin (e.g. a
+serialisation that references ports by index) MUST refer to the plugin by both
+URI and version. However, implementations should be tolerant and extensions
+should be designed such that there is no need to do this (e.g. indices should
+only be meaningful for a particular plugin <em>instance</em> at run-time).</p>
+
+<p>When hosts discover several installed versions of a resource, they SHOULD
+warn the user and load only the most recent version.</p>
+
+<p>This property describes half of a resource version. See also <a
+href="http://lv2plug.in/ns/lv2core#minorVersion">lv2:minorVersion</a>, the
+property which describes the other half.</p>
+""" .
+
+lv2:microVersion a rdf:Property ;
+    rdfs:domain lv2:Resource ;
+    rdfs:range  xsd:nonNegativeInteger ;
+    rdfs:label  "micro version" ;
+    lv2:documentation """
+<p>The micro component of a Resource's version.</p>
+
+<p>An odd micro version indicates that the resource is a possibly unstable
+development version. Hosts and tools SHOULD clearly indicate this wherever it
+makes to do so.</p>
+
+<p>Correct version numbers MUST always be maintained for published
+resources. For example, after a release, if a change is made in the development
+version in source control, the micro revision MUST be incremented (to an odd
+number) to distinguish this modified version from the previous release.</p>
+
+<p>This property describes half of a resource version. For detailed
+documentation on LV2 resource versioning, see <a
+href="http://lv2plug.in/ns/lv2core#minorVersion">lv2:minorVersion</a>.
+""" .
 
 lv2:binary a rdf:Property ;
     rdfs:domain lv2:Resource ;
