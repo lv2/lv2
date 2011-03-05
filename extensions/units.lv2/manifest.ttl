@@ -3,6 +3,7 @@
 
 <http://lv2plug.in/ns/extensions/units>
 	a lv2:Specification ;
-	lv2:revision "5.1pre1" ;
+	lv2:minorVersion 5 ;
+	lv2:microVersion 1 ;
 	rdfs:seeAlso <units.ttl> .
 
