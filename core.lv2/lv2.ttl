@@ -391,6 +391,13 @@ only be meaningful for a particular plugin <em>instance</em> at run-time).</p>
 <p>When hosts discover several installed versions of a resource, they SHOULD
 warn the user and load only the most recent version.</p>
 
+<p>An odd minor <em>or</em> micro version indicates that the resource is a
+possibly unstable development version. Hosts and tools SHOULD clearly indicate
+this wherever appropriate. Several versions of a resource with an odd version
+may exist; i.e. it is acceptable to work on a development version of a resource
+(e.g. in source control) without worrying about version numbers as long as
+either the minor or micro version is odd.</p>
+
 <p>This property describes half of a resource version. See also <a
 href="http://lv2plug.in/ns/lv2core#minorVersion">lv2:minorVersion</a>, the
 property which describes the other half.</p>
@@ -402,13 +409,6 @@ lv2:microVersion a rdf:Property ;
     rdfs:label  "micro version" ;
     lv2:documentation """
 <p>The micro component of a Resource's version.</p>
-
-<p>An odd micro version indicates that the resource is a possibly unstable
-development version. Hosts and tools SHOULD clearly indicate this wherever it
-makes to do so. Several versions of a resource with an odd micro version may
-exist globally; i.e. it is acceptable to work on a development version of a
-resource (e.g. in source control) without worrying about version numbers as
-long as the micro version is odd.</p>
 
 <p>Correct version numbers MUST always be maintained for published
 resources. For example, after a release, if a change is made in the development
