@@ -405,11 +405,14 @@ lv2:microVersion a rdf:Property ;
 
 <p>An odd micro version indicates that the resource is a possibly unstable
 development version. Hosts and tools SHOULD clearly indicate this wherever it
-makes to do so.</p>
+makes to do so. Several versions of a resource with an odd micro version may
+exist globally; i.e. it is acceptable to work on a development version of a
+resource (e.g. in source control) without worrying about version numbers as
+long as the micro version is odd.</p>
 
 <p>Correct version numbers MUST always be maintained for published
 resources. For example, after a release, if a change is made in the development
-version in source control, the micro revision MUST be incremented (to an odd
+version in source control, the micro version MUST be incremented (to an odd
 number) to distinguish this modified version from the previous release.</p>
 
 <p>This property describes half of a resource version. For detailed
