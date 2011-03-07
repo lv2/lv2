@@ -556,7 +556,9 @@ values in the range of lv2:float.
 lv2:Feature a rdfs:Class ;
     rdfs:subClassOf lv2:Resource ;
     rdfs:label   "Feature" ;
-    rdfs:comment "An additional feature which a plugin may use or require.".
+    rdfs:comment """
+An additional feature which a plugin or other resource may use or require.
+""".
 
 lv2:optionalFeature a rdf:Property ;
     rdfs:domain  lv2:Resource ;
