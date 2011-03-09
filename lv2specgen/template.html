@@ -15,6 +15,9 @@
     <link href="@STYLE_URI@" rel="stylesheet" type="text/css" />
   </head>
   <body>
+
+  <!-- HEADER -->
+
   <div id="titleheader">
     <h1 id="title">@NAME@</h1>
     <div class="meta">
@@ -36,16 +39,24 @@
   href="mailto:@MAIL@">@MAIL@</a>.</p>
   </div>
 
+  
+  <!-- CONTENTS -->
+
   <h2 class="sec" id="contents">Contents</h2>
   <div class="content">
-    <h3>This Document</h3>
     <ol id="toc">
       <li><a href="#sec-description">Description</a></li>
       <li><a href="#sec-index">Index</a></li>
       <li><a href="#sec-documentation">Documentation</a></li>
       <li><a href="#sec-references">References</a></li>
     </ol>
-    <h3>Other Resources</h3>
+  </div>
+
+  
+  <!-- RESOURCES -->
+
+  <h2 class="sec" id="resources">Resources</h2>
+  <div class="content">
 	<ul>
 	@FILES@
 	</ul>
