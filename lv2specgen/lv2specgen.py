@@ -576,24 +576,29 @@ def specProperties(m, subject, predicate):
 
 def specAuthors(m, subject):
     "Return an HTML description of the authors of the spec."
-    dev = ''
+    dev = set()
     for i in m.find_statements(RDF.Statement(None, doap.developer, None)):
         for j in m.find_statements(RDF.Statement(i.object, foaf.name, None)):
-            dev += '<div class="author" property="doap:developer">%s</div>' % j.object.literal_value['string']
+            dev.add(j.object.literal_value['string'])
 
-    maint = ''
+    dev_str = ''
+    for d in dev:
+        dev_str += '<div class="author" property="doap:developer">%s</div>' % d
+
+    maint = set()
     for i in m.find_statements(RDF.Statement(None, doap.maintainer, None)):
         for j in m.find_statements(RDF.Statement(i.object, foaf.name, None)):
-            maint += '<div class="author" property="doap:maintainer">%s</div>' % j.object.literal_value['string']
+            maint.add(j.object.literal_value['string'])
 
-    if dev == '' and maint == '':
-        return ''
+    maint_str = ''
+    for m in maint:
+        maint_str += '<div class="author" property="doap:maintainer">%s</div>' % m
 
     ret = ''
-    if dev != '':
-        ret += '<tr><th class="metahead">Developer(s)</th><td>' + dev + '</td></tr>'
-    if maint != '':
-        ret += '<tr><th class="metahead">Maintainer(s)</th><td>' + maint + '</td></tr>'
+    if dev_str != '':
+        ret += '<tr><th class="metahead">Developer(s)</th><td>' + dev_str + '</td></tr>'
+    if maint_str != '':
+        ret += '<tr><th class="metahead">Maintainer(s)</th><td>' + maint_str + '</td></tr>'
 
     return ret
 
