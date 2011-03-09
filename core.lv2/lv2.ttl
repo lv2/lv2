@@ -275,7 +275,7 @@ consider all the classes of a port to determine which ports are most suitable
 for connection (e.g. by ignoring ports with additional classes the host does
 not recognize).</p>
 
-<p>A port has two identifiers - a (numeric) index, and a (textual) symbol.
+<p>A port has two identifiers: a (numeric) index, and a (textual) symbol.
 The index can be used as an identifier at run-time, but persistent references
 to ports (e.g. in a saved preset) MUST use the symbol. A symbol is guaranteed
 to refer to the same port on all plugins with a given URI. An index does NOT
