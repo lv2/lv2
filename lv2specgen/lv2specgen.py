@@ -351,15 +351,16 @@ def extraInfo(term,m):
 def rdfsInstanceInfo(term,m):
     """Generate rdfs-type information for instances"""
     doc = ""
-    
-    t = m.find_statements( RDF.Statement(term, rdf.type, None) )
+
+    term = RDF.Uri(term)
+    t = m.find_statements(RDF.Statement(term, rdf.type, None))
     if t.current():
         doc += "<dt>Type</dt>"
     while t.current():
-        doc += "<dd>%s</dd>" % getTermLink(str(t.current().object.uri), term, rdf.type)
+        doc += "<dd>%s</dd>" % getTermLink(RDF.Node(t.current().object), RDF.Node(term), rdf.type)
         t.next()
 
-    doc += extraInfo(term, m)
+    doc += extraInfo(RDF.Node(term), m)
 
     return doc
 
@@ -641,7 +642,7 @@ def getInstances(model, classes, properties):
     for one in classes:
         for i in model.find_statements(RDF.Statement(None, rdf.type, spec_ns[one])):
             uri = str(i.subject.uri)
-            if not uri in instances:
+            if not uri in instances and uri != spec_url:
                 instances.append(uri)
     for i in model.find_statements(RDF.Statement(None, rdf.type, None)):
         if not i.subject.is_resource():
@@ -668,13 +669,15 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
     m = RDF.Model()
     p = RDF.Parser(name="guess")
     try:
+        base = specloc[0:specloc.rfind('/')]
+
+        # Parse manifest.ttl
+        manifest_path = os.path.join(base, 'manifest.ttl')
+        p.parse_into_model(m, manifest_path)
+
         # Parse ontology file
         p.parse_into_model(m, specloc)
 
-        # Parse manifest.ttl
-        base = specloc[0:specloc.rfind('/')]
-        manifest_path = os.path.join(base, 'manifest.ttl')
-        p.parse_into_model(m, manifest_path)
     except IOError, e:
         print "Error reading from ontology:", str(e)
         usage()
