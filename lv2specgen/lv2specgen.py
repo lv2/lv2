@@ -773,14 +773,15 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
         release_name = "lv2-" + basename
         if basename == "lv2":
             release_name = "lv2core"
-        other_files += '<li><a href="http://lv2plug.in/spec/%s-%s.tar.gz">Release</a> (<a href="http://lv2plug.in/spec">all releases</a>)</li>\n' % (release_name, version[0])
+        other_files += '<li><a href="http://lv2plug.in/spec/%s-%d.%d.tar.gz">Release</a> (<a href="http://lv2plug.in/spec">all releases</a>)</li>\n' % (release_name, version[0], version[1])
     if os.path.exists(os.path.abspath(header_path)):
         other_files += '<li><a href="' + docdir + '/html/%s">Header Documentation</a></li>\n' % (
             basename + '_8h.html')
 
-        other_files += '<li><a href="%s">Header</a> %s</li>' % (basename + '.h', basename + '.h')
+        header = basename + '.h'
+        other_files += '<li><a href="%s">%s</a></li>' % (header, header)
 
-    other_files += '<li><a href="%s">Ontology</a> %s</li>\n' % (filename, filename)
+    #other_files += '<li><a href="%s">Ontology</a> %s</li>\n' % (filename, filename)
 
     see_also_files = specProperties(m, spec_url, rdfs.seeAlso)
     for f in see_also_files:
