@@ -422,7 +422,8 @@ def docTerms(category, list, m):
 
         label = getLabel(m, term)
         comment = getComment(m, term)
-        
+
+        doc += '<div class="spectermbody">'
         if label!='' or comment != '':
             doc += '<div class="description">'
 
@@ -449,7 +450,8 @@ def docTerms(category, list, m):
         if (len(terminfo)>0): #to prevent empty list (bug #882)
             doc += '\n<dl class="terminfo">%s</dl>\n' % terminfo
         
-        doc += "\n\n</div>\n\n"
+        doc += '</div>'
+        doc += "\n</div>\n\n"
     
     return doc
 

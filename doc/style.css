@@ -1,4 +1,5 @@
 html, body {
+	font-size: 100%;
 	background-color: #fff;
 	color: #000;
 	margin: 0;
@@ -52,18 +53,18 @@ h4 {
 	padding: 0;
 }
 #logoheader {
-	background-color: #f7f7f7;
+	background-color: #F3F3F3;
 	border: 0;
-	border-bottom: 1px solid #999;
+	border-bottom: 1px solid #DDD;
 	height: 84px;
 	margin: 0;
 	padding: 1px;
 	z-index: 1;
 }
 #titleheader {
-	background-color: #f7f7f7;
+	background-color: #F3F3F3;
 	border: 0;
-	border-bottom: 1px solid #999;
+	border-bottom: 1px solid #DDD;
 	margin: 0;
 	padding: 1ex;
 }
@@ -370,10 +371,10 @@ a:active {
 	color: #C00;
 }
 .sec {
-	background-color: #f7f7f7;
-	border-bottom: 1px solid #CCC;
+	background-color: #FBFBFB;
+	border-top: 1px solid #EEE;
 	color: #000;
-	margin: 1em 0 .5em;
+	margin: 1em 1ex .5em 1ex;
 	padding: 1ex;
 }
 ul, ol {
@@ -396,7 +397,7 @@ ul, ol {
 	padding: 0 0 0 1ex;
 }
 .description {
-	margin-bottom: 2ex;
+	margin-bottom: 0.75em;
 }
 .blankdesc {
 	background-color: #eee;
@@ -408,9 +409,18 @@ ul, ol {
 }
 .specterm {
 	background-color: #fbfbfb;
-	border: 1px solid #ddd;
-	margin-top: 1ex;
-	padding: 1ex;
+	border: 0;
+	border-top: 1px solid #ddd;
+	margin: 0;
+	padding: 0;
+	margin-bottom: 1em;
+}
+.specterm h3 {
+	background-color: #F3F3F3;
+	padding: 0.5ex;
+}
+.spectermbody {
+	padding: 0 1ex 1ex 1ex;
 }
 dl {
 	margin: 0;
