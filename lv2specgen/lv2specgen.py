@@ -598,23 +598,32 @@ def specAuthors(m, subject):
     return ret
 
 
-def specRevision(m, subject):
+def specVersion(m, subject):
     """
-    Return a (revision date) tuple, both strings, about the latest
-    release of the specification
+    Return a (minorVersion, microVersion, date) tuple
     """
-    latest_revision = ""
-    latest_release = None
+    # Get the date from the latest doap release
+    latest_doap_revision = ""
+    latest_doap_release = None
     for i in m.find_statements(RDF.Statement(None, doap.release, None)):
         for j in m.find_statements(RDF.Statement(i.object, doap.revision, None)):
             revision = j.object.literal_value['string']
-            if latest_revision == "" or revision > latest_revision:
-                latest_revision = revision
-                latest_release = i.object
-    if latest_release != None:
-        for i in m.find_statements(RDF.Statement(latest_release, doap.created, None)):
-            return (latest_revision, i.object.literal_value['string'])
+            if latest_doap_revision == "" or revision > latest_doap_revision:
+                latest_doap_revision = revision
+                latest_doap_release = i.object
+    date = ""
+    if latest_doap_release != None:
+        for i in m.find_statements(RDF.Statement(latest_doap_release, doap.created, None)):
+            date = i.object.literal_value['string']
 
+    # Get the LV2 version
+    minor_version = 0
+    micro_version = 0
+    for i in m.find_statements(RDF.Statement(None, lv2.minorVersion, None)):
+        minor_version = int(i.object.literal_value['string'])
+    for i in m.find_statements(RDF.Statement(None, lv2.microVersion, None)):
+        micro_version = int(i.object.literal_value['string'])
+    return (minor_version, micro_version, date)
 
 def getInstances(model, classes, properties):
     """
@@ -652,7 +661,13 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
     m = RDF.Model()
     p = RDF.Parser(name="guess")
     try:
+        # Parse ontology file
         p.parse_into_model(m, specloc)
+
+        # Parse manifest.ttl
+        base = specloc[0:specloc.rfind('/')]
+        manifest_path = os.path.join(base, 'manifest.ttl')
+        p.parse_into_model(m, manifest_path)
     except IOError, e:
         print "Error reading from ontology:", str(e)
         usage()
@@ -732,21 +747,26 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
     template = template.replace('@HEADER@', basename + '.h')
     template = template.replace('@MAIL@', 'devel@lists.lv2plug.in')
 
-    revision = specRevision(m, spec_url) # (revision, date)
-    if revision and revision[0] != '0':
-        template = template.replace('@REVISION@', revision[0] + " (" + revision[1] + ")")
-    else:
-        template = template.replace('@REVISION@', '<span style="color: red; font-weight: bold">EXPERIMENTAL</span>')
+    version = specVersion(m, spec_url) # (minor, micro, date)
+    date_string = version[2]
+    if date_string == "":
+        date_string = "Undated"
+
+    version_string = "%s.%s (%s)" % (version[0], version[1], date_string)
+    if version[0] == 0 or version[0] % 2 == 1 or version[1] % 2 == 1:
+        version_string += ' <span style="color: red; font-weight: bold">UNSTABLE</span>'
+
+    template = template.replace('@REVISION@', version_string)
 
     bundle_path = os.path.split(specloc[specloc.find(':')+1:])[0]
     header_path = bundle_path + '/' + basename + '.h'
 
     other_files = ''
-    if revision and revision[0] != '0':
+    if version[0] != '0':
         release_name = "lv2-" + basename
         if basename == "lv2":
             release_name = "lv2core"
-        other_files += '<li><a href="http://lv2plug.in/spec/%s-%s.tar.gz">Release</a> (<a href="http://lv2plug.in/spec">all releases</a>)</li>\n' % (release_name, revision[0])
+        other_files += '<li><a href="http://lv2plug.in/spec/%s-%s.tar.gz">Release</a> (<a href="http://lv2plug.in/spec">all releases</a>)</li>\n' % (release_name, version[0])
     if os.path.exists(os.path.abspath(header_path)):
         other_files += '<li><a href="' + docdir + '/html/%s">Header Documentation</a></li>\n' % (
             basename + '_8h.html')
