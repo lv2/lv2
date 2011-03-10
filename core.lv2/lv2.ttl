@@ -112,7 +112,7 @@ those in <a href="http://www.ladspa.org/">LADSPA</a>: <em>control</em> and
 <em>audio</em>. Audio data is communicated using arrays with one
 <code>float</code> element per sample, allowing a block of audio to be
 processed by the plugin in a single call to <code>run()</code>. Control data is
-communicated using single <code>float</code> values, which are considered valid
+communicated using single <code>float</code> values, which are fixed and valid
 for the duration of the call to <code>run()</code>. Thus the "control rate" is
 determined by the block size, which is controlled by the host (and not
 necessarily constant).</p>
@@ -161,7 +161,6 @@ allowed. For example, a host may call run() for two different plugin instances
 simultaneously.</p>""" .
 
 
-
 #############################
 ## Template/Plugin Classes ##
 #############################
@@ -202,7 +201,6 @@ detailed descriptions.
 """ .
 
 
-
 ##################
 ## Port Classes ##
 ##################
@@ -231,11 +229,13 @@ and another to describe the specific data type, e.g. lv2:AudioPort).
 """  ] , [
          a                  owl:Restriction ;
          owl:onProperty     lv2:index ;
-         owl:someValuesFrom xsd:decimal ;
+         owl:someValuesFrom xsd:nonNegativeInteger ;
          owl:cardinality    1 ;
          rdfs:comment """
-A port MUST have a single lv2:index which is of type xsd:decimal (e.g. a
-literal integer in Turtle).
+A port MUST have a single lv2:index which is of type xsd:nonNegativeInteger
+(e.g. a non-negative integer literal in Turtle). The actual RDF datatype
+of the index MAY be xsd:integer (which is what a generic Turtle parser
+will do), but the value itself MUST be non-negative.
 """  ] , [
          a                  owl:Restriction ;
          owl:onProperty     lv2:symbol ;
@@ -253,9 +253,9 @@ A port MUST have at least one lv2:name which is of type xsd:string.
     lv2:documentation """
 <p>The class which represents an LV2 port.</p>
 
-<p>All LV2 port descriptions MUST have a rdf:type that is one of one of
-lv2:Port lv2:InputPort or lv2:OutputPort. Additionally there MUST be at least
-one other rdf:type which more specifically describes type of the port
+<p>All LV2 port descriptions MUST have a rdf:type that is one of lv2:Port
+lv2:InputPort or lv2:OutputPort. Additionally there MUST be at least one other
+rdf:type which more precisely describes type of the port
 (e.g. lv2:AudioPort).</p>
 
 <p>Hosts that do not support a specific port class MUST NOT instantiate the
@@ -414,15 +414,40 @@ lv2:binary a rdf:Property ;
     rdfs:range  rdfs:Resource ;
     rdfs:label  "binary" ;
     lv2:documentation """
-The binary of an LV2 resource. The value of this property must be a URI that
-resolves to a shared library object (the actual type of this library is system
-specific).
 
-This is a required property of a Plugin which MUST be included in the bundle's
-<tt>manifest.ttl</tt> file. The lv2:binary of an lv2:Plugin is the shared
-object containing the <code>lv2_descriptor()</code> function which can be used
-to access the descriptor for that plugin. This property may be used similarly
-by extensions to relate other resources to their implementations.""" .
+<p>The binary of an LV2 resource. The value of this property must be a URI that
+resolves to a shared library object (the actual type of this library is system
+specific).</p>
+
+<p>This is a required property of a Plugin which MUST be included in the
+bundle's <tt>manifest.ttl</tt> file. The lv2:binary of an lv2:Plugin is the
+shared object containing the <code>lv2_descriptor()</code> function which can
+be used to access the descriptor for that plugin. This property may be used
+similarly by extensions to relate other resources to their implementations.</p>
+""" .
+
+lv2:appliesTo a rdf:Property ;
+	rdfs:domain  rdfs:Resource ;
+	rdfs:range   lv2:Plugin ;
+	rdfs:label   "Applies to" ;
+	lv2:documentation """
+<p>Specifies that a resource is related to a plugin. This is primarily intended
+for discovery purposes: bundles that describe resources that work with
+particular plugins (e.g. presets or user interfaces) SHOULD use this predicate
+in <tt>manifest.ttl</tt> to relate the resource to the applicable
+plugin(s), e.g.:</p>
+<pre>
+&lt;thing&gt;
+    a             ext:Thing ;
+    lv2:appliesTo &lt;plugin&gt; ;
+    rdfs:seeAlso  &lt;thing.ttl&gt; .
+</pre>
+
+<p>Particularly for large amounts of data, this is preferable to
+extending the plugin description with rdfs:seeAlso since the host may choose
+if/when to load the data, knowing that it describes an additional resource and
+not the plugin itself.</p>
+""" .
 
 
 ####################################
@@ -486,7 +511,6 @@ property without changing the Plugin URI.
 """ .
 
 
-
 ##################################
 ## Optional Port RDF Properties ##
 ##################################
@@ -536,7 +560,6 @@ A hint to the host for the maximum useful value that the port will use.
 This is a "soft" limit - the plugin is required to gracefully accept all
 values in the range of a port's data type.
 """ .
-
 
 
 ##############
@@ -614,13 +637,11 @@ This property is not related to "hard real-time" execution requirements
 lv2:inPlaceBroken a lv2:Feature ;
     rdfs:label   "in-place broken" ;
     rdfs:comment """
-Indicates that the plugin may cease to work correctly if the host elects
-to use the same data location for both audio input and audio output.
-Plugins that will fail to work correctly if ANY input buffer for a port of
-the class lv2:AudioPort is set to the same location as ANY output buffer for
-a port of the same class (with connect_port()) MUST require this Feature.
-Doing so should be avoided as it makes it impossible for hosts to use the
-plugin to process audio "in-place".
+Indicates that the plugin may cease to work correctly if the host elects to use
+the same data location for both input and output.  Plugins that will fail to
+work correctly if ANY input port is connected to the same location as ANY
+output port MUST require this Feature.  Doing so should be avoided as it makes
+it impossible for hosts to use the plugin to process data "in-place".
 """ .
 
 lv2:hardRTCapable a lv2:Feature ;
