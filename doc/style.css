@@ -23,6 +23,7 @@ img {
 }
 h1, h2, h3, h4, h5, h6 {
 	line-height: 1em;
+	margin: 1em 0 0.5em 0;
 }
 h1 {
 	font-size: 180%;
