@@ -49,7 +49,7 @@ An LV2 Resource (e.g. plugin, specification, or any other LV2 related thing)
 lv2:Specification a rdfs:Class ;
     rdfs:subClassOf lv2:Resource ;
     rdfs:comment """
-An LV2 specification (i.e. this specification, or an LV2 "extension").
+An LV2 specification (i.e. this specification, or an LV2 extension).
 
 Specification data, like plugin data, is distributed in standardized bundles
 so hosts may discover all present LV2 data. See http://lv2plug.in/docs for
@@ -70,8 +70,8 @@ more details.
     doap:shortdesc "An audio plugin interface specification" ;
     doap:programming-language "C" ;
     doap:release [
-        doap:revision "4.0pre2" ;
-        doap:created "2010-11-05"
+        doap:revision "3.1" ;
+        doap:created "2011-03-10"
     ] ;
     doap:maintainer [
         a foaf:Person ;
@@ -218,14 +218,14 @@ lv2:Port a rdfs:Class ;
             owl:oneOf ( lv2:Port lv2:InputPort lv2:OutputPort )
         ] ;
         rdfs:comment """
-A Port MUST have at least one rdf:type with object either lv2:Port,
+A Port MUST have at least one rdf:type property that is one of lv2:Port,
 lv2:InputPort, or lv2:OutputPort.
 """ ] , [
         a                  owl:Restriction ;
         owl:onProperty     rdf:type ;
         owl:minCardinality 2 ;
         rdfs:comment """
-A Port MUST have at least two rdf:type properties with objects that are some
+A Port MUST have at least two rdf:type properties that are some
 subclass of lv2:Port (one for lv2:Port, lv2:InputPort, or lv2:OutputPort,
 and another to describe the specific data type, e.g. lv2:AudioPort).
 """  ] , [
@@ -253,20 +253,10 @@ A port MUST have at least one lv2:name which is of type xsd:string.
     lv2:documentation """
 <p>The class which represents an LV2 port.</p>
 
-<p>In order for it to be used by a host it MUST have at least 
-the following properties:</p>
-<ul>
-<li>rdf:type (with object one of lv2:Port, lv2:InputPort, lv2:OutputPort)</li>
-<li>rdf:type (more specific port class, see below)</li>
-<li>lv2:index</li>
-<li>lv2:symbol</li>
-<li>lv2:name</li>
-</ul>
-
-<p>All LV2 port descriptions MUST have a property rdf:type where the object is
-one of lv2:Port lv2:InputPort or lv2:OutputPort. Additionally there MUST
-be at least one other rdf:type property which more specifically describes
-type of the port (e.g. lv2:AudioPort).</p>
+<p>All LV2 port descriptions MUST have a rdf:type that is one of one of
+lv2:Port lv2:InputPort or lv2:OutputPort. Additionally there MUST be at least
+one other rdf:type which more specifically describes type of the port
+(e.g. lv2:AudioPort).</p>
 
 <p>Hosts that do not support a specific port class MUST NOT instantiate the
 plugin, unless that port has the connectionOptional property set (in which case
@@ -422,14 +412,16 @@ lv2:binary a rdf:Property ;
     rdfs:domain lv2:Resource ;
     rdfs:range  rdfs:Resource ;
     rdfs:label  "binary" ;
-    rdfs:comment """
-The binary of an LV2 resource. The value of this property must be a URI to
-a shared library object. The actual type of this object is system specific.
+    lv2:documentation """
+The binary of an LV2 resource. The value of this property must be a URI that
+resolves to a shared library object (the actual type of this library is system
+specific).
 
-This is a required property of an lv2:Plugin. The lv2:binary of an lv2:Plugin
-is the shared object containing the lv2_descriptor function which can be used
-to access the descriptor for that plugin.
-""" .
+This is a required property of a Plugin which MUST be included in the bundle's
+<tt>manifest.ttl</tt> file. The lv2:binary of an lv2:Plugin is the shared
+object containing the <code>lv2_descriptor()</code> function which can be used
+to access the descriptor for that plugin. This property may be used similarly
+by extensions to relate other resources to their implementations.""" .
 
 
 ####################################
@@ -511,7 +503,7 @@ minimum, and maximum), though future extensions may define more.
 
 lv2:ScalePoint a rdfs:Class ;
     rdfs:subClassOf lv2:Point ;
-    rdfs:comment "A single lv2:float Point (for control inputs)" .
+    rdfs:comment "A single float Point (for control inputs)." .
 
 lv2:scalePoint a rdf:Property ;
     rdfs:domain  lv2:Port ;
@@ -533,7 +525,7 @@ lv2:minimum a rdf:Property ;
     rdfs:comment """
 A hint to the host for the minimum useful value that the port will use.
 This is a "soft" limit - the plugin is required to gracefully accept all
-values in the range of lv2:float.
+values in the range of a port's data type.
 """ .
 
 lv2:maximum a rdf:Property ;
@@ -542,7 +534,7 @@ lv2:maximum a rdf:Property ;
     rdfs:comment """
 A hint to the host for the maximum useful value that the port will use.
 This is a "soft" limit - the plugin is required to gracefully accept all
-values in the range of lv2:float.
+values in the range of a port's data type.
 """ .
 
 
@@ -567,7 +559,6 @@ Signifies that a plugin or other resource supports a certain features.
 If the host supports this feature, it MUST pass its URI and any additional
 data to the plugin in the instantiate() function. The plugin MUST NOT fail to
 instantiate if an optional feature is not supported by the host.
-This predicate may be used by extensions for any type of subject.
 """ .
 
 lv2:requiredFeature a rdf:Property ;
@@ -581,7 +572,6 @@ data to the plugin in the instantiate() function. The plugin MUST fail to
 instantiate if a required feature is not present; hosts SHOULD always check 
 this before attempting to instantiate a plugin (i.e. discovery by attempting 
 to instantiate is strongly discouraged).
-This predicate may be used by extensions for any type of subject.
 """ .
 
 
