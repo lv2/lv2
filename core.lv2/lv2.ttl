@@ -341,7 +341,7 @@ and micro version. These have the usual semantics:</p>
 <ul>
 <li>The minor version MUST be incremented when backwards (but not
 forwards) compatible additions are made, e.g. the addition of a port to a
-plugin.
+plugin.</li>
 
 <li>The micro version is incremented for changes which do not affect
 compatibility at all, e.g. bug fixes or documentation updates.</li>
@@ -414,7 +414,7 @@ number) to distinguish this modified version from the previous release.</p>
 
 <p>This property describes half of a resource version. For detailed
 documentation on LV2 resource versioning, see <a
-href="http://lv2plug.in/ns/lv2core#minorVersion">lv2:minorVersion</a>.
+href="http://lv2plug.in/ns/lv2core#minorVersion">lv2:minorVersion</a>.</p>
 """ .
 
 lv2:binary a rdf:Property ;
