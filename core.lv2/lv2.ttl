@@ -349,13 +349,13 @@ compatibility at all, e.g. bug fixes or documentation updates.</li>
 
 <p>Note there is deliberately no concept of a major version: all versions of an
 LV2 resource with a given URI are by definition backwards compatible. More
-precisely, a new version of a resource MUST be able to replace an older version
-without breaking anything. If a change is made which breaks this rule, the URI
+precisely: replacing a resource with a newer version of that resource MUST NOT
+break anything. If a change is made which breaks this rule, the URI
 of the resource MUST be changed. In contexts where a full (e.g. <a
 href="http://semver.org">SemVer</a> conformant) version number is required, the
 major version of all released LV2 resources is 1.</p>
 
-<p>Plugins and extensions must adhere to the following rules:</p>
+<p>Plugins and extensions MUST adhere to the following rules:</p>
 <ul>
 <li>All versions of a plugin with a given URI MUST have the "same" set of
 mandatory (i.e. not lv2:connectionOptional) ports with respect to lv2:symbol
@@ -369,18 +369,15 @@ plugin.</li>
 <li>New ports MAY be added without changing the plugin URI if and only if they
 are lv2:connectionOptional and the minor version is incremented.</li>
 
-<li>The minor version MUST be incremented if the index of a particular port
-(identified by its symbol) is changed.</li>
+<li>The minor version MUST be incremented if the index of any port (identified
+by its symbol) is changed.</li>
 
 <li>All versions of an extension MUST be compatible in the sense that an
 implementation of the new version can interoperate with an implementation of
 any previous version.</li>
 </ul>
 
-<p>These rules are an attempt to rigorously define the necessary best
-practices, but may not exhaustively cover all cases. In general the rule is:
-replacing a resource with a new version of that resource MUST NOT break
-anything.</p>
+<p>(Note these rules are not necessarily exhaustive)</p>
 
 <p>Anything that depends on a specific version of a plugin (e.g. a
 serialisation that references ports by index) MUST refer to the plugin by both
