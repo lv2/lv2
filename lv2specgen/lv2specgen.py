@@ -584,27 +584,32 @@ def specAuthors(m, subject):
         for j in m.find_statements(RDF.Statement(i.object, foaf.name, None)):
             dev.add(j.object.literal_value['string'])
 
-    dev_str = ''
-    for d in dev:
-        dev_str += '<div class="author" property="doap:developer">%s</div>' % d
-
     maint = set()
     for i in m.find_statements(RDF.Statement(None, doap.maintainer, None)):
         for j in m.find_statements(RDF.Statement(i.object, foaf.name, None)):
             maint.add(j.object.literal_value['string'])
 
-    maint_str = ''
+    doc = ''
+    first = True
+    for d in dev:
+        if not first:
+            doc += ', '
+        doc += '<span class="author" property="doap:developer">%s</span>' % d
+        first = False
+
     for m in maint:
-        maint_str += '<div class="author" property="doap:maintainer">%s</div>' % m
+        if not first:
+            doc += ', '
+        doc += '<span class="author" property="doap:maintainer">%s</span>' % m
+        first = False
 
-    ret = ''
-    if dev_str != '':
-        ret += '<tr><th class="metahead">Developer(s)</th><td>' + dev_str + '</td></tr>'
-    if maint_str != '':
-        ret += '<tr><th class="metahead">Maintainer(s)</th><td>' + maint_str + '</td></tr>'
-
-    return ret
-
+    n_authors = len(dev) + len(maint)
+    if n_authors == 0:
+        return ''
+    elif n_authors == 1:
+        return '<tr><th class="metahead">Author</th><td>' + doc + '</td></tr>'
+    else:
+        return '<tr><th class="metahead">Authors</th><td>' + doc + '</td></tr>'
 
 def specVersion(m, subject):
     """
