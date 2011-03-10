@@ -398,8 +398,9 @@ lv2:microVersion a rdf:Property ;
     lv2:documentation """
 <p>The micro component of a Resource's version.</p>
 
-<p>Correct version numbers MUST always be maintained for published
-resources. For example, after a release, if a change is made in the development
+<p>Releases of plugins and extensions MUST be explicitly versioned. Correct
+version numbers MUST always be maintained for any versioned resource that is
+published. For example, after a release, if a change is made in the development
 version in source control, the micro version MUST be incremented (to an odd
 number) to distinguish this modified version from the previous release.</p>
 
@@ -429,7 +430,6 @@ by extensions to relate other resources to their implementations.""" .
 ####################################
 
 lv2:documentation a rdf:Property ;
-    rdfs:domain  lv2:Resource ;
     rdfs:range   rdfs:Literal ;
     rdfs:label   "documentation" ;
     rdfs:seeAlso <http://www.w3.org/TR/xhtml-basic/> ;
