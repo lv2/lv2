@@ -864,14 +864,17 @@ lv2:MultiEQPlugin a rdfs:Class ;
 
 lv2:SpectralPlugin a rdfs:Class ;
     rdfs:subClassOf lv2:Plugin ;
-    rdfs:label "Spectral Processor" .
+    rdfs:label "Spectral" ;
+    rdfs:comment """
+Plugins that alter the spectral properties (e.g. frequency) of audio.
+""" .
 
 lv2:PitchPlugin a rdfs:Class ;
     rdfs:subClassOf lv2:SpectralPlugin ;
     rdfs:label "Pitch Shifter" .
 
 lv2:AmplifierPlugin a rdfs:Class ;
-    rdfs:subClassOf lv2:Plugin ;
+    rdfs:subClassOf lv2:DynamicsPlugin ;
     rdfs:label "Amplifier" .
 
 lv2:DistortionPlugin a rdfs:Class ;
@@ -884,9 +887,9 @@ lv2:WaveshaperPlugin a rdfs:Class ;
 
 lv2:DynamicsPlugin a rdfs:Class ;
     rdfs:subClassOf lv2:Plugin ;
-    rdfs:label "Dynamics Processor" ;
+    rdfs:label "Dynamics" ;
     rdfs:comment """
-Plugins that alter the envelope or dynamic range of the processed audio.
+Plugins that alter the envelope or dynamic range of audio.
 """ .
 
 lv2:CompressorPlugin a rdfs:Class ;
@@ -904,3 +907,11 @@ lv2:LimiterPlugin a rdfs:Class ;
 lv2:GatePlugin a rdfs:Class ;
     rdfs:subClassOf lv2:DynamicsPlugin ;
     rdfs:label "Gate" .
+
+lv2:FunctionPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:UtilityPlugin ;
+    rdfs:label "Function" .
+
+lv2:ConstantPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:GeneratorPlugin ;
+    rdfs:label "Constant" .
