@@ -6,6 +6,8 @@ import subprocess
 import glob
 import re
 import datetime
+import xml.dom.minidom
+import xml.dom
 
 out_base = os.path.join('build', 'ns')
 try:
@@ -16,6 +18,7 @@ except:
 os.makedirs(out_base)
 
 URIPREFIX  = 'http://lv2plug.in/ns/'
+DOXPREFIX  = 'http://lv2plug.in/ns/doc/html/'
 SPECGENDIR = './specgen'
 STYLEURI   = os.path.join('aux', 'style.css')
 
@@ -25,6 +28,50 @@ try:
 except:
     pass
 
+devnull = open(os.devnull, 'w')
+
+# Generate code (headers) documentation
+print "** Generating header documentation"
+#shutil.copy('Doxyfile', os.path.join('upload', 'Doxyfile'))
+print ' * Calling doxygen in ' + os.getcwd()
+subprocess.call('doxygen', stdout=devnull)
+
+
+# Rescue Doxygen tag file from XML hell
+
+# Return the content of the first child node with a certain tag name
+def getChildText(elt, tagname):
+    elements = elt.getElementsByTagName(tagname)
+    text = ''
+    for e in elements:
+        if e.parentNode == elt:
+            text = e.firstChild.nodeValue
+            return text
+    return text
+
+tagdoc = xml.dom.minidom.parse('c_tags')
+root = tagdoc.documentElement
+bettertags = open('c_bettertags', 'w')
+for cn in root.childNodes:
+    if cn.nodeType == xml.dom.Node.ELEMENT_NODE and cn.tagName == 'compound':
+        if cn.getAttribute('kind') == 'page':
+            continue
+        name = getChildText(cn, 'name')
+        filename = getChildText(cn, 'filename')
+        bettertags.write('%s %s%s.html\n' % (name, DOXPREFIX, filename))
+        if cn.getAttribute('kind') == 'file':
+            prefix = ''
+        else:
+            prefix = name + '::'
+        members = cn.getElementsByTagName('member')
+        for m in members:
+            mname = prefix + getChildText(m, 'name')
+            mafile = getChildText(m, 'anchorfile')
+            manchor = getChildText(m, 'anchor')
+            bettertags.write('%s %s%s#%s\n' % (mname, DOXPREFIX, \
+                                                   mafile, manchor))
+bettertags.close()
+
 print '** Generating core documentation'
 
 lv2_outdir = os.path.join(out_base, 'lv2core')
@@ -33,8 +80,6 @@ shutil.copy('core.lv2/lv2.h',        lv2_outdir)
 shutil.copy('core.lv2/lv2.ttl',      lv2_outdir)
 shutil.copy('core.lv2/manifest.ttl', lv2_outdir)
 shutil.copy('doc/index.php',         lv2_outdir)
-
-devnull = open(os.devnull, 'w')
 
 def gendoc(specgen_dir, bundle_dir, ttl_filename, html_filename):
     subprocess.call([os.path.join(specgen_dir, 'lv2specgen.py'),
@@ -157,12 +202,6 @@ try:
 except:
     pass
 shutil.copy('lv2specgen/style.css', os.path.join('build', STYLEURI))
-
-# Generate code (headers) documentation
-print "** Generating header documentation"
-#shutil.copy('Doxyfile', os.path.join('upload', 'Doxyfile'))
-print ' * Calling doxygen in ' + os.getcwd()
-subprocess.call('doxygen', stdout=devnull)
 
 devnull.close()
 footer.close()
