@@ -862,6 +862,14 @@ lv2:MultiEQPlugin a rdfs:Class ;
     rdfs:subClassOf lv2:EQPlugin ;
     rdfs:label "Multiband" .
 
+lv2:SpatialPlugin a rdfs:Class ;
+    rdfs:subClassOf lv2:Plugin ;
+    rdfs:label "Spatial" ;
+    rdfs:comment """
+Plugins that manipulate the position of audio in space (e.g. panning,
+stereo width, surround encoding, etc.).
+""" .
+
 lv2:SpectralPlugin a rdfs:Class ;
     rdfs:subClassOf lv2:Plugin ;
     rdfs:label "Spectral" ;
