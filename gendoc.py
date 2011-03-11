@@ -21,6 +21,7 @@ URIPREFIX  = 'http://lv2plug.in/ns/'
 DOXPREFIX  = 'http://lv2plug.in/ns/doc/html/'
 SPECGENDIR = './specgen'
 STYLEURI   = os.path.join('aux', 'style.css')
+TAGFILE    = './doclinks'
 
 release_dir = os.path.join('build', 'spec')
 try:
@@ -51,14 +52,17 @@ def getChildText(elt, tagname):
 
 tagdoc = xml.dom.minidom.parse('c_tags')
 root = tagdoc.documentElement
-bettertags = open('c_bettertags', 'w')
+bettertags = open(TAGFILE, 'w')
 for cn in root.childNodes:
     if cn.nodeType == xml.dom.Node.ELEMENT_NODE and cn.tagName == 'compound':
         if cn.getAttribute('kind') == 'page':
             continue
         name = getChildText(cn, 'name')
         filename = getChildText(cn, 'filename')
-        bettertags.write('%s %s%s.html\n' % (name, DOXPREFIX, filename))
+        # Sometimes the .html is there, sometimes it isn't...
+        if filename[-5:] != '.html':
+            filename += '.html'
+        bettertags.write('%s %s%s\n' % (name, DOXPREFIX, filename))
         if cn.getAttribute('kind') == 'file':
             prefix = ''
         else:
@@ -88,6 +92,7 @@ def gendoc(specgen_dir, bundle_dir, ttl_filename, html_filename):
               STYLEURI,
               os.path.join(out_base, html_filename),
               os.path.join('..', '..'),
+              TAGFILE,
               '-i'])
 
 gendoc('./lv2specgen', 'core.lv2', 'lv2.ttl', 'lv2core/lv2core.html')
@@ -163,6 +168,7 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
                              STYLEURI,
                              '%s.lv2/%s.html' % (b, b),
                              os.path.join('..', '..', '..'),
+                             os.path.join('..', '..', '..', TAGFILE),
                              '-i'], cwd=outdir);
 
             li = '<li>'

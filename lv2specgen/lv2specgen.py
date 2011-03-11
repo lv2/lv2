@@ -60,6 +60,7 @@ except ImportError:
 #global vars
 classranges = {}
 classdomains = {}
+linkmap = {}
 spec_url = None
 spec_ns_str = None
 spec_ns = None
@@ -128,9 +129,14 @@ def getComment(m, urinode):
                                           'struct' + match.replace('_', '__') + '.html')
                 markup = markup.replace('href="urn:struct:' + match + '"',
                                         'href="' + struct_uri + '"')
-                
-        return markup
-
+        
+        rgx = re.compile('([^a-zA-Z0-9_:])(' + \
+                             '|'.join(map(re.escape, linkmap)) + \
+                             ')([^a-aA-Z0-9_:])')
+        def translate(match):
+            return match.group(1) + linkmap[match.group(2)] + match.group(3)
+        return rgx.sub(translate, markup)
+    
     c = m.find_statements(RDF.Statement(urinode, rdfs.comment, None))
     if c.current():
         text = c.current().object.literal_value['string']
@@ -662,7 +668,7 @@ def getInstances(model, classes, properties):
     return instances
    
  
-def specgen(specloc, docdir, template, instances=False, mode="spec"):
+def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     """The meat and potatoes: Everything starts here."""
 
     global spec_url
@@ -670,7 +676,13 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
     global spec_ns
     global spec_pre
     global ns_list
-
+    
+    # Build a symbol -> link mapping for external links
+    dlfile = open(doclinks, 'r')
+    for line in dlfile:
+        sym, _, url = line.rstrip().partition(' ')
+        linkmap[sym] = '<a href="%s">%s</a>' % (url, sym)
+    
     m = RDF.Model()
     try:
         base = specloc[0:specloc.rfind('/')]
@@ -913,6 +925,9 @@ if __name__ == "__main__":
 
         # Doxygen documentation directory
         doc_base = args[4]
+        
+        # C symbol -> doxygen link mapping
+        doc_links = args[5]
 
         template = template.replace('@STYLE_URI@', os.path.join(doc_base, style_uri))
 
@@ -920,8 +935,8 @@ if __name__ == "__main__":
         
         # Flags
         instances = False
-        if len(args) > 4:
-            flags = args[4:]
+        if len(args) > 5:
+            flags = args[5:]
             i = 0
             while i < len(flags):
                 if flags[i] == '-i':
@@ -931,5 +946,5 @@ if __name__ == "__main__":
                     i += 1
                 i += 1
         
-        save(dest, specgen(specloc, docdir, template, instances=instances))
+        save(dest, specgen(specloc, docdir, template, doc_links, instances=instances))
 
