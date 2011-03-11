@@ -419,7 +419,7 @@ def docTerms(category, list, m):
         except:
             term_uri = term
         
-        doc += """<div class="specterm" id="%s" about="%s">\n<h3>%s <a href="%s">%s</a></h3>\n""" % (t, term_uri, category, term_uri, curie)
+        doc += """<div class="specterm" id="%s" about="%s">\n<h3>%s <a href="#%s">%s</a></h3>\n""" % (t, term_uri, category, getAnchor(str(term_uri)), curie)
 
         label = getLabel(m, term)
         comment = getComment(m, term)
