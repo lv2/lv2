@@ -672,15 +672,16 @@ def specgen(specloc, docdir, template, instances=False, mode="spec"):
     global ns_list
 
     m = RDF.Model()
-    p = RDF.Parser(name="guess")
     try:
         base = specloc[0:specloc.rfind('/')]
 
         # Parse manifest.ttl
         manifest_path = os.path.join(base, 'manifest.ttl')
+        p = RDF.Parser(name="guess")
         p.parse_into_model(m, manifest_path)
 
         # Parse ontology file
+        p = RDF.Parser(name="guess")
         p.parse_into_model(m, specloc)
 
     except IOError, e:
