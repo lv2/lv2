@@ -220,9 +220,9 @@ def getTermLink(uri, subject=None, predicate=None):
     if subject != None and predicate != None:
         extra = 'about="%s" rel="%s" resource="%s"' % (str(subject.uri), niceName(str(predicate.uri)), uri)
     if (uri.startswith(spec_ns_str)):
-        return '<a href="#%s" style="font-family: monospace;" %s>%s</a>' % (uri.replace(spec_ns_str, ""), extra, niceName(uri))
+        return '<a href="#%s" %s>%s</a>' % (uri.replace(spec_ns_str, ""), extra, niceName(uri))
     else:
-        return '<a href="%s" style="font-family: monospace;" %s>%s</a>' % (uri, extra, niceName(uri))
+        return '<a href="%s" %s>%s</a>' % (uri, extra, niceName(uri))
 
 
 def rdfsClassInfo(term,m):
