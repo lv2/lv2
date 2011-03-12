@@ -681,7 +681,7 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     dlfile = open(doclinks, 'r')
     for line in dlfile:
         sym, _, url = line.rstrip().partition(' ')
-        linkmap[sym] = '<a href="%s">%s</a>' % (url, sym)
+        linkmap[sym] = '<span><a href="%s">%s</a></span>' % (url, sym)
     
     m = RDF.Model()
     try:
