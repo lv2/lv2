@@ -86,6 +86,7 @@ lv2_object_iter_get(LV2_Object_Iter iter)
 /** A macro for iterating over all properties of an Object.
  * @param obj  The object to iterate over
  * @param iter The name of the iterator
+ *
  * This macro is used similarly to a for loop (which it expands to), e.g.:
  * <pre>
  * LV2_OBJECT_FOREACH(object, i) {
