@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import autowaf
 import datetime
 import os
 
-import Logs
+from waflib.extras import autowaf as autowaf
+import waflib.Logs as Logs
 
 # Version of this package (even if built as a child)
 LV2EXT_VERSION = datetime.date.isoformat(datetime.datetime.now()).replace('-', '.')
@@ -18,16 +18,16 @@ out = 'build'
 
 def options(opt):
 	autowaf.set_options(opt)
-	opt.tool_options('compiler_cc')
-	opt.tool_options('compiler_cxx')
-	opt.sub_options('core.lv2')
+	opt.load('compiler_cc')
+	opt.load('compiler_cxx')
+	opt.recurse('core.lv2')
 
 def configure(conf):
 	autowaf.set_recursive()
 	autowaf.configure(conf)
-	conf.sub_config('core.lv2');
-	conf.check_tool('compiler_cc')
-	conf.check_tool('compiler_cxx')
+	conf.recurse('core.lv2');
+	conf.load('compiler_cc')
+	conf.load('compiler_cxx')
 	conf.env.append_value('CFLAGS', '-std=c99')
 	pat = conf.env['cshlib_PATTERN']
 	ext = pat[pat.rfind('.'):]
@@ -44,7 +44,7 @@ def build_extension(bld, name, dir):
 
 def build(bld):
 	autowaf.set_recursive()
-	bld.add_subdirs('core.lv2')
+	bld.recurse('core.lv2')
 	ext = '''
 		atom
 		contexts
