@@ -578,7 +578,7 @@ lv2:optionalFeature a rdf:Property ;
     rdfs:range   lv2:Feature ;
     rdfs:label   "Optional feature" ;
     rdfs:comment """
-Signifies that a plugin or other resource supports a certain features.
+Signifies that a plugin or other resource supports a certain feature.
 If the host supports this feature, it MUST pass its URI and any additional
 data to the plugin in the instantiate() function. The plugin MUST NOT fail to
 instantiate if an optional feature is not supported by the host.
