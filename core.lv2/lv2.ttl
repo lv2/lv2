@@ -113,9 +113,9 @@ those in <a href="http://www.ladspa.org/">LADSPA</a>: <em>control</em> and
 <code>float</code> element per sample, allowing a block of audio to be
 processed by the plugin in a single call to <code>run()</code>. Control data is
 communicated using single <code>float</code> values, which are fixed and valid
-for the duration of the call to <code>run()</code>. Thus the "control rate" is
-determined by the block size, which is controlled by the host (and not
-necessarily constant).</p>
+for the duration of the call to <code>run()</code>. Thus the <q>control
+rate</q> is determined by the block size, which is controlled by the host (and
+not necessarily constant).</p>
 
 <p>Plugins reside in shared object files suitable for dynamic linking (e.g. via
 <code>dlopen()</code>). This <em>library</em> provides one or more <a
@@ -203,13 +203,13 @@ A Plugin MUST have at least one rdf:type that is lv2:Plugin.
 A Plugin MUST have at least one doap:name that is a string
 with no language tag.
 """ ] ;
-    rdfs:comment """
-The class which represents an LV2 plugin.
+    lv2:documentation """
+<p>The class which represents an LV2 plugin.</p>
 
-Plugins SHOULD have a doap:license property whenever possible. The doap:name
+<p>Plugins SHOULD have a doap:license property whenever possible. The doap:name
 property should be at most a few words in length using title capitalization,
-e.g. "Tape Delay Unit". Use doap:shortdesc or doap:description for more
-detailed descriptions.
+e.g. <q>Tape Delay Unit</q>. Use doap:shortdesc or doap:description for more
+detailed descriptions.</p>
 """ .
 
 
@@ -272,7 +272,7 @@ rdf:type which more precisely describes type of the port
 
 <p>Hosts that do not support a specific port class MUST NOT instantiate the
 plugin, unless that port has the connectionOptional property set (in which case
-the host can simply "connect" that port to NULL). If a host is interested
+the host can simply <q>connect</q> that port to NULL). If a host is interested
 in plugins to insert in a certain signal path (e.g. stereo audio), it SHOULD
 consider all the classes of a port to determine which ports are most suitable
 for connection (e.g. by ignoring ports with additional classes the host does
@@ -361,7 +361,7 @@ major version of all released LV2 resources is 1.</p>
 
 <p>Plugins and extensions MUST adhere to the following rules:</p>
 <ul>
-<li>All versions of a plugin with a given URI MUST have the "same" set of
+<li>All versions of a plugin with a given URI MUST have the <q>same</q> set of
 mandatory (i.e. not lv2:connectionOptional) ports with respect to lv2:symbol
 and rdf:type. In other words, every port on a specific version of a plugin has
 a lv2:symbol and a set of rdf:types; all future versions of that plugin are
@@ -559,19 +559,19 @@ other information available.
 lv2:minimum a rdf:Property ;
     rdfs:subPropertyOf lv2:scalePoint ;
     rdfs:label         "Minimum value" ;
-    rdfs:comment """
-A hint to the host for the minimum useful value that the port will use.
-This is a "soft" limit - the plugin is required to gracefully accept all
-values in the range of a port's data type.
+    lv2:documentation """
+A hint to the host for the minimum useful value that the port will use.  This
+is a <q>soft</q> limit; the plugin is required to gracefully accept all values
+in the range of a port's data type.
 """ .
 
 lv2:maximum a rdf:Property ;
     rdfs:subPropertyOf lv2:scalePoint ;
     rdfs:label         "Maximum value" ;
-    rdfs:comment """
-A hint to the host for the maximum useful value that the port will use.
-This is a "soft" limit - the plugin is required to gracefully accept all
-values in the range of a port's data type.
+    lv2:documentation """
+<p>A hint to the host for the maximum useful value that the port will use.
+This is a <q>soft</q> limit; the plugin is required to gracefully accept all
+values in the range of a port's data type.</p>
 """ .
 
 
@@ -639,22 +639,22 @@ interface for the port.
 
 lv2:isLive a lv2:Feature ;
     rdfs:label   "Has a live (realtime) dependency" ;
-    rdfs:comment """
-Indicates that the plugin has a real-time dependency (e.g. queues data from
+    lv2:documentation """
+<p>Indicates that the plugin has a real-time dependency (e.g. queues data from
 a socket) and so its output must not be cached or subject to significant
-latency, and calls to the run method should be done in rapid succession.
-This property is not related to "hard real-time" execution requirements
-(see lv2:hardRTCapable).
+latency, and calls to the run method should be done in rapid succession.  This
+property is not related to <q>hard real-time</q> execution requirements (see
+lv2:hardRTCapable).</p>
 """ .
 
 lv2:inPlaceBroken a lv2:Feature ;
     rdfs:label   "in-place broken" ;
-    rdfs:comment """
-Indicates that the plugin may cease to work correctly if the host elects to use
-the same data location for both input and output.  Plugins that will fail to
-work correctly if ANY input port is connected to the same location as ANY
+    lv2:documentation """
+<p>Indicates that the plugin may cease to work correctly if the host elects to
+use the same data location for both input and output.  Plugins that will fail
+to work correctly if ANY input port is connected to the same location as ANY
 output port MUST require this Feature.  Doing so should be avoided as it makes
-it impossible for hosts to use the plugin to process data "in-place".
+it impossible for hosts to use the plugin to process data <q>in-place</q>.</p>
 """ .
 
 lv2:hardRTCapable a lv2:Feature ;
@@ -662,8 +662,8 @@ lv2:hardRTCapable a lv2:Feature ;
     lv2:documentation """
 
 <p>Indicates that the plugin is capable of running not only in a conventional
-host but also in a "hard real-time" environment. To qualify for this the plugin
-MUST satisfy all of the following:</p>
+host but also in a <q>hard real-time</q> environment. To qualify for this the
+plugin MUST satisfy all of the following:</p>
 <ol>
 <li>The plugin MUST NOT use malloc(), free() or other heap memory management
     functions within its Audio class functions.</li>
@@ -700,24 +700,25 @@ to the connectPort method.
 
 lv2:reportsLatency a lv2:PortProperty ;
     rdfs:label   "Latency reporting port" ;
-    rdfs:comment """
-Indicates that the port is used to express the processing latency incurred by
-the plugin, expressed in samples. The latency may be affected by the current
+    lv2:documentation """
+<p>Indicates that the port is used to express the processing latency incurred
+by the plugin, expressed in samples. The latency may be affected by the current
 sample rate, plugin settings, or other factors, and may be changed by the
 plugin at any time. Where the latency is frequency dependent the plugin may
 choose any appropriate value. If a plugin introduces latency it MUST provide
-EXACTLY ONE port with this property set which informs the host of the "correct" 
-latency. In "fuzzy" cases the value output should be the most reasonable based
-on user expectation of input/output alignment (eg. musical delay/echo plugins
-should not report their delay as latency, as it is an intentional effect).
+EXACTLY ONE port with this property set which informs the host of the
+<q>correct</q> latency. In <q>fuzzy</q> cases the value output should be the
+most reasonable based on user expectation of input/output alignment
+(eg. musical delay/echo plugins should not report their delay as latency, as it
+is an intentional effect).</p>
 """ .
 
 lv2:toggled a lv2:PortProperty ;
     rdfs:label   "Toggled" ;
-    rdfs:comment """
-Indicates that the data item should be considered a Boolean toggle. Data less
-than or equal to zero should be considered "off" or "false", and data above
-zero should be considered "on" or "true".
+    lv2:documentation """
+<p>Indicates that the data item should be considered a Boolean toggle. Data
+less than or equal to zero should be considered <q>off</q> or <q>false</q>, and
+data above zero should be considered <q>on</q> or <q>true</q>.</p>
 """ .
 
 lv2:sampleRate a lv2:PortProperty ;
