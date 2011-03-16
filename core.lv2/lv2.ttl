@@ -646,31 +646,30 @@ it impossible for hosts to use the plugin to process data "in-place".
 
 lv2:hardRTCapable a lv2:Feature ;
     rdfs:label   "Hard realtime capable" ;
-    rdfs:comment """
-Indicates that the plugin is capable of running not only in a conventional host
-but also in a "hard real-time" environment. To qualify for this the plugin MUST
-satisfy all of the following:
+    lv2:documentation """
 
-    (1) The plugin must not use malloc(), free() or other heap memory
-    management within its Audio class functions. All new memory used in 
-    Audio class functions must be managed via the stack. These restrictions 
-    only apply to the Audio class functions.
+<p>Indicates that the plugin is capable of running not only in a conventional
+host but also in a "hard real-time" environment. To qualify for this the plugin
+MUST satisfy all of the following:</p>
+<ol>
+<li>The plugin MUST NOT use malloc(), free() or other heap memory management
+    functions within its Audio class functions.</li>
 
-    (2) The plugin will not attempt to make use of any library
-    functions in its Audio class functions, with the exceptions of functions 
-    in the ANSI standard C and C maths libraries, which the host is expected to
-    provide.
+<li>The plugin MUST NOT attempt to make use of any library functions in its
+    Audio class functions, unless those functions themselves adhere to these
+    rules (i.e. are hard realtime safe). The plugin MAY assume the standard C
+    and C math library functions are safe.</li>
 
-    (3) The plugin will not access files, devices, pipes, sockets, IPC
-    or any other mechanism that might result in process or thread
-    blocking within its Audio class functions.
+<li>The plugin will not access files, devices, pipes, sockets, IPC or any other
+    mechanism that might result in process or thread blocking within its Audio
+    class functions.</li>
       
-    (4) The plugin will take an amount of time to execute a run() call 
-    approximately of form (A+B*SampleCount) where A and B depend on the 
-    machine and host in use. This amount of time may not depend on input
-    signals or plugin state. The host is left the responsibility to perform 
-    timings to estimate upper bounds for A and B. The plugin will also take an
-    approximately constant amount of time to execute a connect_port() call.
+<li>The plugin will take an amount of time to execute a run() call
+    approximately of form <code>A + B * SampleCount</code> where <code>A</code>
+    and <code>B</code> depend on the machine and host in use. This amount of
+    time MUST NOT depend on input signals or plugin state.</li>
+</ol>
+<p>Note these rules apply to the connect_port() function as well as run().</p>
 """ .
 
 
