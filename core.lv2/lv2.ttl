@@ -140,6 +140,10 @@ the functions provided by a plugin are divided into classes:</p>
 <dd>run(), connect_port()</dd>
 </dl>
 
+<p>Plugin functions in any class MUST NOT manipulate any state which might
+affect other plugin or host code, e.g. by using non-reentrant global
+functions.</p>
+
 <p>Extensions to this specification which add new plugin functions MUST declare
 in which of these classes the functions belong, or define new classes for
 them. Extensions which add new host-provided functions MUST declare from which
