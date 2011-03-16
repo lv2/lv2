@@ -43,6 +43,8 @@
 #define NS_RDF "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 #define NS_LV2 "http://lv2plug.in/ns/lv2core#"
 
+static const size_t file_scheme_len = 7; /* strlen("file://") */
+
 /** Record of an LV2 specification. */
 typedef struct _Spec {
 	SerdNode      uri;
@@ -144,7 +146,7 @@ discover_manifest(World* world, const char* uri)
 
 	world->state = serd_read_state_new(env, (const uint8_t*)uri);
 
-	const char* const path = uri + strlen("file://");
+	const char* const path = uri + file_scheme_len;
 	FILE*             fd   = fopen(path, "r");
 	if (fd) {
 		world->current_file = (const uint8_t*)uri;
@@ -208,7 +210,7 @@ discover_dir(World* world, const char* dir_path, const char* inc_dir)
 			continue;
 		}
 
-		char* uri = malloc(strlen("file://")
+		char* uri = malloc(file_scheme_len
 		                   + strlen(full_path) + 1
 		                   + strlen(file->d_name) + 1
 		                   + strlen("manifest.ttl") + 1);
@@ -251,7 +253,7 @@ discover_path(World* world, const char* lv2_path, const char* inc_dir)
 }
 
 /** Return the output include dir based on path (prepend DESTDIR). */
-char*
+static char*
 output_dir(const char* path)
 {
 	char* destdir = getenv("DESTDIR");
@@ -290,13 +292,44 @@ mkdir_parents(const char* dir_path)
 	return 0;
 }
 
+/** Order specifications by URI. */
+static int
+spec_cmp(const void* a_ptr, const void* b_ptr)
+{
+	const Spec* a = (const Spec*)a_ptr;
+	const Spec* b = (const Spec*)b_ptr;
+	return strcmp((const char*)a->uri.buf, (const char*)b->uri.buf);
+}
+
+
 /** Build an LV2 include tree for all specifications. */
 static void
-build_trees(World* world)
+output_includes(World* world)
 {
+	/* Sort specs array. */
+	qsort(world->specs, world->n_specs, sizeof(Spec), spec_cmp);
+
 	/* Make a link in the include tree for each specification bundle. */
-	for (size_t i = 0; i < world->n_specs; ++i) {
-		Spec*       spec = &world->specs[i];
+	const Spec* last_spec = NULL;
+	for (unsigned i = 0; i < world->n_specs; ++i) {
+		const Spec* const spec = &world->specs[i];
+
+		/* Skip duplicate extensions with a warning. */
+		if (last_spec && !strcmp((const char*)last_spec->uri.buf,
+		                         (const char*)spec->uri.buf)) {
+			fprintf(stderr,
+			        "lv2config: %s: warning: Duplicate extension <%s>.\n"
+			        "lv2config: %s: note: Using this version.\n",
+			        (const char*)last_spec->manifest.buf + file_scheme_len,
+			        (const char*)spec->uri.buf,
+			        (const char*)spec->manifest.buf + file_scheme_len);
+
+			continue;
+		}
+		last_spec = spec;
+
+		/* Build path to include directory for this specification. */
+
 		const char* path = strchr((const char*)spec->uri.buf, ':');
 		if (!path) {
 			fprintf(stderr, "lv2config: Invalid URI <%s>\n", spec->uri.buf);
@@ -305,7 +338,7 @@ build_trees(World* world)
 		for (++path; (path[0] == '/' && path[0] != '\0'); ++path) {}
 
 		const char* bundle_uri  = (const char*)spec->manifest.buf;
-		char*       bundle_path = strdup(bundle_uri + strlen("file://"));
+		char*       bundle_path = strdup(bundle_uri + file_scheme_len);
 		char*       last_sep    = strrchr(bundle_path, LV2CORE_DIR_SEP[0]);
 		if (last_sep) {
 			*(last_sep + 1) = '\0';
@@ -321,23 +354,28 @@ build_trees(World* world)
 		free(rel_inc_path);
 		printf("%s => %s\n", inc_path, bundle_path);
 
-		if (!mkdir_parents(inc_path)) {
-			if (!access(inc_path, F_OK) && unlink(inc_path)) {
-				fprintf(stderr, "lv2config: Failed to remove %s (%s)\n",
-				        inc_path, strerror(errno));
-				free(inc_path);
-				free(bundle_path);
-				continue;
-			}
+		/* Create parent directory. */
+		if (mkdir_parents(inc_path)) {
+			continue;
+		}
 
-			if (symlink(bundle_path, inc_path)) {
-				fprintf(stderr, "lv2config: Failed to create link (%s)\n",
-				        strerror(errno));
-			}
-
+		/* Remove existing link for this bundle. */
+		if (!access(inc_path, F_OK) && unlink(inc_path)) {
+			fprintf(stderr, "lv2config: Failed to remove %s (%s)\n",
+			        inc_path, strerror(errno));
 			free(inc_path);
 			free(bundle_path);
+			continue;
 		}
+
+		/* Create link to this bundle in include tree. */
+		if (symlink(bundle_path, inc_path)) {
+			fprintf(stderr, "lv2config: Failed to create link (%s)\n",
+			        strerror(errno));
+		}
+
+		free(inc_path);
+		free(bundle_path);
 	}
 }
 
@@ -379,13 +417,13 @@ main(int argc, char** argv)
 		}
 		discover_path(&world, lv2_path, argv[1]);
 	} else if (argc == 3) {
-		/* lv2_config INCLUDE_DIR BUNDLES_DIR */
-		discover_dir(&world, argv[2], argv[1]);
+		/* lv2_config INCLUDE_DIR LV2_PATH */
+		discover_path(&world, argv[2], argv[1]);
 	} else {
 		return usage(argv[0], true);
 	}
 
-	build_trees(&world);
+	output_includes(&world);
 
 	specs_free(&world);
 	serd_reader_free(world.reader);
