@@ -133,11 +133,18 @@ the functions provided by a plugin are divided into classes:</p>
 
 <dl>
 <dt>Discovery Class</dt>
-<dd>lv2_descriptor(), extension_data()</dd>
+<dd>lv2_descriptor(),
+LV2_Descriptor::extension_data()</dd>
+
 <dt>Instantiation Class</dt>
-<dd>instantiate(), cleanup(), activate(), deactivate()</dd>
+<dd>LV2_Descriptor::instantiate(),
+LV2_Descriptor::cleanup(),
+LV2_Descriptor::activate(),
+LV2_Descriptor::deactivate()</dd>
+
 <dt>Audio Class</dt>
-<dd>run(), connect_port()</dd>
+<dd>LV2_Descriptor::run(),
+LV2_Descriptor::connect_port()</dd>
 </dl>
 
 <p>Plugin functions in any class MUST NOT manipulate any state which might
@@ -161,8 +168,9 @@ no other functions for that instance may run.</li>
 </ul>
 
 <p>Any simultaneous calls that are not explicitly forbidden by these rules are
-allowed. For example, a host may call run() for two different plugin instances
-simultaneously.</p>""" .
+allowed. For example, a host may call <code>run()</code> for two different
+plugin instances simultaneously.</p>
+""" .
 
 
 #############################
@@ -582,24 +590,24 @@ lv2:optionalFeature a rdf:Property ;
     rdfs:domain  lv2:Resource ;
     rdfs:range   lv2:Feature ;
     rdfs:label   "Optional feature" ;
-    rdfs:comment """
-Signifies that a plugin or other resource supports a certain feature.
-If the host supports this feature, it MUST pass its URI and any additional
-data to the plugin in the instantiate() function. The plugin MUST NOT fail to
-instantiate if an optional feature is not supported by the host.
+    lv2:documentation """
+<p>Signifies that a plugin or other resource supports a certain feature.  If
+the host supports this feature, it MUST pass its URI and any additional data to
+the plugin in LV2_Descriptor::instantiate(). The plugin MUST NOT fail to
+instantiate if an optional feature is not supported by the host.</p>
 """ .
 
 lv2:requiredFeature a rdf:Property ;
     rdfs:domain  lv2:Resource ;
     rdfs:range   lv2:Feature ;
     rdfs:label   "Required feature" ;
-    rdfs:comment """
-Signifies that a plugin or other resource requires a certain feature.
-If the host supports this feature, it MUST pass its URI and any additional
-data to the plugin in the instantiate() function. The plugin MUST fail to 
-instantiate if a required feature is not present; hosts SHOULD always check 
-this before attempting to instantiate a plugin (i.e. discovery by attempting 
-to instantiate is strongly discouraged).
+    lv2:documentation """
+<p>Signifies that a plugin or other resource requires a certain feature.  If
+the host supports this feature, it MUST pass its URI and any additional data to
+the plugin in LV2_Descriptor::instantiate(). The plugin MUST fail to
+instantiate if a required feature is not present; hosts SHOULD always check
+this before attempting to instantiate a plugin (i.e. discovery by attempting to
+instantiate is strongly discouraged).</p>
 """ .
 
 
