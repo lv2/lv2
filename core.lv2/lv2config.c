@@ -47,6 +47,7 @@
 typedef struct _Spec {
 	SerdNode      uri;
 	SerdNode      manifest;
+	const char*   inc_dir;
 } Spec;
 
 /** Global lv2config state. */
@@ -54,6 +55,7 @@ typedef struct {
 	SerdReader     reader;
 	SerdReadState  state;
 	const uint8_t* current_file;
+	const char*    current_inc_dir;
 	Spec*          specs;
 	size_t         n_specs;
 } World;
@@ -62,12 +64,14 @@ typedef struct {
 void
 add_spec(World*         world,
          SerdNode*      uri,
-         const uint8_t* manifest)
+         const uint8_t* manifest,
+         const char*    inc_dir)
 {
 	world->specs = realloc(world->specs, sizeof(Spec) * (world->n_specs + 1));
 	world->specs[world->n_specs].uri = *uri;
 	world->specs[world->n_specs].manifest = serd_node_from_string(
 		SERD_URI, (const uint8_t*)strdup((const char*)manifest));
+	world->specs[world->n_specs].inc_dir = inc_dir;
 	++world->n_specs;
 }
 
@@ -123,7 +127,7 @@ on_statement(void*           handle,
 	if (abs_s.buf && abs_p.buf && abs_o.buf
 	    && !strcmp((const char*)abs_p.buf, NS_RDF "type")
 	    && !strcmp((const char*)abs_o.buf, NS_LV2 "Specification")) {
-		add_spec(world, &abs_s, world->current_file);
+		add_spec(world, &abs_s, world->current_file, world->current_inc_dir);
 	} else {
 		serd_node_free(&abs_s);
 	}
@@ -134,7 +138,7 @@ on_statement(void*           handle,
 
 /** Add any specifications found in a manifest.ttl to world->specs. */
 static void
-scan_manifest(World* world, const char* uri)
+discover_manifest(World* world, const char* uri)
 {
 	SerdEnv env = serd_env_new();
 
@@ -183,9 +187,9 @@ expand(const char* path)
 
 /** Scan all bundles in path (i.e. scan all path/foo.lv2/manifest.ttl). */
 void
-scan_dir(World* world, const char* path)
+discover_dir(World* world, const char* dir_path, const char* inc_dir)
 {
-	char* full_path = expand(path);
+	char* full_path = expand(dir_path);
 	if (!full_path) {
 		return;
 	}
@@ -195,6 +199,8 @@ scan_dir(World* world, const char* path)
 		free(full_path);
 		return;
 	}
+
+	world->current_inc_dir = inc_dir;
 
 	struct dirent* file;
 	while ((file = readdir(dir))) {
@@ -210,12 +216,53 @@ scan_dir(World* world, const char* path)
 		sprintf(uri, "file://%s/%s/manifest.ttl",
 		        full_path, file->d_name);
 
-		scan_manifest(world, uri);
+		discover_manifest(world, uri);
 		free(uri);
 	}
 
 	closedir(dir);
 	free(full_path);
+}
+
+/** Add all specifications in lv2_path to world->specs. */
+void
+discover_path(World* world, const char* lv2_path, const char* inc_dir)
+{
+	/* Call discover_dir for each component of lv2_path,
+	   which will build world->specs (a linked list of struct Spec).
+	*/
+	while (lv2_path[0] != '\0') {
+		const char* const sep = strchr(lv2_path, LV2CORE_PATH_SEP[0]);
+		if (sep) {
+			const size_t dir_len = sep - lv2_path;
+			char* const  dir     = malloc(dir_len + 1);
+			memcpy(dir, lv2_path, dir_len);
+			dir[dir_len] = '\0';
+			discover_dir(world, dir, inc_dir);
+			free(dir);
+			lv2_path += dir_len + 1;
+		} else {
+			discover_dir(world, lv2_path, inc_dir);
+			lv2_path = "\0";
+		}
+	}
+
+	/* TODO: Check revisions */
+}
+
+/** Return the output include dir based on path (prepend DESTDIR). */
+char*
+output_dir(const char* path)
+{
+	char* destdir = getenv("DESTDIR");
+	if (destdir) {
+		size_t len = strlen(destdir) + strlen(path);
+		char*  ret = malloc(len + 1);
+		snprintf(ret, len + 1, "%s%s", destdir, path);
+		return ret;
+	} else {
+		return strdup(path);
+	}
 }
 
 /** Create all parent directories of dir_path, but not dir_path itself. */
@@ -243,48 +290,10 @@ mkdir_parents(const char* dir_path)
 	return 0;
 }
 
-/** Return the output include dir based on path (prepend DESTDIR). */
-char*
-output_dir(const char* path)
-{
-	char* destdir = getenv("DESTDIR");
-	if (destdir) {
-		size_t len = strlen(destdir) + strlen(path);
-		char*  ret = malloc(len + 1);
-		snprintf(ret, len + 1, "%s%s", destdir, path);
-		return ret;
-	} else {
-		return strdup(path);
-	}
-}
-
-/** Build an LV2 include tree in dest for all bunles in lv2_path. */
+/** Build an LV2 include tree for all specifications. */
 void
-build_tree(World* world, const char* lv2_path, const char* dest)
+build_trees(World* world)
 {
-	free_specs(world);
-
-	/* Call scan_dir for each component of lv2_path,
-	   which will build world->specs (a linked list of struct Spec).
-	*/
-	while (lv2_path[0] != '\0') {
-		const char* const sep = strchr(lv2_path, LV2CORE_PATH_SEP[0]);
-		if (sep) {
-			const size_t dir_len = sep - lv2_path;
-			char* const  dir     = malloc(dir_len + 1);
-			memcpy(dir, lv2_path, dir_len);
-			dir[dir_len] = '\0';
-			scan_dir(world, dir);
-			free(dir);
-			lv2_path += dir_len + 1;
-		} else {
-			scan_dir(world, lv2_path);
-			lv2_path = "\0";
-		}
-	}
-
-	/* TODO: Check revisions */
-
 	/* Make a link in the include tree for each specification bundle. */
 	for (size_t i = 0; i < world->n_specs; ++i) {
 		Spec*       spec = &world->specs[i];
@@ -302,7 +311,7 @@ build_tree(World* world, const char* lv2_path, const char* dest)
 			*(last_sep + 1) = '\0';
 		}
 
-		char*  full_dest    = output_dir(dest);
+		char*  full_dest    = output_dir(spec->inc_dir);
 		size_t len          = strlen(full_dest) + 1 + strlen(path);
 		char*  rel_inc_path = malloc(len + 1);
 		snprintf(rel_inc_path, len + 1, "%s/%s", full_dest, path);
@@ -338,9 +347,11 @@ usage(const char* name, bool error)
 	FILE* out = (error ? stderr : stdout);
 	fprintf(out, "Usage: %s\n", name);
 	fprintf(out, "Build the default system LV2 include directories.\n\n");
+
 	fprintf(out, "Usage: %s INCLUDE_DIR\n", name);
 	fprintf(out, "Build an LV2 include directory tree at INCLUDE_DIR\n");
 	fprintf(out, "for all extensions found in $LV2_PATH.\n\n");
+
 	fprintf(out, "Usage: %s INCLUDE_DIR BUNDLES_DIR\n", name);
 	fprintf(out, "Build an lv2 include directory tree at INCLUDE_DIR\n");
 	fprintf(out, "for all extensions found in bundles under BUNDLES_DIR.\n");
@@ -350,14 +361,14 @@ usage(const char* name, bool error)
 int
 main(int argc, char** argv)
 {
-	World world = { NULL, NULL, NULL, NULL, 0 };
+	World world = { NULL, NULL, NULL, NULL, NULL, 0 };
 	world.reader = serd_reader_new(
 		SERD_TURTLE, &world, on_base, on_prefix, on_statement, NULL);
 
 	if (argc == 1) {
 		/* lv2_config */
-		build_tree(&world, "/usr/local/lib/lv2", "/usr/local/include/lv2");
-		build_tree(&world, "/usr/lib/lv2",       "/usr/include/lv2");
+		discover_dir(&world, "/usr/local/lib/lv2", "/usr/local/include/lv2");
+		discover_dir(&world, "/usr/lib/lv2",       "/usr/include/lv2");
 	} else if (argv[1][0] == '-') {
 		return usage(argv[0], false);
 	} else if (argc == 2) {
@@ -366,13 +377,15 @@ main(int argc, char** argv)
 		if (!lv2_path) {
 			lv2_path = LV2CORE_DEFAULT_LV2_PATH;
 		}
-		build_tree(&world, lv2_path, argv[1]);
+		discover_path(&world, lv2_path, argv[1]);
 	} else if (argc == 3) {
 		/* lv2_config INCLUDE_DIR BUNDLES_DIR */
-		build_tree(&world, argv[2], argv[1]);
+		discover_dir(&world, argv[2], argv[1]);
 	} else {
 		return usage(argv[0], true);
 	}
+
+	build_trees(&world);
 
 	free_specs(&world);
 	serd_reader_free(world.reader);
