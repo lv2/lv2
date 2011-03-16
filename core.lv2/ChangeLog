@@ -1,16 +1,20 @@
-lv2core (4.0) unstable; urgency=low
+lv2core (UNRELEASED) unstable; urgency=low
 
   * Make doap:license suggested, but not required (for wrappers)
+  * Define lv2:binary (must be in manifest.ttl)
+  * Define lv2:majorVersion and lv2:minorVersion (must be in manifest.ttl)
+  * Add plugin classes lv2:FunctionPlugin and lv2:ConstantPlugin
+  * Move lv2:AmplifierPlugin under lv2:DynamicsPlugin
   * Loosen domain restriction of lv2:optionalFeature and lv2:requiredFeature
     (to allow re-use in extensions)
- 
- -- David Robillard <d@drobilla.net>  Fri, 10 Jul 2009 17:27:57 -0400
+
+ -- David Robillard <d@drobilla.net>  UNRELEASED
 
 lv2core (3.0) unstable; urgency=low
 
   * Require that serialisations refer to ports by symbol rather than index.
   * Minor stylistic changes to lv2.ttl
   * No header changes
- 
+
  -- David Robillard <d@drobilla.net>  Sat, 08 Nov 2008 14:27:10 -0500
 
