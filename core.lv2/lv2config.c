@@ -43,11 +43,13 @@
 #define NS_RDF "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 #define NS_LV2 "http://lv2plug.in/ns/lv2core#"
 
+/** Record of an LV2 specification. */
 typedef struct _Spec {
 	SerdNode      uri;
 	SerdNode      manifest;
 } Spec;
 
+/** Global lv2config state. */
 typedef struct {
 	SerdReader     reader;
 	SerdReadState  state;
@@ -56,7 +58,7 @@ typedef struct {
 	size_t         n_specs;
 } World;
 
-/* Append a discovered specification to world->specs. */
+/** Append a discovered specification to world->specs. */
 void
 add_spec(World*         world,
          SerdNode*      uri,
@@ -83,7 +85,7 @@ free_specs(World* world)
 	world->n_specs = 0;
 }
 
-/** Reader @base directive handler. */
+/** Reader base directive handler. */
 bool
 on_base(void*           handle,
         const SerdNode* uri_node)
@@ -92,7 +94,7 @@ on_base(void*           handle,
 	return serd_read_state_set_base_uri(world->state, uri_node);
 }
 
-/** Reader @prefix directive handler. */
+/** Reader prefix directive handler. */
 static bool
 on_prefix(void*           handle,
           const SerdNode* name,
@@ -156,7 +158,7 @@ scan_manifest(World* world, const char* uri)
 	world->state = NULL;
 }
 
-/** Expand variables, ~, etc. in path. */
+/** Expand variables (e.g. ~) in path. */
 static char*
 expand(const char* path)
 {
