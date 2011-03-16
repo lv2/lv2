@@ -297,17 +297,19 @@ be written to by the plugin during their run method.
 lv2:ControlPort a rdfs:Class ;
     rdfs:subClassOf lv2:Port ;
     rdfs:label      "Control port" ;
-    rdfs:comment    """
-Ports of this type will be connected to a pointer to a single value conforming
-to the 32bit IEEE-754 floating point specification.
+    lv2:documentation """
+    
+<p>Ports of this type will be connected to a pointer to a single value of C
+type <code>float</code>.</p>
+
 """ .
 
 lv2:AudioPort a rdfs:Class ;
     rdfs:subClassOf lv2:Port ;
     rdfs:label      "Audio port" ;
-    rdfs:comment    """
-Ports of this type will be connected to an array of length SampleCount
-conforming to the 32bit IEEE-754 floating point specification.
+    lv2:documentation """
+<p>Ports of this type will be connected to an array of length SampleCount with
+elements of C type <code>float</code>.</p>
 """ .
 
 
