@@ -298,7 +298,6 @@ lv2:ControlPort a rdfs:Class ;
     rdfs:subClassOf lv2:Port ;
     rdfs:label      "Control port" ;
     lv2:documentation """
-    
 <p>Ports of this type will be connected to a pointer to a single value of C
 type <code>float</code>.</p>
 
@@ -308,8 +307,8 @@ lv2:AudioPort a rdfs:Class ;
     rdfs:subClassOf lv2:Port ;
     rdfs:label      "Audio port" ;
     lv2:documentation """
-<p>Ports of this type will be connected to an array of length SampleCount with
-elements of C type <code>float</code>.</p>
+<p>Ports of this type will be connected to an array of length sample_count
+with elements of C type <code>float</code>.</p>
 """ .
 
 
@@ -671,7 +670,7 @@ MUST satisfy all of the following:</p>
     class functions.</li>
       
 <li>The plugin will take an amount of time to execute a run() call
-    approximately of form <code>A + B * SampleCount</code> where <code>A</code>
+    approximately of form <code>A + B * sample_count</code> where <code>A</code>
     and <code>B</code> depend on the machine and host in use. This amount of
     time MUST NOT depend on input signals or plugin state.</li>
 </ol>
