@@ -61,11 +61,11 @@ typedef struct {
 } World;
 
 /** Append a discovered specification to world->specs. */
-void
-add_spec(World*         world,
-         SerdNode*      uri,
-         const uint8_t* manifest,
-         const char*    inc_dir)
+static void
+specs_add(World*         world,
+          SerdNode*      uri,
+          const uint8_t* manifest,
+          const char*    inc_dir)
 {
 	world->specs = realloc(world->specs, sizeof(Spec) * (world->n_specs + 1));
 	world->specs[world->n_specs].uri = *uri;
@@ -76,8 +76,8 @@ add_spec(World*         world,
 }
 
 /** Free world->specs. */
-void
-free_specs(World* world)
+static void
+specs_free(World* world)
 {
 	for (size_t i = 0; i < world->n_specs; ++i) {
 		Spec* spec = &world->specs[i];
@@ -90,7 +90,7 @@ free_specs(World* world)
 }
 
 /** Reader base directive handler. */
-bool
+static bool
 on_base(void*           handle,
         const SerdNode* uri_node)
 {
@@ -127,7 +127,7 @@ on_statement(void*           handle,
 	if (abs_s.buf && abs_p.buf && abs_o.buf
 	    && !strcmp((const char*)abs_p.buf, NS_RDF "type")
 	    && !strcmp((const char*)abs_o.buf, NS_LV2 "Specification")) {
-		add_spec(world, &abs_s, world->current_file, world->current_inc_dir);
+		specs_add(world, &abs_s, world->current_file, world->current_inc_dir);
 	} else {
 		serd_node_free(&abs_s);
 	}
@@ -186,7 +186,7 @@ expand(const char* path)
 }
 
 /** Scan all bundles in path (i.e. scan all path/foo.lv2/manifest.ttl). */
-void
+static void
 discover_dir(World* world, const char* dir_path, const char* inc_dir)
 {
 	char* full_path = expand(dir_path);
@@ -225,7 +225,7 @@ discover_dir(World* world, const char* dir_path, const char* inc_dir)
 }
 
 /** Add all specifications in lv2_path to world->specs. */
-void
+static void
 discover_path(World* world, const char* lv2_path, const char* inc_dir)
 {
 	/* Call discover_dir for each component of lv2_path,
@@ -266,7 +266,7 @@ output_dir(const char* path)
 }
 
 /** Create all parent directories of dir_path, but not dir_path itself. */
-int
+static int
 mkdir_parents(const char* dir_path)
 {
 	char*        path     = strdup(dir_path);
@@ -291,7 +291,7 @@ mkdir_parents(const char* dir_path)
 }
 
 /** Build an LV2 include tree for all specifications. */
-void
+static void
 build_trees(World* world)
 {
 	/* Make a link in the include tree for each specification bundle. */
@@ -341,7 +341,7 @@ build_trees(World* world)
 	}
 }
 
-int
+static int
 usage(const char* name, bool error)
 {
 	FILE* out = (error ? stderr : stdout);
@@ -387,7 +387,7 @@ main(int argc, char** argv)
 
 	build_trees(&world);
 
-	free_specs(&world);
+	specs_free(&world);
 	serd_reader_free(world.reader);
 
 	return 0;
