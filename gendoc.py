@@ -18,7 +18,7 @@ except:
 os.makedirs(out_base)
 
 URIPREFIX  = 'http://lv2plug.in/ns/'
-DOXPREFIX  = 'http://lv2plug.in/ns/doc/html/'
+DOXPREFIX  = 'ns/doc/html/'
 SPECGENDIR = './specgen'
 STYLEURI   = os.path.join('aux', 'style.css')
 TAGFILE    = './doclinks'

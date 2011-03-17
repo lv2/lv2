@@ -734,7 +734,8 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     dlfile = open(doclinks, 'r')
     for line in dlfile:
         sym, _, url = line.rstrip().partition(' ')
-        linkmap[sym] = '<span><a href="%s">%s</a></span>' % (url, sym)
+        linkmap[sym] = '<span><a href="%s">%s</a></span>' % (
+            os.path.join(doc_base, url), sym)
     
     m = RDF.Model()
     try:
@@ -932,7 +933,7 @@ def usage():
                 -p PREFIX : Set ontology namespace prefix from command line
 
 Example:
-    %s lv2_foos.ttl template.html style.css lv2_foos.html ../docs -i -p foos
+    %s lv2_foos.ttl template.html style.css lv2_foos.html ../doc -i -p foos
 """ % (script, script)
     sys.exit(-1)
 
