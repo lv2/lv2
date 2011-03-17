@@ -1,4 +1,5 @@
-This software requires only Python to build.
+This software requires only Python to build. The build system, based on waf,
+is included in this source distribution.
 
 = LV2Core =
 
