@@ -144,6 +144,19 @@ def getComment(m, urinode):
 
     return ''
 
+def getProperty(val, first=True):
+    "Return a string representing a property value in a property table"
+    doc = ''
+    if not first:
+        doc += '<tr><td></td>' # Empty cell in header column
+    doc += '<td>%s</td></tr>\n' % val
+    return doc
+
+def endProperties(first):
+    if first:
+        return '</tr>'
+    else:
+        return ''
 
 def owlVersionInfo(m):
     v = m.find_statements(RDF.Statement(None, owl.versionInfo, None))
@@ -151,7 +164,6 @@ def owlVersionInfo(m):
         return v.current().object.literal_value['string']
     else:
         return ""
-
 
 def rdfsPropertyInfo(term,m):
     """Generate HTML for properties: Domain, range"""
@@ -165,10 +177,12 @@ def rdfsPropertyInfo(term,m):
     o = m.find_statements( RDF.Statement(term, rdfs.subPropertyOf, None) )
     if o.current():
         rlist = ''
+        first = True
         for st in o:
             k = getTermLink(str(st.object.uri), term, rdfs.subPropertyOf)
-            rlist += "<dd>%s</dd>" % k
-        doc += "<dt>Sub-property of</dt> %s" % rlist
+            rlist += getProperty(k, first)
+            first = False
+        doc += "<tr><th>Sub-property of</th>%s" % rlist
 
     # Domain stuff
     domains = m.find_statements(RDF.Statement(term, rdfs.domain, None))
@@ -177,14 +191,16 @@ def rdfsPropertyInfo(term,m):
         collection = m.find_statements(RDF.Statement(d.object, owl.unionOf, None))
         if collection.current():
             uris = parseCollection(m, collection)
+            first = True
             for uri in uris:
-                domainsdoc += "<dd>%s</dd>" % getTermLink(uri, term, rdfs.domain)
+                domainsdoc += getProperty(getTermLink(uri, term, rdfs.domain), first)
                 add(classdomains, uri, term.uri)
+                first = False
         else:
             if not d.object.is_blank():
-                domainsdoc += "<dd>%s</dd>" % getTermLink(str(d.object.uri), term, rdfs.domain)
+                domainsdoc += getProperty(getTermLink(str(d.object.uri), term, rdfs.domain))
     if (len(domainsdoc)>0):
-        doc += "<dt>Domain</dt> %s" % domainsdoc
+        doc += "<tr><th>Domain</th>%s" % domainsdoc
 
     # Range stuff
     ranges = m.find_statements(RDF.Statement(term, rdfs.range, None))
@@ -193,14 +209,16 @@ def rdfsPropertyInfo(term,m):
         collection = m.find_statements(RDF.Statement(r.object, owl.unionOf, None))
         if collection.current():
             uris = parseCollection(m, collection)
+            first = True
             for uri in uris:
-                rangesdoc += "<dd>%s</dd>" % getTermLink(uri, term, rdfs.range)
+                rangesdoc += getProperty(getTermLink(uri, term, rdfs.range), first)
                 add(classranges, uri, term.uri)
+                first = False
         else:
             if not r.object.is_blank():
-                rangesdoc += "<dd>%s</dd>" % getTermLink(str(r.object.uri), term, rdfs.range)
+                rangesdoc += getProperty(getTermLink(str(r.object.uri), term, rdfs.range))
     if (len(rangesdoc)>0):
-        doc += "<dt>Range</dt> %s" % rangesdoc
+        doc += "<tr><th>Range</th>%s" % rangesdoc
 
     return doc
 
@@ -229,8 +247,7 @@ def getTermLink(uri, subject=None, predicate=None):
         return '<a href="#%s" %s>%s</a>' % (uri.replace(spec_ns_str, ""), extra, niceName(uri))
     else:
         return '<a href="%s" %s>%s</a>' % (uri, extra, niceName(uri))
-
-
+  
 def rdfsClassInfo(term,m):
     """Generate rdfs-type information for Classes: ranges, and domains."""
     global classranges
@@ -252,9 +269,11 @@ def rdfsClassInfo(term,m):
                 restrictions.append(meta_types.current().subject)
 
         if len(superclasses) > 0:
-            doc += "\n<dt>Sub-class of</dt>"
+            doc += "\n<tr><th>Sub-class of</th>"
+            first = True
             for superclass in superclasses:
-                doc += "<dd>%s</dd>" % getTermLink(superclass)
+                doc += getProperty(getTermLink(superclass), first)
+                first = False
 
     for r in restrictions:
         props = m.find_statements(RDF.Statement(r, None, None))
@@ -266,47 +285,65 @@ def rdfsClassInfo(term,m):
             elif p.predicate == rdfs.comment:
                 comment = p.object
         if onProp != None:
-            doc += '<dt>Restriction on property %s</dt>\n' % getTermLink(onProp.uri)
-            doc += '<dd class="restriction">\n'
-            if comment != None:
-                doc += "<span>%s</span>\n" % comment.literal_value['string']
+            doc += '<tr><th>Restriction on %s</th><td>' % getTermLink(onProp.uri)
 
             prop_str = ''
+            last_pred = None
+            first = True
             for p in m.find_statements(RDF.Statement(r, None, None)):
-                if p.predicate != owl.onProperty and p.predicate != rdfs.comment and not(
-                        p.predicate == rdf.type and p.object == owl.Restriction) and p.predicate != lv2.documentation:
-                    if p.object.is_resource():
-                        prop_str += '\n<dt>%s</dt><dd>%s</dd>\n' % (
-                                getTermLink(p.predicate.uri), getTermLink(p.object.uri))
-                    elif p.object.is_literal():
-                        prop_str += '\n<dt>%s</dt><dd>%s</dd>\n' % (
-                                getTermLink(p.predicate.uri), p.object.literal_value['string'])
+                if (p.predicate == owl.onProperty
+                    or p.predicate == rdfs.comment
+                    or (p.predicate == rdf.type and p.object == owl.Restriction)
+                    or p.predicate == lv2.documentation):
+                    last_pred = None
+                    continue
+
+                if p.predicate != last_pred:
+                    prop_str += '<tr><th>%s</th>\n' % getTermLink(str(p.predicate.uri))
+                    first = True
+                if p.object.is_resource():
+                    prop_str += getProperty(getTermLink(p.object.uri), first)
+                    first = False
+                elif p.object.is_literal():
+                    prop_str += getProperty(p.object.literal_value['string'], first)
+                    first = False
+
+                last_pred = p.predicate
+
+            prop_str += endProperties(first)
+
             if prop_str != '':
-                doc += '<dl class=\"prop\">%s</dl>\n' % prop_str
-            doc += '</dd>'
+                doc += '<table class=\"restriction\">%s</table>\n' % prop_str
+            if comment != None:
+                doc += "<span>%s</span>\n" % comment.literal_value['string']
+            doc += '</td></tr>'
 
     # Find out about properties which have rdfs:domain of t
     d = classdomains.get(str(term.uri), "")
     if d:
         dlist = ''
+        first = True
         for k in d:
-            dlist += "<dd>%s</dd>" % getTermLink(k)
-        doc += "<dt>In domain of</dt>" + dlist
+            dlist += getProperty(getTermLink(k), first)
+            first = False
+        doc += "<tr><th>In domain of</th>%s" % dlist
 
     # Find out about properties which have rdfs:range of t
     r = classranges.get(str(term.uri), "")
     if r:
         rlist = ''
+        first = True
         for k in r:
-            rlist += "<dd>%s</dd>" % getTermLink(k)
-        doc += "<dt>In range of</dt>" + rlist
+            rlist += getProperty(getTermLink(k), first)
+            first = False
+        doc += "<tr><th>In range of</th>%s" % rlist
 
     return doc
 
 
 def isSpecial(pred):
     """Return True if the predicate is "special" and shouldn't be emitted generically"""
-    return pred in [rdf.type, rdfs.range, rdfs.domain, rdfs.label, rdfs.comment, rdfs.subClassOf, lv2.documentation]
+    return pred in [rdf.type, rdfs.range, rdfs.domain, rdfs.label, rdfs.comment, rdfs.subClassOf, rdfs.subPropertyOf, lv2.documentation]
 
 
 def blankNodeDesc(node,m):
@@ -336,21 +373,28 @@ def extraInfo(term,m):
     """Generate information about misc. properties of a term"""
     doc = ""
     properties = m.find_statements(RDF.Statement(term, None, None))
-    last_pred = ''
+    last_pred = None
+    first = True
     for p in properties:
         if isSpecial(p.predicate):
+            last_pred = None
             continue
         if p.predicate != last_pred:
-            doc += '<dt>%s</dt>\n' % getTermLink(str(p.predicate.uri))
+            doc += '<tr><th>%s</th>\n' % getTermLink(str(p.predicate.uri))
+            first = True
         if p.object.is_resource():
-            doc += '<dd>%s</dd>\n' % getTermLink(str(p.object.uri), term, p.predicate)
+            doc += getProperty(getTermLink(str(p.object.uri), term, p.predicate), first)
         elif p.object.is_literal():
-            doc += '<dd>%s</dd>\n' % str(p.object)
+            doc += getProperty(str(p.object), first)
         elif p.object.is_blank():
-            doc += '<dd>' + blankNodeDesc(p.object,m) + '</dd>\n'
+            doc += getProperty(str(blankNodeDesc(p.object, m)), first)
         else:
-            doc += '<dd>?</dd>\n'
+            doc += getProperty('?', first)
+        first = False
         last_pred = p.predicate
+
+    #doc += endProperties(first)
+
     return doc
 
 
@@ -361,11 +405,17 @@ def rdfsInstanceInfo(term,m):
     term = RDF.Uri(term)
     t = m.find_statements(RDF.Statement(term, rdf.type, None))
     if t.current():
-        doc += "<dt>Type</dt>"
+        doc += "<tr><th>Type</th>"
+    first = True
     while t.current():
-        doc += "<dd>%s</dd>" % getTermLink(RDF.Node(t.current().object), RDF.Node(term), rdf.type)
+        doc += getProperty(getTermLink(RDF.Node(t.current().object),
+                                       RDF.Node(term),
+                                       rdf.type),
+                           first)
+        first = False
         t.next()
 
+    doc += endProperties(first)
     doc += extraInfo(RDF.Node(term), m)
 
     return doc
@@ -378,14 +428,17 @@ def owlInfo(term,m):
     # Inverse properties ( owl:inverseOf )
     o = m.find_statements(RDF.Statement(term, owl.inverseOf, None))
     if o.current():
-        res += "<dt>Inverse:</dt>"
+        res += "<tr><th>Inverse:</th>\n"
+        first = True
         for st in o:
-            res += "<dd>%s</dd>" % getTermLink(str(st.object.uri))
+            res += getProperty(getTermLink(str(st.object.uri)), first)
+            first = False
+        res += endProperties(first)
     
     def owlTypeInfo(term, propertyType, name):
         o = m.find_statements(RDF.Statement(term, rdf.type, propertyType))
         if o.current():
-            return "<dt>OWL Type</dt><dd>%s</dd>\n" % name
+            return "<tr><th>OWL Type</th><td>%s</td></tr>\n" % name
         else:
             return ""
 
@@ -455,7 +508,7 @@ def docTerms(category, list, m):
         terminfo += extraInfo(term,m)
         
         if (len(terminfo)>0): #to prevent empty list (bug #882)
-            doc += '\n<dl class="terminfo">%s</dl>\n' % terminfo
+            doc += '\n<table class="terminfo">%s</table>\n' % terminfo
         
         doc += '</div>'
         doc += "\n</div>\n\n"

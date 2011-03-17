@@ -388,9 +388,15 @@ ul, ol {
 .index {
 	margin-left: 1em;
 }
+.prop {
+	margin: 0;
+	padding: 0;
+}
 .restriction {
-	margin: .5ex 0 1ex 4ex;
-	padding: 0 0 0 1ex;
+	margin: 0;
+	padding: 0;
+	border-spacing: 0;
+	vertical-align: text-top;
 }
 .description {
 	margin-bottom: 0.75em;
@@ -398,10 +404,30 @@ ul, ol {
 .blankdesc {
 	background-color: #eee;
 	border: 1px solid #ddd;
-	margin: .5em;
+	margin: 0;
+	padding: 0;
 }
 .blankterm {
 	padding-right: .5em;
+}
+.terminfo {
+	border-spacing: 0 0.5ex;
+}
+.restriction {
+	border-spacing: 0;
+}
+.terminfo th, .restriction th {
+	margin: 0;
+	padding: 0;
+	padding-right: 1ex;
+	border-top: dotted 1px #F0F0F0;
+	background-color: #F8F8F8;
+}
+.terminfo td, .restriction td {
+	margin: 0;
+	padding: 0;
+	border-top: dotted 1px #F0F0F0;
+	background-color: #F8F8F8;
 }
 .specterm {
 	background-color: #fbfbfb;
@@ -446,8 +472,17 @@ div.head table {
 	margin-left: 2em;
 	margin-top: 2em;
 }
+table {
+	margin: 0;
+	padding: 0;
+	border-width: 0;
+}
+th {
+	vertical-align: text-top;
+}
 td {
-	padding-right: 2ex;
+	margin: 0;
+	padding: 0 2ex 0 0;
 }
 #meta {
 	border-bottom: 1px solid #c4cfe5;
