@@ -81,6 +81,7 @@ typedef struct _LV2_Feature {
 typedef struct _LV2_Descriptor {
 	/**
 	   A globally unique, case-sensitive identifier for this plugin type.
+	   This MUST be a valid URI string as defined by RFC 3986.
 	 
 	   All plugins with the same URI MUST be compatible in terms of 'port
 	   signature', meaning they have the same ports with the same symbols.
