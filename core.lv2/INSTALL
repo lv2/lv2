@@ -1,52 +1,44 @@
 This software requires only Python to build.
 
-= LV2 Core package instructions =
+= LV2Core =
 
-This package contains a header file, pkg-config file, and an LV2 bundle;
-there is no code that requires compiling (i.e. this is NOT a library).
-Accordingly, the versioning scheme is simpler than a library: the major
-number is the version number of the LV2 specification, and the minor
-number is the version of this package.  There is no 'micro' number.
+This package contains everything necessary to compile against and/or use LV2
+plugins and extensions: a header file, pkg-config file, LV2 bundle (with Turtle
+files), and a utility program (lv2config).
 
-The configure option --bundle-only can be used to install only the bundle.
-This can be used in conjunction with the --lv2-user option to install
-only the bundle to the user-specific (i.e. in your home directory) LV2
-path, if you do not have write access to the system.
+The configure option --bundle-only can be used to install only the bundle. This
+is useful for installing the bundle to a user-specific location (e.g. ~/.lv2).
 
-Distribution packages should install everything, as apps may depend
-on 'lv2core' (via pkg-config) to ensure both the header and data
-bundle are present.
-
-
-= Generic waf instructions =
-
-Like an auto* project, building has three phases:
+Any C header(s) are a part of the bundle. Packages must not separate the
+header(s) into a separate package from the bundle, as this would break
+lv2config. The utility lv2config builds standard LV2 style include directory
+trees, and is necessary for compiling LV2 code. Programs can use pkg-config to
+check for package 'lv2core' to ensure all this data (bundle, including any
+contained header(s), and lv2config) is available on the system. Programs may
+also simply check for the header "lv2/lv2plug.in/ns/lv2core/lv2.h".
 
 
-* Configure:       ./waf configure [OPTIONS]
+= Generic Waf Instructions =
 
-  Example:
-    ./waf configure --prefix=/some/where
+As with most build systems, building and installing a project with waf is done
+in three separate stages:
+
+Configure: ./waf configure [OPTIONS]
+     e.g.: ./waf configure --prefix=/some/where
 
   The default prefix is /usr/local
 
 
-* Build:           ./waf [OPTIONS]
-
-  Example:
-    ./waf
+Build: ./waf [OPTIONS]
+ e.g.: ./waf
 
 
-* Install:         ./waf install [OPTIONS]
+Install: ./waf install [OPTIONS]
+   e.g.: ./waf install
+   e.g.:  DESTDIR=/home/drobilla/packages ./waf install
 
   The environment variable DESTDIR can be used to add any prefix to
-  the install paths (useful for packaging).  Example:
+  the install paths (useful for packaging).
 
-  DESTDIR=/home/drobilla/packages ./waf install
-
-
-*** IMPORTANT: You must use absolute paths everywhere
-
-
+  
 Run './waf --help' for detailed option information.
-
