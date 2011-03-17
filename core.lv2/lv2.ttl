@@ -1,8 +1,5 @@
-# RDF Schema for LV2 plugins
-# PROVISIONAL Revision 4.0pre1
-#
-# This document describes the classes and properties that are defined by the
-# core LV2 specification. See <http://lv2plug.in> for more information.
+# This document describes LV2, a plugin interface.
+# See <http://lv2plug.in> for more information.
 # 
 # Copyright (C) 2006-2011 Steve Harris, David Robillard
 # 
@@ -70,8 +67,8 @@ more details.
     doap:shortdesc "An audio plugin interface specification" ;
     doap:programming-language "C" ;
     doap:release [
-        doap:revision "3.1" ;
-        doap:created "2011-03-10"
+        doap:revision "3.2" ;
+        doap:created "2011-03-17"
     ] ;
     doap:maintainer [
         a foaf:Person ;
@@ -190,14 +187,14 @@ lv2:Plugin a rdfs:Class ;
     rdfs:subClassOf lv2:Template ;
     rdfs:label "Plugin" ;
     rdfs:subClassOf [
-        a                  owl:Restriction ;
-        owl:onProperty     rdf:type ;
-        owl:hasValue       lv2:Plugin ;
+        a owl:Restriction ;
+        owl:onProperty rdf:type ;
+        owl:hasValue lv2:Plugin ;
         rdfs:comment """
 A Plugin MUST have at least one rdf:type that is lv2:Plugin.
 """ ] , [
-        a                  owl:Restriction ;
-        owl:onProperty     doap:name ;
+        a owl:Restriction ;
+        owl:onProperty doap:name ;
         owl:someValuesFrom xsd:string ;
         rdfs:comment """
 A Plugin MUST have at least one doap:name that is a string
@@ -221,43 +218,43 @@ lv2:Port a rdfs:Class ;
     rdfs:subClassOf lv2:Resource ;
     rdfs:label   "Port" ;
     rdfs:subClassOf [
-        a                  owl:Restriction ;
-        owl:onProperty     rdf:type ;
+        a owl:Restriction ;
+        owl:onProperty rdf:type ;
         owl:someValuesFrom [
-            a         owl:DataRange ;
+            a owl:DataRange ;
             owl:oneOf ( lv2:Port lv2:InputPort lv2:OutputPort )
         ] ;
         rdfs:comment """
 A Port MUST have at least one rdf:type property that is one of lv2:Port,
 lv2:InputPort, or lv2:OutputPort.
 """ ] , [
-        a                  owl:Restriction ;
-        owl:onProperty     rdf:type ;
+        a owl:Restriction ;
+        owl:onProperty rdf:type ;
         owl:minCardinality 2 ;
         rdfs:comment """
 A Port MUST have at least two rdf:type properties that are some
 subclass of lv2:Port (one for lv2:Port, lv2:InputPort, or lv2:OutputPort,
 and another to describe the specific data type, e.g. lv2:AudioPort).
 """  ] , [
-         a                  owl:Restriction ;
-         owl:onProperty     lv2:index ;
+         a owl:Restriction ;
+         owl:onProperty lv2:index ;
          owl:someValuesFrom xsd:nonNegativeInteger ;
-         owl:cardinality    1 ;
+         owl:cardinality 1 ;
          rdfs:comment """
 A port MUST have a single lv2:index which is of type xsd:nonNegativeInteger
 (e.g. a non-negative integer literal in Turtle). The actual RDF datatype
 of the index MAY be xsd:integer (which is what a generic Turtle parser
 will do), but the value itself MUST be non-negative.
 """  ] , [
-         a                  owl:Restriction ;
-         owl:onProperty     lv2:symbol ;
+         a owl:Restriction ;
+         owl:onProperty lv2:symbol ;
          owl:someValuesFrom xsd:string ;
          rdfs:comment """
 A port MUST have a single lv2:symbol which is of type xsd:string with no
 language tag.
 """  ] , [
-         a                  owl:Restriction ;
-         owl:onProperty     lv2:name ;
+         a owl:Restriction ;
+         owl:onProperty lv2:name ;
          owl:someValuesFrom xsd:string ;
          rdfs:comment """
 A port MUST have at least one lv2:name which is of type xsd:string.
@@ -288,23 +285,23 @@ index for a port may differ between plugin binaries).</p>
 
 lv2:InputPort a rdfs:Class ;
     rdfs:subClassOf lv2:Port ;
-    rdfs:label      "Input port" ;
-    rdfs:comment    """
+    rdfs:label "Input port" ;
+    rdfs:comment """
 Ports of this type will be connected to a pointer to some value, which will
 be read by the plugin during their run method.
 """ .
 
 lv2:OutputPort a rdfs:Class ;
     rdfs:subClassOf lv2:Port ;
-    rdfs:label      "Output port" ;
-    rdfs:comment    """
+    rdfs:label "Output port" ;
+    rdfs:comment """
 Ports of this type will be connected to a pointer to some value, which will
 be written to by the plugin during their run method.
 """ .
 
 lv2:ControlPort a rdfs:Class ;
     rdfs:subClassOf lv2:Port ;
-    rdfs:label      "Control port" ;
+    rdfs:label "Control port" ;
     lv2:documentation """
 <p>Ports of this type will be connected to a pointer to a single value of C
 type <code>float</code>.</p>
@@ -313,7 +310,7 @@ type <code>float</code>.</p>
 
 lv2:AudioPort a rdfs:Class ;
     rdfs:subClassOf lv2:Port ;
-    rdfs:label      "Audio port" ;
+    rdfs:label "Audio port" ;
     lv2:documentation """
 <p>Ports of this type will be connected to an array of length sample_count
 with elements of C type <code>float</code>.</p>
@@ -325,15 +322,15 @@ with elements of C type <code>float</code>.</p>
 #####################################
 
 lv2:port a rdf:Property ;
-    rdfs:domain  lv2:Template ;
-    rdfs:range   lv2:Port ;
-    rdfs:label   "port" ;
+    rdfs:domain lv2:Template ;
+    rdfs:range lv2:Port ;
+    rdfs:label "port" ;
     rdfs:comment "Relates a Template or Plugin to the Ports it contains" .
 
 lv2:minorVersion a rdf:Property ;
     rdfs:domain lv2:Resource ;
-    rdfs:range  xsd:nonNegativeInteger ;
-    rdfs:label  "minor version" ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "minor version" ;
     lv2:documentation """
 <p>The minor version of an LV2 Resource. This property is used (along with
 lv2:microVersion) by hosts to distinguish different versions of a compatible
@@ -406,8 +403,8 @@ property which describes the other half.</p>
 
 lv2:microVersion a rdf:Property ;
     rdfs:domain lv2:Resource ;
-    rdfs:range  xsd:nonNegativeInteger ;
-    rdfs:label  "micro version" ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "micro version" ;
     lv2:documentation """
 <p>The micro component of a Resource's version.</p>
 
@@ -424,8 +421,8 @@ href="http://lv2plug.in/ns/lv2core#minorVersion">lv2:minorVersion</a>.</p>
 
 lv2:binary a rdf:Property ;
     rdfs:domain lv2:Resource ;
-    rdfs:range  rdfs:Resource ;
-    rdfs:label  "binary" ;
+    rdfs:range rdfs:Resource ;
+    rdfs:label "binary" ;
     lv2:documentation """
 
 <p>The binary of an LV2 resource. The value of this property must be a URI that
@@ -440,9 +437,9 @@ similarly by extensions to relate other resources to their implementations.</p>
 """ .
 
 lv2:appliesTo a rdf:Property ;
-	rdfs:domain  rdfs:Resource ;
-	rdfs:range   lv2:Plugin ;
-	rdfs:label   "Applies to" ;
+	rdfs:domain rdfs:Resource ;
+	rdfs:range lv2:Plugin ;
+	rdfs:label "Applies to" ;
 	lv2:documentation """
 <p>Specifies that a resource is related to a plugin. This is primarily intended
 for discovery purposes: bundles that describe resources that work with
@@ -468,8 +465,8 @@ not the plugin itself.</p>
 ####################################
 
 lv2:documentation a rdf:Property ;
-    rdfs:range   rdfs:Literal ;
-    rdfs:label   "documentation" ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "documentation" ;
     rdfs:seeAlso <http://www.w3.org/TR/xhtml-basic/> ;
     lv2:documentation """
 <p>Relates a Resource to documentation markup. The value of this property
@@ -490,17 +487,17 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
 ###################################
 
 lv2:index a rdf:Property ;
-    rdfs:domain  lv2:Port ;
-    rdfs:range   xsd:nonNegativeInteger ;
-    rdfs:label   "index" ;
+    rdfs:domain lv2:Port ;
+    rdfs:range xsd:nonNegativeInteger ;
+    rdfs:label "index" ;
     rdfs:comment """
 Specifies the index of the port, passed as an argument to the connect port
 function. The index uniqely identifies the port on an instance of the plugin.
 """ .
 
 lv2:symbol a rdf:Property ;
-    rdfs:domain  lv2:Resource ;
-    rdfs:label   "symbol" ;
+    rdfs:domain lv2:Resource ;
+    rdfs:label "symbol" ;
     rdfs:comment """
 A short name used as a machine and human readable identifier.
 
@@ -513,8 +510,8 @@ change the plugin URI if a port symbol is changed or removed).
 """ .
 
 lv2:name a rdf:Property ;
-    rdfs:domain  lv2:Port ;
-    rdfs:label   "name" ;
+    rdfs:domain lv2:Port ;
+    rdfs:label "name" ;
     rdfs:comment """
 A display name for labeling the Port in a user interface.
 
@@ -529,7 +526,7 @@ property without changing the Plugin URI.
 ##################################
 
 lv2:Point a rdfs:Class ;
-    rdfs:label   "Port value point" ;
+    rdfs:label "Port value point" ;
     rdfs:comment """
 Used to describe interesting values in a Port's range. To be valid it
 requires two properties: rdfs:label and rdf:value.
@@ -543,14 +540,14 @@ lv2:ScalePoint a rdfs:Class ;
     rdfs:comment "A single float Point (for control inputs)." .
 
 lv2:scalePoint a rdf:Property ;
-    rdfs:domain  lv2:Port ;
-    rdfs:range   lv2:ScalePoint ;
-    rdfs:label   "Scale point" ;
+    rdfs:domain lv2:Port ;
+    rdfs:range lv2:ScalePoint ;
+    rdfs:label "Scale point" ;
     rdfs:comment "Relates a Port to its ScalePoints." .
 
 lv2:default a rdf:Property ;
     rdfs:subPropertyOf lv2:scalePoint ;
-    rdfs:label         "Default value" ;
+    rdfs:label "Default value" ;
     rdfs:comment """
 The default value that the host SHOULD set this port to when there is no
 other information available.
@@ -558,7 +555,7 @@ other information available.
 
 lv2:minimum a rdf:Property ;
     rdfs:subPropertyOf lv2:scalePoint ;
-    rdfs:label         "Minimum value" ;
+    rdfs:label "Minimum value" ;
     lv2:documentation """
 A hint to the host for the minimum useful value that the port will use.  This
 is a <q>soft</q> limit; the plugin is required to gracefully accept all values
@@ -567,7 +564,7 @@ in the range of a port's data type.
 
 lv2:maximum a rdf:Property ;
     rdfs:subPropertyOf lv2:scalePoint ;
-    rdfs:label         "Maximum value" ;
+    rdfs:label "Maximum value" ;
     lv2:documentation """
 <p>A hint to the host for the maximum useful value that the port will use.
 This is a <q>soft</q> limit; the plugin is required to gracefully accept all
@@ -581,15 +578,15 @@ values in the range of a port's data type.</p>
 
 lv2:Feature a rdfs:Class ;
     rdfs:subClassOf lv2:Resource ;
-    rdfs:label   "Feature" ;
+    rdfs:label "Feature" ;
     rdfs:comment """
 An additional feature which a plugin or other resource may use or require.
 """.
 
 lv2:optionalFeature a rdf:Property ;
-    rdfs:domain  lv2:Resource ;
-    rdfs:range   lv2:Feature ;
-    rdfs:label   "Optional feature" ;
+    rdfs:domain lv2:Resource ;
+    rdfs:range lv2:Feature ;
+    rdfs:label "Optional feature" ;
     lv2:documentation """
 <p>Signifies that a plugin or other resource supports a certain feature.  If
 the host supports this feature, it MUST pass its URI and any additional data to
@@ -598,9 +595,9 @@ instantiate if an optional feature is not supported by the host.</p>
 """ .
 
 lv2:requiredFeature a rdf:Property ;
-    rdfs:domain  lv2:Resource ;
-    rdfs:range   lv2:Feature ;
-    rdfs:label   "Required feature" ;
+    rdfs:domain lv2:Resource ;
+    rdfs:range lv2:Feature ;
+    rdfs:label "Required feature" ;
     lv2:documentation """
 <p>Signifies that a plugin or other resource requires a certain feature.  If
 the host supports this feature, it MUST pass its URI and any additional data to
@@ -623,9 +620,9 @@ sensible decisions (e.g. to provide a better interface).
 """ .
 
 lv2:portProperty a rdf:Property ;
-    rdfs:domain  lv2:Port ;
-    rdfs:range   lv2:PortProperty ;
-    rdfs:label   "Port property" ;
+    rdfs:domain lv2:Port ;
+    rdfs:range lv2:PortProperty ;
+    rdfs:label "Port property" ;
     rdfs:comment """
 Relates Ports to PortProperties. The PortProperty may be ignored without 
 catastrophic effects, though it may be useful e.g. for providing a sensible
@@ -638,7 +635,7 @@ interface for the port.
 #######################
 
 lv2:isLive a lv2:Feature ;
-    rdfs:label   "Has a live (realtime) dependency" ;
+    rdfs:label "Has a live (realtime) dependency" ;
     lv2:documentation """
 <p>Indicates that the plugin has a real-time dependency (e.g. queues data from
 a socket) and so its output must not be cached or subject to significant
@@ -648,7 +645,7 @@ lv2:hardRTCapable).</p>
 """ .
 
 lv2:inPlaceBroken a lv2:Feature ;
-    rdfs:label   "in-place broken" ;
+    rdfs:label "In-place broken" ;
     lv2:documentation """
 <p>Indicates that the plugin may cease to work correctly if the host elects to
 use the same data location for both input and output.  Plugins that will fail
@@ -658,7 +655,7 @@ it impossible for hosts to use the plugin to process data <q>in-place</q>.</p>
 """ .
 
 lv2:hardRTCapable a lv2:Feature ;
-    rdfs:label   "Hard realtime capable" ;
+    rdfs:label "Hard realtime capable" ;
     lv2:documentation """
 
 <p>Indicates that the plugin is capable of running not only in a conventional
@@ -691,7 +688,7 @@ plugin MUST satisfy all of the following:</p>
 #############################
 
 lv2:connectionOptional a lv2:PortProperty ;
-    rdfs:label   "Optionally connected port" ;
+    rdfs:label "Optionally connected port" ;
     rdfs:comment """
 Indicates that this port does not have to be connected to valid data by the
 host. If it is to be disconnected then the port MUST set to NULL with a call
@@ -699,7 +696,7 @@ to the connectPort method.
 """ .
 
 lv2:reportsLatency a lv2:PortProperty ;
-    rdfs:label   "Latency reporting port" ;
+    rdfs:label "Latency reporting port" ;
     lv2:documentation """
 <p>Indicates that the port is used to express the processing latency incurred
 by the plugin, expressed in samples. The latency may be affected by the current
@@ -714,7 +711,7 @@ is an intentional effect).</p>
 """ .
 
 lv2:toggled a lv2:PortProperty ;
-    rdfs:label   "Toggled" ;
+    rdfs:label "Toggled" ;
     lv2:documentation """
 <p>Indicates that the data item should be considered a Boolean toggle. Data
 less than or equal to zero should be considered <q>off</q> or <q>false</q>, and
@@ -722,7 +719,7 @@ data above zero should be considered <q>on</q> or <q>true</q>.</p>
 """ .
 
 lv2:sampleRate a lv2:PortProperty ;
-    rdfs:label   "Sample rate" ;
+    rdfs:label "Sample rate" ;
     rdfs:comment """
 Indicates that any bounds specified should be interpreted as multiples of the
 sample rate. For instance, a frequency range from 0Hz to the Nyquist frequency
@@ -732,7 +729,7 @@ Hosts that support bounds at all MUST support this property.
 """ .
 
 lv2:integer a lv2:PortProperty ;
-    rdfs:label   "Integer" ;
+    rdfs:label "Integer" ;
     rdfs:comment """
 Indicates that a port's reasonable values are integers (eg. a user interface
 would likely wish to provide a stepped control allowing only integer input).
@@ -740,7 +737,7 @@ A plugin MUST operate reasonably even if such a port has a non-integer input.
 """ .
 
 lv2:enumeration a lv2:PortProperty ;
-    rdfs:label   "Enumeration" ;
+    rdfs:label "Enumeration" ;
     rdfs:comment """  
 Indicates that a port's only reasonable values are the scale points defined for
 that port. A host SHOULD NOT allow a user to set the value of such a port to
