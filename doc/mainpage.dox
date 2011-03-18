@@ -22,3 +22,5 @@
  * \li <a href="../../extensions">Extensions at lv2plug.in/ns/extensions</a>
  */
 
+#define NOTHING_HERE
+
