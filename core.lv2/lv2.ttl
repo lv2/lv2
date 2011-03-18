@@ -465,12 +465,21 @@ property without changing the Plugin URI.
 
 lv2:Point a rdfs:Class , owl:Class ;
     rdfs:label "Port value point" ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty rdfs:label ;
+        owl:someValuesFrom xsd:string ;
+        rdfs:comment "A Point MUST have at least one string rdfs:label." ;
+    ] , [
+        a owl:Restriction ;
+        owl:onProperty rdf:value ;
+        owl:cardinality 1 ;
+        rdfs:comment "A Point MUST have exactly one rdf:value." ;
+    ] ;
     rdfs:comment """
-Used to describe interesting values in a Port's range. To be valid it
-requires two properties: rdfs:label and rdf:value.
-
-There are 3 specially defined Points in the LV2 specification (default,
-minimum, and maximum), though future extensions may define more.
+A Point describes an interesting value in a Port's range (much like a labeled
+<q>notch</q> on a physical knob). A Point has a string label and a value; the
+type of the value MUST be compatible with the type of the corresponding Port.
 """ .
 
 lv2:ScalePoint a rdfs:Class , owl:Class ;
