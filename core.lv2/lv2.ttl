@@ -65,7 +65,7 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
 """ .
 
 <http://lv2plug.in/ns/lv2core>
-    a lv2:Specification ;
+    a lv2:Specification , owl:Ontology ;
     lv2:documentation """
 <h4>Overview</h4>
 
