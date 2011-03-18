@@ -1,30 +1,31 @@
-/* LV2 - An audio plugin interface specification
- * Revision 4
- *
- * Copyright (C) 2000-2002 Richard W.E. Furse, Paul Barton-Davis,
- *                         Stefan Westerfeld.
- * Copyright (C) 2006-2011 Steve Harris, David Robillard.
- *
- * This header is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published
- * by the Free Software Foundation; either version 2.1 of the License,
- * or (at your option) any later version.
- *
- * This header is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
- * USA.
- */
+/*
+  LV2 - An audio plugin interface specification.
+  Copyright (C) 2006-2011 Steve Harris, David Robillard.
+
+  Based on LADSPA:
+  Copyright (C) 2000-2002 Richard W.E. Furse, Paul Barton-Davis,
+                          Stefan Westerfeld.
+ 
+  This header is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Lesser General Public License as published
+  by the Free Software Foundation; either version 2.1 of the License,
+  or (at your option) any later version.
+ 
+  This header is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  Lesser General Public License for more details.
+ 
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+  USA.
+*/
 
 /**
   @file lv2.h
   API for the LV2 specification <http://lv2plug.in/ns/lv2core>.
-  Revision: 4
+  Revision: 3.2
 */
 
 #ifndef LV2_H_INCLUDED
@@ -46,18 +47,21 @@ extern "C" {
 typedef void * LV2_Handle;
 
 /**
-   Feature data.
+   Feature.
  
-   These are passed to a plugin's instantiate method to represent a special
-   feature the host has which the plugin may depend on. This allows extensions
-   to the plugin interface without breaking the LV2 API. Extensions that
+   Features are used to provide an extensible interface to allow adding
+   arbitrary functionality to implementations without breaking API
+   compatibility. In particular, they may be passed by the host to the plugin's
+   instantiate method to provide additional functionality. Extensions that
    describe a feature MUST specify the @a URI and format of @a data that needs
    to be used here. The core LV2 specification does not define any features;
-   hosts are not required to use this facility.
+   implementations are not required to use this facility.
 */
 typedef struct _LV2_Feature {
 	/**
 	   A globally unique, case-sensitive identifier (URI) for this feature.
+
+	   This MUST be a valid URI string as defined by RFC 3986.
 	*/
 	const char * URI;
 
@@ -80,23 +84,12 @@ typedef struct _LV2_Feature {
 */
 typedef struct _LV2_Descriptor {
 	/**
-	   A globally unique, case-sensitive identifier for this plugin type.
-	   This MUST be a valid URI string as defined by RFC 3986.
-	 
-	   All plugins with the same URI MUST be compatible in terms of 'port
-	   signature', meaning they have the same ports with the same symbols.
-	   Newer versions of a plugin MAY be released with the same URI if ports are
-	   added, as long as all such ports are "connection optional".  shortnames,
-	   and roughly the same functionality.  Newer versions of a plugin that
-	   break these rules MUST have a different URI, e.g. by appending a version
-	   number to the previous URI.
-	 
-	   When referring to plugins in a persistent serialisation (e.g. session or
-	   patch files, network protocols, etc.), hosts MUST refer to a loaded
-	   plugin by URI only. The rules above are designed such that, in the future,
-	   loading a plugin with this URI will yield a plugin which can be used
-	   identically (i.e. has identical ports) (though the plugin MAY be a newer
-	   revision with additional "connection optional" ports.
+	   A globally unique, case-sensitive identifier for this plugin.
+
+	   This MUST be a valid URI string as defined by RFC 3986. All plugins with
+	   the same URI are compatible to some degree; see lv2.ttl and the <a
+	   href="http://lv2plug.in/ns/lv2core">LV2 Ontology Documentation</a> for
+	   details.
 	*/
 	const char * URI;
 
@@ -104,7 +97,7 @@ typedef struct _LV2_Descriptor {
 	   Instantiate the plugin.
 
 	   Note that instance initialisation should generally occur in activate()
-	   rather than here. If a host calls instantiate, it MUST call cleanup()
+	   rather than here. If a host calls instantiate(), it MUST call cleanup()
 	   at some point in the future.
 
 	   @param descriptor Descriptor of the plugin to instantiate.
@@ -113,17 +106,17 @@ typedef struct _LV2_Descriptor {
 
 	   @param bundle_path Path to the LV2 bundle which contains this plugin
 	   binary. It MUST include the trailing directory separator (e.g. '/') so
-	   that simply appending a filename will give the full path to that file in
-	   the bundle.
+	   that simply appending a filename will yield the path to that file in the
+	   bundle.
 	 
 	   @param features A NULL terminated array of LV2_Feature structs which
 	   represent the features the host supports. Plugins may refuse to
 	   instantiate if required features are not found here. However, hosts MUST
 	   NOT use this as a discovery mechanism: instead, use the RDF data to
-	   determinate what features are required, and do not attempt to load or
-	   instantiate unsupported plugins at all. This parameter MUST NOT be NULL,
-	   i.e. a host that supports no features MUST pass a single element array
-	   containing NULL.
+	   determine which features are required and do not attempt to instantiate
+	   unsupported plugins at all. This parameter MUST NOT be NULL, i.e. a host
+	   that supports no features MUST pass a single element array containing
+	   NULL.
 
 	   @return A handle for the new plugin instance, or NULL if instantiation
 	   has failed.	 
@@ -138,19 +131,17 @@ typedef struct _LV2_Descriptor {
 
 	   Plugin writers should be aware that the host may elect to use the same
 	   buffer for more than one port and even use the same buffer for both
-	   input and output (see lv2:inPlaceBroken in lv2.ttl).  However,
-	   overlapped buffers or use of a single buffer for both audio and control
-	   data may result in unexpected behaviour.
+	   input and output (see lv2:inPlaceBroken in lv2.ttl).
 	 
 	   If the plugin has the feature lv2:hardRTCapable then there are various
-	   things that the plugin MUST NOT do within the connect_port() function
-	   (see lv2.ttl).
+	   things that the plugin MUST NOT do within the connect_port() function;
+	   see lv2.ttl for details.
 
 	   connect_port() MUST be called at least once for each port before run()
 	   is called, unless that port is lv2:connectionOptional. The plugin must
-	   pay careful attention to the block size passed to the run function as
-	   the block allocated may only just be large enough to contain the block
-	   of data (typically samples), and is not guaranteed to be constant.
+	   pay careful attention to the block size passed to run() since the block
+	   allocated may only just be large enough to contain the data, and is not
+	   guaranteed to remain constant between run() calls.
 
 	   connect_port() may be called more than once for a plugin instance to
 	   allow the host to change the buffers that the plugin is reading or
@@ -160,7 +151,7 @@ typedef struct _LV2_Descriptor {
 	   @param instance Plugin instance containing the port.
 
 	   @param port Index of the port to connect. The host MUST NOT try to
-	   connect a port index that is not defined in the plugin's RDF data.  If
+	   connect a port index that is not defined in the plugin's RDF data. If
 	   it does, the plugin's behaviour is undefined (a crash is likely).
 
 	   @param data_location Pointer to data of the type defined by the port
@@ -197,15 +188,15 @@ typedef struct _LV2_Descriptor {
 	void (*activate)(LV2_Handle instance);
 
 	/**
-	   Runs a plugin instance for a block.
+	   Run a plugin instance for a block.
 
 	   Note that if an activate() function exists then it must be called before
 	   run(). If deactivate() is called for a plugin instance then run() may
 	   not be called until activate() has been called again.
 	 
-	   If the plugin has the feature lv2:hardRTCapable then there are
-	   various things that the plugin MUST NOT do within the run()
-	   function (see lv2.ttl for details).
+	   If the plugin has the feature lv2:hardRTCapable then there are various
+	   things that the plugin MUST NOT do within the run() function (see
+	   lv2.ttl for details).
 
 	   @param instance Instance to be run.
 
@@ -221,7 +212,7 @@ typedef struct _LV2_Descriptor {
 	   Hosts MUST deactivate all activated instances after they have been run()
 	   for the last time. This call SHOULD be made as close to the last run()
 	   call as possible and indicates to real-time plugins that they are no
-	   longer live, however plugins MUST NOT rely on prompt deactivation.  If
+	   longer live, however plugins MUST NOT rely on prompt deactivation. If
 	   there is nothing for deactivate() to do then this field may be NULL
 
 	   Deactivation is not similar to pausing since the plugin instance will be
@@ -243,7 +234,7 @@ typedef struct _LV2_Descriptor {
 	   this call.
 	 
 	   If activate() was called for a plugin instance then a corresponding call
-	   to deactivate() MUST be made before cleanup() is called.  Hosts MUST NOT
+	   to deactivate() MUST be made before cleanup() is called. Hosts MUST NOT
 	   call cleanup() unless instantiate() was previously called.
 	*/
 	void (*cleanup)(LV2_Handle instance);
@@ -256,8 +247,8 @@ typedef struct _LV2_Descriptor {
 	 
 	   The actual type and meaning of the returned object MUST be specified
 	   precisely by the extension if it defines any extra data. This function
-	   MUST return NULL for any unsupported URI. If a plugin does not support any
-	   extensions that define extra data, this field may be NULL.
+	   MUST return NULL for any unsupported URI. If a plugin does not support
+	   any extension data, this field may be NULL.
 	 
 	   @param uri URI of the extension. The plugin MUST return NULL if it does
 	   not support the extension, but hosts MUST NOT use this as a discovery
@@ -267,10 +258,9 @@ typedef struct _LV2_Descriptor {
 	   The host is never responsible for freeing the returned value.
 	 
 	   Note this function SHOULD return a struct (likely containing function
-	   pointers) and NOT a direct function pointer. Standard C and C++ do not
-	   allow type casts from void* to a function pointer type, and returning a
-	   struct is much better since it is extensible (e.g. fields can be added
-	   by backwards compatible extensions).
+	   pointers) and NOT a direct function pointer. Casting void* to a function
+	   pointer type is not portable, and returning a struct is much safer
+	   since it is extensible (fields can be added without breaking the ABI).
 	*/
 	const void * (*extension_data)(const char * uri);
 } LV2_Descriptor;
@@ -297,9 +287,9 @@ typedef struct _LV2_Descriptor {
    enumerate plugins by increasing @a index until NULL is returned.
 
    Note that @a index has no meaning, hosts MUST NOT depend on it remaining
-   constant in any way. In particular, hosts MUST NOT refer to plugins by
-   library path and index in persistent serialisations (e.g. save files).
-   In other words, the index is NOT a plugin ID.
+   constant in any way. In other words, @a index is NOT a plugin ID.  In
+   particular, hosts MUST NOT refer to plugins by library path and index in
+   persistent serialisations (e.g. save files).
 */
 const LV2_Descriptor * lv2_descriptor(uint32_t index);
 
