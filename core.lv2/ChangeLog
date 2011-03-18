@@ -7,6 +7,9 @@ lv2core (UNRELEASED) unstable; urgency=low
   * Move lv2:AmplifierPlugin under lv2:DynamicsPlugin
   * Loosen domain restriction of lv2:optionalFeature and lv2:requiredFeature
     (to allow re-use in extensions)
+  * Fix definition of lv2:minimum etc. (used for values, not scale points)
+  * More precisely define properties with OWL
+  * Move project metadata to manifest
 
  -- David Robillard <d@drobilla.net>  UNRELEASED
 
