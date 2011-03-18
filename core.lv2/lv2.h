@@ -198,6 +198,13 @@ typedef struct _LV2_Descriptor {
 	   things that the plugin MUST NOT do within the run() function (see
 	   lv2.ttl for details).
 
+	   As a special case, when @a sample_count == 0, the plugin should update
+	   any output ports that represent a single instant in time (e.g. control
+	   ports, but not audio ports). This is particularly useful for latent
+	   plugins, which should update their latency output port so hosts can
+	   pre-roll plugins to compute latency. Plugins MUST NOT crash when
+	   @a sample_count == 0.
+
 	   @param instance Instance to be run.
 
 	   @param sample_count The block size (in samples) for which the plugin
