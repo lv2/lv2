@@ -16,74 +16,73 @@ top = '.'
 out = 'build'
 
 def options(opt):
-	opt.add_option('--default-lv2-path', type='string', default='',
-	               dest='default_lv2_path',
-	               help="Default LV2 path to use if $LV2_PATH is unset")
-	opt.add_option('--bundle-only', action='store_true', default=False,
-	               dest='bundle_only',
-	               help="Only install LV2 bundle (not header or pkg-config file)")
-	autowaf.set_options(opt)
+    opt.add_option('--default-lv2-path', type='string', default='',
+                   dest='default_lv2_path',
+                   help="Default LV2 path to use if $LV2_PATH is unset")
+    opt.add_option('--bundle-only', action='store_true', default=False,
+                   dest='bundle_only',
+                   help="Only install LV2 bundle (not header or pkg-config file)")
+    autowaf.set_options(opt)
 
 def configure(conf):
-	autowaf.configure(conf)
-	lv2core_path_sep = ':'
-	lv2core_dir_sep  = '/'
-	if sys.platform == 'win32':
-		lv2core_path_sep = ';'
-		lv2core_dir_sep = '\\'
+    autowaf.configure(conf)
+    lv2core_path_sep = ':'
+    lv2core_dir_sep  = '/'
+    if sys.platform == 'win32':
+        lv2core_path_sep = ';'
+        lv2core_dir_sep = '\\'
 
-	autowaf.define(conf, 'LV2CORE_PATH_SEP', lv2core_path_sep)
-	autowaf.define(conf, 'LV2CORE_DIR_SEP',  lv2core_dir_sep)
+    autowaf.define(conf, 'LV2CORE_PATH_SEP', lv2core_path_sep)
+    autowaf.define(conf, 'LV2CORE_DIR_SEP',  lv2core_dir_sep)
 
-	if Options.options.default_lv2_path == '':
-		if Options.platform == 'darwin':
-			Options.options.default_lv2_path = lv2core_path_sep.join([
-					'~/Library/Audio/Plug-Ins/LV2',
-					'~/.lv2',
-					'/usr/local/lib/lv2',
-					'/usr/lib/lv2',
-					'/Library/Audio/Plug-Ins/LV2'])
-		elif Options.platform == 'haiku':
-			Options.options.default_lv2_path = lv2core_path_sep.join([
-				'~/.lv2',
-				'/boot/common/add-ons/lv2'])
-		elif Options.platform == 'win32':
-			Options.options.default_lv2_path = 'C:\\Program Files\\LV2'
-		else:
-			Options.options.default_lv2_path = lv2core_path_sep.join([
-					'~/.lv2',
-					'/usr/%s/lv2' % conf.env['LIBDIRNAME'],
-					'/usr/local/%s/lv2' % conf.env['LIBDIRNAME']])
+    if Options.options.default_lv2_path == '':
+        if Options.platform == 'darwin':
+            Options.options.default_lv2_path = lv2core_path_sep.join([
+                    '~/Library/Audio/Plug-Ins/LV2',
+                    '~/.lv2',
+                    '/usr/local/lib/lv2',
+                    '/usr/lib/lv2',
+                    '/Library/Audio/Plug-Ins/LV2'])
+        elif Options.platform == 'haiku':
+            Options.options.default_lv2_path = lv2core_path_sep.join([
+                '~/.lv2',
+                '/boot/common/add-ons/lv2'])
+        elif Options.platform == 'win32':
+            Options.options.default_lv2_path = 'C:\\Program Files\\LV2'
+        else:
+            Options.options.default_lv2_path = lv2core_path_sep.join([
+                    '~/.lv2',
+                    '/usr/%s/lv2' % conf.env['LIBDIRNAME'],
+                    '/usr/local/%s/lv2' % conf.env['LIBDIRNAME']])
 
-	autowaf.define(conf, 'LV2CORE_DEFAULT_LV2_PATH', Options.options.default_lv2_path)
+    autowaf.define(conf, 'LV2CORE_DEFAULT_LV2_PATH', Options.options.default_lv2_path)
 
-	conf.write_config_header('lv2-config.h', remove=False)
+    conf.write_config_header('lv2-config.h', remove=False)
 
 def build(bld):
-	# Header "library"
-	obj = bld()
-	obj.export_includes = ['.']
-	obj.name            = 'liblv2core'
-	obj.target          = 'lv2core'
+    # Header "library"
+    obj = bld(export_includes = ['.'],
+              name            = 'liblv2core',
+              target          = 'lv2core')
 
-	if not Options.options.bundle_only:
-		# Header
-		bld.install_files('${INCLUDEDIR}', 'lv2.h')
-		bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.h')
+    if not Options.options.bundle_only:
+        # Header
+        bld.install_files('${INCLUDEDIR}', 'lv2.h')
+        bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.h')
 
-		# Pkgconfig file
-		autowaf.build_pc(bld, 'LV2CORE', LV2CORE_VERSION, [])
+        # Pkgconfig file
+        autowaf.build_pc(bld, 'LV2CORE', LV2CORE_VERSION, [])
 
-	# Bundle (data)
-	bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.ttl manifest.ttl')
+    # Bundle (data)
+    bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.ttl manifest.ttl')
 
-	obj = bld(features = 'c cprogram')
-	obj.source       = 'lv2config.c serd-0.1.0.c'
-	obj.target       = 'lv2config'
-	obj.install_path = '${BINDIR}'
-	obj.cflags       = '-std=c99'
+    obj = bld(features     = 'c cprogram',
+              source       = 'lv2config.c serd-0.1.0.c',
+              target       = 'lv2config',
+              install_path = '${BINDIR}',
+              cflags       = '-std=c99')
 
 def dist():
-	import Scripting
-	Scripting.g_gz = 'gz'
-	Scripting.dist()
+    import Scripting
+    Scripting.g_gz = 'gz'
+    Scripting.dist()
