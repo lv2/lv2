@@ -119,7 +119,7 @@ typedef struct _LV2_Descriptor {
 	   @param features A NULL terminated array of LV2_Feature structs which
 	   represent the features the host supports. Plugins may refuse to
 	   instantiate if required features are not found here. However, hosts MUST
-	   NOT use this as a discovery mechanism: instead, use the data file to
+	   NOT use this as a discovery mechanism: instead, use the RDF data to
 	   determinate what features are required, and do not attempt to load or
 	   instantiate unsupported plugins at all. This parameter MUST NOT be NULL,
 	   i.e. a host that supports no features MUST pass a single element array
@@ -164,7 +164,7 @@ typedef struct _LV2_Descriptor {
 	   it does, the plugin's behaviour is undefined (a crash is likely).
 
 	   @param data_location Pointer to data of the type defined by the port
-	   type in the plugin's data file (e.g. an array of float for an
+	   type in the plugin's RDF data (e.g. an array of float for an
 	   lv2:AudioPort). This pointer must be stored by the plugin instance and
 	   used to read/write data when run() is called. Data present at the time
 	   of the connect_port() call MUST NOT be considered meaningful.
@@ -262,7 +262,7 @@ typedef struct _LV2_Descriptor {
 	   @param uri URI of the extension. The plugin MUST return NULL if it does
 	   not support the extension, but hosts MUST NOT use this as a discovery
 	   mechanism. Hosts should only call this function for extensions known to
-	   be supported by the plugin, as described in the plugin's data file.
+	   be supported by the plugin, as described in the plugin's RDF data.
 	 
 	   The host is never responsible for freeing the returned value.
 	 
@@ -280,17 +280,17 @@ typedef struct _LV2_Descriptor {
  
    The exact mechanism by which plugin libraries are loaded is host and system
    dependent, however all hosts need to know is the URI of the plugin they wish
-   to load. Plugins are discovered via data files (not by loading libraries).
-   Documentation on best practices for plugin discovery can be found at
-   <http://lv2plug.in>, however it is expected that hosts use a library to
-   provide this functionality.
+   to load. Plugins are discovered via RDF data (not by loading plugin
+   libraries). Documentation on best practices for plugin discovery can be
+   found at <http://lv2plug.in>, however it is expected that hosts use a
+   library to provide this functionality.
  
    A plugin library MUST include a function called "lv2_descriptor" with this
    prototype. This function MUST have C-style linkage (if you are using C++
    this is taken care of by the 'extern "C"' clause at the top of this file).
  
-   A host will find the plugin's library via data files, get the
-   lv2_descriptor() function from it, and proceed from there.
+   A host will find the plugin's library via RDF data, get the lv2_descriptor()
+   function from it, and proceed from there.
  
    Plugins are accessed by index using values from 0 upwards. Out of range
    indices MUST result in this function returning NULL, so the host can
