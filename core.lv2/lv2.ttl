@@ -28,19 +28,14 @@
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 
-####################
-## Resource Class ##
-####################
+###########################
+## General LV2 Resources ##
+###########################
 
 lv2:Resource a rdfs:Class , owl:Class ;
     rdfs:comment """
 An LV2 Resource (e.g. plugin, specification, or any other LV2 related thing).
 """ .
-
-
-#########################
-## Specification Class ##
-#########################
 
 lv2:Specification a rdfs:Class , owl:Class ;
     rdfs:subClassOf lv2:Resource ;
@@ -52,10 +47,22 @@ so hosts may discover all present LV2 data. See http://lv2plug.in/docs for
 more details.
 """ .
 
-
-#######################
-## LV2 Specification ##
-#######################
+lv2:documentation a rdf:Property , owl:DatatypeProperty ;
+    rdfs:range rdfs:Literal ;
+    rdfs:label "documentation" ;
+    rdfs:seeAlso <http://www.w3.org/TR/xhtml-basic/> ;
+    lv2:documentation """
+<p>Relates a Resource to documentation markup. The value of this property
+MUST be a string literal which is a valid XHTML Basic 1.1 fragment suitable
+for use as the content of a &lt;div&gt; element. This can be used by
+hosts to provide rich online documentation or by tools to generate external
+documentation pages. The standard language tagging facility of RDF can be
+used to provide multi-lingual documentation.</p>
+<p>XHTML Basic is a W3C Recommendation which defines a basic subset of XHTML
+intended to be reasonable to implement with limited resources (e.g. on embedded
+devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
+>XHTML Basic, Section 3</a> for a list of legal tags.</p>
+""" .
 
 <http://lv2plug.in/ns/lv2core>
     a lv2:Specification ;
@@ -147,10 +154,9 @@ allowed. For example, a host may call <code>run()</code> for two different
 plugin instances simultaneously.</p>
 """ .
 
-
-#############################
-## Template/Plugin Classes ##
-#############################
+############
+## Plugin ##
+############
 
 lv2:Template a rdfs:Class , owl:Class ;
     rdfs:subClassOf lv2:Resource ;
@@ -187,10 +193,9 @@ e.g. <q>Tape Delay Unit</q>. Use doap:shortdesc or doap:description for more
 detailed descriptions.</p>
 """ .
 
-
-##################
-## Port Classes ##
-##################
+##########
+## Port ##
+##########
 
 lv2:Port a rdfs:Class , owl:Class ;
     rdfs:subClassOf lv2:Resource ;
@@ -276,10 +281,9 @@ lv2:AudioPort a rdfs:Class , owl:Class ;
 with elements of C type <code>float</code>.</p>
 """ .
 
-
-#####################################
-## Mandatory Plugin RDF Properties ##
-#####################################
+#######################
+## Plugin Properties ##
+#######################
 
 lv2:port a rdf:Property , owl:ObjectProperty ;
     rdfs:domain lv2:Template ;
@@ -418,32 +422,9 @@ if/when to load the data, knowing that it describes an additional resource and
 not the plugin itself.</p>
 """ .
 
-
-####################################
-## Documentation                  ##
-####################################
-
-lv2:documentation a rdf:Property , owl:DatatypeProperty ;
-    rdfs:range rdfs:Literal ;
-    rdfs:label "documentation" ;
-    rdfs:seeAlso <http://www.w3.org/TR/xhtml-basic/> ;
-    lv2:documentation """
-<p>Relates a Resource to documentation markup. The value of this property
-MUST be a string literal which is a valid XHTML Basic 1.1 fragment suitable
-for use as the content of a &lt;div&gt; element. This can be used by
-hosts to provide rich online documentation or by tools to generate external
-documentation pages. The standard language tagging facility of RDF can be
-used to provide multi-lingual documentation.</p>
-<p>XHTML Basic is a W3C Recommendation which defines a basic subset of XHTML
-intended to be reasonable to implement with limited resources (e.g. on embedded
-devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
->XHTML Basic, Section 3</a> for a list of legal tags.</p>
-""" .
-
-
-###################################
-## Mandatory Port RDF Properties ##
-###################################
+#####################
+## Port Properties ##
+#####################
 
 lv2:index a rdf:Property , owl:DatatypeProperty ;
     rdfs:domain lv2:Port ;
@@ -478,10 +459,9 @@ port identification. The plugin author may change the values of this
 property without changing the Plugin URI.
 """ .
 
-
-##################################
-## Optional Port RDF Properties ##
-##################################
+###########################
+## Port Range and Points ##
+###########################
 
 lv2:Point a rdfs:Class , owl:Class ;
     rdfs:label "Port value point" ;
@@ -515,7 +495,7 @@ lv2:minimum a rdf:Property , owl:DatatypeProperty ;
     rdfs:domain lv2:Port ;
     rdfs:label "Minimum value" ;
     lv2:documentation """
-A hint to the host for the minimum useful value that the port will use.  This
+A hint to the host for the minimum useful value that the port will use. This
 is a <q>soft</q> limit; the plugin is required to gracefully accept all values
 in the range of a port's data type.
 """ .
@@ -529,10 +509,9 @@ This is a <q>soft</q> limit; the plugin is required to gracefully accept all
 values in the range of a port's data type.</p>
 """ .
 
-
-##############
-## Features ##
-##############
+#############
+## Feature ##
+#############
 
 lv2:Feature a rdfs:Class , owl:Class ;
     rdfs:subClassOf lv2:Resource ;
@@ -546,7 +525,7 @@ lv2:optionalFeature a rdf:Property , owl:ObjectProperty ;
     rdfs:range lv2:Feature ;
     rdfs:label "Optional feature" ;
     lv2:documentation """
-<p>Signifies that a plugin or other resource supports a certain feature.  If
+<p>Signifies that a plugin or other resource supports a certain feature. If
 the host supports this feature, it MUST pass its URI and any additional data to
 the plugin in LV2_Descriptor::instantiate(). The plugin MUST NOT fail to
 instantiate if an optional feature is not supported by the host.</p>
@@ -557,36 +536,13 @@ lv2:requiredFeature a rdf:Property , owl:ObjectProperty ;
     rdfs:range lv2:Feature ;
     rdfs:label "Required feature" ;
     lv2:documentation """
-<p>Signifies that a plugin or other resource requires a certain feature.  If
+<p>Signifies that a plugin or other resource requires a certain feature. If
 the host supports this feature, it MUST pass its URI and any additional data to
 the plugin in LV2_Descriptor::instantiate(). The plugin MUST fail to
 instantiate if a required feature is not present; hosts SHOULD always check
 this before attempting to instantiate a plugin (i.e. discovery by attempting to
 instantiate is strongly discouraged).</p>
 """ .
-
-
-####################
-## PortProperties ##
-####################
-
-lv2:PortProperty a rdfs:Class , owl:Class ;
-    rdfs:label "Port property" ;
-    rdfs:comment """
-A port property - a useful piece of information that allows a host to make more
-sensible decisions (e.g. to provide a better interface).
-""" .
-
-lv2:portProperty a rdf:Property , owl:ObjectProperty ;
-    rdfs:domain lv2:Port ;
-    rdfs:range lv2:PortProperty ;
-    rdfs:label "Port property" ;
-    rdfs:comment """
-Relates Ports to PortProperties. The PortProperty may be ignored without 
-catastrophic effects, though it may be useful e.g. for providing a sensible
-interface for the port.
-""" .
-
 
 #######################
 ## Standard Features ##
@@ -597,7 +553,7 @@ lv2:isLive a lv2:Feature ;
     lv2:documentation """
 <p>Indicates that the plugin has a real-time dependency (e.g. queues data from
 a socket) and so its output must not be cached or subject to significant
-latency, and calls to the run method should be done in rapid succession.  This
+latency, and calls to the run method should be done in rapid succession. This
 property is not related to <q>hard real-time</q> execution requirements (see
 lv2:hardRTCapable).</p>
 """ .
@@ -606,9 +562,9 @@ lv2:inPlaceBroken a lv2:Feature ;
     rdfs:label "In-place broken" ;
     lv2:documentation """
 <p>Indicates that the plugin may cease to work correctly if the host elects to
-use the same data location for both input and output.  Plugins that will fail
+use the same data location for both input and output. Plugins that will fail
 to work correctly if ANY input port is connected to the same location as ANY
-output port MUST require this Feature.  Doing so should be avoided as it makes
+output port MUST require this Feature. Doing so should be avoided as it makes
 it impossible for hosts to use the plugin to process data <q>in-place</q>.</p>
 """ .
 
@@ -640,6 +596,26 @@ plugin MUST satisfy all of the following:</p>
 <p>Note these rules apply to the connect_port() function as well as run().</p>
 """ .
 
+##################
+## PortProperty ##
+##################
+
+lv2:PortProperty a rdfs:Class , owl:Class ;
+    rdfs:label "Port property" ;
+    rdfs:comment """
+A port property - a useful piece of information that allows a host to make more
+sensible decisions (e.g. to provide a better interface).
+""" .
+
+lv2:portProperty a rdf:Property , owl:ObjectProperty ;
+    rdfs:domain lv2:Port ;
+    rdfs:range lv2:PortProperty ;
+    rdfs:label "Port property" ;
+    rdfs:comment """
+Relates Ports to PortProperties. The PortProperty may be ignored without 
+catastrophic effects, though it may be useful e.g. for providing a sensible
+interface for the port.
+""" .
 
 #############################
 ## Standard PortProperties ##
@@ -704,8 +680,6 @@ even if such a port has an input that is not a scale point, preferably by
 simply choosing the largest enumeration value less than or equal to the actual
 input value (i.e. round the input value down).
 """ .
-
-
 
 ####################
 ## Plugin Classes ##

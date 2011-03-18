@@ -10,6 +10,7 @@ lv2core (UNRELEASED) unstable; urgency=low
   * Fix definition of lv2:minimum etc. (used for values, not scale points)
   * More precisely define properties with OWL
   * Move project metadata to manifest
+  * Add lv2:enumeration port property.
 
  -- David Robillard <d@drobilla.net>  UNRELEASED
 
