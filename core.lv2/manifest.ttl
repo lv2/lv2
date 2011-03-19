@@ -1,33 +1,10 @@
 @prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/lv2core>
-	a doap:Project , lv2:Specification , owl:Ontology;
+	a doap:Project , lv2:Specification , owl:Ontology ;
 	lv2:minorVersion 3 ;
 	lv2:microVersion 2 ;
-	rdfs:seeAlso <lv2.ttl> ;
-    doap:license <http://usefulinc.com/doap/licenses/mit> ;
-    doap:name "LV2" ;
-    doap:homepage <http://lv2plug.in> ;
-    doap:created "2004-04-21" ;
-    doap:shortdesc "An audio plugin interface specification" ;
-    doap:programming-language "C" ;
-    doap:release [
-        doap:revision "3.2" ;
-        doap:created "2011-03-17"
-    ] ;
-    doap:maintainer [
-        a foaf:Person ;
-        foaf:name "Steve Harris" ;
-        foaf:homepage <http://plugin.org.uk/> ;
-        rdfs:seeAlso <http://plugin.org.uk/swh.xrdf>
-    ] , [
-        a foaf:Person ;
-        foaf:name "David Robillard" ;
-        foaf:homepage <http://drobilla.net/> ;
-        rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
-    ] .
-
+	rdfs:seeAlso <lv2.ttl> .
