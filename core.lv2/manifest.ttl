@@ -5,6 +5,6 @@
 
 <http://lv2plug.in/ns/lv2core>
 	a doap:Project , lv2:Specification , owl:Ontology ;
-	lv2:minorVersion 3 ;
-	lv2:microVersion 2 ;
+	lv2:minorVersion 4 ;
+	lv2:microVersion 0 ;
 	rdfs:seeAlso <lv2.ttl> .

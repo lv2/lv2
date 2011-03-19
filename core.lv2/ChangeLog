@@ -1,8 +1,9 @@
-lv2core (UNRELEASED) unstable; urgency=low
+lv2core (4.0) unstable; urgency=medium
 
   * Make doap:license suggested, but not required (for wrappers)
   * Define lv2:binary (MUST be in manifest.ttl)
   * Define lv2:majorVersion and lv2:minorVersion (MUST be in manifest.ttl)
+  * Define lv2:documentation and use it to document lv2core
   * Add lv2:FunctionPlugin and lv2:ConstantPlugin classes
   * Move lv2:AmplifierPlugin under lv2:DynamicsPlugin
   * Loosen domain of lv2:optionalFeature and lv2:requiredFeature
@@ -14,7 +15,7 @@ lv2core (UNRELEASED) unstable; urgency=low
   * Add lv2:enumeration port property.
   * Define run() pre-roll special case (sample_count == 0).
 
- -- David Robillard <d@drobilla.net>  UNRELEASED
+ -- David Robillard <d@drobilla.net>  Fri, 18 Mar 2011 23:23:23 -0400
 
 lv2core (3.0) unstable; urgency=low
 

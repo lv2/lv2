@@ -5,7 +5,7 @@ from waflib.extras import autowaf as autowaf
 import waflib.Options as Options
 
 # Version of this package (even if built as a child)
-LV2CORE_VERSION = '3.2'
+LV2CORE_VERSION = '4.0'
 
 # Variables for 'waf dist'
 APPNAME = 'lv2core'

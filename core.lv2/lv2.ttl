@@ -74,8 +74,8 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
     doap:shortdesc "An audio plugin interface specification" ;
     doap:programming-language "C" ;
     doap:release [
-        doap:revision "3.2" ;
-        doap:created "2011-03-17"
+        doap:revision "4.0" ;
+        doap:created "2011-03-18"
     ] ;
     doap:maintainer [
         a foaf:Person ;
