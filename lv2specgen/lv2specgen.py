@@ -848,7 +848,7 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
         release_name = "lv2-" + basename
         if basename == "lv2":
             release_name = "lv2core"
-        other_files += '<li><a href="http://lv2plug.in/spec/%s-%d.%d.tar.gz">Release</a> (<a href="http://lv2plug.in/spec">all releases</a>)</li>\n' % (release_name, version[0], version[1])
+        other_files += '<li><a href="http://lv2plug.in/spec/%s-%d.%d.tar.bz2">Release</a> (<a href="http://lv2plug.in/spec">all releases</a>)</li>\n' % (release_name, version[0], version[1])
     if os.path.exists(os.path.abspath(header_path)):
         other_files += '<li><a href="' + docdir + '/html/%s">Header Documentation</a></li>\n' % (
             basename + '_8h.html')
