@@ -1,12 +1,13 @@
 lv2core (UNRELEASED) unstable; urgency=low
 
   * Make doap:license suggested, but not required (for wrappers)
-  * Define lv2:binary (must be in manifest.ttl)
-  * Define lv2:majorVersion and lv2:minorVersion (must be in manifest.ttl)
-  * Add plugin classes lv2:FunctionPlugin and lv2:ConstantPlugin
+  * Define lv2:binary (MUST be in manifest.ttl)
+  * Define lv2:majorVersion and lv2:minorVersion (MUST be in manifest.ttl)
+  * Add lv2:FunctionPlugin and lv2:ConstantPlugin classes
   * Move lv2:AmplifierPlugin under lv2:DynamicsPlugin
-  * Loosen domain restriction of lv2:optionalFeature and lv2:requiredFeature
+  * Loosen domain of lv2:optionalFeature and lv2:requiredFeature
     (to allow re-use in extensions)
+  * Add generic lv2:Resource and lv2:PluginBase classes
   * Fix definition of lv2:minimum etc. (used for values, not scale points)
   * More precisely define properties with OWL
   * Move project metadata to manifest
