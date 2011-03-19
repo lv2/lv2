@@ -47,7 +47,7 @@ Defines presets (e.g. named sets of control values) for LV2 plugins.
 """ .
 
 pset:Preset a rdfs:Class ;
-    rdfs:subClassOf lv2:Template ;
+    rdfs:subClassOf lv2:PluginBase ;
 	rdfs:label "LV2 Preset" ;
 	rdfs:comment """
 A Preset for an LV2 Plugin.  A preset can be considered an "overlay" on a

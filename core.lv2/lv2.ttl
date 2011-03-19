@@ -180,17 +180,20 @@ plugin instances simultaneously.</p>
 ## Plugin ##
 ############
 
-lv2:Template a rdfs:Class , owl:Class ;
+lv2:PluginBase a rdfs:Class , owl:Class ;
     rdfs:subClassOf lv2:Resource ;
-    rdfs:comment """
-An abstract plugin-like resource that may not actually be an LV2 plugin
-(e.g. may not actually have a plugin binary). A Template is a Resource that
-may have ports, and otherwise mimic the structure of a plugin. This should be
-subclassed by extensions that define such things.
+    lv2:documentation """
+
+<p>An abstract plugin-like resource that MAY not actually be an LV2 plugin
+(e.g. may not actually have a plugin binary).</p>
+
+<p>PluginBase SHOULD be used as a base type for any resource that may have
+ports or otherwise mimic the structure of a Plugin (e.g. a preset), since
+hosts and other tools already <q>understand</q> this structure.</p>
 """ .
     
 lv2:Plugin a rdfs:Class , owl:Class ;
-    rdfs:subClassOf lv2:Template ;
+    rdfs:subClassOf lv2:PluginBase ;
     rdfs:label "Plugin" ;
     rdfs:subClassOf [
         a owl:Restriction ;
@@ -308,10 +311,10 @@ with elements of C type <code>float</code>.</p>
 #######################
 
 lv2:port a rdf:Property , owl:ObjectProperty ;
-    rdfs:domain lv2:Template ;
+    rdfs:domain lv2:PluginBase ;
     rdfs:range lv2:Port ;
     rdfs:label "port" ;
-    rdfs:comment "Relates a Template or Plugin to the Ports it contains" .
+    rdfs:comment "Relates a Plugin to the Ports it contains" .
 
 lv2:minorVersion a rdf:Property , owl:DatatypeProperty ;
     rdfs:domain lv2:Resource ;
