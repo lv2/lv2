@@ -92,28 +92,28 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
 <h4>Overview</h4>
 
 <p>LV2 gives programmers the ability to write audio processors (or
-<em>plugins</em>) in C/C++ which can be dynamically loaded into a range of
-applications (or <em>hosts</em>).</p>
+<q>plugins</q>) in C/C++ which can be dynamically loaded into a range of
+applications (or <q>hosts</q>).</p>
 
-<p>This specification is deliberately as short and simple as possible, but is
-designed so that <em>extensions</em> can be defined to add more advanced
-features. The shared library portion of the API includes only what must
-necessarily be written in code. The information required to use a plugin is in
-a companion data file, written in <a
+<p>This <q>core</q> specification is deliberately as short and simple as
+possible, but is designed so that <q>extensions</q> can be defined to add more
+advanced features. The shared library portion of the API includes only what
+must necessarily be written in code. The information required to use a plugin
+is in a companion data file, written in <a
 href="http://www.w3.org/TeamSubmission/turtle/">Turtle</a>. Plugin libraries do
 not contain enough information to make use of the plugin possible; the data
 file is mandatory. This makes using, adding, and manipulating plugin data
 flexible and avoids binary compatibility issues.</p>
 
 <p>Plugins can operate on any type of data, which is input/output via
-<em>ports</em>. Data is processed by first <em>connecting</em> each port to a
+<q>ports</q>. Data is processed by first <q>connecting</q> each port to a
 buffer, then repeatedly calling a plugin's <code>run()</code> method to process
-a <em>block</em> of data of some host-specified length (measured in audio
+a <q>block</q> of data of some host-specified length (measured in audio
 frames).</p>
 
-<p>This <em>core</em> specification defines two types of port, equivalent to
-those in <a href="http://www.ladspa.org/">LADSPA</a>: <em>control</em> and
-<em>audio</em>. Audio data is communicated using arrays with one
+<p>The LV2 core specification defines two types of port, equivalent to those in
+<a href="http://www.ladspa.org/">LADSPA</a>: <q>control</q> and
+<q>audio</q>. Audio data is communicated using arrays with one
 <code>float</code> element per sample, allowing a block of audio to be
 processed by the plugin in a single call to <code>run()</code>. Control data is
 communicated using single <code>float</code> values, which are fixed and valid
@@ -122,11 +122,11 @@ rate</q> is determined by the block size, which is controlled by the host (and
 not necessarily constant).</p>
 
 <p>Plugins reside in shared object files suitable for dynamic linking (e.g. via
-<code>dlopen()</code>). This <em>library</em> provides one or more <a
+<code>dlopen()</code>). This <q>library</q> provides one or more <a
 href="urn:struct:LV2_Descriptor">plugin descriptors</a> via the
 <code>lv2_descriptor()</code> function. These plugins can be instantiated to
-create plugin <em>instances</em>, which can be run directly on data or
-connected together to perform advanced signal processing tasks.</p>
+create plugin <q>instances</q>, which can be run directly on data or connected
+together to perform advanced signal processing tasks.</p>
 
 <h4>Threading Rules</h4>
 
