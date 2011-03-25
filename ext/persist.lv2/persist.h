@@ -9,7 +9,7 @@
  
   This header is distributed in the hope that it will be useful, but WITHOUT
   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
+  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
   License for more details.
  
   You should have received a copy of the GNU Lesser General Public License
@@ -46,9 +46,9 @@ extern "C" {
  
    Unless @a type is 0, @a value is guaranteed to be POD (i.e. a region
    of memory that does not contain pointers and can safely be copied
-   and persisted indefinitely with a simple memcpy).  If @a type is 0,
+   and persisted indefinitely with a simple memcpy). If @a type is 0,
    then @a value is a reference, as defined by the LV2 Atom extension
-   <http://lv2plug.in/ns/ext/atom/>.  Hosts are not required to support
+   <http://lv2plug.in/ns/ext/atom/>. Hosts are not required to support
    references: a plugin MUST NOT expect a host to persist references unless
    the host supports the feature <http://lv2plug.in/ns/ext/atom#blobSupport>.
    Plugins SHOULD express their state entirely with POD values.
@@ -75,14 +75,14 @@ typedef void (*LV2_Persist_Store_Function)(
    @return A pointer to the restored value (object), or NULL if no value
    has been stored under @a key.
  
-   A callback of this type is passed by the host to LV2_Persist.restore().  This
+   A callback of this type is passed by the host to LV2_Persist.restore(). This
    callback is called repeatedly by the plugin within LV2_Persist.restore() to
    retrieve the values of any keys it requires to restore its state.
  
    The returned value MUST remain valid until LV2_Persist.restore() returns.
  
    The plugin MUST NOT attempt to use this function, or any value returned from
-   it, outside of the LV2_Persist.restore() context.  Returned values MAY be
+   it, outside of the LV2_Persist.restore() context. Returned values MAY be
    copied for later use if necessary.
 */
 typedef const void* (*LV2_Persist_Retrieve_Function)(
@@ -103,14 +103,14 @@ typedef const void* (*LV2_Persist_Retrieve_Function)(
    for the given function are met).
  
    The typical use case is to save the plugin's state when a project is
-   saved, and to restore the state when a project has been loaded.  Other
+   saved, and to restore the state when a project has been loaded. Other
    uses are possible (e.g. cloning plugin instances or taking a snapshot
    of plugin state).
  
    Stored data is only guaranteed to be compatible between instances of plugins
    with the same URI (i.e. if a change to a plugin would cause a fatal error
    when restoring state saved by a previous version of that plugin, the plugin
-   URI must change just as it must when a plugin's ports change).  Plugin
+   URI must change just as it must when a plugin's ports change). Plugin
    authors should consider this possibility, and always store sensible data
    with meaningful types to avoid such compatibility issues in the future.
 */
@@ -122,7 +122,7 @@ typedef struct _LV2_Persist {
 	   @param instance The instance handle of the plugin.
 	   @param store The host-provided store callback.
 	   @param callback_data	An opaque pointer to host data, e.g. the map or
-	   file where the values are to be stored.  If @a store is called,
+	   file where the values are to be stored. If @a store is called,
 	   this MUST be passed as its callback_data parameter.
 	 
 	   The plugin is expected to store everything necessary to completely
@@ -137,7 +137,7 @@ typedef struct _LV2_Persist {
 	   may be called concurrently with functions in any other class,
 	   unless the definition of that class prohibits it (e.g. it may
 	   not be called concurrently with a "Discovery" function, but it
-	   may be called concurrently with an "Audio" function.  The plugin
+	   may be called concurrently with an "Audio" function. The plugin
 	   is responsible for any locking or lock-free techniques necessary
 	   to make this possible.
 	 
@@ -149,7 +149,7 @@ typedef struct _LV2_Persist {
 	   Plugins that dynamically modify state while running, however,
 	   must take care to do so in such a way that a concurrent call to
 	   save() will save a consistent representation of plugin state for a
-	   single instant in time.  The simplest way to do this is to modify a
+	   single instant in time. The simplest way to do this is to modify a
 	   copy of the state map and atomically swap a pointer to the entire
 	   map once the changes are complete (for very large state maps,
 	   a purely functional map data structure may be more appropriate
@@ -165,7 +165,7 @@ typedef struct _LV2_Persist {
 	   @param instance The instance handle of the plugin.
 	   @param retrieve The host-provided retrieve callback.
 	   @param callback_data	An opaque pointer to host data, e.g. the map or
-	   file from which the values are to be restored.  If @a retrieve is
+	   file from which the values are to be restored. If @a retrieve is
 	   called, this MUST be passed as its callback_data parameter.
 	 
 	   The plugin MAY assume a restored value was set by a previous call to
@@ -179,7 +179,7 @@ typedef struct _LV2_Persist {
 	   beyond the scope of restore().
 	 
 	   This function is in the "Instantiation" threading class as defined
-	   by LV2.  This means it MUST NOT be called concurrently with any other
+	   by LV2. This means it MUST NOT be called concurrently with any other
 	   function on the same plugin instance.
 	*/
 	void (*restore)(LV2_Handle                    instance,
