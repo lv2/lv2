@@ -3,7 +3,7 @@
 # Copyright (C) 2010-2011 Lars Luthman <mail@larsluthman.net>
 #
 # based on lv2.ttl, which is
-# Copyright (C) 2006-2008 Steve Harris, Dave Robillard
+# Copyright (C) 2006-2008 Steve Harris, David Robillard
 #
 # This extension should be considered a replacement for the earlier
 # in-process UI extension with the URI <http://lv2plug.in/ns/extensions/ui>.
@@ -52,7 +52,7 @@
 	];
 	lv2:documentation """
 This extension defines an ui:PortProtocol for passing events (MIDI, OSC,
-etc) between LV2 plugins and UIs.
+etc.) between LV2 plugins and UIs.
 """.
 
 uiev:events a ui:PortProtocol;
@@ -60,21 +60,22 @@ uiev:events a ui:PortProtocol;
 	lv2:documentation """
 <ol>
 <li>This PortProtocol is valid for ports with the type ev:EventPort.</li>
-<li>The host MUST call port_event() whenever there is an event in an input
-    port prior to the plugin instance's run() function is called, and whenever
-    there is an event in an output port after run() has been called. The
-    UI MUST NOT depend on the timing of the calls. However, the host MUST
-    do the calls in the same order that the events occur in. The host is
-    allowed and encouraged to bundle multiple events into a single port_event()
-    call if it improves performance.</li>
+<li>The host MUST call port_event() whenever there is an event in an input port
+    prior to the plugin instance's run() function is called, and whenever there
+    is an event in an output port after run() has been called. The UI MUST NOT
+    depend on the timing of the calls. However, the host MUST do the calls in
+    the same order that the events occur in. The host is allowed and encouraged
+    to bundle multiple events into a single port_event() call if it improves
+    performance.</li>
 <li>The data buffer passed to port_event() is an LV2_Event_Buffer, as specified
     in the Event extension. The stamp_type MUST be ignored. The frames and
-    subframes fields of every event in the buffer MUST be ignored. Events
-    with type 0 (reference counted events) MUST be ignored.</li>
-<li>The data buffer passed to write_event() is an LV2_Event_Buffer, as specified
-    in the Event extension. The stamp_type MUST be ignored. The frames and
-    subframes fields of every event in the buffer MUST be ignored. Events
-    with type 0 MUST NOT be written to the buffer.</li>
+    subframes fields of every event in the buffer MUST be ignored. Events with
+    type 0 (reference counted events) MUST be ignored.</li>
+<li>The data buffer passed to write_event() is an LV2_Event_Buffer, as
+    specified in the Event extension. The stamp_type MUST be ignored. The
+    frames and subframes fields of every event in the buffer MUST be
+    ignored. The host MUST NOT pass events with type 0 (references) unless the
+    UI supports the feature "http://lv2plug.in/ns/ext/event".</li>
 <li>The host MUST pass all the events in the buffer to the plugin instance's
     event port in the same order, but the plugin and the UI MUST NOT depend on
     the timing of the events, or on whether they are all sent to the plugin in

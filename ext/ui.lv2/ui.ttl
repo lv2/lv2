@@ -3,7 +3,7 @@
 # Copyright (C) 2010-2011 Lars Luthman <mail@larsluthman.net>
 #
 # based on lv2.ttl, which is
-# Copyright (C) 2006-2008 Steve Harris, Dave Robillard
+# Copyright (C) 2006-2008 Steve Harris, David Robillard
 #
 # This extension should be considered a replacement for the earlier
 # in-process UI extension with the URI <http://lv2plug.in/ns/extensions/ui>.
@@ -53,10 +53,10 @@
 plugins. The UIs are code that reside in shared object files in an LV2
 bundle and are referenced in the RDF data using the triples
 <pre>
-  @prefix ui: &lt;http://lv2plug.in/ns/ext/ui#&gt;.
-  &lt;http://my.pluginui&gt;  a             ui-gtk:GtkUI;
-                        lv2:appliesTo &lt;http://my.plugin&gt;;
-                        ui:binary     &lt;myui.so&gt;.
+  @prefix ui: &lt;http://lv2plug.in/ns/ext/ui#&gt; .
+  &lt;http://my.pluginui&gt;  a             ui-gtk:GtkUI ;
+                        lv2:appliesTo &lt;http://my.plugin&gt; ;
+                        ui:binary     &lt;myui.so&gt; .
 </pre>
 where &lt;http://my.plugin&gt; is the URI of the plugin, 
 &lt;http://my.pluginui&gt; is
@@ -130,8 +130,8 @@ detailed descriptions.</p>
 <p>UIs may have optional or required features, specified using lv2:optionalFeature
 or lv2:requiredFeature. The same rules apply here as for plugins; a host MUST
 pass the LV2_Feature objects for all features it supports to the UI's
-instantiate() function, a host SHOULD not try to instantiate an UI if it
-doesn't support all of it's required features, and an UI MUST fail to
+instantiate() function, a host SHOULD NOT try to instantiate an UI if it
+doesn't support all of its required features, and an UI MUST fail to
 instantiate if the host doesn't pass all required features to instantiate().
 </p>
 
@@ -150,7 +150,7 @@ ui:PortProtocol a rdfs:Class;
 	lv2:documentation     """
 <p>A PortProtocol defines a certain way of communicating port data between UI
 and plugin. PortProtocols can be specified in additional extensions, and
-those extensions MUST specify
+those extensions MUST specify:
 </p>
 
 <p><ol>
@@ -173,6 +173,7 @@ lv2:requiredFeature to specify which PortProtocols they want to use.
 ui:floatControl a ui:PortProtocol;
 	rdfs:label "Floating point value";
 	lv2:documentation """
+<p>The rules (see ui:PortProtocol) for this port protocol are:</p>
 <ol>
 <li>This PortProtocol is valid for ports with the type lv2:ControlPort.</li>
 <li>The host SHOULD call port_event() as soon as possible when the port value

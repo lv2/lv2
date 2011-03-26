@@ -3,7 +3,7 @@
 # Copyright (C) 2010-2011 Lars Luthman <mail@larsluthman.net>
 #
 # based on lv2.ttl, which is
-# Copyright (C) 2006-2008 Steve Harris, Dave Robillard
+# Copyright (C) 2006-2008 Steve Harris, David Robillard
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -23,13 +23,13 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-@prefix ui-gtk:  <http://lv2plug.in/ns/ext/ui-gtk#>.
-@prefix ui:  <http://lv2plug.in/ns/ext/ui#>.
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix doap:  <http://usefulinc.com/ns/doap#> .
-@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix ui-gtk: <http://lv2plug.in/ns/ext/ui-gtk#>.
+@prefix ui:     <http://lv2plug.in/ns/ext/ui#>.
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#>.
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix doap:   <http://usefulinc.com/ns/doap#> .
+@prefix foaf:   <http://xmlns.com/foaf/0.1/> .
 
 <http://lv2plug.in/ns/ext/ui-gtk> a lv2:Specification ;
 	doap:license <http://usefulinc.com/doap/licenses/mit>;
@@ -49,34 +49,30 @@ used in a Gtk+ program.
 """.
 
 ui-gtk:GtkUI a rdfs:Class;
-	rdfs:subClassOf  ui:UI;
+	rdfs:subClassOf ui:UI;
 	rdfs:label "Gtk+ UI";
 	lv2:documentation """
 <p>The class which represents a Gtk+ UI. For a successfully created instance of
-an UI of this class, the get_widget() function MUST return a pointer to a
-valid GtkWidget object compatible with Gtk+ version 2.0. The host MUST ensure
-that the Gtk+ library has been initialised and that the Glib main loop is
-running before an UI of this type is instantiated.
-</p>
+an UI of this class, the get_widget() function MUST return a pointer to a valid
+GtkWidget object compatible with Gtk+ version 2.0. The host MUST ensure that
+the Gtk+ library has been initialised and that the Glib main loop is running
+before an UI of this type is instantiated.</p>
 
 <p>Unless otherwise specified by extensions, all function pointers in
-LV2_UI_Descriptor may only be called from the thread that runs the Glib
-main loop.
-</p>""" .
+LV2_UI_Descriptor may only be called from the thread that runs the Glib main
+loop.</p>
+""" .
 
 ui-gtk:noHostResize a lv2:Feature;
 	rdfs:label "No host resize";
 	lv2:documentation """
-<p>This Feature should only be used with UIs.
-</p>
+<p>This Feature should only be used with UIs.</p>
 
 <p>When this Feature is active the host SHOULD NOT resize the UI widget to any
 other size than the one given by gtk_widget_size_request(). However, the UI
 MUST NOT break if the widget is resized to another size. This Feature can be
-used for example when the widget uses a fixed-size pixmap interface.
-</p>
+used for example when the widget uses a fixed-size pixmap interface.</p>
 
 <p>The data pointer in the LV2_Feature object for this Feature should be set to
-NULL.
-</p>
+NULL.</p>
 """.
