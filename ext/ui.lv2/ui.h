@@ -50,7 +50,7 @@
 
 /** The numerical ID returned by LV2_UI_Host_Descriptor::port_protocol_id() for
     invalid or unsupported PortProtocols. */
-#define LV2_UI_INVALID_PORT_PROTOCOL_ID ((uint32_t)-1)
+#define LV2_UI_INVALID_PORT_PROTOCOL_ID 0
 
 /** The full URI for the ui:floatControl PortProtocol. */
 #define LV2_UI_FLOAT_CONTROL_URI "http://lv2plug.in/ns/ext/ui#floatControl"
@@ -146,12 +146,11 @@ typedef struct _LV2_UI_Host_Descriptor {
 	   This function is used by the UI, typically at instantiation, to get
 	   the numeric IDs that are mapped to certain ui:PortProtocols (see
 	   ui.ttl for details). If the host does not support the given
-	   ui:PortProtocol it MUST return LV2_UI_INVALID_PORT_PROTOCOL_ID.
+	   ui:PortProtocol it MUST return LV2_UI_INVALID_PORT_PROTOCOL_ID,
+	   but the UI SHOULD not rely on this to find out which protocols
+	   are supported, it should check the @a features array passed to
+	   instantiate() for this.
 
-	   As a special case, when @a port_protocol_uri is LV2_UI_FLOAT_CONTROL_URI
-	   and ui:floatControl is listed as a required Feature for the UI, this
-	   function MUST return 0. The UI may assume this and skip the call.
-      
 	   @param host_handle The @a host_handle that was passed to the UI's 
 	   instantiate() function.
 	   @param port_protocol_uri The URI of the ui:PortProtocol.
