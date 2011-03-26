@@ -60,6 +60,9 @@ def build(bld):
 		presets
 		resize-port
 		string-port
+		ui
+		ui-event
+		ui-gtk
 		uri-map
 		uri-unmap
 	'''
