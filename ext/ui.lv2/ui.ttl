@@ -1,8 +1,7 @@
-# In-process UI extension
-#
+# LV2 UI Extension
 # Copyright (C) 2010-2011 Lars Luthman <mail@larsluthman.net>
 #
-# based on lv2.ttl, which is
+# Based on lv2.ttl, which is
 # Copyright (C) 2006-2008 Steve Harris, David Robillard
 #
 # This extension should be considered a replacement for the earlier
@@ -29,7 +28,7 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-@prefix ui:  <http://lv2plug.in/ns/ext/ui#>.
+@prefix ui:    <http://lv2plug.in/ns/ext/ui#>.
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
@@ -38,7 +37,7 @@
 
 <http://lv2plug.in/ns/ext/ui> a lv2:Specification ;
 	doap:license <http://usefulinc.com/doap/licenses/mit>;
-	doap:name "LV2 in-process UI" ;
+	doap:name "LV2 UI" ;
 	doap:release [
 		doap:revision "0.1" ;
 		doap:created "2011-03-26"
@@ -53,48 +52,43 @@
 plugins. The UIs are code that reside in shared object files in an LV2
 bundle and are referenced in the RDF data using the triples
 <pre>
-  @prefix ui: &lt;http://lv2plug.in/ns/ext/ui#&gt; .
-  &lt;http://my.pluginui&gt;  a             ui-gtk:GtkUI ;
-                        lv2:appliesTo &lt;http://my.plugin&gt; ;
-                        ui:binary     &lt;myui.so&gt; .
+  @prefix ui:     &lt;http://lv2plug.in/ns/ext/ui#&gt; .
+  @prefix ui-gtk: &lt;http://lv2plug.in/ns/ext/ui-gtk#&gt; .
+  &lt;http://example.org/my-ui&gt;  a             ui-gtk:GtkUI ;
+                              lv2:appliesTo &lt;http://example.org/my-plugin&gt; ;
+                              ui:binary     &lt;my-ui.so&gt; .
 </pre>
-where &lt;http://my.plugin&gt; is the URI of the plugin, 
-&lt;http://my.pluginui&gt; is
-the URI of the plugin UI and &lt;myui.so&gt; is the relative URI
-to the shared 
-object file. While it is possible to have the plugin UI and the plugin in 
-the same shared object file it is probably a good idea to keep them 
-separate so that hosts that don't want UIs don't have to load the UI code.
-</p>
+where <code>http://example.org/my-plugin</code> is the URI of the plugin,
+<code>http://example.org/my-ui</code> is the URI of the plugin UI and
+<code>my-ui.so</code> is the relative URI to the shared object file. While it
+is possible to have the plugin UI and the plugin in the same shared object file
+it is probably a good idea to keep them separate so that hosts that don't want
+UIs don't have to load the UI code.</p>
 
 <p>A UI MUST specify its class in the RDF data and the class MUST be a proper
-subclass of ui:UI, in this case ui-gtk:GtkUI. The class defines what type the UI
-is, e.g. what graphics toolkit it uses. There are no UI classes defined in
-this extension, those are specified separately (and anyone can define their 
-own).
-</p>
+subclass of ui:UI, in this case ui-gtk:GtkUI. The class defines what type the
+UI is, e.g. what graphics toolkit it uses. There are no UI classes defined in
+this extension, those are specified separately (and anyone can define their
+own).</p>
 
 <p>It's entirely possible to have multiple UIs for the same plugin, or to have
-the UI for a plugin in a different bundle from the actual plugin - this
-way people other than the plugin author can write plugin UIs independently
-without editing the original plugin bundle. It is also possible to have one
-UI that works with several different plugins.
-</p>
+the UI for a plugin in a different bundle from the actual plugin - this way
+people other than the plugin author can write plugin UIs independently without
+editing the original plugin bundle. It is also possible to have one UI that
+works with several different plugins.</p>
 
 <p>UIs should also be written in such a way that the host may load several
 instances of an UI, or different UIs, and use them with the same plugin
-instance.
-</p>
+instance.</p>
 
 <p>Note that the process that loads the shared object file containing the UI
-code and the process that loads the shared object file containing the 
-actual plugin implementation do not have to be the same. There are many
-valid reasons for having the plugin and the UI in different processes, or
-even on different machines. This means that you can <b>not</b> use singletons
-and global variables and expect them to refer to the same objects in the
-UI and the actual plugin. The function callback interface defined in the
-header lv2_ui.h is all you can expect to work.
-</p>
+code and the process that loads the shared object file containing the actual
+plugin implementation do not have to be the same. There are many valid reasons
+for having the plugin and the UI in different processes, or even on different
+machines. This means that you can <b>not</b> use singletons and global
+variables and expect them to refer to the same objects in the UI and the actual
+plugin. The function callback interface defined in the header ui.h is all you
+can expect to work.</p>
 """.
 
 ##############
