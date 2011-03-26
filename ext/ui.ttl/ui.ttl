@@ -1,0 +1,192 @@
+# In-process UI extension
+#
+# Copyright (C) 2010-2011 Lars Luthman <mail@larsluthman.net>
+#
+# based on lv2.ttl, which is
+# Copyright (C) 2006-2008 Steve Harris, Dave Robillard
+#
+# This extension should be considered a replacement for the earlier
+# in-process UI extension with the URI <http://lv2plug.in/ns/extensions/ui>.
+# Hosts and plugins that used that extension should use this one instead.
+# The earlier in-process UI extension is not compatible with LV2 revision 3
+# and later and may break in subtle ways.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+@prefix ui:  <http://lv2plug.in/ns/ext/ui#>.
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<http://lv2plug.in/ns/ext/ui> a lv2:Specification ;
+	doap:license <http://usefulinc.com/doap/licenses/mit>;
+	doap:name "LV2 in-process UI" ;
+	doap:release [
+		doap:revision "0.1" ;
+		doap:created "2011-03-26"
+	];
+	doap:maintainer [
+		a foaf:Person;
+		foaf:name "Lars Luthman";
+		foaf:mbox <mailto:mail@larsluthman.net>;
+	];
+	lv2:documentation """
+<p>This extension defines an interface that can be used to create UIs for 
+plugins. The UIs are code that reside in shared object files in an LV2
+bundle and are referenced in the RDF data using the triples
+<pre>
+  @prefix ui: &lt;http://lv2plug.in/ns/ext/ui#&gt;.
+  &lt;http://my.pluginui&gt;  a             ui-gtk:GtkUI;
+                        lv2:appliesTo &lt;http://my.plugin&gt;;
+                        ui:binary     &lt;myui.so&gt;.
+</pre>
+where &lt;http://my.plugin&gt; is the URI of the plugin, 
+&lt;http://my.pluginui&gt; is
+the URI of the plugin UI and &lt;myui.so&gt; is the relative URI
+to the shared 
+object file. While it is possible to have the plugin UI and the plugin in 
+the same shared object file it is probably a good idea to keep them 
+separate so that hosts that don't want UIs don't have to load the UI code.
+</p>
+
+<p>A UI MUST specify its class in the RDF data and the class MUST be a proper
+subclass of ui:UI, in this case ui-gtk:GtkUI. The class defines what type the UI
+is, e.g. what graphics toolkit it uses. There are no UI classes defined in
+this extension, those are specified separately (and anyone can define their 
+own).
+</p>
+
+<p>It's entirely possible to have multiple UIs for the same plugin, or to have
+the UI for a plugin in a different bundle from the actual plugin - this
+way people other than the plugin author can write plugin UIs independently
+without editing the original plugin bundle. It is also possible to have one
+UI that works with several different plugins.
+</p>
+
+<p>UIs should also be written in such a way that the host may load several
+instances of an UI, or different UIs, and use them with the same plugin
+instance.
+</p>
+
+<p>Note that the process that loads the shared object file containing the UI
+code and the process that loads the shared object file containing the 
+actual plugin implementation do not have to be the same. There are many
+valid reasons for having the plugin and the UI in different processes, or
+even on different machines. This means that you can <b>not</b> use singletons
+and global variables and expect them to refer to the same objects in the
+UI and the actual plugin. The function callback interface defined in the
+header lv2_ui.h is all you can expect to work.
+</p>
+""".
+
+##############
+## UI Class ##
+##############
+
+ui:UI a rdfs:Class;
+      rdfs:subClassOf lv2:Feature;
+      rdfs:label "UI";
+      lv2:documentation """
+<p>The class which represents an LV2 plugin UI.
+</p>
+
+<p>To be used by a host a UI MUST have at least the following properties:
+<pre>
+    rdf:type (with object a proper subclass of ui:UI)
+    doap:name (one without language tag)
+    lv2:binary (with a shared object file as object)
+    lv2:appliesTo (with a LV2 plugin as object)
+</pre>
+The rdf:type of an UI is used by the host to decide whether it supports the
+UI and how to handle the LV2_UI_Widget object that is returned by the UIs
+get_widget() function. For example, a type of ui-gtk:GtkGUI might tell the host
+that LV2_UI_Widget is a pointer to an object of a type defined in the Gtk+
+library. No UI types are defined in this extension, that is intentionally
+left for other extensions.
+</p>
+
+<p>The doap:name property should be at most a few words in length using title
+capitalization, e.g. "Flashy Mixer GUI". Use lv2:documentation for more
+detailed descriptions.</p>
+
+<p>UIs may have optional or required features, specified using lv2:optionalFeature
+or lv2:requiredFeature. The same rules apply here as for plugins; a host MUST
+pass the LV2_Feature objects for all features it supports to the UI's
+instantiate() function, a host SHOULD not try to instantiate an UI if it
+doesn't support all of it's required features, and an UI MUST fail to
+instantiate if the host doesn't pass all required features to instantiate().
+</p>
+
+<p>For details about the C API used to load UIs, see the file lv2_ui.h.
+</p>
+""" .
+
+
+####################
+## Port Protocols ##
+####################
+
+ui:PortProtocol a rdfs:Class;
+	rdfs:subClassOf  lv2:Feature;
+	rdfs:label       "Port protocol";
+	lv2:documentation     """
+<p>A PortProtocol defines a certain way of communicating port data between UI
+and plugin. PortProtocols can be specified in additional extensions, and
+those extensions MUST specify
+</p>
+
+<p><ol>
+<li>Which plugin port types the buffer type is valid for</li>
+<li>When the host should call port_event() in LV2_UI_Descriptor</li>
+<li>The format of the data in the buffer passed to port_event()</li>
+<li>The format of the data in the buffer passed to write_port()</li>
+<li>What happens when the UI calls write_port() in LV2_UI_Host_Descriptor</li>
+<li>What data (if any) should be passed in the LV2_Feature data pointer. </li>
+</ol></p>
+
+<p>For an example, see ui:floatControl.
+</p>
+
+<p>PortProtocol is a subclass of lv2:Feature, so UIs use lv2:optionalFeature and
+lv2:requiredFeature to specify which PortProtocols they want to use.
+</p>
+""".
+
+ui:floatControl a ui:PortProtocol;
+	rdfs:label "Floating point value";
+	lv2:documentation """
+<ol>
+<li>This PortProtocol is valid for ports with the type lv2:ControlPort.</li>
+<li>The host SHOULD call port_event() as soon as possible when the port value
+    has changed, but the plugin MUST NOT depend on a call for every change or
+    the timing of the calls. However, the host MUST do the calls in the same
+    order that the value changes occur in.</li>
+<li>The format of the data in the buffer passed to port_event() is a single
+    float, and the buffer size is sizeof(float).</li>
+<li>Same as 3.</li>
+<li>The host SHOULD change the port value as soon as possible when write_port()
+    is called, but the UI MUST NOT depend on a change for every call or the
+    timing of the changes. However, the host MUST do the changes in the same
+    order that the function calls occur in.</li>
+<li>The data pointer in the LV2_Feature object for this feature should be
+    NULL.</li>
+</ol>
+""".
