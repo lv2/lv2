@@ -87,8 +87,9 @@ plugin implementation do not have to be the same. There are many valid reasons
 for having the plugin and the UI in different processes, or even on different
 machines. This means that you can <b>not</b> use singletons and global
 variables and expect them to refer to the same objects in the UI and the actual
-plugin. The function callback interface defined in the header ui.h is all you
-can expect to work.</p>
+plugin. The function callback interface defined in the header
+<a href="../../doc/html/ui_8lv2_2ui_8h.html">ui<!-- hackety hack -->.h</a> is
+all you can expect to work.</p>
 """.
 
 ##############
@@ -129,7 +130,8 @@ doesn't support all of its required features, and an UI MUST fail to
 instantiate if the host doesn't pass all required features to instantiate().
 </p>
 
-<p>For details about the C API used to load UIs, see the file ui.h.
+<p>For details about the C API used to load UIs, see the file
+<a href="../../doc/html/ui_8lv2_2ui_8h.html">ui<!-- hackety hack -->.h</a>.
 </p>
 """ .
 
