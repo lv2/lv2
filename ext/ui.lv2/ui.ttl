@@ -129,7 +129,7 @@ doesn't support all of its required features, and an UI MUST fail to
 instantiate if the host doesn't pass all required features to instantiate().
 </p>
 
-<p>For details about the C API used to load UIs, see the file lv2_ui.h.
+<p>For details about the C API used to load UIs, see the file ui.h.
 </p>
 """ .
 
