@@ -5,7 +5,7 @@ from waflib.extras import autowaf as autowaf
 import waflib.Options as Options
 
 # Version of this package (even if built as a child)
-LV2CORE_VERSION = '4.0'
+LV2CORE_VERSION = '4.1'
 
 # Variables for 'waf dist'
 APPNAME = 'lv2core'
@@ -76,11 +76,15 @@ def build(bld):
     # Bundle (data)
     bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.ttl manifest.ttl')
 
+    # lv2config program
     obj = bld(features     = 'c cprogram',
               source       = 'lv2config.c serd-0.1.0.c',
               target       = 'lv2config',
               install_path = '${BINDIR}',
               cflags       = '-std=c99')
+
+    # Man page
+    bld.install_files('${MANDIR}/man1', 'lv2config.1')
 
 def dist():
     import Scripting
