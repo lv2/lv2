@@ -580,6 +580,9 @@ INPUT =  \
 	ext/osc.lv2/osc.h \
 	ext/persist.lv2/persist.h \
 	ext/string-port.lv2/string-port.h \
+	ext/ui.lv2/ui.h \
+	ext/ui-event.lv2/ui-event.h \
+	ext/ui-gtk.lv2/ui-gtk.h \
 	ext/uri-map.lv2/uri-map.h \
 	ext/uri-unmap.lv2/uri-unmap.h \
 	extensions/ui.lv2/ui.h
