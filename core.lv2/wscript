@@ -70,6 +70,8 @@ def configure(conf):
                         conf.is_defined('HAVE_WORDEXP'))
     autowaf.display_msg(conf, "Default LV2_PATH",
                         conf.env['LV2CORE_DEFAULT_LV2_PATH'])
+    autowaf.display_msg(conf, "LV2 bundle directory",
+                        conf.env['LV2DIR'])
     print('')
 
 def build(bld):
