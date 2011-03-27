@@ -66,6 +66,8 @@ def configure(conf):
 
     autowaf.display_msg(conf, "Path expansion via wordexp",
                         conf.is_defined('HAVE_WORDEXP'))
+    autowaf.display_msg(conf, "Default LV2_PATH",
+                        conf.env['LV2CORE_DEFAULT_LV2_PATH'])
     print('')
 
 def build(bld):
