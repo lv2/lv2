@@ -57,7 +57,16 @@ def configure(conf):
 
     autowaf.define(conf, 'LV2CORE_DEFAULT_LV2_PATH', Options.options.default_lv2_path)
 
+    conf.check(function_name='wordexp',
+               header_name='wordexp.h',
+               define_name='HAVE_WORDEXP',
+               mandatory=False)
+
     conf.write_config_header('lv2-config.h', remove=False)
+
+    autowaf.display_msg(conf, "Path expansion via wordexp",
+                        conf.is_defined('HAVE_WORDEXP'))
+    print('')
 
 def build(bld):
     # Header "library"

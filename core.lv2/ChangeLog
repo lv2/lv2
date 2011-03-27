@@ -1,3 +1,9 @@
+lv2core (UNRELEASED) unstable; urgency=low
+
+  * Build lv2config on systems without wordexp (e.g. Windows)
+
+ -- David Robillard <d@drobilla.net>  UNRELEASED
+
 lv2core (4.0) unstable; urgency=medium
 
   * Make doap:license suggested, but not required (for wrappers)

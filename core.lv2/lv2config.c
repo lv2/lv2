@@ -34,11 +34,14 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <wordexp.h>
 
 #include "serd-0.1.0.h"
 
 #include "lv2-config.h"
+
+#ifdef HAVE_WORDEXP
+#include <wordexp.h>
+#endif
 
 #define NS_RDF "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 #define NS_LV2 "http://lv2plug.in/ns/lv2core#"
@@ -168,6 +171,7 @@ discover_manifest(World* world, const char* uri)
 static char*
 expand(const char* path)
 {
+#ifdef HAVE_WORDEXP
 	char*     ret = NULL;
 	wordexp_t p;
 
@@ -184,6 +188,9 @@ expand(const char* path)
 	}
 
 	wordfree(&p);
+#else
+	char* ret = strdup(path);
+#endif
 	return ret;
 }
 
