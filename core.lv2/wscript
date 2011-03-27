@@ -30,7 +30,7 @@ def configure(conf):
     lv2core_dir_sep  = '/'
     if sys.platform == 'win32':
         lv2core_path_sep = ';'
-        lv2core_dir_sep = '\\'
+        lv2core_dir_sep = '\\\\'
 
     autowaf.define(conf, 'LV2CORE_PATH_SEP', lv2core_path_sep)
     autowaf.define(conf, 'LV2CORE_DIR_SEP',  lv2core_dir_sep)
@@ -48,7 +48,7 @@ def configure(conf):
                 '~/.lv2',
                 '/boot/common/add-ons/lv2'])
         elif Options.platform == 'win32':
-            Options.options.default_lv2_path = 'C:\\Program Files\\LV2'
+            Options.options.default_lv2_path = 'C:\\\\Program Files\\\\LV2'
         else:
             Options.options.default_lv2_path = lv2core_path_sep.join([
                     '~/.lv2',
@@ -92,7 +92,7 @@ def build(bld):
               source       = 'lv2config.c serd-0.1.0.c',
               target       = 'lv2config',
               install_path = '${BINDIR}',
-              cflags       = '-std=c99')
+              cflags       = ['-std=c99', '-U__STRICT_ANSI__'])
 
     # Man page
     bld.install_files('${MANDIR}/man1', 'lv2config.1')

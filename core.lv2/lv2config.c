@@ -35,6 +35,13 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#ifdef __WIN32__
+#define _WIN32_WINNT 0x0600
+#include <windows.h>
+#define symlink(src, dst) (!CreateSymbolicLink((src), (dst), 0))
+#define mkdir(path, mode) mkdir(path)
+#endif
+
 #include "serd-0.1.0.h"
 
 #include "lv2-config.h"
