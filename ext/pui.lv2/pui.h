@@ -55,9 +55,52 @@
 /** The full URI for the pui:floatControl PortProtocol. */
 #define LV2_PUI_FLOAT_CONTROL_URI "http://lv2plug.in/ns/ext/pui#floatControl"
 
+/** The full URI for the pui:floatPeakRMS PortProtocol. */
+#define LV2_PUI_FLOAT_PEAK_RMS_URI "http://lv2plug.in/ns/ext/pui#floatPeakRMS"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/** 
+   A data type that is used to pass peak and RMS values for a period of
+   audio data at an input or output port to an UI, using port_event. See the
+   documentation for pui:floatPeakRMS for details about how and when this
+   should be done.
+*/
+typedef struct _LV2_PUI_Peak_RMS_Data {
+  
+  /**
+     The start of the measurement period. This is just a running counter that
+     must not be interpreted as any sort of global frame position. It should
+     only be interpreted relative to the starts of other measurement periods
+     in port_event() calls to the same plugin instance.
+     
+     This counter is allowed to overflow, in which case it should just wrap
+     around.
+  */
+  uint32_t period_start;
+  
+  /**
+     The size of the measurement period, in the same units as period_start.
+  */
+  uint32_t period_size;
+  
+  /**
+     The peak value for the measurement period. This should be the maximal
+     value for abs(sample) over all the samples in the period.
+  */
+  float peak;
+  
+  /**
+     The RMS value for the measurement period. This should be the root mean
+     square value of the samples in the period, equivalent to
+     sqrt((pow(sample1, 2) + pow(sample2, 2) + ... + pow(sampleN, 2)) / N)
+     where N is period_size.
+  */
+  float rms;
+
+} LV2_PUI_Peak_RMS_Data;
 
 /**
    A pointer to a widget or other type of UI.

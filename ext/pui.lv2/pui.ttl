@@ -156,7 +156,7 @@ those extensions MUST specify:
 <li>What data (if any) should be passed in the LV2_Feature data pointer. </li>
 </ol></p>
 
-<p>For an example, see pui:floatControl.
+<p>For an example, see pui:floatControl or pui:floatPeakRMS.
 </p>
 
 <p>PortProtocol is a subclass of lv2:Feature, so UIs use lv2:optionalFeature and
@@ -181,6 +181,42 @@ pui:floatControl a pui:PortProtocol;
     is called, but the UI MUST NOT depend on a change for every call or the
     timing of the changes. However, the host MUST do the changes in the same
     order that the function calls occur in.</li>
+<li>The data pointer in the LV2_Feature object for this feature should be
+    NULL.</li>
+</ol>
+""".
+
+pui:floatPeakRMS a pui:PortProtocol;
+	rdfs:label "Peak and RMS for a period of audio data";
+	lv2:documentation """
+<p>This port protocol defines a way for the host to send continuous peak
+and RMS measurements of the audio signal at a certain port to the UI. The
+intended use is visualisation, e.g. an animated meter widget that shows
+the level of the audio input or output.</p>
+
+<p>A contiguous sequence of audio samples for which a single peak value
+and a single RMS value have been computed is called a <em>measurement
+period</em>.</p>
+
+<p>The rules (see pui:PortProtocol) for this port protocol are:</p>
+<ol>
+<li>This PortProtocol is valid for ports with the type lv2:AudioPort.</li>
+<li>The host SHOULD call port_event() at regular intervals. The measurement
+    periods used for calls to port_event() for the same port SHOULD be
+    contiguous (i.e. the measurement period for one call should begin right
+    after the end of the measurement period for the previous call ends) unless
+    the UI has removed and re-added the port subscription between those calls.
+    However, UIs MUST NOT depend on either the regularity of the calls or the
+    contiguity of the measurement periods; hosts may change the call rate
+    or skip calls for performance or other reasons. Measurement periods for
+    different calls to port_event() for the same port MUST NOT overlap. 
+<li>The format of the data in the buffer passed to port_event() is a single
+    LV2_PUI_Peak_RMS_Data object, and the buffer size is
+    sizeof(LV2_PUI_Peak_RMS_Data).</li>
+<li>The UI MUST NOT call write_port() with the ID for this port protocol as
+    the port_protocol parameter.</li>
+<li>The host MUST ignore any write_port() calls with the ID for this port
+    protocol as the port_protocol parameter.</li>
 <li>The data pointer in the LV2_Feature object for this feature should be
     NULL.</li>
 </ol>
