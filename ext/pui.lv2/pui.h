@@ -1,6 +1,6 @@
 /************************************************************************
  *
- * In-process UI extension for LV2
+ * Plugin UI extension for LV2
  *
  * Copyright (C) 2006-2011 Lars Luthman <mail@larsluthman.net>
  * 
@@ -28,7 +28,7 @@
  ***********************************************************************/
 
 /**
-   @file ui.h C API for the LV2 UI extension <http://lv2plug.in/ns/ext/ui>.
+   @file pui.h C API for the LV2 UI extension <http://lv2plug.in/ns/ext/pui>.
 
    This file specifies a C API for communication between an LV2 host and an
    LV2 UI. The interface is similar to the one used for actual LV2 plugins.
@@ -36,24 +36,24 @@
    The entry point is the function lv2ui_descriptor().
 */
 
-#ifndef LV2_UI_H
-#define LV2_UI_H
+#ifndef LV2_PUI_H
+#define LV2_PUI_H
 
 #include <lv2.h>
 
 /** The URI of this extension (note this is not the same as the prefix). */
-#define LV2_UI_URI "http://lv2plug.in/ns/ext/ui"
+#define LV2_PUI_URI "http://lv2plug.in/ns/ext/pui"
 
-/** The numerical ID returned by LV2_UI_Host_Descriptor::port_index() for
+/** The numerical ID returned by LV2_PUI_Host_Descriptor::port_index() for
     invalid port symbols. */
-#define LV2_UI_INVALID_PORT_INDEX ((uint32_t)-1)
+#define LV2_PUI_INVALID_PORT_INDEX ((uint32_t)-1)
 
-/** The numerical ID returned by LV2_UI_Host_Descriptor::port_protocol_id() for
+/** The numerical ID returned by LV2_PUI_Host_Descriptor::port_protocol_id() for
     invalid or unsupported PortProtocols. */
-#define LV2_UI_INVALID_PORT_PROTOCOL_ID 0
+#define LV2_PUI_INVALID_PORT_PROTOCOL_ID 0
 
-/** The full URI for the ui:floatControl PortProtocol. */
-#define LV2_UI_FLOAT_CONTROL_URI "http://lv2plug.in/ns/ext/ui#floatControl"
+/** The full URI for the pui:floatControl PortProtocol. */
+#define LV2_PUI_FLOAT_CONTROL_URI "http://lv2plug.in/ns/ext/pui#floatControl"
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,7 +66,7 @@ extern "C" {
    host only needs to pass the necessary callbacks and display the widget, if
    possible. Plugins may have several UIs, in various toolkits.
 */
-typedef void* LV2_UI_Widget;
+typedef void* LV2_PUI_Widget;
 
 /**
    Handle for a particular instance of a UI.
@@ -74,17 +74,17 @@ typedef void* LV2_UI_Widget;
    NOT attempt to interpret it. The UI may use it to reference internal
    instance data.
 */
-typedef void* LV2_UI_Handle;
+typedef void* LV2_PUI_Handle;
 
 /**
    Handle for host functions and data provided to a UI.
    An object of this type is passed to the UI's instantiate() function, and the
    UI must in turn pass it as the first parameter to the callbacks in
-   LV2_UI_Host_Descriptor. The host may use it to reference internal data, such
+   LV2_PUI_Host_Descriptor. The host may use it to reference internal data, such
    as the plugin instance that the UI is associated with. The UI MUST NOT
-   interpret the value of an LV2_UI_Host_Handle in any way.
+   interpret the value of an LV2_PUI_Host_Handle in any way.
 */
-typedef void* LV2_UI_Host_Handle;
+typedef void* LV2_PUI_Host_Handle;
 
 /**
    Host-provided functions that the UI can use to control the plugin instance.
@@ -94,7 +94,7 @@ typedef void* LV2_UI_Host_Handle;
 
    The host MUST provide non-NULL values for all the function pointers.
 */
-typedef struct _LV2_UI_Host_Descriptor {
+typedef struct _LV2_PUI_Host_Descriptor {
 
 	/**
 	   Send data to one of the plugin's input ports.
@@ -104,7 +104,7 @@ typedef struct _LV2_UI_Host_Descriptor {
 	   with it depends on the value of the @a port_protocol parameter.
     
 	   The @a port_protocol parameter MUST be a numeric ID for a 
-	   ui:PortProtocol. Numeric IDs for PortProtocols are retrieved using the 
+	   pui:PortProtocol. Numeric IDs for PortProtocols are retrieved using the 
 	   port_protocol_id() function.
 
 	   The @a buffer is only valid during the time of this function call, so if 
@@ -120,43 +120,43 @@ typedef struct _LV2_UI_Host_Descriptor {
 	   @param port_protocol The numeric ID of the Port Protocol to use,
 	   as returned by port_protocol_id().
 	*/
-	void (*write_port)(LV2_UI_Host_Handle host_handle,
-	                   uint32_t           port_index,
-	                   uint32_t           buffer_size,
-	                   uint32_t           port_protocol,
-	                   void const*        buffer);
+	void (*write_port)(LV2_PUI_Host_Handle host_handle,
+	                   uint32_t            port_index,
+	                   uint32_t            buffer_size,
+	                   uint32_t            port_protocol,
+	                   void const*         buffer);
   
 	/**
 	   Return the numerical index for a port.
 	   This index is used when writing data to ports using write_port() and whe
 	   receiving data using port_event(). If @a port_symbol is not a valid port
 	   symbol for @a plugin the host it MUST return
-	   LV2_UI_INVALID_PORT_INDEX. For performance reasons it may be a good idea
+	   LV2_PUI_INVALID_PORT_INDEX. For performance reasons it may be a good idea
 	   to cache port indices in the UI at instantiation time.
       
-	   @param host_handle The LV2_UI_Host_Handle that was passed to the UI's 
+	   @param host_handle The LV2_PUI_Host_Handle that was passed to the UI's 
 	   instantiate() function.
 	   @param port_symbol The port's symbol, as defined in the RDF data for
 	   the plugin.
 	*/
-	uint32_t (*port_index)(LV2_UI_Host_Handle host_handle,
-	                       char const*        port_symbol);
+	uint32_t (*port_index)(LV2_PUI_Host_Handle host_handle,
+	                       char const*         port_symbol);
   
 	/**
 	   This function is used by the UI, typically at instantiation, to get
-	   the numeric IDs that are mapped to certain ui:PortProtocols (see
-	   ui.ttl for details). If the host does not support the given
-	   ui:PortProtocol it MUST return LV2_UI_INVALID_PORT_PROTOCOL_ID,
+	   the numeric IDs that are mapped to certain pui:PortProtocols (see
+	   pui.ttl for details). If the host does not support the given
+	   pui:PortProtocol it MUST return LV2_PUI_INVALID_PORT_PROTOCOL_ID,
 	   but the UI SHOULD not rely on this to find out which protocols
 	   are supported, it should check the @a features array passed to
 	   instantiate() for this.
 
 	   @param host_handle The @a host_handle that was passed to the UI's 
 	   instantiate() function.
-	   @param port_protocol_uri The URI of the ui:PortProtocol.
+	   @param port_protocol_uri The URI of the pui:PortProtocol.
 	*/
-	uint32_t (*port_protocol_id)(LV2_UI_Host_Handle host_handle,
-	                             char const*        port_protocol_uri);
+	uint32_t (*port_protocol_id)(LV2_PUI_Host_Handle host_handle,
+	                             char const*         port_protocol_uri);
   
 	/**
 	   Subscribe to updates for a port.
@@ -172,9 +172,9 @@ typedef struct _LV2_UI_Host_Descriptor {
 	   @param port_protocol The numeric ID of the PortProtocol, as
 	   returned by port_protocol_id().
 	*/
-	void (*add_port_subscription)(LV2_UI_Host_Handle host_handle,
-	                              uint32_t           port_index,
-	                              uint32_t           port_protocol);
+	void (*add_port_subscription)(LV2_PUI_Host_Handle host_handle,
+	                              uint32_t            port_index,
+	                              uint32_t            port_protocol);
 
 	/**
 	   Unsubscribe to updates for a port.
@@ -190,17 +190,17 @@ typedef struct _LV2_UI_Host_Descriptor {
 	   @param port_protocol The numeric ID of the PortProtocol, as
 	   returned by port_protocol_id().
 	*/
-	void (*remove_port_subscription)(LV2_UI_Host_Handle host_handle,
-	                                 uint32_t           port_index,
-	                                 uint32_t           port_protocol);
+	void (*remove_port_subscription)(LV2_PUI_Host_Handle host_handle,
+	                                 uint32_t            port_index,
+	                                 uint32_t            port_protocol);
   
-} LV2_UI_Host_Descriptor;
+} LV2_PUI_Host_Descriptor;
 
 /**
    This struct contains the implementation of an UI. A pointer to an 
    object of this type is returned by the lv2ui_descriptor() function. 
 */
-typedef struct _LV2_UI_Descriptor {
+typedef struct _LV2_PUI_Descriptor {
   
 	/**
 	   The URI for this UI (not for the plugin it controls).
@@ -235,32 +235,32 @@ typedef struct _LV2_UI_Descriptor {
 	   the same; @a features will probably not be the same array as the one the
 	   plugin host passes to a plugin.
 	*/
-	LV2_UI_Handle (*instantiate)(struct _LV2_UI_Descriptor const* descriptor,
-	                             char const*                      plugin_uri,
-	                             char const*                      bundle_path,
-	                             LV2_UI_Host_Descriptor const*    host_descriptor,
-	                             LV2_UI_Host_Handle               host_handle,
-	                             LV2_Feature const* const*        features);
+	LV2_PUI_Handle (*instantiate)(struct _LV2_PUI_Descriptor const* descriptor,
+	                             char const*                        plugin_uri,
+	                             char const*                        bundle_path,
+	                             LV2_PUI_Host_Descriptor const*     host_descriptor,
+	                             LV2_PUI_Host_Handle                host_handle,
+	                             LV2_Feature const* const*          features);
 
 	/**
 	   Return the widget pointer for the UI object.
 	   This MUST return the same value during the entire lifetime of the UI
 	   object.
 	*/
-	LV2_UI_Widget (*get_widget)(LV2_UI_Handle ui);
+	LV2_PUI_Widget (*get_widget)(LV2_PUI_Handle ui);
 
 	/**
 	   Destroy the UI object and the associated widget.
 	   The host must not try to access the widget after calling this function.
 	*/
-	void (*cleanup)(LV2_UI_Handle ui);
+	void (*cleanup)(LV2_PUI_Handle ui);
   
 	/**
 	   Notify the UI that something has happened to a subscribed port.
 
 	   This is called by the host when something happens at a plugin port that
 	   has been subscribed to using
-	   LV2_UI_Host_Descriptor::add_port_subscription().
+	   LV2_PUI_Host_Descriptor::add_port_subscription().
       
 	   The @a buffer is only valid during the time of this function call, so if 
 	   the UI wants to keep it for later use it has to copy the contents to an
@@ -268,29 +268,29 @@ typedef struct _LV2_UI_Descriptor {
       
 	   @param ui A handle for the UI object.
 	   @param port_index The index of the port that has changed, as returned by
-	   LV2_UI_Host_Descriptor::port_index().
+	   LV2_PUI_Host_Descriptor::port_index().
 	   @param buffer_size The size of the data buffer in bytes.
 	   @param port_protocol The format of the data buffer, as returned by
-	   LV2_UI_Host_Descriptor::port_protocol_id().
+	   LV2_PUI_Host_Descriptor::port_protocol_id().
 	   @param buffer A pointer to the data buffer.
 	*/
-	void (*port_event)(LV2_UI_Handle ui,
-	                   uint32_t      port_index,
-	                   uint32_t      buffer_size,
-	                   uint32_t      port_protocol,
-	                   void const*   buffer);
+	void (*port_event)(LV2_PUI_Handle ui,
+	                   uint32_t       port_index,
+	                   uint32_t       buffer_size,
+	                   uint32_t       port_protocol,
+	                   void const*    buffer);
   
 	/**
 	   Return a data structure associated with an extension URI.
 
-	   This facility can be used by extensions to extend the LV2_UI_Descriptor
+	   This facility can be used by extensions to extend the LV2_PUI_Descriptor
 	   API. This function adheres to the same rules as
 	   LV2_Descriptor::extension_data, except it applies to UIs rather than
 	   plugins.
 	*/
 	void const* (*extension_data)(char const*  uri);
 
-} LV2_UI_Descriptor;
+} LV2_PUI_Descriptor;
 
 /**
    Prototype for UI accessor function.
@@ -298,15 +298,15 @@ typedef struct _LV2_UI_Descriptor {
    This function follows the same rules as lv2_desciprotr(), except it applies
    to UIs rather than plugins.
 */
-LV2_UI_Descriptor const* lv2ui_descriptor(uint32_t index);
+LV2_PUI_Descriptor const* lv2ui_descriptor(uint32_t index);
 
 /**
    Type of the lv2ui_descriptor() function in a UI library.
 */
-typedef LV2_UI_Descriptor const* (*LV2_UI_DescriptorFunction)(uint32_t index);
+typedef LV2_PUI_Descriptor const* (*LV2_PUI_DescriptorFunction)(uint32_t index);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* LV2_UI_H */
+#endif /* LV2_PUI_H */

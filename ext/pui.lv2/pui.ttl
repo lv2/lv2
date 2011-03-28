@@ -1,4 +1,4 @@
-# LV2 UI Extension
+# LV2 Plugin UI Extension
 # Copyright (C) 2010-2011 Lars Luthman <mail@larsluthman.net>
 #
 # Based on lv2.ttl, which is
@@ -28,14 +28,14 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-@prefix ui:    <http://lv2plug.in/ns/ext/ui#>.
+@prefix pui:   <http://lv2plug.in/ns/ext/pui#>.
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 
-<http://lv2plug.in/ns/ext/ui> a lv2:Specification ;
+<http://lv2plug.in/ns/ext/pui> a lv2:Specification ;
 	doap:license <http://usefulinc.com/doap/licenses/mit>;
 	doap:name "LV2 UI" ;
 	doap:release [
@@ -52,11 +52,11 @@
 plugins. The UIs are code that reside in shared object files in an LV2
 bundle and are referenced in the RDF data using the triples
 <pre>
-  @prefix ui:     &lt;http://lv2plug.in/ns/ext/ui#&gt; .
-  @prefix ui-gtk: &lt;http://lv2plug.in/ns/ext/ui-gtk#&gt; .
-  &lt;http://example.org/my-ui&gt;  a             ui-gtk:GtkUI ;
+  @prefix pui:     &lt;http://lv2plug.in/ns/ext/pui#&gt; .
+  @prefix pui-gtk: &lt;http://lv2plug.in/ns/ext/pui-gtk#&gt; .
+  &lt;http://example.org/my-ui&gt;  a             pui-gtk:GtkUI ;
                               lv2:appliesTo &lt;http://example.org/my-plugin&gt; ;
-                              ui:binary     &lt;my-ui.so&gt; .
+                              pui:binary     &lt;my-ui.so&gt; .
 </pre>
 where <code>http://example.org/my-plugin</code> is the URI of the plugin,
 <code>http://example.org/my-ui</code> is the URI of the plugin UI and
@@ -66,7 +66,7 @@ it is probably a good idea to keep them separate so that hosts that don't want
 UIs don't have to load the UI code.</p>
 
 <p>A UI MUST specify its class in the RDF data and the class MUST be a proper
-subclass of ui:UI, in this case ui-gtk:GtkUI. The class defines what type the
+subclass of pui:UI, in this case pui-gtk:GtkUI. The class defines what type the
 UI is, e.g. what graphics toolkit it uses. There are no UI classes defined in
 this extension, those are specified separately (and anyone can define their
 own).</p>
@@ -87,8 +87,7 @@ plugin implementation do not have to be the same. There are many valid reasons
 for having the plugin and the UI in different processes, or even on different
 machines. This means that you can <b>not</b> use singletons and global
 variables and expect them to refer to the same objects in the UI and the actual
-plugin. The function callback interface defined in the header
-<a href="../../doc/html/ui_8lv2_2ui_8h.html">ui<!-- hackety hack -->.h</a> is
+plugin. The function callback interface defined in the header pui.h is
 all you can expect to work.</p>
 """.
 
@@ -96,7 +95,7 @@ all you can expect to work.</p>
 ## UI Class ##
 ##############
 
-ui:UI a rdfs:Class;
+pui:UI a rdfs:Class;
       rdfs:subClassOf lv2:Feature;
       rdfs:label "UI";
       lv2:documentation """
@@ -105,15 +104,15 @@ ui:UI a rdfs:Class;
 
 <p>To be used by a host a UI MUST have at least the following properties:
 <pre>
-    rdf:type (with object a proper subclass of ui:UI)
+    rdf:type (with object a proper subclass of pui:UI)
     doap:name (one without language tag)
     lv2:binary (with a shared object file as object)
     lv2:appliesTo (with a LV2 plugin as object)
 </pre>
 The rdf:type of an UI is used by the host to decide whether it supports the
-UI and how to handle the LV2_UI_Widget object that is returned by the UIs
-get_widget() function. For example, a type of ui-gtk:GtkGUI might tell the host
-that LV2_UI_Widget is a pointer to an object of a type defined in the Gtk+
+UI and how to handle the LV2_PUI_Widget object that is returned by the UIs
+get_widget() function. For example, a type of pui-gtk:GtkGUI might tell the host
+that LV2_PUI_Widget is a pointer to an object of a type defined in the Gtk+
 library. No UI types are defined in this extension, that is intentionally
 left for other extensions.
 </p>
@@ -130,8 +129,7 @@ doesn't support all of its required features, and an UI MUST fail to
 instantiate if the host doesn't pass all required features to instantiate().
 </p>
 
-<p>For details about the C API used to load UIs, see the file
-<a href="../../doc/html/ui_8lv2_2ui_8h.html">ui<!-- hackety hack -->.h</a>.
+<p>For details about the C API used to load UIs, see the file pui.h.
 </p>
 """ .
 
@@ -140,7 +138,7 @@ instantiate if the host doesn't pass all required features to instantiate().
 ## Port Protocols ##
 ####################
 
-ui:PortProtocol a rdfs:Class;
+pui:PortProtocol a rdfs:Class;
 	rdfs:subClassOf  lv2:Feature;
 	rdfs:label       "Port protocol";
 	lv2:documentation     """
@@ -151,14 +149,14 @@ those extensions MUST specify:
 
 <p><ol>
 <li>Which plugin port types the buffer type is valid for</li>
-<li>When the host should call port_event() in LV2_UI_Descriptor</li>
+<li>When the host should call port_event() in LV2_PUI_Descriptor</li>
 <li>The format of the data in the buffer passed to port_event()</li>
 <li>The format of the data in the buffer passed to write_port()</li>
-<li>What happens when the UI calls write_port() in LV2_UI_Host_Descriptor</li>
+<li>What happens when the UI calls write_port() in LV2_PUI_Host_Descriptor</li>
 <li>What data (if any) should be passed in the LV2_Feature data pointer. </li>
 </ol></p>
 
-<p>For an example, see ui:floatControl.
+<p>For an example, see pui:floatControl.
 </p>
 
 <p>PortProtocol is a subclass of lv2:Feature, so UIs use lv2:optionalFeature and
@@ -166,10 +164,10 @@ lv2:requiredFeature to specify which PortProtocols they want to use.
 </p>
 """.
 
-ui:floatControl a ui:PortProtocol;
+pui:floatControl a pui:PortProtocol;
 	rdfs:label "Floating point value";
 	lv2:documentation """
-<p>The rules (see ui:PortProtocol) for this port protocol are:</p>
+<p>The rules (see pui:PortProtocol) for this port protocol are:</p>
 <ol>
 <li>This PortProtocol is valid for ports with the type lv2:ControlPort.</li>
 <li>The host SHOULD call port_event() as soon as possible when the port value

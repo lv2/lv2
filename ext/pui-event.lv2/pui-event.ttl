@@ -1,15 +1,13 @@
-# In-process UI extension
+# Plugin UI extension
 #
 # Copyright (C) 2010-2011 Lars Luthman <mail@larsluthman.net>
 #
 # based on lv2.ttl, which is
 # Copyright (C) 2006-2008 Steve Harris, David Robillard
 #
-# This extension should be considered a replacement for the earlier
-# in-process UI extension with the URI <http://lv2plug.in/ns/extensions/ui>.
-# Hosts and plugins that used that extension should use this one instead.
-# The earlier in-process UI extension is not compatible with LV2 revision 3
-# and later and may break in subtle ways.
+# This extension specifies a method for plugin UIs, as defined in the
+# extension <http://lv2plug.in/ns/ext/pui>, to send events to a plugin's
+# event ports and to monitor incoming and outgoing events.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -29,16 +27,16 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-@prefix ui:    <http://lv2plug.in/ns/ext/ui#>.
-@prefix ev:    <http://lv2plug.in/ns/ext/event#>.
-@prefix uiev:  <http://lv2plug.in/ns/ext/ui-event#>.
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#>.
-@prefix doap:  <http://usefulinc.com/ns/doap#>.
-@prefix foaf:  <http://xmlns.com/foaf/0.1/>.
+@prefix pui:    <http://lv2plug.in/ns/ext/pui#>.
+@prefix ev:     <http://lv2plug.in/ns/ext/event#>.
+@prefix puiev:  <http://lv2plug.in/ns/ext/pui-event#>.
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#>.
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix doap:   <http://usefulinc.com/ns/doap#>.
+@prefix foaf:   <http://xmlns.com/foaf/0.1/>.
 
-<http://lv2plug.in/ns/ext/ui-event> a lv2:Specification ;
+<http://lv2plug.in/ns/ext/pui-event> a lv2:Specification ;
 	doap:license <http://usefulinc.com/doap/licenses/mit>;
 	doap:name "LV2 UI Event port protocol" ;
 	doap:release [
@@ -51,11 +49,11 @@
 		foaf:mbox <mailto:mail@larsluthman.net>;
 	];
 	lv2:documentation """
-This extension defines an ui:PortProtocol for passing events (MIDI, OSC,
+This extension defines an pui:PortProtocol for passing events (MIDI, OSC,
 etc.) between LV2 plugins and UIs.
 """.
 
-uiev:events a ui:PortProtocol;
+puiev:events a pui:PortProtocol;
 	rdfs:label "Event buffer";
 	lv2:documentation """
 <ol>

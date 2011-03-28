@@ -1,8 +1,8 @@
 /************************************************************************
  *
- * Event port protocol for the in-process LV2 UI extension
+ * Event port protocol for the LV2 plugin UI extension
  *
- * Copyright (C) 2010 Lars Luthman <mail@larsluthman.net>
+ * Copyright (C) 2010-2011 Lars Luthman <mail@larsluthman.net>
  * 
  * This header is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as published
@@ -26,12 +26,12 @@
     for this extension.
 */
 
-#ifndef LV2_UI_EVENT_H
-#define LV2_UI_EVENT_H
+#ifndef LV2_PUI_EVENT_H
+#define LV2_PUI_EVENT_H
 
 
 /** The URI prefix for this extension. */
-#define LV2_UI_EVENT_URI "http://lv2plug.in/ns/ext/ui-event"
+#define LV2_PUI_EVENT_URI "http://lv2plug.in/ns/ext/pui-event"
 
 
 #endif
