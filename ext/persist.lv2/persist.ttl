@@ -31,6 +31,10 @@
 <http://lv2plug.in/ns/ext/persist>
     a lv2:Specification ;
     doap:name "LV2 Persist" ;
+    doap:release [
+        doap:revision "0.1" ;
+        doap:created "2011-03-25"
+    ] ;
     doap:developer [
         a foaf:Person ;
         foaf:name "Leonard Ritter" ;
@@ -84,7 +88,20 @@ or conventional state keys likely to be useful to several implementations.</p>
 
 <p>In pseudo code, a typical use case in a plugin is:</p>
 <pre>
+#define NS_EG   "http://example.org/"
+#define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
+
 static const char* const KEY_GREETING = "http://example.org/greeting";
+
+LV2_Handle my_instantiate(...)
+{
+    MyPlugin*            plugin = ...;
+    LV2_URI_Map_Feature* map    = ...;
+    plugin->uri_greeting_key = map->uri_to_id(..., NULL, NS_EG "greeting-key");
+    plugin->uri_atom_String  = map->uri_to_id(..., NULL, NS_ATOM "String");
+    plugin->state->greeting  = strdup("Hello");
+    return plugin;
+}
 
 void my_save(LV2_Handle                 instance,
              LV2_Persist_Store_Function store,
@@ -93,9 +110,12 @@ void my_save(LV2_Handle                 instance,
     MyPlugin*   plugin   = (MyPlugin*)instance;
     const char* greeting = plugin->state->greeting;
     
-    store(callback_data, KEY_GREETING,
-        greeting, strlen(greeting) + 1,
-        lv2_uri_map("http://lv2plug.in/ns/ext/atom#String"));
+    store(callback_data,
+          plugin->uri_greeting_key,
+          greeting,
+          strlen(greeting) + 1,
+          plugin->uri_atom_String,
+          true);
 }
 
 void my_restore(LV2_Handle                    instance,
@@ -106,26 +126,38 @@ void my_restore(LV2_Handle                    instance,
 
     size_t      size;
     uint32_t    type;
-    const char* greeting = retrieve(callback_data, KEY_GREETING, &amp;size, &amp;type);
+    bool        pod;
+    const char* greeting = retrieve(callback_data,
+                                    plugin->uri_greeting_key,
+                                    &amp;size,
+                                    &amp;type,
+                                    &amp;pod);
 
-    if (greeting)
-        plugin->state->greeting = greeting;
-    else
-        plugin->state->greeting = "Hello";
- 
+    if (greeting) {
+        free(plugin->state->greeting);
+        plugin->state->greeting = strdup(greeting);
+    } else {
+        plugin->state->greeting = strdup("Hello");
+    }
 }
 </pre>
 
 <p>Similarly, a typical use case in a host is:</p>
 <pre>
-void store_callback(void*       callback_data,
-                    const char* key,
-                    const void* value,
-                    size_t      size,
-                    uint32_t    type)
+int store_callback(void*       callback_data,
+                   uint32_t    key,
+                   const void* value,
+                   size_t      size,
+                   uint32_t    type,
+                   bool        pod)
 {
-    Map* state_map = (Map*)callback_data;
-    state_map->insert(key, Value(value, size, type));
+    if (pod) {
+        Map* state_map = (Map*)callback_data;
+        state_map->insert(key, Value(value, size, type, pod));
+        return 0;
+    } else {
+        return 1; /* Non-POD events are unsupported. */
+    }
 }
 
 Map get_plugin_state(LV2_Handle instance)
@@ -142,14 +174,14 @@ persist:InstanceState
     a rdfs:Class ;
     rdfs:label "Plugin Instance State" ;
     rdfs:comment """
-This class is used to express a plugin instance's state in RDF.  The key/value
+This class is used to express a plugin instance's state in RDF. The key/value
 properties of the instance form the predicate/object (respectively) of triples
-with a persist:InstanceState as the subject (see persist:instanceState
-for an example).  This may be used wherever it is useful to express a
-plugin instance's state in RDF (e.g. for serialisation, storing in a model, or
-transmitting over a network).  Note that this class is provided because it
-may be useful for hosts, plugins, or extensions that work with instance state,
-but its use is not required to support the LV2 Persist extension.
+with a persist:InstanceState as the subject (see persist:instanceState for an
+example). This may be used wherever it is useful to express a plugin instance's
+state in RDF (e.g. for serialisation, storing in a model, or transmitting over
+a network). Note that this class is provided because it may be useful for
+hosts, plugins, or extensions that work with instance state, but its use is not
+required to support the LV2 Persist extension.
 """ .
 
 
@@ -157,18 +189,18 @@ persist:instanceState
     a rdf:Property ;
     rdfs:range persist:InstanceState ;
     lv2:documentation """
-Predicate to relate a plugin instance to an InstanceState.  This may be used
+Predicate to relate a plugin instance to an InstanceState. This may be used
 wherever the state of a particular plugin instance needs to be represented.
-Note that the domain of this property is unspecified, since LV2 does not
-define any RDF class for plugin instance.  This predicate may be used
-wherever it makes sense to do so, e.g.:
+Note that the domain of this property is unspecified, since LV2 does not define
+any RDF class for plugin instance. This predicate may be used wherever it makes
+sense to do so, e.g.:
 <pre>
 @prefix eg: &lt;http://example.org/&gt; .
 
 &lt;plugininstance&gt; persist:instanceState [
     eg:somekey "some value" ;
     eg:someotherkey "some other value" ;
-    eg:favouritenumber 2 .
+    eg:favourite-number 2 .
 ]
 </pre>
 Note that this property is provided because it may be useful for hosts,

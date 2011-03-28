@@ -25,6 +25,9 @@
 #ifndef LV2_PERSIST_H
 #define LV2_PERSIST_H
 
+#include <stdbool.h>
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,24 +37,32 @@ extern "C" {
 /**
    A host-provided function to store a value under a given key.
    @param callback_data Must be the callback_data passed to LV2_Persist.save().
-   @param key The URI key (predicate) under which the value is to be stored.
+   @param key The key (predicate) to store @a value under (URI mapped integer).
    @param value Pointer to the value (object) to be stored.
    @param size The size of the data at @a value in bytes.
-   @param type The type of @a value, as a URI mapped to an integer.
+   @param type The type of @a value (URI mapped integer).
+   @param pod True iff @a value is POD.
+   @return 0 on success, otherwise a non-zero error code.
 
    The host passes a callback of this type to LV2_Persist.save().
    This callback is called repeatedly by the plugin within
    LV2_Persist.save() to store all the key/value records that describe
    its current state.
 
-   Unless @a type is 0, @a value is guaranteed to be POD (i.e. a region
-   of memory that does not contain pointers and can safely be copied
-   and persisted indefinitely with a simple memcpy). If @a type is 0,
-   then @a value is a reference, as defined by the LV2 Atom extension
-   <http://lv2plug.in/ns/ext/atom/>. Hosts are not required to support
-   references: a plugin MUST NOT expect a host to persist references unless
-   the host supports the feature <http://lv2plug.in/ns/ext/atom#blobSupport>.
-   Plugins SHOULD express their state entirely with POD values.
+   If @a pod is true, @a value is guaranteed to be architecture-independent POD
+   (i.e. a region of memory that does not contain pointers or references to
+   non-persistent resources and can safely be copied and stored with a simple
+   memcpy). Note that this definition of POD is more strict than exclusively
+   in-memory definitions since the value MUST be architecture independent;
+   e.g. endianness must be considered (so basic numeric types are typically NOT
+   POD). Hosts MAY fail to store the value, particularly if it is
+   non-POD. Plugins MUST gracefully handle this situation, even though state
+   may not be fully restored. Hosts SHOULD support any POD value, even if the
+   host does not know anything about its type. Plugins SHOULD express their
+   state entirely with POD values whenever possible, and use non-POD values
+   only where necessary. Plugins SHOULD use common RDF types and/or types from
+   the Atom extension <http://lv2plug.in/ns/ext/atom> whenever possible since
+   hosts are likely to already contain the necessary implementation.
 
    Note that @a size MUST be > 0, and @a value MUST point to a valid region of
    memory @a size bytes long (this is required to make restore unambiguous).
@@ -59,19 +70,21 @@ extern "C" {
    The plugin MUST NOT attempt to use this function outside of the
    LV2_Persist.restore() context.
 */
-typedef void (*LV2_Persist_Store_Function)(
-	void*       callback_data,
-	const char* key,
-	const void* value,
-	size_t      size,
-	uint32_t    type);
+typedef int (*LV2_Persist_Store_Function)(
+	void*          callback_data,
+	const uint32_t key,
+	const void*    value,
+	size_t         size,
+	uint32_t       type,
+	bool           pod);
 
 /**
    A host-provided function to retrieve a value under a given key.
    @param callback_data Must be the callback_data passed to LV2_Persist.restore().
-   @param key The URI key (predicate) under which a value has been stored.
+   @param key The key (predicate) of the value to retrieve (URI mapped integer).
    @param size (Output) If non-NULL, set to the size of the restored value.
    @param type (Output) If non-NULL, set to the type of the restored value.
+   @param pod (Output) If non-NULL, set to true iff @a value is POD.
    @return A pointer to the restored value (object), or NULL if no value
    has been stored under @a key.
 
@@ -83,13 +96,15 @@ typedef void (*LV2_Persist_Store_Function)(
 
    The plugin MUST NOT attempt to use this function, or any value returned from
    it, outside of the LV2_Persist.restore() context. Returned values MAY be
-   copied for later use if necessary.
+   copied for later use if necessary, assuming the plugin knows how to
+   correctly do so (e.g. the value is POD, or the plugin understands the type).
 */
 typedef const void* (*LV2_Persist_Retrieve_Function)(
-	void*       callback_data,
-	const char* key,
-	size_t*     size,
-	uint32_t*   type);
+	void*     callback_data,
+	uint32_t  key,
+	size_t*   size,
+	uint32_t* type,
+	bool*     pod);
 
 /**
    Persist Extension Data.
@@ -110,7 +125,7 @@ typedef const void* (*LV2_Persist_Retrieve_Function)(
    Stored data is only guaranteed to be compatible between instances of plugins
    with the same URI (i.e. if a change to a plugin would cause a fatal error
    when restoring state saved by a previous version of that plugin, the plugin
-   URI must change just as it must when a plugin's ports change). Plugin
+   URI MUST change just as it must when ports change incompatibly). Plugin
    authors should consider this possibility, and always store sensible data
    with meaningful types to avoid such compatibility issues in the future.
 */
@@ -149,11 +164,7 @@ typedef struct _LV2_Persist {
 	   Plugins that dynamically modify state while running, however,
 	   must take care to do so in such a way that a concurrent call to
 	   save() will save a consistent representation of plugin state for a
-	   single instant in time. The simplest way to do this is to modify a
-	   copy of the state map and atomically swap a pointer to the entire
-	   map once the changes are complete (for very large state maps,
-	   a purely functional map data structure may be more appropriate
-	   since a complete copy is not necessary).
+	   single instant in time.
 	*/
 	void (*save)(LV2_Handle                 instance,
 	             LV2_Persist_Store_Function store,
