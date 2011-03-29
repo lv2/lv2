@@ -1,6 +1,6 @@
 # LV2 Persist Extension
-# Copyright (C) 2010 Leonard Ritter <paniq@paniq.org>
-# Copyright (C) 2010 David Robillard <d@drobilla.net>
+# Copyright 2010-2011 David Robillard <d@drobilla.net>
+# Copyright 2010 Leonard Ritter <paniq@paniq.org>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -32,8 +32,8 @@
     a lv2:Specification ;
     doap:name "LV2 Persist" ;
     doap:release [
-        doap:revision "0.1" ;
-        doap:created "2011-03-25"
+        doap:revision "0.2" ;
+        doap:created "2011-03-28"
     ] ;
     doap:developer [
         a foaf:Person ;
