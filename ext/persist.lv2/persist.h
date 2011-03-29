@@ -60,8 +60,8 @@ typedef enum {
 	   Portable (architecture independent) data.
 
 	   Values with this flag are in a format that is usable on any
-	   architecture, i.e. if the value is saved on one machine, it can safely
-	   be restored on another machine regardless of endianness, alignment, etc.
+	   architecture, i.e. if the value is saved on one machine it can safely be
+	   restored on another machine regardless of endianness, alignment, etc.
 	*/
 	LV2_PERSIST_IS_PORTABLE = 1 << 1
 
@@ -83,9 +83,9 @@ typedef enum {
    the statements that describe its current state.
 
    The host MAY fail to store a statement if the type is not understood and is
-   not LV2_PERSIST_IS_POD and/or LV2_PERSIST_IS_PORTABLE. Implementations
-   are encouraged to use POD and portable values (e.g. string literals)
-   wherever possible, and use common types (e.g. types from
+   not LV2_PERSIST_IS_POD and/or LV2_PERSIST_IS_PORTABLE. Implementations are
+   encouraged to use POD and portable values (e.g. string literals) wherever
+   possible, and use common types (e.g. types from
    http://lv2plug.in/ns/ext/atom) regardless, since hosts are likely to already
    contain the necessary implementation.
 
@@ -124,8 +124,8 @@ typedef int (*LV2_Persist_Store_Function)(
 
    The plugin MUST NOT attempt to use this function, or any value returned from
    it, outside of the LV2_Persist.restore() context. Returned values MAY be
-   copied for later use if necessary, assuming the plugin knows how to
-   do so correctly (e.g. the value is POD, or the plugin understands the type).
+   copied for later use if necessary, assuming the plugin knows how to do so
+   correctly (e.g. the value is POD, or the plugin understands the type).
 */
 typedef const void* (*LV2_Persist_Retrieve_Function)(
 	void*     callback_data,
@@ -139,17 +139,17 @@ typedef const void* (*LV2_Persist_Retrieve_Function)(
    Persist Extension Data.
 
    When the plugin's extension_data is called with argument LV2_PERSIST_URI,
-   the plugin MUST return an LV2_Persist structure, which remains valid for
-   the lifetime of the plugin.
+   the plugin MUST return an LV2_Persist structure, which remains valid for the
+   lifetime of the plugin.
 
    The host can use the contained function pointers to save and restore the
    state of a plugin instance at any time (provided the threading restrictions
    for the given function are met).
 
-   The typical use case is to save the plugin's state when a project is
-   saved, and to restore the state when a project has been loaded. Other
-   uses are possible (e.g. cloning plugin instances or taking a snapshot
-   of plugin state).
+   The typical use case is to save the plugin's state when a project is saved,
+   and to restore the state when a project has been loaded. Other uses are
+   possible (e.g. cloning plugin instances or taking a snapshot of plugin
+   state).
 
    Stored data is only guaranteed to be compatible between instances of plugins
    with the same URI (i.e. if a change to a plugin would cause a fatal error
@@ -170,30 +170,27 @@ typedef struct _LV2_Persist {
 	   this MUST be passed as its callback_data parameter.
 
 	   The plugin is expected to store everything necessary to completely
-	   restore its state later (possibly much later, in a different
-	   process, on a completely different machine, etc.)
+	   restore its state later (possibly much later, in a different process, on
+	   a completely different machine, etc.)
 
-	   The @a callback_data pointer and @a store function MUST NOT be
-	   used beyond the scope of save().
+	   The @a callback_data pointer and @a store function MUST NOT be used
+	   beyond the scope of save().
 
-	   This function has its own special threading class: it may not be
-	   called concurrently with any "Instantiation" function, but it
-	   may be called concurrently with functions in any other class,
-	   unless the definition of that class prohibits it (e.g. it may
-	   not be called concurrently with a "Discovery" function, but it
-	   may be called concurrently with an "Audio" function. The plugin
-	   is responsible for any locking or lock-free techniques necessary
-	   to make this possible.
+	   This function has its own special threading class: it may not be called
+	   concurrently with any "Instantiation" function, but it may be called
+	   concurrently with functions in any other class, unless the definition of
+	   that class prohibits it (e.g. it may not be called concurrently with a
+	   "Discovery" function, but it may be called concurrently with an "Audio"
+	   function. The plugin is responsible for any locking or lock-free
+	   techniques necessary to make this possible.
 
-	   Note that in the simple case where state is only modified by
-	   restore(), there are no synchronization issues since save() is
-	   never called concurrently with restore() (though run() may read
-	   it during a save).
+	   Note that in the simple case where state is only modified by restore(),
+	   there are no synchronization issues since save() is never called
+	   concurrently with restore() (though run() may read it during a save).
 
-	   Plugins that dynamically modify state while running, however,
-	   must take care to do so in such a way that a concurrent call to
-	   save() will save a consistent representation of plugin state for a
-	   single instant in time.
+	   Plugins that dynamically modify state while running, however, must take
+	   care to do so in such a way that a concurrent call to save() will save a
+	   consistent representation of plugin state for a single instant in time.
 	*/
 	void (*save)(LV2_Handle                 instance,
 	             LV2_Persist_Store_Function store,
@@ -211,15 +208,15 @@ typedef struct _LV2_Persist {
 	   The plugin MAY assume a restored value was set by a previous call to
 	   LV2_Persist.save() by a plugin with the same URI.
 
-	   The plugin MUST gracefully fall back to a default value when a
-	   value can not be retrieved. This allows the host to reset the
-	   plugin state with an empty map.
+	   The plugin MUST gracefully fall back to a default value when a value can
+	   not be retrieved. This allows the host to reset the plugin state with an
+	   empty map.
 
 	   The @a callback_data pointer and @a store function MUST NOT be used
 	   beyond the scope of restore().
 
-	   This function is in the "Instantiation" threading class as defined
-	   by LV2. This means it MUST NOT be called concurrently with any other
+	   This function is in the "Instantiation" threading class as defined by
+	   LV2. This means it MUST NOT be called concurrently with any other
 	   function on the same plugin instance.
 	*/
 	void (*restore)(LV2_Handle                    instance,
