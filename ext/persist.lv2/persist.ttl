@@ -112,7 +112,6 @@ void my_save(LV2_Handle                 instance,
     const char* greeting = plugin->state->greeting;
 
     store(callback_data,
-          0,
           plugin->uri_greeting_key,
           greeting,
           strlen(greeting) + 1,
@@ -130,7 +129,6 @@ void my_restore(LV2_Handle                    instance,
     uint32_t    type;
     uint32_t    flags;
     const char* greeting = retrieve(callback_data,
-                                    0
                                     plugin->uri_greeting_key,
                                     &amp;size,
                                     &amp;type,
@@ -148,7 +146,6 @@ void my_restore(LV2_Handle                    instance,
 <p>Similarly, a typical use case in a host is:</p>
 <pre>
 int store_callback(void*       callback_data,
-                   uint32_t    subject,
                    uint32_t    key,
                    const void* value,
                    size_t      size,
@@ -160,8 +157,7 @@ int store_callback(void*       callback_data,
            LV2_PERSIST_IS_PORTABLE would have to be checked as well.
         */
         Map* state_map = (Map*)callback_data;
-        state_map->insert(Key(subject, key),
-                          Value(copy(value), size, type, pod));
+        state_map->insert(key, Value(copy(value), size, type, pod));
         return 0;
     } else {
         return 1; /* Non-POD events are unsupported. */
