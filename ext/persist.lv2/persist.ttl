@@ -90,6 +90,7 @@ or conventional state keys likely to be useful to several implementations.</p>
 <pre>
 #define NS_EG   "http://example.org/"
 #define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
+#define NS_XSD  "http://www.w3.org/2001/XMLSchema#"
 
 static const char* const KEY_GREETING = "http://example.org/greeting";
 
@@ -98,7 +99,7 @@ LV2_Handle my_instantiate(...)
     MyPlugin*            plugin = ...;
     LV2_URI_Map_Feature* map    = ...;
     plugin->uri_greeting_key = map->uri_to_id(..., NULL, NS_EG "greeting-key");
-    plugin->uri_atom_String  = map->uri_to_id(..., NULL, NS_ATOM "String");
+    plugin->uri_xsd_string   = map->uri_to_id(..., NULL, NS_XSD "string");
     plugin->state->greeting  = strdup("Hello");
     return plugin;
 }
@@ -111,11 +112,12 @@ void my_save(LV2_Handle                 instance,
     const char* greeting = plugin->state->greeting;
 
     store(callback_data,
+          0,
           plugin->uri_greeting_key,
           greeting,
           strlen(greeting) + 1,
-          plugin->uri_atom_String,
-          true);
+          plugin->uri_xsd_string,
+          LV2_PERSIST_IS_POD | LV2_PERSIST_IS_PORTABLE);
 }
 
 void my_restore(LV2_Handle                    instance,
@@ -126,12 +128,13 @@ void my_restore(LV2_Handle                    instance,
 
     size_t      size;
     uint32_t    type;
-    bool        pod;
+    uint32_t    flags;
     const char* greeting = retrieve(callback_data,
+                                    0
                                     plugin->uri_greeting_key,
                                     &amp;size,
                                     &amp;type,
-                                    &amp;pod);
+                                    &amp;flags);
 
     if (greeting) {
         free(plugin->state->greeting);
@@ -145,15 +148,20 @@ void my_restore(LV2_Handle                    instance,
 <p>Similarly, a typical use case in a host is:</p>
 <pre>
 int store_callback(void*       callback_data,
+                   uint32_t    subject,
                    uint32_t    key,
                    const void* value,
                    size_t      size,
                    uint32_t    type,
-                   bool        pod)
+                   uint32_t    flags)
 {
-    if (pod) {
+    if ((flags & LV2_PERSIST_IS_POD)) {
+        /* Keeping state in memory only, if disk was involved then
+           LV2_PERSIST_IS_PORTABLE would have to be checked as well.
+        */
         Map* state_map = (Map*)callback_data;
-        state_map->insert(key, Value(value, size, type, pod));
+        state_map->insert(Key(subject, key),
+                          Value(copy(value), size, type, pod));
         return 0;
     } else {
         return 1; /* Non-POD events are unsupported. */
