@@ -32,8 +32,8 @@
     a lv2:Specification ;
     doap:name "LV2 Persist" ;
     doap:release [
-        doap:revision "0.2" ;
-        doap:created "2011-03-28"
+        doap:revision "0.3" ;
+        doap:created "2011-03-29"
     ] ;
     doap:developer [
         a foaf:Person ;
