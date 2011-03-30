@@ -57,6 +57,11 @@ in bundles under BUNDLES_DIR.
 .TP
 \fB\-h\fR, \fB\-\-help\fR
 show usage and exit
+.SH ENVIRONMENT
+All directories in LV2_PATH are searched if BUNDLES_DIR is unspecified.
+.PP
+DESTDIR is prepended to both INCLUDE_DIR and BUNDLES_DIR to facilitate
+packaging.
 .SH AUTHOR
 lv2config was written by David Robillard <d@drobilla.net>.
 .PP

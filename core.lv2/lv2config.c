@@ -66,6 +66,7 @@ typedef struct _Spec {
 typedef struct {
 	SerdReader     reader;
 	SerdReadState  state;
+	const char*    destdir;
 	const uint8_t* current_file;
 	const char*    current_inc_dir;
 	Spec*          specs;
@@ -203,14 +204,31 @@ expand(const char* path)
 	return ret;
 }
 
+/** Return the corresponding output path (prepend destdir if applicable). */
+static char*
+output_dir(const char* path, const char* destdir)
+{
+	if (destdir) {
+		size_t len = strlen(destdir) + strlen(path);
+		char*  ret = malloc(len + 1);
+		snprintf(ret, len + 1, "%s%s", destdir, path);
+		return ret;
+	} else {
+		return strdup(path);
+	}
+}
+
 /** Scan all bundles in path (i.e. scan all path/foo.lv2/manifest.ttl). */
 static void
 discover_dir(World* world, const char* dir_path, const char* inc_dir)
 {
-	char* full_path = expand(dir_path);
-	if (!full_path) {
+	char* expanded_path = expand(dir_path);
+	if (!expanded_path) {
 		return;
 	}
+
+	char* full_path = output_dir(expanded_path, world->destdir);
+	free(expanded_path);
 
 	DIR* dir = opendir(full_path);
 	if (!dir) {
@@ -266,21 +284,6 @@ discover_path(World* world, const char* lv2_path, const char* inc_dir)
 	}
 
 	/* TODO: Check revisions */
-}
-
-/** Return the output include dir based on path (prepend DESTDIR). */
-static char*
-output_dir(const char* path)
-{
-	char* destdir = getenv("DESTDIR");
-	if (destdir) {
-		size_t len = strlen(destdir) + strlen(path);
-		char*  ret = malloc(len + 1);
-		snprintf(ret, len + 1, "%s%s", destdir, path);
-		return ret;
-	} else {
-		return strdup(path);
-	}
 }
 
 /** Create all parent directories of dir_path, but not dir_path itself. */
@@ -360,7 +363,7 @@ output_includes(World* world)
 			*(last_sep + 1) = '\0';
 		}
 
-		char*  full_dest    = output_dir(spec->inc_dir);
+		char*  full_dest    = output_dir(spec->inc_dir, world->destdir);
 		size_t len          = strlen(full_dest) + 1 + strlen(path);
 		char*  rel_inc_path = malloc(len + 1);
 		snprintf(rel_inc_path, len + 1, "%s/%s", full_dest, path);
@@ -384,8 +387,16 @@ output_includes(World* world)
 			continue;
 		}
 
+		char* link_path = bundle_path;
+		if (world->destdir) {
+			const size_t destdir_len = strlen(world->destdir);
+			if (!strncmp(link_path, world->destdir, destdir_len)) {
+				link_path += destdir_len;
+			}
+		}
+
 		/* Create link to this bundle in include tree. */
-		if (symlink(bundle_path, inc_path)) {
+		if (symlink(link_path, inc_path)) {
 			fprintf(stderr, "lv2config: Failed to create link (%s)\n",
 			        strerror(errno));
 		}
@@ -415,9 +426,14 @@ usage(const char* name, bool error)
 int
 main(int argc, char** argv)
 {
-	World world = { NULL, NULL, NULL, NULL, NULL, 0 };
+	World world = { NULL, NULL, NULL, NULL, NULL, NULL, 0 };
 	world.reader = serd_reader_new(
 		SERD_TURTLE, &world, on_base, on_prefix, on_statement, NULL);
+
+	const char* destdir = getenv("DESTDIR");
+	if (destdir && destdir[0] != '\0') {
+		world.destdir = destdir;
+	}
 
 	if (argc == 1) {
 		/* lv2_config */
