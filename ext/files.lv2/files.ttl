@@ -1,6 +1,5 @@
 # LV2 Files Extension
-# Copyright (C) 2010 Leonard Ritter <paniq@paniq.org>
-# Copyright (C) 2010 David Robillard <d@drobilla.net>
+# Copyright 2010-2011 David Robillard <d@drobilla.net>
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,9 +19,9 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-@prefix files: <http://lv2plug.in/ns/ext/files#> .
-@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix files: <http://lv2plug.in/ns/ext/files#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -43,19 +42,20 @@
 storing arbitrary data (e.g. waveforms), which can be persisted using
 the <a href="http://lv2plug.in/ns/ext/persist">LV2 Persist</a> extension.
 This allows plugins to work with potentially very large data via files,
-and save/restore these files.</p>
+and save/restore these files across plugin instances.</p>
 
 <p>The motivating idea behind this extension is that all details of file
-management must be handled by the host in whatever way is most appropriate for
-that host.  Plugins MUST NOT make any assumption about filesystem locations
-beyond what is explicitly guaranteed by this extension.</p>
+management MUST be handled by the host in whatever way is most appropriate for
+that host, since hosts may have very different requirements. Plugins MUST NOT
+make any assumption about filesystem locations beyond what is explicitly
+guaranteed by this extension.</p>
 
-<p>To create a new file, plugins request a filename from the host.  This way,
+<p>To create a new file, plugins request a filename from the host. This way,
 the host is aware of files used by the plugin and can use an appropriate
 location for them that the plugin alone could not know (e.g. using an
 appropriate disk volume for recording).</p>
 
-<p>Plugins may also use pre-existing files from elsewhere on the filesystem.
+<p>Plugins MAY also use pre-existing files from elsewhere on the filesystem.
 Using the LV2 Persist extension, the host can save both these types of files
 in an appropriate way (by e.g. storing a link, or copying the file to export
 or archive a project).</p>
@@ -64,17 +64,17 @@ or archive a project).</p>
 files:fileSupport a lv2:Feature ;
    rdfs:label "Support for plugin-created files" ;
    lv2:documentation """
-<p>This feature allows plugins to use pre-existing or newly created files,
-and files them (e.g. across project saves and restores).  If a host supports
-this feature it passes a LV2_Files_FileSupport structure to the plugins
-instantiate method as a feature (with URI
-http://lv2plug.in/ns/ext/files#FileSupport).  This structure provides
-a function the plugin can use to create new file names.  If and only if the
-host supports this feature, the plugin MAY files and restore values of
-type LV2_FILES_FILENAME.</p>
+   
+<p>This feature allows plugins to use pre-existing or newly created files, and
+persist them (e.g. across project saves and restores). If a host supports this
+feature it passes a LV2_Files_FileSupport structure to the plugins instantiate
+method as a feature (with URI http://lv2plug.in/ns/ext/files#FileSupport). This
+structure provides a function the plugin can use to create new file names. If
+and only if the host supports this feature, the plugin MAY files and restore
+values of type LV2_FILES_FILENAME.</p>
 
 <p>A plugin SHOULD use this facility to create any new files it may need
-(e.g. samples, waveforms for recording).  Plugins MUST NOT expect their
+(e.g. samples, waveforms for recording). Plugins MUST NOT expect their
 state to be correctly restored if they do not use this mechanism to
 create new files.</p>
 """ .
@@ -82,12 +82,12 @@ create new files.</p>
 files:FilePath a atom:AtomType ;
     rdfs:label "File Path" ;
     lv2:documentation """
-The full path to a file on the local filesystem.  The format of a
+The full path to a file on the local filesystem. The format of a
 files:filePath is a C string (escaped or otherwise restricted in whatever way
-necessary for the system).  This URI (http://lv2plug.in/ns/ext/files#FilePath),
+necessary for the system). This URI (http://lv2plug.in/ns/ext/files#FilePath),
 mapped to an integer, should be used as the <code>type</code> parameter with
-the LV2 Persist extension to persist a file.  When persisting a files:FilePath,
+the LV2 Persist extension to persist a file. When persisting a files:FilePath,
 the plugin MUST NOT assume that the same path will be restored (i.e. the
-host MAY choose to store the file elsewhere).  The plugin may, of course,
+host MAY choose to store the file elsewhere). The plugin may, of course,
 assume that the actual contents of the file are equivalent when restored.
 """ .
