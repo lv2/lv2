@@ -31,6 +31,10 @@
 <http://lv2plug.in/ns/ext/files>
 	a lv2:Specification ;
     doap:name "LV2 Files" ;
+    doap:release [
+        doap:revision "0.1" ;
+        doap:created "2011-04-02"
+    ] ;
     doap:maintainer [
         a foaf:Person ;
         foaf:name     "David Robillard" ;
@@ -38,56 +42,63 @@
         rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
     ] ;
 	lv2:documentation """
-<p>This extension provides a mechanism for plugins to create new files for
-storing arbitrary data (e.g. waveforms), which can be persisted using
-the <a href="http://lv2plug.in/ns/ext/persist">LV2 Persist</a> extension.
-This allows plugins to work with potentially very large data via files,
-and save/restore these files across plugin instances.</p>
+<p>This extension provides a mechanism for plugins to use files and portably
+refer to files in persistent plugin state (using the <a
+href="http://lv2plug.in/ns/ext/persist">LV2 Persist</a> extension).  A facility
+is also provided to allow plugins to create new files in host-defined
+locations, e.g. for recording.</p>
 
 <p>The motivating idea behind this extension is that all details of file
-management MUST be handled by the host in whatever way is most appropriate for
-that host, since hosts may have very different requirements. Plugins MUST NOT
-make any assumption about filesystem locations beyond what is explicitly
-guaranteed by this extension.</p>
+management MUST be handled by the host since different hosts may have very
+different requirements.  Plugins MUST NOT make any assumption about file system
+locations beyond what is explicitly guaranteed by this extension.</p>
 
-<p>To create a new file, plugins request a filename from the host. This way,
-the host is aware of files used by the plugin and can use an appropriate
-location for them that the plugin alone could not know (e.g. using an
-appropriate disk volume for recording).</p>
+<p>To create a new file, the plugin MUST request a path from the host using
+LV2_Files_File_Support::new_file_path().  Thus, the host may choose an
+appropriate location for the file (e.g. a writable path on the appropriate disk
+volume or a path within a session directory) using information not available to
+the plugin.</p>
 
-<p>Plugins MAY also use pre-existing files from elsewhere on the filesystem.
-Using the LV2 Persist extension, the host can save both these types of files
-in an appropriate way (by e.g. storing a link, or copying the file to export
-or archive a project).</p>
-""" .
+<p>To store a path in persistent state, the plugin MUST map it to an
+<q>abstract path</q> using LV2_Files_File_Support::abstract_path().  To use a
+path loaded from persistent state, the plugin MUST map the (abstract) path to
+an absolute path using LV2_Files_File_Support::absolute_path().  Thus, the host
+can manage all paths used in a session and support exporting sessions to a
+portable self-contained format for archival or distribution.</p> """ .
 
 files:fileSupport a lv2:Feature ;
-   rdfs:label "Support for plugin-created files" ;
-   lv2:documentation """
-   
-<p>This feature allows plugins to use pre-existing or newly created files, and
-persist them (e.g. across project saves and restores). If a host supports this
-feature it passes a LV2_Files_FileSupport structure to the plugins instantiate
-method as a feature (with URI http://lv2plug.in/ns/ext/files#FileSupport). This
-structure provides a function the plugin can use to create new file names. If
-and only if the host supports this feature, the plugin MAY files and restore
-values of type LV2_FILES_FILENAME.</p>
+   rdfs:label "Support for files in plugin state" ;
+   lv2:documentation """   
+<p>This feature allows plugins to use pre-existing or newly created files and
+refer to them in persistent state.  To support this feature a host MUST pass a
+LV2_Files_File_Support structure to the plugin's LV2_Descriptor::instantiate()
+method as an LV2_Feature with LV2_Feature::URI =
+<q>http://lv2plug.in/ns/ext/files#fileSupport</q> and LV2_Feature::data pointed
+to an instance of LV2_Files_File_Support.</p>
 
-<p>A plugin SHOULD use this facility to create any new files it may need
-(e.g. samples, waveforms for recording). Plugins MUST NOT expect their
-state to be correctly restored if they do not use this mechanism to
-create new files.</p>
+<p>Plugins MUST use the functions provided by this feature to handle
+<em>all</em> paths saved to, or restored from, persistent plugin state;
+otherwise broken and/or non-portable state will silently be created resulting
+in a broken user experience.</p>
 """ .
 
-files:FilePath a atom:AtomType ;
+files:AbstractPath a rdfs:class ;
     rdfs:label "File Path" ;
     lv2:documentation """
-The full path to a file on the local filesystem. The format of a
-files:filePath is a C string (escaped or otherwise restricted in whatever way
-necessary for the system). This URI (http://lv2plug.in/ns/ext/files#FilePath),
-mapped to an integer, should be used as the <code>type</code> parameter with
-the LV2 Persist extension to persist a file. When persisting a files:FilePath,
-the plugin MUST NOT assume that the same path will be restored (i.e. the
-host MAY choose to store the file elsewhere). The plugin may, of course,
-assume that the actual contents of the file are equivalent when restored.
+<p>An abstract path to a file in persistent plugin state.</p>
+
+<p>The format of a files:AbstractPath is a C string escaped or otherwise
+restricted in a system-specific manner.  This URI,
+<q>http://lv2plug.in/ns/ext/files#AbstractPath</q>, mapped to an integer,
+should be used as the <code>type</code> parameter to a
+LV2_Persist_Store_Function; and will likewise be returned by the corresponding
+call to a LV2_Persist_Retrieve_Function.</p>
+
+<p>Abstract paths reside in a namespace specific to a plugin instance.
+Typical hosts are expected to implement this by giving each plugin instance its
+own state directory.</p>
+
+<p>When storing and retrieving an abstract path, the plugin MUST NOT assume the
+same path will be restored.  However, the restored path will refer to a file
+with equivalent contents to the original.</p>
 """ .
