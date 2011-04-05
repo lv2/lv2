@@ -88,12 +88,13 @@ typedef struct _LV2_Atom {
 typedef LV2_Atom LV2_Atom_Reference;
 
 /**
-   The body of an atom:String.
+   The body of an atom:Literal.
 */
-typedef struct _LV2_Atom_String {
-	uint32_t lang;  /**< The ID of the language of this string */
-	uint8_t  str[]; /**< Null-terminated string data in UTF-8 encoding */
-} LV2_Atom_String;
+typedef struct _LV2_Atom_Literal {
+	uint32_t datatype;  /**< The ID of the datatype of this literal */
+	uint32_t lang;      /**< The ID of the language of this literal */
+	uint8_t  str[];     /**< Null-terminated string data in UTF-8 encoding */
+} LV2_Atom_Literal;
 
 /**
    The body of an atom:Vector.

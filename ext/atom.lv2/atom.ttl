@@ -1,6 +1,5 @@
-
 # LV2 Atom Extension
-# Copyright (C) 2007-2010 David Robillard <d@drobilla.net>
+# Copyright (C) 2007-2011 David Robillard <d@drobilla.net>
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -31,6 +30,10 @@
 <http://lv2plug.in/ns/ext/atom>
 	a lv2:Specification ;
 	doap:name "LV2 Atom" ;
+    doap:release [
+        doap:revision "0.1" ;
+        doap:created "2011-04-05"
+    ] ;
 	doap:maintainer [
 		a foaf:Person ;
 		foaf:name	 "David Robillard" ;
@@ -125,41 +128,63 @@ atom:String a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label      "String" ;
 	lv2:documentation """
-<p>A UTF-8 encoded string, with an optional language tag.  An
-<a href="urn:struct:LV2_Atom_String">LV2_Atom_String</a> has an <a href="#ID">ID</a>
-<code>lang</code> followed by the string data in UTF-8 encoding.  The length of the
-string data in bytes is <code>size - sizeof(uint32_t)</code>, including the
-terminating NULL character.  The <code>lang</code> may be any URI; to
-describe a human language, use http://lexvo.org/id/term/LANG where LANG is
-an <a href="http://www.loc.gov/standards/iso639-2/">ISO 693-2</a> or
-<a href="http://www.loc.gov/standards/iso639-2/">ISO 693-3</a> language code.</p>
+<p>A UTF-8 encoded string.</p>
+
+<p>The body of an atom:String is a C string in UTF-8 encoding, i.e. an array of
+bytes (<code>uint8_t</code>) terminated with a NULL byte (<code>'\\0'</code>).</p>
+
+<p>This type can be used for free-form strings, but in most cases it is better to
+use atom:Literal since this supports a language tag or datatype.  Implementations
+SHOULD NOT use atom:String unless translating the string does not make sense and
+the string has no meaningful datatype.</p>
+""" .
+
+
+atom:Literal a rdfs:Class ;
+	rdfs:subClassOf atom:Atom ;
+	rdfs:label      "String Literal" ;
+	lv2:documentation """
+<p>A UTF-8 encoded string literal, with an optional language tag or datatype.</p>
+
+<p>This type is compatible with an RDF literal and is capable of expressing a
+string in any language, or a value of any type.  An LV2_Atom_Literal has an <a
+href="#ID">ID</a> <code>lang</code> and <code>datatype</code> followed by the
+string data in UTF-8 encoding.  The length of the string data in bytes is
+<code>size - (2 * sizeof(uint32_t))</code>, including the terminating NULL
+character.  The <code>lang</code> field SHOULD be a URI of the form
+&lt;http://lexvo.org/id/term/LANG&gt; where LANG is an <a
+href="http://www.loc.gov/standards/iso639-2/">ISO 693-2</a> or <a
+href="http://www.loc.gov/standards/iso639-2/">ISO 693-3</a> language code.</p>
 
 <p>For example, "Hello" in English:</p>
 <pre>
 struct LV2_Atom {
-    uint16_t type = uri_to_id(atom:String);
-    uint16_t size = 10;
+    uint16_t type = uri_to_id(atom:Literal);
+    uint16_t size = 14;
 }
-uint32_t lang  = uri_to_id("http://lexvo.org/id/term/en");
-char     str[] = "Hello";
+uint32_t datatype = 0;
+uint32_t lang     = uri_to_id("http://lexvo.org/id/term/en");
+char     str[]    = "Hello";
 </pre>
 and French:
 <pre>
 struct LV2_Atom {
-    uint16_t type = uri_to_id(atom:String);
-    uint16_t size = 12;
+    uint16_t type = uri_to_id(atom:Literal);
+    uint16_t size = 16;
 }
-uint32_t lang  = uri_to_id("http://lexvo.org/id/term/fr");
-char     str[] = "Bonjour";
+uint32_t datatype = 0;
+uint32_t lang     = uri_to_id("http://lexvo.org/id/term/fr");
+char     str[]    = "Bonjour";
 </pre>
 <p>or a Turtle string:</p>
 <pre>
 struct LV2_Atom {
-    uint16_t type = uri_to_id(atom:String);
-    uint16_t size = 60;
+    uint16_t type = uri_to_id(atom:Literal);
+    uint16_t size = 64;
 }
-uint32_t lang  = uri_to_id("http://www.w3.org/2008/turtle#turtle");
-char     str[] = "&lt;http://example.org/foo&gt; a &lt;http://example.org/Thing&gt; ."
+uint32_t datatype = uri_to_id("http://www.w3.org/2008/turtle#turtle");
+uint32_t lang     = 0;
+char     str[]    = "&lt;http://example.org/foo&gt; a &lt;http://example.org/Thing&gt; ."
 </pre>
 """ .
 
