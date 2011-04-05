@@ -32,8 +32,8 @@
 	a lv2:Specification ;
     doap:name "LV2 Files" ;
     doap:release [
-        doap:revision "0.1" ;
-        doap:created "2011-04-02"
+        doap:revision "0.2" ;
+        doap:created "2011-04-05"
     ] ;
     doap:maintainer [
         a foaf:Person ;
@@ -42,44 +42,60 @@
         rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
     ] ;
 	lv2:documentation """
-<p>This extension provides a mechanism for plugins to use files and portably
-refer to files in persistent plugin state (using the <a
-href="http://lv2plug.in/ns/ext/persist">LV2 Persist</a> extension).  A facility
-is also provided to allow plugins to create new files in host-defined
-locations, e.g. for recording.</p>
+<p>This extension provides a mechanism for plugins to portably refer to files
+in persistent plugin state (using the <a
+href="http://lv2plug.in/ns/ext/persist">LV2 Persist</a> extension), and create
+instance-local files in host-defined locations (e.g. for recording).</p>
 
 <p>The motivating idea behind this extension is that all details of file
 management MUST be handled by the host since different hosts may have very
 different requirements.  Plugins MUST NOT make any assumption about file system
 locations beyond what is explicitly guaranteed by this extension.</p>
 
+<p>This extension defines two features: <a
+href="#newFileSupport">files:newFileSupport</a> allows plugins to create new
+files within an instance-specific namespace at any time (except in realtime
+contexts); while <a href="#pathSupport">files:pathSupport</a> allows plugins
+to refer to file paths in plugin state in a way transparent to the host.</p>
+
 <p>To create a new file, the plugin MUST request a path from the host using
-LV2_Files_File_Support::new_file_path().  Thus, the host may choose an
+LV2_Files_New_File_Support::new_file_path().  Thus, the host may choose an
 appropriate location for the file (e.g. a writable path on the appropriate disk
 volume or a path within a session directory) using information not available to
 the plugin.</p>
 
 <p>To store a path in persistent state, the plugin MUST map it to an
-<q>abstract path</q> using LV2_Files_File_Support::abstract_path().  To use a
+<q>abstract path</q> using LV2_Files_Path_Support::abstract_path().  To use a
 path loaded from persistent state, the plugin MUST map the (abstract) path to
-an absolute path using LV2_Files_File_Support::absolute_path().  Thus, the host
+an absolute path using LV2_Files_Path_Support::absolute_path().  Thus, the host
 can manage all paths used in a session and support exporting sessions to a
 portable self-contained format for archival or distribution.</p> """ .
 
-files:fileSupport a lv2:Feature ;
-   rdfs:label "Support for files in plugin state" ;
-   lv2:documentation """   
-<p>This feature allows plugins to use pre-existing or newly created files and
-refer to them in persistent state.  To support this feature a host MUST pass a
-LV2_Files_File_Support structure to the plugin's LV2_Descriptor::instantiate()
-method as an LV2_Feature with LV2_Feature::URI =
-<q>http://lv2plug.in/ns/ext/files#fileSupport</q> and LV2_Feature::data pointed
-to an instance of LV2_Files_File_Support.</p>
+files:pathSupport a lv2:Feature ;
+   rdfs:label "Support for storing file paths in plugin state" ;
+   lv2:documentation """
+<p>This feature allows plugins to refer to pre-existing or newly created files
+in persistent plugin state in a portable way.  To support this feature a host
+MUST pass a LV2_Files_Path_Support structure to the plugin's
+LV2_Descriptor::instantiate() method as an LV2_Feature with LV2_Feature::URI =
+LV2_FILES_PATH_SUPPORT_URI and LV2_Feature::data pointed to an instance of
+LV2_Files_Path_Support.</p>
 
 <p>Plugins MUST use the functions provided by this feature to handle
 <em>all</em> paths saved to, or restored from, persistent plugin state;
 otherwise broken and/or non-portable state will silently be created resulting
 in a broken user experience.</p>
+""" .
+
+files:newFileSupport a lv2:Feature ;
+   rdfs:label "Support for creating new files" ;
+   lv2:documentation """
+<p>This feature allows plugins to create new files local to that plugin
+instance.  To support this feature a host MUST pass a
+LV2_Files_New_File_Support structure to the plugin's
+LV2_Descriptor::instantiate() method as an LV2_Feature with LV2_Feature::URI =
+LV2_FILES_NEW_FILE_SUPPORT_URI and LV2_Feature::data pointed to an instance of
+LV2_Files_New_File_Support.</p>
 """ .
 
 files:AbstractPath a rdfs:class ;
