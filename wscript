@@ -17,70 +17,70 @@ top = '.'
 out = 'build'
 
 def options(opt):
-	autowaf.set_options(opt)
-	opt.load('compiler_cc')
-	opt.load('compiler_cxx')
-	opt.recurse('core.lv2')
+    autowaf.set_options(opt)
+    opt.load('compiler_cc')
+    opt.load('compiler_cxx')
+    opt.recurse('core.lv2')
 
 def configure(conf):
-	autowaf.set_recursive()
-	autowaf.configure(conf)
-	conf.recurse('core.lv2');
-	conf.load('compiler_cc')
-	conf.load('compiler_cxx')
-	conf.env.append_value('CFLAGS', '-std=c99')
-	pat = conf.env['cshlib_PATTERN']
-	ext = pat[pat.rfind('.'):]
-	conf.env.append_value('cshlib_EXTENSION', ext)
-	conf.write_config_header('lv2-config.h', remove=False)
+    autowaf.set_recursive()
+    autowaf.configure(conf)
+    conf.recurse('core.lv2');
+    conf.load('compiler_cc')
+    conf.load('compiler_cxx')
+    conf.env.append_value('CFLAGS', '-std=c99')
+    pat = conf.env['cshlib_PATTERN']
+    ext = pat[pat.rfind('.'):]
+    conf.env.append_value('cshlib_EXTENSION', ext)
+    conf.write_config_header('lv2-config.h', remove=False)
 
 def build_extension(bld, name, dir):
-	data_file     = '%s/%s.lv2/%s.ttl' % (dir, name, name)
-	manifest_file = '%s/%s.lv2/manifest.ttl' % (dir, name)
-	header_files  = '%s/%s.lv2/*.h' % (dir, name)
-	bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(data_file))
-	bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(manifest_file))
-	bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(header_files))
+    data_file     = '%s/%s.lv2/%s.ttl' % (dir, name, name)
+    manifest_file = '%s/%s.lv2/manifest.ttl' % (dir, name)
+    header_files  = '%s/%s.lv2/*.h' % (dir, name)
+    bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(data_file))
+    bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(manifest_file))
+    bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(header_files))
 
 def build(bld):
-	autowaf.set_recursive()
-	bld.recurse('core.lv2')
-	ext = '''
-		atom
-		contexts
-		data-access
-		dyn-manifest
-		event
-		host-info
-		instance-access
-		midi
-		osc
-		parameter
-		port-groups
-		presets
-		resize-port
-		string-port
-		pui
-		pui-event
-		pui-gtk
-		uri-map
-		uri-unmap
-	'''
-	for e in ext.split():
-		build_extension(bld, e, 'ext')
+    autowaf.set_recursive()
+    bld.recurse('core.lv2')
+    ext = '''
+            atom
+            contexts
+            data-access
+            dyn-manifest
+            event
+            host-info
+            instance-access
+            midi
+            osc
+            parameter
+            port-groups
+            presets
+            resize-port
+            string-port
+            pui
+            pui-event
+            pui-gtk
+            uri-map
+            uri-unmap
+    '''
+    for e in ext.split():
+        build_extension(bld, e, 'ext')
 
-	extensions = '''
-		ui
-		units
-	'''
-	for e in extensions.split():
-		build_extension(bld, e, 'extensions')
+    extensions = '''
+            ui
+            units
+    '''
+    for e in extensions.split():
+        build_extension(bld, e, 'extensions')
 
-	bld.add_post_fun(warn_lv2config)
+    bld.add_post_fun(warn_lv2config)
 
 def warn_lv2config(ctx):
-	if ctx.cmd == 'install':
-		Logs.warn('''
- * LV2 Extension(s) Installed
- * You need to run lv2config to update extension headers
+    if ctx.cmd == 'install':
+        Logs.warn('''
+* LV2 Extension(s) Installed
+* You need to run lv2config to update extension headers
 ''')
