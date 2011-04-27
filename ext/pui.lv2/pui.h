@@ -318,18 +318,53 @@ typedef struct _LV2_PUI_Descriptor {
 
 } LV2_PUI_Descriptor;
 
-/**
-   Prototype for UI accessor function.
-
-   This function follows the same rules as lv2_desciprotr(), except it applies
-   to UIs rather than plugins.
-*/
-LV2_PUI_Descriptor const* lv2ui_descriptor(uint32_t index);
+typedef void* LV2_PUI_Lib_Data;
 
 /**
-   Type of the lv2ui_descriptor() function in a UI library.
+   Descriptor for a plugin UI library.
+
+   Each plugin UI shared library has exactly one of these objects, accessed
+   via the lv2_pui_lib_descriptor() function in that library.
 */
-typedef LV2_PUI_Descriptor const* (*LV2_PUI_DescriptorFunction)(uint32_t index);
+typedef struct {
+	/**
+	   Opaque library data which must be passed as the first parameter to
+	   all the methods of this struct.
+	*/
+	LV2_PUI_Lib_Data lib_data;
+
+	void (*cleanup)(LV2_PUI_Lib_Data lib_data);
+
+	/**
+	   Prototype for UI accessor function.
+
+	   This function follows the same rules as lv2_descriptor(), except it
+	   applies to UIs rather than plugins.
+	*/
+	LV2_PUI_Descriptor const* (*pui_descriptor)(LV2_PUI_Lib_Data lib_data,
+	                                            uint32_t         index);
+	
+} LV2_PUI_Lib_Descriptor;
+
+/**
+   Prototype for UI library accessor function.
+
+   This is the entry point for a plugin UI library.  Hosts load this symbol
+   from the library and call this function to obtain a library descriptor which
+   can be used to access all the UIs contained in this library.  The returned
+   object must not be destroyed (with LV2_PUI_Lib_Descriptor::cleanup()) until
+   all UIs loaded from that library have been destroyed.
+*/
+LV2_PUI_Lib_Descriptor const* lv2_pui_lib_descriptor(
+	const char*               bundle_path,
+	LV2_Feature const* const* features);
+
+/**
+   Type of the lv2_pui_lib_descriptor() function in a UI library.
+*/
+typedef LV2_PUI_Lib_Descriptor const* (*LV2_PUI_Lib_Descriptor_Func)(
+	const char*               bundle_path,
+	LV2_Feature const* const* features);
 
 #ifdef __cplusplus
 }
