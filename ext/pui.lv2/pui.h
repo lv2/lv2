@@ -262,11 +262,11 @@ typedef struct _LV2_PUI_Descriptor {
 	   plugin host passes to a plugin.
 	*/
 	LV2_PUI_Handle (*instantiate)(struct _LV2_PUI_Descriptor const* descriptor,
-	                              char const*                        plugin_uri,
-	                              char const*                        bundle_path,
-	                              LV2_PUI_Host_Descriptor const*     host_descriptor,
-	                              LV2_PUI_Host_Handle                host_handle,
-	                              LV2_Feature const* const*          features);
+	                              char const*                       plugin_uri,
+	                              char const*                       bundle_path,
+	                              LV2_PUI_Host_Descriptor const*    host_descriptor,
+	                              LV2_PUI_Host_Handle               host_handle,
+	                              LV2_Feature const* const*         features);
 
 	/**
 	   Return the widget pointer for the UI object.
