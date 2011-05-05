@@ -58,7 +58,7 @@ static const size_t file_scheme_len = 7; /* strlen("file://") */
 /** Record of an LV2 specification. */
 typedef struct _Spec {
 	SerdNode      uri;
-	SerdNode      manifest;
+	char*         manifest;
 	const char*   inc_dir;
 } Spec;
 
@@ -82,8 +82,7 @@ specs_add(World*         world,
 {
 	world->specs = realloc(world->specs, sizeof(Spec) * (world->n_specs + 1));
 	world->specs[world->n_specs].uri = *uri;
-	world->specs[world->n_specs].manifest = serd_node_from_string(
-		SERD_URI, (const uint8_t*)strdup((const char*)manifest));
+	world->specs[world->n_specs].manifest = strdup((const char*)manifest);
 	world->specs[world->n_specs].inc_dir = inc_dir;
 	++world->n_specs;
 }
@@ -95,7 +94,7 @@ specs_free(World* world)
 	for (size_t i = 0; i < world->n_specs; ++i) {
 		Spec* spec = &world->specs[i];
 		serd_node_free(&spec->uri);
-		serd_node_free(&spec->manifest);
+		free(spec->manifest);
 	}
 	free(world->specs);
 	world->specs   = NULL;
@@ -339,9 +338,9 @@ output_includes(World* world)
 			fprintf(stderr,
 			        "lv2config: %s: warning: Duplicate extension <%s>.\n"
 			        "lv2config: %s: note: Using this version.\n",
-			        (const char*)last_spec->manifest.buf + file_scheme_len,
+			        last_spec->manifest + file_scheme_len,
 			        (const char*)spec->uri.buf,
-			        (const char*)spec->manifest.buf + file_scheme_len);
+			        spec->manifest + file_scheme_len);
 
 			continue;
 		}
@@ -356,7 +355,7 @@ output_includes(World* world)
 		}
 		for (++path; (path[0] == '/' && path[0] != '\0'); ++path) {}
 
-		const char* bundle_uri  = (const char*)spec->manifest.buf;
+		const char* bundle_uri  = spec->manifest;
 		char*       bundle_path = strdup(bundle_uri + file_scheme_len);
 		char*       last_sep    = strrchr(bundle_path, LV2CORE_DIR_SEP[0]);
 		if (last_sep) {
