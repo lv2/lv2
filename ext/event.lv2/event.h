@@ -1,21 +1,19 @@
 /*
   LV2 Event Extension
-  Copyright (C) 2006-2007 Lars Luthman <lars.luthman@gmail.com>
-  Copyright (C) 2008-2011 David Robillard <http://drobilla.net>
- 
-  This header is free software; you can redistribute it and/or modify it
-  under the terms of the GNU Lesser General Public License as published
-  by the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
- 
-  This header is distributed in the hope that it will be useful, but WITHOUT
-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
-  License for more details.
- 
-  You should have received a copy of the GNU Lesser General Public License
-  along with this header; if not, write to the Free Software Foundation,
-  Inc., 59 Temple Place, Suite 330, Boston, MA 01222-1307 USA
+  Copyright 2008-2011 David Robillard <http://drobilla.net>
+  Copyright 2006-2007 Lars Luthman <lars.luthman@gmail.com>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 #ifndef LV2_EVENT_H
@@ -212,11 +210,12 @@ typedef void* LV2_Event_Callback_Data;
 
 
 /**
-   The data field of the LV2_Feature for this extension.
+   Non-POD events feature.
  
    To support this feature the host must pass an LV2_Feature struct to the
    plugin's instantiate method with URI "http://lv2plug.in/ns/ext/event"
-   and data pointed to an instance of this struct.
+   and data pointed to an instance of this struct.  Note this feature
+   is not mandatory to support the event extension.
 */
 typedef struct {
 
