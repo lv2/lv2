@@ -3,8 +3,8 @@ from waflib.extras import autowaf as autowaf
 import waflib.Logs as Logs
 
 # Variables for 'waf dist'
-APPNAME = 'lv2-event'
-VERSION = '1.2'
+APPNAME = 'lv2-@NAME@'
+VERSION = '@MINOR@.@MICRO@'
 
 # Mandatory variables
 top = '.'
@@ -20,8 +20,8 @@ def configure(conf):
     print('')
 
 def build(bld):
-    bld.install_files('${LV2DIR}/event.lv2',
-                      'event.ttl event.h event-helpers.h manifest.ttl')
+    bld.install_files('${LV2DIR}/@NAME@.lv2',
+                      bld.path.ant_glob('*.*'))
 
     bld.add_post_fun(warn_lv2config)
 
