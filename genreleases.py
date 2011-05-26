@@ -12,11 +12,11 @@ lv2  = RDF.NS('http://lv2plug.in/ns/lv2core#')
 
 manifests = glob.glob('ext/*.lv2/manifest.ttl')
 
-try:
-    os.mkdir('build')
-    os.mkdir('spec')
-except:
-    pass
+try: os.mkdir('build')
+except: pass
+
+try: os.mkdir('build/spec')
+except: pass
 
 for i in manifests:
     match = re.search('.*/([^/]*).lv2/.*', i)

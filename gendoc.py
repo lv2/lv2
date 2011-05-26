@@ -23,11 +23,11 @@ SPECGENDIR = './specgen'
 STYLEURI   = os.path.join('aux', 'style.css')
 TAGFILE    = './doclinks'
 
-release_dir = os.path.join('build', 'spec')
-try:
-    os.mkdir(release_dir)
-except:
-    pass
+# release_dir = os.path.join('build', 'spec')
+# try:
+#     os.mkdir(release_dir)
+# except:
+#     pass
 
 devnull = open(os.devnull, 'w')
 
@@ -154,10 +154,10 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
         else:
             rev = '0'
 
-        if rev != '0' and rev.find('pre') == -1:
-            path = os.path.join(os.path.abspath(release_dir), 'lv2-%s-%s.tar.gz' % (b, rev))
-            subprocess.call(['tar', '--exclude-vcs', '-czf', path,
-                             bundle[bundle.find('/') + 1:]], cwd=dir)
+        # if rev != '0' and rev.find('pre') == -1:
+        #     path = os.path.join(os.path.abspath(release_dir), 'lv2-%s-%s.tar.gz' % (b, rev))
+        #     subprocess.call(['tar', '--exclude-vcs', '-czf', path,
+        #                      bundle[bundle.find('/') + 1:]], cwd=dir)
 
         specgendir = '../../../lv2specgen/'
         if (os.access(outdir + '/%s.lv2/%s.ttl' % (b, b), os.R_OK)):
