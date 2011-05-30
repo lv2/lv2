@@ -45,7 +45,7 @@
     doap:shortdesc "An LV2-based specification for dynamic data generation." ;
     doap:programming-language "C" ;
     doap:release [
-        doap:revision "1.1pre1" ;
+        doap:revision "1.1" ;
         doap:created "2010-10-29"
     ] ;
     doap:maintainer [
