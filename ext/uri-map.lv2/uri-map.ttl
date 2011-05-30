@@ -27,7 +27,7 @@
 	doap:name "LV2 URI Map" ;
     doap:release [
         doap:revision "1.2" ;
-        doap:created "2011-05-25"
+        doap:created "2011-05-26"
     ] ;
 	doap:maintainer [
 		a foaf:Person ;
