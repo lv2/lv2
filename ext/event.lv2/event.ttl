@@ -21,13 +21,14 @@
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 
-<http://lv2plug.in/ns/ext/event> a lv2:Specification ;
+<http://lv2plug.in/ns/ext/event>
+	a lv2:Specification ;
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	doap:name "LV2 Event" ;
 	rdfs:seeAlso <event-helpers.h> ;
     doap:release [
-        doap:revision "1.1pre1" ;
-        doap:created "2010-10-29"
+        doap:revision "1.2" ;
+        doap:created "2011-05-26"
     ] ;
 	doap:maintainer [
 		a foaf:Person ;
