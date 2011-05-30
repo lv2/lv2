@@ -33,7 +33,7 @@
 	doap:license <http://usefulinc.com/doap/licenses/mit> ;
 	doap:name    "LV2 Presets" ;
 	doap:release [
-		doap:revision "2.1pre1" ;
+		doap:revision "2.1" ;
 		doap:created "2010-10-29"
 	] ;
 	doap:maintainer [
