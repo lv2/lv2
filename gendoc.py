@@ -154,6 +154,13 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
         else:
             rev = '0'
 
+        minor = '0'
+        micro = '0'
+        match = re.search('([^\.]*)\.([^\.]*)', rev)
+        if match:
+            minor = match.group(1)
+            micro = match.group(2)
+
         # if rev != '0' and rev.find('pre') == -1:
         #     path = os.path.join(os.path.abspath(release_dir), 'lv2-%s-%s.tar.gz' % (b, rev))
         #     subprocess.call(['tar', '--exclude-vcs', '-czf', path,
@@ -172,7 +179,7 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
                              '-i'], cwd=outdir);
 
             li = '<li>'
-            if rev == '0':
+            if minor == '0' or (int(micro) % 2) != 0:
                 li += '<span style="color: red;">Experimental: </span>'
             li += '<a rel="rdfs:seeAlso" href="%s">%s</a>' % (b, b)
             li += '</li>'
