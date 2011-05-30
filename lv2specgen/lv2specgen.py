@@ -2,26 +2,26 @@
 # -*- coding: utf-8 -*-
 #
 # lv2specgen, an LV2 extension specification page generator
-# Copyright (c) 2009-2010 David Robillard <d@drobilla.net>
+# Copyright (c) 2009-2011 David Robillard <d@drobilla.net>
 #
 # Based on SpecGen:
 # <http://forge.morfeo-project.org/wiki_en/index.php/SpecGen>
 # Copyright (c) 2003-2008 Christopher Schmidt <crschmidt@crschmidt.net>
 # Copyright (c) 2005-2008 Uldis Bojars <uldis.bojars@deri.org>
 # Copyright (c) 2007-2008 Sergio Fernández <sergio.fernandez@fundacionctic.org>
-# 
+#
 # This software is licensed under the terms of the MIT License.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,12 +30,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-__version__ = "1.0.0"
-__authors__ = "Christopher Schmidt, Uldis Bojars, Sergio Fernández, David Robillard"
+__version__ = "1.0.1"
+__authors__ = """
+Christopher Schmidt,
+Uldis Bojars,
+Sergio Fernández,
+David Robillard"""
 __license__ = "MIT License <http://www.opensource.org/licenses/mit-license.php>"
 __contact__ = "devel@lists.lv2plug.in"
-__date__    = "2009-06-11"
- 
+__date__ = "2011-05-30"
+
 import os
 import sys
 import datetime
@@ -65,20 +69,21 @@ spec_url = None
 spec_ns_str = None
 spec_ns = None
 spec_pre = None
-ns_list = { "http://www.w3.org/1999/02/22-rdf-syntax-ns#"   : "rdf",
-            "http://www.w3.org/2000/01/rdf-schema#"         : "rdfs",
-            "http://www.w3.org/2002/07/owl#"                : "owl",
-            "http://www.w3.org/2001/XMLSchema#"             : "xsd",
-            "http://rdfs.org/sioc/ns#"                      : "sioc",
-            "http://xmlns.com/foaf/0.1/"                    : "foaf", 
-            "http://purl.org/dc/elements/1.1/"              : "dc",
-            "http://purl.org/dc/terms/"                     : "dct",
-            "http://purl.org/rss/1.0/modules/content/"      : "content", 
-            "http://www.w3.org/2003/01/geo/wgs84_pos#"      : "geo",
-            "http://www.w3.org/2004/02/skos/core#"          : "skos",
-            "http://lv2plug.in/ns/lv2core#"                 : "lv2",
-            "http://usefulinc.com/ns/doap#"                 : "doap"
-          }
+ns_list = {
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#"   : "rdf",
+    "http://www.w3.org/2000/01/rdf-schema#"         : "rdfs",
+    "http://www.w3.org/2002/07/owl#"                : "owl",
+    "http://www.w3.org/2001/XMLSchema#"             : "xsd",
+    "http://rdfs.org/sioc/ns#"                      : "sioc",
+    "http://xmlns.com/foaf/0.1/"                    : "foaf",
+    "http://purl.org/dc/elements/1.1/"              : "dc",
+    "http://purl.org/dc/terms/"                     : "dct",
+    "http://purl.org/rss/1.0/modules/content/"      : "content",
+    "http://www.w3.org/2003/01/geo/wgs84_pos#"      : "geo",
+    "http://www.w3.org/2004/02/skos/core#"          : "skos",
+    "http://lv2plug.in/ns/lv2core#"                 : "lv2",
+    "http://usefulinc.com/ns/doap#"                 : "doap"
+    }
 
 rdf  = RDF.NS('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 rdfs = RDF.NS('http://www.w3.org/2000/01/rdf-schema#')
@@ -89,13 +94,14 @@ foaf = RDF.NS('http://xmlns.com/foaf/0.1/')
 
 doc_base = '.'
 
+
 def niceName(uri):
-    regexp = re.compile( "^(.*[/#])([^/#]+)$" )
-    rez = regexp.search( uri )
+    regexp = re.compile("^(.*[/#])([^/#]+)$")
+    rez = regexp.search(uri)
     if not rez:
         return uri
     pref = rez.group(1)
-    if ns_list.has_key(pref):
+    if pref in ns_list:
         return ns_list.get(pref, pref) + ":" + rez.group(2)
     else:
         return uri
@@ -105,6 +111,7 @@ def return_name(m, urinode):
     "Trims the namespace out of a term to give a name to the term."
     return str(urinode.uri).replace(spec_ns_str, "")
 
+
 def getLabel(m, urinode):
     if (type(urinode) == str):
         urinode = RDF.Uri(urinode)
@@ -113,6 +120,7 @@ def getLabel(m, urinode):
         return l.current().object.literal_value['string']
     else:
         return ''
+
 
 def getComment(m, urinode):
     if (type(urinode) == str):
@@ -129,14 +137,16 @@ def getComment(m, urinode):
                                           'struct' + match.replace('_', '__') + '.html')
                 markup = markup.replace('href="urn:struct:' + match + '"',
                                         'href="' + struct_uri + '"')
-        
+
         rgx = re.compile('([^a-zA-Z0-9_:])(' + \
                              '|'.join(map(re.escape, linkmap)) + \
                              ')([^a-aA-Z0-9_:])')
+
         def translate(match):
             return match.group(1) + linkmap[match.group(2)] + match.group(3)
+
         return rgx.sub(translate, markup)
-    
+
     c = m.find_statements(RDF.Statement(urinode, rdfs.comment, None))
     if c.current():
         text = c.current().object.literal_value['string']
@@ -144,19 +154,22 @@ def getComment(m, urinode):
 
     return ''
 
+
 def getProperty(val, first=True):
     "Return a string representing a property value in a property table"
     doc = ''
     if not first:
-        doc += '<tr><td></td>' # Empty cell in header column
+        doc += '<tr><td></td>'  # Empty cell in header column
     doc += '<td>%s</td></tr>\n' % val
     return doc
+
 
 def endProperties(first):
     if first:
         return '</tr>'
     else:
         return ''
+
 
 def owlVersionInfo(m):
     v = m.find_statements(RDF.Statement(None, owl.versionInfo, None))
@@ -165,7 +178,8 @@ def owlVersionInfo(m):
     else:
         return ""
 
-def rdfsPropertyInfo(term,m):
+
+def rdfsPropertyInfo(term, m):
     """Generate HTML for properties: Domain, range"""
     global classranges
     global classdomains
@@ -174,7 +188,7 @@ def rdfsPropertyInfo(term,m):
     domain = ""
 
     # Find subPropertyOf information
-    o = m.find_statements( RDF.Statement(term, rdfs.subPropertyOf, None) )
+    o = m.find_statements(RDF.Statement(term, rdfs.subPropertyOf, None))
     if o.current():
         rlist = ''
         first = True
@@ -199,7 +213,7 @@ def rdfsPropertyInfo(term,m):
         else:
             if not d.object.is_blank():
                 domainsdoc += getProperty(getTermLink(str(d.object.uri), term, rdfs.domain))
-    if (len(domainsdoc)>0):
+    if (len(domainsdoc) > 0):
         doc += "<tr><th>Domain</th>%s" % domainsdoc
 
     # Range stuff
@@ -217,7 +231,7 @@ def rdfsPropertyInfo(term,m):
         else:
             if not r.object.is_blank():
                 rangesdoc += getProperty(getTermLink(str(r.object.uri), term, rdfs.range))
-    if (len(rangesdoc)>0):
+    if (len(rangesdoc) > 0):
         doc += "<tr><th>Range</th>%s" % rangesdoc
 
     return doc
@@ -234,7 +248,7 @@ def parseCollection(model, collection):
         one = rdflist.current()
         if one.predicate == rdf.rest:
             rdflist = model.find_statements(RDF.Statement(one.object, None, None))
-    
+
     return uris
 
 
@@ -247,15 +261,16 @@ def getTermLink(uri, subject=None, predicate=None):
         return '<a href="#%s" %s>%s</a>' % (uri.replace(spec_ns_str, ""), extra, niceName(uri))
     else:
         return '<a href="%s" %s>%s</a>' % (uri, extra, niceName(uri))
-  
-def rdfsClassInfo(term,m):
+
+
+def rdfsClassInfo(term, m):
     """Generate rdfs-type information for Classes: ranges, and domains."""
     global classranges
     global classdomains
     doc = ""
 
     # Find subClassOf information
-    o = m.find_statements( RDF.Statement(term, rdfs.subClassOf, None) )
+    o = m.find_statements(RDF.Statement(term, rdfs.subClassOf, None))
     restrictions = []
     if o.current():
         superclasses = []
@@ -346,7 +361,7 @@ def isSpecial(pred):
     return pred in [rdf.type, rdfs.range, rdfs.domain, rdfs.label, rdfs.comment, rdfs.subClassOf, rdfs.subPropertyOf, lv2.documentation]
 
 
-def blankNodeDesc(node,m):
+def blankNodeDesc(node, m):
     properties = m.find_statements(RDF.Statement(node, None, None))
     doc = ''
     last_pred = ''
@@ -356,11 +371,12 @@ def blankNodeDesc(node,m):
         doc += '<tr>'
         doc += '<td class="blankterm">%s</td>\n' % getTermLink(str(p.predicate.uri))
         if p.object.is_resource():
-            doc += '<td class="blankdef">%s</td>\n' % getTermLink(str(p.object.uri))#getTermLink(str(p.object.uri), node, p.predicate)
+            doc += '<td class="blankdef">%s</td>\n' % getTermLink(str(p.object.uri))
+            # getTermLink(str(p.object.uri), node, p.predicate)
         elif p.object.is_literal():
             doc += '<td class="blankdef">%s</td>\n' % str(p.object.literal_value['string'])
         elif p.object.is_blank():
-            doc += '<td class="blankdef">' + blankNodeDesc(p.object,m) + '</td>\n'
+            doc += '<td class="blankdef">' + blankNodeDesc(p.object, m) + '</td>\n'
         else:
             doc += '<td class="blankdef">?</td>\n'
         doc += '</tr>'
@@ -369,7 +385,7 @@ def blankNodeDesc(node,m):
     return doc
 
 
-def extraInfo(term,m):
+def extraInfo(term, m):
     """Generate information about misc. properties of a term"""
     doc = ""
     properties = m.find_statements(RDF.Statement(term, None, None))
@@ -398,7 +414,7 @@ def extraInfo(term,m):
     return doc
 
 
-def rdfsInstanceInfo(term,m):
+def rdfsInstanceInfo(term, m):
     """Generate rdfs-type information for instances"""
     doc = ""
 
@@ -421,7 +437,7 @@ def rdfsInstanceInfo(term,m):
     return doc
 
 
-def owlInfo(term,m):
+def owlInfo(term, m):
     """Returns an extra information that is defined about a term (an RDF.Node()) using OWL."""
     res = ''
 
@@ -434,7 +450,7 @@ def owlInfo(term,m):
             res += getProperty(getTermLink(str(st.object.uri)), first)
             first = False
         res += endProperties(first)
-    
+
     def owlTypeInfo(term, propertyType, name):
         o = m.find_statements(RDF.Statement(term, rdf.type, propertyType))
         if o.current():
@@ -454,13 +470,14 @@ def owlInfo(term,m):
 def docTerms(category, list, m):
     """
     A wrapper class for listing all the terms in a specific class (either
-    Properties, or Classes. Category is 'Property' or 'Class', list is a 
+    Properties, or Classes. Category is 'Property' or 'Class', list is a
     list of term names (strings), return value is a chunk of HTML.
     """
     doc = ""
     nspre = spec_pre
     for t in list:
-        if (t.startswith(spec_ns_str)) and (len(t[len(spec_ns_str):].split("/"))<2):
+        if (t.startswith(spec_ns_str)) and (
+            len(t[len(spec_ns_str):].split("/")) < 2):
             term = t
             t = t.split(spec_ns_str[-1])[1]
             curie = "%s:%s" % (nspre, t)
@@ -472,47 +489,47 @@ def docTerms(category, list, m):
             else:
                 term = spec_ns[t]
                 curie = "%s:%s" % (nspre, t)
-        
+
         try:
             term_uri = term.uri
         except:
             term_uri = term
-        
+
         doc += """<div class="specterm" id="%s" about="%s">\n<h3>%s <a href="#%s">%s</a></h3>\n""" % (t, term_uri, category, getAnchor(str(term_uri)), curie)
 
         label = getLabel(m, term)
         comment = getComment(m, term)
 
         doc += '<div class="spectermbody">'
-        if label!='' or comment != '':
+        if label != '' or comment != '':
             doc += '<div class="description">'
 
-        if label!='':
+        if label != '':
             doc += "<div property=\"rdfs:label\" class=\"label\">%s</div>" % label
 
-        if comment!='':
+        if comment != '':
             doc += "<div property=\"rdfs:comment\">%s</div>" % comment
 
-        if label!='' or comment != '':
+        if label != '' or comment != '':
             doc += "</div>"
-        
+
         terminfo = ""
-        if category=='Property':
-            terminfo += owlInfo(term,m)
-            terminfo += rdfsPropertyInfo(term,m)
-        if category=='Class':
-            terminfo += rdfsClassInfo(term,m)
-        if category=='Instance':
-            terminfo += rdfsInstanceInfo(term,m)
-        
-        terminfo += extraInfo(term,m)
-        
-        if (len(terminfo)>0): #to prevent empty list (bug #882)
+        if category == 'Property':
+            terminfo += owlInfo(term, m)
+            terminfo += rdfsPropertyInfo(term, m)
+        if category == 'Class':
+            terminfo += rdfsClassInfo(term, m)
+        if category == 'Instance':
+            terminfo += rdfsInstanceInfo(term, m)
+
+        terminfo += extraInfo(term, m)
+
+        if (len(terminfo) > 0):  # to prevent empty list (bug #882)
             doc += '\n<table class="terminfo">%s</table>\n' % terminfo
-        
+
         doc += '</div>'
         doc += "\n</div>\n\n"
-    
+
     return doc
 
 
@@ -525,23 +542,24 @@ def getShortName(uri):
 
 def getAnchor(uri):
     if (uri.startswith(spec_ns_str)):
-        return uri[len(spec_ns_str):].replace("/","_")
+        return uri[len(spec_ns_str):].replace("/", "_")
     else:
         return getShortName(uri)
 
 
 def buildIndex(classlist, proplist, instalist=None):
     """
-    Builds the A-Z list of terms. Args are a list of classes (strings) and 
+    Builds the A-Z list of terms. Args are a list of classes (strings) and
     a list of props (strings)
     """
 
-    if len(classlist)==0 and len(proplist)==0 and (not instalist or len(instalist)==0):
+    if len(classlist) == 0 and len(proplist) == 0 and (
+        not instalist or len(instalist) == 0):
         return ''
 
     azlist = '<dl class="index">'
 
-    if (len(classlist)>0):
+    if (len(classlist) > 0):
         azlist += "<dt>Classes</dt><dd>"
         classlist.sort()
         for c in classlist:
@@ -550,7 +568,7 @@ def buildIndex(classlist, proplist, instalist=None):
             azlist = """%s <a href="#%s">%s</a>, """ % (azlist, c, c)
         azlist = """%s</dd>\n""" % azlist
 
-    if (len(proplist)>0):
+    if (len(proplist) > 0):
         azlist += "<dt>Properties</dt><dd>"
         proplist.sort()
         for p in proplist:
@@ -559,7 +577,7 @@ def buildIndex(classlist, proplist, instalist=None):
             azlist = """%s <a href="#%s">%s</a>, """ % (azlist, p, p)
         azlist = """%s</dd>\n""" % azlist
 
-    if (instalist!=None and len(instalist)>0):
+    if (instalist != None and len(instalist) > 0):
         azlist += "<dt>Instances</dt><dd>"
         for i in instalist:
             p = getShortName(i)
@@ -572,7 +590,7 @@ def buildIndex(classlist, proplist, instalist=None):
 
 
 def add(where, key, value):
-    if not where.has_key(key):
+    if not key in where:
         where[key] = []
     if not value in where[key]:
         where[key].append(value)
@@ -591,15 +609,29 @@ def specInformation(m, ns):
     classtypes = [rdfs.Class, owl.Class]
     classlist = []
     for onetype in classtypes:
-        for classStatement in m.find_statements(RDF.Statement(None, rdf.type, onetype)):
-            for range in m.find_statements(RDF.Statement(None, rdfs.range, classStatement.subject)):
-                if not m.contains_statement( RDF.Statement( range.subject, rdf.type, owl.DeprecatedProperty )):
+        for classStatement in m.find_statements(RDF.Statement(None,
+                                                              rdf.type,
+                                                              onetype)):
+            for range in m.find_statements(RDF.Statement(None,
+                                                         rdfs.range,
+                                                         classStatement.subject)):
+                if not m.contains_statement(RDF.Statement(range.subject,
+                                                          rdf.type,
+                                                          owl.DeprecatedProperty)):
                     if not classStatement.subject.is_blank():
-                        add(classranges, str(classStatement.subject.uri), str(range.subject.uri))
-            for domain in m.find_statements(RDF.Statement(None, rdfs.domain, classStatement.subject)):
-                if not m.contains_statement( RDF.Statement( domain.subject, rdf.type, owl.DeprecatedProperty )):
+                        add(classranges,
+                            str(classStatement.subject.uri),
+                            str(range.subject.uri))
+            for domain in m.find_statements(RDF.Statement(None,
+                                                          rdfs.domain,
+                                                          classStatement.subject)):
+                if not m.contains_statement(RDF.Statement(domain.subject,
+                                                          rdf.type,
+                                                          owl.DeprecatedProperty)):
                     if not classStatement.subject.is_blank():
-                        add(classdomains, str(classStatement.subject.uri), str(domain.subject.uri))
+                        add(classdomains,
+                            str(classStatement.subject.uri),
+                            str(domain.subject.uri))
             if not classStatement.subject.is_blank():
                 uri = str(classStatement.subject.uri)
                 name = return_name(m, classStatement.subject)
@@ -609,7 +641,7 @@ def specInformation(m, ns):
     # Create a list of properties in the schema.
     proptypes = [rdf.Property, owl.ObjectProperty, owl.DatatypeProperty, owl.AnnotationProperty]
     proplist = []
-    for onetype in proptypes: 
+    for onetype in proptypes:
         for propertyStatement in m.find_statements(RDF.Statement(None, rdf.type, onetype)):
             uri = str(propertyStatement.subject.uri)
             name = return_name(m, propertyStatement.subject)
@@ -629,7 +661,7 @@ def specProperty(m, subject, predicate):
 
 def specProperties(m, subject, predicate):
     "Return a property of the spec."
-    properties=[]
+    properties = []
     for c in m.find_statements(RDF.Statement(None, predicate, None)):
         if c.subject.is_resource() and str(c.subject.uri) == str(subject):
             properties += [c.object]
@@ -670,6 +702,7 @@ def specAuthors(m, subject):
     else:
         return '<tr><th class="metahead">Authors</th><td>' + doc + '</td></tr>'
 
+
 def specVersion(m, subject):
     """
     Return a (minorVersion, microVersion, date) tuple
@@ -697,6 +730,7 @@ def specVersion(m, subject):
         micro_version = int(i.object.literal_value['string'])
     return (minor_version, micro_version, date)
 
+
 def getInstances(model, classes, properties):
     """
     Extract all resources instanced in the ontology
@@ -710,7 +744,7 @@ def getInstances(model, classes, properties):
                 instances.append(uri)
     for i in model.find_statements(RDF.Statement(None, rdf.type, None)):
         if not i.subject.is_resource():
-            continue;
+            continue
         full_uri = str(i.subject.uri)
         if (full_uri.startswith(spec_ns_str)):
             uri = full_uri[len(spec_ns_str):]
@@ -719,8 +753,8 @@ def getInstances(model, classes, properties):
         if ((not full_uri in instances) and (not uri in classes) and (not uri in properties) and (full_uri != spec_url)):
             instances.append(full_uri)
     return instances
-   
- 
+
+
 def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     """The meat and potatoes: Everything starts here."""
 
@@ -729,14 +763,14 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     global spec_ns
     global spec_pre
     global ns_list
-    
+
     # Build a symbol -> link mapping for external links
     dlfile = open(doclinks, 'r')
     for line in dlfile:
         sym, _, url = line.rstrip().partition(' ')
         linkmap[sym] = '<span><a href="%s">%s</a></span>' % (
             os.path.join(doc_base, url), sym)
-    
+
     m = RDF.Model()
     try:
         base = specloc[0:specloc.rfind('/')]
@@ -759,11 +793,11 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     spec_url = getOntologyNS(m)
 
     spec_ns_str = spec_url
-    if (spec_ns_str[-1]!="/" and spec_ns_str[-1]!="#"):
+    if (spec_ns_str[-1] != "/" and spec_ns_str[-1] != "#"):
         spec_ns_str += "#"
 
     spec_ns = RDF.NS(spec_ns_str)
-    
+
     namespaces = getNamespaces(p)
     keys = namespaces.keys()
     keys.sort()
@@ -774,22 +808,22 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
             spec_pre = i
         prefixes_html += '<a href="%s">%s</a> ' % (uri, i)
     prefixes_html += "</span>"
-    
+
     if spec_pre is None:
         print 'No namespace prefix for specification defined'
         sys.exit(1)
-    
+
     ns_list[spec_ns_str] = spec_pre
 
     classlist, proplist = specInformation(m, spec_ns_str)
     classlist = sorted(classlist)
     proplist = sorted(proplist)
-        
+
     instalist = None
     if instances:
         instalist = getInstances(m, classlist, proplist)
         instalist.sort(lambda x, y: cmp(getShortName(x).lower(), getShortName(y).lower()))
-    
+
     azlist = buildIndex(classlist, proplist, instalist)
 
     # Generate Term HTML
@@ -797,18 +831,18 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     termlist = docTerms('Class', classlist, m) + termlist
     if instances:
         termlist += docTerms('Instance', instalist, m)
-    
+
     # Generate RDF from original namespace.
     u = urllib.urlopen(specloc)
     rdfdata = u.read()
     rdfdata = re.sub(r"(<\?xml version.*\?>)", "", rdfdata)
     rdfdata = re.sub(r"(<!DOCTYPE[^]]*]>)", "", rdfdata)
     #rdfdata.replace("""<?xml version="1.0"?>""", "")
-    
+
     # print template % (azlist.encode("utf-8"), termlist.encode("utf-8"), rdfdata.encode("ISO-8859-1"))
     template = re.sub(r"^#format \w*\n", "", template)
-    template = re.sub(r"\$VersionInfo\$", owlVersionInfo(m).encode("utf-8"), template) 
-    
+    template = re.sub(r"\$VersionInfo\$", owlVersionInfo(m).encode("utf-8"), template)
+
     template = template.replace('@NAME@', specProperty(m, spec_url, doap.name))
     template = template.replace('@URI@', spec_url)
     template = template.replace('@PREFIX@', spec_pre)
@@ -819,7 +853,7 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
 
     filename = os.path.basename(specloc)
     basename = filename[0:filename.rfind('.')]
-    
+
     template = template.replace('@PREFIXES@', str(prefixes_html))
     template = template.replace('@BASE@', spec_ns_str)
     template = template.replace('@AUTHORS@', specAuthors(m, spec_url))
@@ -829,18 +863,18 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     template = template.replace('@HEADER@', basename + '.h')
     template = template.replace('@MAIL@', 'devel@lists.lv2plug.in')
 
-    version = specVersion(m, spec_url) # (minor, micro, date)
+    version = specVersion(m, spec_url)  # (minor, micro, date)
     date_string = version[2]
     if date_string == "":
         date_string = "Undated"
 
     version_string = "%s.%s (%s)" % (version[0], version[1], date_string)
-    if version[0] == 0 or version[0] % 2 == 1 or version[1] % 2 == 1:
-        version_string += ' <span style="color: red; font-weight: bold">UNSTABLE</span>'
+    if version[0] == 0 or version[1] % 2 == 1:
+        version_string += ' <span style="color: red; font-weight: bold">EXPERIMENTAL</span>'
 
     template = template.replace('@REVISION@', version_string)
 
-    bundle_path = os.path.split(specloc[specloc.find(':')+1:])[0]
+    bundle_path = os.path.split(specloc[specloc.find(':') + 1:])[0]
     header_path = bundle_path + '/' + basename + '.h'
 
     other_files = ''
@@ -866,7 +900,7 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
 
         other_files += '<li><a href="%s">%s</a></li>' % (uri, uri)
 
-    template = template.replace('@FILES@', other_files);
+    template = template.replace('@FILES@', other_files)
 
     comment = getComment(m, spec_url)
     if comment != '':
@@ -940,12 +974,12 @@ Example:
 
 if __name__ == "__main__":
     """Ontology specification generator tool"""
-    
+
     args = sys.argv[1:]
     if (len(args) < 3):
         usage()
     else:
-        
+
         # Ontology
         specloc = "file:" + str(args[0])
 
@@ -958,7 +992,7 @@ if __name__ == "__main__":
         except Exception, e:
             print "Error reading from template \"" + temploc + "\": " + str(e)
             usage()
-        
+
         # Footer
         footerloc = temploc.replace('template', 'footer')
         footer = ''
@@ -970,7 +1004,7 @@ if __name__ == "__main__":
             usage()
 
         template = template.replace('@FOOTER@', footer)
-        
+
         # Style
         style_uri = args[2]
 
@@ -979,14 +1013,14 @@ if __name__ == "__main__":
 
         # Doxygen documentation directory
         doc_base = args[4]
-        
+
         # C symbol -> doxygen link mapping
         doc_links = args[5]
 
         template = template.replace('@STYLE_URI@', os.path.join(doc_base, style_uri))
 
         docdir = os.path.join(doc_base, 'ns', 'doc')
-        
+
         # Flags
         instances = False
         if len(args) > 5:
@@ -999,6 +1033,5 @@ if __name__ == "__main__":
                     spec_pre = flags[i + 1]
                     i += 1
                 i += 1
-        
-        save(dest, specgen(specloc, docdir, template, doc_links, instances=instances))
 
+        save(dest, specgen(specloc, docdir, template, doc_links, instances=instances))
