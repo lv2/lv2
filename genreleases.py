@@ -8,9 +8,10 @@ import re
 import shutil
 import sys
 
-lv2  = RDF.NS('http://lv2plug.in/ns/lv2core#')
+lv2 = RDF.NS('http://lv2plug.in/ns/lv2core#')
 
 manifests = glob.glob('ext/*.lv2/manifest.ttl')
+manifests += ['extensions/ui.lv2/manifest.ttl']
 
 try: os.mkdir('build')
 except: pass
@@ -31,20 +32,24 @@ for i in manifests:
 
     s = m.find_statements(RDF.Statement(None, lv2.minorVersion, None))
     if not s.current():
-        #print("No minor version found for %s\n" % i)
         continue
     minor = s.current().object.literal_value['string']
 
     s = m.find_statements(RDF.Statement(None, lv2.microVersion, None))
     if not s.current():
-        #print("No micro version found for %s\n" % i)
         continue
     micro = s.current().object.literal_value['string']
 
     if int(minor) != 0 and int(micro) % 2 == 0:
         print('Packaging %s extension version %s.%s' % (name, minor, micro))
+
+        distdir = 'build/spec/lv2-%s-%s.%s' % (name, minor, micro)
+        os.mkdir(distdir)
+        for f in glob.glob('%s/*.*' % dir):
+            shutil.copy(f, '%s/%s' % (distdir, os.path.basename(f)))
+
         wscript_template = open('wscript.template')
-        wscript = open('%s/wscript' % dir, 'w')
+        wscript = open('%s/wscript' % distdir, 'w')
         for l in wscript_template:
             wscript.write(l.replace(
                     '@NAME@', name).replace(
@@ -53,11 +58,13 @@ for i in manifests:
         wscript_template.close()
         wscript.close()
         try:
-            os.remove('%s/waf' % dir)
+            os.remove('%s/waf' % distdir)
         except:
             pass
-        os.symlink('../../waf', '%s/waf' % dir)
+        os.symlink('../../../waf', '%s/waf' % distdir)
 
-        os.system('tar --exclude=".*" -cjhf build/spec/lv2-%s-%s.%s.tar.bz2 %s' % (
-                name, minor, micro, dir))
-
+        olddir = os.getcwd()
+        os.chdir(distdir + '/..')
+        os.system('tar --exclude=".*" -cjhf %s.tar.bz2 %s' % (
+                os.path.basename(distdir), os.path.basename(distdir)))
+        os.chdir(olddir)
