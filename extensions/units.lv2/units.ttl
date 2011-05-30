@@ -32,8 +32,8 @@
     doap:created "2007-02-06" ;
     doap:homepage <http://lv2plug.in/ns/extensions/units> ;
     doap:release [
-        doap:revision "5.1pre1" ;
-        doap:created "2010-10-29"
+        doap:revision "5.2" ;
+        doap:created "2011-05-26"
     ] ;
     doap:maintainer [
         a foaf:Person ;
