@@ -51,18 +51,20 @@ def build(bld):
             data-access
             dyn-manifest
             event
+            files
             host-info
             instance-access
             midi
             osc
             parameter
+            persist
             port-groups
             presets
-            resize-port
-            string-port
             pui
             pui-event
             pui-gtk
+            resize-port
+            string-port
             uri-map
             uri-unmap
     '''
