@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+import os
+import shutil
+from waflib import Logs
+from waflib.extras import autowaf as autowaf
+
+# Variables for 'waf dist'
+APPNAME = 'eg-sampler.lv2'
+VERSION = '1.0.0'
+
+# Mandatory variables
+top = '.'
+out = 'build'
+
+def options(opt):
+    autowaf.set_options(opt)
+    opt.load('compiler_c')
+
+def configure(conf):
+    autowaf.configure(conf)
+
+    conf.line_just = 51
+    autowaf.display_header('Sampler Configuration')
+    conf.load('compiler_c')
+
+    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/lv2core/lv2.h')
+    autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
+                      atleast_version='1.0.0', mandatory=True)
+
+    conf.env.append_value('CFLAGS', '-std=c99')
+
+    # Set env['pluginlib_PATTERN']
+    pat = conf.env['cshlib_PATTERN']
+    if pat.startswith('lib'):
+        pat = pat[3:]
+    conf.env['pluginlib_PATTERN'] = pat
+    conf.env['pluginlib_EXT'] = pat[pat.rfind('.'):]
+
+    autowaf.display_msg(conf, "LV2 bundle directory",
+                        conf.env['LV2DIR'])
+    print('')
+
+def build(bld):
+    bundle = 'eg-sampler.lv2'
+
+    # Copy data files to build bundle (build/eg-sampler.lv2)
+    for i in [ 'sampler.ttl', 'manifest.ttl', 'monosample.wav' ]:
+        bld(rule         = 'cp ${SRC} ${TGT}',
+            source       = i,
+            target       = bld.path.get_bld().make_node('%s/%s' % (bundle, i)),
+            install_path = '${LV2DIR}/%s' % bundle)
+
+    # Create a build environment that builds module-style library names
+    # e.g. eg-sampler.so instead of libeg-sampler.so
+    # Note for C++ you must set cxxshlib_PATTERN instead
+    penv                   = bld.env.derive()
+    penv['cshlib_PATTERN'] = bld.env['pluginlib_PATTERN']
+
+    # Build plugin library
+    obj = bld(features     = 'c cshlib',
+              env          = penv,
+              source       = 'sampler.c',
+              name         = 'sampler',
+              target       = '%s/sampler' % bundle,
+              install_path = '${LV2DIR}/%s' % bundle,
+              use          = 'SNDFILE')
+

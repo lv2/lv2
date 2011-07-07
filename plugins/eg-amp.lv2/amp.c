@@ -1,6 +1,7 @@
 /*
   LV2 Amp Example Plugin
-  Copyright 2006-2011 Steve Harris, David Robillard.
+  Copyright 2006-2011 Steve Harris <steve@plugin.org.uk>,
+                      David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above

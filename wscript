@@ -20,14 +20,14 @@ def options(opt):
     autowaf.set_options(opt)
     opt.load('compiler_cc')
     opt.load('compiler_cxx')
-    opt.recurse('core.lv2')
-    opt.recurse('plugins/eg-amp.lv2')
+    for i in ['core.lv2', 'plugins/eg-amp.lv2', 'plugins/eg-sampler.lv2']:
+        opt.recurse(i)
 
 def configure(conf):
     autowaf.set_recursive()
     autowaf.configure(conf)
-    conf.recurse('core.lv2');
-    conf.recurse('plugins/eg-amp.lv2');
+    for i in ['core.lv2', 'plugins/eg-amp.lv2', 'plugins/eg-sampler.lv2']:
+        conf.recurse(i)
     conf.load('compiler_cc')
     conf.load('compiler_cxx')
     conf.env.append_value('CFLAGS', '-std=c99')
@@ -82,7 +82,8 @@ def build(bld):
 
     bld.add_post_fun(warn_lv2config)
 
-    bld.recurse('plugins/eg-amp.lv2')
+    for i in ['plugins/eg-amp.lv2', 'plugins/eg-sampler.lv2']:
+        bld.recurse(i)
 
 def warn_lv2config(ctx):
     if ctx.cmd == 'install':
