@@ -291,7 +291,6 @@ mkdir_parents(const char* dir_path)
 {
 	char*        path     = strdup(dir_path);
 	const size_t path_len = strlen(path);
-	size_t       last_sep = 0;
 	for (size_t i = 1; i <= path_len; ++i) {
 		if (path[i] == LV2CORE_DIR_SEP[0]) {
 			path[i] = '\0';
@@ -302,7 +301,6 @@ mkdir_parents(const char* dir_path)
 				return 1;
 			}
 			path[i] = LV2CORE_DIR_SEP[0];
-			last_sep = i;
 		}
 	}
 
