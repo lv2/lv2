@@ -1,6 +1,7 @@
 /*
   LV2 Amp Example Plugin
   Copyright 2006-2011 Steve Harris, David Robillard.
+
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
   copyright notice and this permission notice appear in all copies.
@@ -20,10 +21,13 @@
 
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
-#define AMP_URI    "http://lv2plug.in/plugins/eg-amp"
-#define AMP_GAIN   0
-#define AMP_INPUT  1
-#define AMP_OUTPUT 2
+#define AMP_URI "http://lv2plug.in/plugins/eg-amp"
+
+typedef enum {
+	AMP_GAIN   = 0,
+	AMP_INPUT  = 1,
+	AMP_OUTPUT = 2
+} PortIndex;
 
 typedef struct {
 	float* gain;
@@ -49,7 +53,7 @@ connect_port(LV2_Handle instance,
 {
 	Amp* amp = (Amp*)instance;
 
-	switch (port) {
+	switch ((PortIndex)port) {
 	case AMP_GAIN:
 		amp->gain = data;
 		break;
