@@ -38,14 +38,6 @@ def configure(conf):
                         conf.env['LV2DIR'])
     print('')
 
-def build_plugin(bld, lang, bundle, name, source, cflags=[], libs=[]):
-
-    if cflags != []:
-        obj.cflags = cflags
-        obj.cxxflags = cflags
-    if libs != []:
-        autowaf.use_lib(bld, obj, libs)
-
 def build(bld):
     bundle = 'eg-amp.lv2'
 
