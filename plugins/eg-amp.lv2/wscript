@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+import os
+import shutil
+from waflib import Logs
+from waflib.extras import autowaf as autowaf
+
+# Variables for 'waf dist'
+APPNAME = 'eg-amp.lv2'
+VERSION = '1.0.0'
+
+# Mandatory variables
+top = '.'
+out = 'build'
+
+def options(opt):
+    autowaf.set_options(opt)
+    opt.load('compiler_c')
+
+def configure(conf):
+    autowaf.configure(conf)
+
+    conf.line_just = 51
+    autowaf.display_header('Amp Configuration')
+    conf.load('compiler_c')
+
+    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/lv2core/lv2.h')
+
+    conf.env.append_value('CFLAGS', '-std=c99')
+
+    # Set env['pluginlib_PATTERN']
+    pat = conf.env['cshlib_PATTERN']
+    if pat.startswith('lib'):
+        pat = pat[3:]
+    conf.env['pluginlib_PATTERN'] = pat
+    conf.env['pluginlib_EXT'] = pat[pat.rfind('.'):]
+
+    autowaf.display_msg(conf, "LV2 bundle directory",
+                        conf.env['LV2DIR'])
+    print('')
+
+def build_plugin(bld, lang, bundle, name, source, cflags=[], libs=[]):
+
+    if cflags != []:
+        obj.cflags = cflags
+        obj.cxxflags = cflags
+    if libs != []:
+        autowaf.use_lib(bld, obj, libs)
+
+def build(bld):
+    bundle = 'eg-amp.lv2'
+
+    # Copy data files to build bundle (build/eg-amp.lv2)
+    for i in [ 'amp.ttl', 'manifest.ttl' ]:
+        bld(rule         = 'cp ${SRC} ${TGT}',
+            source       = i,
+            target       = bld.path.get_bld().make_node('%s/%s' % (bundle, i)),
+            install_path = '${LV2DIR}/%s' % bundle)
+
+    # Create a build environment that builds module-style library names
+    # e.g. eg-amp.so instead of libeg-amp.so
+    # Note for C++ you must set cxxshlib_PATTERN instead
+    penv                   = bld.env.derive()
+    penv['cshlib_PATTERN'] = bld.env['pluginlib_PATTERN']
+
+    # Build plugin library
+    obj = bld(features     = 'c cshlib',
+              env          = penv,
+              source       = 'amp.c',
+              name         = 'amp',
+              target       = '%s/amp' % bundle,
+              install_path = '${LV2DIR}/%s' % bundle)
+

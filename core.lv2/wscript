@@ -86,7 +86,7 @@ def build(bld):
         bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.h')
 
         # Pkgconfig file
-        autowaf.build_pc(bld, 'LV2CORE', LV2CORE_VERSION, [])
+        autowaf.build_pc(bld, 'LV2CORE', LV2CORE_VERSION, '', [])
 
     # Bundle (data)
     bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.ttl manifest.ttl')

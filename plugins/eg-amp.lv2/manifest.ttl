@@ -1,0 +1,10 @@
+# LV2 Plugin Manifest
+# Lists where plugins' data files and shared objects reside.
+
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://lv2plug.in/plugins/eg-amp>
+	a lv2:Plugin ;
+	lv2:binary <amp.so>  ;
+	rdfs:seeAlso <amp.ttl> .
