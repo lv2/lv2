@@ -1,8 +1,8 @@
 /*
   LV2 Sampler Example Plugin
   Copyright 2011 Gabriel M. Beddingfield <gabriel@teuton.org>,
-  James Morris <jwm.art.net@gmail.com>,
-  David Robillard <d@drobilla.net>
+                 James Morris <jwm.art.net@gmail.com>,
+                 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -19,11 +19,11 @@
 
 /**
    @file sampler.c Sampler Plugin
- 
+
    A simple example of an LV2 sampler that dynamically loads samples (based on
    incoming events) and also triggers their playback (based on incoming MIDI
    note events).  The sample must be monophonic.
- 
+
    So that the runSampler() method stays real-time safe, the plugin creates a
    worker thread (worker_thread_main) that listens for file loading events.  It
    loads everything in plugin->pending_samp and then signals the runSampler()
@@ -44,9 +44,13 @@
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 #include "lv2/lv2plug.in/ns/ext/event/event-helpers.h"
 #include "lv2/lv2plug.in/ns/ext/uri-map/uri-map.h"
+#include "lv2/lv2plug.in/ns/ext/persist/persist.h"
+
+#define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
 
 #define SAMPLER_URI    "http://lv2plug.in/plugins/eg-sampler"
 #define MIDI_EVENT_URI "http://lv2plug.in/ns/ext/midi#MidiEvent"
+#define FILENAME_URI   SAMPLER_URI "#filename"
 #define STRING_BUF     8192
 
 enum {
@@ -63,6 +67,9 @@ typedef struct {
 } SampleFile;
 
 typedef struct {
+	/* Features */
+	LV2_URI_Map_Feature* uri_map;
+
 	/* Sample */
 	SampleFile*     samp;
 	SampleFile*     pending_samp;
@@ -91,8 +98,8 @@ handle_load_sample(Sampler* plugin)
 
 	SF_INFO* const info   = &plugin->pending_samp->info;
 	SNDFILE* const sample = sf_open(plugin->pending_samp->filepath,
-                                    SFM_READ,
-                                    info);
+	                                SFM_READ,
+	                                info);
 
 	if (!sample
 	    || !info->frames
@@ -124,9 +131,7 @@ handle_load_sample(Sampler* plugin)
 void*
 worker_thread_main(void* arg)
 {
-	Sampler* plugin;
-
-	plugin = (Sampler*)arg;
+	Sampler* plugin = (Sampler*)arg;
 
 	pthread_mutex_lock(&plugin->pending_samp_mutex);
 	while (true) {
@@ -134,7 +139,7 @@ worker_thread_main(void* arg)
 		pthread_cond_wait(&plugin->pending_samp_cond,
 		                  &plugin->pending_samp_mutex);
 
-        /* Then load it */
+		/* Then load it */
 		handle_load_sample(plugin);
 	}
 	pthread_mutex_unlock(&plugin->pending_samp_mutex);
@@ -168,7 +173,7 @@ connect_port(LV2_Handle instance,
 		plugin->eventPort = (LV2_Event_Buffer*)data;
 		break;
 	case SAMPLER_OUT:
-        plugin->outputPort = (float*)data;
+		plugin->outputPort = (float*)data;
 		break;
 	default:
 		break;
@@ -212,12 +217,10 @@ instantiate(const LV2_Descriptor*     descriptor,
 	/* Scan host features for event and uri-map */
 	for (int i = 0; features[i]; ++i) {
 		if (strcmp(features[i]->URI, LV2_URI_MAP_URI) == 0) {
-			LV2_URI_Map_Feature*
-                map_feature = (LV2_URI_Map_Feature*)features[i]->data;
-
-			plugin->midi_event_id
-			    = map_feature->uri_to_id(map_feature->callback_data,
-			                             LV2_EVENT_URI, MIDI_EVENT_URI);
+			plugin->uri_map = (LV2_URI_Map_Feature*)features[i]->data;
+			plugin->midi_event_id = plugin->uri_map->uri_to_id(
+				plugin->uri_map->callback_data,
+				LV2_EVENT_URI, MIDI_EVENT_URI);
 		} else if (strcmp(features[i]->URI, LV2_EVENT_URI) == 0) {
 			plugin->event_ref = (LV2_Event_Feature*)features[i]->data;
 		}
@@ -256,16 +259,16 @@ run(LV2_Handle instance,
 
 	/* Read incoming events */
 	LV2_Event_Iterator iterator;
-    for (lv2_event_begin(&iterator, plugin->eventPort);
-         lv2_event_is_valid(&iterator);
-         lv2_event_increment(&iterator)) {
-         
+	for (lv2_event_begin(&iterator, plugin->eventPort);
+	     lv2_event_is_valid(&iterator);
+	     lv2_event_increment(&iterator)) {
+
 		ev = lv2_event_get(&iterator, NULL);
 
 		if (ev->type == 0) {
 			if (plugin->event_ref) {
 				plugin->event_ref->lv2_event_unref(
-				    plugin->event_ref->callback_data, ev);
+					plugin->event_ref->callback_data, ev);
 			}
 		} else if (ev->type == plugin->midi_event_id) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);
@@ -331,6 +334,59 @@ run(LV2_Handle instance,
 	}
 }
 
+static uint32_t
+uri_to_id(Sampler* plugin, const char* uri)
+{
+	return plugin->uri_map->uri_to_id(plugin->uri_map->callback_data,
+	                                  NULL,
+	                                  uri);
+}
+
+static void
+save(LV2_Handle                 instance,
+     LV2_Persist_Store_Function store,
+     void*                      callback_data)
+{
+	Sampler* plugin = (Sampler*)instance;
+	store(callback_data,
+	      uri_to_id(plugin, FILENAME_URI),
+	      plugin->samp->filepath,
+	      strlen(plugin->samp->filepath) + 1,
+	      uri_to_id(plugin, NS_ATOM "String"),
+	      LV2_PERSIST_IS_POD | LV2_PERSIST_IS_PORTABLE);
+}
+
+static void
+restore(LV2_Handle                    instance,
+        LV2_Persist_Retrieve_Function retrieve,
+        void*                         callback_data)
+{
+	Sampler* plugin = (Sampler*)instance;
+
+	size_t   size;
+	uint32_t type;
+	uint32_t flags;
+
+	const void* value = retrieve(
+		callback_data,
+		uri_to_id(plugin, FILENAME_URI),
+		&size, &type, &flags);
+
+	if (value) {
+		printf("Restored filename %s\n", (const char*)value);
+	}
+}
+
+const void*
+extension_data(const char* uri)
+{
+	static const LV2_Persist persist = { save, restore };
+	if (!strcmp(uri, LV2_PERSIST_URI)) {
+		return &persist;
+	}
+	return NULL;
+}
+
 static const LV2_Descriptor descriptor = {
 	SAMPLER_URI,
 	instantiate,
@@ -339,13 +395,13 @@ static const LV2_Descriptor descriptor = {
 	run,
 	NULL, // deactivate,
 	cleanup,
-	NULL, // extension_data
+	extension_data
 };
 
 LV2_SYMBOL_EXPORT
 const LV2_Descriptor* lv2_descriptor(uint32_t index)
 {
-    switch (index) {
+	switch (index) {
 	case 0:
 		return &descriptor;
 	default:

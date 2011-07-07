@@ -26,7 +26,8 @@
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	lv2:requiredFeature <http://lv2plug.in/ns/ext/uri-map> ;
 	lv2:optionalFeature lv2:hardRtCapable ,
-		<http://lv2plug.in/ns/ext/event> ;
+		<http://lv2plug.in/ns/ext/event> ,
+		<http://lv2plug.in/ns/ext/persist> ;
 	lv2:port [
 		a lv2:InputPort ,
 			lv2ev:EventPort ;

@@ -24,6 +24,9 @@ def configure(conf):
     conf.load('compiler_c')
 
     autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/lv2core/lv2.h')
+    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/event/event-helpers.h')
+    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/uri-map/uri-map.h')
+    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/persist/persist.h')
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)
 

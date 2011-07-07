@@ -102,7 +102,7 @@ cleanup(LV2_Handle instance)
 }
 
 const void*
-extension_data(const char * uri)
+extension_data(const char* uri)
 {
 	return NULL;
 }
