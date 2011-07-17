@@ -17,16 +17,19 @@ top = '.'
 out = 'build'
 
 def options(opt):
+    autowaf.set_options(opt)
+    opt.load('compiler_c')
     opt.add_option('--default-lv2-path', type='string', default='',
                    dest='default_lv2_path',
                    help="Default LV2 path to use if $LV2_PATH is unset")
     opt.add_option('--bundle-only', action='store_true', default=False,
                    dest='bundle_only',
                    help="Only install LV2 bundle (not header or pkg-config file)")
-    autowaf.set_options(opt)
 
 def configure(conf):
     autowaf.configure(conf)
+    conf.load('compiler_c')
+
     lv2core_path_sep = ':'
     lv2core_dir_sep  = '/'
     if sys.platform == 'win32':
