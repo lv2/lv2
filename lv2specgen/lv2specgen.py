@@ -927,7 +927,7 @@ def getNamespaces(parser):
     """Return a prefix:URI dictionary of all namespaces seen during parsing"""
     count = Redland.librdf_parser_get_namespaces_seen_count(parser._parser)
     nspaces = {}
-    for index in range(0, count - 1):
+    for index in range(0, count):
         prefix = Redland.librdf_parser_get_namespaces_seen_prefix(parser._parser, index)
         uri_obj = Redland.librdf_parser_get_namespaces_seen_uri(parser._parser, index)
         if uri_obj is None:
