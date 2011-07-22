@@ -41,10 +41,10 @@
 
 #include <sndfile.h>
 
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 #include "lv2/lv2plug.in/ns/ext/event/event-helpers.h"
-#include "lv2/lv2plug.in/ns/ext/uri-map/uri-map.h"
 #include "lv2/lv2plug.in/ns/ext/persist/persist.h"
+#include "lv2/lv2plug.in/ns/ext/uri-map/uri-map.h"
+#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
 #define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
 
