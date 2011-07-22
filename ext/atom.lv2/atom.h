@@ -45,7 +45,7 @@
    The type field defines how to interpret an atom.
  
    All atoms are by definition Plain Old Data (POD) and may be safely copied
-   (e.g. with memcpy) using the size field, except atoms with type 0. An atom
+   (e.g. with memcpy) using the size field, except atoms with type 0.  An atom
    with type 0 is a reference, and may only be used via the functions provided
    in LV2_Blob_Support (e.g. it MUST NOT be manually copied).
  
