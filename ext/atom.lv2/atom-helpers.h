@@ -1,42 +1,38 @@
-/* lv2_atom_helpers.h - Helper functions for the LV2 atoms extension.
- * Copyright (C) 2008-2010 David Robillard <http://drobilla.net>
- *
- * This header is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as published
- * by the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This header is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
- * License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this header; if not, write to the Free Software Foundation,
- * Inc., 59 Temple Place, Suite 330, Boston, MA 01222-1307 USA
- */
+/*
+  Copyright 2008-2011 David Robillard <http://drobilla.net>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
+
+/**
+   @file atom-helpers.h Helper functions for the LV2 Atom extension.
+ 
+   These functions are provided for convenience only, use of them is not
+   required for supporting atoms.
+ 
+   Note that these functions are all static inline which basically means:
+   do not take the address of these functions.
+*/
 
 #ifndef LV2_ATOM_HELPERS_H
 #define LV2_ATOM_HELPERS_H
 
-#include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
+#include <stdint.h>
 #include <stdio.h>
+#include <string.h>
+
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
-
-/** @file
- * Helper functions for the LV2 Atom extension
- * <http://lv2plug.in/ns/ext/atom>.
- *
- * These functions are provided for convenience only, use of them is not
- * required for supporting atoms (i.e. the definition of atoms in memory
- * is described in atom.h and NOT by this API).
- *
- * Note that these functions are all static inline which basically means:
- * do not take the address of these functions.
- */
-
 
 /** Pad a size to 4 bytes (32 bits) */
 static inline uint16_t
@@ -47,28 +43,28 @@ lv2_atom_pad_size(uint16_t size)
 
 typedef LV2_Atom_Property* LV2_Object_Iter;
 
-/** Get an iterator pointing to @a prop in some LV2_Object */
+/** Get an iterator pointing to @c prop in some LV2_Object */
 static inline LV2_Object_Iter
 lv2_object_begin(const LV2_Atom* obj)
 {
 	return (LV2_Object_Iter)(((const LV2_Object*)obj->body)->properties);
 }
 
-/** Return true iff @a iter has reached the end of @a object */
+/** Return true iff @c iter has reached the end of @c object */
 static inline bool
 lv2_object_iter_is_end(const LV2_Atom* object, LV2_Object_Iter iter)
 {
 	return (uint8_t*)iter >= ((uint8_t*)object->body + object->size);
 }
 
-/** Return true iff @a l points to the same property as @a r */
+/** Return true iff @c l points to the same property as @c r */
 static inline bool
 lv2_object_iter_equals(const LV2_Object_Iter l, const LV2_Object_Iter r)
 {
 	return l == r;
 }
 
-/** Return an iterator to the property following @a iter */
+/** Return an iterator to the property following @c iter */
 static inline LV2_Object_Iter
 lv2_object_iter_next(const LV2_Object_Iter iter)
 {
@@ -76,42 +72,45 @@ lv2_object_iter_next(const LV2_Object_Iter iter)
 		(uint8_t*)iter + sizeof(LV2_Atom_Property) + lv2_atom_pad_size(iter->value.size));
 }
 
-/** Return the property pointed to by @a iter */
+/** Return the property pointed to by @c iter */
 static inline LV2_Atom_Property*
 lv2_object_iter_get(LV2_Object_Iter iter)
 {
 	return (LV2_Atom_Property*)iter;
 }
 
-/** A macro for iterating over all properties of an Object.
- * @param obj  The object to iterate over
- * @param iter The name of the iterator
- *
- * This macro is used similarly to a for loop (which it expands to), e.g.:
- * <pre>
- * LV2_OBJECT_FOREACH(object, i) {
- *    LV2_Atom_Property* prop = lv2_object_iter_get(i);
- *    // Do things with prop here...
- * }
- * </pre>
- */
+/**
+   A macro for iterating over all properties of an Object.
+   @param obj  The object to iterate over
+   @param iter The name of the iterator
+ 
+   This macro is used similarly to a for loop (which it expands to), e.g.:
+   <pre>
+   LV2_OBJECT_FOREACH(object, i) {
+       LV2_Atom_Property* prop = lv2_object_iter_get(i);
+       // Do things with prop here...
+   }
+   </pre>
+*/
 #define LV2_OBJECT_FOREACH(obj, iter) \
 	for (LV2_Object_Iter (iter) = lv2_object_begin(obj); \
 	     !lv2_object_iter_is_end(obj, (iter)); \
 	     (iter) = lv2_object_iter_next(iter))
 
-/** Append a Property body to an Atom that contains properties (e.g. atom:Object).
- * This function will write the property body (not including an LV2_Object
- * header) at lv2_atom_pad_size(body + size).  Thus, it can be used with any
- * Atom type that contains headerless 32-bit aligned properties.
- * @param object Pointer to the atom that contains the property to add.  object.size
- *        must be valid, but object.type is ignored.
- * @param key The key of the new property
- * @param value_type The type of the new value
- * @param value_size The size of the new value
- * @param value_body Pointer to the new value's data
- * @return a pointer to the new LV2_Atom_Property in @a body.
- */
+/**
+   Append a Property body to an Atom that contains properties (e.g. atom:Object).
+   @param object Pointer to the atom that contains the property to add.  object.size
+   must be valid, but object.type is ignored.
+   @param key The key of the new property
+   @param value_type The type of the new value
+   @param value_size The size of the new value
+   @param value_body Pointer to the new value's data
+   @return a pointer to the new LV2_Atom_Property in @c body.
+
+   This function will write the property body (not including an LV2_Object
+   header) at lv2_atom_pad_size(body + size).  Thus, it can be used with any
+   Atom type that contains headerless 32-bit aligned properties.
+*/
 static inline LV2_Atom_Property*
 lv2_atom_append_property(LV2_Atom*      object,
                          uint32_t       key,
@@ -129,14 +128,14 @@ lv2_atom_append_property(LV2_Atom*      object,
 	return prop;
 }
 
-/** Return true iff @a atom is NULL */
+/** Return true iff @c atom is NULL */
 static inline bool
 lv2_atom_is_null(LV2_Atom* atom)
 {
 	return !atom || (atom->type == 0 && atom->size == 0);
 }
 
-/** Return true iff @a object has rdf:type @a type */
+/** Return true iff @c object has rdf:type @c type */
 static inline bool
 lv2_atom_is_a(LV2_Atom* object,
               uint32_t  rdf_type,
@@ -174,13 +173,15 @@ typedef struct {
 	const LV2_Atom* value; ///< Possibly set by query function to the found value
 } LV2_Object_Query;
 
-/** "Query" an object, getting a pointer to the values for various keys.
- * The value pointer of each item in @a q will be set to the location of
- * the corresponding value in @a object.  Every value pointer in @a query
- * MUST be initialised to NULL.  This function reads @a object in a single
- * linear sweep.  By allocating @a q on the stack, objects can be "queried"
- * quickly without allocating any memory.  This function is realtime safe.
- */
+/**
+   "Query" an object, getting a pointer to the values for various keys.
+
+   The value pointer of each item in @c query will be set to the location of
+   the corresponding value in @c object.  Every value pointer in @c query MUST
+   be initialised to NULL.  This function reads @c object in a single linear
+   sweep.  By allocating @c query on the stack, objects can be "queried"
+   quickly without allocating any memory.  This function is realtime safe.
+*/
 static inline int
 lv2_object_query(const LV2_Atom* object, LV2_Object_Query* query)
 {
@@ -206,4 +207,3 @@ lv2_object_query(const LV2_Atom* object, LV2_Object_Query* query)
 }
 
 #endif /* LV2_ATOM_HELPERS_H */
-
