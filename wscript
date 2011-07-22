@@ -69,6 +69,7 @@ def build(bld):
             string-port
             uri-map
             uri-unmap
+            urid
     '''
     for e in ext.split():
         build_extension(bld, e, 'ext')

@@ -1,0 +1,57 @@
+# LV2 URID Extension
+# Copyright 2011 Gabriel M. Beddingfield <gabrbedd@gmail.com>
+# Copyright 2008-2011 David Robillard <http://drobilla.net>
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix urid: <http://lv2plug.in/ns/ext/urid#> .
+
+<http://lv2plug.in/ns/ext/urid>
+	a lv2:Specification ;
+	doap:license <http://opensource.org/licenses/isc-license> ;
+	doap:name "LV2 URID" ;
+    doap:release [
+        doap:revision "0.1" ;
+        doap:created "2011-07-20"
+    ] ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "Gabriel M. Beddingfield" ;
+		foaf:homepage <http://gabe.is-a-geek.org/>
+	] ;
+    lv2:documentation """
+This extension defines a simple mechanism for plugins to map URIs to and from
+integers, usually for performance reasons (e.g. processing events typed by URIs
+in real time).  Typically, plugins map URIs to integers for things they
+"understand" at instantiation time, and store those values for use in the audio
+thread without doing any string comparison.  This allows for the extensibility
+of RDF but with the performance of integers.
+
+This extension is intended as an improved and simpler replacement for the
+<a href="http://lv2plug.in/ns/ext/uri-map">uri-map</a> extension, since the
+<q>map</q> context parameter has been found problematic.
+""" .
+
+urid:URIMap
+    a lv2:Feature ;
+    lv2:documentation """
+An lv2:Feature which provides URI mapping and unmapping capability.  To support
+this feature, the host must pass an LV2_Feature to
+LV2_Descriptor::instantiate with <em>URI</em>
+<q>http://lv2plug.in/ns/ext/urid#URIMap</q> and <em>data</em> pointed to an instance of
+LV2_URID_Feature.
+""" .
