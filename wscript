@@ -65,6 +65,7 @@ def build(bld):
             pui
             pui-event
             pui-gtk
+            reference
             resize-port
             string-port
             uri-map
