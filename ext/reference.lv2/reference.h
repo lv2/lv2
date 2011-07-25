@@ -28,6 +28,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
+
 /**
    Dynamically Allocated Data.
  
@@ -40,6 +42,8 @@
    LV2_Blob_Support.
 */
 typedef void* LV2_Blob;
+
+typedef LV2_Atom LV2_Reference;
 
 typedef void* LV2_Blob_Support_Data;
 
@@ -81,17 +85,17 @@ typedef struct {
 	   accessed, copied, or destroyed). The actual payload of the blob can
 	   be accessed with LV2_Blob_Support.blob_get.
 	*/
-	LV2_Blob (*ref_get)(LV2_Blob_Support_Data    data,
-	                    LV2_Reference_Reference* ref);
+	LV2_Blob (*ref_get)(LV2_Blob_Support_Data data,
+	                    LV2_Reference*        ref);
 
 	/**
 	   Copy a reference.
 	   This copies a reference but not the blob it refers to,
 	   i.e. after this call @a dst and @a src refer to the same LV2_Blob.
 	*/
-	void (*ref_copy)(LV2_Blob_Support_Data    data,
-	                 LV2_Reference_Reference* dst,
-	                 LV2_Reference_Reference* src);
+	void (*ref_copy)(LV2_Blob_Support_Data data,
+	                 LV2_Reference*        dst,
+	                 LV2_Reference*        src);
 
 	/**
 	   Reset (release) a reference.
@@ -110,8 +114,8 @@ typedef struct {
 	   <li>Release it with ref_reset.</li></ul></li>
 	   </ul>
 	*/
-	void (*ref_reset)(LV2_Blob_Support_Data    data,
-	                  LV2_Reference_Reference* ref);
+	void (*ref_reset)(LV2_Blob_Support_Data data,
+	                  LV2_Reference*        ref);
 
 	/**
 	   Initialize a reference to point to a newly allocated Blob.
@@ -129,11 +133,11 @@ typedef struct {
 	   @param type ID of type of blob to allocate.
 	   @param size Size of blob to allocate in bytes.
 	*/
-	void (*blob_new)(LV2_Blob_Support_Data    data,
-	                 LV2_Reference_Reference* ref,
-	                 LV2_Blob_Destroy         destroy,
-	                 uint32_t                 type,
-	                 size_t                   size);
+	void (*blob_new)(LV2_Blob_Support_Data data,
+	                 LV2_Reference*        ref,
+	                 LV2_Blob_Destroy      destroy,
+	                 uint32_t              type,
+	                 size_t                size);
 	
 	/**
 	   Get blob's type as an ID.
