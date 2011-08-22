@@ -12,6 +12,7 @@ lv2 = RDF.NS('http://lv2plug.in/ns/lv2core#')
 
 manifests = glob.glob('ext/*.lv2/manifest.ttl')
 manifests += ['extensions/ui.lv2/manifest.ttl']
+manifests += ['extensions/units.lv2/manifest.ttl']
 
 try: os.mkdir('build')
 except: pass
