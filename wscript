@@ -50,6 +50,7 @@ def build(bld):
     ext = '''
             atom
             contexts
+            cv-port
             data-access
             dyn-manifest
             event
