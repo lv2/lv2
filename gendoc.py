@@ -32,9 +32,9 @@ TAGFILE    = './doclinks'
 devnull = open(os.devnull, 'w')
 
 # Generate code (headers) documentation
-print "** Generating header documentation"
+print('** Generating header documentation')
 #shutil.copy('Doxyfile', os.path.join('upload', 'Doxyfile'))
-print ' * Calling doxygen in ' + os.getcwd()
+print(' * Calling doxygen in ' + os.getcwd())
 subprocess.call('doxygen', stdout=devnull)
 
 
@@ -76,7 +76,7 @@ for cn in root.childNodes:
                                                    mafile, manchor))
 bettertags.close()
 
-print '** Generating core documentation'
+print('** Generating core documentation')
 
 lv2_outdir = os.path.join(out_base, 'lv2core')
 os.mkdir(lv2_outdir)
@@ -101,7 +101,7 @@ footer = open('./lv2specgen/footer.html', 'r')
 
 # Generate main (ontology) documentation and indices
 for dir in ['ext', 'extensions']:
-    print "** Generating %s%s documentation" % (URIPREFIX, dir)
+    print("** Generating %s%s documentation" % (URIPREFIX, dir))
 
     outdir = os.path.join(out_base, dir)
 
@@ -127,16 +127,18 @@ for dir in ['ext', 'extensions']:
         b = b[b.find('/') + 1:]
 
         # Get extension URI
-        ext = subprocess.Popen(['roqet', '-q', '-e', """
+        ext = str(subprocess.Popen(['roqet', '-q', '-e', """
 PREFIX lv2: <http://lv2plug.in/ns/lv2core#>
 SELECT ?ext FROM <%s.lv2/%s.ttl> WHERE { ?ext a lv2:Specification }
-""" % (os.path.join(dir, b), b)], stdout=subprocess.PIPE).communicate()[0]
+""" % (os.path.join(dir, b), b)], stdout=subprocess.PIPE).communicate()[0])
 
         if ext == "":
             continue
 
-        ext = re.sub('^result: \[ext=uri<', '', ext)
-        ext = re.sub('>\]$', '', ext).strip()
+        ext = re.sub("^b'", '', ext)
+        ext = re.sub("\n'$", '', ext)
+        ext = re.sub('.*result: \[ext=uri<', '', ext)
+        ext = re.sub('>.*$', '', ext).strip()
 
         # Get revision
         query = """
@@ -145,12 +147,14 @@ PREFIX doap: <http://usefulinc.com/ns/doap#>
 SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev ] }
 """ % (os.path.join(dir, b), b, ext)
 
-        rev = subprocess.Popen(['roqet', '-q', '-e', query],
-                               stdout=subprocess.PIPE).communicate()[0]
+        rev = str(subprocess.Popen(['roqet', '-q', '-e', query],
+                                   stdout=subprocess.PIPE).communicate()[0])
 
         if rev != '':
-            rev = re.sub('^result: \[rev=string\("', '', rev)
-            rev = re.sub('"\)\]$', '', rev).strip()
+            rev = re.sub("^b'", '', rev)
+            rev = re.sub("\n'$", '', rev)
+            rev = re.sub('.*result: \[rev=string\("', '', rev)
+            rev = re.sub('"\)\].*$', '', rev).strip()
         else:
             rev = '0'
 
@@ -168,7 +172,7 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
 
         specgendir = '../../../lv2specgen/'
         if (os.access(outdir + '/%s.lv2/%s.ttl' % (b, b), os.R_OK)):
-            print ' * Calling lv2specgen for %s%s/%s' %(URIPREFIX, dir, b)
+            print(' * Calling lv2specgen for %s%s/%s' %(URIPREFIX, dir, b))
             subprocess.call([specgendir + 'lv2specgen.py',
                              '%s.lv2/%s.ttl' % (b, b),
                              specgendir + 'template.html',
@@ -206,7 +210,7 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
     index_html += '</body></html>\n'
 
     index_file = open(os.path.join(outdir, 'index.html'), 'w')
-    print >>index_file, index_html
+    index_file.write(index_html)
     index_file.close()
 
 # Copy stylesheet

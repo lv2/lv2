@@ -784,11 +784,13 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
         p = RDF.Parser(name="guess")
         p.parse_into_model(m, specloc)
 
-    except IOError, e:
-        print "Error reading from ontology:", str(e)
+    except IOError:
+        e = sys.exc_info()[1]
+        print('Error reading from ontology:' + str(e))
         usage()
-    except RDF.RedlandError, e:
-        print "Error parsing the ontology"
+    except RDF.RedlandError:
+        e = sys.exc_info()[1]
+        print('Error parsing the ontology')
 
     spec_url = getOntologyNS(m)
 
@@ -810,7 +812,7 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     prefixes_html += "</span>"
 
     if spec_pre is None:
-        print 'No namespace prefix for specification defined'
+        print('No namespace prefix for specification defined')
         sys.exit(1)
 
     ns_list[spec_ns_str] = spec_pre
@@ -839,7 +841,7 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     rdfdata = re.sub(r"(<!DOCTYPE[^]]*]>)", "", rdfdata)
     #rdfdata.replace("""<?xml version="1.0"?>""", "")
 
-    # print template % (azlist.encode("utf-8"), termlist.encode("utf-8"), rdfdata.encode("ISO-8859-1"))
+    # print(template % (azlist.encode("utf-8"), termlist.encode("utf-8"), rdfdata.encode("ISO-8859-1")))
     template = re.sub(r"^#format \w*\n", "", template)
     template = re.sub(r"\$VersionInfo\$", owlVersionInfo(m).encode("utf-8"), template)
 
@@ -919,8 +921,9 @@ def save(path, text):
         f.write(text)
         f.flush()
         f.close()
-    except Exception, e:
-        print "Error writing to file \"" + path + "\": " + str(e)
+    except Exception:
+        e = sys.exc_info()[1]
+        print('Error writing to file "' + path + '": ' + str(e))
 
 
 def getNamespaces(parser):
@@ -954,7 +957,7 @@ def getOntologyNS(m):
 
 def usage():
     script = os.path.basename(sys.argv[0])
-    print """Usage: %s ONTOLOGY TEMPLATE STYLE OUTPUT [FLAGS]
+    print("""Usage: %s ONTOLOGY TEMPLATE STYLE OUTPUT [FLAGS]
 
         ONTOLOGY : Path to ontology file
         TEMPLATE : HTML template path
@@ -968,7 +971,7 @@ def usage():
 
 Example:
     %s lv2_foos.ttl template.html style.css lv2_foos.html ../doc -i -p foos
-""" % (script, script)
+""" % (script, script))
     sys.exit(-1)
 
 
@@ -989,8 +992,9 @@ if __name__ == "__main__":
         try:
             f = open(temploc, "r")
             template = f.read()
-        except Exception, e:
-            print "Error reading from template \"" + temploc + "\": " + str(e)
+        except Exception:
+            e = sys.exc_info()[1]
+            print("Error reading from template \"" + temploc + "\": " + str(e))
             usage()
 
         # Footer
@@ -999,8 +1003,9 @@ if __name__ == "__main__":
         try:
             f = open(footerloc, "r")
             footer = f.read()
-        except Exception, e:
-            print "Error reading from footer \"" + footerloc + "\": " + str(e)
+        except Exception:
+            e = sys.exc_info()[1]
+            print("Error reading from footer \"" + footerloc + "\": " + str(e))
             usage()
 
         template = template.replace('@FOOTER@', footer)
