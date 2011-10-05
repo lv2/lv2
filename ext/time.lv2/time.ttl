@@ -1,0 +1,54 @@
+# LV2 Time Extension
+# Copyright 2011 David Robillard <d@drobilla.net>
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+@prefix time: <http://lv2plug.in/ns/ext/time#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://lv2plug.in/ns/ext/time>
+	a lv2:Specification ;
+	doap:name "LV2 Time" ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name	 "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
+	] ;
+	lv2:documentation """
+<p>This extension defines a structure type, LV2_Time_Position, which
+describes a tempo and position along a timeline.  This can be used as
+an event payload by the host to notify plugins about the current
+tempo and position.</p>
+""" .
+
+time:Position
+	a rdfs:Class ;
+    rdfs:label "LV2 time position" ;
+    lv2:documentation """
+Type for an LV2_Time_Position struct.  This can be mapped to an integer
+and used as the type field of an event to indicate that the event payload
+is an LV2_Time_Positon struct.  Plugins can indicate that a port supports
+time information using the ev:supports predicate, e.g.:
+<pre>
+	<plugin> lv2:port [
+		a ev:EventPort ;
+		ev:supports time:Position
+	]
+</pre>
+""" .
