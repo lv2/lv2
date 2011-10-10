@@ -2,6 +2,8 @@ lv2core (UNRELEASED) unstable; urgency=low
 
   * Remove lv2config in favour of the convention that extension bundles simply
     install headers to standard URI-like include paths
+  * Switch to simple BSD-style (ISC) license (with permission of all
+    contributors to lv2.h and it's ancestor, ladspa.h)
 
  -- David Robillard <d@drobilla.net>  UNRELEASED
 
