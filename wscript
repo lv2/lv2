@@ -85,14 +85,5 @@ def build(bld):
     for e in extensions.split():
         build_extension(bld, e, 'extensions')
 
-    bld.add_post_fun(warn_lv2config)
-
     #for i in ['plugins/eg-amp.lv2', 'plugins/eg-sampler.lv2']:
     #    bld.recurse(i)
-
-def warn_lv2config(ctx):
-    if ctx.cmd == 'install':
-        Logs.warn('''
-* LV2 Extension(s) Installed
-* You need to run lv2config to update extension headers
-''')
