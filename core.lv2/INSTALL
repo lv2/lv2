@@ -4,20 +4,15 @@ is included in this source distribution.
 = LV2Core =
 
 This package contains everything necessary to compile against and/or use LV2
-plugins and extensions: a header file, pkg-config file, LV2 bundle (with Turtle
-files), and a utility program (lv2config).
+plugins and extensions: a header file, pkg-config file, and LV2 bundle (with
+Turtle files).
 
 The configure option --bundle-only can be used to install only the bundle. This
-is useful for installing the bundle to a user-specific location (e.g. ~/.lv2).
+is useful for installing the bundle to a project-specific or user-specific
+location (e.g. ~/.lv2).
 
-Any C header(s) are a part of the bundle. Packages must not separate the
-header(s) into a separate package from the bundle, as this would break
-lv2config. The utility lv2config builds standard LV2 style include directory
-trees, and is necessary for compiling LV2 code. Programs can use pkg-config to
-check for package 'lv2core' to ensure all this data (bundle, including any
-contained header(s), and lv2config) is available on the system. Programs may
-also simply check for the header "lv2/lv2plug.in/ns/lv2core/lv2.h".
-
+See README for details on how to correctly package LV2, and how to depend on
+LV2 in other projects.
 
 = Generic Waf Instructions =
 
