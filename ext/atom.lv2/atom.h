@@ -109,8 +109,8 @@ typedef struct _LV2_Atom_Property {
    The body of an atom:Resource or atom:Blank.
 */
 typedef struct _LV2_Object {
-	uint32_t context;      /**< ID of context graph, or 0 for the default context */
-	uint32_t id;           /**< ID for atom:Resource or blank ID for atom:Blank */
+	uint32_t context;      /**< ID of context graph, or 0 for default */
+	uint32_t id;           /**< URID (for Resource) or blank ID (for Blank) */
 	uint8_t  properties[]; /**< Sequence of LV2_Atom_Property */
 } LV2_Object;
 

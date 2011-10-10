@@ -16,10 +16,10 @@
 
 /**
    @file atom-helpers.h Helper functions for the LV2 Atom extension.
- 
+
    These functions are provided for convenience only, use of them is not
    required for supporting atoms.
- 
+
    Note that these functions are all static inline which basically means:
    do not take the address of these functions.
 */
@@ -68,8 +68,9 @@ lv2_object_iter_equals(const LV2_Object_Iter l, const LV2_Object_Iter r)
 static inline LV2_Object_Iter
 lv2_object_iter_next(const LV2_Object_Iter iter)
 {
-	return (LV2_Object_Iter)(
-		(uint8_t*)iter + sizeof(LV2_Atom_Property) + lv2_atom_pad_size(iter->value.size));
+	return (LV2_Object_Iter)((uint8_t*)iter
+	                         + sizeof(LV2_Atom_Property)
+	                         + lv2_atom_pad_size(iter->value.size));
 }
 
 /** Return the property pointed to by @c iter */
@@ -83,7 +84,7 @@ lv2_object_iter_get(LV2_Object_Iter iter)
    A macro for iterating over all properties of an Object.
    @param obj  The object to iterate over
    @param iter The name of the iterator
- 
+
    This macro is used similarly to a for loop (which it expands to), e.g.:
    <pre>
    LV2_OBJECT_FOREACH(object, i) {
@@ -169,8 +170,8 @@ lv2_atom_is_a(LV2_Atom* object,
 
 /** A single entry in an Object query. */
 typedef struct {
-	uint32_t        key;   ///< Set by the user to the desired key to query.
-	const LV2_Atom* value; ///< Possibly set by query function to the found value
+	uint32_t        key;   ///< Key to query (input set by user)
+	const LV2_Atom* value; ///< Found value (output set by query function)
 } LV2_Object_Query;
 
 /**
@@ -191,7 +192,7 @@ lv2_object_query(const LV2_Atom* object, LV2_Object_Query* query)
 	// Count number of query keys so we can short-circuit when done
 	for (LV2_Object_Query* q = query; q->key; ++q)
 		++n_queries;
-	
+
 	LV2_OBJECT_FOREACH(object, o) {
 		const LV2_Atom_Property* prop = lv2_object_iter_get(o);
 		for (LV2_Object_Query* q = query; q->key; ++q) {

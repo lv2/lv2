@@ -343,7 +343,7 @@ typedef struct {
 	*/
 	LV2_PUI_Descriptor const* (*pui_descriptor)(LV2_PUI_Lib_Data lib_data,
 	                                            uint32_t         index);
-	
+
 } LV2_PUI_Lib_Descriptor;
 
 /**

@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import datetime
 import os
+import subprocess
+import glob
 
 from waflib.extras import autowaf as autowaf
 import waflib.Logs as Logs
@@ -87,3 +89,9 @@ def build(bld):
 
     #for i in ['plugins/eg-amp.lv2', 'plugins/eg-sampler.lv2']:
     #    bld.recurse(i)
+
+def lint(ctx):
+    for i in (['core.lv2/lv2.h']
+              + glob.glob('ext/*/*.h')
+              + glob.glob('extensions/*/*.h')):
+        subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-whitespace/blank_line,-build/header_guard,-readability/casting,-readability/todo,-build/include ' + i, shell=True)

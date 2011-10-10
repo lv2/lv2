@@ -32,11 +32,11 @@
 
 /**
    Dynamically Allocated Data.
- 
+
    This is an opaque piece of data of any type, dynamically allocated in memory.
    Unlike an "atom", a "blob" is not necessarily POD.  Non-POD data is referred
    to by a "reference (a special case of atom with type 0).
- 
+
    This is a pointer to host data which is opaque to the plugin.  Plugins MUST
    NOT interpret this data in any way, except via host-provided functions in
    LV2_Blob_Support.
@@ -51,7 +51,7 @@ typedef void (*LV2_Blob_Destroy)(LV2_Blob* blob);
 
 /**
    The data field of the LV2_Feature for reference:blobSupport.
- 
+
    A host which supports blobs must pass an LV2_Feature to the plugin's
    instantiate method with 'URI' = "http://lv2plug.in/ns/ext/reference#blobSupport"
    and 'data' pointing to an instance of this struct. All fields of this struct
@@ -61,7 +61,7 @@ typedef struct {
 
 	/**
 	   Pointer to opaque host data.
-	 
+
 	   The plugin MUST pass this to any call to functions in this struct.
 	   Otherwise, the plugin MUST NOT interpret this value in any way.
 	*/
@@ -69,17 +69,17 @@ typedef struct {
 
 	/**
 	   The size of a reference, in bytes.
-	 
+
 	   This value is provided by the host so plugins can allocate large enough
 	   chunks of memory to store references. Note a reference is an LV2_Reference
 	   with type reference:Reference, hence ref_size is a uint16, like
 	   LV2_Reference.size.
 	*/
 	uint16_t ref_size;
-	
+
 	/**
 	   Return the Blob referred to by @a ref.
-	 
+
 	   The returned value MUST NOT be used in any way other than by calling
 	   methods defined in LV2_Blob_Support (e.g. it MUST NOT be directly
 	   accessed, copied, or destroyed). The actual payload of the blob can
@@ -138,10 +138,10 @@ typedef struct {
 	                 LV2_Blob_Destroy      destroy,
 	                 uint32_t              type,
 	                 size_t                size);
-	
+
 	/**
 	   Get blob's type as an ID.
-	 
+
 	   The return value may be any type URI, mapped to an integer with the
 	   URI Map extension with <code>context = NULL</code>.
 	*/
@@ -149,13 +149,13 @@ typedef struct {
 
 	/**
 	   Get blob's body.
-	 
+
 	   Returns a pointer to the start of the blob data. The format of this
 	   data is defined by the return value of the type method. It MUST NOT
 	   be used in any way by code which does not understand that type.
 	*/
 	void* (*blob_data)(LV2_Blob blob);
-	
+
 } LV2_Blob_Support;
 
 #endif /* LV2_REFERENCE_H */
