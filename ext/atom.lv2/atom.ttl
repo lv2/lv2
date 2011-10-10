@@ -16,23 +16,23 @@
 @prefix atom: <http://lv2plug.in/ns/ext/atom#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/atom>
 	a lv2:Specification ;
 	doap:name "LV2 Atom" ;
-    doap:release [
-        doap:revision "0.1" ;
-        doap:created "2011-04-05"
-    ] ;
+	doap:release [
+		doap:revision "0.1" ;
+		doap:created "2011-04-05"
+	] ;
 	doap:maintainer [
 		a foaf:Person ;
-		foaf:name	 "David Robillard" ;
+		foaf:name "David Robillard" ;
 		foaf:homepage <http://drobilla.net/> ;
-		rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
+		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
 	] ;
 	lv2:documentation """
 <p>This extension defines a generic format for a typed piece of data, called an
@@ -69,14 +69,14 @@ semantics (with respect to how the run() callback interprets the Atom).</p>
 href="http://lv2plug.in/ns/ext/uri-map">LV2 URI Map</a> extension.</p>
 """ .
 
-
-atom:Atom a rdfs:Class ;
-	rdfs:label   "Atom" ;
+atom:Atom
+	a rdfs:Class ;
+	rdfs:label "Atom" ;
 	lv2:documentation """
 <p>Abstract base class for all atoms.  An <a href="urn:struct:LV2_Atom"
 >LV2_Atom</a> has a 16-bit <code>type</code> and <code>size</code> followed by
 a <code>body</code>.</p>
- 
+
 <p>All concrete Atom types (subclasses of this class) MUST define a precise
 binary layout for <code>body</code>.</p>
 
@@ -96,10 +96,10 @@ the type 0 for references, actual specification of how references are used is le
 to another extension.</p>
 """ .
 
-
-atom:String a rdfs:Class ;
+atom:String
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label      "String" ;
+	rdfs:label "String" ;
 	lv2:documentation """
 <p>A UTF-8 encoded string.</p>
 
@@ -112,10 +112,10 @@ SHOULD NOT use atom:String unless translating the string does not make sense and
 the string has no meaningful datatype.</p>
 """ .
 
-
-atom:Literal a rdfs:Class ;
+atom:Literal
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label      "String Literal" ;
+	rdfs:label "String Literal" ;
 	lv2:documentation """
 <p>A UTF-8 encoded string literal, with an optional language tag or datatype.</p>
 
@@ -161,10 +161,10 @@ char     str[]    = "&lt;http://example.org/foo&gt; a &lt;http://example.org/Thi
 </pre>
 """ .
 
-
-atom:ID a rdfs:Class ;
+atom:ID
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label   "Integer ID mapped from a URI" ;
+	rdfs:label "Integer ID mapped from a URI" ;
 	lv2:documentation """
 An unsigned 32-bit integer mapped from a URI using the
 <a href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's
@@ -172,10 +172,10 @@ An unsigned 32-bit integer mapped from a URI using the
 with <code>map = NULL</code>.
 """ .
 
-
-atom:BlankID a rdfs:Class ;
+atom:BlankID
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label   "Integer ID for a blank node" ;
+	rdfs:label "Integer ID for a blank node" ;
 	lv2:documentation """
 An unsigned 32-bit integer identifier for a blank node.  A BlankID is only
 meaningful within a limited scope (e.g. the Atom in which it appears), and
@@ -183,10 +183,10 @@ MUST NOT be used as a global identifier.  In particular, a BlankID is NOT an
 ID, and can not be mapped to/from a URI.
 """ .
 
-
-atom:Vector a rdfs:Class ;
+atom:Vector
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label      "Vector" ;
+	rdfs:label "Vector" ;
 	lv2:documentation """
 <p>A homogeneous sequence of atoms with equivalent type and size.</p>
 
@@ -221,8 +221,8 @@ of the vector, even by an implementation which does not understand
 aligned if the Vector itself is 64-bit aligned.</p>
 """ .
 
-
-atom:Tuple a rdfs:Class ;
+atom:Tuple
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Tuple" ;
 	lv2:documentation """
@@ -233,8 +233,8 @@ and <code>size</code>.</p>
 32 bits.</p>
 """ .
 
-
-atom:Property a rdfs:Class ;
+atom:Property
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Property of an Object" ;
 	lv2:documentation """
@@ -244,8 +244,8 @@ has an <a href="#ID">ID</a> <code>key</code> and
 <a href="#Atom">Atom</a> <code>value</code>.
 """ .
 
-
-atom:Object a rdfs:Class ;
+atom:Object
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Object" ;
 	lv2:documentation """
@@ -268,16 +268,16 @@ same binary format.  Thus, both named and anonymous objects can be handled
 with common code using only a 64-bit header for both.</p>
 """ .
 
-
-atom:Resource a rdfs:Class ;
+atom:Resource
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Object ;
 	lv2:documentation """
 An <a href="#Object">Object</a> where <code>id</code> is the
 URI of the resource mapped to an <a href="#ID">ID</a>.
 """ .
 
-
-atom:Blank a rdfs:Class ;
+atom:Blank
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Object ;
 	lv2:documentation """
 An <a href="#Object">Object</a> where <code>id</code> is the blank node ID of
@@ -286,8 +286,8 @@ the object, which is only meaningful within a certain limited scope
 In particular, <code>id</code> is NOT an <a href="ID">ID</a>.
 """ .
 
-
-atom:Model a rdfs:Class ;
+atom:Model
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Model" ;
 	lv2:documentation """
@@ -295,7 +295,8 @@ A description of a set of <a href="#Object">objects</a>.  In memory, a Model is
 simply a sequence of objects.
 """ .
 
-atom:Bang a rdfs:Class ;
+atom:Bang
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Bang (activity) (size = 0)" .
 
@@ -304,27 +305,33 @@ atom:Byte
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Byte (<code>size = 1</code>)" .
 
-atom:Int32 a rdfs:Class ;
+atom:Int32
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Signed 32-bit integer" .
-	
-atom:Int64 a rdfs:Class ;
+
+atom:Int64
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Signed 64-bit integer" .
-	
-atom:Bool a rdfs:Class ;
+
+atom:Bool
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Signed 32-bit integer where 0 is false" .
-	
-atom:Float a rdfs:Class ;
+
+atom:Float
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "32-bit IEEE-754 floating point number" .
-	
-atom:Double a rdfs:Class ;
+
+atom:Double
+	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "64-bit IEEE-754 floating point number" .
-	
-atom:blobSupport a lv2:Feature ;
+
+atom:blobSupport
+	a lv2:Feature ;
 	rdfs:label "Blob support" ;
 	lv2:documentation """
 Support for dynamically allocated blobs.  If a host supports this feature, it
@@ -334,10 +341,10 @@ and <code>data</code> pointing to a <a href="urn:struct:LV2_Blob_Support"
 >LV2_Blob_Support</a>.
 """ .
 
-
-atom:AtomPort a rdfs:Class ;
+atom:AtomPort
+	a rdfs:Class ;
 	rdfs:subClassOf lv2:Port ;
-	rdfs:label      "Atom Port" ;
+	rdfs:label "Atom Port" ;
 	lv2:documentation """
 <p>A port which contains an <a href="#Atom">Atom</a>.  Ports of this type will
 be connected to a 32-bit aligned <a href="urn:struct:LV2_Atom">LV2_Atom</a>
@@ -356,10 +363,10 @@ is no reasonable value to write to the port, the plugin MUST write NULL
 (the Atom with both <code>type = 0</code> and <code>size = 0</code>).</p>
 """ .
 
-
-atom:ValuePort a rdfs:Class ;
+atom:ValuePort
+	a rdfs:Class ;
 	rdfs:subClassOf atom:AtomPort ;
-	rdfs:label      "Value Port" ;
+	rdfs:label "Value Port" ;
 	lv2:documentation """
 An AtomPort that interprets its data as a persistent and time-independent
 "value".
@@ -376,11 +383,11 @@ Value ports can be thought of as purely functional ports: if a plugin
 callback has only value ports, then the plugin callback is a pure function.
 """ .
 
-
-atom:MessagePort a rdfs:Class ;
+atom:MessagePort
+	a rdfs:Class ;
 	rdfs:subClassOf atom:AtomPort ;
-	rdfs:label      "Message Port" ;
-	rdfs:comment    """
+	rdfs:label "Message Port" ;
+	rdfs:comment """
 An AtomPort that "receives", "consumes", "executes", or "sends" its value.
 The Atom contained in a MessagePort is considered transient and/or
 time-dependent, and is only valid for a single run invocation.  Unlike a
@@ -390,14 +397,14 @@ Intuitively, a MessagePort contains a "message" or "command" or "event"
 which is reacted to, NOT a "value" or "signal" (which is computed with).
 """ .
 
-atom:supports a rdf:Property ;
-	rdfs:domain  lv2:Port ;
-	rdfs:range   atom:Atom ;
-	rdfs:label   "supports" ;
+atom:supports
+	a rdf:Property ;
+	rdfs:domain lv2:Port ;
+	rdfs:range atom:Atom ;
+	rdfs:label "supports" ;
 	lv2:documentation """
 Indicates that a Port supports a certain <a href="#Atom">Atom</a> type.
 This is distinct from the port type - e.g. the port type ValuePort can hold
 atoms with many different types.  This property is used to describe which
 Atom types a Port expects to receive or send.
 """ .
-
