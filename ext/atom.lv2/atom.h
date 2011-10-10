@@ -55,7 +55,7 @@
    <code>type</code>. The macro LV2_ATOM_FROM_EVENT is provided in this header
    for this purpose.
 */
-typedef struct _LV2_Atom {
+typedef struct {
 
 	/**
 	   The type of this atom.
@@ -82,7 +82,7 @@ typedef struct _LV2_Atom {
 /**
    The body of an atom:Literal.
 */
-typedef struct _LV2_Atom_Literal {
+typedef struct {
 	uint32_t datatype;  /**< The ID of the datatype of this literal */
 	uint32_t lang;      /**< The ID of the language of this literal */
 	uint8_t  str[];     /**< Null-terminated string data in UTF-8 encoding */
@@ -91,7 +91,7 @@ typedef struct _LV2_Atom_Literal {
 /**
    The body of an atom:Vector.
 */
-typedef struct _LV2_Atom_Vector {
+typedef struct {
 	uint16_t elem_count; /**< The number of elements in the vector */
 	uint16_t elem_type;  /**< The type of each element in the vector */
 	uint8_t  elems[];    /**< Sequence of element bodies */
@@ -108,7 +108,7 @@ typedef struct _LV2_Atom_Property {
 /**
    The body of an atom:Resource or atom:Blank.
 */
-typedef struct _LV2_Object {
+typedef struct {
 	uint32_t context;      /**< ID of context graph, or 0 for default */
 	uint32_t id;           /**< URID (for Resource) or blank ID (for Blank) */
 	uint8_t  properties[]; /**< Sequence of LV2_Atom_Property */
@@ -164,7 +164,7 @@ typedef struct {
    |FRAMES |SUBFRMS|TYPE   |SIZE   |DATADATADATAPAD|FRAMES |SUBFRMS|...
    </pre>
 */
-typedef struct _LV2_Atom_Event_Buffer {
+typedef struct {
 
 	/**
 	   The contents of the event buffer. This may or may not reside in the
