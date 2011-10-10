@@ -295,6 +295,15 @@ A description of a set of <a href="#Object">objects</a>.  In memory, a Model is
 simply a sequence of objects.
 """ .
 
+atom:Event
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Atom ;
+	rdfs:label "Event" ;
+	lv2:documentation """
+An atom with a time stamp header prepended, typically for sample accurate
+transmission via LV2 ports.  See struct LV2_Atom_Event.
+""" .
+
 atom:Bang
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
@@ -395,6 +404,19 @@ ValuePort, a MessagePort may be used to manipulate internal plugin state.
 
 Intuitively, a MessagePort contains a "message" or "command" or "event"
 which is reacted to, NOT a "value" or "signal" (which is computed with).
+""" .
+
+atom:EventPort
+	a rdfs:Class ;
+	rdfs:label "Event port" ;
+	rdfs:subClassOf lv2:Port ;
+	lv2:documentation """
+Ports of this type will be connected to an LV2_Atom_Event_Buffer.  These ports
+contain a sequence of atom:Event (i.e. time stamped atoms).  These ports are
+used to send and receive atoms in the audio context
+(i.e. LV2_Descriptor::run()), and are intended as a simpler, more generic, and
+atom compatible successor to <a
+href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>.
 """ .
 
 atom:supports
