@@ -39,14 +39,19 @@ def configure(conf):
     conf.write_config_header('lv2-config.h', remove=False)
 
 def build_extension(bld, name, dir):
+    # Bundle
     data_file     = '%s/%s.lv2/%s.ttl' % (dir, name, name)
     manifest_file = '%s/%s.lv2/manifest.ttl' % (dir, name)
     header_files  = '%s/%s.lv2/*.h' % (dir, name)
     bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(data_file))
     bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(manifest_file))
     bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(header_files))
-    bld.symlink_as('${INCLUDEDIR}/lv2/lv2plug.in/ns/%s/%s' % (dir, name),
-                   os.path.join(bld.env['LV2DIR'], name + '.lv2'))
+
+    # URI-style include
+    include_dir = bld.env['INCLUDEDIR'] + '/lv2/lv2plug.in/ns/%s' % dir
+    bundle_dir  = os.path.join(bld.env['LV2DIR'], name + '.lv2')
+    bld.symlink_as(os.path.join(include_dir, name),
+                   os.path.relpath(bundle_dir, include_dir))
 
 def build(bld):
     autowaf.set_recursive()
