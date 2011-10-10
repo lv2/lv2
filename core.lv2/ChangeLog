@@ -1,6 +1,7 @@
 lv2core (UNRELEASED) unstable; urgency=low
 
-  * Build lv2config on systems without wordexp (e.g. Windows)
+  * Remove lv2config in favour of the convention that extension bundles simply
+    install headers to standard URI-like include paths
 
  -- David Robillard <d@drobilla.net>  UNRELEASED
 

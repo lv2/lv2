@@ -17,19 +17,19 @@ top = '.'
 out = 'build'
 
 def options(opt):
-    autowaf.set_options(opt)
     opt.load('compiler_cc')
     opt.load('compiler_cxx')
+    autowaf.set_options(opt)
     for i in ['core.lv2']: #, 'plugins/eg-amp.lv2', 'plugins/eg-sampler.lv2']:
         opt.recurse(i)
 
 def configure(conf):
+    conf.load('compiler_cc')
+    conf.load('compiler_cxx')
     autowaf.set_recursive()
     autowaf.configure(conf)
     for i in ['core.lv2']: #, 'plugins/eg-amp.lv2', 'plugins/eg-sampler.lv2']:
         conf.recurse(i)
-    conf.load('compiler_cc')
-    conf.load('compiler_cxx')
     conf.env.append_value('CFLAGS', '-std=c99')
     pat = conf.env['cshlib_PATTERN']
     ext = pat[pat.rfind('.'):]
@@ -43,6 +43,8 @@ def build_extension(bld, name, dir):
     bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(data_file))
     bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(manifest_file))
     bld.install_files('${LV2DIR}/' + name + '.lv2', bld.path.ant_glob(header_files))
+    bld.symlink_as('${INCLUDEDIR}/lv2/lv2plug.in/ns/%s/%s' % (dir, name),
+                   os.path.join(bld.env['LV2DIR'], name + '.lv2'))
 
 def build(bld):
     autowaf.set_recursive()

@@ -1,10 +1,12 @@
 #!/usr/bin/env python
+import os
 from waflib.extras import autowaf as autowaf
 import waflib.Logs as Logs
+import waflib.Options as Options
 
 # Variables for 'waf dist'
 APPNAME = 'lv2-@NAME@'
-VERSION = '@MINOR@.@MICRO@'
+VERSION = '1.2'
 
 # Mandatory variables
 top = '.'
@@ -12,22 +14,31 @@ out = 'build'
 
 def options(opt):
     autowaf.set_options(opt)
+    opt.add_option('--copy-headers', action='store_true', default=False,
+                   dest='copy_headers',
+                   help='Copy headers instead of linking to bundle')
 
 def configure(conf):
     autowaf.configure(conf)
+    conf.env['COPY_HEADERS'] = Options.options.copy_headers
     autowaf.display_msg(conf, "LV2 bundle directory",
                         conf.env['LV2DIR'])
     print('')
 
 def build(bld):
-    bld.install_files('${LV2DIR}/@NAME@.lv2',
-                      bld.path.ant_glob('*.*'))
+    uri          = '@URI@'
+    include_base = os.path.dirname(uri[uri.find('://') + 3:])
+    bundle_dir   = os.path.join(bld.env['LV2DIR'], '@NAME@.lv2')
+    include_dir  = os.path.join(bld.env['INCLUDEDIR'], 'lv2', include_base)
 
-    bld.add_post_fun(warn_lv2config)
+    # Install bundle
+    bld.install_files(bundle_dir,
+                      bld.path.ant_glob('?*.*'))
 
-def warn_lv2config(ctx):
-    if ctx.cmd == 'install':
-        Logs.warn('''
-* LV2 Extension Installed
-* You need to run lv2config to update extension headers
-''')
+    # Install URI-like includes
+    if bld.env['COPY_HEADERS']:
+        bld.install_files(os.path.join(include_dir, '@NAME@'),
+                          bld.path.ant_glob('*.h'))
+    else:
+        bld.symlink_as(os.path.join(include_dir, '@NAME@'),
+                       os.path.relpath(bundle_dir, include_dir))

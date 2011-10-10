@@ -15,10 +15,11 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix lv2ev: <http://lv2plug.in/ns/ext/event#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
 
 <http://lv2plug.in/plugins/eg-sampler>
 	a lv2:Plugin ;
@@ -28,6 +29,7 @@
 	lv2:optionalFeature lv2:hardRtCapable ,
 		<http://lv2plug.in/ns/ext/event> ,
 		<http://lv2plug.in/ns/ext/persist> ;
+	ui:ui <http://lv2plug.in/plugins/eg-sampler#ui> ;
 	lv2:port [
 		a lv2:InputPort ,
 			lv2ev:EventPort ;
@@ -42,3 +44,7 @@
 		lv2:symbol "out" ;
 		lv2:name "Out"
 	] .
+
+<http://lv2plug.in/plugins/eg-sampler#ui>
+	a ui:GtkUI ;
+	ui:binary <sampler_ui.so> .

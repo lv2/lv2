@@ -29,6 +29,8 @@ def configure(conf):
     autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/persist/persist.h')
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)
+    autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
+                      atleast_version='2.18.0', mandatory=False)
 
     conf.env.append_value('CFLAGS', '-std=c99')
 
@@ -67,4 +69,14 @@ def build(bld):
               target       = '%s/sampler' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
               use          = 'SNDFILE')
+
+    # Build UI library
+    if bld.is_defined('HAVE_GTK2'):
+        obj = bld(features     = 'c cshlib',
+                  env          = penv,
+                  source       = 'sampler_ui.c',
+                  name         = 'sampler_ui',
+                  target       = '%s/sampler_ui' % bundle,
+                  install_path = '${LV2DIR}/%s' % bundle,
+                  use          = 'GTK2')
 

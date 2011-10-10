@@ -17,64 +17,20 @@ top = '.'
 out = 'build'
 
 def options(opt):
-    autowaf.set_options(opt)
     opt.load('compiler_c')
-    opt.add_option('--default-lv2-path', type='string', default='',
-                   dest='default_lv2_path',
-                   help="Default LV2 path to use if $LV2_PATH is unset")
+    autowaf.set_options(opt)
     opt.add_option('--bundle-only', action='store_true', default=False,
                    dest='bundle_only',
-                   help="Only install LV2 bundle (not header or pkg-config file)")
+                   help="Only install bundle (not header or pkg-config file)")
+    opt.add_option('--copy-headers', action='store_true', default=False,
+                   dest='copy_headers',
+                   help='Copy headers instead of linking to bundle')
 
 def configure(conf):
-    autowaf.configure(conf)
     conf.load('compiler_c')
+    autowaf.configure(conf)
 
-    lv2core_path_sep = ':'
-    lv2core_dir_sep  = '/'
-    if sys.platform == 'win32':
-        lv2core_path_sep = ';'
-        lv2core_dir_sep = '\\\\'
-
-    autowaf.define(conf, 'LV2CORE_PATH_SEP', lv2core_path_sep)
-    autowaf.define(conf, 'LV2CORE_DIR_SEP',  lv2core_dir_sep)
-
-    if Options.options.default_lv2_path == '':
-        if Options.platform == 'darwin':
-            Options.options.default_lv2_path = lv2core_path_sep.join([
-                    '~/Library/Audio/Plug-Ins/LV2',
-                    '~/.lv2',
-                    '/usr/local/lib/lv2',
-                    '/usr/lib/lv2',
-                    '/Library/Audio/Plug-Ins/LV2'])
-        elif Options.platform == 'haiku':
-            Options.options.default_lv2_path = lv2core_path_sep.join([
-                '~/.lv2',
-                '/boot/common/add-ons/lv2'])
-        elif Options.platform == 'win32':
-            Options.options.default_lv2_path = 'C:\\\\Program Files\\\\LV2'
-        else:
-            libdirname = os.path.basename(conf.env['LIBDIR'])
-            Options.options.default_lv2_path = lv2core_path_sep.join([
-                    '~/.lv2',
-                    '/usr/%s/lv2' % libdirname,
-                    '/usr/local/%s/lv2' % libdirname])
-
-    autowaf.define(conf, 'LV2CORE_DEFAULT_LV2_PATH', Options.options.default_lv2_path)
-
-    conf.check(function_name='wordexp',
-               header_name='wordexp.h',
-               define_name='HAVE_WORDEXP',
-               mandatory=False)
-
-    conf.write_config_header('lv2-config.h', remove=False)
-
-    autowaf.display_msg(conf, "Path expansion via wordexp",
-                        conf.is_defined('HAVE_WORDEXP'))
-    autowaf.display_msg(conf, "Default LV2_PATH",
-                        conf.env['LV2CORE_DEFAULT_LV2_PATH'])
-    autowaf.display_msg(conf, "LV2 bundle directory",
-                        conf.env['LV2DIR'])
+    autowaf.display_msg(conf, "LV2 bundle directory", conf.env['LV2DIR'])
     print('')
 
 def build(bld):
@@ -82,6 +38,9 @@ def build(bld):
     obj = bld(export_includes = ['.'],
               name            = 'liblv2core',
               target          = 'lv2core')
+
+    # Bundle (data)
+    bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.ttl manifest.ttl')
 
     if not Options.options.bundle_only:
         # Header
@@ -91,18 +50,15 @@ def build(bld):
         # Pkgconfig file
         autowaf.build_pc(bld, 'LV2CORE', LV2CORE_VERSION, '', [])
 
-    # Bundle (data)
-    bld.install_files('${LV2DIR}/lv2core.lv2', 'lv2.ttl manifest.ttl')
-
-    # lv2config program
-    obj = bld(features     = 'c cprogram',
-              source       = 'lv2config.c serd-0.1.0.c',
-              target       = 'lv2config',
-              install_path = '${BINDIR}',
-              cflags       = ['-std=c99', '-U__STRICT_ANSI__'])
-
-    # Man page
-    bld.install_files('${MANDIR}/man1', 'lv2config.1')
+        # URI-like header include
+        include_dir = os.path.join(bld.env['INCLUDEDIR'], 'lv2/lv2plug.in/ns')
+        bundle_dir  = os.path.join(bld.env['LV2DIR'], 'lv2core.lv2')
+        if bld.env['COPY_HEADERS']:
+            bld.install_files(os.path.join(include_dir, 'lv2core'),
+                              bld.path.ant_glob('*.h'))
+        else:
+            bld.symlink_as(os.path.join(include_dir, 'lv2core'),
+                           os.path.relpath(bundle_dir, include_dir))
 
 def dist():
     import Scripting
