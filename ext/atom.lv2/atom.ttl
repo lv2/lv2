@@ -73,17 +73,16 @@ atom:Atom
 	a rdfs:Class ;
 	rdfs:label "Atom" ;
 	lv2:documentation """
-<p>Abstract base class for all atoms.  An <a href="urn:struct:LV2_Atom"
->LV2_Atom</a> has a 16-bit <code>type</code> and <code>size</code> followed by
-a <code>body</code>.</p>
+<p>Abstract base class for all atoms.  An LV2_Atom has a 16-bit
+<code>type</code> and <code>size</code> followed by a <code>body</code> of
+<code>size</code> bytes.</p>
 
 <p>All concrete Atom types (subclasses of this class) MUST define a precise
 binary layout for <code>body</code>.</p>
 
 <p>The <code>type</code> field is the URI of a subclass of Atom mapped to an
 integer using the <a href="http://lv2plug.in/ns/ext/uri-map">URI Map</a>
-extension's <a href="urn:struct:LV2_URI_Map_Feature"
->LV2_URI_Map_Feature</a>::uri_to_id with
+extension's LV2_URI_Map_Feature::uri_to_id() with
 <code>map = "http://lv2plug.in/ns/ext/event"</code>.  If a plugin or host
 does not understand <code>type</code>, that atom SHOULD be gracefully ignored
 (or copied if it does not have type 0).</p>
@@ -166,10 +165,9 @@ atom:ID
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Integer ID mapped from a URI" ;
 	lv2:documentation """
-An unsigned 32-bit integer mapped from a URI using the
-<a href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's
-<a href="urn:struct:LV2_URI_Map_Feature">LV2_URI_Map_Feature</a>::uri_to_id
-with <code>map = NULL</code>.
+An unsigned 32-bit integer mapped from a URI using the <a
+href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's
+LV2_URI_Map_Feature::uri_to_id() with <code>map = NULL</code>.
 """ .
 
 atom:BlankID
@@ -190,11 +188,11 @@ atom:Vector
 	lv2:documentation """
 <p>A homogeneous sequence of atoms with equivalent type and size.</p>
 
-<p>An <a href="urn:struct:LV2_Atom_Vector">LV2_Atom_Vector</a> is a
-16-bit <code>elem_count</code> and <code>elem_type</code> followed
-by <code>elem_count</code> atom bodies of type <code>elem_type</code>.
-The element type must be a fixed size <a href="#Atom">Atom</a> type, i.e. the
-size of each element is the vector's <code>size / elem_count</code>.</p>
+<p>An LV2_Atom_Vector is a 16-bit <code>elem_count</code> and
+<code>elem_type</code> followed by <code>elem_count</code> atom bodies of type
+<code>elem_type</code>.  The element type must be a fixed size <a
+href="#Atom">Atom</a> type, i.e. the size of each element is the vector's
+<code>size / elem_count</code>.</p>
 
 <p>For example, an atom:Vector containing 42 elements of type atom:Float looks
 like this in memory:</p>
@@ -239,8 +237,7 @@ atom:Property
 	rdfs:label "Property of an Object" ;
 	lv2:documentation """
 A single property of some <a href="#Object">Object</a>.  An
-<a href="urn:struct:LV2_Atom_Property">LV2_Atom_Property</a>
-has an <a href="#ID">ID</a> <code>key</code> and
+LV2_Atom_Property has an <a href="#ID">ID</a> <code>key</code> and
 <a href="#Atom">Atom</a> <code>value</code>.
 """ .
 
@@ -249,23 +246,22 @@ atom:Object
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Object" ;
 	lv2:documentation """
-<p>Abstract base class for an "Object", i.e. an <a href="#Atom">Atom</a>
-with a number of <a href="#Property">properties</a>.  An <a
-href="urn:struct:LV2_Object">LV2_Object</a> is an unsigned 32-bit
-integer <code>context</code> and <code>id</code> followed by a sequence of
-<a href="urn:struct:LV2_Atom_Property" >properties</a>.</p>
+<p>Abstract base class for an "Object", i.e. an <a href="#Atom">Atom</a> with a
+number of <a href="#Property">properties</a>.  An LV2_Object is an unsigned
+32-bit integer <code>context</code> and <code>id</code> followed by a sequence
+of LV2_Atom_Property .</p>
 
 <p>The <code>context</code> is mapped using the <a
-href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's <a
-href="urn:struct:LV2_URI_Map_Feature">LV2_URI_Map_Feature</a>::uri_to_id
-with <code>map = NULL</code>, and may be 0 (the default context).</p>
+href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's
+LV2_URI_Map_Feature::uri_to_id() with <code>map = NULL</code>, and may be 0
+(the default context).</p>
 
-<p>Note this is an abstract class, i.e. no Atom can exist with
-<code>type = uri_to_id(atom:Object)</code>.  An Object is
-either a <a href="urn:struct:LV2_Resource">Resource</a> or a <a
-href="urn:struct:Blank">Blank</a>, but the <code>body</code> always has the
-same binary format.  Thus, both named and anonymous objects can be handled
-with common code using only a 64-bit header for both.</p>
+<p>Note this is an abstract class, i.e. no Atom can exist with <code>type =
+uri_to_id(atom:Object)</code>.  An Object is either a <a
+href="#Resource">Resource</a> or a <a href="#Blank">Blank</a>, but the
+<code>body</code> always has the same binary format, LV2_Object.  Thus, both
+named and anonymous objects can be handled with common code using only a 64-bit
+header for both.</p>
 """ .
 
 atom:Resource
@@ -344,10 +340,9 @@ atom:blobSupport
 	rdfs:label "Blob support" ;
 	lv2:documentation """
 Support for dynamically allocated blobs.  If a host supports this feature, it
-MUST pass a <a href="urn:struct:LV2_Feature">LV2_Feature</a> with
-<code>URI</code> http://lv2plug.in/ns/ext/atom#blobSupport
-and <code>data</code> pointing to a <a href="urn:struct:LV2_Blob_Support"
->LV2_Blob_Support</a>.
+MUST pass a LV2_Feature with <code>URI</code>
+http://lv2plug.in/ns/ext/atom#blobSupport and <code>data</code> pointing to a
+LV2_Blob_Support.
 """ .
 
 atom:AtomPort
@@ -356,8 +351,8 @@ atom:AtomPort
 	rdfs:label "Atom Port" ;
 	lv2:documentation """
 <p>A port which contains an <a href="#Atom">Atom</a>.  Ports of this type will
-be connected to a 32-bit aligned <a href="urn:struct:LV2_Atom">LV2_Atom</a>
-immediately followed by <code>size</code> bytes of data.</p>
+be connected to a 32-bit aligned LV2_Atom immediately followed by
+<code>size</code> bytes of data.</p>
 
 <p>This is an abstract port type, i.e. a port MUST NOT only be an AtomPort,
 but must be a more descriptive type that is a subclass of AtomPort which
