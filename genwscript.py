@@ -4,7 +4,6 @@
 import rdflib
 import glob
 import os
-import re
 import shutil
 
 lv2 = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
@@ -18,11 +17,8 @@ def query(model, s, p, o):
     raise Exception('Bad LV2 extension data')
 
 def genwscript(manifest):
-    match = re.search('.*/([^/]*).lv2/.*', manifest)
-    name = match.group(1)
-
-    match = re.search('(.*)/.*', manifest)
-    dir = match.group(1)
+    dir = os.path.dirname(manifest)
+    name = os.path.basename(dir).replace('.lv2', '')
 
     m = rdflib.ConjunctiveGraph()
     m.parse('file:' + manifest, format='n3')
