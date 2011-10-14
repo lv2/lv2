@@ -1,14 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import RDF
+import rdflib
 import glob
 import os
 import re
 import shutil
 
-rdf = RDF.NS('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-lv2 = RDF.NS('http://lv2plug.in/ns/lv2core#')
+lv2 = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
+rdf = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+
+# Get the first match for a triple pattern, or throw if no matches
+def query(model, s, p, o):
+    triples = model.triples([s, p, o])
+    for i in triples:
+        return i
+    raise Exception('Bad LV2 extension data')
 
 def genwscript(manifest):
     match = re.search('.*/([^/]*).lv2/.*', manifest)
@@ -17,44 +24,57 @@ def genwscript(manifest):
     match = re.search('(.*)/.*', manifest)
     dir = match.group(1)
 
-    m = RDF.Model()
-    p = RDF.Parser(name="turtle")
-    p.parse_into_model(m, 'file:' + manifest)
+    m = rdflib.ConjunctiveGraph()
+    m.parse('file:' + manifest, format='n3')
 
-    s = m.find_statements(RDF.Statement(None, rdf.type, lv2.Specification))
-    if not s.current():
+    try:
+        # ?uri a lv2:Specification
+        uri = query(m, None, rdf.type, lv2.Specification)[0]
+        
+        # uri lv2:minorVersion ?minor
+        minor = query(m, uri, lv2.minorVersion, None)[2]
+        
+        # uri lv2:microVersion ?
+        micro = query(m, uri, lv2.microVersion, None)[2]
+    except:
         return False
-
-    uri = str(s.current().subject.uri)
-
-    s = m.find_statements(RDF.Statement(None, lv2.minorVersion, None))
-    if not s.current():
-        return False
-    minor = s.current().object.literal_value['string']
-
-    s = m.find_statements(RDF.Statement(None, lv2.microVersion, None))
-    if not s.current():
-        return False
-    micro = s.current().object.literal_value['string']
 
     if int(minor) != 0 and int(micro) % 2 == 0:
         print('Packaging %s extension version %s.%s' % (name, minor, micro))
 
+        # Make directory and copy all files to it
         distdir = 'build/spec/lv2-%s-%s.%s' % (name, minor, micro)
         os.mkdir(distdir)
         for f in glob.glob('%s/*.*' % dir):
             shutil.copy(f, '%s/%s' % (distdir, os.path.basename(f)))
 
+        pkgconfig_name = str(uri).replace('http://', 'lv2-').replace('/', '-')
+
+        # Generate wscript
         wscript_template = open('wscript.template')
         wscript = open('%s/wscript' % distdir, 'w')
         for l in wscript_template:
             wscript.write(l.replace(
                     '@NAME@', name).replace(
-                    '@URI@', uri).replace(
+                    '@URI@', str(uri)).replace(
                     '@MINOR@', minor).replace(
-                    '@MICRO@', micro))
+                    '@MICRO@', micro).replace(
+                    '@PKGCONFIG_NAME@', pkgconfig_name))
         wscript_template.close()
         wscript.close()
+
+        # Generate pkgconfig file
+        pkgconfig_template = open('ext.pc.template', 'r')
+        pkgconfig = open('%s/%s.pc.in' % (distdir, pkgconfig_name), 'w')
+        for l in pkgconfig_template:
+            pkgconfig.write(l.replace(
+                    '@NAME@', 'LV2 ' + name.title()).replace(
+                    '@DESCRIPTION@', 'The LV2 "' + name + '" extension').replace(
+                    '@VERSION@', '%s.%s' % (minor, micro)).replace(
+                    '@INCLUDE_PATH@', str(uri).replace('http://', 'lv2/')))
+        pkgconfig_template.close()
+        pkgconfig.close()
+
         try:
             os.remove('%s/waf' % distdir)
         except:

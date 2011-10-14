@@ -1,0 +1,6 @@
+includedir=@INCLUDEDIR@
+
+Name: @NAME@
+Version: @VERSION@
+Description: @DESCRIPTION@
+Cflags: -I${includedir}/@INCLUDE_PATH@

@@ -6,7 +6,7 @@ import waflib.Options as Options
 
 # Variables for 'waf dist'
 APPNAME = 'lv2-@NAME@'
-VERSION = '1.2'
+VERSION = '@VERSION@'
 
 # Mandatory variables
 top = '.'
@@ -30,6 +30,13 @@ def build(bld):
     include_base = os.path.dirname(uri[uri.find('://') + 3:])
     bundle_dir   = os.path.join(bld.env['LV2DIR'], '@NAME@.lv2')
     include_dir  = os.path.join(bld.env['INCLUDEDIR'], 'lv2', include_base)
+
+    # Pkgconfig file
+    obj = bld(features     = 'subst',
+              source       = '@PKGCONFIG_NAME@.pc.in',
+              target       = '@PKGCONFIG_NAME@.pc',
+              install_path = '${LIBDIR}/pkgconfig',
+              INCLUDEDIR   = bld.env['INCLUDEDIR'])
 
     # Install bundle
     bld.install_files(bundle_dir,
