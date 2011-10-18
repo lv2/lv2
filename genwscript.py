@@ -11,8 +11,7 @@ rdf = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
 # Get the first match for a triple pattern, or throw if no matches
 def query(model, s, p, o):
-    triples = model.triples([s, p, o])
-    for i in triples:
+    for i in model.triples([s, p, o]):
         return i
     raise Exception('Bad LV2 extension data')
 
@@ -21,16 +20,11 @@ def genwscript(manifest):
     name = os.path.basename(dir).replace('.lv2', '')
 
     m = rdflib.ConjunctiveGraph()
-    m.parse('file:' + manifest, format='n3')
+    m.parse(manifest, format='n3')
 
     try:
-        # ?uri a lv2:Specification
-        uri = query(m, None, rdf.type, lv2.Specification)[0]
-        
-        # uri lv2:minorVersion ?minor
+        uri   = query(m, None, rdf.type, lv2.Specification)[0]
         minor = query(m, uri, lv2.minorVersion, None)[2]
-        
-        # uri lv2:microVersion ?
         micro = query(m, uri, lv2.microVersion, None)[2]
     except:
         return False
@@ -46,30 +40,27 @@ def genwscript(manifest):
 
         pkgconfig_name = str(uri).replace('http://', 'lv2-').replace('/', '-')
 
+        def subst_file(source_path, target_path):
+            source = open(source_path, 'r')
+            target = open(target_path, 'w')
+            for l in source:
+                target.write(l.replace(
+                        '@DESCRIPTION@', 'LV2 "' + name + '" extension').replace(
+                        '@INCLUDE_PATH@', str(uri).replace('http://', 'lv2/')).replace(
+                        '@MICRO@', micro).replace(
+                        '@MINOR@', minor).replace(
+                        '@NAME@', name).replace(
+                        '@PKGCONFIG_NAME@', pkgconfig_name).replace(
+                        '@URI@', str(uri)).replace(
+                        '@VERSION@', '%s.%s' % (minor, micro)))
+            source.close()
+            target.close()
+            
         # Generate wscript
-        wscript_template = open('wscript.template')
-        wscript = open('%s/wscript' % distdir, 'w')
-        for l in wscript_template:
-            wscript.write(l.replace(
-                    '@NAME@', name).replace(
-                    '@URI@', str(uri)).replace(
-                    '@MINOR@', minor).replace(
-                    '@MICRO@', micro).replace(
-                    '@PKGCONFIG_NAME@', pkgconfig_name))
-        wscript_template.close()
-        wscript.close()
+        subst_file('wscript.template', '%s/wscript' % distdir)
 
         # Generate pkgconfig file
-        pkgconfig_template = open('ext.pc.template', 'r')
-        pkgconfig = open('%s/%s.pc.in' % (distdir, pkgconfig_name), 'w')
-        for l in pkgconfig_template:
-            pkgconfig.write(l.replace(
-                    '@NAME@', 'LV2 ' + name.title()).replace(
-                    '@DESCRIPTION@', 'The LV2 "' + name + '" extension').replace(
-                    '@VERSION@', '%s.%s' % (minor, micro)).replace(
-                    '@INCLUDE_PATH@', str(uri).replace('http://', 'lv2/')))
-        pkgconfig_template.close()
-        pkgconfig.close()
+        subst_file('ext.pc.template', '%s/%s.pc.in' % (distdir, pkgconfig_name))
 
         try:
             os.remove('%s/waf' % distdir)
