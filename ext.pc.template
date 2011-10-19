@@ -1,6 +1,6 @@
 includedir=@INCLUDEDIR@
 
-Name: @NAME@
+Name: LV2 @NAME@
 Version: @VERSION@
 Description: @DESCRIPTION@
 Cflags: -I${includedir}/@INCLUDE_PATH@

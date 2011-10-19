@@ -20,6 +20,7 @@ def options(opt):
 
 def configure(conf):
     autowaf.configure(conf)
+    autowaf.display_header('LV2 @NAME@ Configuration')
     conf.env['COPY_HEADERS'] = Options.options.copy_headers
     autowaf.display_msg(conf, "LV2 bundle directory",
                         conf.env['LV2DIR'])
