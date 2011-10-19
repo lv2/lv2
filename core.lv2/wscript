@@ -59,8 +59,3 @@ def build(bld):
         else:
             bld.symlink_as(os.path.join(include_dir, 'lv2core'),
                            os.path.relpath(bundle_dir, include_dir))
-
-def dist():
-    import Scripting
-    Scripting.g_gz = 'gz'
-    Scripting.dist()
