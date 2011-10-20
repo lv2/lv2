@@ -105,7 +105,7 @@ for dir in ['ext', 'extensions']:
 
     outdir = os.path.join(out_base, dir)
 
-    shutil.copytree(dir, outdir, ignore = lambda src, names: '.svn')
+    shutil.copytree(dir, outdir, ignore=shutil.ignore_patterns('.*', 'waf', 'wscript', '*.in'))
 
     index_html = """<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
