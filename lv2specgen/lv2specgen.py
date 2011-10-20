@@ -908,13 +908,14 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
         release_name = "lv2-" + basename
         if basename == "lv2":
             release_name = "lv2core"
-        other_files += '<li><a href="http://lv2plug.in/spec/%s-%d.%d.tar.bz2">Release</a> (<a href="http://lv2plug.in/spec">all releases</a>)</li>\n' % (release_name, version[0], version[1])
+        other_files += '<a href="http://lv2plug.in/spec/%s-%d.%d.tar.bz2">Release</a>' % (release_name, version[0], version[1])
+        other_files += ', <a href="http://lv2plug.in/spec">All releases</a>'
     if os.path.exists(os.path.abspath(header_path)):
-        other_files += '<li><a href="' + docdir + '/html/%s">Header Documentation</a></li>\n' % (
+        other_files += ', <a href="' + docdir + '/html/%s">API documentation</a>' % (
             basename + '_8h.html')
 
         header = basename + '.h'
-        other_files += '<li><a href="%s">%s</a></li>' % (header, header)
+        other_files += ', <a href="%s">%s</a>' % (header, header)
 
     #other_files += '<li><a href="%s">Ontology</a> %s</li>\n' % (filename, filename)
 
@@ -924,7 +925,9 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
         if uri[0:5] == 'file:':
             uri = uri[5:]
 
-        other_files += '<li><a href="%s">%s</a></li>' % (uri, uri)
+        other_files += ', <a href="%s">%s</a>' % (uri, uri)
+
+    other_files = '<tr><th class="metahead">See Also</th><td>%s</td></tr>' % other_files
 
     template = template.replace('@FILES@', other_files)
 

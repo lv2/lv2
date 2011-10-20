@@ -17,81 +17,47 @@
   <body>
 
   <!-- HEADER -->
-
   <div id="titleheader">
     <h1 id="title">@NAME@</h1>
     <div class="meta">
-    <table>
-      <tr><th class="metahead">URI</th><td><a href="@URI@">@URI@</a></td></tr>
-      <tr><th class="metahead">Version</th><td>@REVISION@</td></tr>
-      <tr><th class="metahead">Prefixes</th><td>@PREFIXES@</td></tr>
-      @AUTHORS@
-    </table>
+      <table>
+        <tr><th class="metahead">URI</th><td><a href="@URI@">@URI@</a></td></tr>
+        <tr><th class="metahead">Version</th><td>@REVISION@</td></tr>
+        <tr><th class="metahead">Prefixes</th><td>@PREFIXES@</td></tr>
+        <tr><th class="metahead">Discuss</th><td>
+            <a href="mailto:@MAIL@">@MAIL@</a>
+	        (<a href="http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in">subscribe</a>)
+        </td></tr>
+        @AUTHORS@
+        @FILES@
+      </table>
     </div>
   </div>
   
-  <!-- META -->
-
   <div class="content">
-	<p>This document is generated from <a href="@FILENAME@">@FILENAME@</a>,
-	  which describes <a href="@URI@">@NAME@</a>
-	  (an <a href="http://lv2plug.in/">LV2</a> specification).  Comments are
-	  welcome, please direct discussion
-	  to <a href="mailto:@MAIL@">@MAIL@</a>.</p>
-
-	<h3>Contents</h3>
-	<ol id="toc">
-      <li><a href="#sec-description">Description</a></li>
-      <li><a href="#sec-index">Index</a></li>
-      <li><a href="#sec-documentation">Documentation</a></li>
-      <li><a href="#sec-references">References</a></li>
-	</ol>
-
-	<h3>Resources</h3>
-	<ul>
-	  @FILES@
-	</ul>
+    <p>This document describes <a href="@URI@">@NAME@</a>.
+	  For more information about LV2,
+	  visit <a href="http://lv2plug.in/">http://lv2plug.in</a>.
+    </p>
   </div>
-
+  
   <!-- DESCRIPTION -->
-
-  <h2 class="sec" id="sec-description">1. Description</h2>
+  <h2 class="sec" id="sec-description">Description</h2>
   <div class="content">@COMMENT@</div>
 
-
   <!-- INDEX -->
-
-  <h2 class="sec" id="sec-index">2. Index</h2>
+  <h2 class="sec" id="sec-index">Index</h2>
   <div class="content">
   @INDEX@
   </div>
 
-
-  <!-- REFERENCE -->
-
-  <h2 class="sec" id="sec-documentation">3. Documentation</h2>
+  <!-- DOCUMENTATION -->
+  <h2 class="sec" id="sec-documentation">Documentation</h2>
   <div class="content">
   @REFERENCE@
   </div>
 
-  <!-- REFERENCES -->
-
-  <h2 class="sec" id="sec-references">4. References</h2>
-  <div class="content">
-  <dl>
-    <dt class="label" id="ref-rfc2119">IETF RFC 2119</dt>
-    <dd>
-      <em>
-        <a href="http://www.ietf.org/rfc/rfc2119.txt">
-          RFC 2119: Key words for use in RFCs to Indicate Requirement Levels</a>
-      </em>.  Internet Engineering Task Force, 1997.
-    </dd>
-  </dl>
-  </div>
-
-
   <!-- FOOTER -->
-
   <div id="footer">
 	<span class="footer-text">Generated on @TIME@ from <a href="./@FILENAME@" class="footer-text">@FILENAME@</a> by <a href="http://drobilla.net/software/lv2specgen" class="footer-text">lv2specgen</a></span>
 	@FOOTER@
