@@ -374,7 +374,9 @@ a:active {
 	padding: 1ex;
 }
 ul, ol {
-	margin: 0 1ex 2ex;
+	margin-top: 0;
+	padding-top: 0;
+	margin: 0 0 0.5ex 0;
 }
 .content {
 	margin-left: 1.5em;

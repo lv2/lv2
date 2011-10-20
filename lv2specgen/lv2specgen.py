@@ -418,21 +418,20 @@ def rdfsInstanceInfo(term, m):
     """Generate rdfs-type information for instances"""
     doc = ""
 
-    term = RDF.Uri(term)
     t = m.find_statements(RDF.Statement(term, rdf.type, None))
     if t.current():
         doc += "<tr><th>Type</th>"
     first = True
     while t.current():
         doc += getProperty(getTermLink(RDF.Node(t.current().object),
-                                       RDF.Node(term),
+                                       term,
                                        rdf.type),
                            first)
         first = False
         t.next()
 
     doc += endProperties(first)
-    doc += extraInfo(RDF.Node(term), m)
+    doc += extraInfo(term, m)
 
     return doc
 
@@ -475,7 +474,8 @@ def docTerms(category, list, m):
     """
     doc = ""
     nspre = spec_pre
-    for t in list:
+    for item in list:
+        t = return_name(m, item)
         if (t.startswith(spec_ns_str)) and (
             len(t[len(spec_ns_str):].split("/")) < 2):
             term = t
@@ -534,6 +534,7 @@ def docTerms(category, list, m):
 
 
 def getShortName(uri):
+    uri = str(uri)
     if ("#" in uri):
         return uri.split("#")[-1]
     else:
@@ -541,13 +542,14 @@ def getShortName(uri):
 
 
 def getAnchor(uri):
+    uri = str(uri)
     if (uri.startswith(spec_ns_str)):
         return uri[len(spec_ns_str):].replace("/", "_")
     else:
         return getShortName(uri)
 
 
-def buildIndex(classlist, proplist, instalist=None):
+def buildIndex(m, classlist, proplist, instalist=None):
     """
     Builds the A-Z list of terms. Args are a list of classes (strings) and
     a list of props (strings)
@@ -560,21 +562,44 @@ def buildIndex(classlist, proplist, instalist=None):
     azlist = '<dl class="index">'
 
     if (len(classlist) > 0):
-        azlist += "<dt>Classes</dt><dd>"
+        azlist += "<dt>Classes</dt><dd><ul>"
         classlist.sort()
+        shown = {}
         for c in classlist:
-            if c.startswith(spec_ns_str):
-                c = c.split(spec_ns_str[-1])[1]
-            azlist = """%s <a href="#%s">%s</a>, """ % (azlist, c, c)
-        azlist = """%s</dd>\n""" % azlist
+            if c in shown:
+                continue
+            if not m.find_statements(RDF.Statement(None, rdfs.subClassOf, c)).current():
+                continue
+            shown[c] = True
+            name = return_name(m, c)
+            if name.startswith(spec_ns_str):
+                name = name.split(spec_ns_str[-1])[1]
+            azlist += '<li><a href="#%s">%s</a>' % (name, name)
+            def class_tree(c):
+                tree = ''
+                shown[c] = True
+                statements = m.find_statements(RDF.Statement(None, rdfs.subClassOf, c))
+                if statements.current():
+                    tree += '<ul>'
+                    for s in statements:
+                        s_name = return_name(m, s.subject)
+                        tree += '<li><a href="#%s">%s</a>\n' % (s_name, s_name)
+                        tree += class_tree(s.subject)
+                        tree += '</li>'
+                    tree += '</ul>'
+                return tree
+            azlist += class_tree(c)
+            azlist += '</li>'
+        azlist = """%s</dd></ul>\n""" % azlist
 
     if (len(proplist) > 0):
         azlist += "<dt>Properties</dt><dd>"
         proplist.sort()
         for p in proplist:
-            if p.startswith(spec_ns_str):
-                p = p.split(spec_ns_str[-1])[1]
-            azlist = """%s <a href="#%s">%s</a>, """ % (azlist, p, p)
+            name = return_name(m, p)
+            if name.startswith(spec_ns_str):
+                name = name.split(spec_ns_str[-1])[1]
+            azlist = """%s <a href="#%s">%s</a>, """ % (azlist, name, name)
         azlist = """%s</dd>\n""" % azlist
 
     if (instalist != None and len(instalist) > 0):
@@ -633,20 +658,18 @@ def specInformation(m, ns):
                             str(classStatement.subject.uri),
                             str(domain.subject.uri))
             if not classStatement.subject.is_blank():
-                uri = str(classStatement.subject.uri)
-                name = return_name(m, classStatement.subject)
-                if name not in classlist and uri.startswith(ns):
-                    classlist.append(return_name(m, classStatement.subject))
+                klass = classStatement.subject
+                if klass not in classlist and str(klass).startswith(ns):
+                    classlist.append(klass)
 
     # Create a list of properties in the schema.
     proptypes = [rdf.Property, owl.ObjectProperty, owl.DatatypeProperty, owl.AnnotationProperty]
     proplist = []
     for onetype in proptypes:
         for propertyStatement in m.find_statements(RDF.Statement(None, rdf.type, onetype)):
-            uri = str(propertyStatement.subject.uri)
-            name = return_name(m, propertyStatement.subject)
-            if uri.startswith(ns) and not name in proplist:
-                proplist.append(name)
+            prop = propertyStatement.subject
+            if prop not in proplist and str(prop).startswith(ns):
+                proplist.append(prop)
 
     return classlist, proplist
 
@@ -737,21 +760,19 @@ def getInstances(model, classes, properties):
     (aka "everything that is not a class or a property")
     """
     instances = []
-    for one in classes:
-        for i in model.find_statements(RDF.Statement(None, rdf.type, spec_ns[one])):
-            uri = str(i.subject.uri)
-            if not uri in instances and uri != spec_url:
-                instances.append(uri)
+    for c in classes:
+        for i in model.find_statements(RDF.Statement(None, rdf.type, c)):
+            if not i.subject.is_resource():
+                continue
+            inst = i.subject
+            if inst not in instances and str(inst) != spec_url:
+                instances.append(inst)
     for i in model.find_statements(RDF.Statement(None, rdf.type, None)):
-        if not i.subject.is_resource():
+        if not i.subject.is_resource() or i.subject in classes or i.subject in instances:
             continue
         full_uri = str(i.subject.uri)
         if (full_uri.startswith(spec_ns_str)):
-            uri = full_uri[len(spec_ns_str):]
-        else:
-            uri = full_uri
-        if ((not full_uri in instances) and (not uri in classes) and (not uri in properties) and (full_uri != spec_url)):
-            instances.append(full_uri)
+            instances.append(i.subject)
     return instances
 
 
@@ -826,7 +847,7 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
         instalist = getInstances(m, classlist, proplist)
         instalist.sort(lambda x, y: cmp(getShortName(x).lower(), getShortName(y).lower()))
 
-    azlist = buildIndex(classlist, proplist, instalist)
+    azlist = buildIndex(m, classlist, proplist, instalist)
 
     # Generate Term HTML
     termlist = docTerms('Property', proplist, m)

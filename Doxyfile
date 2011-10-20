@@ -584,6 +584,7 @@ INPUT =  \
 	ext/pui.lv2/pui.h \
 	ext/string-port.lv2/string-port.h \
 	ext/time.lv2/time.h \
+	ext/ui-resize.lv2/ui-resize.h \
 	ext/uri-map.lv2/uri-map.h \
 	ext/uri-unmap.lv2/uri-unmap.h \
 	ext/urid.lv2/urid.h \
