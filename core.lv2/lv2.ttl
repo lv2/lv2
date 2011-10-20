@@ -495,7 +495,7 @@ lv2:Point a rdfs:Class , owl:Class ;
         owl:cardinality 1 ;
         rdfs:comment "A Point MUST have exactly one rdf:value." ;
     ] ;
-    rdfs:comment """
+    lv2:documentation """
 A Point describes an interesting value in a Port's range (much like a labeled
 <q>notch</q> on a physical knob). A Point has a string label and a value; the
 type of the value MUST be compatible with the type of the corresponding Port.

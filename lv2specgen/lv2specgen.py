@@ -590,7 +590,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 return tree
             azlist += class_tree(c)
             azlist += '</li>'
-        azlist = """%s</dd></ul>\n""" % azlist
+        azlist += '</ul></dd>\n'
 
     if (len(proplist) > 0):
         azlist += "<dt>Properties</dt><dd>"
@@ -768,7 +768,10 @@ def getInstances(model, classes, properties):
             if inst not in instances and str(inst) != spec_url:
                 instances.append(inst)
     for i in model.find_statements(RDF.Statement(None, rdf.type, None)):
-        if not i.subject.is_resource() or i.subject in classes or i.subject in instances:
+        if ((not i.subject.is_resource())
+            or (i.subject in classes)
+            or (i.subject in instances)
+            or (i.subject in properties)):
             continue
         full_uri = str(i.subject.uri)
         if (full_uri.startswith(spec_ns_str)):
