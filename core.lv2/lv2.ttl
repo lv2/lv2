@@ -34,12 +34,11 @@ An LV2 Resource (e.g. plugin, specification, or any other LV2 related thing).
 
 lv2:Specification a rdfs:Class , owl:Class ;
     rdfs:subClassOf lv2:Resource ;
-    rdfs:comment """
+    lv2:documentation """
 An LV2 specification (i.e. this specification, or an LV2 extension).
 
-Specification data, like plugin data, is distributed in standardized bundles
-so hosts may discover all present LV2 data. See http://lv2plug.in/docs for
-more details.
+Specification data, like plugin data, is distributed in bundles
+so hosts may discover <em>all</em> present LV2 data.
 """ .
 
 lv2:documentation a rdf:Property , owl:DatatypeProperty ;
@@ -85,75 +84,72 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
     lv2:documentation """
 <h4>Overview</h4>
 
-<p>LV2 gives programmers the ability to write audio processors (or
-<q>plugins</q>) in C/C++ which can be dynamically loaded into a range of
-applications (or <q>hosts</q>).</p>
+<p>LV2 is an interface for writing audio processors, or <q>plugins</q>, in
+C/C++ which can be dynamically loaded into many applications, or <q>hosts</q>.
+This <q>core</q> specification is simple and minimal, but is designed so that
+<q>extensions</q> can be defined to add more advanced features, making it
+possibly to implement nearly any feature imaginable.</p>
 
-<p>This <q>core</q> specification is deliberately as short and simple as
-possible, but is designed so that <q>extensions</q> can be defined to add more
-advanced features. The shared library portion of the API includes only what
-must necessarily be written in code. The information required to use a plugin
-is in a companion data file, written in <a
-href="http://www.w3.org/TeamSubmission/turtle/">Turtle</a>. Plugin libraries do
-not contain enough information to make use of the plugin possible; the data
-file is mandatory. This makes using, adding, and manipulating plugin data
-flexible and avoids binary compatibility issues.</p>
+<p>LV2 maintains a strong distinction between <q>code</q> and <q>data</q>.
+Plugin code is in a shared library, while data is in a companion data file
+written in <a href="http://www.w3.org/TeamSubmission/turtle/">Turtle</a>.
+Code, data, and any other resources (e.g. waveforms) are shipped together in a
+<q>bundle</q> directory.  The code contains only the executable portions of the
+plugin which inherently <em>must</em> be written in code.  All other data is
+provided in the data file(s).  This makes plugin data flexible and extensible,
+and allows the host to do everything but run the plugin without executing any
+code at all.  Among other advantages, this makes hosts more robust (broken
+plugins can't crash a host during discovery) and allows non-C programs to work
+with LV2 data (such as the pure <a href="http://python.org">Python</a> script
+which generated this page).  LV2 itself and extensions are distributed
+similarly.</p>
 
-<p>Plugins can operate on any type of data, which is input/output via
-<q>ports</q>. Data is processed by first <q>connecting</q> each port to a
-buffer, then repeatedly calling a plugin's <code>run()</code> method to process
-a <q>block</q> of data of some host-specified length (measured in audio
-frames).</p>
-
-<p>The LV2 core specification defines two types of port, equivalent to those in
-<a href="http://www.ladspa.org/">LADSPA</a>: <q>control</q> and
-<q>audio</q>. Audio data is communicated using arrays with one
-<code>float</code> element per sample, allowing a block of audio to be
-processed by the plugin in a single call to <code>run()</code>. Control data is
-communicated using single <code>float</code> values, which are fixed and valid
-for the duration of the call to <code>run()</code>. Thus the <q>control
-rate</q> is determined by the block size, which is controlled by the host (and
-not necessarily constant).</p>
-
-<p>Plugins reside in shared object files suitable for dynamic linking (e.g. via
-<code>dlopen()</code>). This <q>library</q> provides one or more <a
+<p>An LV2 plugin library is suitable for dynamic loading (e.g. via
+<code>dlopen()</code>) and provides one or more <a
 href="urn:struct:LV2_Descriptor">plugin descriptors</a> via the
-<code>lv2_descriptor()</code> function. These plugins can be instantiated to
-create plugin <q>instances</q>, which can be run directly on data or connected
+<code>lv2_descriptor()</code> function.  These can be instantiated to create
+plugin <q>instances</q>, which can be run directly on data or connected
 together to perform advanced signal processing tasks.</p>
+
+<p>Plugins communicate via <q>ports</q>, which can transmit any type of data.
+Data is processed by first <q>connecting</q> each port to a buffer, then
+repeatedly calling a plugin's <code>run()</code> method to process blocks of
+data.</p>
+
+<p>This core specification defines two types of port, equivalent to those in <a
+href="http://www.ladspa.org/">LADSPA</a>: <a
+href="#ControlPort">ControlPort</a> and <a href="#AudioPort">AudioPort</a>.
+Audio ports contain arrays with one <code>float</code> element per sample,
+allowing a block of audio to be processed in a single call to
+<code>run()</code>.  Control ports contain single <code>float</code> values,
+which are fixed and valid for the duration of the call to <code>run()</code>.
+Thus the <q>control rate</q> is determined by the block size, which is
+controlled by the host (and not necessarily constant).</p>
 
 <h4>Threading Rules</h4>
 
-<p>Certain hosts may need to call the functions provided by a plugin from
-multiple threads. For this to be safe, the plugin must be written so that those
-functions can be executed simultaneously without problems. To facilitate this,
-the functions provided by a plugin are divided into classes:</p>
+<p>To faciliate use in multi-threaded programs, LV2 functions are partitioned
+into several threading classes:</p>
 
-<dl>
-<dt>Discovery Class</dt>
-<dd>lv2_descriptor(),
-LV2_Descriptor::extension_data()</dd>
-
-<dt>Instantiation Class</dt>
-<dd>LV2_Descriptor::instantiate(),
-LV2_Descriptor::cleanup(),
-LV2_Descriptor::activate(),
-LV2_Descriptor::deactivate()</dd>
-
-<dt>Audio Class</dt>
-<dd>LV2_Descriptor::run(),
-LV2_Descriptor::connect_port()</dd>
-</dl>
-
-<p>Plugin functions in any class MUST NOT manipulate any state which might
-affect other plugin or host code, e.g. by using non-reentrant global
-functions.</p>
-
-<p>Extensions to this specification which add new plugin functions MUST declare
-in which of these classes the functions belong, or define new classes for
-them. Extensions which add new host-provided functions MUST declare from which
-of these classes the functions may be called, or otherwise precisely describe
-their threading rules.</p>
+<table>
+<tr>
+  <th>Discovery Class</th>
+  <th>Instantiation Class</th>
+  <th>Audio Class</th>
+</tr>
+<tr>
+  <td>lv2_descriptor()</td>
+  <td>LV2_Descriptor::instantiate()</td>
+  <td>LV2_Descriptor::run()</td>
+</tr>
+<tr>
+  <td>LV2_Descriptor::extension_data()</td>
+  <td>LV2_Descriptor::cleanup()</td>
+  <td>LV2_Descriptor::connect_port()</td>
+</tr>
+<tr><td></td><td>LV2_Descriptor::activate()</td><td></td></tr>
+<tr><td></td><td>LV2_Descriptor::deactivate()</td><td></td></tr>
+</table>
 
 <p>The rules that hosts MUST follow are:</p>
 <ul>
@@ -168,6 +164,14 @@ no other functions for that instance may run.</li>
 <p>Any simultaneous calls that are not explicitly forbidden by these rules are
 allowed. For example, a host may call <code>run()</code> for two different
 plugin instances simultaneously.</p>
+
+<p>Plugin functions in any class MUST NOT manipulate any state which might
+affect other plugin or host code, e.g. by using non-reentrant global
+functions.</p>
+
+<p>Extensions to this specification which add new functions MUST declare in
+which of these classes the functions belong, define new classes for them, or
+otherwise precisely describe their threading rules.</p>
 """ .
 
 ############
