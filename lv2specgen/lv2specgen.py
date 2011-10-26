@@ -568,7 +568,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
         for c in classlist:
             if c in shown:
                 continue
-            if not m.find_statements(RDF.Statement(None, rdfs.subClassOf, c)).current():
+            if m.find_statements(RDF.Statement(c, rdfs.subClassOf, None)).current():
                 continue
             shown[c] = True
             name = return_name(m, c)
