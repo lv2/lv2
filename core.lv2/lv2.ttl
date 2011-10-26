@@ -97,12 +97,11 @@ Code, data, and any other resources (e.g. waveforms) are shipped together in a
 <q>bundle</q> directory.  The code contains only the executable portions of the
 plugin which inherently <em>must</em> be written in code.  All other data is
 provided in the data file(s).  This makes plugin data flexible and extensible,
-and allows the host to do everything but run the plugin without executing any
-code at all.  Among other advantages, this makes hosts more robust (broken
-plugins can't crash a host during discovery) and allows non-C programs to work
-with LV2 data (such as the pure <a href="http://python.org">Python</a> script
-which generated this page).  LV2 itself and extensions are distributed
-similarly.</p>
+and allows the host to do everything but run the plugin without loading or
+executing any code.  Among other advantages, this makes hosts more robust
+(broken plugins can't crash a host during discovery) and allows generic tools
+and non-C programs to work with LV2 data.  LV2 itself and extensions are
+distributed in a similar way.</p>
 
 <p>An LV2 plugin library is suitable for dynamic loading (e.g. via
 <code>dlopen()</code>) and provides one or more <a
@@ -132,21 +131,15 @@ controlled by the host (and not necessarily constant).</p>
 into several threading classes:</p>
 
 <table>
-<tr>
-  <th>Discovery Class</th>
-  <th>Instantiation Class</th>
-  <th>Audio Class</th>
-</tr>
-<tr>
-  <td>lv2_descriptor()</td>
-  <td>LV2_Descriptor::instantiate()</td>
-  <td>LV2_Descriptor::run()</td>
-</tr>
-<tr>
-  <td>LV2_Descriptor::extension_data()</td>
-  <td>LV2_Descriptor::cleanup()</td>
-  <td>LV2_Descriptor::connect_port()</td>
-</tr>
+<tr><th>Discovery Class</th>
+    <th>Instantiation Class</th>
+    <th>Audio Class</th></tr>
+<tr><td>lv2_descriptor()</td>
+    <td>LV2_Descriptor::instantiate()</td>
+    <td>LV2_Descriptor::run()</td></tr>
+<tr><td>LV2_Descriptor::extension_data()</td>
+    <td>LV2_Descriptor::cleanup()</td>
+    <td>LV2_Descriptor::connect_port()</td></tr>
 <tr><td></td><td>LV2_Descriptor::activate()</td><td></td></tr>
 <tr><td></td><td>LV2_Descriptor::deactivate()</td><td></td></tr>
 </table>
