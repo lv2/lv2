@@ -129,15 +129,6 @@ def getComment(m, urinode):
     if c.current():
         markup = c.current().object.literal_value['string']
 
-        # Replace urn:struct links with links to code documentation
-        matches = re.findall('href="urn:struct:([^"]*)"', markup)
-        if matches:
-            for match in matches:
-                struct_uri = os.path.join(doc_base, 'ns', 'doc', 'html',
-                                          'struct' + match.replace('_', '__') + '.html')
-                markup = markup.replace('href="urn:struct:' + match + '"',
-                                        'href="' + struct_uri + '"')
-
         rgx = re.compile('([^a-zA-Z0-9_:])(' + \
                              '|'.join(map(re.escape, linkmap)) + \
                              ')([^a-aA-Z0-9_:])')

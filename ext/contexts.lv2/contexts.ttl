@@ -99,8 +99,7 @@ ctx:MessageContext a ctx:Context , lv2:Feature ;
 A non-realtime context for plugin control via message passing.  This context
 has a run method which takes a bitset of flags for parameters specifying which
 input and output ports are valid before and after the run method has executed,
-respectively (see <a href="urn:struct:LV2_Contexts_MessageContext"
->LV2_Contexts_MessageContext</a>).
+respectively (see <code>LV2_Contexts_MessageContext</code>).
 """ .
 
 ctx:IdleContext a ctx:Context , lv2:Feature ;
@@ -112,10 +111,9 @@ This context never has any ports.
 ctx:RequestRunFeature a lv2:Feature ;
 	lv2:documentation """
 A feature allowing the plugin to request the execution of a particular context
-at an arbitrary time.  To support this feature, the host MUST pass an <a href=
-"urn:struct:LV2_Feature">LV2_Feature</a> to <code>instantiate</code> with
-<code>data</code> pointing to a <a href="urn:struct:LV2_Contexts_Request_Run_Feature"
->LV2_Contexts_Request_Run_Feature</a>.
+at an arbitrary time.  To support this feature, the host MUST pass an
+LV2_Feature to <code>instantiate</code> with <code>data</code> pointing to a
+LV2_Contexts_Request_Run_Feature.
 
 <p>The plugin MAY call <code>request_run</code> with the given
 <code>data</code> from any non-realtime context to demand soon-as-possible execution

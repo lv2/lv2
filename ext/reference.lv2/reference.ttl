@@ -51,7 +51,7 @@ reference:Reference a rdfs:Class ;
 <p>Reference to a <a href="#Blob">Blob</a>.  The actual contents of a Reference
 are opaque and host specific, and must not be copied, serialized, or otherwise
 interpreted by a plugin, except via functions provided by the host in
-<a href="urn:struct:LV2_Blob_Support">LV2_Blob_Support</a>.</p>
+LV2_Blob_Support.</p>
 
 <p>A Reference is a special case of Atom with <code>type = 0</code>.
 "Null" is the unique Atom with <code>type = 0</code> and
@@ -62,21 +62,19 @@ reference:blobSupport a lv2:Feature ;
 	rdfs:label "Blob support" ;
 	lv2:documentation """
 Support for dynamically allocated blobs.  If a host supports this feature, it
-MUST pass a <a href="urn:struct:LV2_Feature">LV2_Feature</a> with
-<code>URI</code> http://lv2plug.in/ns/ext/atom#blobSupport
-and <code>data</code> pointing to a <a href="urn:struct:LV2_Blob_Support"
->LV2_Blob_Support</a>.
+MUST pass a LV2_Feature with <code>URI</code>
+http://lv2plug.in/ns/ext/atom#blobSupport and <code>data</code> pointing to a
+LV2_Blob_Support.
 """ .
 
 reference:Blob a rdfs:Class ;
 	rdfs:label      "Blob" ;
 	lv2:documentation """
-<p>Base class for all dynamically allocated blobs.  An <a
-href="urn:struct:LV2_Blob" >LV2_Blob</a> ia an opaque pointer to host
-data.  The type and data of a blob can be accessed via host-provided
-functions in <a href="urn:struct:LV2_Blob_Support">LV2_Blob_Support</a>.
-The type of a blob can be any URI that describes a data format.  Blobs are
-always allocated by the host, and unlike atoms are not necessarily POD.</p>
+<p>Base class for all dynamically allocated blobs.  An <a LV2_Blob is an opaque
+pointer to host data.  The type and data of a blob can be accessed via
+host-provided functions in LV2_Blob_Support.  The type of a blob can be any URI
+that describes a data format.  Blobs are always allocated by the host, and
+unlike atoms are not necessarily POD.</p>
 
 <p>Blob data MUST NOT be used in any way by an implementation that does not
 understand that blob type (unlike Atoms, meaningful type-oblivious use

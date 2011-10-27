@@ -50,10 +50,9 @@
 
    Note that an LV2_Atom is the latter two fields of an LV2_Event as defined by
    the <a href="http://lv2plug.in/ns/ext/event">LV2 events extension</a>. The
-   host MAY marshal an <a href="urn:struct:LV2_Event">LV2_Event</a> to an <a
-   href="urn:struct:LV2_Atom">LV2_Atom</a> by simply pointing to the offset of
-   <code>type</code>. The macro LV2_ATOM_FROM_EVENT is provided in this header
-   for this purpose.
+   host MAY marshal an LV2_Event to an LV2_Atom by simply pointing to the
+   offset of <code>type</code>. The macro LV2_ATOM_FROM_EVENT is provided in
+   this header for this purpose.
 */
 typedef struct {
 
