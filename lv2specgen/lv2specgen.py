@@ -923,6 +923,7 @@ def getNamespaces(m):
     nspaces = {}
     for prefix, uri in m.namespaces():
         nspaces[prefix] = uri
+    del nspaces['default1']  # Remove ugly default prefix added by rdflib
     return nspaces
 
 
