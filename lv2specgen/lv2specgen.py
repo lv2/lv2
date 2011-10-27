@@ -125,7 +125,7 @@ def niceName(uri):
 
 def termName(m, urinode):
     "Trims the namespace out of a term to give a name to the term."
-    return str(urinode.uri).replace(spec_ns_str, "")
+    return str(urinode).replace(spec_ns_str, "")
 
 
 def getLabel(m, urinode):
@@ -196,7 +196,7 @@ def rdfsPropertyInfo(term, m):
         rlist = ''
         first = True
         for st in o:
-            k = getTermLink(getObject(st).uri, term, rdfs.subPropertyOf)
+            k = getTermLink(getObject(st), term, rdfs.subPropertyOf)
             rlist += getProperty(k, first)
             first = False
         doc += "<tr><th>Sub-property of</th>%s" % rlist
@@ -215,7 +215,7 @@ def rdfsPropertyInfo(term, m):
                 first = False
         else:
             if not getObject(d).is_blank():
-                domainsdoc += getProperty(getTermLink(getObject(d).uri, term, rdfs.domain))
+                domainsdoc += getProperty(getTermLink(getObject(d), term, rdfs.domain))
     if (len(domainsdoc) > 0):
         doc += "<tr><th>Domain</th>%s" % domainsdoc
 
@@ -233,7 +233,7 @@ def rdfsPropertyInfo(term, m):
                 first = False
         else:
             if not getObject(r).is_blank():
-                rangesdoc += getProperty(getTermLink(getObject(r).uri, term, rdfs.range))
+                rangesdoc += getProperty(getTermLink(getObject(r), term, rdfs.range))
     if (len(rangesdoc) > 0):
         doc += "<tr><th>Range</th>%s" % rangesdoc
 
@@ -259,7 +259,7 @@ def getTermLink(uri, subject=None, predicate=None):
     uri = str(uri)
     extra = ''
     if subject != None and predicate != None:
-        extra = 'about="%s" rel="%s" resource="%s"' % (str(subject.uri), niceName(str(predicate.uri)), uri)
+        extra = 'about="%s" rel="%s" resource="%s"' % (str(subject), niceName(str(predicate)), uri)
     if (uri.startswith(spec_ns_str)):
         return '<a href="#%s" %s>%s</a>' % (uri.replace(spec_ns_str, ""), extra, niceName(uri))
     else:
@@ -277,8 +277,8 @@ def rdfsClassInfo(term, m):
     superclasses = []
     for st in findStatements(m, term, rdfs.subClassOf, None):
         if not getObject(st).is_blank():
-            uri = str(getObject(st).uri)
-            if (not uri in superclasses):
+            uri = getObject(st)
+            if not uri in superclasses:
                 superclasses.append(uri)
         else:
             meta_type = findOne(m, getObject(st), rdf.type, None)
@@ -335,7 +335,7 @@ def rdfsClassInfo(term, m):
             doc += '</td></tr>'
 
     # Find out about properties which have rdfs:domain of t
-    d = classdomains.get(str(term.uri), "")
+    d = classdomains.get(str(term), "")
     if d:
         dlist = ''
         first = True
@@ -345,7 +345,7 @@ def rdfsClassInfo(term, m):
         doc += "<tr><th>In domain of</th>%s" % dlist
 
     # Find out about properties which have rdfs:range of t
-    r = classranges.get(str(term.uri), "")
+    r = classranges.get(str(term), "")
     if r:
         rlist = ''
         first = True
@@ -638,13 +638,13 @@ def specInformation(m, ns):
             for range in findStatements(m, None, rdfs.range, getSubject(classStatement)):
                 if not getSubject(classStatement).is_blank():
                     add(classranges,
-                        str(getSubject(classStatement).uri),
-                        str(getSubject(range).uri))
+                        str(getSubject(classStatement)),
+                        str(getSubject(range)))
             for domain in findStatements(m, None, rdfs.domain, getSubject(classStatement)):
                 if not getSubject(classStatement).is_blank():
                     add(classdomains,
-                        str(getSubject(classStatement).uri),
-                        str(getSubject(domain).uri))
+                        str(getSubject(classStatement)),
+                        str(getSubject(domain)))
             if not getSubject(classStatement).is_blank():
                 klass = getSubject(classStatement)
                 if klass not in classlist and str(klass).startswith(ns):
@@ -665,7 +665,7 @@ def specInformation(m, ns):
 def specProperty(m, subject, predicate):
     "Return a property of the spec."
     for c in findStatements(m, None, predicate, None):
-        if getSubject(c).is_resource() and str(getSubject(c).uri) == str(subject):
+        if getSubject(c).is_resource() and str(getSubject(c)) == str(subject):
             return getObject(c).literal_value['string']
     return ''
 
@@ -674,7 +674,7 @@ def specProperties(m, subject, predicate):
     "Return a property of the spec."
     properties = []
     for c in findStatements(m, None, predicate, None):
-        if getSubject(c).is_resource() and str(getSubject(c).uri) == str(subject):
+        if getSubject(c).is_resource() and str(getSubject(c)) == str(subject):
             properties += [getObject(c)]
     return properties
 
@@ -761,7 +761,7 @@ def getInstances(model, classes, properties):
             or (getSubject(i) in instances)
             or (getSubject(i) in properties)):
             continue
-        full_uri = str(getSubject(i).uri)
+        full_uri = str(getSubject(i))
         if (full_uri.startswith(spec_ns_str)):
             instances.append(getSubject(i))
     return instances
@@ -898,7 +898,7 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
 
     see_also_files = specProperties(m, spec_url, rdfs.seeAlso)
     for f in see_also_files:
-        uri = str(f.uri)
+        uri = str(f)
         if uri[0:5] == 'file:':
             uri = uri[5:]
 
@@ -950,7 +950,7 @@ def getOntologyNS(m):
     s = findOne(m, None, rdf.type, lv2.Specification)
     if s:
         if (not getSubject(s).is_blank()):
-            ns = str(getSubject(s).uri)
+            ns = str(getSubject(s))
 
     if (ns == None):
         sys.exit("Impossible to get ontology's namespace")
