@@ -111,6 +111,10 @@ def getObject(s):
     return s.object
 
 
+def getLiteralString(s):
+    return s.literal_value['string']
+
+
 def niceName(uri):
     regexp = re.compile("^(.*[/#])([^/#]+)$")
     rez = regexp.search(uri)
@@ -131,7 +135,7 @@ def termName(m, urinode):
 def getLabel(m, urinode):
     l = findOne(m, urinode, rdfs.label, None)
     if l:
-        return getObject(l).literal_value['string']
+        return getLiteralString(getObject(l))
     else:
         return ''
 
@@ -139,7 +143,7 @@ def getLabel(m, urinode):
 def getComment(m, urinode):
     c = findOne(m, urinode, lv2.documentation, None)
     if c:
-        markup = getObject(c).literal_value['string']
+        markup = getLiteralString(getObject(c))
 
         rgx = re.compile('([^a-zA-Z0-9_:])(' + \
                              '|'.join(map(re.escape, linkmap)) + \
@@ -152,7 +156,7 @@ def getComment(m, urinode):
 
     c = findOne(m, urinode, rdfs.comment, None)
     if c:
-        text = getObject(c).literal_value['string']
+        text = getLiteralString(getObject(c))
         return xml.sax.saxutils.escape(text)
 
     return ''
@@ -177,7 +181,7 @@ def endProperties(first):
 def owlVersionInfo(m):
     v = findOne(m, None, owl.versionInfo, None)
     if v:
-        return getObject(v).literal_value['string']
+        return getLiteralString(getObject(v))
     else:
         return ""
 
@@ -321,7 +325,7 @@ def rdfsClassInfo(term, m):
                     prop_str += getProperty(getTermLink(getObject(p)), first)
                     first = False
                 elif getObject(p).is_literal():
-                    prop_str += getProperty(getObject(p).literal_value['string'], first)
+                    prop_str += getProperty(getLiteralString(getObject(p)), first)
                     first = False
 
                 last_pred = getPredicate(p)
@@ -331,7 +335,7 @@ def rdfsClassInfo(term, m):
             if prop_str != '':
                 doc += '<table class=\"restriction\">%s</table>\n' % prop_str
             if comment != None:
-                doc += "<span>%s</span>\n" % comment.literal_value['string']
+                doc += "<span>%s</span>\n" % getLiteralString(comment)
             doc += '</td></tr>'
 
     # Find out about properties which have rdfs:domain of t
@@ -375,7 +379,7 @@ def blankNodeDesc(node, m):
             doc += '<td class="blankdef">%s</td>\n' % getTermLink(getObject(p))
             # getTermLink(str(getObject(p).uri), node, getPredicate(p))
         elif getObject(p).is_literal():
-            doc += '<td class="blankdef">%s</td>\n' % str(getObject(p).literal_value['string'])
+            doc += '<td class="blankdef">%s</td>\n' % getLiteralString(getObject(p))
         elif getObject(p).is_blank():
             doc += '<td class="blankdef">' + blankNodeDesc(getObject(p), m) + '</td>\n'
         else:
@@ -666,7 +670,7 @@ def specProperty(m, subject, predicate):
     "Return a property of the spec."
     for c in findStatements(m, None, predicate, None):
         if getSubject(c).is_resource() and str(getSubject(c)) == str(subject):
-            return getObject(c).literal_value['string']
+            return getLiteralString(getObject(c))
     return ''
 
 
@@ -684,12 +688,12 @@ def specAuthors(m, subject):
     dev = set()
     for i in findStatements(m, None, doap.developer, None):
         for j in findStatements(m, getObject(i), foaf.name, None):
-            dev.add(getObject(j).literal_value['string'])
+            dev.add(getLiteralString(getObject(j)))
 
     maint = set()
     for i in findStatements(m, None, doap.maintainer, None):
         for j in findStatements(m, getObject(i), foaf.name, None):
-            maint.add(getObject(j).literal_value['string'])
+            maint.add(getLiteralString(getObject(j)))
 
     doc = ''
     first = True
@@ -723,22 +727,22 @@ def specVersion(m, subject):
     latest_doap_release = None
     for i in findStatements(m, None, doap.release, None):
         for j in findStatements(m, getObject(i), doap.revision, None):
-            revision = getObject(j).literal_value['string']
+            revision = getLiteralString(getObject(j))
             if latest_doap_revision == "" or revision > latest_doap_revision:
                 latest_doap_revision = revision
                 latest_doap_release = getObject(i)
     date = ""
     if latest_doap_release != None:
         for i in findStatements(m, latest_doap_release, doap.created, None):
-            date = getObject(i).literal_value['string']
+            date = getLiteralString(getObject(i))
 
     # Get the LV2 version
     minor_version = 0
     micro_version = 0
     for i in findStatements(m, None, lv2.minorVersion, None):
-        minor_version = int(getObject(i).literal_value['string'])
+        minor_version = int(getLiteralString(getObject(i)))
     for i in findStatements(m, None, lv2.microVersion, None):
-        micro_version = int(getObject(i).literal_value['string'])
+        micro_version = int(getLiteralString(getObject(i)))
     return (minor_version, micro_version, date)
 
 
