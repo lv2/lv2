@@ -30,15 +30,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __authors__ = """
 Christopher Schmidt,
 Uldis Bojars,
 Sergio Fernández,
 David Robillard"""
-__license__ = "MIT License <http://www.opensource.org/licenses/mit-license.php>"
+__license__ = "MIT License <http://www.opensource.org/licenses/mit>"
 __contact__ = "devel@lists.lv2plug.in"
-__date__ = "2011-05-30"
+__date__ = "2011-10-26"
 
 import os
 import sys
@@ -51,15 +51,7 @@ try:
     import RDF
     import Redland
 except ImportError:
-    version = sys.version.split(" ")[0]
-    if version.startswith("2.5"):
-        sys.path.append("/usr/lib/python2.4/site-packages/")
-    else:
-        sys.path.append("/usr/lib/python2.5/site-packages/")
-    try:
-        import RDF
-    except:
-        sys.exit("Error importing Redland bindings for Python; check if it is installed correctly")
+    sys.exit("Error importing Redland bindings for Python (python-librdf)")
 
 #global vars
 classranges = {}
