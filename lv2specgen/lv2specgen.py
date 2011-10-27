@@ -52,7 +52,7 @@ try:
 except ImportError:
     sys.exit("Error importing Redland bindings for Python (python-librdf)")
 
-#global vars
+# Global Variables
 classranges = {}
 classdomains = {}
 linkmap = {}
@@ -196,7 +196,7 @@ def rdfsPropertyInfo(term, m):
         rlist = ''
         first = True
         for st in o:
-            k = getTermLink(str(getObject(st).uri), term, rdfs.subPropertyOf)
+            k = getTermLink(getObject(st).uri, term, rdfs.subPropertyOf)
             rlist += getProperty(k, first)
             first = False
         doc += "<tr><th>Sub-property of</th>%s" % rlist
@@ -215,7 +215,7 @@ def rdfsPropertyInfo(term, m):
                 first = False
         else:
             if not getObject(d).is_blank():
-                domainsdoc += getProperty(getTermLink(str(getObject(d).uri), term, rdfs.domain))
+                domainsdoc += getProperty(getTermLink(getObject(d).uri, term, rdfs.domain))
     if (len(domainsdoc) > 0):
         doc += "<tr><th>Domain</th>%s" % domainsdoc
 
@@ -233,7 +233,7 @@ def rdfsPropertyInfo(term, m):
                 first = False
         else:
             if not getObject(r).is_blank():
-                rangesdoc += getProperty(getTermLink(str(getObject(r).uri), term, rdfs.range))
+                rangesdoc += getProperty(getTermLink(getObject(r).uri, term, rdfs.range))
     if (len(rangesdoc) > 0):
         doc += "<tr><th>Range</th>%s" % rangesdoc
 
@@ -301,7 +301,7 @@ def rdfsClassInfo(term, m):
             elif getPredicate(p) == rdfs.comment:
                 comment = getObject(p)
         if onProp != None:
-            doc += '<tr><th>Restriction on %s</th><td>' % getTermLink(onProp.uri)
+            doc += '<tr><th>Restriction on %s</th><td>' % getTermLink(onProp)
 
             prop_str = ''
             last_pred = None
@@ -315,10 +315,10 @@ def rdfsClassInfo(term, m):
                     continue
 
                 if getPredicate(p) != last_pred:
-                    prop_str += '<tr><th>%s</th>\n' % getTermLink(str(getPredicate(p).uri))
+                    prop_str += '<tr><th>%s</th>\n' % getTermLink(getPredicate(p))
                     first = True
                 if getObject(p).is_resource():
-                    prop_str += getProperty(getTermLink(getObject(p).uri), first)
+                    prop_str += getProperty(getTermLink(getObject(p)), first)
                     first = False
                 elif getObject(p).is_literal():
                     prop_str += getProperty(getObject(p).literal_value['string'], first)
@@ -370,9 +370,9 @@ def blankNodeDesc(node, m):
         if isSpecial(getPredicate(p)):
             continue
         doc += '<tr>'
-        doc += '<td class="blankterm">%s</td>\n' % getTermLink(str(getPredicate(p).uri))
+        doc += '<td class="blankterm">%s</td>\n' % getTermLink(getPredicate(p))
         if getObject(p).is_resource():
-            doc += '<td class="blankdef">%s</td>\n' % getTermLink(str(getObject(p).uri))
+            doc += '<td class="blankdef">%s</td>\n' % getTermLink(getObject(p))
             # getTermLink(str(getObject(p).uri), node, getPredicate(p))
         elif getObject(p).is_literal():
             doc += '<td class="blankdef">%s</td>\n' % str(getObject(p).literal_value['string'])
@@ -397,10 +397,10 @@ def extraInfo(term, m):
             last_pred = None
             continue
         if getPredicate(p) != last_pred:
-            doc += '<tr><th>%s</th>\n' % getTermLink(str(getPredicate(p).uri))
+            doc += '<tr><th>%s</th>\n' % getTermLink(getPredicate(p))
             first = True
         if getObject(p).is_resource():
-            doc += getProperty(getTermLink(str(getObject(p).uri), term, getPredicate(p)), first)
+            doc += getProperty(getTermLink(getObject(p), term, getPredicate(p)), first)
         elif getObject(p).is_literal():
             doc += getProperty(str(getObject(p)), first)
         elif getObject(p).is_blank():
@@ -446,7 +446,7 @@ def owlInfo(term, m):
         res += "<tr><th>Inverse:</th>\n"
         first = True
         for st in o:
-            res += getProperty(getTermLink(str(getObject(st).uri)), first)
+            res += getProperty(getTermLink(getObject(st)), first)
             first = False
         res += endProperties(first)
 
