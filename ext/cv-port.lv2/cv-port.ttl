@@ -65,14 +65,14 @@ audio except in cases where this is known to be safe.
 Example:
 <pre>
 &lt;http://example.org/some-plugin&gt;
-	lv2:port [
-		a cv:CVPort, lv2:InputPort ;
-		lv2:index 0 ;
-		lv2:minimum -1.0 ;
-		lv2:maximum 1.0 ;
-		lv2:default 0.0 ;
-		lv2:symbol "modulation" ;
-		lv2:name "Modulation" ;
-	] .
+    lv2:port [
+        a cv:CVPort, lv2:InputPort ;
+        lv2:index 0 ;
+        lv2:minimum -1.0 ;
+        lv2:maximum 1.0 ;
+        lv2:default 0.0 ;
+        lv2:symbol "modulation" ;
+        lv2:name "Modulation" ;
+    ] .
 </pre>
 """ .

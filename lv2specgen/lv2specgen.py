@@ -47,10 +47,9 @@ import re
 import xml.sax.saxutils
 
 try:
-    import RDF
-    import Redland
+    import rdflib
 except ImportError:
-    sys.exit("Error importing Redland bindings for Python (python-librdf)")
+    sys.exit("Error importing rdflib")
 
 # Global Variables
 classranges = {}
@@ -76,43 +75,54 @@ ns_list = {
     "http://usefulinc.com/ns/doap#"                 : "doap"
     }
 
-rdf  = RDF.NS('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-rdfs = RDF.NS('http://www.w3.org/2000/01/rdf-schema#')
-owl  = RDF.NS('http://www.w3.org/2002/07/owl#')
-lv2  = RDF.NS('http://lv2plug.in/ns/lv2core#')
-doap = RDF.NS('http://usefulinc.com/ns/doap#')
-foaf = RDF.NS('http://xmlns.com/foaf/0.1/')
+rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
+owl  = rdflib.Namespace('http://www.w3.org/2002/07/owl#')
+lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
+doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
+foaf = rdflib.Namespace('http://xmlns.com/foaf/0.1/')
 
 doc_base = '.'
 
 
 def findStatements(model, s, p, o):
-    return model.find_statements(RDF.Statement(s, p, o))
-
-
-def isEnd(s):
-    return not s.current()
+    return model.triples([s, p, o])
 
 
 def findOne(m, s, p, o):
     l = findStatements(m, s, p, o)
-    return l.current()
+    try:
+        return l.next()
+    except:
+        return None
 
 
 def getSubject(s):
-    return s.subject
+    return s[0]
 
 
 def getPredicate(s):
-    return s.predicate
+    return s[1]
 
 
 def getObject(s):
-    return s.object
+    return s[2]
 
 
 def getLiteralString(s):
-    return s.literal_value['string']
+    return s
+
+
+def isResource(n):
+    return type(n) == rdflib.URIRef
+
+
+def isBlank(n):
+    return type(n) == rdflib.BNode
+
+
+def isLiteral(n):
+    return type(n) == rdflib.Literal
 
 
 def niceName(uri):
@@ -187,30 +197,29 @@ def rdfsPropertyInfo(term, m):
     domain = ""
 
     # Find subPropertyOf information
-    o = findStatements(m, term, rdfs.subPropertyOf, None)
-    if not isEnd(o):
-        rlist = ''
-        first = True
-        for st in o:
-            k = getTermLink(getObject(st), term, rdfs.subPropertyOf)
-            rlist += getProperty(k, first)
-            first = False
-        doc += "<tr><th>Sub-property of</th>%s" % rlist
+    rlist = ''
+    first = True
+    for st in findStatements(m, term, rdfs.subPropertyOf, None):
+        k = getTermLink(getObject(st), term, rdfs.subPropertyOf)
+        rlist += getProperty(k, first)
+        first = False
+    if rlist != '':
+        doc += '<tr><th>Sub-property of</th>' + rlist
 
     # Domain stuff
     domains = findStatements(m, term, rdfs.domain, None)
     domainsdoc = ""
     for d in domains:
-        collection = findStatements(m, getObject(d), owl.unionOf, None)
-        if not isEnd(collection):
-            uris = parseCollection(m, collection)
+        union = findOne(m, getObject(d), owl.unionOf, None)
+        if union:
+            uris = parseCollection(m, getObject(union))
             first = True
             for uri in uris:
                 domainsdoc += getProperty(getTermLink(uri, term, rdfs.domain), first)
-                add(classdomains, uri, term.uri)
+                add(classdomains, uri, term)
                 first = False
         else:
-            if not getObject(d).is_blank():
+            if not isBlank(getObject(d)):
                 domainsdoc += getProperty(getTermLink(getObject(d), term, rdfs.domain))
     if (len(domainsdoc) > 0):
         doc += "<tr><th>Domain</th>%s" % domainsdoc
@@ -219,16 +228,16 @@ def rdfsPropertyInfo(term, m):
     ranges = findStatements(m, term, rdfs.range, None)
     rangesdoc = ""
     for r in ranges:
-        collection = findStatements(m, getObject(r), owl.unionOf, None)
-        if not isEnd(collection):
-            uris = parseCollection(m, collection)
+        union = findOne(m, getObject(r), owl.unionOf, None)
+        if union:
+            uris = parseCollection(m, getObject(union))
             first = True
             for uri in uris:
                 rangesdoc += getProperty(getTermLink(uri, term, rdfs.range), first)
-                add(classranges, uri, term.uri)
+                add(classranges, uri, term)
                 first = False
         else:
-            if not getObject(r).is_blank():
+            if not isBlank(getObject(r)):
                 rangesdoc += getProperty(getTermLink(getObject(r), term, rdfs.range))
     if (len(rangesdoc) > 0):
         doc += "<tr><th>Range</th>%s" % rangesdoc
@@ -236,17 +245,17 @@ def rdfsPropertyInfo(term, m):
     return doc
 
 
-def parseCollection(model, collection):
+def parseCollection(model, node):
     uris = []
-    rdflist = findStatements(model, collection.current().object, None, None)
-    while (not isEnd(rdflist)) and (not rdflist.current().object.is_blank()):
-        one = rdflist.current()
-        if not one.object.is_blank():
-            uris.append(str(one.object.uri))
-        rdflist.next()
-        one = rdflist.current()
-        if getPredicate(one) == rdf.rest:
-            rdflist = findStatements(model, one.object, None, None)
+
+    while node:
+        first = findOne(model, node, rdf.first, None)
+        rest  = findOne(model, node, rdf.rest, None)
+        if not first or not rest:
+            break;
+        
+        uris.append(getObject(first))
+        node = getObject(rest)
 
     return uris
 
@@ -272,7 +281,7 @@ def rdfsClassInfo(term, m):
     restrictions = []
     superclasses = []
     for st in findStatements(m, term, rdfs.subClassOf, None):
-        if not getObject(st).is_blank():
+        if not isBlank(getObject(st)):
             uri = getObject(st)
             if not uri in superclasses:
                 superclasses.append(uri)
@@ -313,10 +322,10 @@ def rdfsClassInfo(term, m):
                 if getPredicate(p) != last_pred:
                     prop_str += '<tr><th>%s</th>\n' % getTermLink(getPredicate(p))
                     first = True
-                if getObject(p).is_resource():
+                if isResource(getObject(p)):
                     prop_str += getProperty(getTermLink(getObject(p)), first)
                     first = False
-                elif getObject(p).is_literal():
+                elif isLiteral(getObject(p)):
                     prop_str += getProperty(getLiteralString(getObject(p)), first)
                     first = False
 
@@ -367,12 +376,12 @@ def blankNodeDesc(node, m):
             continue
         doc += '<tr>'
         doc += '<td class="blankterm">%s</td>\n' % getTermLink(getPredicate(p))
-        if getObject(p).is_resource():
+        if isResource(getObject(p)):
             doc += '<td class="blankdef">%s</td>\n' % getTermLink(getObject(p))
-            # getTermLink(str(getObject(p).uri), node, getPredicate(p))
-        elif getObject(p).is_literal():
+            # getTermLink(str(getObject(p)), node, getPredicate(p))
+        elif isLiteral(getObject(p)):
             doc += '<td class="blankdef">%s</td>\n' % getLiteralString(getObject(p))
-        elif getObject(p).is_blank():
+        elif isBlank(getObject(p)):
             doc += '<td class="blankdef">' + blankNodeDesc(getObject(p), m) + '</td>\n'
         else:
             doc += '<td class="blankdef">?</td>\n'
@@ -395,11 +404,11 @@ def extraInfo(term, m):
         if getPredicate(p) != last_pred:
             doc += '<tr><th>%s</th>\n' % getTermLink(getPredicate(p))
             first = True
-        if getObject(p).is_resource():
+        if isResource(getObject(p)):
             doc += getProperty(getTermLink(getObject(p), term, getPredicate(p)), first)
-        elif getObject(p).is_literal():
+        elif isLiteral(getObject(p)):
             doc += getProperty(str(getObject(p)), first)
-        elif getObject(p).is_blank():
+        elif isBlank(getObject(p)):
             doc += getProperty(str(blankNodeDesc(getObject(p), m)), first)
         else:
             doc += getProperty('?', first)
@@ -415,16 +424,16 @@ def rdfsInstanceInfo(term, m):
     """Generate rdfs-type information for instances"""
     doc = ""
 
-    t = findStatements(m, term, rdf.type, None)
-    if not isEnd(t):
-        doc += "<tr><th>Type</th>"
     first = True
-    for match in t:
+    for match in findStatements(m, term, rdf.type, None):
         doc += getProperty(getTermLink(getObject(match),
                                        term,
                                        rdf.type),
                            first)
         first = False
+
+    if doc != "":
+        doc = "<tr><th>Type</th>" + doc
 
     doc += endProperties(first)
     doc += extraInfo(term, m)
@@ -437,18 +446,16 @@ def owlInfo(term, m):
     res = ''
 
     # Inverse properties ( owl:inverseOf )
-    o = findStatements(m, term, owl.inverseOf, None)
-    if not isEnd(o):
-        res += "<tr><th>Inverse:</th>\n"
-        first = True
-        for st in o:
-            res += getProperty(getTermLink(getObject(st)), first)
-            first = False
+    first = True
+    for st in findStatements(m, term, owl.inverseOf, None):
+        res += getProperty(getTermLink(getObject(st)), first)
+        first = False
+    if res != "":
         res += endProperties(first)
+        res = "<tr><th>Inverse:</th>\n" + res
 
     def owlTypeInfo(term, propertyType, name):
-        o = findStatements(m, term, rdf.type, propertyType)
-        if not isEnd(o):
+        if findOne(m, term, rdf.type, propertyType):
             return "<tr><th>OWL Type</th><td>%s</td></tr>\n" % name
         else:
             return ""
@@ -486,10 +493,7 @@ def docTerms(category, list, m):
                 term = spec_ns[t]
                 curie = "%s:%s" % (nspre, t)
 
-        try:
-            term_uri = term.uri
-        except:
-            term_uri = term
+        term_uri = term
 
         doc += """<div class="specterm" id="%s" about="%s">\n<h3>%s <a href="#%s">%s</a></h3>\n""" % (t, term_uri, category, getAnchor(str(term_uri)), curie)
 
@@ -564,7 +568,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
         for c in classlist:
             if c in shown:
                 continue
-            if not isEnd(findStatements(m, c, rdfs.subClassOf, None)):
+            if findOne(m, c, rdfs.subClassOf, None):
                 continue
             shown[c] = True
             name = termName(m, c)
@@ -574,15 +578,13 @@ def buildIndex(m, classlist, proplist, instalist=None):
             def class_tree(c):
                 tree = ''
                 shown[c] = True
-                statements = findStatements(m, None, rdfs.subClassOf, c)
-                if not isEnd(statements):
-                    tree += '<ul>'
-                    for s in statements:
-                        s_name = termName(m, getSubject(s))
-                        tree += '<li><a href="#%s">%s</a>\n' % (s_name, s_name)
-                        tree += class_tree(getSubject(s))
-                        tree += '</li>'
-                    tree += '</ul>'
+                for s in findStatements(m, None, rdfs.subClassOf, c):
+                    s_name = termName(m, getSubject(s))
+                    tree += '<li><a href="#%s">%s</a>\n' % (s_name, s_name)
+                    tree += class_tree(getSubject(s))
+                    tree += '</li>'
+                if tree != '':
+                    tree = '<ul>' + tree + '</ul>'
                 return tree
             azlist += class_tree(c)
             azlist += '</li>'
@@ -632,16 +634,16 @@ def specInformation(m, ns):
     for onetype in classtypes:
         for classStatement in findStatements(m, None, rdf.type, onetype):
             for range in findStatements(m, None, rdfs.range, getSubject(classStatement)):
-                if not getSubject(classStatement).is_blank():
+                if not isBlank(getSubject(classStatement)):
                     add(classranges,
                         str(getSubject(classStatement)),
                         str(getSubject(range)))
             for domain in findStatements(m, None, rdfs.domain, getSubject(classStatement)):
-                if not getSubject(classStatement).is_blank():
+                if not isBlank(getSubject(classStatement)):
                     add(classdomains,
                         str(getSubject(classStatement)),
                         str(getSubject(domain)))
-            if not getSubject(classStatement).is_blank():
+            if not isBlank(getSubject(classStatement)):
                 klass = getSubject(classStatement)
                 if klass not in classlist and str(klass).startswith(ns):
                     classlist.append(klass)
@@ -661,7 +663,7 @@ def specInformation(m, ns):
 def specProperty(m, subject, predicate):
     "Return a property of the spec."
     for c in findStatements(m, None, predicate, None):
-        if getSubject(c).is_resource() and str(getSubject(c)) == str(subject):
+        if isResource(getSubject(c)) and str(getSubject(c)) == str(subject):
             return getLiteralString(getObject(c))
     return ''
 
@@ -670,7 +672,7 @@ def specProperties(m, subject, predicate):
     "Return a property of the spec."
     properties = []
     for c in findStatements(m, None, predicate, None):
-        if getSubject(c).is_resource() and str(getSubject(c)) == str(subject):
+        if isResource(getSubject(c)) and str(getSubject(c)) == str(subject):
             properties += [getObject(c)]
     return properties
 
@@ -746,13 +748,13 @@ def getInstances(model, classes, properties):
     instances = []
     for c in classes:
         for i in findStatements(model, None, rdf.type, c):
-            if not getSubject(i).is_resource():
+            if not isResource(getSubject(i)):
                 continue
             inst = getSubject(i)
             if inst not in instances and str(inst) != spec_url:
                 instances.append(inst)
     for i in findStatements(model, None, rdf.type, None):
-        if ((not getSubject(i).is_resource())
+        if ((not isResource(getSubject(i)))
             or (getSubject(i) in classes)
             or (getSubject(i) in instances)
             or (getSubject(i) in properties)):
@@ -779,19 +781,12 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
         linkmap[sym] = '<span><a href="%s">%s</a></span>' % (
             os.path.join(doc_base, url), sym)
 
-    m = RDF.Model()
+    m = rdflib.ConjunctiveGraph()
     try:
         base = specloc[0:specloc.rfind('/')]
-
-        # Parse manifest.ttl
         manifest_path = os.path.join(base, 'manifest.ttl')
-        p = RDF.Parser(name="guess")
-        p.parse_into_model(m, manifest_path)
-
-        # Parse ontology file
-        p = RDF.Parser(name="guess")
-        p.parse_into_model(m, specloc)
-
+        m.parse(manifest_path, format='n3')
+        m.parse(specloc, format='n3')
     except:
         e = sys.exc_info()[1]
         print('Error reading ontology: ' + str(e))
@@ -803,9 +798,9 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     if (spec_ns_str[-1] != "/" and spec_ns_str[-1] != "#"):
         spec_ns_str += "#"
 
-    spec_ns = RDF.NS(spec_ns_str)
+    spec_ns = rdflib.Namespace(spec_ns_str)
 
-    namespaces = getNamespaces(p)
+    namespaces = getNamespaces(m)
     keys = namespaces.keys()
     keys.sort()
     prefixes_html = "<span>"
@@ -901,7 +896,7 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
 
     template = template.replace('@FILES@', other_files)
 
-    comment = getComment(m, RDF.Uri(spec_url))
+    comment = getComment(m, rdflib.URIRef(spec_url))
     if comment != '':
         template = template.replace('@COMMENT@', comment)
     else:
@@ -923,17 +918,10 @@ def save(path, text):
         print('Error writing to file "' + path + '": ' + str(e))
 
 
-def getNamespaces(parser):
+def getNamespaces(m):
     """Return a prefix:URI dictionary of all namespaces seen during parsing"""
-    count = Redland.librdf_parser_get_namespaces_seen_count(parser._parser)
     nspaces = {}
-    for index in range(0, count):
-        prefix = Redland.librdf_parser_get_namespaces_seen_prefix(parser._parser, index)
-        uri_obj = Redland.librdf_parser_get_namespaces_seen_uri(parser._parser, index)
-        if uri_obj is None:
-            uri = None
-        else:
-            uri = RDF.Uri(from_object=uri_obj)
+    for prefix, uri in m.namespaces():
         nspaces[prefix] = uri
     return nspaces
 
@@ -942,7 +930,7 @@ def getOntologyNS(m):
     ns = None
     s = findOne(m, None, rdf.type, lv2.Specification)
     if s:
-        if (not getSubject(s).is_blank()):
+        if not isBlank(getSubject(s)):
             ns = str(getSubject(s))
 
     if (ns == None):

@@ -26,10 +26,10 @@
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	doap:name "LV2 Event" ;
 	rdfs:seeAlso <event-helpers.h> ;
-    doap:release [
-        doap:revision "1.2" ;
-        doap:created "2011-05-26"
-    ] ;
+	doap:release [
+		doap:revision "1.2" ;
+		doap:created "2011-05-26"
+	] ;
 	doap:maintainer [
 		a foaf:Person ;
 		foaf:name "David Robillard" ;
@@ -38,7 +38,7 @@
 	] , [
 		a foaf:Person ;
 		foaf:name "Lars Luthman" ;
-    ] ;
+	] ;
 	lv2:documentation """
 This extension defines a generic time-stamped event port type, which can be
 used to create plugins that read and write real-time events, such as MIDI,
@@ -46,20 +46,20 @@ OSC, or any other type of event payload.  The type(s) of event supported by
 a port is defined in the data file for a plugin, for example:
 <pre>
 &lt;http://example.org/some-plugin&gt;
-	lv2:port [
-		a ev:EventPort, lv2:InputPort ;
-		lv2:index 0 ;
-		ev:supportsEvent &lt;http://lv2plug.in/ns/ext/midi#MidiEvent&gt; ;
-		lv2:symbol "midi_input" ;
-		lv2:name "MIDI input" ;
-	] .
+    lv2:port [
+        a ev:EventPort, lv2:InputPort ;
+        lv2:index 0 ;
+        ev:supportsEvent &lt;http://lv2plug.in/ns/ext/midi#MidiEvent&gt; ;
+        lv2:symbol "midi_input" ;
+        lv2:name "MIDI input" ;
+    ] .
 </pre>
 """ .
 
 ev:EventPort a rdfs:Class ;
-    rdfs:label      "Event port" ;
-    rdfs:subClassOf lv2:Port ;
-    rdfs:comment    """
+	rdfs:label      "Event port" ;
+	rdfs:subClassOf lv2:Port ;
+	rdfs:comment    """
 Ports of this type will be connected to a struct of type LV2_Event_Buffer,
 defined in event.h.  These ports contain a sequence of generic events
 (possibly several types mixed in a single stream), the specific types of
@@ -116,8 +116,8 @@ event types whether or not this property is present.
 ev:supportsEvent a rdf:Property ;
 	rdfs:domain  lv2:Port ;
 	rdfs:range   ev:Event ;
-    rdfs:label   "Supports event type" ;
-    rdfs:comment """
+	rdfs:label   "Supports event type" ;
+	rdfs:comment """
 Indicates that this port supports or "understands" a certain event type.
 For input ports, this means the plugin understands and does something useful
 with events of this type.  For output ports, this means the plugin may generate
@@ -137,8 +137,8 @@ lv2ev:generic property for that port is also set.
 ev:inheritsEvent a rdf:Property ;
 	rdfs:domain  lv2:Port ;
 	rdfs:range   lv2:Port ;
-    rdfs:label   "Inherits event type" ;
-    rdfs:comment """
+	rdfs:label   "Inherits event type" ;
+	rdfs:comment """
 Indicates that this output port might pass through events that arrived at some
 other input port (or generate an event of the same type as events arriving at
 that input).  The host must always check the stamp type of all outputs when
@@ -149,8 +149,8 @@ connecting an input, but this property should be set whenever it applies.
 ev:supportsTimeStamp a rdf:Property ;
 	rdfs:domain  lv2:Port ;
 	rdfs:range   ev:TimeStamp ;
-    rdfs:label   "Supports time stamp type" ;
-    rdfs:comment """
+	rdfs:label   "Supports time stamp type" ;
+	rdfs:comment """
 Indicates that this port supports or "understands" a certain time stamp type.
 Meaningful only for input ports, the host must never connect a port to an
 event buffer with a time stamp type that isn't supported by the port.
@@ -160,8 +160,8 @@ event buffer with a time stamp type that isn't supported by the port.
 ev:generatesTimeStamp a rdf:Property ;
 	rdfs:domain  lv2:Port ;
 	rdfs:range   ev:TimeStamp ;
-    rdfs:label   "Outputs time stamp type" ;
-    rdfs:comment """
+	rdfs:label   "Outputs time stamp type" ;
+	rdfs:comment """
 Indicates that this port may output a certain time stamp type, regardless of
 the time stamp type of any input ports.  If the port outputs stamps based on
 what type inputs are connected to, this property should not be set (use the
@@ -177,8 +177,8 @@ struct, if it is non-NULL.
 ev:inheritsTimeStamp a rdf:Property ;
 	rdfs:domain  lv2:Port ;
 	rdfs:range   lv2:Port ;
-    rdfs:label   "Inherits time stamp type" ;
-    rdfs:comment """
+	rdfs:label   "Inherits time stamp type" ;
+	rdfs:comment """
 Indicates that this port follows the time stamp type of an input port.
 This property is not necessary, but it should be set for outputs that
 base their output type on an input port so the host can make more sense

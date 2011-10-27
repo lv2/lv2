@@ -49,11 +49,11 @@ extensions are supported by a given host.</p>
 @prefix hi: &lt;http://lv2plug.in/ns/ext/host-info#&gt; .
 
 &lt;http://example.org/some-host&gt; a hi:Host ;
-	doap:name "Foo Rack" ;
-	hi:supportsExtension [
-		hi:extension &lt;http://example.org/some-extension&gt; ;
-		hi:sinceVersion "1.2.0"
-	] .
+    doap:name "Foo Rack" ;
+    hi:supportsExtension [
+        hi:extension &lt;http://example.org/some-extension&gt; ;
+        hi:sinceVersion "1.2.0"
+    ] .
 </pre>
 """ .
 
