@@ -123,7 +123,7 @@ def niceName(uri):
         return uri
 
 
-def return_name(m, urinode):
+def termName(m, urinode):
     "Trims the namespace out of a term to give a name to the term."
     return str(urinode.uri).replace(spec_ns_str, "")
 
@@ -475,7 +475,7 @@ def docTerms(category, list, m):
     doc = ""
     nspre = spec_pre
     for item in list:
-        t = return_name(m, item)
+        t = termName(m, item)
         if (t.startswith(spec_ns_str)) and (
             len(t[len(spec_ns_str):].split("/")) < 2):
             term = t
@@ -571,7 +571,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
             if not isEnd(findStatements(m, c, rdfs.subClassOf, None)):
                 continue
             shown[c] = True
-            name = return_name(m, c)
+            name = termName(m, c)
             if name.startswith(spec_ns_str):
                 name = name.split(spec_ns_str[-1])[1]
             azlist += '<li><a href="#%s">%s</a>' % (name, name)
@@ -582,7 +582,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 if not isEnd(statements):
                     tree += '<ul>'
                     for s in statements:
-                        s_name = return_name(m, getSubject(s))
+                        s_name = termName(m, getSubject(s))
                         tree += '<li><a href="#%s">%s</a>\n' % (s_name, s_name)
                         tree += class_tree(getSubject(s))
                         tree += '</li>'
@@ -596,7 +596,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
         azlist += "<dt>Properties</dt><dd>"
         proplist.sort()
         for p in proplist:
-            name = return_name(m, p)
+            name = termName(m, p)
             if name.startswith(spec_ns_str):
                 name = name.split(spec_ns_str[-1])[1]
             azlist = """%s <a href="#%s">%s</a>, """ % (azlist, name, name)
