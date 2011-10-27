@@ -178,14 +178,6 @@ def endProperties(first):
         return ''
 
 
-def owlVersionInfo(m):
-    v = findOne(m, None, owl.versionInfo, None)
-    if v:
-        return getLiteralString(getObject(v))
-    else:
-        return ""
-
-
 def rdfsPropertyInfo(term, m):
     """Generate HTML for properties: Domain, range"""
     global classranges
@@ -846,9 +838,6 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     termlist = docTerms('Class', classlist, m) + termlist
     if instances:
         termlist += docTerms('Instance', instalist, m)
-
-    template = re.sub(r"^#format \w*\n", "", template)
-    template = re.sub(r"\$VersionInfo\$", owlVersionInfo(m).encode("utf-8"), template)
 
     template = template.replace('@NAME@', specProperty(m, spec_url, doap.name))
     template = template.replace('@URI@', spec_url)
