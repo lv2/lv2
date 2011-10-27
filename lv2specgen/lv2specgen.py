@@ -44,7 +44,6 @@ import os
 import sys
 import datetime
 import re
-import urllib
 import xml.sax.saxutils
 
 try:
@@ -844,14 +843,6 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     if instances:
         termlist += docTerms('Instance', instalist, m)
 
-    # Generate RDF from original namespace.
-    u = urllib.urlopen(specloc)
-    rdfdata = u.read()
-    rdfdata = re.sub(r"(<\?xml version.*\?>)", "", rdfdata)
-    rdfdata = re.sub(r"(<!DOCTYPE[^]]*]>)", "", rdfdata)
-    #rdfdata.replace("""<?xml version="1.0"?>""", "")
-
-    # print(template % (azlist.encode("utf-8"), termlist.encode("utf-8"), rdfdata.encode("ISO-8859-1")))
     template = re.sub(r"^#format \w*\n", "", template)
     template = re.sub(r"\$VersionInfo\$", owlVersionInfo(m).encode("utf-8"), template)
 
