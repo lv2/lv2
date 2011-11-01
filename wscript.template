@@ -41,7 +41,7 @@ def build(bld):
 
     # Install bundle
     bld.install_files(bundle_dir,
-                      bld.path.ant_glob('?*.*'))
+                      bld.path.ant_glob('?*.*', excl='*.pc.in'))
 
     # Install URI-like includes
     if bld.env['COPY_HEADERS']:
