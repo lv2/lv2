@@ -32,18 +32,16 @@ extern "C" {
    Time states.
 */
 typedef enum {
-	LV2_TIME_STOPPED  = 0,	 /**< Time halted */
-	LV2_TIME_ROLLING  = 1,	 /**< Time playing */
-	LV2_TIME_LOOPING  = 2,	 /**< For OLD_TIME, now ignored */
-	LV2_TIME_STARTING = 3	 /**< Waiting for sync ready */
+	LV2_TIME_STOPPED  = 0,  /**< Transport halted */
+	LV2_TIME_ROLLING  = 1,  /**< Transport playing */
 } LV2_Time_State;
 
 /**
-   Bits indicating which fields of LV2_Time_Position are valid.
+   Bits indicating properties of an LV2_Time_Position.
 */
 typedef enum {
-	LV2_TIME_BBT = 1  /**< Bar, Beat, Tick */
-} LV2_Time_Fields;
+	LV2_TIME_HAS_BBT = 1  /**< Has Bar, Beat, Tick */
+} LV2_Time_Flags;
 
 /**
    Description of a position and/or tempo.
@@ -63,10 +61,10 @@ typedef struct {
 	uint64_t frame;
 
 	/**
-	   Bit field of LV2_Time_Fields values indicating which fields
+	   Bit field of LV2_Time_Flags values indicating which fields
 	   of this struct are valid.
 	*/
-	uint32_t valid;
+	uint32_t flags;
 
 	/**
 	   @}
