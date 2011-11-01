@@ -47,8 +47,14 @@ Defines presets (e.g. named sets of control values) for LV2 plugins.
 """ .
 
 pset:Preset a rdfs:Class ;
-    rdfs:subClassOf lv2:PluginBase ;
+	rdfs:subClassOf lv2:PluginBase ;
 	rdfs:label "LV2 Preset" ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty rdfs:label ;
+		owl:someValuesFrom xsd:string ;
+		rdfs:comment "A Preset MUST have at least one string rdfs:label."
+	] ;
 	rdfs:comment """
 A Preset for an LV2 Plugin.  A preset can be considered an "overlay" on a
 Plugin.  Rather than attempting to define all valid predicates for a Preset
