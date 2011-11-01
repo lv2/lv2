@@ -70,7 +70,7 @@ typedef struct {
 	   @}
 	   @{
 	   @name LV2_TIME_BBT fields
-	   These fields are valid iff the LV2_TIME_BBT bit is set in @ref valid.
+	   These fields are valid iff the LV2_TIME_BBT bit is set in @ref flags.
 	*/
 
 	/**
