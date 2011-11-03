@@ -568,6 +568,28 @@ this before attempting to instantiate a plugin (i.e. discovery by attempting to
 instantiate is strongly discouraged).</p>
 """ .
 
+####################
+## Extension Data ##
+####################
+
+lv2:ExtensionData a rdfs:Class , owl:Class ;
+    rdfs:subClassOf lv2:Resource ;
+    rdfs:label "Extension Data" ;
+    rdfs:comment """
+Additional data and/or functions a plugin may return from
+LV2_Descriptor:extension_data() which can be used to add additional API beyond
+that defined by LV2_Descriptor.
+""".
+
+lv2:extensionData a rdf:Property , owl:ObjectProperty ;
+    rdfs:domain lv2:Resource ;
+    rdfs:range lv2:ExtensionData ;
+    rdfs:label "Available extension data" ;
+    lv2:documentation """
+<p>Signifies that a plugin provides additional data or functions (as defined by
+some extension) via LV2:Descriptor::instantiate().</p>
+""" .
+
 #######################
 ## Standard Features ##
 #######################

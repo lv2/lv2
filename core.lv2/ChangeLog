@@ -1,5 +1,7 @@
 lv2core (UNRELEASED) unstable; urgency=low
 
+  * Add lv2:extensionData and lv2:ExtensionData for plugins to indicate
+    that they support some URI for LV2_Descriptor::extension_data.
   * Remove lv2config in favour of the convention that extension bundles simply
     install headers to standard URI-like include paths
   * Switch to simple BSD-style (ISC) license (with permission of all
