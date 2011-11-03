@@ -67,6 +67,11 @@ typedef struct {
 	uint32_t flags;
 
 	/**
+	   LV2_Time_State.
+	*/
+	LV2_Time_State state;
+
+	/**
 	   @}
 	   @{
 	   @name LV2_TIME_BBT fields
