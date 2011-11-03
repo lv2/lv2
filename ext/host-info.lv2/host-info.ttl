@@ -45,10 +45,11 @@ about LV2 hosts.  Currently, the primary use of this specification is to describ
 extensions are supported by a given host.</p>
 
 <p>The extensions supported by a host can be described like this:</p>
-<pre>
+<pre class="turtle-code">
 @prefix hi: &lt;http://lv2plug.in/ns/ext/host-info#&gt; .
 
-&lt;http://example.org/some-host&gt; a hi:Host ;
+&lt;http://example.org/some-host&gt;
+    a hi:Host ;
     doap:name "Foo Rack" ;
     hi:supportsExtension [
         hi:extension &lt;http://example.org/some-extension&gt; ;

@@ -197,13 +197,13 @@ encoders, etc.</p>
 <p>Note that when used with a pprops:logarithmic port, the steps are
 logarithmic too, and port value can be calculated as:</p>
 
-<pre>
+<pre class="c-code">
 value = lower * pow(upper / lower, step / (steps - 1))
 </pre>
 
 <p>and the step from value is:</p>
 
-<pre>
+<pre class="c-code">
 step = (steps - 1) * log(value / lower) / log(upper / lower)
 </pre>
 

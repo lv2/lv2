@@ -44,7 +44,7 @@ This extension defines a generic time-stamped event port type, which can be
 used to create plugins that read and write real-time events, such as MIDI,
 OSC, or any other type of event payload.  The type(s) of event supported by
 a port is defined in the data file for a plugin, for example:
-<pre>
+<pre class="turtle-code">
 &lt;http://example.org/some-plugin&gt;
     lv2:port [
         a ev:EventPort, lv2:InputPort ;

@@ -63,7 +63,7 @@ Hosts SHOULD take care to prevent data from a CVPort port from being used as
 audio except in cases where this is known to be safe.
 
 Example:
-<pre>
+<pre class="turtle-code">
 &lt;http://example.org/some-plugin&gt;
     lv2:port [
         a cv:CVPort, lv2:InputPort ;

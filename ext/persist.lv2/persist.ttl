@@ -82,7 +82,7 @@ possible. Extensions may define a dynamic mechanism for accessing plugin state,
 or conventional state keys likely to be useful to several implementations.</p>
 
 <p>In pseudo code, a typical use case in a plugin is:</p>
-<pre>
+<pre class="c-code">
 #define NS_EG   "http://example.org/"
 #define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
 #define NS_XSD  "http://www.w3.org/2001/XMLSchema#"
@@ -139,7 +139,7 @@ void my_restore(LV2_Handle                    instance,
 </pre>
 
 <p>Similarly, a typical use case in a host is:</p>
-<pre>
+<pre class="c-code">
 int store_callback(void*       callback_data,
                    uint32_t    key,
                    const void* value,
@@ -193,7 +193,7 @@ wherever the state of a particular plugin instance needs to be represented.
 Note that the domain of this property is unspecified, since LV2 does not define
 any RDF class for plugin instance. This predicate may be used wherever it makes
 sense to do so, e.g.:
-<pre>
+<pre class="turtle-code">
 @prefix eg: &lt;http://example.org/&gt; .
 
 &lt;plugininstance&gt; persist:instanceState [

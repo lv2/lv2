@@ -51,12 +51,12 @@
 <p>This extension defines an interface that can be used to create UIs for 
 plugins. The UIs are code that reside in shared object files in an LV2
 bundle and are referenced in the RDF data using the triples
-<pre>
-  @prefix pui:     &lt;http://lv2plug.in/ns/ext/pui#&gt; .
-  @prefix pui-gtk: &lt;http://lv2plug.in/ns/ext/pui-gtk#&gt; .
-  &lt;http://example.org/my-ui&gt;  a             pui-gtk:GtkUI ;
-                              lv2:appliesTo &lt;http://example.org/my-plugin&gt; ;
-                              pui:binary     &lt;my-ui.so&gt; .
+<pre class="turtle-code">
+@prefix pui:     &lt;http://lv2plug.in/ns/ext/pui#&gt; .
+@prefix pui-gtk: &lt;http://lv2plug.in/ns/ext/pui-gtk#&gt; .
+&lt;http://example.org/my-ui&gt;  a             pui-gtk:GtkUI ;
+                            lv2:appliesTo &lt;http://example.org/my-plugin&gt; ;
+                            pui:binary     &lt;my-ui.so&gt; .
 </pre>
 where <code>http://example.org/my-plugin</code> is the URI of the plugin,
 <code>http://example.org/my-ui</code> is the URI of the plugin UI and
@@ -103,12 +103,12 @@ pui:UI a rdfs:Class;
 </p>
 
 <p>To be used by a host a UI MUST have at least the following properties:
-<pre>
-    rdf:type (with object a proper subclass of pui:UI)
-    doap:name (one without language tag)
-    lv2:binary (with a shared object file as object)
-    lv2:appliesTo (with a LV2 plugin as object)
-</pre>
+<ul>
+<li>rdf:type (with object a proper subclass of pui:UI)</li>
+<li>doap:name (one without language tag)</li>
+<li>lv2:binary (with a shared object file as object)</li>
+<li>lv2:appliesTo (with a LV2 plugin as object)</li>
+</li>
 The rdf:type of an UI is used by the host to decide whether it supports the
 UI and how to handle the LV2_PUI_Widget object that is returned by the UIs
 get_widget() function. For example, a type of pui-gtk:GtkGUI might tell the host

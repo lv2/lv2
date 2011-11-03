@@ -129,7 +129,7 @@ href="http://www.loc.gov/standards/iso639-2/">ISO 693-2</a> or <a
 href="http://www.loc.gov/standards/iso639-2/">ISO 693-3</a> language code.</p>
 
 <p>For example, "Hello" in English:</p>
-<pre>
+<pre class="c-code">
 struct LV2_Atom {
     uint16_t type = uri_to_id(atom:Literal);
     uint16_t size = 14;
@@ -139,7 +139,7 @@ uint32_t lang     = uri_to_id("http://lexvo.org/id/term/en");
 char     str[]    = "Hello";
 </pre>
 and French:
-<pre>
+<pre class="c-code">
 struct LV2_Atom {
     uint16_t type = uri_to_id(atom:Literal);
     uint16_t size = 16;
@@ -149,7 +149,7 @@ uint32_t lang     = uri_to_id("http://lexvo.org/id/term/fr");
 char     str[]    = "Bonjour";
 </pre>
 <p>or a Turtle string:</p>
-<pre>
+<pre class="c-code">
 struct LV2_Atom {
     uint16_t type = uri_to_id(atom:Literal);
     uint16_t size = 64;
@@ -196,7 +196,7 @@ href="#Atom">Atom</a> type, i.e. the size of each element is the vector's
 
 <p>For example, an atom:Vector containing 42 elements of type atom:Float looks
 like this in memory:</p>
-<pre>
+<pre class="c-code">
 struct LV2_Atom {
     uint16_t type = uri_to_id(atom:Vector);
     uint16_t size = sizeof(LV2_Atom) + sizeof(LV2_Atom_Vector) + (42 * sizeof(float);
