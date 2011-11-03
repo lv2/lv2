@@ -40,11 +40,20 @@ __license__ = "MIT License <http://www.opensource.org/licenses/mit>"
 __contact__ = "devel@lists.lv2plug.in"
 __date__ = "2011-10-26"
 
-import os
-import sys
 import datetime
+import os
 import re
+import sys
 import xml.sax.saxutils
+
+try:
+    import pygments
+    import pygments.lexers
+    import pygments.formatters
+    have_pygments = True
+except ImportError:
+    print("Error importing pygments, syntax highlighting disabled")
+    have_pygments = False
 
 try:
     import rdflib
@@ -155,6 +164,22 @@ def getComment(m, urinode):
     if c:
         markup = getLiteralString(getObject(c))
 
+        # Syntax highlight all C code
+        if have_pygments:
+            code_rgx = re.compile('<pre class="c-code">(.*?)</pre>', re.DOTALL)
+            while True:
+                code = code_rgx.search(markup)
+                if not code:
+                    break
+                match_str = xml.sax.saxutils.unescape(code.group(1))
+                code_str = pygments.highlight(
+                    match_str,
+                    pygments.lexers.CLexer(),
+                    pygments.formatters.HtmlFormatter())
+                markup = code_rgx.sub(code_str, markup, 1)
+
+
+        # Add links to code documentation for identifiers
         rgx = re.compile('([^a-zA-Z0-9_:])(' + \
                              '|'.join(map(re.escape, linkmap)) + \
                              ')([^a-aA-Z0-9_:])')
