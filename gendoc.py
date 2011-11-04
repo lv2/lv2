@@ -3,6 +3,7 @@
 import datetime
 import glob
 import os
+import rdflib
 import re
 import shutil
 import subprocess
@@ -26,6 +27,9 @@ DOXPREFIX  = 'ns/doc/html/'
 SPECGENDIR = './specgen'
 STYLEURI   = os.path.join('aux', 'style.css')
 TAGFILE    = './doclinks'
+
+rdf = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+lv2 = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
 
 devnull = open(os.devnull, 'w')
 
@@ -124,44 +128,26 @@ for dir in ['ext', 'extensions']:
         b = bundle.replace('.lv2', '')
         b = b[b.find('/') + 1:]
 
-        # Get extension URI
-        ext = str(subprocess.Popen(['roqet', '-q', '-e', """
-PREFIX lv2: <http://lv2plug.in/ns/lv2core#>
-SELECT ?ext FROM <%s.lv2/%s.ttl> WHERE { ?ext a lv2:Specification }
-""" % (os.path.join(dir, b), b)], stdout=subprocess.PIPE).communicate()[0])
+        model = rdflib.ConjunctiveGraph()
+        model.parse('%s/manifest.ttl' % bundle, format='n3')
+        model.parse('%s/%s.ttl' % (bundle, b), format='n3')
 
-        if ext == "":
+        # Get extension URI
+        ext_node = model.value(None, rdf.type, lv2.Specification)
+        if not ext_node:
             continue
 
-        ext = re.sub("^b'", '', ext)
-        ext = re.sub("\n'$", '', ext)
-        ext = re.sub('.*result: \[ext=uri<', '', ext)
-        ext = re.sub('>.*$', '', ext).strip()
+        ext = str(ext_node)
 
-        # Get revision
-        query = """
-PREFIX lv2: <http://lv2plug.in/ns/lv2core#>
-PREFIX doap: <http://usefulinc.com/ns/doap#>
-SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev ] }
-""" % (os.path.join(dir, b), b, ext)
-
-        rev = str(subprocess.Popen(['roqet', '-q', '-e', query],
-                                   stdout=subprocess.PIPE).communicate()[0])
-
-        if rev != '':
-            rev = re.sub("^b'", '', rev)
-            rev = re.sub("\n'$", '', rev)
-            rev = re.sub('.*result: \[rev=string\("', '', rev)
-            rev = re.sub('"\)\].*$', '', rev).strip()
-        else:
-            rev = '0'
-
-        minor = '0'
-        micro = '0'
-        match = re.search('([^\.]*)\.([^\.]*)', rev)
-        if match:
-            minor = match.group(1)
-            micro = match.group(2)
+        # Get version
+        minor = 0
+        micro = 0
+        try:
+            minor = int(model.value(ext_node, lv2.minorVersion, None))
+            micro = int(model.value(ext_node, lv2.microVersion, None))
+        except Exception as e:
+            print "warning: %s: failed to find version for %s" % (bundle, ext)
+            pass
 
         specgendir = '../../../lv2specgen/'
         if (os.access(outdir + '/%s.lv2/%s.ttl' % (b, b), os.R_OK)):
@@ -179,7 +165,7 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
             os.chdir(oldcwd)
 
             li = '<li>'
-            if minor == '0' or (int(micro) % 2) != 0:
+            if minor == 0 or (micro % 2 != 0):
                 li += '<span style="color: red;">Experimental: </span>'
             li += '<a rel="rdfs:seeAlso" href="%s">%s</a>' % (b, b)
             li += '</li>'
