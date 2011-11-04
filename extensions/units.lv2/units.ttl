@@ -24,6 +24,7 @@
 <http://lv2plug.in/ns/extensions/units>
     a lv2:Specification ;
     doap:name "LV2 Units" ;
+    doap:shortdesc "Units for LV2 values." ;
     doap:created "2007-02-06" ;
     doap:homepage <http://lv2plug.in/ns/extensions/units> ;
     doap:license <http://opensource.org/licenses/isc-license> ;
