@@ -27,17 +27,10 @@ SPECGENDIR = './specgen'
 STYLEURI   = os.path.join('aux', 'style.css')
 TAGFILE    = './doclinks'
 
-# release_dir = os.path.join('build', 'spec')
-# try:
-#     os.mkdir(release_dir)
-# except:
-#     pass
-
 devnull = open(os.devnull, 'w')
 
 # Generate code (headers) documentation
 print('** Generating header documentation')
-#shutil.copy('Doxyfile', os.path.join('upload', 'Doxyfile'))
 print(' * Calling doxygen in ' + os.getcwd())
 subprocess.call('doxygen', stdout=devnull)
 
@@ -169,11 +162,6 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
         if match:
             minor = match.group(1)
             micro = match.group(2)
-
-        # if rev != '0' and rev.find('pre') == -1:
-        #     path = os.path.join(os.path.abspath(release_dir), 'lv2-%s-%s.tar.gz' % (b, rev))
-        #     subprocess.call(['tar', '--exclude-vcs', '-czf', path,
-        #                      bundle[bundle.find('/') + 1:]], cwd=dir)
 
         specgendir = '../../../lv2specgen/'
         if (os.access(outdir + '/%s.lv2/%s.ttl' % (b, b), os.R_OK)):
