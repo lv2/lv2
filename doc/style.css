@@ -51,16 +51,7 @@ h6 {
 	font-size: 100%;
 	font-weight: 450;
 }
-#logoheader {
-	background-color: #F3F3F3;
-	border: 0;
-	border-bottom: 1px solid #DDD;
-	height: 84px;
-	margin: 0;
-	padding: 1px;
-	z-index: 1;
-}
-#titleheader {
+#header {
 	background-color: #F3F3F3;
 	border: 0;
 	border-bottom: 1px solid #DDD;
@@ -70,8 +61,11 @@ h6 {
 #title {
 	font-size: 200%;
 	font-weight: 700;
-	margin: .25ex 0 .5ex 0;
+	margin: .25ex 0 .25ex 0;
 	padding: 0;
+}
+#subtitle {
+    margin: 0 auto 2ex 0.5ex;
 }
 #logo {
 	height: 63px;
@@ -480,7 +474,8 @@ td, th {
     padding: 0.3ex 1em 0.3ex 1em;
 }
 #meta {
-    margin-left: 0.5ex;
+    margin: 1ex 0 0 0.5ex;
+    font-size: small;
 }
 #meta tr td, #meta tr th {
     padding-left: 0;

@@ -934,6 +934,7 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
         termlist += docTerms('Instance', instalist, m)
 
     template = template.replace('@NAME@', specProperty(m, spec_url, doap.name))
+    template = template.replace('@SUBTITLE@', specProperty(m, spec_url, doap.shortdesc))
     template = template.replace('@URI@', spec_url)
     template = template.replace('@PREFIX@', spec_pre)
     if spec_pre == 'lv2':

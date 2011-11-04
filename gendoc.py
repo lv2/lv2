@@ -117,7 +117,7 @@ for dir in ['ext', 'extensions']:
 <link rel="stylesheet" type="text/css" href="../../""" + STYLEURI + """\" />
 </head>
 <body>
-<div id="titleheader"><h1 id="title">LV2 Extension Index</h1></div>
+<div id="header"><h1 id="title">LV2 Extension Index</h1></div>
 <div class="content">
 <table summary="An index of LV2 extensions">
 <tr><th>Name</th><th>Description</th><th>Version</th><th>Date</th></tr>\n"""
