@@ -70,7 +70,7 @@ h6 {
 #title {
 	font-size: 200%;
 	font-weight: 700;
-	margin: .25ex 0 .5ex;
+	margin: .25ex 0 .5ex 0;
 	padding: 0;
 }
 #logo {
@@ -395,12 +395,6 @@ ul, ol {
 	margin: 0;
 	padding: 0;
 }
-.restriction {
-	margin: 0;
-	padding: 0;
-	border-spacing: 0;
-	vertical-align: text-top;
-}
 .description {
 	margin-bottom: 0.75em;
 }
@@ -413,24 +407,22 @@ ul, ol {
 .blankterm {
 	padding-right: .5em;
 }
-.terminfo {
-	border-spacing: 0 0.5ex;
+.terminfo, .restriction {
+	border-spacing: 0.5ex 0.5ex;
+    border-collapse: collapse;
+    border-style: hidden;
 }
 .restriction {
+	margin: 0;
+	padding: 0;
 	border-spacing: 0;
+	vertical-align: text-top;
+}
+.terminfo th, .terminfo td {
+    border: solid 1px #f3f3f3;
 }
 .terminfo th, .restriction th {
-	margin: 0;
-	padding: 0;
-	padding-right: 1ex;
-	border-top: dotted 1px #F0F0F0;
-	background-color: #F8F8F8;
-}
-.terminfo td, .restriction td {
-	margin: 0;
-	padding: 0;
-	border-top: dotted 1px #F0F0F0;
-	background-color: #F8F8F8;
+	padding: 0 1ex 0 0;
 }
 .specterm {
 	background-color: #fbfbfb;
@@ -446,7 +438,7 @@ ul, ol {
 	margin: 0;
 }
 .spectermbody {
-	padding: 0 1ex 1ex 1ex;
+	padding: 1ex 1ex 1ex 1ex;
 }
 dl {
 	margin: 0;
@@ -476,25 +468,22 @@ div.head table {
 	margin-top: 2em;
 }
 table {
-	margin: 0;
-	padding: 0;
-	border-width: 0;
+    border-collapse: collapse;
+    border-style: hidden;
+    margin: 0;
 }
 th {
-	vertical-align: text-top;
+    vertical-align: text-top;
 }
-td {
-	margin: 0;
-	padding: 0 2ex 0 0;
+td, th {
+    border: 1px solid #eee;
+    padding: 0.3ex 1em 0.3ex 1em;
 }
 #meta {
-	border-bottom: 1px solid #c4cfe5;
-	font-size: small;
-	margin: 0 0 2ex;
-	padding: 1ex 0 1ex 2ex;
+    margin-left: 0.5ex;
 }
-.metahead {
-	padding-right: 1ex;
+#meta tr td, #meta tr th {
+    padding-left: 0;
 }
 pre {
     margin: 1em 1em 1em 4em;

@@ -35,6 +35,7 @@
 	a lv2:Specification ;
 	a lv2:Feature ;
     doap:name "LV2 Resize Port Extension" ;
+    doap:shortdesc "Dynamically sized LV2 port buffers." ;
 	lv2:documentation """
 <p>An extension that allows LV2 plugins to request a resize of an output port.</p>
 

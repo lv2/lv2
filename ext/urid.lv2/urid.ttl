@@ -24,6 +24,7 @@
 	a lv2:Specification ;
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	doap:name "LV2 URID" ;
+	doap:shortdesc "Features for mapping URIs to and from integers." ;
     doap:release [
         doap:revision "0.1" ;
         doap:created "2011-07-20"

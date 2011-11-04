@@ -32,6 +32,7 @@
 <http://lv2plug.in/ns/ext/presets> a lv2:Specification ;
 	doap:license <http://usefulinc.com/doap/licenses/mit> ;
 	doap:name    "LV2 Presets" ;
+	doap:shortdesc "Presets for LV2 plugins. " ;
 	doap:release [
 		doap:revision "2.1" ;
 		doap:created "2010-10-29"

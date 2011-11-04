@@ -30,27 +30,10 @@
 <http://lv2plug.in/ns/ext/osc> a lv2:Specification ;
 	doap:license <http://usefulinc.com/doap/licenses/mit> ;
 	doap:name "LV2 OSC Events" ;
-	rdfs:comment "Defines an LV2 event type for standard raw OSC" ;
+	doap:shortdesc "A data type for raw OSC." ;
 	doap:maintainer [
 		a foaf:Person ;
 		foaf:name "David Robillard" ;
 		foaf:homepage <http://drobilla.net/> ;
 		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
 	] .
-
-
-#######################
-## Plugin Properties ##
-#######################
-
-osc:interfacePort a rdf:Property ;
-	rdfs:domain  lv2:Plugin ;
-	rdfs:range   lv2:Port ;
-	rdfs:label   "Has a main OSC control port" ;
-	rdfs:comment """
-Specifies a port that can be used as the OSC interface for the plugin as a
-whole.  For example, if a host is providing an OSC interface to a plugin at
-/some/osc/path/someplugin and a message /some/osc/path/someplugin/foo is
-received, the message /foo should be sent to this port.
-""" .
-

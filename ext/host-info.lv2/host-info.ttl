@@ -33,6 +33,7 @@
 <http://lv2plug.in/ns/ext/host-info> a lv2:Specification ;
 	doap:license <http://usefulinc.com/doap/licenses/mit> ;
 	doap:name    "LV2 Host Info" ;
+    doap:shortdesc "A format for describing LV2 hosts." ;
 	doap:maintainer [
 		a foaf:Person ;
 		foaf:name     "David Robillard" ;

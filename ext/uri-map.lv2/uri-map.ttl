@@ -25,6 +25,7 @@
 	a lv2:Specification , lv2:Feature ;
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	doap:name "LV2 URI Map" ;
+    doap:shortdesc "A feature for mapping URIs to integers." ;
     doap:release [
         doap:revision "1.2" ;
         doap:created "2011-05-26"

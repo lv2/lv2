@@ -31,6 +31,7 @@
 <http://lv2plug.in/ns/ext/parameter>
 	a lv2:Specification ;
     doap:name "LV2 Parameter" ;
+    doap:shortdesc "Dynamic message-controlled LV2 plugin parameters." ;
     doap:maintainer [
         a foaf:Person ;
         foaf:name     "David Robillard" ;

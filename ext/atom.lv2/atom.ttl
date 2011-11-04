@@ -24,6 +24,7 @@
 <http://lv2plug.in/ns/ext/atom>
 	a lv2:Specification ;
 	doap:name "LV2 Atom" ;
+    doap:shortdesc "A generic value container and several data types." ;
 	doap:release [
 		doap:revision "0.1" ;
 		doap:created "2011-04-05"

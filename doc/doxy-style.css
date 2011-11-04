@@ -393,6 +393,8 @@ table.memberdecls {
 .paramname {
 	color: #602020;
 	white-space: nowrap;
+    vertical-align: text-top;
+    padding-right: 1em;
 }
 
 .paramname em {

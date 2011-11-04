@@ -34,6 +34,7 @@
 <http://lv2plug.in/ns/ext/port-groups> a lv2:Specification ;
 	doap:license <http://usefulinc.com/doap/licenses/mit> ;
 	doap:name    "LV2 Port Groups" ;
+	doap:shortdesc "Multi-channel groups of LV2 ports." ;
 	rdfs:comment "Defines semantic groupings of LV2 ports" ;
 	doap:maintainer [
 		a foaf:Person ;

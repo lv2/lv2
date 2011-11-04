@@ -30,6 +30,7 @@
 <http://lv2plug.in/ns/ext/uri-unmap> a lv2:Specification , lv2:Feature ;
 	doap:license <http://usefulinc.com/doap/licenses/mit> ;
 	doap:name "LV2 URI Unmap" ;
+	doap:shortdesc "A feature for unmapping URIs from integers." ;
 	doap:maintainer [
 		a foaf:Person ;
 		foaf:name "David Robillard" ;

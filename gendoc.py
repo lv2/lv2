@@ -28,8 +28,9 @@ SPECGENDIR = './specgen'
 STYLEURI   = os.path.join('aux', 'style.css')
 TAGFILE    = './doclinks'
 
-rdf = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-lv2 = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
+doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
+lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
+rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
 devnull = open(os.devnull, 'w')
 
@@ -44,12 +45,10 @@ subprocess.call('doxygen', stdout=devnull)
 # Return the content of the first child node with a certain tag name
 def getChildText(elt, tagname):
     elements = elt.getElementsByTagName(tagname)
-    text = ''
     for e in elements:
         if e.parentNode == elt:
-            text = e.firstChild.nodeValue
-            return text
-    return text
+            return e.firstChild.nodeValue
+    return ''
 
 tagdoc = xml.dom.minidom.parse('c_tags')
 root = tagdoc.documentElement
@@ -114,13 +113,14 @@ for dir in ['ext', 'extensions']:
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8" />
-<title>LV2 Extensions</title>
+<title>LV2 Extension Index</title>
 <link rel="stylesheet" type="text/css" href="../../""" + STYLEURI + """\" />
 </head>
 <body>
-<div id="titleheader"><h1 id="title">LV2 Extensions</h1></div>
+<div id="titleheader"><h1 id="title">LV2 Extension Index</h1></div>
 <div class="content">
-<h2>""" + URIPREFIX + dir + "/</h2><ul>\n"
+<table summary="An index of LV2 extensions">
+<tr><th>Name</th><th>Description</th><th>Version</th><th>Date</th></tr>\n"""
 
     extensions = []
 
@@ -128,9 +128,14 @@ for dir in ['ext', 'extensions']:
         b = bundle.replace('.lv2', '')
         b = b[b.find('/') + 1:]
 
-        model = rdflib.ConjunctiveGraph()
-        model.parse('%s/manifest.ttl' % bundle, format='n3')
-        model.parse('%s/%s.ttl' % (bundle, b), format='n3')
+        try:
+            model = rdflib.ConjunctiveGraph()
+            model.parse('%s/manifest.ttl' % bundle, format='n3')
+            model.parse('%s/%s.ttl' % (bundle, b), format='n3')
+        except:
+            e = sys.exc_info()[1]
+            print('error parsing %s: %s' % (bundle, str(e)))
+            continue
 
         # Get extension URI
         ext_node = model.value(None, rdf.type, lv2.Specification)
@@ -149,6 +154,21 @@ for dir in ['ext', 'extensions']:
             print "warning: %s: failed to find version for %s" % (bundle, ext)
             pass
 
+        # Get date
+        date = None
+        for r in model.triples([ext_node, doap.release, None]):
+            revision = model.value(r[2], doap.revision, None)
+            if revision != ("%d.%d" % (minor, micro)):
+                print("warning: %s: doap:revision %s != %d.%d" % (
+                        bundle, revision, minor, micro))
+                continue
+
+            date = model.value(r[2], doap.created, None)
+            break
+        
+        # Get short description
+        shortdesc = model.value(ext_node, doap.shortdesc, None)
+
         specgendir = '../../../lv2specgen/'
         if (os.access(outdir + '/%s.lv2/%s.ttl' % (b, b), os.R_OK)):
             oldcwd = os.getcwd()
@@ -164,11 +184,27 @@ for dir in ['ext', 'extensions']:
                                                instances=True))
             os.chdir(oldcwd)
 
-            li = '<li>'
+            # Name
+            li = '<tr><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (b, b)
+
+            # Description
+            if shortdesc:
+                li += '<td>' + str(shortdesc) + '</td>'
+            else:
+                li += '<td></td>'
+
+            # Version
+            version_str = '%s.%s' % (minor, micro)
             if minor == 0 or (micro % 2 != 0):
-                li += '<span style="color: red;">Experimental: </span>'
-            li += '<a rel="rdfs:seeAlso" href="%s">%s</a>' % (b, b)
-            li += '</li>'
+                li += '<td><span style="color: red">' + version_str + ' dev</span></td>'
+            else:
+                li += '<td>' + version_str + '</td>'
+
+            # Date
+            if date:
+                li += '<td>' + str(date) + '</td>'
+
+            li += '</tr>'
 
             extensions.append(li)
 
@@ -181,7 +217,7 @@ for dir in ['ext', 'extensions']:
     for i in extensions:
         index_html += i + '\n'
     
-    index_html += '</ul>\n</div>\n'
+    index_html += '</table>\n</div>\n'
 
     index_html += '<div id="footer">'
     index_html += '<span class="footer-text">Generated on '

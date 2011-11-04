@@ -24,6 +24,7 @@
 <http://lv2plug.in/ns/ext/reference>
 	a lv2:Specification ;
 	doap:name "LV2 Reference" ;
+	doap:shortdesc "A reference data type for using non-POD data." ;
     doap:release [
         doap:revision "0.1" ;
         doap:created "2011-07-22"

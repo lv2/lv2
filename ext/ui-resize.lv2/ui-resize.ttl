@@ -24,6 +24,7 @@
 <http://lv2plug.in/ns/ext/ui-resize>
 	a lv2:Specification ;
 	doap:name "LV2 UI Resize Extension" ;
+	doap:shortdesc "A feature for self-resizing plugin UIs." ;
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	lv2:documentation """
 <p>An extension that allows LV2 plugin UIs to notify the host about size

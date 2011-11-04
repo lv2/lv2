@@ -25,7 +25,7 @@
 	a lv2:Specification ;
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	doap:name "LV2 MIDI Events" ;
-	rdfs:comment "Defines an LV2 event type for standard raw MIDI" ;
+    doap:shortdesc "A data type for raw MIDI." ;
     doap:release [
         doap:revision "1.2" ;
         doap:created "2011-05-21"

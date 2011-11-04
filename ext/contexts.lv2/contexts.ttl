@@ -32,9 +32,9 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
 <http://lv2plug.in/ns/ext/contexts>
-	a lv2:Specification ;
-	a lv2:Feature ;
+	a lv2:Specification , lv2:Feature ;
 	doap:name "LV2 Contexts" ;
+	doap:shortdesc "Support for plugins with several execution contexts." ;
 	lv2:documentation """
 <p>An extension for LV2 plugins which have several execution contexts.</p>
 
