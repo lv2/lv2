@@ -3,5 +3,7 @@
 
 <http://lv2plug.in/ns/ext/parameter>
 	a lv2:Specification ;
+	lv2:minorVersion 0 ;
+	lv2:microVersion 1 ;
 	rdfs:seeAlso <parameter.ttl> .
 
