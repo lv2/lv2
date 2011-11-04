@@ -658,8 +658,16 @@ def buildIndex(m, classlist, proplist, instalist=None):
         for c in classlist:
             if c in shown:
                 continue
-            if findOne(m, c, rdfs.subClassOf, None):
+
+            # Skip classes that are subclasses of classes defined in this spec
+            local_subclass = False
+            for p in findStatements(m, c, rdfs.subClassOf, None):
+                parent = str(p[2])
+                if parent[0:len(spec_ns_str)] == spec_ns_str:
+                    local_subclass = True
+            if local_subclass:
                 continue
+
             shown[c] = True
             name = termName(m, c)
             if name.startswith(spec_ns_str):
