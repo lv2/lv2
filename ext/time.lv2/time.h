@@ -67,7 +67,7 @@ typedef struct {
 	uint32_t flags;
 
 	/**
-	   LV2_Time_State.
+	   Transport state.
 	*/
 	LV2_Time_State state;
 

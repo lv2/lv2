@@ -50,7 +50,7 @@ information using the ev:supports predicate, e.g.:
     a lv2:InputPort , ev:EventPort ;
     lv2:name "control" ;
     lv2:index 0 ;
-    ev:supports time:Position
+    ev:supportsEvent time:Position
 ] .
 </pre>
 """ .
