@@ -976,11 +976,16 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
 
     #other_files += '<li><a href="%s">Ontology</a> %s</li>\n' % (filename, filename)
 
+    abs_bundle_path = os.path.abspath(bundle_path)
     see_also_files = specProperties(m, spec_url, rdfs.seeAlso)
     for f in see_also_files:
         uri = str(f)
-        if uri[0:5] == 'file:':
-            uri = uri[5:]
+        if uri[:7] == 'file://':
+            uri = uri[7:]
+            if uri[:len(abs_bundle_path)] == abs_bundle_path:
+                uri = uri[len(abs_bundle_path) + 1:]
+            else:
+                print("warning: seeAlso file outside bundle: %s" % uri)
 
         other_files += ', <a href="%s">%s</a>' % (uri, uri)
 
