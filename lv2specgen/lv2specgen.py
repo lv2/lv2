@@ -867,24 +867,14 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     # Template
     temploc = os.path.join(indir, "template.html")
     template = None
-    try:
-        f = open(temploc, "r")
-        template = f.read()
-    except Exception:
-        e = sys.exc_info()[1]
-        print("Error reading from template \"" + temploc + "\": " + str(e))
-        usage()
+    f = open(temploc, "r")
+    template = f.read()
 
     # Footer
     footerloc = os.path.join(indir, "footer.html")
     footer = ''
-    try:
-        f = open(footerloc, "r")
-        footer = f.read()
-    except Exception:
-        e = sys.exc_info()[1]
-        print("Error reading from footer \"" + footerloc + "\": " + str(e))
-        usage()
+    f = open(footerloc, "r")
+    footer = f.read()
 
     template = template.replace('@FOOTER@', footer)
 
@@ -896,15 +886,10 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
             os.path.join(doc_base, url), sym)
 
     m = rdflib.ConjunctiveGraph()
-    try:
-        base = specloc[0:specloc.rfind('/')]
-        manifest_path = os.path.join(base, 'manifest.ttl')
-        m.parse(manifest_path, format='n3')
-        m.parse(specloc, format='n3')
-    except:
-        e = sys.exc_info()[1]
-        print('Error reading ontology: ' + str(e))
-        return None
+    base = specloc[0:specloc.rfind('/')]
+    manifest_path = os.path.join(base, 'manifest.ttl')
+    m.parse(manifest_path, format='n3')
+    m.parse(specloc, format='n3')
 
     spec_url = getOntologyNS(m)
 
@@ -996,8 +981,6 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
 
         header = basename + '.h'
         other_files += ', <a href="%s">%s</a>' % (header, header)
-
-    #other_files += '<li><a href="%s">Ontology</a> %s</li>\n' % (filename, filename)
 
     abs_bundle_path = os.path.abspath(bundle_path)
     see_also_files = specProperties(m, spec_url, rdfs.seeAlso)
@@ -1122,4 +1105,11 @@ if __name__ == "__main__":
                     i += 1
                 i += 1
 
+    try:
         save(dest, specgen(specloc, indir, docdir, style_uri, doc_base, doc_links, instances=instances))
+    except:
+        e = sys.exc_info()[1]
+        print('error: ' + str(e))
+        sys.exit(1)
+
+    sys.exit(0)

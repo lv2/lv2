@@ -1,13 +1,17 @@
 #!/usr/bin/env python
 
+import datetime
+import glob
 import os
+import re
 import shutil
 import subprocess
-import glob
-import re
-import datetime
-import xml.dom.minidom
+import sys
 import xml.dom
+import xml.dom.minidom
+
+sys.path.append("./lv2specgen")
+import lv2specgen
 
 out_base = os.path.join('build', 'ns')
 try:
@@ -85,18 +89,18 @@ shutil.copy('core.lv2/lv2.ttl',      lv2_outdir)
 shutil.copy('core.lv2/manifest.ttl', lv2_outdir)
 shutil.copy('doc/index.php',         lv2_outdir)
 
-def gendoc(specgen_dir, bundle_dir, ttl_filename, html_filename):
-    subprocess.call([os.path.join(specgen_dir, 'lv2specgen.py'),
-                     os.path.join(bundle_dir, ttl_filename),
-                     specgen_dir,
-
-              STYLEURI,
-              os.path.join(out_base, html_filename),
-              os.path.join('..', '..'),
-              TAGFILE,
-              '-i'])
-
-gendoc('./lv2specgen', 'core.lv2', 'lv2.ttl', 'lv2core/lv2core.html')
+oldcwd = os.getcwd()
+os.chdir(lv2_outdir)
+print(' * Running lv2specgen for lv2core in ' + os.getcwd())
+lv2specgen.save('lv2.html',
+                lv2specgen.specgen('../../../core.lv2/lv2.ttl',
+                                   '../../../lv2specgen',
+                                   os.path.join('..', '..', 'ns', 'doc'),
+                                   STYLEURI,
+                                   os.path.join('..', '..'),
+                                   os.path.join('..', '..', '..', TAGFILE),
+                                   instances=True))
+os.chdir(oldcwd)
 
 footer = open('./lv2specgen/footer.html', 'r')
 
@@ -173,15 +177,18 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
 
         specgendir = '../../../lv2specgen/'
         if (os.access(outdir + '/%s.lv2/%s.ttl' % (b, b), os.R_OK)):
-            print(' * Calling lv2specgen for %s%s/%s' %(URIPREFIX, dir, b))
-            subprocess.call([specgendir + 'lv2specgen.py',
-                             '%s.lv2/%s.ttl' % (b, b),
-                             specgendir,
-                             STYLEURI,
-                             '%s.lv2/%s.html' % (b, b),
-                             os.path.join('..', '..', '..'),
-                             os.path.join('..', '..', '..', TAGFILE),
-                             '-i'], cwd=outdir);
+            oldcwd = os.getcwd()
+            os.chdir(outdir)
+            print(' * Running lv2specgen for %s in %s' % (b, os.getcwd()))
+            lv2specgen.save('%s.lv2/%s.html' % (b, b),
+                            lv2specgen.specgen('%s.lv2/%s.ttl' % (b, b),
+                                               specgendir,
+                                               os.path.join('..', '..', '..', 'ns', 'doc'),
+                                               STYLEURI,
+                                               os.path.join('..', '..', '..'),
+                                               os.path.join('..', '..', '..', TAGFILE),
+                                               instances=True))
+            os.chdir(oldcwd)
 
             li = '<li>'
             if minor == '0' or (int(micro) % 2) != 0:
