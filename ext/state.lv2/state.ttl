@@ -20,15 +20,14 @@
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/state>
     a lv2:Specification ;
     doap:name "LV2 State" ;
     doap:license <http://opensource.org/licenses/isc-license> ;
     doap:release [
-        doap:revision "0.1" ;
-        doap:created "2011-11-12"
+        doap:revision "0.2" ;
+        doap:created "2011-11-14"
     ] ;
     doap:developer [
         a foaf:Person ;
@@ -82,11 +81,10 @@ should be addressed by a separate extension.</p>
 
 LV2_Handle my_instantiate(...)
 {
-    MyPlugin*            plugin = ...;
-    LV2_URI_Map_Feature* map    = ...;
-    plugin->uri_greeting_key = map->uri_to_id(..., NULL, NS_EG "greeting");
-    plugin->uri_xsd_string   = map->uri_to_id(..., NULL, NS_ATOM "String");
-    plugin->state->greeting  = strdup("Hello");
+    MyPlugin* plugin = ...;
+    plugin->uris.atom_String = map_uri(NS_ATOM "String");
+    plugin->uris.eg_greeting = map_uri(NS_EG "greeting");
+    plugin->state.greeting   = strdup("Hello");
     return plugin;
 }
 
@@ -96,13 +94,13 @@ void my_save(LV2_Handle               instance,
              uint32_t                 flags)
 {
     MyPlugin*   plugin   = (MyPlugin*)instance;
-    const char* greeting = plugin->state->greeting;
+    const char* greeting = plugin->state.greeting;
 
     store(callback_data,
-          plugin->uri_greeting_key,
+          plugin->uris.eg_greeting,
           greeting,
           strlen(greeting) + 1,
-          plugin->uri_xsd_string,
+          plugin->uris.atom_String,
           LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 }
 
@@ -117,7 +115,7 @@ void my_restore(LV2_Handle                  instance,
     uint32_t    type;
     uint32_t    flags;
     const char* greeting = retrieve(callback_data,
-                                    plugin->uri_greeting_key,
+                                    plugin->uris.eg_greeting,
                                     &amp;size,
                                     &amp;type,
                                     &amp;flags);
