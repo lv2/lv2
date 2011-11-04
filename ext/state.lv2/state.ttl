@@ -1,0 +1,230 @@
+# LV2 State Extension
+# Copyright 2010-2011 David Robillard <d@drobilla.net>
+# Copyright 2010 Leonard Ritter <paniq@paniq.org>
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+<http://lv2plug.in/ns/ext/state>
+    a lv2:Specification ;
+    doap:name "LV2 State" ;
+    doap:license <http://opensource.org/licenses/isc-license> ;
+    doap:release [
+        doap:revision "0.1" ;
+        doap:created "2011-11-12"
+    ] ;
+    doap:developer [
+        a foaf:Person ;
+        foaf:name "Leonard Ritter" ;
+        foaf:homepage <http://paniq.org> ;
+    ] ;
+    doap:maintainer [
+        a foaf:Person ;
+        foaf:name     "David Robillard" ;
+        foaf:homepage <http://drobilla.net/> ;
+        rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
+    ] ;
+    lv2:documentation """
+<p>This extension provides a mechanism for plugins to save and restore state
+across instances, allowing hosts to save configuration/state/data with a
+project or fully clone (i.e. make a deep copy of) a plugin instance.</p>
+
+<p>This extension allows plugins to save private state data, i.e. data that is
+not contained in input ports.  The motivating ideal is for the state of a
+plugin instance to be <em>entirely</em> described by port values (as with all
+LV2 plugins) and a key/value dictionary as defined by this extension. This
+mechanism is simple, yet sufficiently powerful to describe very advanced and
+complex state.</p>
+
+<p>The <q>state</q> described by this extension is conceptually a single
+key/value dictionary.  Keys are URIs, and values are type-tagged blobs of any
+type.  The plugin provides a save and restore method for saving and restoring
+state.  To initiate a save or restore, the host calls these methods, passing a
+callback to be used for handling a single key/value pair.  The host is free to
+implement saving and restoring in any way; the actual mechanism is completely
+abstract from the plugin's perspective.</p>
+
+<p>Because the state is a simple dictionary, hosts and plugins can work with
+state easily from many languages and protocols.  Additionally, this format is
+simple and terse to serialise in many formats (e.g. any RDF syntax, JSON, XML,
+key/value databases such as BDB, etc.).  In particular, state can be elegantly
+described in a plugin's Turtle description, which is useful for e.g. presets or
+default state.</p>
+
+<p>This extension defines a conceptual model of state and a mechanism for
+saving and restoring it, but no interface for manipulating that state
+dynamically.  It is intended that a generic way to modify this state (e.g.
+with messages sent via ports) is the preferred way to achieve more advanced
+plugin control than control ports provide, but the details of this mechanism
+should be addressed by a separate extension.</p>
+
+<p>In pseudo code, a typical use case in a plugin is:</p>
+<pre class="c-code">
+#define NS_EG   "http://example.org/"
+#define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
+
+LV2_Handle my_instantiate(...)
+{
+    MyPlugin*            plugin = ...;
+    LV2_URI_Map_Feature* map    = ...;
+    plugin->uri_greeting_key = map->uri_to_id(..., NULL, NS_EG "greeting");
+    plugin->uri_xsd_string   = map->uri_to_id(..., NULL, NS_ATOM "String");
+    plugin->state->greeting  = strdup("Hello");
+    return plugin;
+}
+
+void my_save(LV2_Handle               instance,
+             LV2_State_Store_Function store,
+             void*                    callback_data,
+             uint32_t                 flags)
+{
+    MyPlugin*   plugin   = (MyPlugin*)instance;
+    const char* greeting = plugin->state->greeting;
+
+    store(callback_data,
+          plugin->uri_greeting_key,
+          greeting,
+          strlen(greeting) + 1,
+          plugin->uri_xsd_string,
+          LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
+}
+
+void my_restore(LV2_Handle                  instance,
+                LV2_State_Retrieve_Function retrieve,
+                void*                       callback_data,
+                uint32_t                    flags)
+{
+    MyPlugin* plugin = (MyPlugin*)instance;
+
+    size_t      size;
+    uint32_t    type;
+    uint32_t    flags;
+    const char* greeting = retrieve(callback_data,
+                                    plugin->uri_greeting_key,
+                                    &amp;size,
+                                    &amp;type,
+                                    &amp;flags);
+
+    if (greeting) {
+        free(plugin->state->greeting);
+        plugin->state->greeting = strdup(greeting);
+    } else {
+        plugin->state->greeting = strdup("Hello");
+    }
+}
+
+const void* my_extension_data(const char* uri)
+{
+    static const LV2_State_Interface state_iface = { my_save, my_restore };
+    if (!strcmp(uri, "http://lv2plug.in/ns/ext/state#Interface")) {
+        return &state_iface;
+    }
+}
+</pre>
+
+<p>Similarly, a typical use case in a host is:</p>
+<pre class="c-code">
+int store_callback(void*       callback_data,
+                   uint32_t    key,
+                   const void* value,
+                   size_t      size,
+                   uint32_t    type,
+                   uint32_t    flags)
+{
+    if ((flags & LV2_STATE_IS_POD)) {
+        /* We only care about POD since we're keeping state in memory only.
+           If this was for disk or network storage/transmission,
+           LV2_STATE_IS_PORTABLE would have to be checked as well.
+        */
+        Map* state_map = (Map*)callback_data;
+        state_map->insert(key, Value(copy(value), size, type, pod));
+        return 0;
+    } else {
+        return 1; /* Non-POD events are unsupported. */
+    }
+}
+
+Map get_plugin_state(LV2_Handle instance)
+{
+    LV2_State* state = instance.extension_data("http://lv2plug.in/ns/ext/state");
+    Map state_map;
+    /** Request a fast/native/POD save, since we're just copying in memory */
+    state.save(instance, store_callback, &amp;state_map,
+               LV2_STATE_IS_POD|LV2_STATE_IS_NATIVE);
+    return state_map;
+}
+</pre>
+""" .
+
+state:Interface
+    a rdfs:Class ;
+    rdfs:subClassOf lv2:ExtensionData ;
+    lv2:documentation """
+A structure (LV2_State_Interface) which contains functions to be called by the
+host to save and restore state.  In order to support this extension, the plugin
+must return a valid LV2_State_Interface from LV2_Descriptor::extension_data()
+when it is called with URI "http://lv2plug.in/ns/ext/state#StateInterface".
+
+The plugin data file should describe this like so:
+<pre class="turtle-code">
+@prefix state: &lt;http://lv2plug.in/ns/ext/state#&gt; .
+
+&lt;plugin&gt;
+    a lv2:Plugin ;
+    lv2:extensionData state:Interface .
+</pre>
+""" .
+
+state:InstanceState
+    a rdfs:Class ;
+    rdfs:label "Plugin Instance State" ;
+    rdfs:comment """
+This class is used to express a plugin instance's state in RDF. The key/value
+properties of the instance form the predicate/object (respectively) of triples
+with a state:InstanceState as the subject (see state:instanceState for an
+example). This may be used wherever it is useful to express a plugin instance's
+state in RDF (e.g. for serialisation, storing in a model, or transmitting over
+a network). Note that this class is provided because it may be useful for
+hosts, plugins, or extensions that work with instance state, but its use is not
+required to support the LV2 State extension.
+""" .
+
+state:instanceState
+    a rdf:Property ;
+    rdfs:range state:InstanceState ;
+    lv2:documentation """
+Predicate to relate a plugin instance to an InstanceState. This may be used
+wherever the state of a particular plugin instance needs to be represented.
+Note that the domain of this property is unspecified, since LV2 does not define
+any RDF class for plugin instance. This predicate may be used wherever it makes
+sense to do so, e.g.:
+<pre class="turtle-code">
+@prefix eg: &lt;http://example.org/&gt; .
+
+&lt;plugininstance&gt; state:instanceState [
+    eg:somekey "some value" ;
+    eg:someotherkey "some other value" ;
+    eg:favourite-number 2
+] .
+</pre>
+Note that this property is provided because it may be useful for hosts,
+plugins, or extensions that work with instance state, but its use is not
+required to support the LV2 State extension.
+""" .

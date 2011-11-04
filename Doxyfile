@@ -565,8 +565,8 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT =  \
-	doc/mainpage.dox \
 	core.lv2/lv2.h \
+	doc/mainpage.dox \
 	ext/atom.lv2/atom-helpers.h \
 	ext/atom.lv2/atom.h \
 	ext/contexts.lv2/contexts.h \
@@ -582,6 +582,7 @@ INPUT =  \
 	ext/pui-event.lv2/pui-event.h \
 	ext/pui-gtk.lv2/pui-gtk.h \
 	ext/pui.lv2/pui.h \
+	ext/state.lv2/state.h \
 	ext/string-port.lv2/string-port.h \
 	ext/time.lv2/time.h \
 	ext/ui-resize.lv2/ui-resize.h \
