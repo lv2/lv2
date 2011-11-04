@@ -93,8 +93,6 @@ lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
 doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
 foaf = rdflib.Namespace('http://xmlns.com/foaf/0.1/')
 
-doc_base = '.'
-
 
 def findStatements(model, s, p, o):
     return model.triples([s, p, o])
@@ -857,7 +855,7 @@ def getInstances(model, classes, properties):
     return instances
 
 
-def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
+def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=False, mode="spec"):
     """The meat and potatoes: Everything starts here."""
 
     global spec_url
@@ -865,6 +863,30 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     global spec_ns
     global spec_pre
     global ns_list
+
+    # Template
+    temploc = os.path.join(indir, "template.html")
+    template = None
+    try:
+        f = open(temploc, "r")
+        template = f.read()
+    except Exception:
+        e = sys.exc_info()[1]
+        print("Error reading from template \"" + temploc + "\": " + str(e))
+        usage()
+
+    # Footer
+    footerloc = os.path.join(indir, "footer.html")
+    footer = ''
+    try:
+        f = open(footerloc, "r")
+        footer = f.read()
+    except Exception:
+        e = sys.exc_info()[1]
+        print("Error reading from footer \"" + footerloc + "\": " + str(e))
+        usage()
+
+    template = template.replace('@FOOTER@', footer)
 
     # Build a symbol -> link mapping for external links
     dlfile = open(doclinks, 'r')
@@ -937,6 +959,7 @@ def specgen(specloc, docdir, template, doclinks, instances=False, mode="spec"):
     filename = os.path.basename(specloc)
     basename = filename[0:filename.rfind('.')]
 
+    template = template.replace('@STYLE_URI@', os.path.join(doc_base, style_uri))
     template = template.replace('@PREFIXES@', str(prefixes_html))
     template = template.replace('@BASE@', spec_ns_str)
     template = template.replace('@AUTHORS@', specAuthors(m, spec_url))
@@ -1039,13 +1062,14 @@ def getOntologyNS(m):
 
 def usage():
     script = os.path.basename(sys.argv[0])
-    print("""Usage: %s ONTOLOGY TEMPLATE STYLE OUTPUT [FLAGS]
+    print("""Usage: %s ONTOLOGY INDIR STYLE OUTPUT [FLAGS]
 
         ONTOLOGY : Path to ontology file
-        TEMPLATE : HTML template path
-        STYLE    : CSS style path
+        INDIR    : Input directory containing template.html footer.html style.css
+        STYLE    : Stylesheet URI
         OUTPUT   : HTML output path
         BASE     : Documentation output base URI
+        DOCLINKS : Doxygen links file
 
         Optional flags:
                 -i        : Document class/property instances (disabled by default)
@@ -1068,29 +1092,8 @@ if __name__ == "__main__":
         # Ontology
         specloc = "file:" + str(args[0])
 
-        # Template
-        temploc = args[1]
-        template = None
-        try:
-            f = open(temploc, "r")
-            template = f.read()
-        except Exception:
-            e = sys.exc_info()[1]
-            print("Error reading from template \"" + temploc + "\": " + str(e))
-            usage()
-
-        # Footer
-        footerloc = temploc.replace('template', 'footer')
-        footer = ''
-        try:
-            f = open(footerloc, "r")
-            footer = f.read()
-        except Exception:
-            e = sys.exc_info()[1]
-            print("Error reading from footer \"" + footerloc + "\": " + str(e))
-            usage()
-
-        template = template.replace('@FOOTER@', footer)
+        # Input directory
+        indir = args[1]
 
         # Style
         style_uri = args[2]
@@ -1103,8 +1106,6 @@ if __name__ == "__main__":
 
         # C symbol -> doxygen link mapping
         doc_links = args[5]
-
-        template = template.replace('@STYLE_URI@', os.path.join(doc_base, style_uri))
 
         docdir = os.path.join(doc_base, 'ns', 'doc')
 
@@ -1121,4 +1122,4 @@ if __name__ == "__main__":
                     i += 1
                 i += 1
 
-        save(dest, specgen(specloc, docdir, template, doc_links, instances=instances))
+        save(dest, specgen(specloc, indir, docdir, style_uri, doc_base, doc_links, instances=instances))

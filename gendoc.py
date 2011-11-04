@@ -87,8 +87,9 @@ shutil.copy('doc/index.php',         lv2_outdir)
 
 def gendoc(specgen_dir, bundle_dir, ttl_filename, html_filename):
     subprocess.call([os.path.join(specgen_dir, 'lv2specgen.py'),
-              os.path.join(bundle_dir, ttl_filename),
-              os.path.join(specgen_dir, 'template.html'),
+                     os.path.join(bundle_dir, ttl_filename),
+                     specgen_dir,
+
               STYLEURI,
               os.path.join(out_base, html_filename),
               os.path.join('..', '..'),
@@ -175,7 +176,7 @@ SELECT ?rev FROM <%s.lv2/%s.ttl> WHERE { <%s> doap:release [ doap:revision ?rev 
             print(' * Calling lv2specgen for %s%s/%s' %(URIPREFIX, dir, b))
             subprocess.call([specgendir + 'lv2specgen.py',
                              '%s.lv2/%s.ttl' % (b, b),
-                             specgendir + 'template.html',
+                             specgendir,
                              STYLEURI,
                              '%s.lv2/%s.html' % (b, b),
                              os.path.join('..', '..', '..'),
