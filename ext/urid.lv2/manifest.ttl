@@ -5,5 +5,5 @@
 <http://lv2plug.in/ns/ext/urid>
 	a lv2:Specification ;
 	lv2:minorVersion 0 ;
-	lv2:microVersion 1 ;
+	lv2:microVersion 2 ;
 	rdfs:seeAlso <urid.ttl> .

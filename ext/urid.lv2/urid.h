@@ -28,9 +28,14 @@
 #include <stdint.h>
 
 /**
-   Opaque pointer to host data.
+   Opaque pointer to host data for LV2_URID_Mapper.
 */
-typedef void* LV2_URID_Callback_Data;
+typedef void* LV2_URID_Mapper_Handle;
+
+/**
+   Opaque pointer to host data for LV2_URID_Unmapper.
+*/
+typedef void* LV2_URID_Unmapper_Handle;
 
 /**
    URI mapped to an integer.
@@ -38,29 +43,21 @@ typedef void* LV2_URID_Callback_Data;
 typedef uint32_t LV2_URID;
 
 /**
-   URID Feature.
-
-   To support this feature the host must pass an LV2_Feature struct to the
-   plugin's instantiate method with URI "http://lv2plug.in/ns/ext/urid#URIMap"
-   and data pointed to an instance of this struct.
+   URI Mapper (http://lv2plug.in/ns/ext/urid#Mapper).
 */
 typedef struct {
-
 	/**
 	   Opaque pointer to host data.
 
-	   The plugin MUST pass this to any call to functions in this struct.
+	   This MUST be passed to map_uri() whenever it is called.
 	   Otherwise, it must not be interpreted in any way.
 	*/
-	LV2_URID_Callback_Data callback_data;
+	LV2_URID_Mapper_Handle handle;
 
 	/**
-	   Get the numeric ID of a URI from the host.
+	   Get the numeric ID of a URI.
 
 	   If the ID does not already exist, it will be created.
-
-	   @param callback_data Must be the callback_data member of this struct.
-	   @param uri The URI to be mapped to an integer ID.
 
 	   This function is referentially transparent; any number of calls with the
 	   same arguments is guaranteed to return the same value over the life of a
@@ -72,28 +69,43 @@ typedef struct {
 	   could not be created for whatever reason.  However, hosts SHOULD NOT
 	   return 0 from this function in non-exceptional circumstances (i.e. the
 	   URI map SHOULD be dynamic).
+
+	   @param handle Must be the callback_data member of this struct.
+	   @param uri The URI to be mapped to an integer ID.
 	*/
-	LV2_URID (*map_uri)(LV2_URID_Callback_Data callback_data,
+	LV2_URID (*map_uri)(LV2_URID_Mapper_Handle handle,
 	                    const char*            uri);
+} LV2_URID_Mapper;
+
+/**
+   URI Unmapper (http://lv2plug.in/ns/ext/urid#Unmapper).
+*/
+typedef struct {
+	/**
+	   Opaque pointer to host data.
+
+	   This MUST be passed to unmap_uri() whenever it is called.
+	   Otherwise, it must not be interpreted in any way.
+	*/
+	LV2_URID_Unmapper_Handle handle;
 
 	/**
-	   Get the URI for a given numeric ID from the host.
+	   Get the URI for a previously mapped numeric ID.
 
-	   @param callback_data Must be the callback_data member of this struct.
-	   @param id The ID to be mapped back to the URI string.
-
-	   Returns NULL if @c id is not yet mapped.  Otherwise, the corresponding
-	   URI is returned in a canonical form.  This may not be the exact same
-	   string that was originally passed to map_uri(), but it will be an
+	   Returns NULL if @c urid is not yet mapped.  Otherwise, the corresponding
+	   URI is returned in a canonical form.  This MAY not be the exact same
+	   string that was originally passed to map_uri(), but it MUST be an
 	   identical URI according to the URI spec.  A non-NULL return for a given
-	   @c id will always be the same for the life of the plugin.  Plugins that
-	   intend to perform string comparison on unmapped URIs should first
+	   @c urid will always be the same for the life of the plugin.  Plugins
+	   that intend to perform string comparison on unmapped URIs SHOULD first
 	   canonicalise URI strings with a call to map_uri() followed by a call to
 	   unmap_uri().
-	*/
-	const char* (*unmap_uri)(LV2_URID_Callback_Data callback_data,
-	                         LV2_URID               urid);
 
-} LV2_URID_Feature;
+	   @param handle Must be the callback_data member of this struct.
+	   @param urid The ID to be mapped back to the URI string.
+	*/
+	const char* (*unmap_uri)(LV2_URID_Unmapper_Handle handle,
+	                         LV2_URID                 urid);
+} LV2_URID_Unmapper;
 
 #endif /* LV2_URID_H */
