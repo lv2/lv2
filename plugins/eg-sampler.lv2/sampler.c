@@ -1,8 +1,8 @@
 /*
   LV2 Sampler Example Plugin
-  Copyright 2011 Gabriel M. Beddingfield <gabriel@teuton.org>,
-                 James Morris <jwm.art.net@gmail.com>,
-                 David Robillard <d@drobilla.net>
+  Copyright 2011 Gabriel M. Beddingfield <gabriel@teuton.org>
+  Copyright 2011 James Morris <jwm.art.net@gmail.com>
+  Copyright 2011 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
