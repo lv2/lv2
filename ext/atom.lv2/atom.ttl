@@ -301,28 +301,6 @@ An atom with a time stamp header prepended, typically for sample accurate
 transmission via LV2 ports.  See struct LV2_Atom_Event.
 """ .
 
-atom:MidiMessage
-	a rdfs:Class ;
-	rdfs:label "MIDI Message" ;
-	rdfs:subClassOf atom:Atom ;
-	lv2:documentation """
-<p>A single raw MIDI message.</p>
-
-<p>This is a standard MIDI message, with the following restrictions to ease the
-burden on plugin authors:</p>
-<ul>
-  <li>Running status is not allowed, every message must have its own status
-  byte.</li>
-
-  <li>Note On messages with velocity 0 are not allowed.  These messages are
-  equivalent to Note Off in standard MIDI streams, but here only proper Note
-  Off messages are allowed.</li>
-
-  <li>"Realtime messages" (status bytes 0xF8 to 0xFF) are allowed, but may
-  not occur inside other messages like they can in standard MIDI streams.</li>
-</ul>
-""" .
-
 atom:Bang
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;

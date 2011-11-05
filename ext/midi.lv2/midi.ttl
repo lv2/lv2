@@ -14,65 +14,67 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix midi:  <http://lv2plug.in/ns/ext/midi#> .
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix lv2ev: <http://lv2plug.in/ns/ext/event#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix doap:  <http://usefulinc.com/ns/doap#> .
-@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix ev: <http://lv2plug.in/ns/ext/event#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix midi: <http://lv2plug.in/ns/ext/midi#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/ext/midi>
 	a lv2:Specification ;
 	doap:license <http://opensource.org/licenses/isc-license> ;
-	doap:name "LV2 MIDI Events" ;
-    doap:shortdesc "A data type for raw MIDI." ;
-    doap:release [
-        doap:revision "1.2" ;
-        doap:created "2011-05-21"
-    ] ;
+	doap:name "LV2 MIDI" ;
+	doap:shortdesc "A data type for raw MIDI." ;
+	doap:release [
+		doap:revision "1.3" ;
+		doap:created "2011-11-04"
+	] ;
 	doap:maintainer [
 		a foaf:Person ;
 		foaf:name "David Robillard" ;
 		foaf:homepage <http://drobilla.net/> ;
 		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
-	] , [
+	] ;
+	doap:developer [
 		a foaf:Person ;
 		foaf:name "Lars Luthman" ;
-	] .
+		foaf:mbox <mailto:lars.luthman@gmail.com>
+	] ;
+    lv2:documentation """
+This extension defines a data type for a MIDI message (<a
+href="#MidiEvent">MidiEvent</a>), which is normalized for fast and convenient
+processing by plugins.  It is particularly useful as the payload of an <a
+href="http://lv2plug.in/ns/ext/atom#Atom">Atom</a> or <a
+href="http://lv2plug.in/ns/ext/event#Event">Event</a>.
+""" .
 
-midi:MidiEvent a rdfs:Class ;
-	rdfs:label      "LV2 MIDI event" ;
-	rdfs:subClassOf lv2ev:Event ;
+midi:MidiEvent
+	a rdfs:Class ;
+	rdfs:label "LV2 MIDI message." ;
+	rdfs:subClassOf ev:Event ,
+		atom:Atom ;
 	lv2:documentation """
-<p>A single raw (sequence of bytes) MIDI event.</p>
+<p>A single raw MIDI message (i.e. a sequence of bytes).</p>
 
-<p>These events are equivalent to standard MIDI events, with the following
-restrictions to ease the burden on plugin authors:</p>
+<p>These is equivalent to a standard MIDI messages, except with the following
+restrictions to simplify handling:</p>
 <ul>
-  <li>Running status is not allowed. Every event must have its own status
-    byte.</li>
+  <li>Running status is not allowed, every message must have its own status
+  byte.</li>
 
-  <li>Note On events with velocity 0 are not allowed. These events are
-  equivalent to Note Off in standard MIDI streams, but in order to make
-  plugins and hosts easier to write, as well as more efficient, only proper
-  Note Off events are allowed as Note Off.</li>
+  <li>Note On messages with velocity 0 are not allowed.  These messages are
+  equivalent to Note Off in standard MIDI streams, but here only proper Note
+  Off messages are allowed.</li>
 
-  <li>"Realtime events" (status bytes 0xF8 to 0xFF) are allowed, but may
-  not occur inside other events like they are allowed to in hardware MIDI
-  streams.</li>
+  <li>"Realtime messages" (status bytes 0xF8 to 0xFF) are allowed, but may
+  not occur inside other messages like they can in standard MIDI streams.</li>
 
-  <li>All events must be fully contained in a single data buffer, i.e. events
-  may not "wrap around" by storing the first few bytes in one buffer and
-  then wait for the next run() call to store the rest of the event. If
-  there isn't enough space in the current data buffer to store an event,
-  the event will either have to wait until next run() call, be ignored,
-  or compensated for in some more clever way.</li>
-
-  <li>All events must be valid MIDI events. This means for example that
-  only the first byte in each event (the status byte) may have the eighth
-  bit set, that Note On and Note Off events are always 3 bytes long etc.
-  The MIDI writer (host or plugin) is responsible for writing valid MIDI
-  events to the buffer, and the MIDI reader (plugin or host) can assume that
-  all events are valid.</li>
+  <li>All messages are complete valid MIDI messages.  This means, for example,
+  that only the first byte in each event (the status byte) may have the eighth
+  bit set, that Note On and Note Off events are always 3 bytes long, etc.
+  Where messages are communicated, the writer is responsible for writing valid
+  messages, and the reader may assume that all events are valid.</li>
 </ul>
 """ .
