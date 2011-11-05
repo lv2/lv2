@@ -143,6 +143,7 @@ def niceName(uri):
     if pref in ns_list:
         return ns_list.get(pref, pref) + ":" + rez.group(2)
     else:
+        print ns_list
         return uri
 
 
@@ -914,6 +915,7 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     prefixes_html = "<span>"
     for i in keys:
         uri = namespaces[i]
+        ns_list[str(uri)] = i
         if str(uri) == str(spec_url) + '#':
             spec_pre = i
         prefixes_html += '<a href="%s">%s</a> ' % (uri, i)
