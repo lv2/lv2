@@ -48,23 +48,24 @@
 <p>This extension defines a number of units for use in audio processing.</p>
 
 <p>For example, to say that a gain port's value is in decibels (units:db)</p>
-<pre>
-@prefix : &lt;http://lv2plug.in/ns/extensions/units#&gt; .
+<pre class="turtle-code">
+@prefix :   &lt;http://lv2plug.in/ns/extensions/units#&gt; .
+@prefix eg: &lt;http://example.org/&gt; .
 
-lv2:port [
+eg:plugin lv2:port [
     a            lv2:ControlRateInputPort ;
     lv2:datatype lv2:Float ;
     lv2:index    0 ;
     lv2:symbol   "gain" ;
     lv2:name     "gain" ;
     :unit        :db
-]
+] .
 </pre>
 
 <p>Using the same form, plugins may also specify one-off units inline, to give
 better display hints to hosts:</p>
-<pre>
-lv2:port [
+<pre class="turtle-code">
+eg:plugin lv2:port [
     a            lv2:ControlRateInputPort ;
     lv2:datatype lv2:Float ;
     lv2:index    0 ;
@@ -76,7 +77,7 @@ lv2:port [
         units:symbol "fr" ;
         units:render "%f f"
     ]
-]
+] .
 </pre>
 
 <p>Units are defined by a number of properties:</p>
