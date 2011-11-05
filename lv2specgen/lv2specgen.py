@@ -914,7 +914,7 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     prefixes_html = "<span>"
     for i in keys:
         uri = namespaces[i]
-        if spec_pre is None and str(uri) == str(spec_url + '#'):
+        if str(uri) == str(spec_url) + '#':
             spec_pre = i
         prefixes_html += '<a href="%s">%s</a> ' % (uri, i)
     prefixes_html += "</span>"
