@@ -51,7 +51,7 @@
 	lv2:documentation """
 <p>This extension defines an interface that can be used to create UIs for 
 plugins. The UIs are code that reside in shared object files in an LV2
-bundle and are referenced in the RDF data using the triples
+bundle and are referenced in the RDF data using the triples:</p>
 <pre class="turtle-code">
 @prefix pui:     &lt;http://lv2plug.in/ns/ext/pui#&gt; .
 @prefix pui-gtk: &lt;http://lv2plug.in/ns/ext/pui-gtk#&gt; .
@@ -59,7 +59,7 @@ bundle and are referenced in the RDF data using the triples
                             lv2:appliesTo &lt;http://example.org/my-plugin&gt; ;
                             pui:binary     &lt;my-ui.so&gt; .
 </pre>
-where <code>http://example.org/my-plugin</code> is the URI of the plugin,
+<p>... where <code>http://example.org/my-plugin</code> is the URI of the plugin,
 <code>http://example.org/my-ui</code> is the URI of the plugin UI and
 <code>my-ui.so</code> is the relative URI to the shared object file. While it
 is possible to have the plugin UI and the plugin in the same shared object file
@@ -103,20 +103,20 @@ pui:UI a rdfs:Class;
 <p>The class which represents an LV2 plugin UI.
 </p>
 
-<p>To be used by a host a UI MUST have at least the following properties:
+<p>To be used by a host a UI MUST have at least the following properties:</p>
 <ul>
 <li>rdf:type (with object a proper subclass of pui:UI)</li>
 <li>doap:name (one without language tag)</li>
 <li>lv2:binary (with a shared object file as object)</li>
 <li>lv2:appliesTo (with a LV2 plugin as object)</li>
-</li>
-The rdf:type of an UI is used by the host to decide whether it supports the
+</ul>
+
+<p>The rdf:type of an UI is used by the host to decide whether it supports the
 UI and how to handle the LV2_PUI_Widget object that is returned by the UIs
-get_widget() function. For example, a type of pui-gtk:GtkGUI might tell the host
-that LV2_PUI_Widget is a pointer to an object of a type defined in the Gtk+
-library. No UI types are defined in this extension, that is intentionally
-left for other extensions.
-</p>
+get_widget() function. For example, a type of pui-gtk:GtkGUI might tell the
+host that LV2_PUI_Widget is a pointer to an object of a type defined in the
+Gtk+ library. No UI types are defined in this extension, that is intentionally
+left for other extensions.</p>
 
 <p>The doap:name property should be at most a few words in length using title
 capitalization, e.g. "Flashy Mixer GUI". Use lv2:documentation for more
@@ -148,14 +148,14 @@ and plugin. PortProtocols can be specified in additional extensions, and
 those extensions MUST specify:
 </p>
 
-<p><ol>
+<ol>
 <li>Which plugin port types the buffer type is valid for</li>
 <li>When the host should call port_event() in LV2_PUI_Descriptor</li>
 <li>The format of the data in the buffer passed to port_event()</li>
 <li>The format of the data in the buffer passed to write_port()</li>
 <li>What happens when the UI calls write_port() in LV2_PUI_Host_Descriptor</li>
 <li>What data (if any) should be passed in the LV2_Feature data pointer. </li>
-</ol></p>
+</ol>
 
 <p>For an example, see pui:floatControl or pui:floatPeakRMS.
 </p>
@@ -210,7 +210,7 @@ period</em>.</p>
     However, UIs MUST NOT depend on either the regularity of the calls or the
     contiguity of the measurement periods; hosts may change the call rate
     or skip calls for performance or other reasons. Measurement periods for
-    different calls to port_event() for the same port MUST NOT overlap. 
+    different calls to port_event() for the same port MUST NOT overlap.</li>
 <li>The format of the data in the buffer passed to port_event() is a single
     LV2_PUI_Peak_RMS_Data object, and the buffer size is
     sizeof(LV2_PUI_Peak_RMS_Data).</li>

@@ -299,36 +299,37 @@ def rdfsPropertyInfo(term, m):
     # Domain stuff
     domains = findStatements(m, term, rdfs.domain, None)
     domainsdoc = ""
+    first = True
     for d in domains:
         union = findOne(m, getObject(d), owl.unionOf, None)
         if union:
             uris = parseCollection(m, getObject(union))
-            first = True
             for uri in uris:
                 domainsdoc += getProperty(getTermLink(uri, term, rdfs.domain), first)
                 add(classdomains, uri, term)
-                first = False
         else:
             if not isBlank(getObject(d)):
-                domainsdoc += getProperty(getTermLink(getObject(d), term, rdfs.domain))
+                domainsdoc += getProperty(getTermLink(getObject(d), term, rdfs.domain), first)
+        first = False
     if (len(domainsdoc) > 0):
         doc += "<tr><th>Domain</th>%s" % domainsdoc
 
     # Range stuff
     ranges = findStatements(m, term, rdfs.range, None)
     rangesdoc = ""
+    first = True
     for r in ranges:
         union = findOne(m, getObject(r), owl.unionOf, None)
         if union:
             uris = parseCollection(m, getObject(union))
-            first = True
             for uri in uris:
                 rangesdoc += getProperty(getTermLink(uri, term, rdfs.range), first)
                 add(classranges, uri, term)
                 first = False
         else:
             if not isBlank(getObject(r)):
-                rangesdoc += getProperty(getTermLink(getObject(r), term, rdfs.range))
+                rangesdoc += getProperty(getTermLink(getObject(r), term, rdfs.range), first)
+        first = False
     if (len(rangesdoc) > 0):
         doc += "<tr><th>Range</th>%s" % rangesdoc
 

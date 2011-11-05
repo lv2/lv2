@@ -71,7 +71,7 @@ LV2_Blob_Support.
 reference:Blob a rdfs:Class ;
 	rdfs:label      "Blob" ;
 	lv2:documentation """
-<p>Base class for all dynamically allocated blobs.  An <a LV2_Blob is an opaque
+<p>Base class for all dynamically allocated blobs.  An LV2_Blob is an opaque
 pointer to host data.  The type and data of a blob can be accessed via
 host-provided functions in LV2_Blob_Support.  The type of a blob can be any URI
 that describes a data format.  Blobs are always allocated by the host, and
