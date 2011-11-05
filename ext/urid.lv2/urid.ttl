@@ -25,16 +25,16 @@
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	doap:name "LV2 URID" ;
 	doap:shortdesc "Features for mapping URIs to and from integers." ;
-    doap:release [
-        doap:revision "0.2" ;
-        doap:created "2011-01-04"
-    ] ;
+	doap:release [
+		doap:revision "0.2" ;
+		doap:created "2011-01-04"
+	] ;
 	doap:developer [
 		a foaf:Person ;
 		foaf:name "Gabriel M. Beddingfield" ;
 		foaf:homepage <http://gabe.is-a-geek.org/>
 	] ;
-    lv2:documentation """
+	lv2:documentation """
 This extension defines a simple mechanism for plugins to map URIs to and from
 integers, usually for performance reasons (e.g. processing events typed by URIs
 in real time).  Typically, plugins map URIs to integers for things they
@@ -48,8 +48,8 @@ This extension is intended as an improved and simpler replacement for the
 """ .
 
 urid:Mapper
-    a lv2:Feature ;
-    lv2:documentation """
+	a lv2:Feature ;
+	lv2:documentation """
 A feature which is used to map URIs to integers.  To support this feature, the
 host must pass an LV2_Feature to LV2_Descriptor::instantiate() with
 <em>URI</em> <q>http://lv2plug.in/ns/ext/urid#Mapper</q> and <em>data</em>
@@ -57,8 +57,8 @@ pointed to an instance of LV2_URID_Mapper.
 """ .
 
 urid:Unmapper
-    a lv2:Feature ;
-    lv2:documentation """
+	a lv2:Feature ;
+	lv2:documentation """
 A feature which is used to unmap URIs previously mapped to integers by <a
 href="#Mapper">Mapper</a>.  To support this feature, the host must pass an
 LV2_Feature to LV2_Descriptor::instantiate() with <em>URI</em>

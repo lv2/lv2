@@ -13,23 +13,26 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix umap:  <http://lv2plug.in/ns/ext/uri-map#> .
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix lv2ev: <http://lv2plug.in/ns/ext/event#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix lv2ev: <http://lv2plug.in/ns/ext/event#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix umap:  <http://lv2plug.in/ns/ext/uri-map#> .
 
 <http://lv2plug.in/ns/ext/uri-map>
-	a lv2:Specification , lv2:Feature ;
+	a lv2:Specification ,
+		lv2:Feature ;
+	owl:deprecated true ;
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	doap:name "LV2 URI Map" ;
-    doap:shortdesc "A feature for mapping URIs to integers." ;
-    doap:release [
-        doap:revision "1.2" ;
-        doap:created "2011-05-26"
-    ] ;
+	doap:shortdesc "A feature for mapping URIs to integers." ;
+	doap:release [
+		doap:revision "1.2" ;
+		doap:created "2011-05-26"
+	] ;
 	doap:maintainer [
 		a foaf:Person ;
 		foaf:name "David Robillard" ;
@@ -37,14 +40,18 @@
 		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
 	] , [
 		a foaf:Person ;
-		foaf:name "Lars Luthman" ;
+		foaf:name "Lars Luthman"
 	] ;
-    rdfs:comment """
-This extension defines a simple mechanism for plugins to map URIs to integers,
-usually for performance reasons (e.g. processing events typed by URIs in
-real time).  The expected use case is for plugins to map URIs to integers for
-things they 'understand' at instantiation time, and store those values for
-use in the audio thread without doing any string comparison.  This allows
-the extensibility of RDF with the performance of integers (or centrally
-defined enumerations).
+	lv2:documentation """
+<p><span class="warning">This extension is deprecated.</span> New
+implementations should use <a href="http://lv2plug.in/ns/ext/urid">LV2 URID</a>
+instead.</p>
+
+<p>This extension defines a simple mechanism for plugins to map URIs to
+integers, usually for performance reasons (e.g. processing events typed by URIs
+in real time).  The expected use case is for plugins to map URIs to integers
+for things they 'understand' at instantiation time, and store those values for
+use in the audio thread without doing any string comparison.  This allows the
+extensibility of RDF with the performance of integers (or centrally defined
+enumerations).</p>
 """ .

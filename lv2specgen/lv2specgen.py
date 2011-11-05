@@ -973,7 +973,11 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
 
     version_string = "%s.%s (%s)" % (version[0], version[1], date_string)
     if version[0] == 0 or version[1] % 2 == 1:
-        version_string += ' <span style="color: red; font-weight: bold">EXPERIMENTAL</span>'
+        version_string += ' <span class="warning">EXPERIMENTAL</span>'
+
+    deprecated = findOne(m, rdflib.URIRef(spec_url), owl.deprecated, None)
+    if deprecated and str(deprecated[2]).find("true") > 0:
+        version_string += ' <span class="warning">DEPRECATED</span>'
 
     template = template.replace('@REVISION@', version_string)
 
