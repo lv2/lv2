@@ -499,8 +499,16 @@ code {
 h1, h2, h3, h4, h5, h6, th {
 	text-align: left;
 }
-.warning {
+.error {
     color: red;
+    font-weight: bold;
+}
+.warning {
+    color: orange;
+    font-weight: bold;
+}
+.success {
+    color: green;
     font-weight: bold;
 }
 

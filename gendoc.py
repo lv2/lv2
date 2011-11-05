@@ -30,6 +30,7 @@ TAGFILE    = './doclinks'
 
 doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
 lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
+owl  = rdflib.Namespace('http://www.w3.org/2002/07/owl#')
 rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
 devnull = open(os.devnull, 'w')
@@ -120,7 +121,7 @@ for dir in ['ext', 'extensions']:
 <div id="header"><h1 id="title">LV2 Extension Index</h1></div>
 <div class="content">
 <table summary="An index of LV2 extensions">
-<tr><th>Name</th><th>Description</th><th>Version</th><th>Date</th></tr>\n"""
+<tr><th>Name</th><th>Description</th><th>Version</th><th>Date</th><th>Status</th></tr>\n"""
 
     extensions = []
 
@@ -185,28 +186,35 @@ for dir in ['ext', 'extensions']:
             os.chdir(oldcwd)
 
             # Name
-            li = '<tr><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (b, b)
+            row = '<tr><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (b, b)
 
             # Description
             if shortdesc:
-                li += '<td>' + str(shortdesc) + '</td>'
+                row += '<td>' + str(shortdesc) + '</td>'
             else:
-                li += '<td></td>'
+                row += '<td></td>'
 
             # Version
             version_str = '%s.%s' % (minor, micro)
             if minor == 0 or (micro % 2 != 0):
-                li += '<td><span style="color: red">' + version_str + ' dev</span></td>'
+                row += '<td><span style="color: red">' + version_str + ' dev</span></td>'
             else:
-                li += '<td>' + version_str + '</td>'
+                row += '<td>' + version_str + '</td>'
 
             # Date
-            if date:
-                li += '<td>' + str(date) + '</td>'
+            row += '<td>%s</td>' % (str(date) if date else '')
 
-            li += '</tr>'
+            # Status
+            deprecated = model.value(ext_node, owl.deprecated, None)
+            if minor == 0:
+                row += '<td><span class="error">Experimental</span></td>'
+            elif deprecated and str(deprecated[2]) != "false":
+                    row += '<td><span class="warning">Deprecated</span></td>'
+            elif micro % 2 == 0:
+                row += '<td><span class="success">Stable</span></td>'
 
-            extensions.append(li)
+            row += '</tr>'
+            extensions.append(row)
 
         shutil.copy('doc/index.php', os.path.join(outdir, b + '.lv2', 'index.php'))
     
