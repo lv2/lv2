@@ -1,7 +1,7 @@
 # LV2 Sampler Example Plugin
-# Copyright 2011 Gabriel M. Beddingfield <gabriel@teuton.org>,
-#                James Morris <jwm.art.net@gmail.com>,
-#                David Robillard <d@drobilla.net>
+# Copyright 2011 Gabriel M. Beddingfield <gabriel@teuton.org>
+# Copyright 2011 James Morris <jwm.art.net@gmail.com>
+# Copyright 2011 David Robillard <d@drobilla.net>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -15,25 +15,25 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix lv2ev: <http://lv2plug.in/ns/ext/event#> .
 @prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
 
 <http://lv2plug.in/plugins/eg-sampler>
 	a lv2:Plugin ;
-	doap:name "Simple Sampler" ;
+	doap:name "Example Sampler" ;
 	doap:license <http://opensource.org/licenses/isc-license> ;
-	lv2:requiredFeature <http://lv2plug.in/ns/ext/uri-map> ;
+	lv2:requiredFeature <http://lv2plug.in/ns/ext/urid#Mapper> ;
 	lv2:optionalFeature lv2:hardRtCapable ,
 		<http://lv2plug.in/ns/ext/event> ,
-		<http://lv2plug.in/ns/ext/persist> ;
+		<http://lv2plug.in/ns/ext/state> ;
 	ui:ui <http://lv2plug.in/plugins/eg-sampler#ui> ;
 	lv2:port [
 		a lv2:InputPort ,
-			lv2ev:EventPort ;
-		lv2ev:supportsEvent <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
+			atom:EventPort ;
+		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
 		lv2:index 0 ;
 		lv2:symbol "control" ;
 		lv2:name "Control"

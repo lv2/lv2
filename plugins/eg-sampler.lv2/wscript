@@ -13,19 +13,18 @@ top = '.'
 out = 'build'
 
 def options(opt):
-    autowaf.set_options(opt)
     opt.load('compiler_c')
+    autowaf.set_options(opt)
 
 def configure(conf):
-    autowaf.configure(conf)
-
-    conf.line_just = 51
-    autowaf.display_header('Sampler Configuration')
     conf.load('compiler_c')
+    conf.line_just = 51
+    autowaf.configure(conf)
+    autowaf.display_header('Sampler Configuration')
 
     autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/lv2core/lv2.h')
-    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/event/event-helpers.h')
-    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/uri-map/uri-map.h')
+    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/atom/atom-buffer.h')
+    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/urid/urid.h')
     autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/persist/persist.h')
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)
