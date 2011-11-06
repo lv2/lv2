@@ -175,18 +175,20 @@ typedef struct _LV2_State_Interface {
 
 	   @param instance The instance handle of the plugin.
 	   @param store The host-provided store callback.
-	   @param callback_data An opaque pointer to host data, e.g. the map or
+	   @param handle An opaque pointer to host data, e.g. the map or
 	   file where the values are to be stored. If @c store is called, this MUST
-	   be passed as its callback_data parameter.
+	   be passed as its handle parameter.
 	   @param flags Flags describing desires properties of this save.  The
 	   plugin SHOULD use these values to determine the most appropriate and/or
 	   efficient serialisation, but is not required to do so.
+	   @param features Extensible parameter for passing any additional
+	   features to be used for this save.
 
 	   The plugin is expected to store everything necessary to completely
 	   restore its state later (possibly much later, in a different process, on
 	   a completely different machine, etc.)
 
-	   The @c callback_data pointer and @c store function MUST NOT be used
+	   The @c handle pointer and @c store function MUST NOT be used
 	   beyond the scope of save().
 
 	   This function has its own special threading class: it may not be called
@@ -205,20 +207,24 @@ typedef struct _LV2_State_Interface {
 	   care to do so in such a way that a concurrent call to save() will save a
 	   consistent representation of plugin state for a single instant in time.
 	*/
-	void (*save)(LV2_Handle               instance,
-	             LV2_State_Store_Function store,
-	             LV2_State_Handle         handle,
-	             uint32_t                 flags);
+	void (*save)(LV2_Handle                 instance,
+	             LV2_State_Store_Function   store,
+	             LV2_State_Handle           handle,
+	             uint32_t                   flags,
+	             const LV2_Feature *const * features);
+
 
 	/**
 	   Restore plugin state using a host-provided @c retrieve callback.
 
 	   @param instance The instance handle of the plugin.
 	   @param retrieve The host-provided retrieve callback.
-	   @param callback_data	An opaque pointer to host data, e.g. the map or
+	   @param handle An opaque pointer to host data, e.g. the map or
 	   file from which the values are to be restored. If @c retrieve is
-	   called, this MUST be passed as its callback_data parameter.
+	   called, this MUST be passed as its handle parameter.
 	   @param flags Currently unused.
+	   @param features Extensible parameter for passing any additional
+	   features to be used for this restore.
 
 	   The plugin MAY assume a restored value was set by a previous call to
 	   LV2_State_Interface.save() by a plugin with the same URI.
@@ -227,7 +233,7 @@ typedef struct _LV2_State_Interface {
 	   not be retrieved. This allows the host to reset the plugin state with an
 	   empty map.
 
-	   The @c callback_data pointer and @c store function MUST NOT be used
+	   The @c handle pointer and @c store function MUST NOT be used
 	   beyond the scope of restore().
 
 	   This function is in the "Instantiation" threading class as defined by
@@ -237,7 +243,8 @@ typedef struct _LV2_State_Interface {
 	void (*restore)(LV2_Handle                  instance,
 	                LV2_State_Retrieve_Function retrieve,
 	                LV2_State_Handle            handle,
-	                uint32_t                    flags);
+	                uint32_t                    flags,
+	                const LV2_Feature *const *  features);
 
 } LV2_State_Interface;
 
