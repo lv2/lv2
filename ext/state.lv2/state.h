@@ -35,6 +35,8 @@ extern "C" {
 
 #define LV2_STATE_URI "http://lv2plug.in/ns/ext/state"
 
+typedef void* LV2_State_Handle;
+
 /**
    Flags describing value characteristics.
 
@@ -106,13 +108,12 @@ typedef enum {
    The plugin MUST NOT attempt to use this function outside of the
    LV2_State_Interface.restore() context.
 */
-typedef int (*LV2_State_Store_Function)(
-	void*       callback_data,
-	uint32_t    key,
-	const void* value,
-	size_t      size,
-	uint32_t    type,
-	uint32_t    flags);
+typedef int (*LV2_State_Store_Function)(LV2_State_Handle* handle,
+                                        uint32_t          key,
+                                        const void*       value,
+                                        size_t            size,
+                                        uint32_t          type,
+                                        uint32_t          flags);
 
 /**
    A host-provided function to retrieve a property.
@@ -138,12 +139,11 @@ typedef int (*LV2_State_Store_Function)(
    copied for later use if necessary, assuming the plugin knows how to do so
    correctly (e.g. the value is POD, or the plugin understands the type).
 */
-typedef const void* (*LV2_State_Retrieve_Function)(
-	void*     callback_data,
-	uint32_t  key,
-	size_t*   size,
-	uint32_t* type,
-	uint32_t* flags);
+typedef const void* (*LV2_State_Retrieve_Function)(LV2_State_Handle handle,
+                                                   uint32_t         key,
+                                                   size_t*          size,
+                                                   uint32_t*        type,
+                                                   uint32_t*        flags);
 
 /**
    State Extension Data.
@@ -207,7 +207,7 @@ typedef struct _LV2_State_Interface {
 	*/
 	void (*save)(LV2_Handle               instance,
 	             LV2_State_Store_Function store,
-	             void*                    callback_data,
+	             LV2_State_Handle         handle,
 	             uint32_t                 flags);
 
 	/**
@@ -236,7 +236,7 @@ typedef struct _LV2_State_Interface {
 	*/
 	void (*restore)(LV2_Handle                  instance,
 	                LV2_State_Retrieve_Function retrieve,
-	                void*                       callback_data,
+	                LV2_State_Handle            handle,
 	                uint32_t                    flags);
 
 } LV2_State_Interface;

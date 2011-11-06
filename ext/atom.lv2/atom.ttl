@@ -25,9 +25,10 @@
 	a lv2:Specification ;
 	doap:name "LV2 Atom" ;
     doap:shortdesc "A generic value container and several data types." ;
+	rdfs:seeAlso <atom-buffer.h> ;
 	doap:release [
-		doap:revision "0.1" ;
-		doap:created "2011-04-05"
+		doap:revision "0.2" ;
+		doap:created "2011-11-05"
 	] ;
 	doap:maintainer [
 		a foaf:Person ;
@@ -66,15 +67,16 @@ to a single Atom: <a href="#ValuePort">ValuePort</a> and <a href="#MessagePort"
 >MessagePort</a>, which both have the same buffer format but different
 semantics (with respect to how the run() callback interprets the Atom).</p>
 
-<p>This extension requires the host to support the <a
-href="http://lv2plug.in/ns/ext/uri-map">LV2 URI Map</a> extension.</p>
+<p>Implementing this extension requires a facility for mapping URIs to
+integers, such as the <a href="http://lv2plug.in/ns/ext/urid">LV2 URID</a>
+extension.</p>
 """ .
 
 atom:Atom
 	a rdfs:Class ;
 	rdfs:label "Atom" ;
 	lv2:documentation """
-<p>Abstract base class for all atoms.  An LV2_Atom has a 16-bit
+<p>Abstract base class for all atoms.  An LV2_Atom has a 32-bit
 <code>type</code> and <code>size</code> followed by a <code>body</code> of
 <code>size</code> bytes.</p>
 
@@ -407,11 +409,11 @@ atom:EventPort
 	rdfs:label "Event port" ;
 	rdfs:subClassOf lv2:Port ;
 	lv2:documentation """
-Ports of this type will be connected to an LV2_Atom_Event_Buffer.  These ports
-contain a sequence of atom:Event (i.e. time stamped atoms).  These ports are
-used to send and receive atoms in the audio context
-(i.e. LV2_Descriptor::run()), and are intended as a simpler, more generic, and
-atom compatible successor to <a
+A port used for communicating time-stamped atoms in the audio context.  Ports
+of this type are connected to an LV2_Atom_Buffer, which contains a flat
+time-stamped sequence of <a href="#Event">Events</a>.
+
+This port type is intended as a simpler and atom compatible successor to <a
 href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>.
 """ .
 

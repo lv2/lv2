@@ -208,6 +208,6 @@ typedef struct {
 	*/
 	uint32_t size;
 
-} LV2_Atom_Event_Buffer;
+} LV2_Atom_Buffer;
 
 #endif /* LV2_ATOM_H */
