@@ -35,8 +35,6 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#define LV2_ATOM_FROM_EVENT(ev) ((LV2_Atom*)&((LV2_Event*)ev)->type)
-
 /**
    An LV2 Atom.
 

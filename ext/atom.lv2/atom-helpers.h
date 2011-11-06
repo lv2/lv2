@@ -170,8 +170,8 @@ lv2_atom_is_a(LV2_Atom* object,
 
 /** A single entry in an Object query. */
 typedef struct {
-	uint32_t        key;   ///< Key to query (input set by user)
-	const LV2_Atom* value; ///< Found value (output set by query function)
+	uint32_t        key;    /**< Key to query (input set by user) */
+	const LV2_Atom* value;  /**< Found value (output set by query function) */
 } LV2_Object_Query;
 
 /**
@@ -189,7 +189,7 @@ lv2_object_query(const LV2_Atom* object, LV2_Object_Query* query)
 	int matches   = 0;
 	int n_queries = 0;
 
-	// Count number of query keys so we can short-circuit when done
+	/* Count number of query keys so we can short-circuit when done */
 	for (LV2_Object_Query* q = query; q->key; ++q)
 		++n_queries;
 
