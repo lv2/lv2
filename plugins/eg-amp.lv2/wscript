@@ -13,15 +13,14 @@ top = '.'
 out = 'build'
 
 def options(opt):
-    autowaf.set_options(opt)
     opt.load('compiler_c')
+    autowaf.set_options(opt)
 
 def configure(conf):
-    autowaf.configure(conf)
-
-    conf.line_just = 51
-    autowaf.display_header('Amp Configuration')
     conf.load('compiler_c')
+    conf.line_just = 51
+    autowaf.configure(conf)
+    autowaf.display_header('Amp Configuration')
 
     autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/lv2core/lv2.h')
 
