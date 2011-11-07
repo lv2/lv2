@@ -66,10 +66,12 @@ def options(opt):
 
 def should_build(ctx):
     top_level = (len(ctx.stack_path) <= 1)
-    return top_level or Options.options.experimental or (
+    return top_level or ctx.env['EXPERIMENTAL'] or (
         info.MINOR > 0 and info.MICRO % 2 == 0)
 
 def configure(conf):
+    conf.env['EXPERIMENTAL'] = Options.options.experimental
+
     if not should_build(conf):
         return
 
