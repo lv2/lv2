@@ -36,7 +36,7 @@ except:
            'MINOR'     : int(m.value(spec, lv2.minorVersion, None)),
            'MICRO'     : int(m.value(spec, lv2.microVersion, None)),
            'URI'       : str(spec),
-           'PKGNAME'   : 'lv2-' + spec.replace('http://', '').replace('/', '-'),
+           'PKGNAME'   : str('lv2-' + spec.replace('http://', '').replace('/', '-')),
            'SHORTDESC' : str(m.value(spec, doap.shortdesc, None))})
         
     except:
@@ -113,3 +113,22 @@ def build(bld):
     else:
         bld.symlink_as(os.path.join(include_dir, info.NAME),
                        os.path.relpath(bundle_dir, include_dir))
+
+class Dist(Scripting.Dist):
+    def execute(self):
+        # Generate lv2extinfo.py in source tree
+        lv2extinfo_py = open('lv2extinfo.py', 'w')
+        for i in info.__dict__:
+            if i.isupper():
+                lv2extinfo_py.write("%s = %s\n" % (i, repr(info.__dict__[i])))
+        lv2extinfo_py.close()
+
+        # Build distribution
+        Scripting.Dist.execute(self)
+
+        # Delete lv2extinfo.py from source tree
+        try:
+            os.remove('lv2extinfo.py')
+            os.remove('lv2extinfo.pyc')
+        except:
+            pass
