@@ -32,11 +32,11 @@ except:
         m.parse(os.path.join(dir, name + '.ttl'), format='n3')
         
         info = type('lv2extinfo', (object,), {
-           'NAME'      : name,
+           'NAME'      : str(name),
            'MINOR'     : int(m.value(spec, lv2.minorVersion, None)),
            'MICRO'     : int(m.value(spec, lv2.microVersion, None)),
            'URI'       : str(spec),
-           'PKGNAME'   : 'lv2-' + spec.replace('http://', '').replace('/', '-')
+           'PKGNAME'   : 'lv2-' + spec.replace('http://', '').replace('/', '-'),
            'SHORTDESC' : str(m.value(spec, doap.shortdesc, None))})
         
     except:
@@ -79,7 +79,7 @@ def configure(conf):
     autowaf.display_msg(conf, 'LV2 bundle directory', conf.env['LV2DIR'])
     autowaf.display_msg(conf, 'URI', info.URI)
     autowaf.display_msg(conf, 'Version', VERSION)
-    autowaf.display_msg(conf, 'Pkgconfig name', info.PKGCONFIG_NAME)
+    autowaf.display_msg(conf, 'Pkgconfig name', info.PKGNAME)
     print('')
 
 def build(bld):
@@ -94,7 +94,7 @@ def build(bld):
     # Pkgconfig file
     obj = bld(features     = 'subst',
               source       = 'ext.pc.in',
-              target       = info.PKGCONFIG_NAME + '.pc',
+              target       = info.NAME + '.pc',
               install_path = '${LIBDIR}/pkgconfig',
               INCLUDEDIR   = bld.env['INCLUDEDIR'],
               INCLUDE_PATH = uri.replace('http://', 'lv2/'),
