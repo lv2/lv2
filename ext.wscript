@@ -94,7 +94,7 @@ def build(bld):
     # Pkgconfig file
     obj = bld(features     = 'subst',
               source       = 'ext.pc.in',
-              target       = info.NAME + '.pc',
+              target       = info.PKGNAME + '.pc',
               install_path = '${LIBDIR}/pkgconfig',
               INCLUDEDIR   = bld.env['INCLUDEDIR'],
               INCLUDE_PATH = uri.replace('http://', 'lv2/'),
