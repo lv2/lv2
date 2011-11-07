@@ -12,34 +12,33 @@ import waflib.Utils as Utils
 info = None
 
 try:
+    # Read version information from lv2extinfo.py (in a release tarball)
     import lv2extinfo
     info = lv2extinfo
 except:
+    # Read version information from RDF files
     try:
         import rdflib
         doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
         rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
         lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
 
-        dir  = sys.path[0]
-
-        m = rdflib.ConjunctiveGraph()
+        dir = sys.path[0]
+        m   = rdflib.ConjunctiveGraph()
         m.parse(os.path.join(dir, 'manifest.ttl'), format='n3')
 
         spec = m.value(None, rdf.type, lv2.Specification)
-        uri  = str(spec)
-        name = os.path.basename(uri.replace('http://', ''))
-
+        name = os.path.basename(spec.replace('http://', ''))
         m.parse(os.path.join(dir, name + '.ttl'), format='n3')
         
-        pkgname = 'lv2-' + uri.replace('http://', '').replace('/', '-')
-        info = type('lv2extinfo', (object,),
-                    {'NAME'           : name,
-                     'MINOR'          : int(m.value(spec, lv2.minorVersion, None)),
-                     'MICRO'          : int(m.value(spec, lv2.microVersion, None)),
-                     'URI'            : str(spec),
-                     'PKGCONFIG_NAME' : pkgname,
-                     'SHORTDESC'      : str(m.value(spec, doap.shortdesc, None))})
+        info = type('lv2extinfo', (object,), {
+           'NAME'      : name,
+           'MINOR'     : int(m.value(spec, lv2.minorVersion, None)),
+           'MICRO'     : int(m.value(spec, lv2.microVersion, None)),
+           'URI'       : str(spec),
+           'PKGNAME'   : 'lv2-' + spec.replace('http://', '').replace('/', '-')
+           'SHORTDESC' : str(m.value(spec, doap.shortdesc, None))})
+        
     except:
         e = sys.exc_info()[1]
         Logs.error('Error reading version information: '  + str(e))
