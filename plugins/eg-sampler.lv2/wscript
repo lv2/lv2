@@ -22,10 +22,13 @@ def configure(conf):
     autowaf.configure(conf)
     autowaf.display_header('Sampler Configuration')
 
-    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/lv2core/lv2.h')
-    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/atom/atom-buffer.h')
-    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/urid/urid.h')
-    autowaf.check_header(conf, 'c', 'lv2/lv2plug.in/ns/ext/persist/persist.h')
+    autowaf.check_pkg(conf, 'lv2core', uselib_store='LV2CORE')
+    autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-urid',
+                      uselib_store='LV2_URID')
+    autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-atom',
+                      uselib_store='LV2_ATOM')
+    autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-state',
+                      uselib_store='LV2_STATE')
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)
     autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',

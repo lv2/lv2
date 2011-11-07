@@ -42,7 +42,7 @@
 #include <sndfile.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom-buffer.h"
-#include "lv2/lv2plug.in/ns/ext/persist/persist.h"
+#include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
@@ -185,15 +185,17 @@ instantiate(const LV2_Descriptor*     descriptor,
             const char*               path,
             const LV2_Feature* const* features)
 {
-	Sampler* plugin      = (Sampler*)malloc(sizeof(Sampler));
+	Sampler* plugin = (Sampler*)malloc(sizeof(Sampler));
+	if (!plugin) {
+		return NULL;
+	}
+	
 	plugin->samp         = (SampleFile*)malloc(sizeof(SampleFile));
 	plugin->pending_samp = (SampleFile*)malloc(sizeof(SampleFile));
-
-	if (!plugin || !plugin->samp || !plugin->pending_samp) {
+	if (!plugin->samp || !plugin->pending_samp) {
 		return NULL;
 	}
 
-	memset(plugin, 0, sizeof(Sampler));
 	memset(plugin->samp, 0, sizeof(SampleFile));
 	memset(plugin->pending_samp, 0, sizeof(SampleFile));
 
@@ -326,9 +328,11 @@ map_uri(Sampler* plugin, const char* uri)
 }
 
 static void
-save(LV2_Handle                 instance,
-     LV2_Persist_Store_Function store,
-     void*                      callback_data)
+save(LV2_Handle                instance,
+     LV2_State_Store_Function  store,
+     void*                     callback_data,
+     uint32_t                  flags,
+     const LV2_Feature* const* features)
 {
 	Sampler* plugin = (Sampler*)instance;
 	store(callback_data,
@@ -336,24 +340,26 @@ save(LV2_Handle                 instance,
 	      plugin->samp->filepath,
 	      strlen(plugin->samp->filepath) + 1,
 	      map_uri(plugin, NS_ATOM "String"),
-	      LV2_PERSIST_IS_POD | LV2_PERSIST_IS_PORTABLE);
+	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 }
 
 static void
-restore(LV2_Handle                    instance,
-        LV2_Persist_Retrieve_Function retrieve,
-        void*                         callback_data)
+restore(LV2_Handle                  instance,
+        LV2_State_Retrieve_Function retrieve,
+        void*                       callback_data,
+        uint32_t                    flags,
+        const LV2_Feature* const*   features)
 {
 	Sampler* plugin = (Sampler*)instance;
 
 	size_t   size;
 	uint32_t type;
-	uint32_t flags;
+	uint32_t valflags;
 
 	const void* value = retrieve(
 		callback_data,
 		map_uri(plugin, FILENAME_URI),
-		&size, &type, &flags);
+		&size, &type, &valflags);
 
 	if (value) {
 		printf("Restored filename %s\n", (const char*)value);
@@ -363,9 +369,9 @@ restore(LV2_Handle                    instance,
 const void*
 extension_data(const char* uri)
 {
-	static const LV2_Persist persist = { save, restore };
-	if (!strcmp(uri, LV2_PERSIST_URI)) {
-		return &persist;
+	static const LV2_State_Interface state = { save, restore };
+	if (!strcmp(uri, LV2_STATE_URI)) {
+		return &state;
 	}
 	return NULL;
 }
