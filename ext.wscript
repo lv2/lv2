@@ -115,7 +115,10 @@ def build(bld):
                        os.path.relpath(bundle_dir, include_dir))
 
 class Dist(Scripting.Dist):
-    def execute(self):
+    fun = 'dist'
+    cmd = 'dist'
+
+    def archive(self):
         # Generate lv2extinfo.py in source tree
         lv2extinfo_py = open('lv2extinfo.py', 'w')
         for i in info.__dict__:
@@ -124,7 +127,7 @@ class Dist(Scripting.Dist):
         lv2extinfo_py.close()
 
         # Build distribution
-        Scripting.Dist.execute(self)
+        Scripting.Dist.archive(self)
 
         # Delete lv2extinfo.py from source tree
         try:
@@ -132,3 +135,10 @@ class Dist(Scripting.Dist):
             os.remove('lv2extinfo.pyc')
         except:
             pass
+
+class DistCheck(Dist, Scripting.DistCheck):
+    fun = 'distcheck'
+    cmd = 'distcheck'
+
+    def archive(self):
+        Dist.archive(self)
