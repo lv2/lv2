@@ -28,18 +28,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#include <assert.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
-
-/**
-   Pad a size to 64 bits.
-*/
-static inline uint32_t
-lv2_atom_pad_size(uint32_t size)
-{
-	return (size + 7) & (~7);
-}
 
 /**
    Initialize an existing atom buffer.
@@ -111,9 +101,10 @@ lv2_atom_buffer_is_valid(LV2_Atom_Buffer_Iterator i)
 static inline LV2_Atom_Buffer_Iterator
 lv2_atom_buffer_next(LV2_Atom_Buffer_Iterator i)
 {
-	assert(lv2_atom_buffer_is_valid(i));
-	const LV2_Atom_Event* const ev = (LV2_Atom_Event*)(
-		i.buf->data + i.offset);
+	if (!lv2_atom_buffer_is_valid(i)) {
+		return i;
+	}
+	const LV2_Atom_Event* const ev = (LV2_Atom_Event*)(i.buf->data + i.offset);
 	i.offset += lv2_atom_pad_size(sizeof(LV2_Atom_Event) + ev->body.size);
 	return i;
 }
@@ -124,7 +115,9 @@ lv2_atom_buffer_next(LV2_Atom_Buffer_Iterator i)
 static inline LV2_Atom_Event*
 lv2_atom_buffer_get(LV2_Atom_Buffer_Iterator i)
 {
-	assert(lv2_event_is_valid(i));
+	if (!lv2_atom_buffer_is_valid(i)) {
+		return NULL;
+	}
 	return (LV2_Atom_Event*)(i.buf->data + i.offset);
 }
 

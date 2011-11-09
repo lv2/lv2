@@ -34,27 +34,20 @@
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 
-/** Pad a size to 4 bytes (32 bits) */
-static inline uint16_t
-lv2_atom_pad_size(uint16_t size)
-{
-	return (size + 3) & (~3);
-}
-
 typedef LV2_Atom_Property* LV2_Object_Iter;
 
 /** Get an iterator pointing to @c prop in some LV2_Object */
 static inline LV2_Object_Iter
-lv2_object_begin(const LV2_Atom* obj)
+lv2_object_begin(const LV2_Object* obj)
 {
-	return (LV2_Object_Iter)(((const LV2_Object*)obj->body)->properties);
+	return (LV2_Object_Iter)(obj->properties);
 }
 
 /** Return true iff @c iter has reached the end of @c object */
 static inline bool
-lv2_object_iter_is_end(const LV2_Atom* object, LV2_Object_Iter iter)
+lv2_object_iter_is_end(const LV2_Object* obj, LV2_Object_Iter iter)
 {
-	return (uint8_t*)iter >= ((uint8_t*)object->body + object->size);
+	return (uint8_t*)iter >= ((uint8_t*)obj + sizeof(LV2_Atom) + obj->size);
 }
 
 /** Return true iff @c l points to the same property as @c r */
@@ -113,14 +106,15 @@ lv2_object_iter_get(LV2_Object_Iter iter)
    Atom type that contains headerless 32-bit aligned properties.
 */
 static inline LV2_Atom_Property*
-lv2_atom_append_property(LV2_Atom*      object,
-                         uint32_t       key,
-                         uint16_t       value_type,
-                         uint16_t       value_size,
-                         const uint8_t* value_body)
+lv2_object_append(LV2_Object* object,
+                  uint32_t    key,
+                  uint32_t    value_type,
+                  uint32_t    value_size,
+                  const void* value_body)
 {
 	object->size = lv2_atom_pad_size(object->size);
-	LV2_Atom_Property* prop = (LV2_Atom_Property*)(object->body + object->size);
+	LV2_Atom_Property* prop = (LV2_Atom_Property*)(
+		(uint8_t*)object + sizeof(LV2_Atom) + object->size);
 	prop->key = key;
 	prop->value.type = value_type;
 	prop->value.size = value_size;
@@ -136,43 +130,13 @@ lv2_atom_is_null(LV2_Atom* atom)
 	return !atom || (atom->type == 0 && atom->size == 0);
 }
 
-/** Return true iff @c object has rdf:type @c type */
-static inline bool
-lv2_atom_is_a(LV2_Atom* object,
-              uint32_t  rdf_type,
-              uint32_t  atom_URIInt,
-              uint32_t  atom_Object,
-              uint32_t  type)
-{
-	if (lv2_atom_is_null(object))
-		return false;
-
-	if (object->type == type)
-		return true;
-
-	if (object->type == atom_Object) {
-		LV2_OBJECT_FOREACH(object, o) {
-			LV2_Atom_Property* prop = lv2_object_iter_get(o);
-			if (prop->key == rdf_type) {
-				if (prop->value.type == atom_URIInt) {
-					const uint32_t object_type = *(uint32_t*)prop->value.body;
-					if (object_type == type)
-						return true;
-				} else {
-					fprintf(stderr, "error: rdf:type is not a URIInt\n");
-				}
-			}
-		}
-	}
-
-	return false;
-}
-
 /** A single entry in an Object query. */
 typedef struct {
-	uint32_t        key;    /**< Key to query (input set by user) */
-	const LV2_Atom* value;  /**< Found value (output set by query function) */
+	uint32_t         key;    /**< Key to query (input set by user) */
+	const LV2_Atom** value;  /**< Found value (output set by query function) */
 } LV2_Object_Query;
+
+static const LV2_Object_Query LV2_OBJECT_QUERY_END = { 0, NULL };
 
 /**
    "Query" an object, getting a pointer to the values for various keys.
@@ -184,7 +148,7 @@ typedef struct {
    quickly without allocating any memory.  This function is realtime safe.
 */
 static inline int
-lv2_object_query(const LV2_Atom* object, LV2_Object_Query* query)
+lv2_object_query(const LV2_Object* object, LV2_Object_Query* query)
 {
 	int matches   = 0;
 	int n_queries = 0;
@@ -196,8 +160,8 @@ lv2_object_query(const LV2_Atom* object, LV2_Object_Query* query)
 	LV2_OBJECT_FOREACH(object, o) {
 		const LV2_Atom_Property* prop = lv2_object_iter_get(o);
 		for (LV2_Object_Query* q = query; q->key; ++q) {
-			if (q->key == prop->key && !q->value) {
-				q->value = &prop->value;
+			if (q->key == prop->key && !*q->value) {
+				*q->value = &prop->value;
 				if (++matches == n_queries)
 					return matches;
 				break;

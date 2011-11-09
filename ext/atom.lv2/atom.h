@@ -18,11 +18,8 @@
    @file atom.h C header for the LV2 Atom extension
    <http://lv2plug.in/ns/ext/atom>.
 
-   This extension defines convenience structs that should match the definition
-   of the built-in types of the atom extension. The layout of atoms in this
-   header must match the description in RDF. The RDF description of an atom
-   type should be considered normative. This header is a non-normative (but
-   hopefully accurate) implementation of that specification.
+   This header describes the binary layout of various types defined in the
+   atom extension.
 */
 
 #ifndef LV2_ATOM_H
@@ -35,6 +32,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
    An LV2 Atom.
 
@@ -45,70 +46,76 @@
    (e.g. with memcpy) using the size field, except atoms with type 0.  An atom
    with type 0 is a reference, and may only be used via the functions provided
    in LV2_Blob_Support (e.g. it MUST NOT be manually copied).
-
-   Note that an LV2_Atom is the latter two fields of an LV2_Event as defined by
-   the <a href="http://lv2plug.in/ns/ext/event">LV2 events extension</a>. The
-   host MAY marshal an LV2_Event to an LV2_Atom by simply pointing to the
-   offset of <code>type</code>. The macro LV2_ATOM_FROM_EVENT is provided in
-   this header for this purpose.
 */
 typedef struct {
-
-	/**
-	   The type of this atom.
-
-	   This number is mapped from a URI using the extension
-	    <http://lv2plug.in/ns/ext/uri-map> with 'map' =
-	    "http://lv2plug.in/ns/ext/atom". Type 0 is a special case which
-	    indicates this atom is a reference and MUST NOT be copied manually.
-	*/
-	uint16_t type;
-
-	/**
-	   The size of this atom, not including this header, in bytes.
-	*/
-	uint16_t size;
-
-	/**
-	   Size bytes of data follow here.
-	*/
-	uint8_t body[];
-
+	uint32_t type;    /**< Type of this atom (mapped URI). */
+	uint32_t size;    /**< Size in bytes, not including type and size. */
+	uint8_t  body[];  /**< Body of length @ref size bytes. */
 } LV2_Atom;
 
 /**
-   The body of an atom:Literal.
+   An atom:String.
+   This type may safely be cast to LV2_Atom.
 */
 typedef struct {
-	uint32_t datatype;  /**< The ID of the datatype of this literal */
-	uint32_t lang;      /**< The ID of the language of this literal */
-	uint8_t  str[];     /**< Null-terminated string data in UTF-8 encoding */
+	uint32_t type;   /**< Type of this atom (mapped URI). */
+	uint32_t size;   /**< Size in bytes, not including type and size. */
+	uint8_t  str[];  /**< Null-terminated string data in UTF-8 encoding. */
+} LV2_Atom_String;
+
+/**
+   An atom:Literal.
+   This type may safely be cast to LV2_Atom.
+*/
+typedef struct {
+	uint32_t type;      /**< Type of this atom (mapped URI). */
+	uint32_t size;      /**< Size in bytes, not including type and size. */
+	uint32_t datatype;  /**< The ID of the datatype of this literal. */
+	uint32_t lang;      /**< The ID of the language of this literal. */
+	uint8_t  str[];     /**< Null-terminated string data in UTF-8 encoding. */
 } LV2_Atom_Literal;
 
 /**
-   The body of an atom:Vector.
+   An atom:ID.
+   This type may safely be cast to LV2_Atom.
 */
 typedef struct {
-	uint16_t elem_count; /**< The number of elements in the vector */
-	uint16_t elem_type;  /**< The type of each element in the vector */
-	uint8_t  elems[];    /**< Sequence of element bodies */
+	uint32_t type;  /**< Type of this atom (mapped URI). */
+	uint32_t size;  /**< Size in bytes, not including type and size. */
+	uint32_t id;    /**< Value, a URI mapped to an integer. */
+} LV2_Atom_ID;
+
+/**
+   An atom:Vector.
+   This type may safely be cast to LV2_Atom.
+*/
+typedef struct {
+	uint32_t type;        /**< Type of this atom (mapped URI). */
+	uint32_t size;        /**< Size in bytes, not including type and size. */
+	uint32_t elem_count;  /**< The number of elements in the vector */
+	uint32_t elem_type;   /**< The type of each element in the vector */
+	uint8_t  elems[];     /**< Sequence of element bodies */
 } LV2_Atom_Vector;
 
 /**
    The body of an atom:Property.
+   Note this type is not an LV2_Atom.
 */
 typedef struct _LV2_Atom_Property {
-	uint32_t key;   /**< ID of key (predicate) */
-	LV2_Atom value; /**< Value (object) */
+	uint32_t key;    /**< Key (predicate) (mapped URI). */
+	LV2_Atom value;  /**< Value (object) */
 } LV2_Atom_Property;
 
 /**
-   The body of an atom:Resource or atom:Blank.
+   An atom:Object (atom:Resource or atom:Blank).
+   This type may safely be cast to LV2_Atom.
 */
 typedef struct {
-	uint32_t context;      /**< ID of context graph, or 0 for default */
-	uint32_t id;           /**< URID (for Resource) or blank ID (for Blank) */
-	uint8_t  properties[]; /**< Sequence of LV2_Atom_Property */
+	uint32_t type;          /**< Type of this atom (mapped URI). */
+	uint32_t size;          /**< Size in bytes, not including type and size. */
+	uint32_t context;       /**< ID of context graph, or 0 for default */
+	uint32_t id;            /**< URID (for Resource) or blank ID (for Blank) */
+	uint8_t  properties[];  /**< Sequence of LV2_Atom_Property */
 } LV2_Object;
 
 /**
@@ -121,27 +128,9 @@ typedef struct {
    the @ref body field of the Event.
 */
 typedef struct {
-
-	/**
-	   The frames portion of timestamp.  The unit of this value may depend on
-	   context, but for events processed by LV2_Descriptor::run() the unit is
-	   audio frames relative to this block (e.g. frame 0 is the first frame in
-	   this call to run())
-	*/
-	uint32_t frames;
-
-	/**
-	   The sub-frames portion of timestamp.  The unit of this value may depend
-	   on context, but for events processed by LV2_Descriptor::run() the unit
-	   is 1/(2^32) of an audio frame.
-	*/
-	uint32_t subframes;
-
-	/**
-	   The body of this event.
-	*/
-	LV2_Atom body;
-
+	uint32_t frames;     /**< Time in frames relative to this block. */
+	uint32_t subframes;  /**< Fractional time in 1/(2^32)ths of a frame. */
+	LV2_Atom body;       /**< Event body. */
 } LV2_Atom_Event;
 
 /**
@@ -208,4 +197,17 @@ typedef struct {
 
 } LV2_Atom_Buffer;
 
-#endif /* LV2_ATOM_H */
+/**
+   Pad a size to 64 bits.
+*/
+static inline uint32_t
+lv2_atom_pad_size(uint32_t size)
+{
+	return (size + 7) & (~7);
+}
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
+#endif  /* LV2_ATOM_H */
