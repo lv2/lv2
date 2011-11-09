@@ -210,7 +210,21 @@ if have_pygments:
                 (r'(?=\s*\.)', Text, '#pop'),           
             ],
         }
+
+def linkify(string):
+    "Add links to code documentation for identifiers"
+    if string in linkmap.keys():
+        # Exact match for complete string
+        return linkmap[string]
+
+    rgx = re.compile('([^a-zA-Z0-9_:])(' + \
+                     '|'.join(map(re.escape, linkmap)) + \
+                     ')([^a-aA-Z0-9_:])')
+
+    def translateCodeLink(match):
+        return match.group(1) + linkmap[match.group(2)] + match.group(3)
     
+    return rgx.sub(translateCodeLink, string)
 
 def getComment(m, urinode, classlist):
     c = findOne(m, urinode, lv2.documentation, None)
@@ -246,14 +260,7 @@ def getComment(m, urinode, classlist):
                 markup = code_rgx.sub(code_str, markup, 1)
 
         # Add links to code documentation for identifiers
-        rgx = re.compile('([^a-zA-Z0-9_:])(' + \
-                             '|'.join(map(re.escape, linkmap)) + \
-                             ')([^a-aA-Z0-9_:])')
-
-        def translateCodeLink(match):
-            return match.group(1) + linkmap[match.group(2)] + match.group(3)
-
-        markup = rgx.sub(translateCodeLink, markup)
+        markup = linkify(markup)
 
         # Replace ext:ClassName with links to appropriate fragment
         rgx = re.compile(spec_pre + ':([A-Z][a-zA-Z0-9_-]*)')
@@ -513,7 +520,7 @@ def extraInfo(term, m):
         if isResource(getObject(p)):
             doc += getProperty(getTermLink(getObject(p), term, getPredicate(p)), first)
         elif isLiteral(getObject(p)):
-            doc += getProperty(str(getObject(p)), first)
+            doc += getProperty(linkify(str(getObject(p))), first)
         elif isBlank(getObject(p)):
             doc += getProperty(str(blankNodeDesc(getObject(p), m)), first)
         else:

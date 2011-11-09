@@ -20,6 +20,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 
 <http://lv2plug.in/ns/ext/atom>
 	a lv2:Specification ;
@@ -75,6 +76,7 @@ extension.</p>
 atom:Atom
 	a rdfs:Class ;
 	rdfs:label "Atom" ;
+	atom:cType "LV2_Atom" ;
 	lv2:documentation """
 <p>Abstract base class for all atoms.  An LV2_Atom has a 32-bit
 <code>type</code> and <code>size</code> followed by a <code>body</code> of
@@ -102,11 +104,13 @@ atom:String
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "String" ;
+	atom:cType "LV2_Atom_String" ;
 	lv2:documentation """
 <p>A UTF-8 encoded string.</p>
 
-<p>The body of an atom:String is a C string in UTF-8 encoding, i.e. an array of
-bytes (<code>uint8_t</code>) terminated with a NULL byte (<code>'\\0'</code>).</p>
+<p>The body of an LV2_Atom_String is a C string in UTF-8 encoding, i.e. an
+array of bytes (<code>uint8_t</code>) terminated with a NULL byte
+(<code>'\\0'</code>).</p>
 
 <p>This type can be used for free-form strings, but in most cases it is better to
 use atom:Literal since this supports a language tag or datatype.  Implementations
@@ -118,48 +122,43 @@ atom:Literal
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "String Literal" ;
+	atom:cType "LV2_Atom_Literal" ;
 	lv2:documentation """
-<p>A UTF-8 encoded string literal, with an optional language tag or datatype.</p>
+<p>A UTF-8 encoded string literal, with an optional datatype or language.</p>
 
-<p>This type is compatible with an RDF literal and is capable of expressing a
-string in any language, or a value of any type.  An LV2_Atom_Literal has a
-URID <code>lang</code> and <code>datatype</code> followed by the
-string data in UTF-8 encoding.  The length of the string data in bytes is
-<code>size - (2 * sizeof(uint32_t))</code>, including the terminating NULL
-character.  The <code>lang</code> field SHOULD be a URI of the form
+<p>This type is compatible with rdf:Literal and is capable of expressing a
+string in any language, or a value of any type.  A Literal has a
+<code>datatype</code> and <code>lang</code> followed by string data in UTF-8
+encoding.  The length of the string data in bytes is <code>size -
+sizeof(LV2_Atom_Literal)</code>, including the terminating NULL character.  The
+<code>lang</code> field SHOULD be a URI of the form
 &lt;http://lexvo.org/id/term/LANG&gt; where LANG is an <a
 href="http://www.loc.gov/standards/iso639-2/">ISO 693-2</a> or <a
 href="http://www.loc.gov/standards/iso639-2/">ISO 693-3</a> language code.</p>
 
-<p>For example, "Hello" in English:</p>
+<p>For compatibility, a Literal MUST have either a <code>datatype</code>
+or a <code>lang</code>, but never both.</p>
+
+<p>For example, a Literal can be "Hello" in English:</p>
 <pre class="c-code">
-struct LV2_Atom {
-    uint16_t type = uri_to_id(atom:Literal);
-    uint16_t size = 14;
+void set_to_hello_in_english(LV2_Atom_Literal* lit) {
+     lit->type     = map(expand("atom:Literal"));
+     lit->size     = 14;
+     lit->datatype = 0;
+     lit->lang     = map("http://lexvo.org/id/term/en");
+     memcpy(lit->str, "Hello", sizeof("Hello"));  // Assumes enough space
 }
-uint32_t datatype = 0;
-uint32_t lang     = uri_to_id("http://lexvo.org/id/term/en");
-char     str[]    = "Hello";
 </pre>
-and French:
-<pre class="c-code">
-struct LV2_Atom {
-    uint16_t type = uri_to_id(atom:Literal);
-    uint16_t size = 16;
-}
-uint32_t datatype = 0;
-uint32_t lang     = uri_to_id("http://lexvo.org/id/term/fr");
-char     str[]    = "Bonjour";
-</pre>
+
 <p>or a Turtle string:</p>
 <pre class="c-code">
-struct LV2_Atom {
-    uint16_t type = uri_to_id(atom:Literal);
-    uint16_t size = 64;
+void set_to_turtle_string(LV2_Atom_Literal* lit, const char* ttl) {
+     lit->type     = map(expand("atom:Literal"));
+     lit->size     = 64;
+     lit->datatype = map("http://www.w3.org/2008/turtle#turtle");
+     lit->lang     = 0;
+     memcpy(lit->str, ttl, strlen(ttl) + 1);  // Assumes enough space
 }
-uint32_t datatype = uri_to_id("http://www.w3.org/2008/turtle#turtle");
-uint32_t lang     = 0;
-char     str[]    = "&lt;http://example.org/foo&gt; a &lt;http://example.org/Thing&gt; ."
 </pre>
 """ .
 
@@ -167,6 +166,7 @@ atom:URID
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Integer ID mapped from a URI" ;
+	atom:cType "LV2_Atom_ID" ;
 	lv2:documentation """
 An unsigned 32-bit integer mapped from a URI using the <a
 href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's
@@ -177,6 +177,7 @@ atom:BlankID
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Integer ID for a blank node" ;
+	atom:cType "LV2_Atom_ID" ;
 	lv2:documentation """
 An unsigned 32-bit integer identifier for a blank node.  A BlankID is only
 meaningful within a limited scope (e.g. the Atom in which it appears), and
@@ -188,38 +189,30 @@ atom:Vector
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Vector" ;
+	atom:cType "LV2_Atom_Vector" ;
 	lv2:documentation """
 <p>A homogeneous sequence of atoms with equivalent type and size.</p>
 
-<p>An LV2_Atom_Vector is a 16-bit <code>elem_count</code> and
+<p>An LV2_Atom_Vector is a 32-bit <code>elem_count</code> and
 <code>elem_type</code> followed by <code>elem_count</code> atom bodies of type
 <code>elem_type</code>.  The element type must be a fixed size atom:Atom type,
 i.e. the size of each element is the vector's <code>size /
 elem_count</code>.</p>
 
-<p>For example, an atom:Vector containing 42 elements of type atom:Float looks
-like this in memory:</p>
+<p>For example, an atom:Vector containing 42 elements of type atom:Float:</p>
 <pre class="c-code">
-struct LV2_Atom {
-    uint16_t type = uri_to_id(atom:Vector);
-    uint16_t size = sizeof(LV2_Atom) + sizeof(LV2_Atom_Vector) + (42 * sizeof(float);
-}
-struct LV2_Vector {
-    uint16_t elem_count = 42;
-    uint16_t elem_type  = uri_to_id(atom:Float);
-}
-float elem_00;
-float elem_01;
-...
-float elem_41;
+struct VectorOf42Floats {
+    uint32_t type;        // map(expand("atom:Vector"))
+    uint32_t size;        // sizeof(LV2_Atom_Vector) + (42 * sizeof(float);
+    uint32_t elem_count;  // 42
+    uint32_t elem_type;   // map(expand("atom:Float"))
+    float    elems[32];
+};
 </pre>
 
 <p>Note that it is possible to construct a valid Atom for each element
 of the vector, even by an implementation which does not understand
 <code>elem_type</code>.</p>
-
-<p>A Vector header is 64-bits, thus the first element of a Vector is 64-bit
-aligned if the Vector itself is 64-bit aligned.</p>
 """ .
 
 atom:Tuple
@@ -234,20 +227,11 @@ and <code>size</code>.</p>
 32 bits.</p>
 """ .
 
-atom:Property
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Property of a Thing" ;
-	lv2:documentation """
-A single property of some lv2:Thing.  An
-LV2_Atom_Property has an atom:URID <code>key</code> and an atom:Atom
-<code>value</code>.
-""" .
-
 atom:Thing
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Thing" ;
+	atom:cType "LV2_Thing" ;
 	lv2:documentation """
 <p>Abstract base class for a "Thing", i.e. an atom:Atom with a
 number of <a href="#Property">properties</a>.  An LV2_Object is an unsigned
@@ -269,6 +253,7 @@ code using only a 64-bit header for both.</p>
 atom:Resource
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Thing ;
+	atom:cType "LV2_Thing" ;
 	lv2:documentation """
 An atom:Thing where <code>id</code> is the URI of the resource mapped to an
 atom:URID.
@@ -277,6 +262,7 @@ atom:URID.
 atom:Blank
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Thing ;
+	atom:cType "LV2_Thing" ;
 	lv2:documentation """
 An atom:Thing where <code>id</code> is the blank node ID of the object, which
 is only meaningful within a certain limited scope (e.g. the container of the
@@ -287,6 +273,7 @@ NOT an <a href="ID">ID</a>.
 atom:Message
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Thing ;
+	atom:cType "LV2_Thing" ;
 	lv2:documentation """
 A atom:Thing where <code>id</code> is a message type ID.  Conceptually,
 a Message is identical to a Blank, but is a distinct type with a single type
@@ -299,6 +286,7 @@ value <code>id</code> unmapped to a URI.
 atom:Event
 	a rdfs:Class ;
 	rdfs:label "Event" ;
+	atom:cType "LV2_Atom_Event" ;
 	lv2:documentation """
 An atom with a time stamp header prepended, typically for sample accurate
 transmission via LV2 ports.  See struct LV2_Atom_Event.
@@ -309,40 +297,40 @@ atom:Bang
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Bang (activity) (size = 0)" .
 
-atom:Byte
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Byte (<code>size = 1</code>)" .
-
 atom:Number
 	a rdfs:Class ;
-    rdfs:subClassOf atom:Atom ;
+	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Number (abstract class)." .
 
 atom:Int32
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Number ;
-	rdfs:label "Signed 32-bit integer" .
+	rdfs:label "Signed 32-bit integer" ;
+	atom:cType "LV2_Atom_Int32" .
 
 atom:Int64
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Number ;
-	rdfs:label "Signed 64-bit integer" .
+	rdfs:label "Signed 64-bit integer" ;
+	atom:cType "LV2_Atom_Int64" .
 
 atom:Bool
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Signed 32-bit integer where 0 is false" .
+	rdfs:label "An atom:Int32 where 0 is false and all other values true" ;
+	atom:cType "LV2_Atom_Int32" .
 
 atom:Float
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Number ;
-	rdfs:label "32-bit IEEE-754 floating point number" .
+	rdfs:label "32-bit IEEE-754 floating point number" ;
+	atom:cType "LV2_Atom_Float" .
 
 atom:Double
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Number ;
-	rdfs:label "64-bit IEEE-754 floating point number" .
+	rdfs:label "64-bit IEEE-754 floating point number" ;
+	atom:cType "LV2_Atom_Double" .
 
 atom:blobSupport
 	a lv2:Feature ;
@@ -410,6 +398,17 @@ Intuitively, a MessagePort contains a "message" or "command" or "event"
 which is reacted to, NOT a "value" or "signal" (which is computed with).
 """ .
 
+atom:cType
+	a rdf:Property ,
+		owl:DatatypeProperty ;
+	rdfs:label "C type" ;
+	rdfs:domain rdfs:Class ;
+	rdfs:range xsd:string ;
+	rdfs:comment """
+The identifier for a C type describing the in-memory representation of
+an instance of this class.
+""" .
+
 atom:EventPort
 	a rdfs:Class ;
 	rdfs:label "Event port" ;
@@ -417,7 +416,7 @@ atom:EventPort
 	lv2:documentation """
 A port used for communicating time-stamped atoms in the audio context.  Ports
 of this type are connected to an LV2_Atom_Buffer, which contains a flat
-time-stamped sequence of atom:Event</a>.
+time-stamped sequence of atom:Event.
 
 This port type is intended as a simpler and atom compatible successor to <a
 href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>.

@@ -76,13 +76,13 @@ typedef struct {
 } LV2_Atom_Literal;
 
 /**
-   An atom:ID.
+   An atom:URID or atom:BlankID.
    This type may safely be cast to LV2_Atom.
 */
 typedef struct {
 	uint32_t type;  /**< Type of this atom (mapped URI). */
 	uint32_t size;  /**< Size in bytes, not including type and size. */
-	uint32_t id;    /**< Value, a URI mapped to an integer. */
+	uint32_t id;    /**< URID (integer mapped URI) or blank node ID. */
 } LV2_Atom_ID;
 
 /**
@@ -119,19 +119,54 @@ typedef struct {
 } LV2_Thing;
 
 /**
-   An Event (a timestamped Atom).
-
-   Note this struct is different from the other structs in this header in that
-   it does not describe the body of some LV2_Atom, but instead is a "larger"
-   type which contains an LV2_Atom as its payload.  This makes it possible for
-   an Event to be interpreted as an Atom in-place by simply pointing at
-   the @ref body field of the Event.
+   An atom:Event, a timestamped Atom.
+   Note this type is not an LV2_Atom, but contains an Atom as payload.
 */
 typedef struct {
 	uint32_t frames;     /**< Time in frames relative to this block. */
 	uint32_t subframes;  /**< Fractional time in 1/(2^32)ths of a frame. */
 	LV2_Atom body;       /**< Event body. */
 } LV2_Atom_Event;
+
+/**
+   An atom:Int32, a signed 32-bit integer.
+   This type may safely be cast to LV2_Atom.
+*/
+typedef struct {
+	uint32_t type;
+	uint32_t size;
+	int32_t  value;
+} LV2_Atom_Int32;
+
+/**
+   An atom:Int64, a signed 64-bit integer.
+   This type may safely be cast to LV2_Atom.
+*/
+typedef struct {
+	uint32_t type;
+	uint32_t size;
+	int64_t value;
+} LV2_Atom_Int64;
+
+/**
+   An atom:Float, a 32-bit IEEE-754 floating point number.
+   This type may safely be cast to LV2_Atom.
+*/
+typedef struct {
+	uint32_t type;
+	uint32_t size;
+	float    value;
+} LV2_Atom_Float;
+
+/**
+   An atom:Double, a 64-bit IEEE-754 floating point number.
+   This type may safely be cast to LV2_Atom.
+*/
+typedef struct {
+	uint32_t type;
+	uint32_t size;
+	double   value;
+} LV2_Atom_Double;
 
 /**
    A buffer of events (the contents of an atom:EventPort).
