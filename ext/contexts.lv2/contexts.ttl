@@ -91,10 +91,10 @@ accessed concurrently.  The plugin is responsible for any synchronisation
 or locking necessary to make this possible.</p>
 """ .
 
-ctx:AudioContext a ctx:Context , lv2:Feature ;
+ctx:audioContext a ctx:Context , lv2:Feature ;
 	rdfs:comment """The context of LV2_Descriptor.run().""" .
 
-ctx:MessageContext a ctx:Context , lv2:Feature ;
+ctx:messageContext a ctx:Context , lv2:Feature ;
 	lv2:documentation """
 A non-realtime context for plugin control via message passing.  This context
 has a run method which takes a bitset of flags for parameters specifying which
@@ -102,13 +102,13 @@ input and output ports are valid before and after the run method has executed,
 respectively (see <code>LV2_Contexts_MessageContext</code>).
 """ .
 
-ctx:IdleContext a ctx:Context , lv2:Feature ;
+ctx:idleContext a ctx:Context , lv2:Feature ;
 	rdfs:comment """
 A non-realtime idle context, periodically run by the host roughly every second.
 This context never has any ports.
 """ .
 
-ctx:RequestRunFeature a lv2:Feature ;
+ctx:requestRunFeature a lv2:Feature ;
 	lv2:documentation """
 A feature allowing the plugin to request the execution of a particular context
 at an arbitrary time.  To support this feature, the host MUST pass an
