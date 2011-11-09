@@ -73,13 +73,13 @@ on_load_clicked(GtkWidget* widget,
 	gtk_widget_destroy(dialog);
 	
 	uint8_t msg_buf[4096];
-	LV2_Object* msg = (LV2_Object*)msg_buf;
+	LV2_Thing* msg = (LV2_Thing*)msg_buf;
 	lv2_atom_forge_set_message(ui->forge, msg, uri_to_id(ui, SET_MESSAGE_URI));
-	lv2_object_append(msg,
-	                  uri_to_id(ui, FILENAME_URI),
-	                  uri_to_id(ui, NS_ATOM "String"),
-	                  filename_len,
-	                  filename);
+	lv2_thing_append(msg,
+	                 uri_to_id(ui, FILENAME_URI),
+	                 uri_to_id(ui, NS_ATOM "String"),
+	                 filename_len,
+	                 filename);
 
 	ui->write(ui->controller, 0, sizeof(LV2_Atom) + msg->size,
 	          uri_to_id(ui, NS_ATOM "atomTransfer"),

@@ -277,14 +277,14 @@ run(LV2_Handle instance,
 				plugin->play  = true;
 			}
 		} else if (ev->body.type == plugin->atom_message_id) {
-			const LV2_Object* msg = (LV2_Object*)&ev->body;
+			const LV2_Thing* msg = (LV2_Thing*)&ev->body;
 			if (msg->id == plugin->set_message_id) {
 				const LV2_Atom* filename = NULL;
-				LV2_Object_Query q[] = {
+				LV2_Thing_Query q[] = {
 					{ plugin->filename_key_id, &filename },
-					LV2_OBJECT_QUERY_END
+					LV2_THING_QUERY_END
 				};
-				lv2_object_query(msg, q);
+				lv2_thing_query(msg, q);
 
 				if (filename) {
 					memcpy(plugin->pending_samp->filepath,

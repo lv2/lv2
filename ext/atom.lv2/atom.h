@@ -107,7 +107,7 @@ typedef struct _LV2_Atom_Property {
 } LV2_Atom_Property;
 
 /**
-   An atom:Object (atom:Resource or atom:Blank).
+   An atom:Thing (Resource, Blank, or Message).
    This type may safely be cast to LV2_Atom.
 */
 typedef struct {
@@ -116,7 +116,7 @@ typedef struct {
 	uint32_t context;       /**< ID of context graph, or 0 for default */
 	uint32_t id;            /**< URID (for Resource) or blank ID (for Blank) */
 	uint8_t  properties[];  /**< Sequence of LV2_Atom_Property */
-} LV2_Object;
+} LV2_Thing;
 
 /**
    An Event (a timestamped Atom).

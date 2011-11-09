@@ -59,11 +59,11 @@ lv2_atom_forge_make_id(LV2_Atom_Forge* forge, uint32_t id)
 
 static inline void
 lv2_atom_forge_set_message(LV2_Atom_Forge* forge,
-                           LV2_Object*     msg,
+                           LV2_Thing*      msg,
                            uint32_t        id)
 {
 	msg->type    = forge->Message;
-	msg->size    = sizeof(LV2_Object) - sizeof(LV2_Atom);
+	msg->size    = sizeof(LV2_Thing) - sizeof(LV2_Atom);
 	msg->context = 0;
 	msg->id      = id;
 }

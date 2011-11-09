@@ -34,92 +34,92 @@
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 
-typedef LV2_Atom_Property* LV2_Object_Iter;
+typedef LV2_Atom_Property* LV2_Thing_Iter;
 
-/** Get an iterator pointing to @c prop in some LV2_Object */
-static inline LV2_Object_Iter
-lv2_object_begin(const LV2_Object* obj)
+/** Get an iterator pointing to @c prop in some LV2_Thing */
+static inline LV2_Thing_Iter
+lv2_thing_begin(const LV2_Thing* obj)
 {
-	return (LV2_Object_Iter)(obj->properties);
+	return (LV2_Thing_Iter)(obj->properties);
 }
 
-/** Return true iff @c iter has reached the end of @c object */
+/** Return true iff @c iter has reached the end of @c thing */
 static inline bool
-lv2_object_iter_is_end(const LV2_Object* obj, LV2_Object_Iter iter)
+lv2_thing_iter_is_end(const LV2_Thing* obj, LV2_Thing_Iter iter)
 {
 	return (uint8_t*)iter >= ((uint8_t*)obj + sizeof(LV2_Atom) + obj->size);
 }
 
 /** Return true iff @c l points to the same property as @c r */
 static inline bool
-lv2_object_iter_equals(const LV2_Object_Iter l, const LV2_Object_Iter r)
+lv2_thing_iter_equals(const LV2_Thing_Iter l, const LV2_Thing_Iter r)
 {
 	return l == r;
 }
 
 /** Return an iterator to the property following @c iter */
-static inline LV2_Object_Iter
-lv2_object_iter_next(const LV2_Object_Iter iter)
+static inline LV2_Thing_Iter
+lv2_thing_iter_next(const LV2_Thing_Iter iter)
 {
-	return (LV2_Object_Iter)((uint8_t*)iter
-	                         + sizeof(LV2_Atom_Property)
-	                         + lv2_atom_pad_size(iter->value.size));
+	return (LV2_Thing_Iter)((uint8_t*)iter
+	                        + sizeof(LV2_Atom_Property)
+	                        + lv2_atom_pad_size(iter->value.size));
 }
 
 /** Return the property pointed to by @c iter */
 static inline LV2_Atom_Property*
-lv2_object_iter_get(LV2_Object_Iter iter)
+lv2_thing_iter_get(LV2_Thing_Iter iter)
 {
 	return (LV2_Atom_Property*)iter;
 }
 
 /**
-   A macro for iterating over all properties of an Object.
-   @param obj  The object to iterate over
+   A macro for iterating over all properties of an Thing.
+   @param obj  The thing to iterate over
    @param iter The name of the iterator
 
    This macro is used similarly to a for loop (which it expands to), e.g.:
    <pre>
-   LV2_OBJECT_FOREACH(object, i) {
-       LV2_Atom_Property* prop = lv2_object_iter_get(i);
-       // Do things with prop here...
+   LV2_THING_FOREACH(thing, i) {
+   LV2_Atom_Property* prop = lv2_thing_iter_get(i);
+   // Do things with prop here...
    }
    </pre>
 */
-#define LV2_OBJECT_FOREACH(obj, iter) \
-	for (LV2_Object_Iter (iter) = lv2_object_begin(obj); \
-	     !lv2_object_iter_is_end(obj, (iter)); \
-	     (iter) = lv2_object_iter_next(iter))
+#define LV2_THING_FOREACH(thing, iter)                                  \
+	for (LV2_Thing_Iter (iter) = lv2_thing_begin(thing); \
+	     !lv2_thing_iter_is_end(thing, (iter)); \
+	     (iter) = lv2_thing_iter_next(iter))
 
 /**
-   Append a Property body to an Atom that contains properties (e.g. atom:Object).
-   @param object Pointer to the atom that contains the property to add.  object.size
-   must be valid, but object.type is ignored.
+   Append a Property body to an Atom that contains properties (e.g. atom:Thing).
+   @param thing Pointer to the atom that contains the property to add.  thing.size
+   must be valid, but thing.type is ignored.
    @param key The key of the new property
    @param value_type The type of the new value
    @param value_size The size of the new value
    @param value_body Pointer to the new value's data
    @return a pointer to the new LV2_Atom_Property in @c body.
 
-   This function will write the property body (not including an LV2_Object
+   This function will write the property body (not including an LV2_Thing
    header) at lv2_atom_pad_size(body + size).  Thus, it can be used with any
    Atom type that contains headerless 32-bit aligned properties.
 */
 static inline LV2_Atom_Property*
-lv2_object_append(LV2_Object* object,
-                  uint32_t    key,
-                  uint32_t    value_type,
-                  uint32_t    value_size,
-                  const void* value_body)
+lv2_thing_append(LV2_Thing* thing,
+                 uint32_t    key,
+                 uint32_t    value_type,
+                 uint32_t    value_size,
+                 const void* value_body)
 {
-	object->size = lv2_atom_pad_size(object->size);
+	thing->size = lv2_atom_pad_size(thing->size);
 	LV2_Atom_Property* prop = (LV2_Atom_Property*)(
-		(uint8_t*)object + sizeof(LV2_Atom) + object->size);
+		(uint8_t*)thing + sizeof(LV2_Atom) + thing->size);
 	prop->key = key;
 	prop->value.type = value_type;
 	prop->value.size = value_size;
 	memcpy(prop->value.body, value_body, value_size);
-	object->size += sizeof(LV2_Atom_Property) + value_size;
+	thing->size += sizeof(LV2_Atom_Property) + value_size;
 	return prop;
 }
 
@@ -130,36 +130,36 @@ lv2_atom_is_null(LV2_Atom* atom)
 	return !atom || (atom->type == 0 && atom->size == 0);
 }
 
-/** A single entry in an Object query. */
+/** A single entry in an Thing query. */
 typedef struct {
 	uint32_t         key;    /**< Key to query (input set by user) */
 	const LV2_Atom** value;  /**< Found value (output set by query function) */
-} LV2_Object_Query;
+} LV2_Thing_Query;
 
-static const LV2_Object_Query LV2_OBJECT_QUERY_END = { 0, NULL };
+static const LV2_Thing_Query LV2_THING_QUERY_END = { 0, NULL };
 
 /**
-   "Query" an object, getting a pointer to the values for various keys.
+   "Query" an thing, getting a pointer to the values for various keys.
 
    The value pointer of each item in @c query will be set to the location of
-   the corresponding value in @c object.  Every value pointer in @c query MUST
-   be initialised to NULL.  This function reads @c object in a single linear
-   sweep.  By allocating @c query on the stack, objects can be "queried"
+   the corresponding value in @c thing.  Every value pointer in @c query MUST
+   be initialised to NULL.  This function reads @c thing in a single linear
+   sweep.  By allocating @c query on the stack, things can be "queried"
    quickly without allocating any memory.  This function is realtime safe.
 */
 static inline int
-lv2_object_query(const LV2_Object* object, LV2_Object_Query* query)
+lv2_thing_query(const LV2_Thing* thing, LV2_Thing_Query* query)
 {
 	int matches   = 0;
 	int n_queries = 0;
 
 	/* Count number of query keys so we can short-circuit when done */
-	for (LV2_Object_Query* q = query; q->key; ++q)
+	for (LV2_Thing_Query* q = query; q->key; ++q)
 		++n_queries;
 
-	LV2_OBJECT_FOREACH(object, o) {
-		const LV2_Atom_Property* prop = lv2_object_iter_get(o);
-		for (LV2_Object_Query* q = query; q->key; ++q) {
+	LV2_THING_FOREACH(thing, o) {
+		const LV2_Atom_Property* prop = lv2_thing_iter_get(o);
+		for (LV2_Thing_Query* q = query; q->key; ++q) {
 			if (q->key == prop->key && !*q->value) {
 				*q->value = &prop->value;
 				if (++matches == n_queries)

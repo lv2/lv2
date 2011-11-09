@@ -24,7 +24,7 @@
 <http://lv2plug.in/ns/ext/atom>
 	a lv2:Specification ;
 	doap:name "LV2 Atom" ;
-    doap:shortdesc "A generic value container and several data types." ;
+	doap:shortdesc "A generic value container and several data types." ;
 	rdfs:seeAlso <atom-buffer.h> ;
 	doap:release [
 		doap:revision "0.2" ;
@@ -163,7 +163,7 @@ char     str[]    = "&lt;http://example.org/foo&gt; a &lt;http://example.org/Thi
 </pre>
 """ .
 
-atom:ID
+atom:URID
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Integer ID mapped from a URI" ;
@@ -180,8 +180,8 @@ atom:BlankID
 	lv2:documentation """
 An unsigned 32-bit integer identifier for a blank node.  A BlankID is only
 meaningful within a limited scope (e.g. the Atom in which it appears), and
-MUST NOT be used as a global identifier.  In particular, a BlankID is NOT an
-ID, and can not be mapped to/from a URI.
+MUST NOT be used as a global identifier.  In particular, a BlankID is NOT a
+URID, and can not be mapped to/from a URI.
 """ .
 
 atom:Vector
@@ -237,19 +237,19 @@ and <code>size</code>.</p>
 atom:Property
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Property of an Object" ;
+	rdfs:label "Property of a Thing" ;
 	lv2:documentation """
 A single property of some <a href="#Object">Object</a>.  An
-LV2_Atom_Property has an <a href="#ID">ID</a> <code>key</code> and
+LV2_Atom_Property has an <a href="#URID">URID</a> <code>key</code> and
 <a href="#Atom">Atom</a> <code>value</code>.
 """ .
 
-atom:Object
+atom:Thing
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Object" ;
+	rdfs:label "Thing" ;
 	lv2:documentation """
-<p>Abstract base class for an "Object", i.e. an <a href="#Atom">Atom</a> with a
+<p>Abstract base class for a "Thing", i.e. an <a href="#Atom">Atom</a> with a
 number of <a href="#Property">properties</a>.  An LV2_Object is an unsigned
 32-bit integer <code>context</code> and <code>id</code> followed by a sequence
 of LV2_Atom_Property .</p>
@@ -260,7 +260,7 @@ LV2_URI_Map_Feature::uri_to_id() with <code>map = NULL</code>, and may be 0
 (the default context).</p>
 
 <p>Note this is an abstract class, i.e. no Atom can exist with <code>type =
-uri_to_id(atom:Object)</code>.  An Object is either a <a
+uri_to_id(atom:Thing)</code>.  An Object is either a <a
 href="#Resource">Resource</a> or a <a href="#Blank">Blank</a>, but the
 <code>body</code> always has the same binary format, LV2_Object.  Thus, both
 named and anonymous objects can be handled with common code using only a 64-bit
@@ -269,7 +269,7 @@ header for both.</p>
 
 atom:Resource
 	a rdfs:Class ;
-	rdfs:subClassOf atom:Object ;
+	rdfs:subClassOf atom:Thing ;
 	lv2:documentation """
 An <a href="#Object">Object</a> where <code>id</code> is the
 URI of the resource mapped to an <a href="#ID">ID</a>.
@@ -277,12 +277,24 @@ URI of the resource mapped to an <a href="#ID">ID</a>.
 
 atom:Blank
 	a rdfs:Class ;
-	rdfs:subClassOf atom:Object ;
+	rdfs:subClassOf atom:Thing ;
 	lv2:documentation """
 An <a href="#Object">Object</a> where <code>id</code> is the blank node ID of
 the object, which is only meaningful within a certain limited scope
 (e.g. the container of the Blank) and MUST NOT be used as a global ID.
 In particular, <code>id</code> is NOT an <a href="ID">ID</a>.
+""" .
+
+atom:Message
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Thing ;
+	lv2:documentation """
+A <a href="#Thing"> where <code>id</code> is a message type ID.  Conceptually,
+a Message is identical to a Blank, but is a distinct type with a single type
+field to allow simple and fast dispatch by handling code.
+
+A Message may be serialised as a Blank by adding an rdf:type property with the
+value <code>id</code> unmapped to a URI.
 """ .
 
 atom:Model
@@ -296,7 +308,6 @@ simply a sequence of objects.
 
 atom:Event
 	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Event" ;
 	lv2:documentation """
 An atom with a time stamp header prepended, typically for sample accurate
@@ -313,14 +324,19 @@ atom:Byte
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Byte (<code>size = 1</code>)" .
 
+atom:Number
+	a rdfs:Class ;
+    rdfs:subClassOf atom:Atom ;
+	rdfs:label "Number (abstract class)." .
+
 atom:Int32
 	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
+	rdfs:subClassOf atom:Number ;
 	rdfs:label "Signed 32-bit integer" .
 
 atom:Int64
 	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
+	rdfs:subClassOf atom:Number ;
 	rdfs:label "Signed 64-bit integer" .
 
 atom:Bool
@@ -330,12 +346,12 @@ atom:Bool
 
 atom:Float
 	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
+	rdfs:subClassOf atom:Number ;
 	rdfs:label "32-bit IEEE-754 floating point number" .
 
 atom:Double
 	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
+	rdfs:subClassOf atom:Number ;
 	rdfs:label "64-bit IEEE-754 floating point number" .
 
 atom:blobSupport
