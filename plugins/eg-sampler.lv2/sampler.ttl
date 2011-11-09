@@ -46,4 +46,5 @@
 
 <http://lv2plug.in/plugins/eg-sampler#ui>
 	a ui:GtkUI ;
+	lv2:requiredFeature <http://lv2plug.in/ns/ext/urid#Mapper> ;
 	ui:binary <sampler_ui.so> .

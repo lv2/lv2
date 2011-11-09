@@ -42,16 +42,14 @@
 #include <sndfile.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom-buffer.h"
+#include "lv2/lv2plug.in/ns/ext/atom/atom-helpers.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
-#define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
+#include "./uris.h"
 
-#define SAMPLER_URI    "http://lv2plug.in/plugins/eg-sampler"
-#define MIDI_EVENT_URI "http://lv2plug.in/ns/ext/midi#MidiEvent"
-#define FILENAME_URI   SAMPLER_URI "#filename"
-#define STRING_BUF     8192
+#define STRING_BUF 8192
 
 enum {
 	SAMPLER_CONTROL = 0,
@@ -81,6 +79,9 @@ typedef struct {
 	float*           output_port;
 	LV2_Atom_Buffer* event_port;
 	LV2_URID         midi_event_id;
+	LV2_URID         atom_message_id;
+	LV2_URID         set_message_id;
+	LV2_URID         filename_key_id;
 
 	/* Playback state */
 	bool       play;
@@ -95,6 +96,7 @@ handle_load_sample(Sampler* plugin)
 {
 	plugin->pending_sample_ready = 0;
 
+	printf("Loading sample %s\n", plugin->pending_samp->filepath);
 	SF_INFO* const info   = &plugin->pending_samp->info;
 	SNDFILE* const sample = sf_open(plugin->pending_samp->filepath,
 	                                SFM_READ,
@@ -199,7 +201,10 @@ instantiate(const LV2_Descriptor*     descriptor,
 	memset(plugin->samp, 0, sizeof(SampleFile));
 	memset(plugin->pending_samp, 0, sizeof(SampleFile));
 
-	plugin->midi_event_id = -1;
+	plugin->midi_event_id   = -1;
+	plugin->atom_message_id = -1;
+	plugin->set_message_id  = -1;
+	plugin->filename_key_id = -1;
 
 	/* Initialise mutexes and conditions for the worker thread */
 	if (pthread_mutex_init(&plugin->pending_samp_mutex, 0)) {
@@ -221,6 +226,12 @@ instantiate(const LV2_Descriptor*     descriptor,
 			plugin->mapper = (LV2_URID_Mapper*)features[i]->data;
 			plugin->midi_event_id = plugin->mapper->map_uri(
 				plugin->mapper->handle, MIDI_EVENT_URI);
+			plugin->atom_message_id = plugin->mapper->map_uri(
+				plugin->mapper->handle, ATOM_MESSAGE_URI);
+			plugin->set_message_id = plugin->mapper->map_uri(
+				plugin->mapper->handle, SET_MESSAGE_URI);
+			plugin->filename_key_id = plugin->mapper->map_uri(
+				plugin->mapper->handle, FILENAME_URI);
 		}
 	}
 
@@ -265,18 +276,31 @@ run(LV2_Handle instance,
 				plugin->frame = 0;
 				plugin->play  = true;
 			}
-		}
-		/***************************************************
-		 * XXX TODO:                                       *
-		 * ADD CODE HERE TO DETECT AN INCOMING MESSAGE TO  *
-		 * DYNAMICALLY LOAD A SAMPLE                       *
-		 ***************************************************
-		 */
-		else if (0) {
-			/* message to load a sample comes in */
-			/* write filename to plugin->pending_samp->filepath */
-			/* strncpy(plugin->pending_samp->filepath, some_src_string, STRING_BUF); */
-			pthread_cond_signal(&plugin->pending_samp_cond);
+		} else if (ev->body.type == plugin->atom_message_id) {
+			const LV2_Object* msg = (LV2_Object*)&ev->body;
+			if (msg->id == plugin->set_message_id) {
+				const LV2_Atom* filename = NULL;
+				LV2_Object_Query q[] = {
+					{ plugin->filename_key_id, &filename },
+					LV2_OBJECT_QUERY_END
+				};
+				lv2_object_query(msg, q);
+
+				if (filename) {
+					memcpy(plugin->pending_samp->filepath,
+					       filename->body,
+					       filename->size);
+					pthread_cond_signal(&plugin->pending_samp_cond);
+
+				} else {
+					fprintf(stderr, "Ignored set message with no filename\n");
+				}
+			} else {
+				fprintf(stderr, "Unknown message type %d\n", msg->id);
+			}
+
+		} else {
+			fprintf(stderr, "Unknown event type %d\n", ev->body.type);
 		}
 	}
 
@@ -310,7 +334,7 @@ run(LV2_Handle instance,
 		plugin->samp                 = plugin->pending_samp;
 		plugin->pending_samp         = tmp;
 		plugin->pending_sample_ready = 0;
-		free(plugin->pending_samp->data);
+		free(plugin->pending_samp->data); // FIXME: non-realtime!
 
 		pthread_mutex_unlock(&plugin->pending_samp_mutex);
 	}
