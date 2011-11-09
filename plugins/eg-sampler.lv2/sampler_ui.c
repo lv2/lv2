@@ -34,7 +34,7 @@
 #define SAMPLER_UI_URI "http://lv2plug.in/plugins/eg-sampler#ui"
 
 typedef struct {
-	LV2_URID_Mapper* mapper;
+	LV2_URID_Map* map;
 	LV2_Atom_Forge*  forge;
 
 	LV2UI_Write_Function write;
@@ -46,7 +46,7 @@ typedef struct {
 static LV2_URID
 uri_to_id(SamplerUI* ui, const char* uri)
 {
-	return ui->mapper->map_uri(ui->mapper->handle, uri);
+	return ui->map->map(ui->map->handle, uri);
 }
 
 static void
@@ -98,7 +98,7 @@ instantiate(const LV2UI_Descriptor*   descriptor,
             const LV2_Feature* const* features)
 {
 	SamplerUI* ui = (SamplerUI*)malloc(sizeof(SamplerUI));
-	ui->mapper     = NULL;
+	ui->map     = NULL;
 	ui->write      = write_function;
 	ui->controller = controller;
 	ui->button     = NULL;
@@ -106,18 +106,18 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	*widget = NULL;
 
 	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID_URI "#Mapper")) {
-			ui->mapper = (LV2_URID_Mapper*)features[i]->data;
+		if (!strcmp(features[i]->URI, LV2_URID_URI "#Map")) {
+			ui->map = (LV2_URID_Map*)features[i]->data;
 		}
 	}
 
-	if (!ui->mapper) {
+	if (!ui->map) {
 		fprintf(stderr, "sampler_ui: Host does not support uri-map\n");
 		free(ui);
 		return NULL;
 	}
 
-	ui->forge = lv2_atom_forge_new(ui->mapper);
+	ui->forge = lv2_atom_forge_new(ui->map);
 
 	ui->button = gtk_button_new_with_label("Load Sample");
 	g_signal_connect(ui->button, "clicked",

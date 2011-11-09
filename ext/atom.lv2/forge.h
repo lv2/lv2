@@ -35,12 +35,12 @@ typedef struct {
 } LV2_Atom_Forge;
 
 static inline LV2_Atom_Forge*
-lv2_atom_forge_new(LV2_URID_Mapper* mapper)
+lv2_atom_forge_new(LV2_URID_Map* map)
 {
 	LV2_Atom_Forge* forge = (LV2_Atom_Forge*)malloc(sizeof(LV2_Atom_Forge));
-	forge->ID       = mapper->map_uri(mapper->handle, LV2_ATOM_URI "#ID");
-	forge->Message  = mapper->map_uri(mapper->handle, LV2_ATOM_URI "#Message");
-	forge->Property = mapper->map_uri(mapper->handle, LV2_ATOM_URI "#Property");
+	forge->ID       = map->map(map->handle, LV2_ATOM_URI "#ID");
+	forge->Message  = map->map(map->handle, LV2_ATOM_URI "#Message");
+	forge->Property = map->map(map->handle, LV2_ATOM_URI "#Property");
 	return forge;
 }
 

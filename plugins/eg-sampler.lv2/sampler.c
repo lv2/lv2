@@ -66,7 +66,7 @@ typedef struct {
 
 typedef struct {
 	/* Features */
-	LV2_URID_Mapper* mapper;
+	LV2_URID_Map* map;
 
 	/* Sample */
 	SampleFile*     samp;
@@ -220,23 +220,23 @@ instantiate(const LV2_Descriptor*     descriptor,
 		goto fail;
 	}
 
-	/* Scan host features for uri mapper */
+	/* Scan host features for URID map */
 	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID_URI "#Mapper")) {
-			plugin->mapper = (LV2_URID_Mapper*)features[i]->data;
-			plugin->midi_event_id = plugin->mapper->map_uri(
-				plugin->mapper->handle, MIDI_EVENT_URI);
-			plugin->atom_message_id = plugin->mapper->map_uri(
-				plugin->mapper->handle, ATOM_MESSAGE_URI);
-			plugin->set_message_id = plugin->mapper->map_uri(
-				plugin->mapper->handle, SET_MESSAGE_URI);
-			plugin->filename_key_id = plugin->mapper->map_uri(
-				plugin->mapper->handle, FILENAME_URI);
+		if (!strcmp(features[i]->URI, LV2_URID_URI "#map")) {
+			plugin->map = (LV2_URID_Map*)features[i]->data;
+			plugin->midi_event_id = plugin->map->map(
+				plugin->map->handle, MIDI_EVENT_URI);
+			plugin->atom_message_id = plugin->map->map(
+				plugin->map->handle, ATOM_MESSAGE_URI);
+			plugin->set_message_id = plugin->map->map(
+				plugin->map->handle, SET_MESSAGE_URI);
+			plugin->filename_key_id = plugin->map->map(
+				plugin->map->handle, FILENAME_URI);
 		}
 	}
 
-	if (!plugin->mapper) {
-		fprintf(stderr, "Host does not support urid:Mapper.\n");
+	if (!plugin->map) {
+		fprintf(stderr, "Host does not support urid:map.\n");
 		goto fail;
 	}
 
@@ -348,7 +348,7 @@ run(LV2_Handle instance,
 static uint32_t
 map_uri(Sampler* plugin, const char* uri)
 {
-	return plugin->mapper->map_uri(plugin->mapper->handle, uri);
+	return plugin->map->map(plugin->map->handle, uri);
 }
 
 static void

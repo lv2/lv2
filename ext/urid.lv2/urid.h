@@ -28,14 +28,14 @@
 #include <stdint.h>
 
 /**
-   Opaque pointer to host data for LV2_URID_Mapper.
+   Opaque pointer to host data for LV2_URID_Map.
 */
-typedef void* LV2_URID_Mapper_Handle;
+typedef void* LV2_URID_Map_Handle;
 
 /**
-   Opaque pointer to host data for LV2_URID_Unmapper.
+   Opaque pointer to host data for LV2_URID_Unmap.
 */
-typedef void* LV2_URID_Unmapper_Handle;
+typedef void* LV2_URID_Unmap_Handle;
 
 /**
    URI mapped to an integer.
@@ -43,7 +43,7 @@ typedef void* LV2_URID_Unmapper_Handle;
 typedef uint32_t LV2_URID;
 
 /**
-   URI Mapper (http://lv2plug.in/ns/ext/urid#Mapper).
+   URI Map (http://lv2plug.in/ns/ext/urid#map).
 */
 typedef struct {
 	/**
@@ -52,7 +52,7 @@ typedef struct {
 	   This MUST be passed to map_uri() whenever it is called.
 	   Otherwise, it must not be interpreted in any way.
 	*/
-	LV2_URID_Mapper_Handle handle;
+	LV2_URID_Map_Handle handle;
 
 	/**
 	   Get the numeric ID of a URI.
@@ -61,9 +61,11 @@ typedef struct {
 
 	   This function is referentially transparent; any number of calls with the
 	   same arguments is guaranteed to return the same value over the life of a
-	   plugin instance.  However, this function is not necessarily very
-	   fast or RT-safe: plugins SHOULD cache any IDs they might need in
-	   performance critical situations.
+	   plugin instance.  Note, however, that several URIs MAY resolve to the
+	   same ID if the host considers those URIs equivalent.
+
+	   This function is not necessarily very fast or RT-safe: plugins SHOULD
+	   cache any IDs they might need in performance critical situations.
 
 	   The return value 0 is reserved and indicates that an ID for that URI
 	   could not be created for whatever reason.  However, hosts SHOULD NOT
@@ -73,39 +75,39 @@ typedef struct {
 	   @param handle Must be the callback_data member of this struct.
 	   @param uri The URI to be mapped to an integer ID.
 	*/
-	LV2_URID (*map_uri)(LV2_URID_Mapper_Handle handle,
-	                    const char*            uri);
-} LV2_URID_Mapper;
+	LV2_URID (*map)(LV2_URID_Map_Handle handle,
+	                const char*         uri);
+} LV2_URID_Map;
 
 /**
-   URI Unmapper (http://lv2plug.in/ns/ext/urid#Unmapper).
+   URI Unmap (http://lv2plug.in/ns/ext/urid#unmap).
 */
 typedef struct {
 	/**
 	   Opaque pointer to host data.
 
-	   This MUST be passed to unmap_uri() whenever it is called.
+	   This MUST be passed to unmap() whenever it is called.
 	   Otherwise, it must not be interpreted in any way.
 	*/
-	LV2_URID_Unmapper_Handle handle;
+	LV2_URID_Unmap_Handle handle;
 
 	/**
 	   Get the URI for a previously mapped numeric ID.
 
 	   Returns NULL if @c urid is not yet mapped.  Otherwise, the corresponding
 	   URI is returned in a canonical form.  This MAY not be the exact same
-	   string that was originally passed to map_uri(), but it MUST be an
-	   identical URI according to the URI spec.  A non-NULL return for a given
-	   @c urid will always be the same for the life of the plugin.  Plugins
-	   that intend to perform string comparison on unmapped URIs SHOULD first
-	   canonicalise URI strings with a call to map_uri() followed by a call to
-	   unmap_uri().
+	   string that was originally passed to LV2_URID_Map::map(), but it MUST be
+	   an identical URI according to the URI syntax specification (RFC3986).  A
+	   non-NULL return for a given @c urid will always be the same for the life
+	   of the plugin.  Plugins that intend to perform string comparison on
+	   unmapped URIs SHOULD first canonicalise URI strings with a call to
+	   map_uri() followed by a call to unmap_uri().
 
 	   @param handle Must be the callback_data member of this struct.
 	   @param urid The ID to be mapped back to the URI string.
 	*/
-	const char* (*unmap_uri)(LV2_URID_Unmapper_Handle handle,
-	                         LV2_URID                 urid);
-} LV2_URID_Unmapper;
+	const char* (*unmap)(LV2_URID_Unmap_Handle handle,
+	                     LV2_URID              urid);
+} LV2_URID_Unmap;
 
 #endif /* LV2_URID_H */
