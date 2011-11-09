@@ -43,37 +43,35 @@
     ] ;
     lv2:documentation """
 <p>This extension provides a mechanism for plugins to save and restore state
-across instances, allowing hosts to save configuration/state/data with a
-project or fully clone (i.e. make a deep copy of) a plugin instance.</p>
-
-<p>This extension allows plugins to save private state data, i.e. data that is
-not contained in input ports.  The motivating ideal is for the state of a
-plugin instance to be <em>entirely</em> described by port values (as with all
-LV2 plugins) and a key/value dictionary as defined by this extension. This
-mechanism is simple, yet sufficiently powerful to describe very advanced and
-complex state.</p>
+across instances, allowing hosts to save, restore, clone, or take a snapshot of
+a plugin instance's state at any point in time.  The intention is for a plugin
+instance's state to be <em>completely</em> described by port values (as with all
+LV2 plugins) and a simple dictionary.</p>
 
 <p>The <q>state</q> described by this extension is conceptually a single
-key/value dictionary.  Keys are URIs, and values are type-tagged blobs of any
-type.  The plugin provides a save and restore method for saving and restoring
-state.  To initiate a save or restore, the host calls these methods, passing a
-callback to be used for handling a single key/value pair.  The host is free to
-implement saving and restoring in any way; the actual mechanism is completely
-abstract from the plugin's perspective.</p>
+key/value dictionary, where keys are URIDs and values are type-tagged blobs of
+any type.  The plugin provides an LV2_State_Interface for working with this
+state.  To save or restore, the host calls LV2_State_Interface::save() or
+LV2_State_Interface::restore(), passing a callback to be used for handling a
+single key/value pair.  The host is free to implement saving and restoring in
+any way; the actual mechanism is completely abstract from the plugin's
+perspective.</p>
 
-<p>Because the state is a simple dictionary, hosts and plugins can work with
-state easily from many languages and protocols.  Additionally, this format is
-simple and terse to serialise in many formats (e.g. any RDF syntax, JSON, XML,
-key/value databases such as BDB, etc.).  In particular, state can be elegantly
-described in a plugin's Turtle description, which is useful for e.g. presets or
-default state.</p>
+<p>Because state is a simple dictionary, hosts and plugins can work with it
+easily from many languages and protocols.  Keys are URIDs for performance
+reasons as well as RDF compatibility, which makes it simple to serialise state
+in many formats (e.g. any RDF syntax, JSON, XML, key/value databases such as
+BDB, etc.).  In particular, state can be elegantly described in a plugin's
+Turtle description, which is useful for e.g. presets or default state.
+Specific keys may be described in Turtle on the fly or in extensions,
+allowing plugins to use common well-defined keys.</p>
 
 <p>This extension defines a conceptual model of state and a mechanism for
-saving and restoring it, but no interface for manipulating that state
-dynamically.  It is intended that a generic way to modify this state (e.g.
-with messages sent via ports) is the preferred way to achieve more advanced
-plugin control than control ports provide, but the details of this mechanism
-should be addressed by a separate extension.</p>
+saving and restoring it, but no interface for manipulating it dynamically.
+While no such mechanism is defined here, dynamic control of plugins SHOULD be
+achieved by generic manipulations of the same conceptual state dictionary used
+by this extension (e.g. <code>plugin->set(key, value)</code>).  Accordingly,
+plugins SHOULD use meaningful and well-defined keys wherever possible.</p>
 
 <p>In pseudo code, a typical use case in a plugin is:</p>
 <pre class="c-code">
@@ -89,15 +87,17 @@ LV2_Handle my_instantiate(...)
     return plugin;
 }
 
-void my_save(LV2_Handle               instance,
-             LV2_State_Store_Function store,
-             void*                    callback_data,
-             uint32_t                 flags)
+void my_save(LV2_Handle                 instance,
+             LV2_State_Store_Function   store,
+             void*                      handle,
+             uint32_t                   flags,
+             const LV2_Feature *const * features)
+
 {
     MyPlugin*   plugin   = (MyPlugin*)instance;
     const char* greeting = plugin->state.greeting;
 
-    store(callback_data,
+    store(handle,
           plugin->uris.eg_greeting,
           greeting,
           strlen(greeting) + 1,
@@ -107,15 +107,16 @@ void my_save(LV2_Handle               instance,
 
 void my_restore(LV2_Handle                  instance,
                 LV2_State_Retrieve_Function retrieve,
-                void*                       callback_data,
-                uint32_t                    flags)
+                void*                       handle,
+                uint32_t                    flags,
+                const LV2_Feature *const *   features)
 {
     MyPlugin* plugin = (MyPlugin*)instance;
 
     size_t      size;
     uint32_t    type;
     uint32_t    flags;
-    const char* greeting = retrieve(callback_data,
+    const char* greeting = retrieve(handle,
                                     plugin->uris.eg_greeting,
                                     &amp;size,
                                     &amp;type,
@@ -140,7 +141,7 @@ const void* my_extension_data(const char* uri)
 
 <p>Similarly, a typical use case in a host is:</p>
 <pre class="c-code">
-int store_callback(void*       callback_data,
+int store_callback(void*       handle,
                    uint32_t    key,
                    const void* value,
                    size_t      size,
@@ -152,7 +153,7 @@ int store_callback(void*       callback_data,
            If this was for disk or network storage/transmission,
            LV2_STATE_IS_PORTABLE would have to be checked as well.
         */
-        Map* state_map = (Map*)callback_data;
+        Map* state_map = (Map*)handle;
         state_map->insert(key, Value(copy(value), size, type, pod));
         return 0;
     } else {

@@ -83,7 +83,7 @@ typedef enum {
 
 /**
    A host-provided function to store a property.
-   @param callback_data Must be the callback_data passed to LV2_State_Interface.save().
+   @param handle Must be the handle passed to LV2_State_Interface.save().
    @param key The key (predicate) to store @c value under (URI mapped integer).
    @param value Pointer to the value (object) to be stored.
    @param size The size of the data at @c value in bytes.
@@ -117,7 +117,7 @@ typedef int (*LV2_State_Store_Function)(LV2_State_Handle* handle,
 
 /**
    A host-provided function to retrieve a property.
-   @param callback_data Must be the callback_data passed to
+   @param handle Must be the handle passed to
    LV2_State_Interface.restore().
    @param key The key (predicate) of the property to retrieve (URI).
    @param size (Output) If non-NULL, set to the size of the restored value.
@@ -132,12 +132,13 @@ typedef int (*LV2_State_Store_Function)(LV2_State_Handle* handle,
    plugin within LV2_State_Interface.restore() to retrieve any properties it
    requires to restore its state.
 
-   The returned value MUST remain valid until LV2_State_Interface.restore() returns.
+   The returned value MUST remain valid until LV2_State_Interface.restore()
+   returns.
 
    The plugin MUST NOT attempt to use this function, or any value returned from
-   it, outside of the LV2_State_Interface.restore() context. Returned values MAY be
-   copied for later use if necessary, assuming the plugin knows how to do so
-   correctly (e.g. the value is POD, or the plugin understands the type).
+   it, outside of the LV2_State_Interface.restore() context. Returned values
+   MAY be copied for later use if necessary, assuming the plugin knows how to
+   do so correctly (e.g. the value is POD, or the plugin understands the type).
 */
 typedef const void* (*LV2_State_Retrieve_Function)(LV2_State_Handle handle,
                                                    uint32_t         key,
