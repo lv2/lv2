@@ -212,7 +212,7 @@ if have_pygments:
         }
     
 
-def getComment(m, urinode):
+def getComment(m, urinode, classlist):
     c = findOne(m, urinode, lv2.documentation, None)
     if c:
         markup = getLiteralString(getObject(c))
@@ -250,10 +250,24 @@ def getComment(m, urinode):
                              '|'.join(map(re.escape, linkmap)) + \
                              ')([^a-aA-Z0-9_:])')
 
-        def translate(match):
+        def translateCodeLink(match):
             return match.group(1) + linkmap[match.group(2)] + match.group(3)
 
-        return rgx.sub(translate, markup)
+        markup = rgx.sub(translateCodeLink, markup)
+
+        # Replace ext:ClassName with links to appropriate fragment
+        rgx = re.compile(spec_pre + ':([A-Z][a-zA-Z0-9_-]*)')
+
+        def translateClassLink(match):
+            curie = match.group(0)
+            name  = curie[curie.find(':') + 1:]
+            uri   = spec_ns + name
+            if rdflib.URIRef(uri) not in classlist:
+                print("warning: Link to undefined class %s\n" % curie)
+            
+            return '<a href="#%s">%s</a>' % (name, curie)
+
+        return rgx.sub(translateClassLink, markup)
 
     c = findOne(m, urinode, rdfs.comment, None)
     if c:
@@ -561,7 +575,7 @@ def owlInfo(term, m):
     return res
 
 
-def docTerms(category, list, m):
+def docTerms(category, list, m, classlist):
     """
     A wrapper class for listing all the terms in a specific class (either
     Properties, or Classes. Category is 'Property' or 'Class', list is a
@@ -590,7 +604,7 @@ def docTerms(category, list, m):
         doc += """<div class="specterm" id="%s" about="%s">\n<h3>%s <a href="#%s">%s</a></h3>\n""" % (t, term_uri, category, getAnchor(str(term_uri)), curie)
 
         label = getLabel(m, term)
-        comment = getComment(m, term)
+        comment = getComment(m, term, classlist)
 
         doc += '<div class="spectermbody">'
         if label != '' or comment != '':
@@ -939,10 +953,10 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     azlist = buildIndex(m, classlist, proplist, instalist)
 
     # Generate Term HTML
-    termlist = docTerms('Property', proplist, m)
-    termlist = docTerms('Class', classlist, m) + termlist
+    termlist = docTerms('Property', proplist, m, classlist)
+    termlist = docTerms('Class', classlist, m, classlist) + termlist
     if instances:
-        termlist += docTerms('Instance', instalist, m)
+        termlist += docTerms('Instance', instalist, m, classlist)
 
     template = template.replace('@NAME@', specProperty(m, spec_url, doap.name))
     template = template.replace('@SUBTITLE@', specProperty(m, spec_url, doap.shortdesc))
@@ -1015,7 +1029,7 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
 
     template = template.replace('@FILES@', other_files)
 
-    comment = getComment(m, rdflib.URIRef(spec_url))
+    comment = getComment(m, rdflib.URIRef(spec_url), classlist)
     if comment != '':
         template = template.replace('@COMMENT@', comment)
     else:
