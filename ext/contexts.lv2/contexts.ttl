@@ -68,11 +68,11 @@ ctx:Context a rdfs:Class ;
 <p>A potentially concurrent context (callback) on a plugin.</p>
 
 <p>Ports are always associated with a context.  If a port has no explicit context
-property, then its context is ctx:AudioContext (the default LV2 run() context).</p>
+property, then its context is ctx:audioContext (the default LV2 run() context).</p>
 
 <p>A plugin indicates support for a context by supporting an LV2 Feature with
 that context's URI.  If a plugin optionally supports a context (e.g.
-<code>&lt;plugin&gt; lv2:optionalFeature ctx:IdleContext .</code>), then
+<code>&lt;plugin&gt; lv2:optionalFeature ctx:idleContext .</code>), then
 all ports associated with that context MUST be lv2:connectionOptional.  Thus,
 hosts that do not support contexts will connect such ports to NULL and the
 plugin can run with only a standard LV2 run() context.</p>
