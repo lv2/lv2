@@ -94,7 +94,7 @@ LV2_FILES_NEW_FILE_SUPPORT_URI and LV2_Feature::data pointed to an instance of
 LV2_Files_New_File_Support.</p>
 """ .
 
-files:AbstractPath a rdfs:class ;
+files:AbstractPath a rdfs:Class ;
     rdfs:label "File Path" ;
     lv2:documentation """
 <p>An abstract path to a file in persistent plugin state.</p>
