@@ -72,7 +72,7 @@ eg:plugin lv2:port [
     lv2:symbol   "frob" ;
     lv2:name     "frob level" ;
     units:unit [
-        a            units:NonSIUnit ;
+        a            units:Unit ;
         units:name   "frobnication" ;
         units:symbol "fr" ;
         units:render "%f f"
