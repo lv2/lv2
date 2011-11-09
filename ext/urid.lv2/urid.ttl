@@ -59,9 +59,9 @@ pointed to an instance of LV2_URID_Mapper.
 urid:Unmapper
 	a lv2:Feature ;
 	lv2:documentation """
-A feature which is used to unmap URIs previously mapped to integers by <a
-href="#Mapper">Mapper</a>.  To support this feature, the host must pass an
-LV2_Feature to LV2_Descriptor::instantiate() with <em>URI</em>
+A feature which is used to unmap URIs previously mapped to integers by
+urid:Mapper.  To support this feature, the host must pass an LV2_Feature to
+LV2_Descriptor::instantiate() with <em>URI</em>
 <q>http://lv2plug.in/ns/ext/urid#Unmapper</q> and <em>data</em> pointed to an
 instance of LV2_URID_Unmapper.
 """ .

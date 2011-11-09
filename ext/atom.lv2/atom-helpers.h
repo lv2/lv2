@@ -75,7 +75,7 @@ lv2_thing_iter_get(LV2_Thing_Iter iter)
 
 /**
    A macro for iterating over all properties of an Thing.
-   @param obj  The thing to iterate over
+   @param thing The thing to iterate over
    @param iter The name of the iterator
 
    This macro is used similarly to a for loop (which it expands to), e.g.:

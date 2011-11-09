@@ -115,8 +115,7 @@ repeatedly calling a plugin's <code>run()</code> method to process blocks of
 data.</p>
 
 <p>This core specification defines two types of port, equivalent to those in <a
-href="http://www.ladspa.org/">LADSPA</a>: <a
-href="#ControlPort">ControlPort</a> and <a href="#AudioPort">AudioPort</a>.
+href="http://www.ladspa.org/">LADSPA</a>: lv2:ControlPort and lv2:AudioPort.
 Audio ports contain arrays with one <code>float</code> element per sample,
 allowing a block of audio to be processed in a single call to
 <code>run()</code>.  Control ports contain single <code>float</code> values,

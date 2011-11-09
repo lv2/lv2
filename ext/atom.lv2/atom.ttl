@@ -38,7 +38,7 @@
 	] ;
 	lv2:documentation """
 <p>This extension defines a generic format for a typed piece of data, called an
-"<a href="#Atom">Atom</a>" (e.g. integers, strings, buffers, data structures,
+lv2:Atom (e.g. integers, strings, buffers, data structures,
 etc).  Atoms allow LV2 plugins and hosts to communicate, process, serialise,
 and store values of any type via a generic mechanism (e.g. LV2 ports, events,
 disk, shared memory, network).  Atoms are, with one exception, Plain
@@ -60,12 +60,12 @@ implementations to be polymorphic and extensible.</p>
 <p>Atoms (the start of the LV2_Atom header) MUST be 32-bit aligned.</p>
 
 <p>Atoms can be communicated in many ways.  Since an Atom is the payload of an
-Event, an <a href="http://lv2plug.in/ns/ext/event#EventPort">EventPort</a>
-can be used for communicating Atoms in realtime with sub-sample time stamp
+Event, an <a href="http://lv2plug.in/ns/ext/event#EventPort">EventPort</a> can
+be used for communicating Atoms in realtime with sub-sample time stamp
 accuracy.  This extension also defines two port types for connecting directly
-to a single Atom: <a href="#ValuePort">ValuePort</a> and <a href="#MessagePort"
->MessagePort</a>, which both have the same buffer format but different
-semantics (with respect to how the run() callback interprets the Atom).</p>
+to a single Atom: atom:ValuePort and atom:MessagePort, which both have the same
+buffer format but different semantics (with respect to how the run() callback
+interprets the Atom).</p>
 
 <p>Implementing this extension requires a facility for mapping URIs to
 integers, such as the <a href="http://lv2plug.in/ns/ext/urid">LV2 URID</a>
@@ -122,8 +122,8 @@ atom:Literal
 <p>A UTF-8 encoded string literal, with an optional language tag or datatype.</p>
 
 <p>This type is compatible with an RDF literal and is capable of expressing a
-string in any language, or a value of any type.  An LV2_Atom_Literal has an <a
-href="#ID">ID</a> <code>lang</code> and <code>datatype</code> followed by the
+string in any language, or a value of any type.  An LV2_Atom_Literal has a
+URID <code>lang</code> and <code>datatype</code> followed by the
 string data in UTF-8 encoding.  The length of the string data in bytes is
 <code>size - (2 * sizeof(uint32_t))</code>, including the terminating NULL
 character.  The <code>lang</code> field SHOULD be a URI of the form
@@ -193,9 +193,9 @@ atom:Vector
 
 <p>An LV2_Atom_Vector is a 16-bit <code>elem_count</code> and
 <code>elem_type</code> followed by <code>elem_count</code> atom bodies of type
-<code>elem_type</code>.  The element type must be a fixed size <a
-href="#Atom">Atom</a> type, i.e. the size of each element is the vector's
-<code>size / elem_count</code>.</p>
+<code>elem_type</code>.  The element type must be a fixed size atom:Atom type,
+i.e. the size of each element is the vector's <code>size /
+elem_count</code>.</p>
 
 <p>For example, an atom:Vector containing 42 elements of type atom:Float looks
 like this in memory:</p>
@@ -227,7 +227,7 @@ atom:Tuple
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Tuple" ;
 	lv2:documentation """
-<p>A sequence of <a href="#Atom">atoms</a> with varying <code>type</code>
+<p>A sequence of lv2:Atom with varying <code>type</code>
 and <code>size</code>.</p>
 
 <p>The body of a Tuple is simply a sequence of complete atoms, each aligned to
@@ -239,9 +239,9 @@ atom:Property
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Property of a Thing" ;
 	lv2:documentation """
-A single property of some <a href="#Object">Object</a>.  An
-LV2_Atom_Property has an <a href="#URID">URID</a> <code>key</code> and
-<a href="#Atom">Atom</a> <code>value</code>.
+A single property of some lv2:Thing.  An
+LV2_Atom_Property has an atom:URID <code>key</code> and an atom:Atom
+<code>value</code>.
 """ .
 
 atom:Thing
@@ -249,7 +249,7 @@ atom:Thing
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Thing" ;
 	lv2:documentation """
-<p>Abstract base class for a "Thing", i.e. an <a href="#Atom">Atom</a> with a
+<p>Abstract base class for a "Thing", i.e. an atom:Atom with a
 number of <a href="#Property">properties</a>.  An LV2_Object is an unsigned
 32-bit integer <code>context</code> and <code>id</code> followed by a sequence
 of LV2_Atom_Property .</p>
@@ -260,50 +260,40 @@ LV2_URI_Map_Feature::uri_to_id() with <code>map = NULL</code>, and may be 0
 (the default context).</p>
 
 <p>Note this is an abstract class, i.e. no Atom can exist with <code>type =
-uri_to_id(atom:Thing)</code>.  An Object is either a <a
-href="#Resource">Resource</a> or a <a href="#Blank">Blank</a>, but the
-<code>body</code> always has the same binary format, LV2_Object.  Thus, both
-named and anonymous objects can be handled with common code using only a 64-bit
-header for both.</p>
+uri_to_id(atom:Thing)</code>.  An Object is either an atom:Resource or an
+atom:Blank, but the <code>body</code> always has the same binary format,
+LV2_Object.  Thus, both named and anonymous objects can be handled with common
+code using only a 64-bit header for both.</p>
 """ .
 
 atom:Resource
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Thing ;
 	lv2:documentation """
-An <a href="#Object">Object</a> where <code>id</code> is the
-URI of the resource mapped to an <a href="#ID">ID</a>.
+An atom:Thing where <code>id</code> is the URI of the resource mapped to an
+atom:URID.
 """ .
 
 atom:Blank
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Thing ;
 	lv2:documentation """
-An <a href="#Object">Object</a> where <code>id</code> is the blank node ID of
-the object, which is only meaningful within a certain limited scope
-(e.g. the container of the Blank) and MUST NOT be used as a global ID.
-In particular, <code>id</code> is NOT an <a href="ID">ID</a>.
+An atom:Thing where <code>id</code> is the blank node ID of the object, which
+is only meaningful within a certain limited scope (e.g. the container of the
+Blank) and MUST NOT be used as a global ID.  In particular, <code>id</code> is
+NOT an <a href="ID">ID</a>.
 """ .
 
 atom:Message
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Thing ;
 	lv2:documentation """
-A <a href="#Thing"> where <code>id</code> is a message type ID.  Conceptually,
+A atom:Thing where <code>id</code> is a message type ID.  Conceptually,
 a Message is identical to a Blank, but is a distinct type with a single type
 field to allow simple and fast dispatch by handling code.
 
 A Message may be serialised as a Blank by adding an rdf:type property with the
 value <code>id</code> unmapped to a URI.
-""" .
-
-atom:Model
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Model" ;
-	lv2:documentation """
-A description of a set of <a href="#Object">objects</a>.  In memory, a Model is
-simply a sequence of objects.
 """ .
 
 atom:Event
@@ -369,14 +359,14 @@ atom:AtomPort
 	rdfs:subClassOf lv2:Port ;
 	rdfs:label "Atom Port" ;
 	lv2:documentation """
-<p>A port which contains an <a href="#Atom">Atom</a>.  Ports of this type will
+<p>A port which contains an lv2:Atom.  Ports of this type will
 be connected to a 32-bit aligned LV2_Atom immediately followed by
 <code>size</code> bytes of data.</p>
 
 <p>This is an abstract port type, i.e. a port MUST NOT only be an AtomPort,
 but must be a more descriptive type that is a subclass of AtomPort which
-defines the port's semantics (typically <a href="#ValuePort">ValuePort</a>
-or <a href="#MessagePort">MessagePort</a>).</p>
+defines the port's semantics (typically atom:ValuePort or atom:MessagePort).
+</p>
 
 <p>Before calling a method on the plugin that writes to an AtomPort output,
 the host MUST set the size of the Atom in that output to the amount of
@@ -427,7 +417,7 @@ atom:EventPort
 	lv2:documentation """
 A port used for communicating time-stamped atoms in the audio context.  Ports
 of this type are connected to an LV2_Atom_Buffer, which contains a flat
-time-stamped sequence of <a href="#Event">Events</a>.
+time-stamped sequence of atom:Event</a>.
 
 This port type is intended as a simpler and atom compatible successor to <a
 href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>.
@@ -439,8 +429,8 @@ atom:supports
 	rdfs:range atom:Atom ;
 	rdfs:label "supports" ;
 	lv2:documentation """
-Indicates that a Port supports a certain <a href="#Atom">Atom</a> type.
-This is distinct from the port type - e.g. the port type ValuePort can hold
-atoms with many different types.  This property is used to describe which
-Atom types a Port expects to receive or send.
+Indicates that a Port supports a certain atom:Atom type.  This is distinct from
+the port type - e.g. the port type ValuePort can hold atoms with many different
+types.  This property is used to describe which Atom types a Port expects to
+receive or send.
 """ .

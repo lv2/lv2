@@ -38,21 +38,20 @@
 	lv2:documentation """
 <p>This extension defines a mechanism for working with generic/opaque
 dynamically allocated memory, called a <a href="#Blob">"Blob"</a>, which is
-(unlike an Atom) not necessarily POD.  Blobs are accessed via a <a
-href="#Reference">Reference</a>, which is a special case of Atom that always
-has <code>type = 0</code>, is not POD, and can only be copied using host
-provided functions.  This allows plugins and hosts to work with data of any
-type at all.</p>
+(unlike an Atom) not necessarily POD.  Blobs are accessed via a
+reference:Reference, which is a special case of <a
+href="http://lv2plug.in/ns/ext/ext#Atom">Atom</a> that always has <code>type =
+0</code>, is not POD, and can only be copied using host provided functions.
+This allows plugins and hosts to work with data of any type at all.</p>
 """ .
 
 reference:Reference a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label      "Reference" ;
 	lv2:documentation """
-<p>Reference to a <a href="#Blob">Blob</a>.  The actual contents of a Reference
-are opaque and host specific, and must not be copied, serialized, or otherwise
-interpreted by a plugin, except via functions provided by the host in
-LV2_Blob_Support.</p>
+<p>Reference to an lv2:Blob.  The actual contents of a Reference are opaque and
+host specific, and must not be copied, serialized, or otherwise interpreted by
+a plugin, except via functions provided by the host in LV2_Blob_Support.</p>
 
 <p>A Reference is a special case of Atom with <code>type = 0</code>.
 "Null" is the unique Atom with <code>type = 0</code> and

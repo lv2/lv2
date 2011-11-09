@@ -48,11 +48,10 @@ management MUST be handled by the host since different hosts may have very
 different requirements.  Plugins MUST NOT make any assumption about file system
 locations beyond what is explicitly guaranteed by this extension.</p>
 
-<p>This extension defines two features: <a
-href="#newFileSupport">files:newFileSupport</a> allows plugins to create new
-files within an instance-specific namespace at any time (except in realtime
-contexts); while <a href="#pathSupport">files:pathSupport</a> allows plugins
-to refer to file paths in plugin state in a way transparent to the host.</p>
+<p>This extension defines two features: files:newFileSupport allows plugins to
+create new files within an instance-specific namespace at any time (except in
+realtime contexts); while files:pathSupport allows plugins to refer to file
+paths in plugin state in a way transparent to the host.</p>
 
 <p>To create a new file, the plugin MUST request a path from the host using
 LV2_Files_New_File_Support::new_file_path().  Thus, the host may choose an
