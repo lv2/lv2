@@ -578,7 +578,6 @@ INPUT =  \
 	ext/instance-access.lv2/instance-access.h \
 	ext/osc.lv2/osc-print.h \
 	ext/osc.lv2/osc.h \
-	ext/persist.lv2/persist.h \
 	ext/pui-event.lv2/pui-event.h \
 	ext/pui-gtk.lv2/pui-gtk.h \
 	ext/pui.lv2/pui.h \
