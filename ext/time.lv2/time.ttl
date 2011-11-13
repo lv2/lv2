@@ -47,7 +47,7 @@ used as the type field of an event to indicate that the event payload is an
 LV2_Time_Positon struct.  Plugins SHOULD indicate that a port supports time
 information using the ev:supports predicate, e.g.:
 <pre class="turtle-code">
-<plugin> lv2:port [
+&lt;plugin&gt; lv2:port [
     a lv2:InputPort , ev:EventPort ;
     lv2:name "control" ;
     lv2:index 0 ;

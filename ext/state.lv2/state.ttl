@@ -134,7 +134,7 @@ const void* my_extension_data(const char* uri)
 {
     static const LV2_State_Interface state_iface = { my_save, my_restore };
     if (!strcmp(uri, "http://lv2plug.in/ns/ext/state#Interface")) {
-        return &state_iface;
+        return &amp;state_iface;
     }
 }
 </pre>
@@ -148,7 +148,7 @@ int store_callback(void*       handle,
                    uint32_t    type,
                    uint32_t    flags)
 {
-    if ((flags & LV2_STATE_IS_POD)) {
+    if ((flags &amp; LV2_STATE_IS_POD)) {
         /* We only care about POD since we're keeping state in memory only.
            If this was for disk or network storage/transmission,
            LV2_STATE_IS_PORTABLE would have to be checked as well.

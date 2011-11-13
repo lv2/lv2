@@ -147,7 +147,7 @@ int store_callback(void*       callback_data,
                    uint32_t    type,
                    uint32_t    flags)
 {
-    if ((flags & LV2_PERSIST_IS_POD)) {
+    if ((flags &amp; LV2_PERSIST_IS_POD)) {
         /* Keeping state in memory only, if disk was involved then
            LV2_PERSIST_IS_PORTABLE would have to be checked as well.
         */
