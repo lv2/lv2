@@ -41,7 +41,7 @@ Specification data, like plugin data, is distributed in bundles
 so hosts may discover <em>all</em> present LV2 data.
 """ .
 
-lv2:documentation a rdf:Property , owl:DatatypeProperty ;
+lv2:documentation a rdf:Property , owl:AnnotationProperty ;
     rdfs:range rdfs:Literal ;
     rdfs:label "documentation" ;
     rdfs:seeAlso <http://www.w3.org/TR/xhtml-basic/> ;
@@ -60,7 +60,9 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
 
 <http://lv2plug.in/ns/lv2core>
     a lv2:Specification , owl:Ontology , doap:Project ;
-    doap:license <http://usefulinc.com/doap/licenses/mit> ;
+    owl:imports <http://purl.org/az/foaf.owl> ,
+        <http://lv2plug.in/ns/doap.owl> ;
+    doap:license <http://opensource.org/licenses/isc> ;
     doap:name "LV2" ;
     doap:homepage <http://lv2plug.in> ;
     doap:created "2004-04-21" ;
@@ -479,21 +481,17 @@ property without changing the Plugin URI.
 
 lv2:Point a rdfs:Class , owl:Class ;
     rdfs:label "Port value point" ;
-    rdfs:subClassOf [
-        a owl:Restriction ;
-        owl:onProperty rdfs:label ;
-        owl:someValuesFrom xsd:string ;
-        rdfs:comment "A Point MUST have at least one string rdfs:label." ;
-    ] , [
-        a owl:Restriction ;
-        owl:onProperty rdf:value ;
-        owl:cardinality 1 ;
-        rdfs:comment "A Point MUST have exactly one rdf:value." ;
-    ] ;
+    # Unfortunately, it is illegal to specify restrictions on rdfs:label or
+    # rdf:value.  If the migration can be handled gracefully, it would be
+    # good to switch to more appropriate predicates here for validators.
     lv2:documentation """
-A Point describes an interesting value in a Port's range (much like a labeled
-<q>notch</q> on a physical knob). A Point has a string label and a value; the
-type of the value MUST be compatible with the type of the corresponding Port.
+<p>A Point describes an interesting value in a Port's range (much like a labeled
+<q>notch</q> on a physical knob).</p>
+<ul>
+  <li>A Point MUST have at least one rdfs:label which is a string.</li>
+  <li>A Point MUST have exactly one rdf:value with a type that is compatible
+  with the type of the corresponding Port.</li>
+</ul>
 """ .
 
 lv2:ScalePoint a rdfs:Class , owl:Class ;
