@@ -150,7 +150,8 @@ def niceName(uri):
     if pref in ns_list:
         return ns_list.get(pref, pref) + ":" + rez.group(2)
     else:
-        print ns_list
+        print("warning: prefix %s not in ns list:" % pref)
+        print(ns_list)
         return uri
 
 
