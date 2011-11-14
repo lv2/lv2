@@ -47,7 +47,7 @@
 This extension defines an interface that can be used in LV2 plugins and hosts
 to create UIs for plugins. The UIs are similar to plugins and reside in shared object
 files in an LV2 bundle.  UIs are associated with a plugin in RDF using the triples:</p>
-<pre>
+<pre class="turtle-code">
 @prefix ui: &lt;http://lv2plug.in/ns/extensions/ui#&gt; .
 
 &lt;http://my.plugin&gt;   ui:ui     &lt;http://my.pluginui&gt; .
@@ -86,7 +86,7 @@ functionality that could be useful to control with a UI, this extension
 allows for meta-extensions that can extend the interface between the UI and
 the host. These extensions mirror the extensions used for plugins - there are
 required and optional "features" that you declare in the RDF data for the UI:</p>
-<pre>
+<pre class="turtle-code">
 &lt;http://my.pluginui&gt; lv2:requiredFeature &lt;http://my.feature&gt; .
 &lt;http://my.pluginui&gt; lv2:optionalFeature &lt;http://my.feature&gt; .
 </pre>
@@ -140,21 +140,21 @@ UI, e.g. <code>gcc -Wl,nodelete</code>.
 """ .
 
 ui:noUserResize a lv2:Feature ;
-    rdfs:comment """
-If a UI requires this feature it indicates that it does not make sense
+    lv2:documentation """
+<p>If a UI requires this feature it indicates that it does not make sense
 to let the user resize the main widget, and the host should prevent that.
 This feature may not make sense for all UI types. The data pointer for the
-LV2_Feature for this feature should always be set to NULL.
+LV2_Feature for this feature should always be set to NULL.</p>
 """ .
 
 ui:fixedSize a lv2:Feature ;
-    rdfs:comment """
-If a UI requires this feature it indicates the same thing as
+    lv2:documentation """
+<p>If a UI requires this feature it indicates the same thing as
 ui:noUserResize, and additionally it means that the UI will not resize
 the main widget on its own - it will always remain the same size (e.g. a
 pixmap based GUI). This feature may not make sense for all UI types.
 The data pointer for the LV2_Feature for this feature should always be set
-to NULL.
+to NULL.</p>
 """ .
 
 ui:PortNotification a rdfs:Class ;
@@ -178,9 +178,9 @@ A PortNotification MUST have exactly one ui:portIndex which is an xsd:decimal.
 ui:portNotification a rdf:Property ;
     rdfs:domain ui:UI ;
     rdfs:range  ui:PortNotification ;
-    rdfs:comment """
-Indicates that a UI should receive notification (via port_event on
-LV2UI_Descriptor) when a particular port's value changes.
+    lv2:documentation """
+<p>Indicates that a UI should receive notification (via
+LV2UI_Descriptor::port_event()) when a particular port's value changes.</p>
 """ .
 
 ui:plugin a rdf:Property ;
