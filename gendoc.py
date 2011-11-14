@@ -77,6 +77,16 @@ for cn in root.childNodes:
                                                    mafile, manchor))
 bettertags.close()
 
+def subst_file(template, output, dict):
+    i = open(template, 'r')
+    o = open(output, 'w')
+    for line in i:
+        for key in dict:
+            line = line.replace(key, dict[key])
+        o.write(line)
+    i.close()
+    o.close()
+
 print('** Generating core documentation')
 
 lv2_outdir = os.path.join(out_base, 'lv2core')
@@ -84,7 +94,6 @@ os.mkdir(lv2_outdir)
 shutil.copy('core.lv2/lv2.h',        lv2_outdir)
 shutil.copy('core.lv2/lv2.ttl',      lv2_outdir)
 shutil.copy('core.lv2/manifest.ttl', lv2_outdir)
-shutil.copy('doc/index.php',         lv2_outdir)
 
 oldcwd = os.getcwd()
 os.chdir(lv2_outdir)
@@ -98,6 +107,9 @@ lv2specgen.save('lv2.html',
                                    os.path.join('..', '..', '..', TAGFILE),
                                    instances=True))
 os.chdir(oldcwd)
+subst_file('doc/htaccess.in', '%s/lv2core/.htaccess' % out_base,
+           { '@NAME@': 'lv2core',
+             '@BASE@': '/ns/lv2core' })
 
 footer = open('./lv2specgen/footer.html', 'r')
 
@@ -216,7 +228,9 @@ for dir in ['ext', 'extensions']:
             row += '</tr>'
             extensions.append(row)
 
-        shutil.copy('doc/index.php', os.path.join(outdir, b + '.lv2', 'index.php'))
+        subst_file('doc/htaccess.in', '%s/%s.lv2/.htaccess' % (outdir, b),
+                   { '@NAME@': b,
+                     '@BASE@': '/ns/%s/%s' % (dir, b) })
     
         # Remove .lv2 suffix from bundle name (to make URI resolvable)
         os.rename(outdir + '/%s.lv2' % b, outdir + '/%s' % b)
