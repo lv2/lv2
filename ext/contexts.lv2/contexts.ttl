@@ -96,10 +96,10 @@ ctx:audioContext a ctx:Context , lv2:Feature ;
 
 ctx:messageContext a ctx:Context , lv2:Feature ;
 	lv2:documentation """
-A non-realtime context for plugin control via message passing.  This context
+<p>A non-realtime context for plugin control via message passing.  This context
 has a run method which takes a bitset of flags for parameters specifying which
 input and output ports are valid before and after the run method has executed,
-respectively (see <code>LV2_Contexts_MessageContext</code>).
+respectively (see <code>LV2_Contexts_MessageContext</code>).</p>
 """ .
 
 ctx:idleContext a ctx:Context , lv2:Feature ;
@@ -110,10 +110,10 @@ This context never has any ports.
 
 ctx:requestRunFeature a lv2:Feature ;
 	lv2:documentation """
-A feature allowing the plugin to request the execution of a particular context
-at an arbitrary time.  To support this feature, the host MUST pass an
+<p>A feature allowing the plugin to request the execution of a particular
+context at an arbitrary time.  To support this feature, the host MUST pass an
 LV2_Feature to <code>instantiate</code> with <code>data</code> pointing to a
-LV2_Contexts_Request_Run_Feature.
+LV2_Contexts_Request_Run_Feature.</p>
 
 <p>The plugin MAY call <code>request_run</code> with the given
 <code>data</code> from any non-realtime context to demand soon-as-possible execution

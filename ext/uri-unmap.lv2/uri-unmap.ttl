@@ -38,9 +38,9 @@
 		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
 	] ;
     lv2:documentation """
-This extension is the opposite of the <a href="http://lv2plug.in/ns/ext/uri-map"
->LV2 URI Map</a> extension.  It allows the host to pass an id_to_uri function
-to the plugin which can be used for unmapping an integer (previously mapped using
-the URI map extension's uri_to_id) back to a string.
-""" .
+<p>This extension is the opposite of the <a
+href="http://lv2plug.in/ns/ext/uri-map" >LV2 URI Map</a> extension.  It allows
+the host to pass an id_to_uri function to the plugin which can be used for
+unmapping an integer (previously mapped using the URI map extension's
+uri_to_id) back to a string.</p>""" .
 

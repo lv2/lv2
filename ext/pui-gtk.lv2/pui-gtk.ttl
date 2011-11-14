@@ -44,8 +44,8 @@
 		foaf:mbox <mailto:mail@larsluthman.net>;
 	];
 	lv2:documentation """
-This extension defines an UI type for the in-process UI extension that can be
-used in a Gtk+ program.
+<p>This extension defines an UI type for the in-process UI extension that can
+be used in a Gtk+ program.</p>
 """.
 
 gtkui:GtkUI a rdfs:Class;

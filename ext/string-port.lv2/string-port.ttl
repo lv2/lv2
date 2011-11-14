@@ -36,28 +36,28 @@
 		foaf:name "Krzysztof Foltman" ;
 	] ;
 	lv2:documentation """
-Defines ports which contain string data.
+<p>Defines ports which contain string data.</p>
 
 <h4>UI issues</h4>
-When using port_event / write_port (and possible other communication
+<p>When using port_event / write_port (and possible other communication
 mechanisms), the format parameter should contain the numeric value of URI
 LV2_STRING_PORT_URI (mapped with http://lv2plug.in/ns/extensions/ui specified
-as map URI).
+as map URI).</p>
 
-It's probably possible to use ports belonging to message context
+<p>It's probably possible to use ports belonging to message context
 &lt;http://lv2plug.in/ns/ext/contexts#MessageContext&gt; for transfer. However,
-contexts mechanism does not offer any way to notify the message recipient
-about which ports have been changed. To remedy that, this extension defines
-a flag LV2_STRING_DATA_CHANGED_FLAG that carries that information inside a
-port value structure.
+contexts mechanism does not offer any way to notify the message recipient about
+which ports have been changed. To remedy that, this extension defines a flag
+LV2_STRING_DATA_CHANGED_FLAG that carries that information inside a port value
+structure.</p>
 
 <h4>Storage</h4>
-The value of string port are assumed to be "persistent": if a host saves
-and restores a state of a plugin (e.g. control port values), the values
-of input string ports should also be assumed to belong to that state. This
-also applies to message context: if a session is being restored, the host
-MUST resend the last value that was sent to the port before session has been
-saved. In other words, string port values "stick" to message ports.
+<p>The value of string port are assumed to be "persistent": if a host saves and
+restores a state of a plugin (e.g. control port values), the values of input
+string ports should also be assumed to belong to that state. This also applies
+to message context: if a session is being restored, the host MUST resend the
+last value that was sent to the port before session has been saved. In other
+words, string port values "stick" to message ports.</p>
 """ .
 
 sp:StringTransfer a lv2:Feature ;
@@ -66,22 +66,22 @@ sp:StringTransfer a lv2:Feature ;
 sp:StringPort a lv2:Port ;
    rdfs:label "String port" ;
    lv2:documentation """
-Indicates that the port data points to a LV2_String_Data structure
-as defined in accompanying header file.
+<p>Indicates that the port data points to a LV2_String_Data structure
+as defined in accompanying header file.</p>
 
 <h4>Input Port Semantics</h4>
-If the port does not have a context specified (it runs in the default,
+<p>If the port does not have a context specified (it runs in the default,
 realtime audio processing context), the values in the structure and the actual
 string data MUST remain unchanged for the time a run() function of a plugin
 is executed. However, if the port belongs to a different context, the same
 data MUST remain unchanged only for the time a run() or message_process()
-function of a given context is executed.
+function of a given context is executed.</p>
 
 <h4>Output Port Semantics</h4>
-The plugin may only change the string or length in a run() function (if
+<p>The plugin may only change the string or length in a run() function (if
 the port belongs to default context) or in context-defined counterparts
 (if the port belongs to another context). Because of that, using default
-context output string ports is contraindicated for longer strings.
+context output string ports is contraindicated for longer strings.</p>
 """ .
 
 sp:default a rdf:Property ;

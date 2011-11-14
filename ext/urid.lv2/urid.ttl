@@ -35,33 +35,33 @@
 		foaf:homepage <http://gabe.is-a-geek.org/>
 	] ;
 	lv2:documentation """
-This extension defines a simple mechanism for plugins to map URIs to and from
-integers, usually for performance reasons (e.g. processing events typed by URIs
-in real time).  Typically, plugins map URIs to integers for things they
+<p>This extension defines a simple mechanism for plugins to map URIs to and
+from integers, usually for performance reasons (e.g. processing events typed by
+URIs in real time).  Typically, plugins map URIs to integers for things they
 "understand" at instantiation time, and store those values for use in the audio
 thread without doing any string comparison.  This allows for the extensibility
-of RDF but with the performance of integers.
+of RDF but with the performance of integers.</p>
 
-This extension is intended as an improved and simpler replacement for the
-<a href="http://lv2plug.in/ns/ext/uri-map">uri-map</a> extension, since the
-<q>map</q> context parameter has been found problematic.
+<p>This extension is intended as an improved and simpler replacement for the <a
+href="http://lv2plug.in/ns/ext/uri-map">uri-map</a> extension, since the
+<q>map</q> context parameter has been found problematic.</p>
 """ .
 
 urid:map
 	a lv2:Feature ;
 	lv2:documentation """
-A feature which is used to map URIs to integers.  To support this feature, the
-host must pass an LV2_Feature to LV2_Descriptor::instantiate() with
-<em>URI</em> <q>http://lv2plug.in/ns/ext/urid#map</q> and <em>data</em>
-pointed to an instance of LV2_URID_Map.
+<p>A feature which is used to map URIs to integers.  To support this feature,
+the host must pass an LV2_Feature to LV2_Descriptor::instantiate() with
+<em>URI</em> <q>http://lv2plug.in/ns/ext/urid#map</q> and <em>data</em> pointed
+to an instance of LV2_URID_Map.</p>
 """ .
 
 urid:unmap
 	a lv2:Feature ;
 	lv2:documentation """
-A feature which is used to unmap URIs previously mapped to integers by
+<p>A feature which is used to unmap URIs previously mapped to integers by
 urid:map.  To support this feature, the host must pass an LV2_Feature to
 LV2_Descriptor::instantiate() with <em>URI</em>
 <q>http://lv2plug.in/ns/ext/urid#unmap</q> and <em>data</em> pointed to an
-instance of LV2_URID_Unmap.
+instance of LV2_URID_Unmap.</p>
 """ .

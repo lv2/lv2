@@ -43,11 +43,11 @@
 		foaf:mbox <mailto:lars.luthman@gmail.com>
 	] ;
     lv2:documentation """
-This extension defines a data type for a MIDI message, midi:MidiEvent, which is
-normalized for fast and convenient processing by plugins.  It is particularly
-useful as the payload of an <a
+<p>This extension defines a data type for a MIDI message, midi:MidiEvent, which
+is normalized for fast and convenient processing by plugins.  It is
+particularly useful as the payload of an <a
 href="http://lv2plug.in/ns/ext/atom#Atom">Atom</a> or <a
-href="http://lv2plug.in/ns/ext/event#Event">Event</a>.
+href="http://lv2plug.in/ns/ext/event#Event">Event</a>.</p>
 """ .
 
 midi:MidiEvent

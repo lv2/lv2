@@ -32,15 +32,13 @@
 		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
 	] ;
 	lv2:documentation """
-
-This extension defines Control Voltage (CV) ports, which are audio-rate control
-ports like those used on classical voltage-controlled synthesizers.  These
-ports serve as control ports like <a
+<p>This extension defines Control Voltage (CV) ports, which are audio-rate
+control ports like those used on classical voltage-controlled synthesizers.
+These ports serve as control ports like <a
 href="http://lv2plug.in/ns/lv2core#ControlPort">lv2:ControlPort</a> but can
 also be used for audio-rate modulation of control signals.  This enables many
 types of processing and synthesis which are not possible with a lower control
-rate.
-
+rate.</p>
 """ .
 
 cv:CVPort
@@ -49,7 +47,7 @@ cv:CVPort
 	rdfs:subClassOf lv2:Port ;
 	lv2:documentation """
 
-Ports of this type have identical semantics to <a
+<p>Ports of this type have identical semantics to <a
 href="http://lv2plug.in/ns/lv2core#AudioPort">lv2:AudioPort</a> in terms of
 buffer format and connection/input/output logistics.  However, rather than the
 buffer representing audio, the buffer represents audio-rate control data.  A
@@ -58,12 +56,12 @@ href="http://lv2plug.in/ns/lv2core#ControlPort">lv2:ControlPort</a> typically
 has to describe appropriate control values (e.g.  <a
 href="http://lv2plug.in/ns/lv2core#minimum">lv2:minimum</a>, <a
 href="http://lv2plug.in/ns/lv2core#maximum">lv2:maximum</a>, <a
-href="http://lv2plug.in/ns/lv2core#default">lv2:default</a>)
+href="http://lv2plug.in/ns/lv2core#default">lv2:default</a>)</p>
 
-Hosts SHOULD take care to prevent data from a CVPort port from being used as
-audio except in cases where this is known to be safe.
+<p>Hosts SHOULD take care to prevent data from a CVPort port from being used as
+audio except in cases where this is known to be safe.</p>
 
-Example:
+<p>Example:</p>
 <pre class="turtle-code">
 &lt;http://example.org/some-plugin&gt;
     lv2:port [

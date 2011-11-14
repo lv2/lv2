@@ -61,10 +61,10 @@ a plugin, except via functions provided by the host in LV2_Blob_Support.</p>
 reference:blobSupport a lv2:Feature ;
 	rdfs:label "Blob support" ;
 	lv2:documentation """
-Support for dynamically allocated blobs.  If a host supports this feature, it
-MUST pass a LV2_Feature with <code>URI</code>
+<p>Support for dynamically allocated blobs.  If a host supports this feature,
+it MUST pass a LV2_Feature with <code>URI</code>
 http://lv2plug.in/ns/ext/atom#blobSupport and <code>data</code> pointing to a
-LV2_Blob_Support.
+LV2_Blob_Support.</p>
 """ .
 
 reference:Blob a rdfs:Class ;

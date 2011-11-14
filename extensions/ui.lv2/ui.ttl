@@ -74,10 +74,10 @@ editing the original plugin bundle.</p>
 code and the process that loads the shared object file containing the actual
 plugin implementation are not necessarily the same process (and not even
 necessarily on the same machine).  This means that plugin and UI code can
-<b>not</b> use singletons and global variables and expect them to refer to
-the same objects in the UI and the actual plugin. The function callback
-interface defined in this header is the only method of communication between
-UIs and plugin instances (extensions may define more, though this is
+<strong>not</strong> use singletons and global variables and expect them to
+refer to the same objects in the UI and the actual plugin. The function
+callback interface defined in this header is the only method of communication
+between UIs and plugin instances (extensions may define more, though this is
 discouraged unless absolutely necessary since the significant benefits of
 network transparency and serialisability are lost).</p>
 

@@ -49,8 +49,8 @@
 		foaf:mbox <mailto:mail@larsluthman.net>;
 	];
 	lv2:documentation """
-This extension defines an pui:PortProtocol for passing events (MIDI, OSC,
-etc.) between LV2 plugins and UIs.
+<p>This extension defines an pui:PortProtocol for passing events (MIDI, OSC,
+etc.) between LV2 plugins and UIs.</p>
 """.
 
 puiev:events a pui:PortProtocol;

@@ -86,9 +86,9 @@ instance.</p>
 code and the process that loads the shared object file containing the actual
 plugin implementation do not have to be the same. There are many valid reasons
 for having the plugin and the UI in different processes, or even on different
-machines. This means that you can <b>not</b> use singletons and global
-variables and expect them to refer to the same objects in the UI and the actual
-plugin. The function callback interface defined in the header pui.h is
+machines. This means that you can <strong>not</strong> use singletons and
+global variables and expect them to refer to the same objects in the UI and the
+actual plugin. The function callback interface defined in the header pui.h is
 all you can expect to work.</p>
 """.
 

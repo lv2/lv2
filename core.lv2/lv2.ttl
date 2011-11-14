@@ -35,10 +35,10 @@ An LV2 Resource (e.g. plugin, specification, or any other LV2 related thing).
 lv2:Specification a rdfs:Class , owl:Class ;
     rdfs:subClassOf lv2:Resource ;
     lv2:documentation """
-An LV2 specification (i.e. this specification, or an LV2 extension).
+<p>An LV2 specification (i.e. this specification, or an LV2 extension).</p>
 
-Specification data, like plugin data, is distributed in bundles
-so hosts may discover <em>all</em> present LV2 data.
+<p>Specification data, like plugin data, is distributed in bundles
+so hosts may discover <em>all</em> present LV2 data.</p>
 """ .
 
 lv2:documentation a rdf:Property , owl:AnnotationProperty ;
@@ -48,7 +48,7 @@ lv2:documentation a rdf:Property , owl:AnnotationProperty ;
     lv2:documentation """
 <p>Relates a Resource to documentation markup. The value of this property
 MUST be a string literal which is a valid XHTML Basic 1.1 fragment suitable
-for use as the content of a &lt;div&gt; element. This can be used by
+for use as the content of the &lt;body&gt; element. This can be used by
 hosts to provide rich online documentation or by tools to generate external
 documentation pages. The standard language tagging facility of RDF can be
 used to provide multi-lingual documentation.</p>
@@ -174,7 +174,6 @@ otherwise precisely describe their threading rules.</p>
 lv2:PluginBase a rdfs:Class , owl:Class ;
     rdfs:subClassOf lv2:Resource ;
     lv2:documentation """
-
 <p>An abstract plugin-like resource that MAY not actually be an LV2 plugin
 (e.g. may not actually have a plugin binary).</p>
 
@@ -409,7 +408,7 @@ resolves to a shared library object (the actual type of this library is system
 specific).</p>
 
 <p>This is a required property of a Plugin which MUST be included in the
-bundle's <tt>manifest.ttl</tt> file. The lv2:binary of an lv2:Plugin is the
+bundle's manifest.ttl file. The lv2:binary of an lv2:Plugin is the
 shared object containing the <code>lv2_descriptor()</code> function which can
 be used to access the descriptor for that plugin. This property may be used
 similarly by extensions to relate other resources to their implementations.</p>
@@ -423,7 +422,7 @@ lv2:appliesTo a rdf:Property , owl:ObjectProperty ;
 <p>Specifies that a resource is related to a plugin. This is primarily intended
 for discovery purposes: bundles that describe resources that work with
 particular plugins (e.g. presets or user interfaces) SHOULD use this predicate
-in <tt>manifest.ttl</tt> to relate the resource to the applicable
+in manifest.ttl to relate the resource to the applicable
 plugin(s), e.g.:</p>
 <pre>
 &lt;thing&gt;
@@ -516,9 +515,9 @@ lv2:minimum a rdf:Property , owl:DatatypeProperty ;
     rdfs:domain lv2:Port ;
     rdfs:label "Minimum value" ;
     lv2:documentation """
-A hint to the host for the minimum useful value that the port will use. This
+<p>A hint to the host for the minimum useful value that the port will use. This
 is a <q>soft</q> limit; the plugin is required to gracefully accept all values
-in the range of a port's data type.
+in the range of a port's data type.</p>
 """ .
 
 lv2:maximum a rdf:Property , owl:DatatypeProperty ;
@@ -614,7 +613,6 @@ it impossible for hosts to use the plugin to process data <q>in-place</q>.</p>
 lv2:hardRTCapable a lv2:Feature ;
     rdfs:label "Hard realtime capable" ;
     lv2:documentation """
-
 <p>Indicates that the plugin is capable of running not only in a conventional
 host but also in a <q>hard real-time</q> environment. To qualify for this the
 plugin MUST satisfy all of the following:</p>

@@ -68,10 +68,10 @@ param:supportsType a rdf:Property ;
     rdfs:range   atom:AtomType ;
     rdfs:label   "supports type" ;
     lv2:documentation """
-Indicates that a Parameter has values of a particular type.  A Parameter
-may support many types.  Parameter values are always LV2 Atoms as defined
-by the <a href="http://lv2plug.in/ns/ext/atom">LV2 Atom</a> Extension
-Any type of LV2 Atom may be used as a parameter value.
+<p>Indicates that a Parameter has values of a particular type.  A Parameter may
+support many types.  Parameter values are always LV2 Atoms as defined by the <a
+href="http://lv2plug.in/ns/ext/atom">LV2 Atom</a> Extension Any type of LV2
+Atom may be used as a parameter value.</p>
 """ .
 
 

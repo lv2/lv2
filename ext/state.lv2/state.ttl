@@ -177,12 +177,13 @@ state:Interface
     a rdfs:Class ;
     rdfs:subClassOf lv2:ExtensionData ;
     lv2:documentation """
-A structure (LV2_State_Interface) which contains functions to be called by the
-host to save and restore state.  In order to support this extension, the plugin
-must return a valid LV2_State_Interface from LV2_Descriptor::extension_data()
-when it is called with URI "http://lv2plug.in/ns/ext/state#StateInterface".
+<p>A structure (LV2_State_Interface) which contains functions to be called by
+the host to save and restore state.  In order to support this extension, the
+plugin must return a valid LV2_State_Interface from
+LV2_Descriptor::extension_data() when it is called with URI
+"http://lv2plug.in/ns/ext/state#StateInterface".</p>
 
-The plugin data file should describe this like so:
+<p>The plugin data file should describe this like so:</p>
 <pre class="turtle-code">
 @prefix state: &lt;http://lv2plug.in/ns/ext/state#&gt; .
 
@@ -210,11 +211,11 @@ state:instanceState
     a rdf:Property ;
     rdfs:range state:InstanceState ;
     lv2:documentation """
-Predicate to relate a plugin instance to an InstanceState. This may be used
+<p>Predicate to relate a plugin instance to an InstanceState. This may be used
 wherever the state of a particular plugin instance needs to be represented.
 Note that the domain of this property is unspecified, since LV2 does not define
 any RDF class for plugin instance. This predicate may be used wherever it makes
-sense to do so, e.g.:
+sense to do so, e.g.:</p>
 <pre class="turtle-code">
 @prefix eg: &lt;http://example.org/&gt; .
 
@@ -224,7 +225,7 @@ sense to do so, e.g.:
     eg:favourite-number 2
 ] .
 </pre>
-Note that this property is provided because it may be useful for hosts,
+<p>Note that this property is provided because it may be useful for hosts,
 plugins, or extensions that work with instance state, but its use is not
-required to support the LV2 State extension.
+required to support the LV2 State extension.</p>
 """ .

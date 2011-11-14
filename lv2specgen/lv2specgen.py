@@ -47,6 +47,12 @@ import sys
 import xml.sax.saxutils
 
 try:
+    from lxml import etree
+    have_lxml = True
+except:
+    have_lxml = False
+
+try:
     import pygments
     import pygments.lexers
     import pygments.formatters
@@ -70,6 +76,7 @@ spec_url = None
 spec_ns_str = None
 spec_ns = None
 spec_pre = None
+specgendir = None
 ns_list = {
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"   : "rdf",
     "http://www.w3.org/2000/01/rdf-schema#"         : "rdfs",
@@ -230,6 +237,29 @@ def getComment(m, urinode, classlist):
     c = findOne(m, urinode, lv2.documentation, None)
     if c:
         markup = getLiteralString(getObject(c))
+        if have_lxml:
+            try:
+                # Parse and validate documentation as XHTML Basic 1.1
+                doc = """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
+                      "DTD/xhtml-basic11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head xml:lang="en" profile="profile">
+    <title>Validation Skeleton Document</title>
+  </head>
+  <body>
+%s
+  </body>
+</html>
+""" % str(markup.decode())
+
+                oldcwd = os.getcwd()
+                os.chdir(specgendir)
+                parser = etree.XMLParser(dtd_validation=True, no_network=True)
+                root = etree.fromstring(doc, parser)
+                os.chdir(oldcwd)
+            except Exception as e:
+                print("Invalid lv2:documentation for %s\n%s" % (urinode, e))
 
         # Syntax highlight all C code
         if have_pygments:
@@ -894,6 +924,9 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     global spec_ns
     global spec_pre
     global ns_list
+    global specgendir
+
+    specgendir = os.path.abspath(indir)
 
     # Template
     temploc = os.path.join(indir, "template.html")

@@ -168,9 +168,9 @@ atom:URID
 	rdfs:label "Integer ID mapped from a URI" ;
 	atom:cType "LV2_Atom_ID" ;
 	lv2:documentation """
-An unsigned 32-bit integer mapped from a URI using the <a
+<p>An unsigned 32-bit integer mapped from a URI using the <a
 href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's
-LV2_URI_Map_Feature::uri_to_id() with <code>map = NULL</code>.
+LV2_URI_Map_Feature::uri_to_id() with <code>map = NULL</code>.</p>
 """ .
 
 atom:BlankID
@@ -179,10 +179,10 @@ atom:BlankID
 	rdfs:label "Integer ID for a blank node" ;
 	atom:cType "LV2_Atom_ID" ;
 	lv2:documentation """
-An unsigned 32-bit integer identifier for a blank node.  A BlankID is only
+<p>An unsigned 32-bit integer identifier for a blank node.  A BlankID is only
 meaningful within a limited scope (e.g. the Atom in which it appears), and
 MUST NOT be used as a global identifier.  In particular, a BlankID is NOT a
-URID, and can not be mapped to/from a URI.
+URID, and can not be mapped to/from a URI.</p>
 """ .
 
 atom:Vector
@@ -255,8 +255,8 @@ atom:Resource
 	rdfs:subClassOf atom:Thing ;
 	atom:cType "LV2_Thing" ;
 	lv2:documentation """
-An atom:Thing where <code>id</code> is the URI of the resource mapped to an
-atom:URID.
+<p>An atom:Thing where <code>id</code> is the URI of the resource mapped to an
+atom:URID.</p>
 """ .
 
 atom:Blank
@@ -264,10 +264,10 @@ atom:Blank
 	rdfs:subClassOf atom:Thing ;
 	atom:cType "LV2_Thing" ;
 	lv2:documentation """
-An atom:Thing where <code>id</code> is the blank node ID of the object, which
-is only meaningful within a certain limited scope (e.g. the container of the
-Blank) and MUST NOT be used as a global ID.  In particular, <code>id</code> is
-NOT an <a href="ID">ID</a>.
+<p>An atom:Thing where <code>id</code> is the blank node ID of the object,
+which is only meaningful within a certain limited scope (e.g. the container of
+the Blank) and MUST NOT be used as a global ID.  In particular, <code>id</code>
+is NOT an <a href="ID">ID</a>.</p>
 """ .
 
 atom:Message
@@ -275,12 +275,12 @@ atom:Message
 	rdfs:subClassOf atom:Thing ;
 	atom:cType "LV2_Thing" ;
 	lv2:documentation """
-A atom:Thing where <code>id</code> is a message type ID.  Conceptually,
-a Message is identical to a Blank, but is a distinct type with a single type
-field to allow simple and fast dispatch by handling code.
+<p>A atom:Thing where <code>id</code> is a message type ID.  Conceptually, a
+Message is identical to a Blank, but is a distinct type with a single type
+field to allow simple and fast dispatch by handling code.</p>
 
-A Message may be serialised as a Blank by adding an rdf:type property with the
-value <code>id</code> unmapped to a URI.
+<p>A Message may be serialised as a Blank by adding an rdf:type property with
+the value <code>id</code> unmapped to a URI.</p>
 """ .
 
 atom:Event
@@ -288,8 +288,8 @@ atom:Event
 	rdfs:label "Event" ;
 	atom:cType "LV2_Atom_Event" ;
 	lv2:documentation """
-An atom with a time stamp header prepended, typically for sample accurate
-transmission via LV2 ports.  See struct LV2_Atom_Event.
+<p>An atom with a time stamp header prepended, typically for sample accurate
+transmission via LV2 ports.  See struct LV2_Atom_Event.</p>
 """ .
 
 atom:Bang
@@ -336,10 +336,10 @@ atom:blobSupport
 	a lv2:Feature ;
 	rdfs:label "Blob support" ;
 	lv2:documentation """
-Support for dynamically allocated blobs.  If a host supports this feature, it
-MUST pass a LV2_Feature with <code>URI</code>
+<p>Support for dynamically allocated blobs.  If a host supports this feature,
+it MUST pass a LV2_Feature with <code>URI</code>
 http://lv2plug.in/ns/ext/atom#blobSupport and <code>data</code> pointing to a
-LV2_Blob_Support.
+LV2_Blob_Support.</p>
 """ .
 
 atom:AtomPort
@@ -369,8 +369,8 @@ atom:ValuePort
 	rdfs:subClassOf atom:AtomPort ;
 	rdfs:label "Value Port" ;
 	lv2:documentation """
-An AtomPort that interprets its data as a persistent and time-independent
-"value".
+<p>An AtomPort that interprets its data as a persistent and time-independent
+"value".</p>
 <ul>
 <li>If a plugin has fixed input values for all ports, all ValuePort outputs
 are also fixed regardless of the number of times the plugin is run.</li>
@@ -380,8 +380,8 @@ for all ports.</li>
 <li>If a ValuePort contains a reference then the blob it refers to is
 constant; plugin MUST NOT modify the blob in any way.</li>
 </ul>
-Value ports can be thought of as purely functional ports: if a plugin
-callback has only value ports, then the plugin callback is a pure function.
+<p>Value ports can be thought of as purely functional ports: if a plugin
+callback has only value ports, then the plugin callback is a pure function.</p>
 """ .
 
 atom:MessagePort
@@ -414,12 +414,12 @@ atom:EventPort
 	rdfs:label "Event port" ;
 	rdfs:subClassOf lv2:Port ;
 	lv2:documentation """
-A port used for communicating time-stamped atoms in the audio context.  Ports
-of this type are connected to an LV2_Atom_Buffer, which contains a flat
-time-stamped sequence of atom:Event.
+<p>A port used for communicating time-stamped atoms in the audio context.
+Ports of this type are connected to an LV2_Atom_Buffer, which contains a flat
+time-stamped sequence of atom:Event.</p>
 
-This port type is intended as a simpler and atom compatible successor to <a
-href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>.
+<p>This port type is intended as a simpler and atom compatible successor to <a
+href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>.</p>
 """ .
 
 atom:supports
@@ -428,8 +428,8 @@ atom:supports
 	rdfs:range atom:Atom ;
 	rdfs:label "supports" ;
 	lv2:documentation """
-Indicates that a Port supports a certain atom:Atom type.  This is distinct from
+<p>Indicates that a Port supports a certain atom:Atom type.  This is distinct from
 the port type - e.g. the port type ValuePort can hold atoms with many different
 types.  This property is used to describe which Atom types a Port expects to
-receive or send.
+receive or send.</p>
 """ .
