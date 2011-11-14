@@ -128,28 +128,15 @@ and the host guarantees that the Gtk+ library has been initialised and the
 Glib main loop is running before an UI of this type is instantiated.""" .
 
 ui:makeSONameResident a lv2:Feature ;
+    owl:deprecated "true"^^xsd:boolean ;
     lv2:documentation """
-<p>This feature is ELF specific - it should only be used by UIs that
-use the ELF file format for the UI shared object files (e.g. on Linux).
-If it is required by an UI the UI should also list a number of SO names
-(shared object names) for libraries that the UI shared object
-depends on and that may not be unloaded during the lifetime of the host
-process, using the predicate @c ui:residentSONames, like this:</p>
-<pre>
-&lt;http://my.pluginui&gt; ui:residentSONames "libgtkmm-2.4.so.1", "libfoo.so.0"
-</pre>
-<p>The host MUST then make sure that the shared libraries with the given ELF
-SO names are not unloaded when the plugin UI is, but stay loaded during
-the entire lifetime of the host process. On Linux this can be accomplished
-by calling dlopen() on the shared library file with that SO name and never
-calling a matching dlclose(). However, if a plugin UI requires the
-@c ui:makeSONameResident feature, it MUST ALWAYS be safe for the host to
-just never unload the shared object containing the UI implementation, i.e.
-act as if the UI required the @c ui:makeResident feature instead. Thus
-the host only needs to find the shared library files corresponding to the
-given SO names if it wants to save RAM by unloading the UI shared object
-file when it is no longer needed. The data pointer for the LV2_Feature for
-this feature should always be set to NULL.</p>
+<p>DEPRECATED</p>
+
+<p>This feature was intended to support UIs that link against toolkit
+libraries which may not be unloaded during the lifetime of the host.
+This is better achieved by using the appropriate flags when linking the
+UI, e.g. <code>gcc -Wl,nodelete</code>.
+</p>
 """ .
 
 ui:noUserResize a lv2:Feature ;
