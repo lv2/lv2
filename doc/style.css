@@ -314,21 +314,19 @@ blockquote {
 	margin: 0;
 }
 #footer {
-	border-top: 1px dashed #ccc;
 	bottom: 0;
 	clear: both;
-	font-size: 75%;
-	margin: 3em 0 0;
-	padding: 1em;
-	position: relative;
-	text-align: right;
+	font-size: x-small;
+	margin: 2em 0 0;
+	padding: 0 1em 1em 1em;
 	vertical-align: top;
+	background-color: #F3F3F3;
+	border-top: 1px solid #DDD;
 }
-.footer-text {
-	margin: 0 0 0 0;
-	vertical-align: top;
-	color: #444;
+#footer div {
+    padding-top: 1em;
 }
+
 #searchbox a.reference, #searchbox span.reference {
 	color: #339;
 	font-size: 85%;

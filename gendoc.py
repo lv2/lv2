@@ -111,8 +111,6 @@ subst_file('doc/htaccess.in', '%s/lv2core/.htaccess' % out_base,
            { '@NAME@': 'lv2core',
              '@BASE@': '/ns/lv2core' })
 
-footer = open('./lv2specgen/footer.html', 'r')
-
 # Generate main (ontology) documentation and indices
 for dir in ['ext', 'extensions']:
     print("** Generating %s%s documentation" % (URIPREFIX, dir))
@@ -242,10 +240,9 @@ for dir in ['ext', 'extensions']:
     index_html += '</table>\n</div>\n'
 
     index_html += '<div id="footer">'
-    index_html += '<span class="footer-text">Generated on '
+    index_html += '<div>Generated on '
     index_html += datetime.datetime.utcnow().strftime('%F %H:%M UTC')
-    index_html += ' by gendoc.py</span>&nbsp;'
-    index_html += footer.read() + '</div>'
+    index_html += ' by gendoc.py</div></div>'
 
     index_html += '</body></html>\n'
 
@@ -261,4 +258,3 @@ except:
 shutil.copy('lv2specgen/style.css', os.path.join('build', STYLEURI))
 
 devnull.close()
-footer.close()

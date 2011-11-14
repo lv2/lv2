@@ -934,14 +934,6 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     f = open(temploc, "r")
     template = f.read()
 
-    # Footer
-    footerloc = os.path.join(indir, "footer.html")
-    footer = ''
-    f = open(footerloc, "r")
-    footer = f.read()
-
-    template = template.replace('@FOOTER@', footer)
-
     # Build a symbol -> link mapping for external links
     dlfile = open(doclinks, 'r')
     for line in dlfile:
@@ -1118,7 +1110,7 @@ def usage():
     print("""Usage: %s ONTOLOGY INDIR STYLE OUTPUT [FLAGS]
 
         ONTOLOGY : Path to ontology file
-        INDIR    : Input directory containing template.html footer.html style.css
+        INDIR    : Input directory containing template.html and style.css
         STYLE    : Stylesheet URI
         OUTPUT   : HTML output path
         BASE     : Documentation output base URI
