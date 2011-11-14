@@ -1,8 +1,8 @@
 # Turn off MultiViews
 Options -MultiViews
 
-# Ensure *.ttl files are served as appropriate content type
-AddType text/turtle .ttl
+# Ensure *.ttl files are served as appropriate content type and encoding
+AddType 'text/turtle; charset=UTF-8' .ttl
 
 # Rewrite engine setup
 RewriteEngine On
