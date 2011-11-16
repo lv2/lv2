@@ -29,8 +29,8 @@
     doap:name    "LV2 UI" ;
     doap:shortdesc "Generic UI interface for LV2 plugins." ;
     doap:release [
-        doap:revision "2.2" ;
-        doap:created "2011-05-26"
+        doap:revision "2.3" ;
+        doap:created "2011-11-16"
     ] ;
     doap:maintainer [
         a foaf:Person ;
@@ -125,8 +125,22 @@ ui:GtkUI a rdfs:Class ;
     rdfs:comment """
 A UI where the LV2_Widget is a pointer to a Gtk+ 2.0 compatible GtkWidget,
 and the host guarantees that the Gtk+ library has been initialised and the
-Glib main loop is running before an UI of this type is instantiated.""" .
+Glib main loop is running before a UI of this type is instantiated.""" .
 
+ui:Qt4UI a rdfs:Class ;
+    rdfs:subClassOf ui:UI ;
+    rdfs:comment """
+A UI where the LV2_Widget is a pointer to a Qt4 compatible QWidget,
+and the host guarantees that the Qt4 library has been initialised and the
+Qt4 main loop is running before a UI of this type is instantiated.""" .
+
+ui:X11UI a rdfs:Class ;
+    rdfs:subClassOf ui:UI ;
+    rdfs:comment """
+A UI where the LV2_Widget is an X11 window ID.  Note this is actually an
+integer, i.e. the LV2_Widget is not a pointer to an X11 window ID, but should
+be itself taken as an integer value.""" .
+    
 ui:makeSONameResident a lv2:Feature ;
     owl:deprecated "true"^^xsd:boolean ;
     lv2:documentation """
