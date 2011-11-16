@@ -198,7 +198,7 @@ with no language tag.
 
 <p>To be discovered by hosts, plugins MUST explicitly have rdf:type lv2:Plugin
 listed in their bundle's manifest, e.g.:</p>
-<pre>
+<pre class="turtle-code">
 &lt;http://example.org/my-plugin&gt; a lv2:Plugin .
 </pre>
 
@@ -424,7 +424,7 @@ for discovery purposes: bundles that describe resources that work with
 particular plugins (e.g. presets or user interfaces) SHOULD use this predicate
 in manifest.ttl to relate the resource to the applicable
 plugin(s), e.g.:</p>
-<pre>
+<pre class="turtle-code">
 &lt;thing&gt;
     a             ext:Thing ;
     lv2:appliesTo &lt;plugin&gt; ;
