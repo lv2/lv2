@@ -400,20 +400,18 @@ ul, ol {
 	padding-right: .5em;
 }
 .terminfo, .restriction {
-	border-spacing: 0.5ex 0.5ex;
     border-collapse: collapse;
     border-style: hidden;
 }
 .restriction {
-	margin: 0;
+	margin: 0 0 0.5ex 0;
 	padding: 0;
-	border-spacing: 0;
 	vertical-align: text-top;
 }
-.terminfo th, .terminfo td {
-    border: solid 1px #f3f3f3;
+.restriction td {
+    vertical-align: text-top;
 }
-.terminfo th, .restriction th {
+.terminfo th {
 	padding: 0 1ex 0 0;
 }
 .specterm {
@@ -468,14 +466,14 @@ th {
     vertical-align: text-top;
 }
 td, th {
-    border: 1px solid #eee;
-    padding: 0.3ex 1em 0.3ex 1em;
+    border: 1px dashed #ccc;
+    padding: 0.3ex 0.5em 0.3ex 0.5em;
 }
 #meta {
     margin: 1ex 0 0 0.5ex;
     font-size: small;
 }
-#meta tr td, #meta tr th {
+#meta tr th {
     padding-left: 0;
 }
 pre {
