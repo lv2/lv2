@@ -878,9 +878,6 @@ def specHistory(m, subject):
         rev = getLiteralString(getObject(revNode))
 
         created = findOne(m, release, doap.created, None)
-        if not created:
-            print "error: doap:release has no doap:created"
-            continue
 
         dist = findOne(m, release, doap['file-release'], None)
         if dist:
@@ -889,8 +886,10 @@ def specHistory(m, subject):
             entry = '<dt>Version %s' % rev
             #print "warning: doap:release has no doap:file-release"
 
-        entry += ' (%s)</dt>' % (
-            getLiteralString(getObject(created)))
+        if created:
+            entry += ' (%s)</dt>' % getLiteralString(getObject(created))
+        else:
+            entry += ' (<span class="warning">EXPERIMENTAL</span>)</dt>'
 
         changeset = findOne(m, release, dcs.changeset, None)
         if changeset:
@@ -904,15 +903,18 @@ def specHistory(m, subject):
 
                 entry += '<li>%s</li>' % getLiteralString(getObject(label))
 
-            entry += '</dd>\n'
+            entry += '</ul></dd>\n'
 
         entries[rev] = entry
 
-    history = '<dl>'
-    for e in sorted(entries.keys(), reverse=True):
-        history += entries[e]
-    history += '</dl>'
-    return history
+    if len(entries) > 0:
+        history = '<dl>'
+        for e in sorted(entries.keys(), reverse=True):
+            history += entries[e]
+        history += '</dl>'
+        return history
+    else:
+        return ''
 
 
 def specVersion(m, subject):
