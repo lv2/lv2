@@ -93,6 +93,7 @@ lv2_outdir = os.path.join(out_base, 'lv2core')
 os.mkdir(lv2_outdir)
 shutil.copy('core.lv2/lv2.h',        lv2_outdir)
 shutil.copy('core.lv2/lv2.ttl',      lv2_outdir)
+shutil.copy('core.lv2/lv2-doap.ttl', lv2_outdir)
 shutil.copy('core.lv2/manifest.ttl', lv2_outdir)
 
 oldcwd = os.getcwd()

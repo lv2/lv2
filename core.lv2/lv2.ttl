@@ -16,7 +16,6 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 @prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -59,33 +58,9 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
 """ .
 
 <http://lv2plug.in/ns/lv2core>
-    a lv2:Specification , owl:Ontology , doap:Project ;
-    owl:imports <http://purl.org/az/foaf.owl> ,
-        <http://lv2plug.in/ns/doap.owl> ;
-    doap:license <http://opensource.org/licenses/isc> ;
-    doap:name "LV2" ;
-    doap:homepage <http://lv2plug.in> ;
-    doap:created "2004-04-21" ;
-    doap:shortdesc "An audio plugin interface specification" ;
-    doap:programming-language "C" ;
-    doap:release [
-        doap:revision "4.0" ;
-        doap:created "2011-03-18"
-    ] ;
-    doap:maintainer [
-        a foaf:Person ;
-        foaf:name "Steve Harris" ;
-        foaf:homepage <http://plugin.org.uk/> ;
-        rdfs:seeAlso <http://plugin.org.uk/swh.xrdf>
-    ] , [
-        a foaf:Person ;
-        foaf:name "David Robillard" ;
-        foaf:homepage <http://drobilla.net/> ;
-        rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
-    ] ;
-    lv2:documentation """
-<h4>Overview</h4>
-
+	a owl:Ontology ;
+	owl:imports <http://lv2plug.in/ns/doap.owl> ;
+	lv2:documentation """
 <p>LV2 is an interface for writing audio processors, or <q>plugins</q>, in
 C/C++ which can be dynamically loaded into many applications, or <q>hosts</q>.
 This <q>core</q> specification is simple and minimal, but is designed so that
@@ -125,7 +100,7 @@ which are fixed and valid for the duration of the call to <code>run()</code>.
 Thus the <q>control rate</q> is determined by the block size, which is
 controlled by the host (and not necessarily constant).</p>
 
-<h4>Threading Rules</h4>
+<h3>Threading Rules</h3>
 
 <p>To faciliate use in multi-threaded programs, LV2 functions are partitioned
 into several threading classes:</p>

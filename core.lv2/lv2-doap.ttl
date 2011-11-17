@@ -1,0 +1,75 @@
+@prefix dcs: <http://ontologi.es/doap-changeset#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://lv2plug.in/ns/lv2core>
+	a doap:Project ;
+	doap:license <http://opensource.org/licenses/isc> ;
+	doap:name "LV2" ;
+	doap:homepage <http://lv2plug.in> ;
+	doap:created "2004-04-21" ;
+	doap:shortdesc "An audio plugin interface specification" ;
+	doap:programming-language "C" ;
+	doap:release [
+		doap:revision "4.0" ;
+		doap:created "2011-03-18" ;
+		doap:file-release <http://lv2plug.in/spec/lv2core-4.0.tar.bz2> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Make doap:license suggested, but not required (for wrappers)."
+			] , [
+				rdfs:label "Define lv2:binary (MUST be in manifest.ttl)."
+			] , [
+				rdfs:label "Define lv2:majorVersion and lv2:minorVersion (MUST be in manifest.ttl)."
+			] , [
+				rdfs:label "Define lv2:documentation and use it to document lv2core."
+			] , [
+				rdfs:label "Add lv2:FunctionPlugin and lv2:ConstantPlugin classes."
+			] , [
+				rdfs:label "Move lv2:AmplifierPlugin under lv2:DynamicsPlugin."
+			] , [
+				rdfs:label "Loosen domain of lv2:optionalFeature and lv2:requiredFeature (to allow re-use in extensions)."
+			] , [
+				rdfs:label "Add generic lv2:Resource and lv2:PluginBase classes."
+			] , [
+				rdfs:label "Fix definition of lv2:minimum etc. (used for values, not scale points)."
+			] , [
+				rdfs:label "More precisely define properties with OWL."
+			] , [
+				rdfs:label "Move project metadata to manifest."
+			] , [
+				rdfs:label "Add lv2:enumeration port property."
+			] , [
+				rdfs:label "Define run() pre-roll special case (sample_count == 0)."
+			]
+		]
+	] , [
+		doap:revision "3.0" ;
+		doap:created "2008-11-08" ;
+		doap:file-release <http://lv2plug.in/spec/lv2core-3.0.tar.bz2> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Require that serialisations refer to ports by symbol rather than index."
+			] , [
+				rdfs:label "Minor stylistic changes to lv2.ttl."
+			] , [
+				rdfs:label "No header changes."
+			]
+		]
+	] , [
+		doap:revision "2.0" ;
+		doap:created "2008-02-10" ;
+		doap:file-release <http://lv2plug.in/spec/lv2core-2.0.tar.gz> ;
+	] ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "Steve Harris" ;
+		foaf:homepage <http://plugin.org.uk/> ;
+		rdfs:seeAlso <http://plugin.org.uk/swh.xrdf>
+	] , [
+		a foaf:Person ;
+		foaf:name "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
+	] .

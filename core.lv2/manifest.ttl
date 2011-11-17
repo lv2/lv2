@@ -7,4 +7,4 @@
 	a doap:Project , lv2:Specification , owl:Ontology ;
 	lv2:minorVersion 4 ;
 	lv2:microVersion 1 ;
-	rdfs:seeAlso <lv2.ttl> .
+	rdfs:seeAlso <lv2.ttl> , <lv2-doap.ttl> .

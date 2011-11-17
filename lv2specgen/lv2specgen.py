@@ -90,7 +90,8 @@ ns_list = {
     "http://www.w3.org/2003/01/geo/wgs84_pos#"      : "geo",
     "http://www.w3.org/2004/02/skos/core#"          : "skos",
     "http://lv2plug.in/ns/lv2core#"                 : "lv2",
-    "http://usefulinc.com/ns/doap#"                 : "doap"
+    "http://usefulinc.com/ns/doap#"                 : "doap",
+    "http://ontologi.es/doap-changeset#"            : "dcs"
     }
 
 rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
@@ -98,6 +99,7 @@ rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 owl  = rdflib.Namespace('http://www.w3.org/2002/07/owl#')
 lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
 doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
+dcs  = rdflib.Namespace('http://ontologi.es/doap-changeset#')
 foaf = rdflib.Namespace('http://xmlns.com/foaf/0.1/')
 
 
@@ -864,6 +866,55 @@ def specAuthors(m, subject):
         return '<tr><th class="metahead">Authors</th><td>' + doc + '</td></tr>'
 
 
+def specHistory(m, subject):
+    entries = {}
+    for r in findStatements(m, None, doap.release, None):
+        release = getObject(r)
+        revNode = findOne(m, release, doap.revision, None)
+        if not revNode:
+            print "error: doap:release has no doap:revision"
+            continue
+
+        rev = getLiteralString(getObject(revNode))
+
+        created = findOne(m, release, doap.created, None)
+        if not created:
+            print "error: doap:release has no doap:created"
+            continue
+
+        dist = findOne(m, release, doap['file-release'], None)
+        if dist:
+            entry = '<dt><a href="%s">Version %s</a>' % (getObject(dist), rev)
+        else:
+            entry = '<dt>Version %s' % rev
+            #print "warning: doap:release has no doap:file-release"
+
+        entry += ' (%s)</dt>' % (
+            getLiteralString(getObject(created)))
+
+        changeset = findOne(m, release, dcs.changeset, None)
+        if changeset:
+            entry += '<dd><ul>'
+            for i in findStatements(m, getObject(changeset), dcs.item, None):
+                item = getObject(i)
+                label = findOne(m, item, rdfs.label, None)
+                if not label:
+                    print "error: dcs:item has no rdfs:label"
+                    continue
+
+                entry += '<li>%s</li>' % getLiteralString(getObject(label))
+
+            entry += '</dd>\n'
+
+        entries[rev] = entry
+
+    history = '<dl>'
+    for e in sorted(entries.keys(), reverse=True):
+        history += entries[e]
+    history += '</dl>'
+    return history
+
+
 def specVersion(m, subject):
     """
     Return a (minorVersion, microVersion, date) tuple
@@ -948,7 +999,18 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     m.parse(manifest_path, format='n3')
     m.parse(specloc, format='n3')
 
+    bundle_path = os.path.split(specloc[specloc.find(':') + 1:])[0]
+    abs_bundle_path = os.path.abspath(bundle_path)
     spec_url = getOntologyNS(m)
+
+    # Parse all seeAlso files in the bundle
+    for uri in specProperties(m, spec_url, rdfs.seeAlso):
+        if uri[:7] == 'file://':
+            path = uri[7:]
+            if (path.startswith(abs_bundle_path)
+                and path != os.path.abspath(specloc)
+                and path.endswith('.ttl')):
+                    m.parse(path, format='n3')
 
     spec_ns_str = spec_url
     if (spec_ns_str[-1] != "/" and spec_ns_str[-1] != "#"):
@@ -1012,6 +1074,7 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     template = template.replace('@FILENAME@', filename)
     template = template.replace('@HEADER@', basename + '.h')
     template = template.replace('@MAIL@', 'devel@lists.lv2plug.in')
+    template = template.replace('@HISTORY@', specHistory(m, spec_url))
 
     version = specVersion(m, spec_url)  # (minor, micro, date)
     date_string = version[2]
@@ -1028,7 +1091,6 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
 
     template = template.replace('@REVISION@', version_string)
 
-    bundle_path = os.path.split(specloc[specloc.find(':') + 1:])[0]
     header_path = bundle_path + '/' + basename + '.h'
 
     other_files = ''
@@ -1045,7 +1107,6 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
         header = basename + '.h'
         other_files += ', <a href="%s">%s</a>' % (header, header)
 
-    abs_bundle_path = os.path.abspath(bundle_path)
     see_also_files = specProperties(m, spec_url, rdfs.seeAlso)
     for f in see_also_files:
         uri = str(f)
