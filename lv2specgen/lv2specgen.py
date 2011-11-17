@@ -1149,8 +1149,9 @@ def getNamespaces(m):
     """Return a prefix:URI dictionary of all namespaces seen during parsing"""
     nspaces = {}
     for prefix, uri in m.namespaces():
-        nspaces[prefix] = uri
-    del nspaces['default1']  # Remove ugly default prefix added by rdflib
+        if not re.match('default[0-9]*', prefix):
+            # Skip silly default namespaces added by rdflib
+            nspaces[prefix] = uri
     return nspaces
 
 
