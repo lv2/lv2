@@ -106,7 +106,7 @@ def build(bld):
             
     # Install bundle
     bld.install_files(bundle_dir,
-                      bld.path.ant_glob('?*.*', excl='*.pc.in'))
+                      bld.path.ant_glob('?*.*', excl='*.pc.in lv2extinfo.*'))
 
     # Install URI-like includes
     if bld.env['COPY_HEADERS']:
@@ -115,6 +115,48 @@ def build(bld):
     else:
         bld.symlink_as(os.path.join(include_dir, info.NAME),
                        os.path.relpath(bundle_dir, include_dir))
+
+def write_news(doap_file):
+    import rdflib
+    import textwrap
+    from time import strftime, strptime
+
+    doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
+    dcs  = rdflib.Namespace('http://ontologi.es/doap-changeset#')
+    rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
+    foaf = rdflib.Namespace('http://xmlns.com/foaf/0.1/')
+    rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+
+    m = rdflib.ConjunctiveGraph()
+    m.parse(doap_file, format='n3')
+    spec = m.value(None, rdf.type, doap.Project)
+
+    entries = {}
+    for r in m.triples([spec, doap.release, None]):
+        release   = r[2]
+        revision  = m.value(release, doap.revision, None) or '9999'
+        date      = m.value(release, doap.created, None) or '9999-01-01'
+        blamee    = m.value(release, dcs.blame, None)
+        changeset = m.value(release, dcs.changeset, None)
+
+        entry = '%s (%s) stable;\n' % (APPNAME, revision)
+
+        if changeset:
+            for i in m.triples([changeset, dcs.item, None]):
+                entry += '\n  * ' + '\n    '.join(
+                    textwrap.wrap(m.value(i[2], rdfs.label, None), width=79))
+
+        entry += '\n\n -- %s <%s>  %s\n\n' % (
+            m.value(blamee, foaf.name, None),
+            m.value(blamee, foaf.mbox, None).replace('mailto:', ''),
+            strftime('%a, %d %b %Y %H:%M:%S +0000', strptime(date, '%Y-%m-%d')))
+
+        entries[revision] = entry
+
+    news = open('NEWS', 'w')
+    for e in sorted(entries.keys(), reverse=True):
+        news.write(entries[e])
+    news.close()
 
 class Dist(Scripting.Dist):
     fun = 'dist'
@@ -132,14 +174,19 @@ class Dist(Scripting.Dist):
                 lv2extinfo_py.write("%s = %s\n" % (i, repr(info.__dict__[i])))
         lv2extinfo_py.close()
 
+        # Write NEWS file
+        write_news(info.NAME + '-doap.ttl')
+
         # Build distribution
         Scripting.Dist.archive(self)
 
-        # Delete lv2extinfo.py from source tree
+        # Delete generated files from source tree
         try:
+            os.remove('NEWS')
             os.remove('lv2extinfo.py')
             os.remove('lv2extinfo.pyc')
-        except:
+        except Exception as e:
+            print "error cleaning:", e
             pass
 
 class DistCheck(Dist, Scripting.DistCheck):
