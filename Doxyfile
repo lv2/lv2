@@ -571,7 +571,7 @@ INPUT =  \
 	ext/atom.lv2/atom.h \
 	ext/contexts.lv2/contexts.h \
 	ext/data-access.lv2/data-access.h \
-	ext/dyn-manifest.lv2/dyn-manifest.h \
+	ext/dynmanifest.lv2/dynmanifest.h \
 	ext/event.lv2/event-helpers.h \
 	ext/event.lv2/event.h \
 	ext/files.lv2/files.h \

@@ -26,7 +26,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-@prefix dman: <http://lv2plug.in/ns/ext/dyn-manifest#> .
+@prefix dman: <http://lv2plug.in/ns/ext/dynmanifest#> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -35,7 +35,7 @@
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
-<http://lv2plug.in/ns/ext/dyn-manifest>
+<http://lv2plug.in/ns/ext/dynmanifest>
     a doap:Project ;
     a lv2:Specification ;
     doap:license <http://usefulinc.com/doap/licenses/bsd> ;
@@ -46,7 +46,7 @@
     doap:programming-language "C" ;
     doap:release [
         doap:revision "1.1" ;
-        doap:created "2010-10-29"
+        doap:created "2011-11-17"
     ] ;
     doap:maintainer [
         a foaf:Person ;
@@ -78,32 +78,3 @@ There MUST NOT be any instances of :DynManifest in the generated manifest.
 All relative URIs in the generated data MUST be relative to the base path
 that would be used to parse a normal LV2 manifest (the bundle path).
 """ .
-
-##############
-## Features ##
-##############
-
-dman:optionalFeature a rdf:Property ;
-    rdfs:domain  dman:DynManifest ;
-    rdfs:range   lv2:Feature ;
-    rdfs:label   "Optional feature" ;
-    rdfs:comment """
-Signifies that a dynamic manifest generator is able to make use of or provide a
-certain feature. If the host supports this feature, it MUST pass its URI and any
-additional data to the dynamic manifest generator in the lv2_dyn_manifest_open()
-function. The dynamic manifest generator MUST NOT fail because an optional
-feature is possibly not supported by the host.""" .
-
-dman:requiredFeature a rdf:Property ;
-    rdfs:domain  dman:DynManifest ;
-    rdfs:range   lv2:Feature ;
-    rdfs:label   "Required feature" ;
-    rdfs:comment """
-Signifies that a dynamic manifest generator requires a certain feature in order
-to function. If the host supports this feature, it MUST pass its URI and any
-additional data to the dynamic manifest generator in the lv2_dyn_manifest_open()
-function. The dynamic manifest generator MUST fail if a required feature is not
-present; hosts SHOULD always check this before attempting to perform futher
-operations on the dynamic manifest generator.
-""" .
-

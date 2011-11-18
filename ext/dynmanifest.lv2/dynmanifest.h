@@ -1,7 +1,7 @@
 /* Dynamic manifest specification for LV2
- * Revision 1
+ * Revision 1.1
  *
- * Copyright (C) 2008, 2009 Stefano D'Angelo <zanga.mail@gmail.com>
+ * Copyright (C) 2008-2011 Stefano D'Angelo <zanga.mail@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,8 @@
 #include <stdio.h>
 #include "lv2.h"
 
+#define LV2_DYN_MANIFEST_URI "http://lv2plug.in/ns/ext/dynmanifest"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -43,8 +45,8 @@ extern "C" {
 
 /** @file
  * C header for the LV2 Dynamic Manifest extension
- * <http://lv2plug.in/ns/ext/dyn-manifest>.
- * Revision: 1
+ * <http://lv2plug.in/ns/ext/dynmanifest>.
+ * Revision: 1.1
  *
  * == Overview ==
  *
@@ -56,7 +58,7 @@ extern "C" {
  * A host implementing support for this API should first detect that the plugin
  * library implements a dynamic manifest generator by examining its static
  * manifest file, then fetch data from the shared object file by accessing it as
- * usual (dlopen() and family) and using this API.
+ * usual (e.g., dlopen() and family) and using this API.
  *
  * The host is allowed to request regeneration of the dynamic manifest multiple
  * times, and the plugin library is expected to provide updated data if/when
@@ -64,7 +66,7 @@ extern "C" {
  * regeneration of the dynamic manifest is to be considered invalid by the
  * host, including plugin descriptors whose URIs were discovered using this API.
  *
- * This API is extensible in a similar fashion as the LV2 plugin API.
+ * This API is extensible in a similar fashion as the LV2 API.
  *
  * == Threading rules ==
  *
