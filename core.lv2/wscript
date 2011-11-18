@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import os
-import sys
 
 from waflib.extras import autowaf as autowaf
 import waflib.Options as Options
@@ -32,6 +31,48 @@ def configure(conf):
 
     autowaf.display_msg(conf, "LV2 bundle directory", conf.env['LV2DIR'])
     print('')
+
+def write_news(bld):
+    import rdflib
+    import textwrap
+    from time import strftime, strptime
+
+    doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
+    dcs  = rdflib.Namespace('http://ontologi.es/doap-changeset#')
+    rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
+    foaf = rdflib.Namespace('http://xmlns.com/foaf/0.1/')
+    rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+
+    m = rdflib.ConjunctiveGraph()
+    m.parse('lv2-doap.ttl', format='n3')
+    spec = m.value(None, rdf.type, doap.Project)
+
+    entries = {}
+    for r in m.triples([spec, doap.release, None]):
+        release   = r[2]
+        revision  = m.value(release, doap.revision, None) or '9999'
+        date      = m.value(release, doap.created, None) or '9999-01-01'
+        blamee    = m.value(release, dcs.blame, None)
+        changeset = m.value(release, dcs.changeset, None)
+
+        entry = '%s (%s) stable;\n' % (APPNAME, revision)
+
+        if changeset:
+            for i in m.triples([changeset, dcs.item, None]):
+                entry += '\n  * ' + '\n    '.join(
+                    textwrap.wrap(m.value(i[2], rdfs.label, None), width=79))
+
+        entry += '\n\n -- %s <%s>  %s\n\n' % (
+            m.value(blamee, foaf.name, None),
+            m.value(blamee, foaf.mbox, None).replace('mailto:', ''),
+            strftime('%a, %d %b %Y %H:%M:%S +0000', strptime(date, '%Y-%m-%d')))
+
+        entries[revision] = entry
+
+    news = open('NEWS', 'w')
+    for e in sorted(entries.keys(), reverse=True):
+        news.write(entries[e])
+    news.close()
 
 def build(bld):
     # Header "library"
