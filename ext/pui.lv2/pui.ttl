@@ -112,7 +112,7 @@ pui:UI a rdfs:Class;
 
 <p>The rdf:type of an UI is used by the host to decide whether it supports the
 UI and how to handle the LV2_PUI_Widget object that is returned by the UIs
-get_widget() function. For example, a type of pui:Gtk2GUI might tell the
+get_widget() function. For example, a type of pui:Gtk2UI might tell the
 host that LV2_PUI_Widget is a pointer to an object of a type defined in the
 Gtk+ library. No UI types are defined in this extension, that is intentionally
 left for other extensions.</p>
