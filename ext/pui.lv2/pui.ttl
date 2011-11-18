@@ -28,26 +28,27 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 
-@prefix pui:   <http://lv2plug.in/ns/ext/pui#>.
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#>.
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix doap:  <http://usefulinc.com/ns/doap#> .
-@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#>.
+@prefix pui:  <http://lv2plug.in/ns/ext/pui#>.
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://lv2plug.in/ns/ext/pui> a lv2:Specification ;
-	doap:license <http://usefulinc.com/doap/licenses/mit>;
+<http://lv2plug.in/ns/ext/pui>
+	a lv2:Specification ;
+	doap:license <http://usefulinc.com/doap/licenses/mit> ;
 	doap:name "LV2 UI" ;
-    doap:shortdesc "Generic UI interface for LV2 plugins." ;
+	doap:shortdesc "Generic UI interface for LV2 plugins." ;
 	doap:release [
 		doap:revision "0.1" ;
 		doap:created "2011-03-26"
-	];
+	] ;
 	doap:maintainer [
-		a foaf:Person;
-		foaf:name "Lars Luthman";
-		foaf:mbox <mailto:mail@larsluthman.net>;
-	];
+		a foaf:Person ;
+		foaf:name "Lars Luthman" ;
+		foaf:mbox <mailto:mail@larsluthman.net>
+	] ;
 	lv2:documentation """
 <p>This extension defines an interface that can be used to create UIs for 
 plugins. The UIs are code that reside in shared object files in an LV2
@@ -89,16 +90,13 @@ machines. This means that you can <strong>not</strong> use singletons and
 global variables and expect them to refer to the same objects in the UI and the
 actual plugin. The function callback interface defined in the header pui.h is
 all you can expect to work.</p>
-""".
+""" .
 
-##############
-## UI Class ##
-##############
-
-pui:UI a rdfs:Class;
-      rdfs:subClassOf lv2:Feature;
-      rdfs:label "UI";
-      lv2:documentation """
+pui:UI
+	a rdfs:Class ;
+	rdfs:subClassOf lv2:Feature ;
+	rdfs:label "UI" ;
+	lv2:documentation """
 <p>The class which represents an LV2 plugin UI.
 </p>
 
@@ -133,15 +131,11 @@ instantiate if the host doesn't pass all required features to instantiate().
 </p>
 """ .
 
-
-####################
-## Port Protocols ##
-####################
-
-pui:PortProtocol a rdfs:Class;
-	rdfs:subClassOf  lv2:Feature;
-	rdfs:label       "Port protocol";
-	lv2:documentation     """
+pui:PortProtocol
+	a rdfs:Class ;
+	rdfs:subClassOf lv2:Feature ;
+	rdfs:label "Port protocol" ;
+	lv2:documentation """
 <p>A PortProtocol defines a certain way of communicating port data between UI
 and plugin. PortProtocols can be specified in additional extensions, and
 those extensions MUST specify:
@@ -162,10 +156,11 @@ those extensions MUST specify:
 <p>PortProtocol is a subclass of lv2:Feature, so UIs use lv2:optionalFeature and
 lv2:requiredFeature to specify which PortProtocols they want to use.
 </p>
-""".
+""" .
 
-pui:floatControl a pui:PortProtocol;
-	rdfs:label "Floating point value";
+pui:floatControl
+	a pui:PortProtocol ;
+	rdfs:label "Floating point value" ;
 	lv2:documentation """
 <p>The rules (see pui:PortProtocol) for this port protocol are:</p>
 <ol>
@@ -184,10 +179,11 @@ pui:floatControl a pui:PortProtocol;
 <li>The data pointer in the LV2_Feature object for this feature should be
     NULL.</li>
 </ol>
-""".
+""" .
 
-pui:floatPeakRMS a pui:PortProtocol;
-	rdfs:label "Peak and RMS for a period of audio data";
+pui:floatPeakRMS
+	a pui:PortProtocol ;
+	rdfs:label "Peak and RMS for a period of audio data" ;
 	lv2:documentation """
 <p>This port protocol defines a way for the host to send continuous peak
 and RMS measurements of the audio signal at a certain port to the UI. The
@@ -220,10 +216,11 @@ period</em>.</p>
 <li>The data pointer in the LV2_Feature object for this feature should be
     NULL.</li>
 </ol>
-""".
+""" .
 
-pui:events a pui:PortProtocol;
-	rdfs:label "Event buffer";
+pui:events
+	a pui:PortProtocol ;
+	rdfs:label "Event buffer" ;
 	lv2:documentation """
 <ol>
 <li>This PortProtocol is valid for ports with the type ev:EventPort.</li>
@@ -250,11 +247,12 @@ pui:events a pui:PortProtocol;
 <li>The data pointer in the LV2_Feature object for this feature should be
     NULL.</li>
 </ol>
-""".
+""" .
 
-pui:Gtk2UI a rdfs:Class;
-	rdfs:subClassOf pui:UI;
-	rdfs:label "Gtk+ UI";
+pui:Gtk2UI
+	a rdfs:Class ;
+	rdfs:subClassOf pui:UI ;
+	rdfs:label "Gtk+ UI" ;
 	lv2:documentation """
 <p>The class which represents a Gtk+ UI. For a successfully created instance of
 an UI of this class, the get_widget() function MUST return a pointer to a valid
@@ -267,8 +265,9 @@ LV2_PUI_Descriptor may only be called from the thread that runs the Glib main
 loop.</p>
 """ .
 
-pui:noHostResize a lv2:Feature;
-	rdfs:label "No host resize";
+pui:noHostResize
+	a lv2:Feature ;
+	rdfs:label "No host resize" ;
 	lv2:documentation """
 <p>This Feature should only be used with UIs.</p>
 
@@ -280,4 +279,4 @@ for example when the widget uses a fixed-size pixmap interface.</p>
 
 <p>The data pointer in the LV2_Feature object for this Feature should be set to
 NULL.</p>
-""".
+""" .
