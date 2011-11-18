@@ -133,7 +133,7 @@ void my_restore(LV2_Handle                  instance,
 const void* my_extension_data(const char* uri)
 {
     static const LV2_State_Interface state_iface = { my_save, my_restore };
-    if (!strcmp(uri, "http://lv2plug.in/ns/ext/state#Interface")) {
+    if (!strcmp(uri, LV2_STATE_INTERFACE_URI)) {
         return &amp;state_iface;
     }
 }
@@ -180,8 +180,8 @@ state:Interface
 <p>A structure (LV2_State_Interface) which contains functions to be called by
 the host to save and restore state.  In order to support this extension, the
 plugin must return a valid LV2_State_Interface from
-LV2_Descriptor::extension_data() when it is called with URI
-"http://lv2plug.in/ns/ext/state#StateInterface".</p>
+LV2_Descriptor::extension_data() when it is called with
+LV2_STATE_INTERFACE_URI.</p>
 
 <p>The plugin data file should describe this like so:</p>
 <pre class="turtle-code">
