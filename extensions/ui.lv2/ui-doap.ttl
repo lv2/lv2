@@ -33,6 +33,8 @@
 				rdfs:label "Install header to URI-based system path."
 			] , [
 				rdfs:label "Add pkg-config file."
+			] , [
+				rdfs:label "Make ui.ttl a valid OWL 2 DL ontology."
 			]
 		]
 	] , [
