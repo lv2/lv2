@@ -120,6 +120,10 @@ class Dist(Scripting.Dist):
     fun = 'dist'
     cmd = 'dist'
 
+    def tar_file_name(self, node):
+        "Resolve symbolic links to avoid broken links in tarball."
+        return os.path.realpath(node.abspath())
+
     def archive(self):
         # Generate lv2extinfo.py in source tree
         lv2extinfo_py = open('lv2extinfo.py', 'w')
