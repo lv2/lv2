@@ -25,23 +25,6 @@
 
 <http://lv2plug.in/ns/extensions/ui>
     a lv2:Specification ;
-    doap:license <http://opensource.org/licenses/isc-license> ;
-    doap:name    "LV2 UI" ;
-    doap:shortdesc "Generic UI interface for LV2 plugins." ;
-    doap:release [
-        doap:revision "2.3" ;
-        doap:created "2011-11-16"
-    ] ;
-    doap:maintainer [
-        a foaf:Person ;
-        foaf:name "Lars Luthman" ;
-        foaf:mbox <mailto:lars.luthman@gmail.com>
-    ] , [
-        a foaf:Person ;
-        foaf:name     "David Robillard" ;
-        foaf:homepage <http://drobilla.net/> ;
-        rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
-    ] ;
     lv2:documentation """
 <p>
 This extension defines an interface that can be used in LV2 plugins and hosts
