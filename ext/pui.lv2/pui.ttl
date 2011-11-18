@@ -54,8 +54,7 @@ plugins. The UIs are code that reside in shared object files in an LV2
 bundle and are referenced in the RDF data using the triples:</p>
 <pre class="turtle-code">
 @prefix pui:     &lt;http://lv2plug.in/ns/ext/pui#&gt; .
-@prefix pui-gtk: &lt;http://lv2plug.in/ns/ext/pui-gtk#&gt; .
-&lt;http://example.org/my-ui&gt;  a             pui-gtk:GtkUI ;
+&lt;http://example.org/my-ui&gt;  a             pui:Gtk2UI ;
                             lv2:appliesTo &lt;http://example.org/my-plugin&gt; ;
                             pui:binary     &lt;my-ui.so&gt; .
 </pre>
@@ -67,7 +66,7 @@ it is probably a good idea to keep them separate so that hosts that don't want
 UIs don't have to load the UI code.</p>
 
 <p>A UI MUST specify its class in the RDF data and the class MUST be a proper
-subclass of pui:UI, in this case pui-gtk:GtkUI. The class defines what type the
+subclass of pui:UI, in this case pui:Gtk2UI. The class defines what type the
 UI is, e.g. what graphics toolkit it uses. There are no UI classes defined in
 this extension, those are specified separately (and anyone can define their
 own).</p>
@@ -113,7 +112,7 @@ pui:UI a rdfs:Class;
 
 <p>The rdf:type of an UI is used by the host to decide whether it supports the
 UI and how to handle the LV2_PUI_Widget object that is returned by the UIs
-get_widget() function. For example, a type of pui-gtk:GtkGUI might tell the
+get_widget() function. For example, a type of pui:Gtk2GUI might tell the
 host that LV2_PUI_Widget is a pointer to an object of a type defined in the
 Gtk+ library. No UI types are defined in this extension, that is intentionally
 left for other extensions.</p>
@@ -221,4 +220,64 @@ period</em>.</p>
 <li>The data pointer in the LV2_Feature object for this feature should be
     NULL.</li>
 </ol>
+""".
+
+pui:events a pui:PortProtocol;
+	rdfs:label "Event buffer";
+	lv2:documentation """
+<ol>
+<li>This PortProtocol is valid for ports with the type ev:EventPort.</li>
+<li>The host MUST call port_event() whenever there is an event in an input port
+    prior to the plugin instance's run() function is called, and whenever there
+    is an event in an output port after run() has been called. The UI MUST NOT
+    depend on the timing of the calls. However, the host MUST do the calls in
+    the same order that the events occur in. The host is allowed and encouraged
+    to bundle multiple events into a single port_event() call if it improves
+    performance.</li>
+<li>The data buffer passed to port_event() is an LV2_Event_Buffer, as specified
+    in the Event extension. The stamp_type MUST be ignored. The frames and
+    subframes fields of every event in the buffer MUST be ignored. Events with
+    type 0 (reference counted events) MUST be ignored.</li>
+<li>The data buffer passed to write_event() is an LV2_Event_Buffer, as
+    specified in the Event extension. The stamp_type MUST be ignored. The
+    frames and subframes fields of every event in the buffer MUST be
+    ignored. The host MUST NOT pass events with type 0 (references) unless the
+    UI supports the feature "http://lv2plug.in/ns/ext/event".</li>
+<li>The host MUST pass all the events in the buffer to the plugin instance's
+    event port in the same order, but the plugin and the UI MUST NOT depend on
+    the timing of the events, or on whether they are all sent to the plugin in
+    the same run() call or distributed over multiple calls.</li>
+<li>The data pointer in the LV2_Feature object for this feature should be
+    NULL.</li>
+</ol>
+""".
+
+pui:Gtk2UI a rdfs:Class;
+	rdfs:subClassOf pui:UI;
+	rdfs:label "Gtk+ UI";
+	lv2:documentation """
+<p>The class which represents a Gtk+ UI. For a successfully created instance of
+an UI of this class, the get_widget() function MUST return a pointer to a valid
+GtkWidget object compatible with Gtk+ version 2.0. The host MUST ensure that
+the Gtk+ library has been initialised and that the Glib main loop is running
+before an UI of this type is instantiated.</p>
+
+<p>Unless otherwise specified by extensions, all function pointers in
+LV2_PUI_Descriptor may only be called from the thread that runs the Glib main
+loop.</p>
+""" .
+
+pui:noHostResize a lv2:Feature;
+	rdfs:label "No host resize";
+	lv2:documentation """
+<p>This Feature should only be used with UIs.</p>
+
+<p>When this Feature is active the host SHOULD NOT resize the UI widget to any
+other size than its natural size, which the host should be able to determine
+via the API of whatever toolkit the UI is implemented in.  However, the UI MUST
+NOT break if the widget is resized to another size. This Feature can be used
+for example when the widget uses a fixed-size pixmap interface.</p>
+
+<p>The data pointer in the LV2_Feature object for this Feature should be set to
+NULL.</p>
 """.
