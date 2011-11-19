@@ -14,51 +14,51 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 @prefix dman: <http://lv2plug.in/ns/ext/dynmanifest#> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/dynmanifest>
-    a doap:Project ;
-    a lv2:Specification ;
-    doap:license <http://opensource.org/licenses/isc-license> ;
-    doap:name "LV2 Dynamic Manifest" ;
-    doap:homepage <http://naspro.atheme.org> ;
-    doap:created "2009-06-13" ;
-    doap:shortdesc "An LV2-based specification for dynamic data generation." ;
-    doap:programming-language "C" ;
-    doap:release [
-        doap:revision "1.1" ;
-        doap:created "2011-11-17"
-    ] ;
-    doap:maintainer [
-        a foaf:Person ;
-        foaf:name "Stefano D'Angelo" ;
-    ] .
+	a doap:Project ,
+		lv2:Specification ;
+	doap:license <http://opensource.org/licenses/isc-license> ;
+	doap:name "LV2 Dynamic Manifest" ;
+	doap:homepage <http://naspro.atheme.org> ;
+	doap:created "2009-06-13" ;
+	doap:shortdesc "An LV2-based specification for dynamic data generation." ;
+	doap:programming-language "C" ;
+	doap:release [
+		doap:revision "1.1" ;
+		doap:created "2011-11-17"
+	] ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "Stefano D'Angelo"
+	] .
 
-######################################
-## Dynamic manifest generator class ##
-######################################
-
-dman:DynManifest a rdfs:Class ;
-    rdfs:subClassOf lv2:Resource ;
-    rdfs:label   "Dynamic manifest generator" ;
-    rdfs:subClassOf [ a owl:Restriction ;
-        owl:onProperty rdf:type ;
-        owl:hasValue   dman:DynManifest ;
-        rdfs:comment   "A DynManifest has rdf:type dman:DynManifest."
-    ] , [ a owl:Restriction ;
-        owl:onProperty     lv2:binary ;
-        owl:minCardinality 1 ;
-        rdfs:comment       """A DynManifest has at least 1 lv2:binary.
+dman:DynManifest
+	a rdfs:Class ;
+	rdfs:subClassOf lv2:Resource ;
+	rdfs:label "Dynamic manifest generator" ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty rdf:type ;
+		owl:hasValue dman:DynManifest ;
+		rdfs:comment "A DynManifest has rdf:type dman:DynManifest."
+	] , [
+		a owl:Restriction ;
+		owl:onProperty lv2:binary ;
+		owl:minCardinality 1 ;
+		rdfs:comment """A DynManifest has at least 1 lv2:binary.
 The binary must be a library with at least the functions described in
 lv2_dyn_manifest.h implemented.
-""" ] ;
-    rdfs:comment """
+"""
+	] ;
+	rdfs:comment """
 The class which represents a dynamic manifest generator.
 
 There MUST NOT be any instances of :DynManifest in the generated manifest.
