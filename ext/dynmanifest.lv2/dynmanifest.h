@@ -31,7 +31,8 @@
 #define LV2_DYN_MANIFEST_H_INCLUDED
 
 #include <stdio.h>
-#include "lv2.h"
+
+#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
 #define LV2_DYN_MANIFEST_URI "http://lv2plug.in/ns/ext/dynmanifest"
 
@@ -68,79 +69,21 @@ extern "C" {
  *
  * This API is extensible in a similar fashion as the LV2 API.
  *
- * == Threading rules ==
- *
- * This specification defines threading rule classes, similarly to the LV2
- * specification.
- *
- * The functions defined by this API belong to:
- *
- *  - Dynamic manifest open class:  lv2_dyn_manifest_open()
- *  - Dynamic manifest close class: lv2_dyn_manifest_close()
- *  - Dynamic manifest file class:  lv2_dyn_manifest_get_subjects(),
- *                                  lv2_dyn_manifest_get_data()
- *
- * The rules that hosts must follow are these:
- *
- *  - When a function from the Dynamic manifest open or the Dynamic manifest
- *    close class is running, no other functions in the same shared object file
- *    may run.
- *  - When a function from the Dynamic manifest file class is called, no other
- *    functions from the same class may run if they are given at least one
- *    FILE * argument with the same value.
- *  - A function from the Dynamic manifest open class may not run after a
- *    successful call to a function from the same class, in case a function from
- *    the Dynamic manifest close class was not successfully called in the
- *    meanwhile.
- *  - A function from the Dynamic manifest close class may only run after a
- *    successful call to a function from the Dynamic manifest open class.
- *  - A function from the Dynamic manifest file class may only run beetween a
- *    successful call to a function from the Dynamic manifest open class and the
- *    following successful call to a function from the Dynamic manifest close
- *    class.
- *
- * Extensions to this specification which add new functions MUST declare in
- * which of these classes the functions belong, or define new classes for them;
- * furthermore, classes defined by such extensions MUST only allow calls after
- * a successful call to a function from the Dynamic manifest open class and
- * before the following successful call to a function from the Dynamic manifest
- * close class.
- *
- * Any simultaneous calls that are not explicitly forbidden by these rules are
- * allowed.
- */
-
-
-/* ************************************************************************* */
-
-
-/** Dynamic manifest generator handle.
- *
- * This handle indicates a particular status of a dynamic manifest generator.
- * The host MUST NOT attempt to interpret it and, unlikely LV2_Handle, it is NOT
- * even valid to compare this to NULL. The dynamic manifest generator may use it
- * to reference internal data. */
-typedef void * LV2_Dyn_Manifest_Handle;
-
-
-/* ************************************************************************* */
-
-
-/** Accessing data.
+ * == Accessing data ==
  *
  * Whenever a host wants to access data using this API, it could:
  *
- *  1. Call lv2_dyn_manifest_open();
- *  2. Create an empty resource identified by a FILE *;
- *  3. Get a "list" of exposed subject URIs using
+ *  -# Call lv2_dyn_manifest_open();
+ *  -# Create an empty resource identified by a FILE *;
+ *  -# Get a "list" of exposed subject URIs using
  *     lv2_dyn_manifest_get_subjects();
- *  4. Call lv2_dyn_manifest_get_data() for each URI of interest, in order to
+ *  -# Call lv2_dyn_manifest_get_data() for each URI of interest, in order to
  *     get data related to that URI (either by calling the function subsequently
  *     with the same FILE * resource, or by creating more FILE * resources to
  *     perform parallel calls);
- *  5. Call lv2_dyn_manifest_close();
- *  6. Parse the content of the FILE * resource(s).
- *  7. Free/delete/unlink the FILE * resource(s).
+ *  -# Call lv2_dyn_manifest_close();
+ *  -# Parse the content of the FILE * resource(s).
+ *  -# Free/delete/unlink the FILE * resource(s).
  *
  * The content of the FILE * resources has to be interpreted by the host as a
  * regular file in Turtle syntax. This also means that each FILE * resource
@@ -152,18 +95,42 @@ typedef void * LV2_Dyn_Manifest_Handle;
  * When such calls are made, data fetched from the involved library using this
  * API before such call is to be considered no more valid.
  *
- * In case the library uses this same API to access other dynamic manifests, it
- * MUST implement some mechanism to avoid potentially endless loops (such as A
- * loads B, B loads A, etc.) in functions from the Dynamic manifest open class
- * (the open-like operation MUST fail). For this purpose, use of a static
- * boolean flag is suggested.
+ * In case the plugin library uses this same API to access other dynamic
+ * manifests, it MUST implement some mechanism to avoid potentially endless
+ * loops (such as A loads B, B loads A, etc.) and, in case such a loop is
+ * detected, the operation MUST fail. For this purpose, use of a static boolean
+ * flag is suggested.
+ * 
+ * == Threading rules ==
+ *
+ * All of the functions defined by this specification belong to the Discovery
+ * class.
+ *
+ * Extensions to this specification which add new functions MUST declare in
+ * which classes the functions belong, or define new classes for them.
  */
+
+
+/* ************************************************************************* */
+
+
+/** Dynamic manifest generator handle.
+ *
+ * This handle indicates a particular status of a dynamic manifest generator.
+ * The host MUST NOT attempt to interpret it and, unlikely LV2_Handle, it is NOT
+ * even valid to compare this to NULL. The dynamic manifest generator MAY use it
+ * to reference internal data. */
+typedef void * LV2_Dyn_Manifest_Handle;
+
+
+/* ************************************************************************* */
+
 
 /** Function that (re)generates the dynamic manifest.
  *
- * handle is a pointer to an uninitialized dynamic manifest generator handle.
+ * @param handle Pointer to an uninitialized dynamic manifest generator handle.
  *
- * features is a NULL terminated array of LV2_Feature structs which
+ * @param features NULL terminated array of LV2_Feature structs which
  * represent the features the host supports. The dynamic manifest geenrator may
  * refuse to (re)generate the dynamic manifest if required features are not
  * found here (however hosts SHOULD NOT use this as a discovery mechanism,
@@ -171,9 +138,9 @@ typedef void * LV2_Dyn_Manifest_Handle;
  * if a host has no features, it MUST pass a single element array containing
  * NULL.
  *
- * This function MUST return 0 on success, otherwise a non-zero error code, and
- * the host SHOULD evaluate the result of the operation by examining the
- * returned value, rather than try to interpret the value of handle.
+ * @return 0 on success, otherwise a non-zero error code. The host SHOULD
+ * evaluate the result of the operation by examining the returned value and MUST
+ * NOT try to interpret the value of handle.
  */
 int lv2_dyn_manifest_open(LV2_Dyn_Manifest_Handle *  handle,
                           const LV2_Feature *const * features);
@@ -181,61 +148,68 @@ int lv2_dyn_manifest_open(LV2_Dyn_Manifest_Handle *  handle,
 /** Function that fetches a "list" of subject URIs exposed by the dynamic
  *  manifest generator.
  *
- * handle is the dynamic manifest generator handle.
- *
- * fp is the FILE * identifying the resource the host has to set up for the
- * dynamic manifest generator. The host MUST pass a writable, empty resource to
- * this function, and the dynamic manifest generator MUST ONLY perform write
- * operations on it at the end of the stream (e.g. use only fprintf(), fwrite()
- * and similar).
- *
  * The dynamic manifest generator has to fill the resource only with the needed
  * triples to make the host aware of the "objects" it wants to expose. For
- * example, if the library exposes a regular LV2 plugin, it should output only a
- * triple like the following:
+ * example, if the plugin library exposes a regular LV2 plugin, it should output
+ * only a triple like the following:
  *
  *   <http://www.example.com/plugin/uri> a lv2:Plugin .
  *
- * This function MUST return 0 on success, otherwise a non-zero error code.
+ * The objects that are elegible for exposure are those that would need to be
+ * represented by a subject node in a static manifest.
+ *
+ * @param handle Dynamic manifest generator handle.
+ *
+ * @param fp FILE * identifying the resource the host has to set up for the
+ * dynamic manifest generator. The host MUST pass a writable, empty resource to
+ * this function, and the dynamic manifest generator MUST ONLY perform write
+ * operations on it at the end of the stream (e.g., using only fprintf(),
+ * fwrite() and similar).
+ *
+ * @return 0 on success, otherwise a non-zero error code.
  */
 int lv2_dyn_manifest_get_subjects(LV2_Dyn_Manifest_Handle handle,
                                   FILE *                  fp);
 
 /** Function that fetches data related to a specific URI.
  *
- * handle is the dynamic manifest generator handle.
- *
- * fp is the FILE * identifying the resource the host has to set up for the
- * dynamic manifest generator. The host MUST pass a writable resource to this
- * function, and the dynamic manifest generator MUST ONLY perform write
- * operations on it at the current position of the stream (e.g. use only
- * fprintf(), fwrite() and similar).
- *
- * uri is the URI to get data about (in the "plain" form, a.k.a. without RDF
- * prefixes).
- *
  * The dynamic manifest generator has to fill the resource with data related to
- * the URI. For example, if the library exposes a regular LV2 plugin whose URI,
- * as retrieved by the host using lv2_dyn_manifest_get_subjects() is
- * http://www.example.com/plugin/uri, it should output something like:
+ * object represented by the given URI. For example, if the library exposes a
+ * regular LV2 plugin whose URI, as retrieved by the host using
+ * lv2_dyn_manifest_get_subjects() is http://www.example.com/plugin/uri, it
+ * should output something like:
  *
- *   <http://www.example.com/plugin/uri> a lv2:Plugin;
- *       lv2:binary <mylib.so>;
- *       doap:name "My Plugin";
+ *   <http://www.example.com/plugin/uri> a lv2:Plugin ;
+ *       doap:name "My Plugin" ;
+ *       lv2:binary <mylib.so> ;
  *       ... etc...
  *
- * This function MUST return 0 on success, otherwise a non-zero error code.
+ * @param handle Dynamic manifest generator handle.
+ *
+ * @param fp FILE * identifying the resource the host has to set up for the
+ * dynamic manifest generator. The host MUST pass a writable resource to this
+ * function, and the dynamic manifest generator MUST ONLY perform write
+ * operations on it at the current position of the stream (e.g. using only
+ * fprintf(), fwrite() and similar).
+ *
+ * @param uri URI to get data about (in the "plain" form, i.e., absolute URI
+ * without Turtle prefixes).
+ *
+ * @return 0 on success, otherwise a non-zero error code.
  */
 int lv2_dyn_manifest_get_data(LV2_Dyn_Manifest_Handle handle,
                               FILE *                  fp,
                               const char *            uri);
 
 /** Function that ends the operations on the dynamic manifest generator.
- *
- * handle is the dynamic manifest generator handle.
- *
- * This function should be used by the dynamic manifest generator to perform
+ * 
+ * This function SHOULD be used by the dynamic manifest generator to perform
  * cleanup operations, etc.
+ *
+ * Once this function is called, referring to handle will cause undefined
+ * behavior.
+ *
+ * @param handle Dynamic manifest generator handle.
  */
 void lv2_dyn_manifest_close(LV2_Dyn_Manifest_Handle handle);
 
