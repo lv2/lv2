@@ -6,4 +6,4 @@
 	lv2:minorVersion 2 ;
 	lv2:microVersion 3 ;
 	rdfs:seeAlso <ui.ttl> ,
-		<ui-doap.ttl> .
+		<lv2-ui.doap.ttl> .
