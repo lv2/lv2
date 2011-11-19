@@ -1,0 +1,43 @@
+@prefix dcs: <http://ontologi.es/doap-changeset#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:homepage <http://drobilla.net/> ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
+<http://lv2plug.in/ns/ext/dynmanifest>
+	a doap:Project ;
+	doap:license <http://opensource.org/licenses/isc-license> ;
+	doap:name "LV2 Dynamic Manifest" ;
+	doap:homepage <http://naspro.atheme.org> ;
+	doap:created "2009-06-13" ;
+	doap:shortdesc "An LV2-based specification for dynamic data generation." ;
+	doap:programming-language "C" ;
+	doap:developer [
+		a foaf:Person ;
+		foaf:name "Stefano D'Angelo"
+	] ;
+	doap:release [
+		doap:revision "1.1" ;
+		doap:created "2011-11-17" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Improve documentation."
+			]
+		]
+	] , [
+		doap:revision "1.0" ;
+		doap:created "2010-04-10" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial packaging."
+			]
+		]
+	] .
