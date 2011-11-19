@@ -38,18 +38,72 @@
 	doap:maintainer [
 		a foaf:Person ;
 		foaf:name "Stefano D'Angelo"
-	] .
+	] ;
+    lv2:documentation """
+<p>The LV2 API, on its own, cannot be used to write plugin libraries where data
+is dynamically generated at runtime (e.g. API wrappers), since LV2 requires
+needed information to be provided in one or more static data (RDF) files. This
+API addresses this limitation by extending the LV2 API.</p>
+
+<p>To detect that a plugin library implements a dynamic manifest generator,
+the host checks its static manifest for a description like:</p>
+
+<pre class="turtle-code">
+&lt;http://example.org/my-dynamic-manifest&gt;
+    a dman:DynManifest ;
+    lv2:binary &lt;mydynmanifest.so&gt; .
+</pre>
+
+<p>To load the data, the host loads the library
+(e.g. <code>mydynmanifest.so</code>) as usual and fetches the dynamic Turtle
+data from it using this API.</p>
+
+<p>The host is allowed to request regeneration of the dynamic manifest multiple
+times, and the plugin library is expected to provide updated data if/when
+possible.  All data and references provided via this API before the last
+regeneration of the dynamic manifest is to be considered invalid by the host,
+including plugin descriptors whose URIs were discovered using this API.</p>
+
+<h3>Accessing Data</h3>
+
+<p>Whenever a host wants to access data using this API, it could:</p>
+
+<ol>
+<li>Call lv2_dyn_manifest_open().</li>
+<li>Create a FILE for functions to write data to (e.g. using tmpfile()).</li>
+<li>Get a <q>list</q> of exposed subject URIs using
+    lv2_dyn_manifest_get_subjects().</li>
+<li>Call lv2_dyn_manifest_get_data() for each URI of interest to
+    get the data related to that URI (which can be written to any FILE).</li>
+<li>Call lv2_dyn_manifest_close().</li>
+<li>Parse the content of the FILE(s).</li>
+<li>Free/delete/unlink the FILE(s).</li>
+</ol>
+
+<p>Each call to the above mentioned dynamic manifest functions MUST write a
+complete, valid Turtle document (including all needed prefix definitions) to
+the output FILE.</p>
+
+<p>Each call to lv2_dyn_manifest_open() causes the (re)generation of the
+dynamic manifest data, and invalidates all data fetched before the call.</p>
+
+<p>In case the plugin library uses this same API to access other dynamic
+manifests, it MUST implement some mechanism to avoid potentially endless loops
+(such as A loads B, B loads A, etc.) and, in case such a loop is detected, the
+operation MUST fail.  For this purpose, use of a static boolean flag is
+suggested.</p>
+
+<h3>Threading Rules</h3>
+
+<p>All of the functions defined by this specification belong to the Discovery
+class.</p>
+""" .
 
 dman:DynManifest
 	a rdfs:Class ;
 	rdfs:subClassOf lv2:Resource ;
 	rdfs:label "Dynamic manifest generator" ;
 	rdfs:subClassOf [
-		a owl:Restriction ;
-		owl:onProperty rdf:type ;
-		owl:hasValue dman:DynManifest ;
-		rdfs:comment "A DynManifest has rdf:type dman:DynManifest."
-	] , [
 		a owl:Restriction ;
 		owl:onProperty lv2:binary ;
 		owl:minCardinality 1 ;
