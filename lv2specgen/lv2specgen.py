@@ -996,8 +996,7 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
             os.path.join(doc_base, url), sym)
 
     m = rdflib.ConjunctiveGraph()
-    base = specloc[0:specloc.rfind('/')]
-    manifest_path = os.path.join(base, 'manifest.ttl')
+    manifest_path = os.path.join(os.path.dirname(specloc), 'manifest.ttl')
     m.parse(manifest_path, format='n3')
     m.parse(specloc, format='n3')
 
@@ -1067,7 +1066,7 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     filename = os.path.basename(specloc)
     basename = filename[0:filename.rfind('.')]
 
-    template = template.replace('@STYLE_URI@', os.path.join(doc_base, style_uri))
+    template = template.replace('@STYLE_URI@', style_uri)
     template = template.replace('@PREFIXES@', str(prefixes_html))
     template = template.replace('@BASE@', spec_ns_str)
     template = template.replace('@AUTHORS@', specAuthors(m, spec_url))

@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
 import datetime
-import glob
 import os
 import rdflib
-import re
 import shutil
 import subprocess
 import sys
@@ -14,19 +12,29 @@ import xml.dom.minidom
 sys.path.append("./lv2specgen")
 import lv2specgen
 
-out_base = os.path.join('build', 'ns')
 try:
-    shutil.rmtree(out_base)
+    shutil.rmtree('build', 'ns')
 except:
     pass
-    
-os.makedirs(out_base)
+
+# Copy bundles (less build files) to build directory
+shutil.copytree('ns', 'build/ns',
+                ignore=shutil.ignore_patterns('.*', 'waf', 'wscript', '*.in'))
+
+# Copy stylesheet to build directory
+try:
+    os.mkdir('build/aux')
+except:
+    pass
+
+shutil.copy('lv2specgen/style.css', 'build/aux/style.css')
 
 URIPREFIX  = 'http://lv2plug.in/ns/'
 DOXPREFIX  = 'ns/doc/html/'
-SPECGENDIR = './specgen'
-STYLEURI   = os.path.join('aux', 'style.css')
-TAGFILE    = './doclinks'
+SPECGENDIR = os.path.abspath('lv2specgen')
+STYLEPATH  = os.path.abspath('build/aux/style.css')
+TAGFILE    = os.path.abspath('doclinks')
+BUILDDIR   = os.path.abspath('build')
 
 doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
 lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
@@ -91,178 +99,132 @@ def subst_file(template, output, dict):
 
 print('** Generating core documentation')
 
-lv2_outdir = os.path.join(out_base, 'lv2core')
-os.mkdir(lv2_outdir)
-shutil.copy('core.lv2/lv2.h',        lv2_outdir)
-shutil.copy('core.lv2/lv2.ttl',      lv2_outdir)
-shutil.copy('core.lv2/lv2.doap.ttl', lv2_outdir)
-shutil.copy('core.lv2/manifest.ttl', lv2_outdir)
-
+print("Entering directory `%s'" % os.path.abspath('build'))
 oldcwd = os.getcwd()
-os.chdir(lv2_outdir)
-print(' * Running lv2specgen for lv2core in ' + os.getcwd())
-lv2specgen.save('lv2.html',
-                lv2specgen.specgen('../../../core.lv2/lv2.ttl',
-                                   '../../../lv2specgen',
-                                   os.path.join('..', '..', 'ns', 'doc'),
-                                   STYLEURI,
-                                   os.path.join('..', '..'),
-                                   os.path.join('..', '..', '..', TAGFILE),
-                                   instances=True))
-os.chdir(oldcwd)
-subst_file('doc/htaccess.in', '%s/lv2core/.htaccess' % out_base,
-           { '@NAME@': 'lv2core',
-             '@BASE@': '/ns/lv2core' })
+os.chdir('build')
 
-# Generate main (ontology) documentation and indices
-for dir in ['ext', 'extensions']:
-    print("** Generating %s%s documentation" % (URIPREFIX, dir))
+extensions = []
 
-    outdir = os.path.join(out_base, dir)
+for root, dirs, files in os.walk('ns'):
+    if '.svn' in dirs:
+        dirs.remove('.svn')
 
-    shutil.copytree(dir, outdir, ignore=shutil.ignore_patterns('.*', 'waf', 'wscript', '*.in'))
+    if root in ['ns', 'ns/ext', 'ns/extensions']:
+        if 'doc' in dirs:
+            dirs.remove('doc')
+        continue
 
-    index_html = """<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8" />
-<title>LV2 Extension Index</title>
-<link rel="stylesheet" type="text/css" href="../../""" + STYLEURI + """\" />
-</head>
-<body>
-<div id="header"><h1 id="title">LV2 Extension Index</h1></div>
-<div class="content">
-<table summary="An index of LV2 extensions">
-<tr><th>Name</th><th>Description</th><th>Version</th><th>Date</th><th>Status</th></tr>\n"""
+    abs_root = os.path.abspath(root)
+    outdir = root
+    bundle = root
+    b = os.path.basename(root)
 
-    extensions = []
+    print("** Generating %s documentation" % outdir)
 
-    for bundle in glob.glob(os.path.join(dir, '*.lv2')):
-        b = bundle.replace('.lv2', '')
-        b = b[b.find('/') + 1:]
+    try:
+        model = rdflib.ConjunctiveGraph()
+        model.parse('%s/manifest.ttl' % bundle, format='n3')
+        model.parse('%s/%s.ttl' % (bundle, b), format='n3')
+    except:
+        e = sys.exc_info()[1]
+        print('error parsing %s: %s' % (bundle, str(e)))
+        continue
 
-        try:
-            model = rdflib.ConjunctiveGraph()
-            model.parse('%s/manifest.ttl' % bundle, format='n3')
-            model.parse('%s/%s.ttl' % (bundle, b), format='n3')
-        except:
-            e = sys.exc_info()[1]
-            print('error parsing %s: %s' % (bundle, str(e)))
-            continue
+    # Get extension URI
+    ext_node = model.value(None, rdf.type, lv2.Specification)
+    if not ext_node:
+        continue
+    
+    ext = str(ext_node)
 
-        # Get extension URI
-        ext_node = model.value(None, rdf.type, lv2.Specification)
-        if not ext_node:
-            continue
+    # Get version
+    minor = 0
+    micro = 0
+    try:
+        minor = int(model.value(ext_node, lv2.minorVersion, None))
+        micro = int(model.value(ext_node, lv2.microVersion, None))
+    except Exception as e:
+        print("warning: %s: failed to find version for %s" % (bundle, ext))
 
-        ext = str(ext_node)
+    # Get date
+    date = None
+    for r in model.triples([ext_node, doap.release, None]):
+        revision = model.value(r[2], doap.revision, None)
+        if revision == ("%d.%d" % (minor, micro)):
+            date = model.value(r[2], doap.created, None)
+            break
 
-        # Get version
-        minor = 0
-        micro = 0
-        try:
-            minor = int(model.value(ext_node, lv2.minorVersion, None))
-            micro = int(model.value(ext_node, lv2.microVersion, None))
-        except Exception as e:
-            print "warning: %s: failed to find version for %s" % (bundle, ext)
-            pass
+    # Verify that this date is the latest
+    for r in model.triples([ext_node, doap.release, None]):
+        revision = model.value(r[2], doap.revision, None)
+        this_date = model.value(r[2], doap.created, None)
+        if this_date > date:
+            print("warning: revision %d.%d (%s) is not the latest release" % (
+                minor, micro, date))
+            break
+    
+    # Get short description
+    shortdesc = model.value(ext_node, doap.shortdesc, None)
 
-        # Get date
-        date = None
-        for r in model.triples([ext_node, doap.release, None]):
-            revision = model.value(r[2], doap.revision, None)
-            if revision == ("%d.%d" % (minor, micro)):
-                date = model.value(r[2], doap.created, None)
-                break
+    if (os.access(outdir + '/%s.ttl' % b, os.R_OK)):
+        print(' * Running lv2specgen for %s in %s' % (b, os.getcwd()))
+        specdoc = lv2specgen.specgen(
+            root + '/%s.ttl' % b,
+            SPECGENDIR,
+            os.path.relpath(os.path.join('ns', 'doc'), abs_root),
+            os.path.relpath(STYLEPATH, abs_root),
+            os.path.relpath(BUILDDIR, abs_root),
+            TAGFILE,
+            instances=True)
 
-        # Verify that this date is the latest
-        for r in model.triples([ext_node, doap.release, None]):
-            revision = model.value(r[2], doap.revision, None)
-            this_date = model.value(r[2], doap.created, None)
-            if this_date > date:
-                print "warning: revision %d.%d (%s) is not the latest release" % (
-                    minor, micro, date)
-                break
-        
-        # Get short description
-        shortdesc = model.value(ext_node, doap.shortdesc, None)
+        lv2specgen.save(root + '/%s.html' % b, specdoc)
 
-        specgendir = '../../../lv2specgen/'
-        if (os.access(outdir + '/%s.lv2/%s.ttl' % (b, b), os.R_OK)):
-            oldcwd = os.getcwd()
-            os.chdir(outdir)
-            print(' * Running lv2specgen for %s in %s' % (b, os.getcwd()))
-            lv2specgen.save('%s.lv2/%s.html' % (b, b),
-                            lv2specgen.specgen('%s.lv2/%s.ttl' % (b, b),
-                                               specgendir,
-                                               os.path.join('..', '..', '..', 'ns', 'doc'),
-                                               STYLEURI,
-                                               os.path.join('..', '..', '..'),
-                                               os.path.join('..', '..', '..', TAGFILE),
-                                               instances=True))
-            os.chdir(oldcwd)
+        # Name
+        row = '<tr><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
+            os.path.relpath(root, 'ns'), b)
 
-            # Name
-            row = '<tr><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (b, b)
+        # Description
+        if shortdesc:
+            row += '<td>' + str(shortdesc) + '</td>'
+        else:
+            row += '<td></td>'
 
-            # Description
-            if shortdesc:
-                row += '<td>' + str(shortdesc) + '</td>'
-            else:
-                row += '<td></td>'
+        # Version
+        version_str = '%s.%s' % (minor, micro)
+        if minor == 0 or (micro % 2 != 0):
+            row += '<td><span style="color: red">' + version_str + ' dev</span></td>'
+        else:
+            row += '<td>' + version_str + '</td>'
 
-            # Version
-            version_str = '%s.%s' % (minor, micro)
-            if minor == 0 or (micro % 2 != 0):
-                row += '<td><span style="color: red">' + version_str + ' dev</span></td>'
-            else:
-                row += '<td>' + version_str + '</td>'
+        # Date
+        row += '<td>%s</td>' % (str(date) if date else '')
 
-            # Date
-            row += '<td>%s</td>' % (str(date) if date else '')
+        # Status
+        deprecated = model.value(ext_node, owl.deprecated, None)
+        if minor == 0:
+            row += '<td><span class="error">Experimental</span></td>'
+        elif deprecated and str(deprecated[2]) != "false":
+                row += '<td><span class="warning">Deprecated</span></td>'
+        elif micro % 2 == 0:
+            row += '<td><span class="success">Stable</span></td>'
 
-            # Status
-            deprecated = model.value(ext_node, owl.deprecated, None)
-            if minor == 0:
-                row += '<td><span class="error">Experimental</span></td>'
-            elif deprecated and str(deprecated[2]) != "false":
-                    row += '<td><span class="warning">Deprecated</span></td>'
-            elif micro % 2 == 0:
-                row += '<td><span class="success">Stable</span></td>'
+        row += '</tr>'
+        extensions.append(row)
 
-            row += '</tr>'
-            extensions.append(row)
-
-        subst_file('doc/htaccess.in', '%s/%s.lv2/.htaccess' % (outdir, b),
+        subst_file('../doc/htaccess.in', outdir + '.htaccess',
                    { '@NAME@': b,
                      '@BASE@': '/ns/%s/%s' % (dir, b) })
-    
-        # Remove .lv2 suffix from bundle name (to make URI resolvable)
-        os.rename(outdir + '/%s.lv2' % b, outdir + '/%s' % b)
 
-    extensions.sort()
-    for i in extensions:
-        index_html += i + '\n'
-    
-    index_html += '</table>\n</div>\n'
+index_rows = ''
+extensions.sort()
+for i in extensions:
+    index_rows += i + '\n'
 
-    index_html += '<div id="footer">'
-    index_html += '<div>Generated on '
-    index_html += datetime.datetime.utcnow().strftime('%F %H:%M UTC')
-    index_html += ' by gendoc.py</div></div>'
-
-    index_html += '</body></html>\n'
-
-    index_file = open(os.path.join(outdir, 'index.html'), 'w')
-    index_file.write(index_html)
-    index_file.close()
-
-# Copy stylesheet
-try:
-    os.mkdir(os.path.join('build', 'aux'))
-except:
-    pass
-shutil.copy('lv2specgen/style.css', os.path.join('build', STYLEURI))
+subst_file('../ns/index.html.in', 'ns/index.html',
+           { '@ROWS@': index_rows,
+             '@TIME@': datetime.datetime.utcnow().strftime('%F %H:%M UTC') })
+           
+print("Leaving directory `%s'" % os.path.abspath('build'))
+os.chdir(oldcwd)
 
 devnull.close()
