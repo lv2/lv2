@@ -40,42 +40,44 @@ print('** Generating header documentation')
 print(' * Calling doxygen in ' + os.getcwd())
 subprocess.call('doxygen', stdout=devnull)
 
+def rescue_tags(in_path, out_path):
+    "Rescue Doxygen tag file from XML hell."
 
-# Rescue Doxygen tag file from XML hell
+    def getChildText(elt, tagname):
+        "Return the content of the first child node with a certain tag name."
+        elements = elt.getElementsByTagName(tagname)
+        for e in elements:
+            if e.parentNode == elt:
+                return e.firstChild.nodeValue
+        return ''
 
-# Return the content of the first child node with a certain tag name
-def getChildText(elt, tagname):
-    elements = elt.getElementsByTagName(tagname)
-    for e in elements:
-        if e.parentNode == elt:
-            return e.firstChild.nodeValue
-    return ''
+    tagdoc = xml.dom.minidom.parse(in_path)
+    root = tagdoc.documentElement
+    bettertags = open(out_path, 'w')
+    for cn in root.childNodes:
+        if cn.nodeType == xml.dom.Node.ELEMENT_NODE and cn.tagName == 'compound':
+            if cn.getAttribute('kind') == 'page':
+                continue
+            name = getChildText(cn, 'name')
+            filename = getChildText(cn, 'filename')
+            # Sometimes the .html is there, sometimes it isn't...
+            if not filename.endswith('.html'):
+                filename += '.html'
+            bettertags.write('%s %s%s\n' % (name, DOXPREFIX, filename))
+            if cn.getAttribute('kind') == 'file':
+                prefix = ''
+            else:
+                prefix = name + '::'
+            members = cn.getElementsByTagName('member')
+            for m in members:
+                mname = prefix + getChildText(m, 'name')
+                mafile = getChildText(m, 'anchorfile')
+                manchor = getChildText(m, 'anchor')
+                bettertags.write('%s %s%s#%s\n' % (mname, DOXPREFIX, \
+                                                       mafile, manchor))
+    bettertags.close()
 
-tagdoc = xml.dom.minidom.parse('c_tags')
-root = tagdoc.documentElement
-bettertags = open(TAGFILE, 'w')
-for cn in root.childNodes:
-    if cn.nodeType == xml.dom.Node.ELEMENT_NODE and cn.tagName == 'compound':
-        if cn.getAttribute('kind') == 'page':
-            continue
-        name = getChildText(cn, 'name')
-        filename = getChildText(cn, 'filename')
-        # Sometimes the .html is there, sometimes it isn't...
-        if filename[-5:] != '.html':
-            filename += '.html'
-        bettertags.write('%s %s%s\n' % (name, DOXPREFIX, filename))
-        if cn.getAttribute('kind') == 'file':
-            prefix = ''
-        else:
-            prefix = name + '::'
-        members = cn.getElementsByTagName('member')
-        for m in members:
-            mname = prefix + getChildText(m, 'name')
-            mafile = getChildText(m, 'anchorfile')
-            manchor = getChildText(m, 'anchor')
-            bettertags.write('%s %s%s#%s\n' % (mname, DOXPREFIX, \
-                                                   mafile, manchor))
-bettertags.close()
+rescue_tags('c_tags', TAGFILE)
 
 def subst_file(template, output, dict):
     i = open(template, 'r')
