@@ -98,12 +98,14 @@ int lv2_dyn_manifest_get_subjects(LV2_Dyn_Manifest_Handle handle,
    regular LV2 plugin whose URI, as retrieved by the host using
    lv2_dyn_manifest_get_subjects() is http://www.example.com/plugin/uri, it
    should output something like:
- 
-   <http://www.example.com/plugin/uri> a lv2:Plugin ;
+
+   <pre>
+   <http://www.example.com/plugin/uri>
+       a lv2:Plugin ;
        doap:name "My Plugin" ;
        lv2:binary <mylib.so> ;
-       # ... etc...
-       .
+       etc:etc "..." .
+   </pre>
  
    @param handle Dynamic manifest generator handle.
  
