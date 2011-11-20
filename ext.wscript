@@ -128,7 +128,13 @@ def write_news(doap_file):
     rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
     m = rdflib.ConjunctiveGraph()
-    m.parse(doap_file, format='n3')
+
+    try:
+        m.parse(doap_file, format='n3')
+    except:
+        print('warning: no DOAP file found, unable to generate NEWS')
+        return
+
     spec = m.value(None, rdf.type, doap.Project)
 
     entries = {}
@@ -162,7 +168,7 @@ class Dist(Scripting.Dist):
     fun = 'dist'
     cmd = 'dist'
 
-    def tar_file_name(self, node):
+    def get_tar_path(self, node):
         "Resolve symbolic links to avoid broken links in tarball."
         return os.path.realpath(node.abspath())
 
@@ -175,19 +181,17 @@ class Dist(Scripting.Dist):
         lv2extinfo_py.close()
 
         # Write NEWS file
-        write_news(info.NAME + '-doap.ttl')
+        write_news('lv2-%s.doap.ttl' % info.NAME)
 
         # Build distribution
         Scripting.Dist.archive(self)
 
         # Delete generated files from source tree
-        try:
-            os.remove('NEWS')
-            os.remove('lv2extinfo.py')
-            os.remove('lv2extinfo.pyc')
-        except Exception as e:
-            print "error cleaning:", e
-            pass
+        for i in ['NEWS', 'lv2extinfo.py', 'lv2extinfo.pyc']:
+            try:
+                os.remove(i)
+            except:
+                pass
 
 class DistCheck(Dist, Scripting.DistCheck):
     fun = 'distcheck'
