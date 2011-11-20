@@ -1,53 +1,70 @@
 # LV2 Presets Extension
-# PROVISIONAL
-# Copyright (C) 2009 David Robillard <d@drobilla.net>
+# Copyright 2009-2011 David Robillard <d@drobilla.net>
 #
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-# OTHER DEALINGS IN THE SOFTWARE.
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcs:  <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix pset: <http://lv2plug.in/ns/ext/presets#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-<http://lv2plug.in/ns/ext/presets> a lv2:Specification ;
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:homepage <http://drobilla.net/> ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
+<http://lv2plug.in/ns/ext/presets>
+	a lv2:Specification ;
 	doap:license <http://usefulinc.com/doap/licenses/mit> ;
-	doap:name    "LV2 Presets" ;
+	doap:name "LV2 Presets" ;
 	doap:shortdesc "Presets for LV2 plugins. " ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "2.1" ;
-		doap:created "2010-10-29"
-	] ;
-	doap:maintainer [
-		a foaf:Person ;
-		foaf:name     "David Robillard" ;
-		foaf:homepage <http://drobilla.net/> ;
-		rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
+		doap:revision "2.2" ;
+		doap:created "2011-11-14" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-presets-2.2.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Update packaging."
+			] , [
+				rdfs:label "Improve documentation."
+			]
+		]
+	] , [
+		doap:revision "2.0" ;
+		doap:created "2010-10-04" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-presets-2.0.tar.gz> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
 	rdfs:comment """
 Defines presets (e.g. named sets of control values) for LV2 plugins.
 """ .
 
-pset:Preset a rdfs:Class ;
+pset:Preset
+	a rdfs:Class ;
 	rdfs:subClassOf lv2:PluginBase ;
 	rdfs:label "LV2 Preset" ;
 	rdfs:subClassOf [
@@ -69,10 +86,11 @@ Each Port on a Preset MUST have at least a lv2:symbol property and a
 pset:value property.
 """ .
 
-pset:appliesTo a rdf:Property ;
-	rdfs:domain  pset:Preset ;
-	rdfs:range   lv2:Plugin ;
-	rdfs:label   "Applies to" ;
+pset:appliesTo
+	a rdf:Property ;
+	rdfs:domain pset:Preset ;
+	rdfs:range lv2:Plugin ;
+	rdfs:label "Applies to" ;
 	rdfs:comment """
 Specifies the Plugin(s) a Preset may be applied to.  When a Preset applies
 to a Plugin, that Preset SHOULD have ports for every control port on that
@@ -85,11 +103,11 @@ in some way.  The host SHOULD simply ignore any values on a Preset it does
 not understand.
 """ .
 
-pset:value a rdf:Property ;
-	rdfs:domain  lv2:Port ;
-	rdfs:label   "Has value" ;
+pset:value
+	a rdf:Property ;
+	rdfs:domain lv2:Port ;
+	rdfs:label "Has value" ;
 	rdfs:comment """
 Specifies the value of a Port on some Preset.  This property is used
 in a similar way to e.g. lv2:default.
 """ .
-

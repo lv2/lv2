@@ -14,29 +14,69 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 @prefix da:    <http://lv2plug.in/ns/ext/data-access#> .
+@prefix dcs:   <http://ontologi.es/doap-changeset#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix lv2ev: <http://lv2plug.in/ns/ext/event#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix doap:  <http://usefulinc.com/ns/doap#> .
-@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:homepage <http://drobilla.net/> ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
 
 <http://lv2plug.in/ns/ext/data-access>
-	a lv2:Specification ;
+	a lv2:Specification ,
+		doap:Project ;
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	doap:name "LV2 Data Access" ;
-    doap:shortdesc "Provides access to LV2_Descriptor::extension_data." ;
-    doap:release [
-        doap:revision "1.2" ;
-        doap:created "2011-05-26"
-    ] ;
-	doap:maintainer [
-		a foaf:Person ;
-		foaf:name "David Robillard" ;
-		foaf:homepage <http://drobilla.net/> ;
-		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
+	doap:shortdesc "Provides access to LV2_Descriptor::extension_data()." ;
+	doap:developer <http://drobilla.net/drobilla#me> ;
+	doap:release [
+		doap:revision "1.4" ;
+		doap:created "2011-11-14" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-data-access-1.4.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Update packaging."
+			] , [
+				rdfs:label "Improve documentation."
+			]
+		]
+	] , [
+		doap:revision "1.2" ;
+		doap:created "2011-05-26" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-data-access-1.2.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add build system for installation."
+			] , [
+				rdfs:label "Switch to ISC license."
+			]
+		]
+	] , [
+		doap:revision "1.0" ;
+		doap:created "2010-10-04" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-data-access-1.0.tar.gz> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
-	rdfs:comment """
-This extension defines a method for (e.g.) plugin UIs to have (possibly
-marshalled) access to the extension_data function on a plugin instance.
+	lv2:documentation """
+<p>This extension defines a feature, LV2_Extension_Data_Feature, which provides
+access to LV2_Descriptor::extension_data() for plugin UIs or other potentially
+remote users of a plugin.</p>
+
+<p>To support this feature the host must pass an LV2_Feature struct to the
+instantiate method with URI "http://lv2plug.in/ns/ext/data-access" and data
+pointed to an instance of LV2_Extension_Data_Feature.</p>
 """ .

@@ -14,35 +14,70 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+@prefix dcs:  <http://ontologi.es/doap-changeset#> .
 @prefix atom: <http://lv2plug.in/ns/ext/atom#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix ev: <http://lv2plug.in/ns/ext/event#> .
+@prefix ev:   <http://lv2plug.in/ns/ext/event#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix midi: <http://lv2plug.in/ns/ext/midi#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:homepage <http://drobilla.net/> ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
+_:larsl
+	a foaf:Person ;
+	foaf:name "Lars Luthman" ;
+	foaf:mbox <mailto:lars.luthman@gmail.com> .
 
 <http://lv2plug.in/ns/ext/midi>
 	a lv2:Specification ;
 	doap:license <http://opensource.org/licenses/isc-license> ;
 	doap:name "LV2 MIDI" ;
 	doap:shortdesc "A data type for raw MIDI." ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
+	doap:developer _:larsl ;
 	doap:release [
-		doap:revision "1.3" ;
-		doap:created "2011-11-04"
+		doap:revision "1.4" ;
+		doap:created "2011-11-14" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-midi-1.4.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Update packaging."
+			] , [
+				rdfs:label "Improve documentation."
+			]
+		]
+	] , [
+		doap:revision "1.2" ;
+		doap:created "2011-05-26" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-midi-1.2.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add build system for installation."
+			] , [
+				rdfs:label "Switch to ISC license."
+			]
+		]
+	] , [
+		doap:revision "1.0" ;
+		doap:created "2010-10-04" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-midi-1.0.tar.gz> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
-	doap:maintainer [
-		a foaf:Person ;
-		foaf:name "David Robillard" ;
-		foaf:homepage <http://drobilla.net/> ;
-		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
-	] ;
-	doap:developer [
-		a foaf:Person ;
-		foaf:name "Lars Luthman" ;
-		foaf:mbox <mailto:lars.luthman@gmail.com>
-	] ;
-    lv2:documentation """
+	lv2:documentation """
 <p>This extension defines a data type for a MIDI message, midi:MidiEvent, which
 is normalized for fast and convenient processing by plugins.  It is
 particularly useful as the payload of an <a
@@ -58,7 +93,7 @@ midi:MidiEvent
 	lv2:documentation """
 <p>A single raw MIDI message (i.e. a sequence of bytes).</p>
 
-<p>These is equivalent to a standard MIDI messages, except with the following
+<p>This is equivalent to a standard MIDI messages, except with the following
 restrictions to simplify handling:</p>
 <ul>
   <li>Running status is not allowed, every message must have its own status

@@ -170,13 +170,18 @@ for dir in ['ext', 'extensions']:
         date = None
         for r in model.triples([ext_node, doap.release, None]):
             revision = model.value(r[2], doap.revision, None)
-            if revision != ("%d.%d" % (minor, micro)):
-                print("warning: %s: doap:revision %s != %d.%d" % (
-                        bundle, revision, minor, micro))
-                continue
+            if revision == ("%d.%d" % (minor, micro)):
+                date = model.value(r[2], doap.created, None)
+                break
 
-            date = model.value(r[2], doap.created, None)
-            break
+        # Verify that this date is the latest
+        for r in model.triples([ext_node, doap.release, None]):
+            revision = model.value(r[2], doap.revision, None)
+            this_date = model.value(r[2], doap.created, None)
+            if this_date > date:
+                print "warning: revision %d.%d (%s) is not the latest release" % (
+                    minor, micro, date)
+                break
         
         # Get short description
         shortdesc = model.value(ext_node, doap.shortdesc, None)
