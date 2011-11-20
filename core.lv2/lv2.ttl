@@ -426,6 +426,7 @@ function. The index uniqely identifies the port on an instance of the plugin.
 """ .
 
 lv2:symbol a rdf:Property , owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
     rdfs:label "symbol" ;
     rdfs:comment """
 A short name used as a machine and human readable identifier.
@@ -440,6 +441,7 @@ change the plugin URI if a port symbol is changed or removed).
 
 lv2:name a rdf:Property , owl:DatatypeProperty ;
     rdfs:domain lv2:Port ;
+    rdfs:range xsd:string ;
     rdfs:label "name" ;
     rdfs:comment """
 A display name for labeling the Port in a user interface.
