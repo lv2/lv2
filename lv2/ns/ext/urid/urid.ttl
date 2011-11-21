@@ -40,7 +40,7 @@ _:gabrbedd
 	doap:shortdesc "Features for mapping URIs to and from integers." ;
 	doap:release [
 		doap:revision "1.0" ;
-		doap:created "2011-11-20" ;
+		doap:created "2011-11-21" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [

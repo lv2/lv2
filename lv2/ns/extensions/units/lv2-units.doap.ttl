@@ -25,7 +25,7 @@
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:release [
 		doap:revision "5.4" ;
-		doap:created "2011-11-20" ;
+		doap:created "2011-11-21" ;
         doap:file-release <http://lv2plug.in/spec/lv2-units-5.4.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [

@@ -92,15 +92,15 @@ dman:DynManifest
 		a owl:Restriction ;
 		owl:onProperty lv2:binary ;
 		owl:minCardinality 1 ;
-		rdfs:comment """A DynManifest has at least 1 lv2:binary.
-The binary must be a library with at least the functions described in
-lv2_dyn_manifest.h implemented.
+		rdfs:comment """
+A DynManifest MUST have at least 1 lv2:binary, which MUST implement all the
+functions defined in dynmanifest.h.
 """
 	] ;
 	rdfs:comment """
 The class which represents a dynamic manifest generator.
 
-There MUST NOT be any instances of :DynManifest in the generated manifest.
+There MUST NOT be any instances of dman:DynManifest in the generated manifest.
 
 All relative URIs in the generated data MUST be relative to the base path
 that would be used to parse a normal LV2 manifest (the bundle path).

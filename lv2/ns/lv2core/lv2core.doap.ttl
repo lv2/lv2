@@ -26,7 +26,7 @@
 	doap:programming-language "C" ;
 	doap:release [
 		doap:revision "6.0" ;
-		doap:created "2011-11-20" ;
+		doap:created "2011-11-21" ;
 		doap:file-release <http://lv2plug.in/spec/lv2core-6.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
