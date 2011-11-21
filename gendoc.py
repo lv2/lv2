@@ -21,19 +21,19 @@ except:
 shutil.copytree('lv2/ns', 'build/ns',
                 ignore=shutil.ignore_patterns('.*', 'waf', 'wscript', '*.in'))
 
-# Copy stylesheet to build directory
 try:
     os.mkdir('build/aux')
 except:
     pass
 
+# Copy stylesheet to build directory
 shutil.copy('lv2specgen/style.css', 'build/aux/style.css')
 
 URIPREFIX  = 'http://lv2plug.in/ns/'
 DOXPREFIX  = 'ns/doc/html/'
 SPECGENDIR = os.path.abspath('lv2specgen')
 STYLEPATH  = os.path.abspath('build/aux/style.css')
-TAGFILE    = os.path.abspath('doclinks')
+TAGFILE    = os.path.abspath('build/doclinks')
 BUILDDIR   = os.path.abspath('build')
 
 doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
@@ -43,9 +43,14 @@ rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
 devnull = open(os.devnull, 'w')
 
+# Enter build directory
+print("Entering directory `%s'\n" % os.path.abspath('build'))
+oldcwd = os.getcwd()
+os.chdir('build')
+
 # Generate code (headers) documentation
 print('## Generating header documentation with doxygen ##')
-subprocess.call('doxygen', stdout=devnull)
+subprocess.call(['doxygen', '../Doxyfile'], stdout=devnull)
 
 def rescue_tags(in_path, out_path):
     "Rescue Doxygen tag file from XML hell."
@@ -95,10 +100,6 @@ def subst_file(template, output, dict):
         o.write(line)
     i.close()
     o.close()
-
-print("Entering directory `%s'" % os.path.abspath('build'))
-oldcwd = os.getcwd()
-os.chdir('build')
 
 extensions = []
 
@@ -225,7 +226,7 @@ subst_file('../lv2/ns/index.html.in', 'ns/index.html',
            { '@ROWS@': index_rows,
              '@TIME@': datetime.datetime.utcnow().strftime('%F %H:%M UTC') })
            
-print("\nLeaving directory `%s'" % os.path.abspath('build'))
+print("\nLeaving directory `%s'" % os.getcwd())
 os.chdir(oldcwd)
 
 devnull.close()
