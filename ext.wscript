@@ -73,9 +73,12 @@ def should_build(ctx):
 
 def configure(conf):
     conf.env['EXPERIMENTAL'] = Options.options.experimental
-
     if not should_build(conf):
         return
+
+    if not hasattr(os.path, 'relpath') and not Options.options.copy_headers:
+        conf.fatal(
+            'os.path.relpath missing, get Python 2.6 or use --copy-headers')
 
     autowaf.configure(conf)
     autowaf.display_header('LV2 %s Configuration' % info.NAME)

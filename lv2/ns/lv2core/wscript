@@ -27,6 +27,10 @@ def options(opt):
                    help='Copy headers instead of linking to bundle')
 
 def configure(conf):
+    if not hasattr(os.path, 'relpath') and not Options.options.copy_headers:
+        conf.fatal(
+            'os.path.relpath missing, get Python 2.6 or use --copy-headers')
+
     conf.load('compiler_c')
     autowaf.configure(conf)
 
