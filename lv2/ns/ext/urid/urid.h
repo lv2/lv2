@@ -23,7 +23,9 @@
 #ifndef LV2_URID_H
 #define LV2_URID_H
 
-#define LV2_URID_URI "http://lv2plug.in/ns/ext/urid"
+#define LV2_URID_URI       "http://lv2plug.in/ns/ext/urid"
+#define LV2_URID_MAP_URI   LV2_URID_URI "#map"
+#define LV2_URID_UNMAP_URI LV2_URID_URI "#unmap"
 
 #include <stdint.h>
 

@@ -26,8 +26,8 @@
 	doap:name "LV2 URID" ;
 	doap:shortdesc "Features for mapping URIs to and from integers." ;
 	doap:release [
-		doap:revision "0.2" ;
-		doap:created "2011-01-04"
+		doap:revision "1.0" ;
+		doap:created "2011-11-20"
 	] ;
 	doap:developer [
 		a foaf:Person ;
@@ -42,18 +42,18 @@ URIs in real time).  Typically, plugins map URIs to integers for things they
 thread without doing any string comparison.  This allows for the extensibility
 of RDF but with the performance of integers.</p>
 
-<p>This extension is intended as an improved and simpler replacement for the <a
-href="http://lv2plug.in/ns/ext/uri-map">uri-map</a> extension, since the
-<q>map</q> context parameter has been found problematic.</p>
+<p>This extension is intended as an improved and simplified replacement for the
+<a href="http://lv2plug.in/ns/ext/uri-map">uri-map</a> extension, since the
+<q>map</q> context parameter has been found problematic.  New implementations
+are strongly encouraged to use this extension for URI mapping.</p>
 """ .
 
 urid:map
 	a lv2:Feature ;
 	lv2:documentation """
 <p>A feature which is used to map URIs to integers.  To support this feature,
-the host must pass an LV2_Feature to LV2_Descriptor::instantiate() with
-<em>URI</em> <q>http://lv2plug.in/ns/ext/urid#map</q> and <em>data</em> pointed
-to an instance of LV2_URID_Map.</p>
+the host must pass an LV2_Feature to LV2_Descriptor::instantiate() with URI
+LV2_URID_MAP_URI and data pointed to an instance of LV2_URID_Map.</p>
 """ .
 
 urid:unmap
@@ -61,7 +61,6 @@ urid:unmap
 	lv2:documentation """
 <p>A feature which is used to unmap URIs previously mapped to integers by
 urid:map.  To support this feature, the host must pass an LV2_Feature to
-LV2_Descriptor::instantiate() with <em>URI</em>
-<q>http://lv2plug.in/ns/ext/urid#unmap</q> and <em>data</em> pointed to an
-instance of LV2_URID_Unmap.</p>
+LV2_Descriptor::instantiate() with URI LV2_URID_UNMAP_URI and data pointed to
+an instance of LV2_URID_Unmap.</p>
 """ .
