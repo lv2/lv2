@@ -13,34 +13,69 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix doap:  <http://usefulinc.com/ns/doap#> .
-@prefix ev:    <http://lv2plug.in/ns/ext/event#> .
-@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix lv2ev: <http://lv2plug.in/ns/ext/event#> .
-@prefix owl:   <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcs:  <http://ontologi.es/doap-changeset#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix ev:   <http://lv2plug.in/ns/ext/event#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:homepage <http://drobilla.net/> ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
+_:larsl
+	a foaf:Person ;
+	foaf:name "Lars Luthman" .
 
 <http://lv2plug.in/ns/ext/event>
 	a lv2:Specification ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Event" ;
-    doap:shortdesc "A port-based real-time generic event interface." ;
+	doap:shortdesc "A port-based real-time generic event interface." ;
 	rdfs:seeAlso <event-helpers.h> ;
 	doap:release [
 		doap:revision "1.4" ;
-		doap:created "2011-11-20"
-	] ;
-	doap:maintainer [
-		a foaf:Person ;
-		foaf:name "David Robillard" ;
-		foaf:homepage <http://drobilla.net/> ;
-		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
+		doap:created "2011-11-20" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-event-1.4.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Update packaging."
+			]
+		]
 	] , [
-		a foaf:Person ;
-		foaf:name "Lars Luthman" ;
+		doap:revision "1.2" ;
+		doap:created "2011-05-26" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-event-1.2.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add build system (for installation)."
+			] , [
+				rdfs:label "Convert documentation to HTML and use lv2:documentation."
+			] , [
+				rdfs:label "Use lv2:Specification to be discovered as an extension."
+			]
+		]
+	] , [
+		doap:revision "1.0" ;
+		doap:created "2010-11-24" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-event-1.0.tar.gz> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
+	doap:developer <http://drobilla.net/drobilla#me> ,
+		_:larsl ;
 	lv2:documentation """
 <p>This extension defines a generic time-stamped event port type, which can be
 used to create plugins that read and write real-time events, such as MIDI,
@@ -58,23 +93,24 @@ a port is defined in the data file for a plugin, for example:</p>
 </pre>
 """ .
 
-ev:EventPort a rdfs:Class ;
-	rdfs:label      "Event port" ;
+ev:EventPort
+	a rdfs:Class ;
+	rdfs:label "Event port" ;
 	rdfs:subClassOf lv2:Port ;
-	rdfs:comment    """
+	rdfs:comment """
 Ports of this type will be connected to a struct of type LV2_Event_Buffer,
 defined in event.h.  These ports contain a sequence of generic events
 (possibly several types mixed in a single stream), the specific types of
 which are defined by some URI in another LV2 extension.
 """ .
 
-
-ev:Event a rdfs:Class ;
-	rdfs:label      "LV2 event" ;
-	rdfs:comment    """
+ev:Event
+	a rdfs:Class ;
+	rdfs:label "LV2 event" ;
+	rdfs:comment """
 A single generic time-stamped event.
 
-An lv2ev:EventPort contains an LV2_Event_Buffer which contains a sequence
+An ev:EventPort contains an LV2_Event_Buffer which contains a sequence
 of these events.  The binary format of LV2 events is defined by the
 LV2_Event struct in event.h.
 
@@ -82,28 +118,28 @@ Specific event types (e.g. MIDI, OSC) are defined by extensions, and should
 be rdfs:subClassOf this class.
 """ .
 
-
-ev:TimeStamp a rdfs:Class ;
-	rdfs:label      "LV2 event time stamp" ;
-	rdfs:comment    """
+ev:TimeStamp
+	a rdfs:Class ;
+	rdfs:label "LV2 event time stamp" ;
+	rdfs:comment """
 The time stamp of an Event.
 
 This defines the meaning of the 'frames' and 'subframes' fields of an
 LV2_Event (both unsigned 32-bit integers).
 """ .
 
-
-ev:FrameStamp a rdfs:Class ;
+ev:FrameStamp
+	a rdfs:Class ;
 	rdfs:subClassOf ev:TimeStamp ;
-	rdfs:label      "Audio frame time stamp" ;
-	rdfs:comment    """
+	rdfs:label "Audio frame time stamp" ;
+	rdfs:comment """
 The default time stamp unit for an LV2 event: the frames field represents
 audio frames (in the sample rate passed to intantiate), and the subframes
 field is 1/UINT32_MAX of a frame.
 """ .
 
-
-ev:generic a lv2:PortProperty ;
+ev:generic
+	a lv2:PortProperty ;
 	rdfs:label "Generic event port" ;
 	rdfs:comment """
 Indicates that this port does something meaningful for any event type
@@ -114,11 +150,11 @@ listed with :supportsEvent.  Note that plugins must gracefully handle unknown
 event types whether or not this property is present.
 """ .
 
-
-ev:supportsEvent a rdf:Property ;
-	rdfs:domain  lv2:Port ;
-	rdfs:range   ev:Event ;
-	rdfs:label   "Supports event type" ;
+ev:supportsEvent
+	a rdf:Property ;
+	rdfs:domain lv2:Port ;
+	rdfs:range ev:Event ;
+	rdfs:label "Supports event type" ;
 	rdfs:comment """
 Indicates that this port supports or "understands" a certain event type.
 For input ports, this means the plugin understands and does something useful
@@ -132,14 +168,14 @@ event types the plugin understands/generates so hosts can discover plugins
 appropriate for a given scenario (e.g. plugins with a MIDI input).
 Hosts are not expected to consider event ports suitable for some type of
 event if the relevant :supportsEvent property is not set, unless the
-lv2ev:generic property for that port is also set.
+ev:generic property for that port is also set.
 """ .
 
-
-ev:inheritsEvent a rdf:Property ;
-	rdfs:domain  lv2:Port ;
-	rdfs:range   lv2:Port ;
-	rdfs:label   "Inherits event type" ;
+ev:inheritsEvent
+	a rdf:Property ;
+	rdfs:domain lv2:Port ;
+	rdfs:range lv2:Port ;
+	rdfs:label "Inherits event type" ;
 	rdfs:comment """
 Indicates that this output port might pass through events that arrived at some
 other input port (or generate an event of the same type as events arriving at
@@ -147,22 +183,22 @@ that input).  The host must always check the stamp type of all outputs when
 connecting an input, but this property should be set whenever it applies.
 """ .
 
-
-ev:supportsTimeStamp a rdf:Property ;
-	rdfs:domain  lv2:Port ;
-	rdfs:range   ev:TimeStamp ;
-	rdfs:label   "Supports time stamp type" ;
+ev:supportsTimeStamp
+	a rdf:Property ;
+	rdfs:domain lv2:Port ;
+	rdfs:range ev:TimeStamp ;
+	rdfs:label "Supports time stamp type" ;
 	rdfs:comment """
 Indicates that this port supports or "understands" a certain time stamp type.
 Meaningful only for input ports, the host must never connect a port to an
 event buffer with a time stamp type that isn't supported by the port.
 """ .
 
-
-ev:generatesTimeStamp a rdf:Property ;
-	rdfs:domain  lv2:Port ;
-	rdfs:range   ev:TimeStamp ;
-	rdfs:label   "Outputs time stamp type" ;
+ev:generatesTimeStamp
+	a rdf:Property ;
+	rdfs:domain lv2:Port ;
+	rdfs:range ev:TimeStamp ;
+	rdfs:label "Outputs time stamp type" ;
 	rdfs:comment """
 Indicates that this port may output a certain time stamp type, regardless of
 the time stamp type of any input ports.  If the port outputs stamps based on
@@ -175,15 +211,14 @@ stamp_type_changed function provided by the host in the LV2_Event_Feature
 struct, if it is non-NULL.
 """ .
 
-
-ev:inheritsTimeStamp a rdf:Property ;
-	rdfs:domain  lv2:Port ;
-	rdfs:range   lv2:Port ;
-	rdfs:label   "Inherits time stamp type" ;
+ev:inheritsTimeStamp
+	a rdf:Property ;
+	rdfs:domain lv2:Port ;
+	rdfs:range lv2:Port ;
+	rdfs:label "Inherits time stamp type" ;
 	rdfs:comment """
 Indicates that this port follows the time stamp type of an input port.
 This property is not necessary, but it should be set for outputs that
 base their output type on an input port so the host can make more sense
 of the plugin and provide a more sensible interface.
 """ .
-
