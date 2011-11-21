@@ -234,10 +234,9 @@ atom:Thing
 	rdfs:label "Thing" ;
 	atom:cType "LV2_Thing" ;
 	lv2:documentation """
-<p>Abstract base class for a "Thing", i.e. an atom:Atom with a
-number of <a href="#Property">properties</a>.  An LV2_Object is an unsigned
-32-bit integer <code>context</code> and <code>id</code> followed by a sequence
-of LV2_Atom_Property .</p>
+<p>Abstract base class for a "Thing", i.e. an atom:Atom with a number of
+properties.  An LV2_Object is an unsigned 32-bit integer <code>context</code>
+and <code>id</code> followed by a sequence of LV2_Atom_Property .</p>
 
 <p>The <code>context</code> is mapped using the <a
 href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's
@@ -268,7 +267,7 @@ atom:Blank
 <p>An atom:Thing where <code>id</code> is the blank node ID of the object,
 which is only meaningful within a certain limited scope (e.g. the container of
 the Blank) and MUST NOT be used as a global ID.  In particular, <code>id</code>
-is NOT an <a href="ID">ID</a>.</p>
+is NOT a URID.</p>
 """ .
 
 atom:Message
