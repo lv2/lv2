@@ -14,61 +14,16 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix doap:  <http://usefulinc.com/ns/doap#> .
-@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcs:   <http://ontologi.es/doap-changeset#> .
-
-<http://plugin.org.uk/swh.xrdf#me>
-    a foaf:Person ;
-    foaf:name "Steve Harris" ;
-    foaf:homepage <http://plugin.org.uk/> ;
-    rdfs:seeAlso <http://plugin.org.uk/swh.xrdf> .
-
-<http://drobilla.net/drobilla#me>
-    a foaf:Person ;
-    foaf:name "David Robillard" ;
-    foaf:homepage <http://drobilla.net/> ;
-    foaf:mbox <mailto:d@drobilla.net> ;
-    rdfs:seeAlso <http://drobilla.net/drobilla> .
 
 <http://lv2plug.in/ns/extensions/units>
-    a lv2:Specification ;
-    doap:name "LV2 Units" ;
-    doap:shortdesc "Units for LV2 values." ;
-    doap:created "2007-02-06" ;
-    doap:homepage <http://lv2plug.in/ns/extensions/units> ;
-    doap:license <http://opensource.org/licenses/isc> ;
-    doap:release [
-        doap:revision "5.4" ;
-        doap:created "2011-11-20" ;
-        dcs:blame <http://drobilla.net/drobilla#me> ;
-        dcs:changeset [
-            dcs:item [
-                rdfs:label "Define used but undefined resources (units:name, units:render, units:symbol, units:Conversion, units:conversion, units:prefixConversion, units:to, and units:factor)."
-            ] , [
-				rdfs:label "Update packaging."
-			] , [
-				rdfs:label "Improve documentation."
-			]
-        ]
-    ] ;
-    doap:maintainer [
-        a foaf:Person ;
-        rdfs:seeAlso <http://plugin.org.uk/swh.xrdf> ;
-        foaf:homepage <http://plugin.org.uk/> ;
-        foaf:mbox_sha1sum "44bc4fed584a2d1ac8fc55206db67656165d67fd" ;
-        foaf:name "Steve Harris"
-    ], [
-        a foaf:Person ;
-        rdfs:seeAlso <http://drobilla.net/drobilla.rdf> ;
-        foaf:homepage <http://drobilla.net/> ;
-        foaf:name "David Robillard"
-    ] ;
+    a owl:Ontology ;
+    owl:imports <file:///home/drobilla/src/lv2/trunk/lv2/ns/lv2core/lv2core.ttl> ;
     lv2:documentation """
 <p>This extension defines a number of units for use in audio processing.</p>
 
@@ -111,45 +66,45 @@ unit to a desired unit.  The units defined in this extension include conversion
 definitions where it makes sense to do so.</p>
 """ .
 
-units:Unit a rdfs:Class ;
+units:Unit a rdfs:Class , owl:Class ;
     rdfs:comment "A unit for LV2 port data" .
 
 units:unit
-    a rdf:Property ;
+    a rdf:Property , owl:ObjectProperty ;
     rdfs:domain lv2:Port ;
     rdfs:range units:Unit ;
     rdfs:comment "Relates a port to the unit of its data" .
 
 units:name
-    a rdf:Property ;
+    a rdf:Property , owl:DatatypeProperty ;
     rdfs:domain units:Unit ;
     rdfs:range xsd:string ;
     rdfs:comment "A display name for the unit (e.g. decibels)." .
 
 units:render
-    a rdf:Property ;
+    a rdf:Property , owl:DatatypeProperty ;
     rdfs:domain units:Unit ;
     rdfs:range xsd:string ;
     rdfs:comment "A printf format string for rendering a value (eg. \"%f dB\")." .
 
 units:symbol
-    a rdf:Property ;
+    a rdf:Property , owl:DatatypeProperty ;
     rdfs:domain units:Unit ;
     rdfs:range xsd:string ;
     rdfs:comment "The abbreviated symbol for the unit (e.g. dB)." .
 
 units:Conversion
-    a rdfs:Class ;
+    a rdfs:Class , owl:Class ;
     rdfs:comment "A conversion from one unit to another." .
 
 units:conversion
-    a rdf:Property ;
+    a rdf:Property , owl:ObjectProperty ;
     rdfs:domain units:Unit ;
     rdfs:range units:Conversion ;
     rdfs:comment "A conversion from this unit to another." .
 
 units:prefixConversion
-    a rdf:Property ;
+    a rdf:Property , owl:ObjectProperty ;
     rdfs:subPropertyOf units:conversion ;
     rdfs:domain units:Unit ;
     rdfs:range units:Conversion ;
@@ -159,15 +114,14 @@ A conversion from this unit to the same unit but with a different SI prefix
 """ .
 
 units:to
-    a rdf:Property ;
+    a rdf:Property , owl:ObjectProperty ;
     rdfs:domain units:Conversion ;
     rdfs:range units:Unit ;
     rdfs:comment "The target unit this conversion converts to." .
 
 units:factor
-    a rdf:Property ;
+    a rdf:Property , owl:DatatypeProperty ;
     rdfs:domain units:Conversion ;
-    rdfs:range units:Unit ;
     rdfs:comment """
 The factor to multiple the source value by in order to convert
 to the target unit.

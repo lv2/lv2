@@ -5,5 +5,5 @@
 	a lv2:Specification ;
 	lv2:minorVersion 5 ;
 	lv2:microVersion 4 ;
-	rdfs:seeAlso <units.ttl> .
+	rdfs:seeAlso <units.ttl> , <lv2-units.doap.ttl> .
 
