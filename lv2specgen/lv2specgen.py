@@ -57,7 +57,7 @@ try:
     import pygments.lexers
     import pygments.formatters
     from pygments.lexer import RegexLexer, include, bygroups
-    from pygments.token import Text, Comment, Operator, Keyword, Name, String, Literal
+    from pygments.token import Text, Comment, Operator, Keyword, Name, String, Literal, Punctuation
     have_pygments = True
 except ImportError:
     print("Error importing pygments, syntax highlighting disabled")
@@ -212,10 +212,12 @@ if have_pygments:
                 (r'\s*<[^> ]*>', Name.Attribute),
                 (r'\s*("""(?:.|\n)*?""")(\@[a-z]{2-4}|\^\^<?[a-zA-Z0-9\-\:_#/\.]*>?)?\s*', bygroups(Literal.String,Text)),
                 (r'\s*".*?[^\\]"(?:\@[a-z]{2-4}|\^\^<?[a-zA-Z0-9\-\:_#/\.]*>?)?\s*', Literal.String),
+                (r'\s*[0-9]+\.[0-9]*\s*\n?', Literal.Number),
+                (r'\s*[0-9]+\s*\n?', Literal.Number),
                 (r'\s*[a-zA-Z0-9\-_\:]\s*', Name.Attribute),
                 (r'\s*\(', Text, 'objList'),
-                (r'\s*;\s*\n?', Text, '#pop'),
-                (r'\s*,\s*\n?', Text, '#pop'),  # Added by drobilla so "," is not an error
+                (r'\s*;\s*\n?', Punctuation, '#pop'),
+                (r'\s*,\s*\n?', Punctuation),  # Added by drobilla so "," is not an error
                 (r'(?=\s*\])', Text, '#pop'),            
                 (r'(?=\s*\.)', Text, '#pop'),           
             ],
