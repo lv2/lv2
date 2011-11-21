@@ -26,7 +26,7 @@
 	a lv2:Specification ;
     doap:name "LV2 Files" ;
     doap:shortdesc "A standard for referring to files in plugin state." ;
-    doap:license <http://opensource.org/licenses/isc-license> ;
+    doap:license <http://opensource.org/licenses/isc> ;
     doap:release [
         doap:revision "0.2" ;
         doap:created "2011-04-05"

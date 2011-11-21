@@ -38,7 +38,7 @@ _:larsl
 	a lv2:Specification ,
 		lv2:Feature ;
 	owl:deprecated true ;
-	doap:license <http://opensource.org/licenses/isc-license> ;
+	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 URI Map" ;
 	doap:shortdesc "A feature for mapping URIs to integers." ;
 	doap:release [

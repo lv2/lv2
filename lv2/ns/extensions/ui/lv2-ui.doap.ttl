@@ -12,7 +12,7 @@
 
 <http://lv2plug.in/ns/extensions/ui>
 	a doap:Project ;
-	doap:license <http://opensource.org/licenses/isc-license> ;
+	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 UI" ;
 	doap:shortdesc "Generic UI interface for LV2 plugins." ;
 	doap:developer [

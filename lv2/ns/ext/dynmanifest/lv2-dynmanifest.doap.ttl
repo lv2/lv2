@@ -12,7 +12,7 @@
 
 <http://lv2plug.in/ns/ext/dynmanifest>
 	a doap:Project ;
-	doap:license <http://opensource.org/licenses/isc-license> ;
+	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Dynamic Manifest" ;
 	doap:homepage <http://naspro.atheme.org> ;
 	doap:created "2009-06-13" ;

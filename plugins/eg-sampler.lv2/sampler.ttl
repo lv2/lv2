@@ -24,7 +24,7 @@
 <http://lv2plug.in/plugins/eg-sampler>
 	a lv2:Plugin ;
 	doap:name "Example Sampler" ;
-	doap:license <http://opensource.org/licenses/isc-license> ;
+	doap:license <http://opensource.org/licenses/isc> ;
 	lv2:requiredFeature <http://lv2plug.in/ns/ext/urid#Mapper> ;
 	lv2:optionalFeature lv2:hardRtCapable ;
 	lv2:extensionData <http://lv2plug.in/ns/ext/state#Interface> ;
