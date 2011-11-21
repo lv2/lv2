@@ -35,9 +35,13 @@
 			] , [
 				rdfs:label "Add lv2:extensionData and lv2:ExtensionData for plugins to indicate that they support some URI for extension_data()."
 			] , [
-				rdfs:label "Remove lv2config in favour of the convention that extension bundles simply install headers to standard URI-like include paths."
+				rdfs:label "Remove lv2config in favour of the simple convention that specifications install headers to standard URI-based paths."
 			] , [
-				rdfs:label "Switch to simple BSD-style (ISC) license (with permission of all contributors to lv2.h and its ancestor, ladspa.h)."
+				rdfs:label "Switch to the ISC license, a simple BSD-style license (with permission of all contributors to lv2.h and its ancestor, ladspa.h)."
+			] , [
+				rdfs:label "Make lv2core.ttl a valid OWL 2 DL ontology."
+			] , [
+				rdfs:label "Improve documentation."
 			]
 		]
 	] , [
