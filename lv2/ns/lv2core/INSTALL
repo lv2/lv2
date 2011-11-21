@@ -1,40 +1,41 @@
 This software requires only Python to build. The build system, based on waf,
 is included in this source distribution.
 
-= LV2Core =
+
+LV2Core
+=======
 
 This package contains everything necessary to compile against and/or use LV2
 plugins and extensions: a header file, pkg-config file, and LV2 bundle (with
 Turtle files).
 
-The configure option --bundle-only can be used to install only the bundle. This
-is useful for installing the bundle to a project-specific or user-specific
-location (e.g. ~/.lv2).
+The configure option --bundle-only can be used to install only the lv2core.lv2
+bundle.  This is useful for installing the bundle to a project-specific or
+user-specific location (e.g. ~/.lv2).
 
 See README for details on how to correctly package LV2, and how to depend on
 LV2 in other projects.
 
-= Generic Waf Instructions =
+
+Generic Waf Instructions
+========================
 
 As with most build systems, building and installing a project with waf is done
 in three separate stages:
 
-Configure: ./waf configure [OPTIONS]
-     e.g.: ./waf configure --prefix=/some/where
+ 1. ./waf configure [OPTIONS]
+ 2. ./waf build
+ 3. ./waf install
 
-  The default prefix is /usr/local
+The default command is build.  For example:
 
+    ./waf configure --prefix=/some/where
+    ./waf -j2
+    sudo ./waf install
 
-Build: ./waf [OPTIONS]
- e.g.: ./waf
+The environment variable DESTDIR can be used to add a prefix to all install
+paths (useful for packaging), for example:
 
-
-Install: ./waf install [OPTIONS]
-   e.g.: ./waf install
-   e.g.:  DESTDIR=/home/drobilla/packages ./waf install
-
-  The environment variable DESTDIR can be used to add any prefix to
-  the install paths (useful for packaging).
-
+    DESTDIR=./lv2core.pkg ./waf install
   
 Run './waf --help' for detailed option information.
