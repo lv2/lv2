@@ -105,12 +105,20 @@ defined here for use by other extensions.  For simply assigning groups
 and roles to a basic LV2 plugin, index is irrelevant.
 """ .
 
-pg:hasChannel a rdf:Property ;
+pg:hasRole a rdf:Property ;
 	rdfs:domain  pg:Group ;
-	rdfs:range   pg:Channel ;
+	rdfs:range   pg:Role ;
 	rdfs:label   "Has port with role" ;
 	rdfs:comment """
 Indicates that a group always has a port with a particular role.
+""" .
+
+pg:mayHaveRole a rdf:Property ;
+	rdfs:domain  pg:Group ;
+	rdfs:range   pg:Role ;
+	rdfs:label   "May have port with role" ;
+	rdfs:comment """
+Indicates that a group may have a port with a particular role.
 """ .
 
 pg:sideChainOf a rdf:Property ;
@@ -180,7 +188,6 @@ to that group.  Otherwise the role is relevant with respect to the plugin.
 """ .
 
 pg:role a rdf:Property ;
-	rdfs:domain  pg:Port , pg:RoleAssignment;
 	rdfs:range   pg:Role ;
 	rdfs:label   "Role" ;
 	rdfs:comment """
@@ -295,8 +302,8 @@ pg:SevenPointOneWideGroup a rdfs:Class ;
 	pg:hasRole [ pg:index 2; pg:role pg:centerChannel ] ;
 	pg:hasRole [ pg:index 3; pg:role pg:centerRightChannel ] ;
 	pg:hasRole [ pg:index 4; pg:role pg:rightChannel ] ;
-	pg:hasRole [ pg:index 5; pg:role pg:leftRearChannel ] ;
-	pg:hasRole [ pg:index 6; pg:role pg:rightRearChannel ] ;
+	pg:hasRole [ pg:index 5; pg:role pg:rearLeftChannel ] ;
+	pg:hasRole [ pg:index 6; pg:role pg:rearRightChannel ] ;
 	pg:hasRole [ pg:index 7; pg:role pg:lfeChannel ] .
 
 
@@ -461,30 +468,30 @@ pg:waveform           a pg:Role ; rdfs:label "Waveform" .
 pg:EnvelopeControlGroup a rdfs:Class ;
 	rdfs:subClassOf pg:ControlGroup ;
 	rdfs:label "Controls for a DAHDSR envelope." ;
-	pg:mayHavePort pg:delay ;
-	pg:mayHavePort pg:attack ;
-	pg:mayHavePort pg:hold ;
-	pg:mayHavePort pg:decay ;
-	pg:mayHavePort pg:sustain ;
-	pg:mayHavePort pg:release .
+	pg:mayHaveRole pg:delay ;
+	pg:mayHaveRole pg:attack ;
+	pg:mayHaveRole pg:hold ;
+	pg:mayHaveRole pg:decay ;
+	pg:mayHaveRole pg:sustain ;
+	pg:mayHaveRole pg:release .
 
 pg:OscillatorControlGroup a rdfs:Class ;
 	rdfs:subClassOf pg:ControlGroup ;
 	rdfs:label "Controls for an oscillator." ;
-	pg:mayHavePort pg:frequency ;
-	pg:mayHavePort pg:amplitude ;
-	pg:mayHavePort pg:waveform ;
-	pg:mayHavePort pg:pulseWidth .
+	pg:mayHaveRole pg:frequency ;
+	pg:mayHaveRole pg:amplitude ;
+	pg:mayHaveRole pg:waveform ;
+	pg:mayHaveRole pg:pulseWidth .
 
 pg:FilterControlGroup a rdfs:Class ;
 	rdfs:subClassOf pg:ControlGroup ;
 	rdfs:label "Controls for a filter." ;
-	pg:mayHavePort pg:cutoffFrequency ;
-	pg:mayHavePort pg:resonance .
+	pg:mayHaveRole pg:cutoffFrequency ;
+	pg:mayHaveRole pg:resonance .
 
 pg:CompressorControlGroup a rdfs:Class ;
 	rdfs:subClassOf pg:ControlGroup ;
 	rdfs:label "Controls for a compressor." ;
-	pg:mayHavePort pg:threshold ;
-	pg:mayHavePort pg:ratio .
+	pg:mayHaveRole pg:threshold ;
+	pg:mayHaveRole pg:ratio .
 
