@@ -59,8 +59,43 @@
 			]
 		]
 	] ;
-	rdfs:comment """
-Defines presets (e.g. named sets of control values) for LV2 plugins.
+	lv2:documentation """
+<p>This extension describes a format for presets (i.e. named sets of control
+values) for LV2 plugins.  The structure of pset:Preset is deliberately very
+similar to the description of a plugin and can be thought of as a plugin
+<q>overlay</q>.  For example:</p>
+
+<pre class="turtle-code">
+@prefix eg: &lt;http://example.org/&gt; .
+
+eg:mypreset
+    a pset:Preset ;
+    rdfs:label "One louder" ;
+    pset:appliesTo eg:myplugin ;
+    lv2:port [
+        lv2:symbol "volume1" ;
+        pset:value 11
+    ] , [
+        lv2:symbol "volume2" ;
+        pset:value 11.0
+    ] .
+</pre>
+
+<p>Presets may be defined in any bundles, including the plugin's bundle,
+separate third party preset bundles, or user-created preset bundles created by
+hosts.  The manifest.ttl of a bundle containing presets should list the
+presets like so:</p>
+
+<pre class="turtle-code">
+eg:mypreset
+    a              pset:Preset ;
+    pset:appliesTo eg:myplugin ;
+    rdfs:seeAlso   &lt;mypreset.ttl&gt; .
+</pre>
+
+<p>This extension does not define a dynamic mechanism for changing plugin
+presets for plugins that require such a facility, but may be extended to do
+so.</p>
 """ .
 
 pset:Preset
