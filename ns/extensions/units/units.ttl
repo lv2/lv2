@@ -20,6 +20,21 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcs:   <http://ontologi.es/doap-changeset#> .
+
+<http://plugin.org.uk/swh.xrdf#me>
+    a foaf:Person ;
+    foaf:name "Steve Harris" ;
+    foaf:homepage <http://plugin.org.uk/> ;
+    rdfs:seeAlso <http://plugin.org.uk/swh.xrdf> .
+
+<http://drobilla.net/drobilla#me>
+    a foaf:Person ;
+    foaf:name "David Robillard" ;
+    foaf:homepage <http://drobilla.net/> ;
+    foaf:mbox <mailto:d@drobilla.net> ;
+    rdfs:seeAlso <http://drobilla.net/drobilla> .
 
 <http://lv2plug.in/ns/extensions/units>
     a lv2:Specification ;
@@ -29,8 +44,18 @@
     doap:homepage <http://lv2plug.in/ns/extensions/units> ;
     doap:license <http://opensource.org/licenses/isc-license> ;
     doap:release [
-        doap:revision "5.2" ;
-        doap:created "2011-08-21"
+        doap:revision "5.4" ;
+        doap:created "2011-11-20" ;
+        dcs:blame <http://drobilla.net/drobilla#me> ;
+        dcs:changeset [
+            dcs:item [
+                rdfs:label "Define used but undefined resources (units:name, units:render, units:symbol, units:Conversion, units:conversion, units:prefixConversion, units:to, and units:factor)."
+            ] , [
+				rdfs:label "Update packaging."
+			] , [
+				rdfs:label "Improve documentation."
+			]
+        ]
     ] ;
     doap:maintainer [
         a foaf:Person ;
@@ -49,8 +74,8 @@
 
 <p>For example, to say that a gain port's value is in decibels (units:db)</p>
 <pre class="turtle-code">
-@prefix :   &lt;http://lv2plug.in/ns/extensions/units#&gt; .
-@prefix eg: &lt;http://example.org/&gt; .
+@prefix units: &lt;http://lv2plug.in/ns/extensions/units#&gt; .
+@prefix eg:    &lt;http://example.org/&gt; .
 
 eg:plugin lv2:port [
     a            lv2:ControlRateInputPort ;
@@ -58,7 +83,7 @@ eg:plugin lv2:port [
     lv2:index    0 ;
     lv2:symbol   "gain" ;
     lv2:name     "gain" ;
-    :unit        :db
+    units:unit   units:db
 ] .
 </pre>
 
@@ -80,20 +105,10 @@ eg:plugin lv2:port [
 ] .
 </pre>
 
-<p>Units are defined by a number of properties:</p>
-<dl>
-<dt>units:name</dt>
-<dd>A display name for the unit (eg. decibels)</dd>
-<dt>units:symbol</dt>
-<dd>The abbreviated symbol for the unit (eg. dB)</dd>
-<dt>units:render</dt>
-<dd>A printf(3) string to be used to render the numerical value (eg. \"%f dB\")</dd>
-<dt>units:conversion</dt>
-<dd>Defines a conversion into another unit, commonly the SI unit for the
-unit class (eg. units:conversion [ units:to units:m ; units:factor 1000 ]).
-conversions are expressed as either factors (multiplicand for the conversion)
-or offsets (addend for the conversion).</dd>
-</dl>
+<p>It is also possible to define conversions between various units, which makes
+it possible for hosts to automatically and generically convert from a given
+unit to a desired unit.  The units defined in this extension include conversion
+definitions where it makes sense to do so.</p>
 """ .
 
 units:Unit a rdfs:Class ;
@@ -104,6 +119,59 @@ units:unit
     rdfs:domain lv2:Port ;
     rdfs:range units:Unit ;
     rdfs:comment "Relates a port to the unit of its data" .
+
+units:name
+    a rdf:Property ;
+    rdfs:domain units:Unit ;
+    rdfs:range xsd:string ;
+    rdfs:comment "A display name for the unit (e.g. decibels)." .
+
+units:render
+    a rdf:Property ;
+    rdfs:domain units:Unit ;
+    rdfs:range xsd:string ;
+    rdfs:comment "A printf format string for rendering a value (eg. \"%f dB\")." .
+
+units:symbol
+    a rdf:Property ;
+    rdfs:domain units:Unit ;
+    rdfs:range xsd:string ;
+    rdfs:comment "The abbreviated symbol for the unit (e.g. dB)." .
+
+units:Conversion
+    a rdfs:Class ;
+    rdfs:comment "A conversion from one unit to another." .
+
+units:conversion
+    a rdf:Property ;
+    rdfs:domain units:Unit ;
+    rdfs:range units:Conversion ;
+    rdfs:comment "A conversion from this unit to another." .
+
+units:prefixConversion
+    a rdf:Property ;
+    rdfs:subPropertyOf units:conversion ;
+    rdfs:domain units:Unit ;
+    rdfs:range units:Conversion ;
+    rdfs:comment """
+A conversion from this unit to the same unit but with a different SI prefix
+(e.g. Hz to kHz).
+""" .
+
+units:to
+    a rdf:Property ;
+    rdfs:domain units:Conversion ;
+    rdfs:range units:Unit ;
+    rdfs:comment "The target unit this conversion converts to." .
+
+units:factor
+    a rdf:Property ;
+    rdfs:domain units:Conversion ;
+    rdfs:range units:Unit ;
+    rdfs:comment """
+The factor to multiple the source value by in order to convert
+to the target unit.
+""" .
 
 units:s a units:Unit ;
     units:conversion [
