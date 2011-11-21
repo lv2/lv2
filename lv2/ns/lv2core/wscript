@@ -3,6 +3,7 @@ import os
 
 from waflib.extras import autowaf as autowaf
 import waflib.Options as Options
+import waflib.Scripting as Scripting
 
 # Version of this package (even if built as a child)
 LV2CORE_VERSION = '4.1'
@@ -32,7 +33,7 @@ def configure(conf):
     autowaf.display_msg(conf, "LV2 bundle directory", conf.env['LV2DIR'])
     print('')
 
-def write_news(bld):
+def write_news(doap_file):
     import rdflib
     import textwrap
     from time import strftime, strptime
@@ -44,7 +45,13 @@ def write_news(bld):
     rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
     m = rdflib.ConjunctiveGraph()
-    m.parse('lv2-doap.ttl', format='n3')
+
+    try:
+        m.parse(doap_file, format='n3')
+    except:
+        print('warning: no DOAP file found, unable to generate NEWS')
+        return
+
     spec = m.value(None, rdf.type, doap.Project)
 
     entries = {}
@@ -100,3 +107,24 @@ def build(bld):
         else:
             bld.symlink_as(os.path.join(include_dir, 'lv2core'),
                            os.path.relpath(bundle_dir, include_dir))
+
+class Dist(Scripting.Dist):
+    fun = 'dist'
+    cmd = 'dist'
+
+    def archive(self):
+        # Write NEWS file
+        write_news('lv2core.doap.ttl')
+
+        # Build distribution
+        Scripting.Dist.archive(self)
+
+        # Delete generated NEWS file
+        os.remove('NEWS')
+
+class DistCheck(Dist, Scripting.DistCheck):
+    fun = 'distcheck'
+    cmd = 'distcheck'
+
+    def archive(self):
+        Dist.archive(self)
