@@ -134,8 +134,8 @@ def write_news():
     try:
         for i in glob.glob('*.ttl'):
             m.parse(i, format='n3')
-    except Exception as e:
-        print('warning: error parsing data, unable to generate NEWS ' + str(e))
+    except:
+        print('warning: error parsing data, unable to generate NEWS')
         return
 
     spec = m.value(None, rdf.type, doap.Project)
