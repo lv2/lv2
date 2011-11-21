@@ -23,7 +23,7 @@
 
 <http://lv2plug.in/ns/extensions/units>
     a owl:Ontology ;
-    owl:imports <file:///home/drobilla/src/lv2/trunk/lv2/ns/lv2core/lv2core.ttl> ;
+    owl:imports <http://lv2plug.in/ns/lv2core> ;
     lv2:documentation """
 <p>This extension defines a number of units for use in audio processing.</p>
 
