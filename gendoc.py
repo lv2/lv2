@@ -213,7 +213,7 @@ for root, dirs, files in os.walk('ns'):
     row += '</tr>'
     extensions.append(row)
 
-    subst_file('../doc/htaccess.in', outdir + '.htaccess',
+    subst_file('../doc/htaccess.in', outdir + '/.htaccess',
                { '@NAME@': b,
                  '@BASE@': '/ns/%s/%s' % (dir, b) })
 
