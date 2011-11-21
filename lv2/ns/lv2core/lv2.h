@@ -125,7 +125,7 @@ typedef struct _LV2_Descriptor {
 	 
 	   If the plugin has the feature lv2:hardRTCapable then there are various
 	   things that the plugin MUST NOT do within the connect_port() function;
-	   see lv2.ttl for details.
+	   see lv2core.ttl for details.
 
 	   connect_port() MUST be called at least once for each port before run()
 	   is called, unless that port is lv2:connectionOptional. The plugin must
@@ -186,7 +186,7 @@ typedef struct _LV2_Descriptor {
 	 
 	   If the plugin has the feature lv2:hardRTCapable then there are various
 	   things that the plugin MUST NOT do within the run() function (see
-	   lv2.ttl for details).
+	   lv2core.ttl for details).
 
 	   As a special case, when @c sample_count == 0, the plugin should update
 	   any output ports that represent a single instant in time (e.g. control

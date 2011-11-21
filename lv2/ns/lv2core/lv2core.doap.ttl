@@ -29,6 +29,8 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
+				rdfs:label "Rename core.lv2 and lv2.ttl to lv2core.lv2 and lv2core.ttl to adhere to modern conventions."
+			] , [
 				rdfs:label "Add lv2:extensionData and lv2:ExtensionData for plugins to indicate that they support some URI for extension_data()."
 			] , [
 				rdfs:label "Remove lv2config in favour of the convention that extension bundles simply install headers to standard URI-like include paths."
