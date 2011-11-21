@@ -1,7 +1,8 @@
 #!/usr/bin/env python
+import glob
 import os
-import sys
 import shutil
+import sys
 from waflib.extras import autowaf as autowaf
 import waflib.Scripting as Scripting
 import waflib.Logs as Logs
@@ -116,7 +117,7 @@ def build(bld):
         bld.symlink_as(os.path.join(include_dir, info.NAME),
                        os.path.relpath(bundle_dir, include_dir))
 
-def write_news(doap_file):
+def write_news():
     import rdflib
     import textwrap
     from time import strftime, strptime
@@ -130,9 +131,10 @@ def write_news(doap_file):
     m = rdflib.ConjunctiveGraph()
 
     try:
-        m.parse(doap_file, format='n3')
-    except:
-        print('warning: no DOAP file found, unable to generate NEWS')
+        for i in glob.glob('*.ttl'):
+            m.parse(i, format='n3')
+    except Exception as e:
+        print('warning: error parsing data, unable to generate NEWS ' + str(e))
         return
 
     spec = m.value(None, rdf.type, doap.Project)
@@ -181,7 +183,7 @@ class Dist(Scripting.Dist):
         lv2extinfo_py.close()
 
         # Write NEWS file
-        write_news('lv2-%s.doap.ttl' % info.NAME)
+        write_news()
 
         # Build distribution
         Scripting.Dist.archive(self)

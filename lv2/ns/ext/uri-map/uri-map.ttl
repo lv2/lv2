@@ -13,6 +13,7 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+@prefix dcs:   <http://ontologi.es/doap-changeset#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
@@ -21,6 +22,17 @@
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix umap:  <http://lv2plug.in/ns/ext/uri-map#> .
+
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:homepage <http://drobilla.net/> ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
+_:larsl
+	a foaf:Person ;
+	foaf:name "Lars Luthman" .
 
 <http://lv2plug.in/ns/ext/uri-map>
 	a lv2:Specification ,
@@ -31,17 +43,16 @@
 	doap:shortdesc "A feature for mapping URIs to integers." ;
 	doap:release [
 		doap:revision "1.2" ;
-		doap:created "2011-05-26"
+		doap:created "2011-05-26" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
-	doap:maintainer [
-		a foaf:Person ;
-		foaf:name "David Robillard" ;
-		foaf:homepage <http://drobilla.net/> ;
-		rdfs:seeAlso <http://drobilla.net/drobilla.xrdf>
-	] , [
-		a foaf:Person ;
-		foaf:name "Lars Luthman"
-	] ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ,
+		_:larsl ;
 	lv2:documentation """
 <p><span class="warning">This extension is deprecated.</span> New
 implementations should use <a href="http://lv2plug.in/ns/ext/urid">LV2 URID</a>

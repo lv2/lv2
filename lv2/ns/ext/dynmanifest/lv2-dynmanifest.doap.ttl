@@ -16,14 +16,14 @@
 	doap:name "LV2 Dynamic Manifest" ;
 	doap:homepage <http://naspro.atheme.org> ;
 	doap:created "2009-06-13" ;
-	doap:shortdesc "An LV2-based specification for dynamic data generation." ;
+	doap:shortdesc "Support for dynamic data generation." ;
 	doap:programming-language "C" ;
 	doap:developer [
 		a foaf:Person ;
 		foaf:name "Stefano D'Angelo"
 	] ;
 	doap:release [
-		doap:revision "1.1" ;
+		doap:revision "1.2" ;
 		doap:created "2011-11-17" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [

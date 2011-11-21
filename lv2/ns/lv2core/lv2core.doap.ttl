@@ -99,7 +99,7 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial packaging."
+				rdfs:label "Initial release."
 			]
 		]
 	] ;

@@ -14,11 +14,24 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+@prefix dcs:  <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix urid: <http://lv2plug.in/ns/ext/urid#> .
+
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:homepage <http://drobilla.net/> ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
+_:gabrbedd
+	a foaf:Person ;
+	foaf:name "Gabriel M. Beddingfield" ;
+	foaf:homepage <http://gabe.is-a-geek.org/> .
 
 <http://lv2plug.in/ns/ext/urid>
 	a lv2:Specification ;
@@ -27,13 +40,15 @@
 	doap:shortdesc "Features for mapping URIs to and from integers." ;
 	doap:release [
 		doap:revision "1.0" ;
-		doap:created "2011-11-20"
+		doap:created "2011-11-20" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
-	doap:developer [
-		a foaf:Person ;
-		foaf:name "Gabriel M. Beddingfield" ;
-		foaf:homepage <http://gabe.is-a-geek.org/>
-	] ;
+	doap:developer _:gabrbedd ;
 	lv2:documentation """
 <p>This extension defines a simple mechanism for plugins to map URIs to and
 from integers, usually for performance reasons (e.g. processing events typed by

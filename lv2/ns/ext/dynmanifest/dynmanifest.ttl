@@ -23,22 +23,7 @@
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/dynmanifest>
-	a doap:Project ,
-		lv2:Specification ;
-	doap:license <http://opensource.org/licenses/isc-license> ;
-	doap:name "LV2 Dynamic Manifest" ;
-	doap:homepage <http://naspro.atheme.org> ;
-	doap:created "2009-06-13" ;
-	doap:shortdesc "An LV2-based specification for dynamic data generation." ;
-	doap:programming-language "C" ;
-	doap:release [
-		doap:revision "1.2" ;
-		doap:created "2011-11-20"
-	] ;
-	doap:maintainer [
-		a foaf:Person ;
-		foaf:name "Stefano D'Angelo"
-	] ;
+	a lv2:Specification ;
     lv2:documentation """
 <p>The LV2 API, on its own, cannot be used to write plugin libraries where data
 is dynamically generated at runtime (e.g. API wrappers), since LV2 requires

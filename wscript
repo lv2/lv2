@@ -57,12 +57,19 @@ def release(ctx):
     rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
     doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
 
-    manifests = glob.glob('ext/*.lv2/manifest.ttl')
-    manifests += glob.glob('extensions/*.lv2/manifest.ttl')
+    try:
+        shutil.rmtree('build/spec')
+    except:
+        pass
+
+    os.makedirs('build/spec')
+
+    manifests = glob.glob('lv2/ns/lv2core/manifest.ttl')
+    manifests += glob.glob('lv2/ns/*/*/manifest.ttl')
     for manifest in manifests:
         dir = os.path.dirname(manifest)
         name = os.path.basename(dir).replace('.lv2', '')
-        
+
         m = rdflib.ConjunctiveGraph()
         m.parse(manifest, format='n3')
 
@@ -78,12 +85,17 @@ def release(ctx):
             continue
 
         if minor != 0 and micro % 2 == 0:
+            autowaf.display_header('\nBuilding %s Release\n' % dir)
             try:
                 subprocess.call(
-                    ['./waf', 'distclean', 'configure', 'build', 'distcheck', 'distclean'],
+                    ['./waf', 'distclean', 'configure', 'build', 'distcheck'],
                     cwd=dir)
+                for i in glob.glob(dir + '/*.tar.bz2'):
+                    shutil.move(i, 'build/spec')
             except:
-                Logs.error('Error building %s release' % name)
+                Logs.error('Error building %s release' % (name, e))
+
+            subprocess.call(['./waf', 'distclean'], cwd=dir)
         
 def lint(ctx):
     for i in (['lv2/ns/lv2core/lv2.h']
