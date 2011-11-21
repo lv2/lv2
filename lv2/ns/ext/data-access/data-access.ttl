@@ -77,6 +77,6 @@ access to LV2_Descriptor::extension_data() for plugin UIs or other potentially
 remote users of a plugin.</p>
 
 <p>To support this feature the host must pass an LV2_Feature struct to the
-instantiate method with URI "http://lv2plug.in/ns/ext/data-access" and data
-pointed to an instance of LV2_Extension_Data_Feature.</p>
+instantiate method with URI LV2_DATA_ACCESS_URI and data pointed to an instance
+of LV2_Extension_Data_Feature.</p>
 """ .
