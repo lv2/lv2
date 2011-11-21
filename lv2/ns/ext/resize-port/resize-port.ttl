@@ -37,14 +37,14 @@
     doap:name "LV2 Resize Port Extension" ;
     doap:shortdesc "Dynamically sized LV2 port buffers." ;
 	lv2:documentation """
-<p>An extension that allows LV2 plugins to request a resize of an output port.</p>
+<p>An extension that allows LV2 plugins to request a resize of an output
+port.</p>
 
-<p>Any host which supports this extension must pass an LV2_Feature to
-the plugin's instantiate method with URI http://lv2plug.in/ns/ext/resize-port
-and a pointer to a LV2_Resize_Port_Feature structure (see
-<a href="resize-port.h">resize-port.h</a> for details).  This structure
-provides a resize_port function which plugins may use to resize output
-port buffers as necessary.</p>
+<p>Any host which supports this extension must pass an LV2_Feature to the
+plugin's instantiate method with URI http://lv2plug.in/ns/ext/resize-port and a
+pointer to a LV2_Resize_Port_Feature structure.  This structure provides a
+resize_port function which plugins may use to resize output port buffers as
+necessary.</p>
 
 <p>This extension also defines several predicates useful for describing the
 amount of space required for a particular port buffer.</p>
