@@ -24,14 +24,13 @@
 
 <http://lv2plug.in/ns/ext/event>
 	a lv2:Specification ;
-	owl:deprecated true ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Event" ;
     doap:shortdesc "A port-based real-time generic event interface." ;
 	rdfs:seeAlso <event-helpers.h> ;
 	doap:release [
-		doap:revision "1.3" ;
-		doap:created "2011-11-23"
+		doap:revision "1.4" ;
+		doap:created "2011-11-20"
 	] ;
 	doap:maintainer [
 		a foaf:Person ;
@@ -43,10 +42,6 @@
 		foaf:name "Lars Luthman" ;
 	] ;
 	lv2:documentation """
-<p><span class="warning">This extension is deprecated.</span> New
-implementations should use <a href="http://lv2plug.in/ns/ext/atom">LV2 Atom</a>
-instead.</p>
-
 <p>This extension defines a generic time-stamped event port type, which can be
 used to create plugins that read and write real-time events, such as MIDI,
 OSC, or any other type of event payload.  The type(s) of event supported by
