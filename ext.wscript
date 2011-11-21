@@ -26,11 +26,12 @@ except:
 
         dir = sys.path[0]
         m   = rdflib.ConjunctiveGraph()
-        m.parse(os.path.join(dir, 'manifest.ttl'), format='n3')
+
+        for i in glob.glob(os.path.join(dir, '*.ttl')):
+            m.parse(i, format='n3')
 
         spec = m.value(None, rdf.type, lv2.Specification)
         name = os.path.basename(spec.replace('http://', ''))
-        m.parse(os.path.join(dir, name + '.ttl'), format='n3')
         
         info = type('lv2extinfo', (object,), {
            'NAME'      : str(name),
