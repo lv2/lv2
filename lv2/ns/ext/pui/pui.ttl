@@ -54,10 +54,12 @@
 plugins. The UIs are code that reside in shared object files in an LV2
 bundle and are referenced in the RDF data using the triples:</p>
 <pre class="turtle-code">
-@prefix pui:     &lt;http://lv2plug.in/ns/ext/pui#&gt; .
-&lt;http://example.org/my-ui&gt;  a             pui:Gtk2UI ;
-                            lv2:appliesTo &lt;http://example.org/my-plugin&gt; ;
-                            pui:binary     &lt;my-ui.so&gt; .
+@prefix pui: &lt;http://lv2plug.in/ns/ext/pui#&gt; .
+
+&lt;http://example.org/my-ui&gt;
+    a             pui:Gtk2UI ;
+    lv2:appliesTo &lt;http://example.org/my-plugin&gt; ;
+    pui:binary    &lt;my-ui.so&gt; .
 </pre>
 <p>... where <code>http://example.org/my-plugin</code> is the URI of the plugin,
 <code>http://example.org/my-ui</code> is the URI of the plugin UI and
