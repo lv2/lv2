@@ -119,7 +119,11 @@ for root, dirs, files in os.walk('ns'):
     bundle = root
     b = os.path.basename(root)
 
-    print("** Generating %s documentation" % outdir)
+    if not os.access(outdir + '/%s.ttl' % b, os.R_OK):
+        print('warning: extension %s has no %s.ttl file' % (root, root))
+        continue
+
+    print(" * Generating %s documentation" % outdir)
 
     try:
         model = rdflib.ConjunctiveGraph()
@@ -166,54 +170,52 @@ for root, dirs, files in os.walk('ns'):
     # Get short description
     shortdesc = model.value(ext_node, doap.shortdesc, None)
 
-    if (os.access(outdir + '/%s.ttl' % b, os.R_OK)):
-        print(' * Running lv2specgen for %s in %s' % (b, os.getcwd()))
-        specdoc = lv2specgen.specgen(
-            root + '/%s.ttl' % b,
-            SPECGENDIR,
-            os.path.relpath(os.path.join('ns', 'doc'), abs_root),
-            os.path.relpath(STYLEPATH, abs_root),
-            os.path.relpath(BUILDDIR, abs_root),
-            TAGFILE,
-            instances=True)
+    specdoc = lv2specgen.specgen(
+        root + '/%s.ttl' % b,
+        SPECGENDIR,
+        os.path.relpath(os.path.join('ns', 'doc'), abs_root),
+        os.path.relpath(STYLEPATH, abs_root),
+        os.path.relpath(BUILDDIR, abs_root),
+        TAGFILE,
+        instances=True)
 
-        lv2specgen.save(root + '/%s.html' % b, specdoc)
+    lv2specgen.save(root + '/%s.html' % b, specdoc)
 
-        # Name
-        row = '<tr><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
-            os.path.relpath(root, 'ns'), b)
+    # Name
+    row = '<tr><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
+        os.path.relpath(root, 'ns'), b)
 
-        # Description
-        if shortdesc:
-            row += '<td>' + str(shortdesc) + '</td>'
-        else:
-            row += '<td></td>'
+    # Description
+    if shortdesc:
+        row += '<td>' + str(shortdesc) + '</td>'
+    else:
+        row += '<td></td>'
 
-        # Version
-        version_str = '%s.%s' % (minor, micro)
-        if minor == 0 or (micro % 2 != 0):
-            row += '<td><span style="color: red">' + version_str + ' dev</span></td>'
-        else:
-            row += '<td>' + version_str + '</td>'
+    # Version
+    version_str = '%s.%s' % (minor, micro)
+    if minor == 0 or (micro % 2 != 0):
+        row += '<td><span style="color: red">' + version_str + ' dev</span></td>'
+    else:
+        row += '<td>' + version_str + '</td>'
 
-        # Date
-        row += '<td>%s</td>' % (str(date) if date else '')
+    # Date
+    row += '<td>%s</td>' % (str(date) if date else '')
 
-        # Status
-        deprecated = model.value(ext_node, owl.deprecated, None)
-        if minor == 0:
-            row += '<td><span class="error">Experimental</span></td>'
-        elif deprecated and str(deprecated[2]) != "false":
-                row += '<td><span class="warning">Deprecated</span></td>'
-        elif micro % 2 == 0:
-            row += '<td><span class="success">Stable</span></td>'
+    # Status
+    deprecated = model.value(ext_node, owl.deprecated, None)
+    if minor == 0:
+        row += '<td><span class="error">Experimental</span></td>'
+    elif deprecated and str(deprecated[2]) != "false":
+            row += '<td><span class="warning">Deprecated</span></td>'
+    elif micro % 2 == 0:
+        row += '<td><span class="success">Stable</span></td>'
 
-        row += '</tr>'
-        extensions.append(row)
+    row += '</tr>'
+    extensions.append(row)
 
-        subst_file('../doc/htaccess.in', outdir + '.htaccess',
-                   { '@NAME@': b,
-                     '@BASE@': '/ns/%s/%s' % (dir, b) })
+    subst_file('../doc/htaccess.in', outdir + '.htaccess',
+               { '@NAME@': b,
+                 '@BASE@': '/ns/%s/%s' % (dir, b) })
 
 index_rows = ''
 extensions.sort()
