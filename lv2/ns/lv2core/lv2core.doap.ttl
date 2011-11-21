@@ -22,10 +22,12 @@
 	doap:name "LV2" ;
 	doap:homepage <http://lv2plug.in> ;
 	doap:created "2004-04-21" ;
-	doap:shortdesc "An audio plugin interface specification" ;
+	doap:shortdesc "An audio plugin interface specification." ;
 	doap:programming-language "C" ;
 	doap:release [
-		doap:revision "4.1" ;
+		doap:revision "6.0" ;
+		doap:created "2011-11-20" ;
+		doap:file-release <http://lv2plug.in/spec/lv2core-6.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
