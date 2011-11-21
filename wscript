@@ -29,7 +29,7 @@ def options(opt):
     opt.add_option('--experimental', action='store_true', default=False,
                    dest='experimental',
                    help='Install unreleased experimental extensions')
-    for i in ['ns/lv2core']:
+    for i in ['lv2/ns/lv2core']:
         opt.recurse(i)
 
 def configure(conf):
@@ -39,9 +39,9 @@ def configure(conf):
 
     conf.env.append_unique('CFLAGS', '-std=c99')
 
-    subdirs = ['ns/lv2core']
-    subdirs += glob.glob('ns/ext/*/')
-    subdirs += glob.glob('ns/extensions/*/')
+    subdirs = ['lv2/ns/lv2core']
+    subdirs += glob.glob('lv2/ns/ext/*/')
+    subdirs += glob.glob('lv2/ns/extensions/*/')
 
     for i in subdirs:
         conf.recurse(i)
@@ -86,7 +86,7 @@ def release(ctx):
                 Logs.error('Error building %s release' % name)
         
 def lint(ctx):
-    for i in (['ns/lv2core/lv2.h']
-              + glob.glob('ns/ext/*/*.h')
-              + glob.glob('ns/extensions/*/*.h')):
+    for i in (['lv2/ns/lv2core/lv2.h']
+              + glob.glob('lv2/ns/ext/*/*.h')
+              + glob.glob('lv2/ns/extensions/*/*.h')):
         subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-whitespace/blank_line,-build/header_guard,-readability/casting,-readability/todo,-build/include ' + i, shell=True)

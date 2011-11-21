@@ -18,7 +18,7 @@ except:
     pass
 
 # Copy bundles (less build files) to build directory
-shutil.copytree('ns', 'build/ns',
+shutil.copytree('lv2/ns', 'build/ns',
                 ignore=shutil.ignore_patterns('.*', 'waf', 'wscript', '*.in'))
 
 # Copy stylesheet to build directory
@@ -44,8 +44,7 @@ rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 devnull = open(os.devnull, 'w')
 
 # Generate code (headers) documentation
-print('** Generating header documentation')
-print(' * Calling doxygen in ' + os.getcwd())
+print('## Generating header documentation with doxygen ##')
 subprocess.call('doxygen', stdout=devnull)
 
 def rescue_tags(in_path, out_path):
@@ -97,13 +96,13 @@ def subst_file(template, output, dict):
     i.close()
     o.close()
 
-print('** Generating core documentation')
-
 print("Entering directory `%s'" % os.path.abspath('build'))
 oldcwd = os.getcwd()
 os.chdir('build')
 
 extensions = []
+
+print('\n## Generating specification documentation with lv2specgen ##')
 
 for root, dirs, files in os.walk('ns'):
     if '.svn' in dirs:
@@ -123,7 +122,7 @@ for root, dirs, files in os.walk('ns'):
         print('warning: extension %s has no %s.ttl file' % (root, root))
         continue
 
-    print(" * Generating %s documentation" % outdir)
+    print(' * %s' % outdir)
 
     try:
         model = rdflib.ConjunctiveGraph()
@@ -222,11 +221,11 @@ extensions.sort()
 for i in extensions:
     index_rows += i + '\n'
 
-subst_file('../ns/index.html.in', 'ns/index.html',
+subst_file('../lv2/ns/index.html.in', 'ns/index.html',
            { '@ROWS@': index_rows,
              '@TIME@': datetime.datetime.utcnow().strftime('%F %H:%M UTC') })
            
-print("Leaving directory `%s'" % os.path.abspath('build'))
+print("\nLeaving directory `%s'" % os.path.abspath('build'))
 os.chdir(oldcwd)
 
 devnull.close()

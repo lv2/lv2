@@ -565,33 +565,32 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT =  \
-	ns/lv2core/lv2.h \
 	doc/mainpage.dox \
-	ns/ext/atom/atom-buffer.h \
-	ns/ext/atom/atom-helpers.h \
-	ns/ext/atom/atom.h \
-	ns/ext/atom/forge.h \
-	ns/ext/contexts/contexts.h \
-	ns/ext/data-access/data-access.h \
-	ns/ext/dynmanifest/dynmanifest.h \
-	ns/ext/event/event-helpers.h \
-	ns/ext/event/event.h \
-	ns/ext/files/files.h \
-	ns/ext/instance-access/instance-access.h \
-	ns/ext/osc/osc-print.h \
-	ns/ext/osc/osc.h \
-	ns/ext/pui/pui.h \
-	ns/ext/reference/reference.h \
-	ns/ext/resize-port/resize-port.h \
-	ns/ext/state/state.h \
-	ns/ext/string-port/string-port.h \
-	ns/ext/time/time.h \
-	ns/ext/ui-resize/ui-resize.h \
-	ns/ext/uri-map/uri-map.h \
-	ns/ext/uri-unmap/uri-unmap.h \
-	ns/ext/urid/urid.h \
-	ns/extensions/ui/ui.h \
-	ns/lv2core/lv2.h
+	lv2/ns/ext/atom/atom-buffer.h \
+	lv2/ns/ext/atom/atom-helpers.h \
+	lv2/ns/ext/atom/atom.h \
+	lv2/ns/ext/atom/forge.h \
+	lv2/ns/ext/contexts/contexts.h \
+	lv2/ns/ext/data-access/data-access.h \
+	lv2/ns/ext/dynmanifest/dynmanifest.h \
+	lv2/ns/ext/event/event-helpers.h \
+	lv2/ns/ext/event/event.h \
+	lv2/ns/ext/files/files.h \
+	lv2/ns/ext/instance-access/instance-access.h \
+	lv2/ns/ext/osc/osc-print.h \
+	lv2/ns/ext/osc/osc.h \
+	lv2/ns/ext/pui/pui.h \
+	lv2/ns/ext/reference/reference.h \
+	lv2/ns/ext/resize-port/resize-port.h \
+	lv2/ns/ext/state/state.h \
+	lv2/ns/ext/string-port/string-port.h \
+	lv2/ns/ext/time/time.h \
+	lv2/ns/ext/ui-resize/ui-resize.h \
+	lv2/ns/ext/uri-map/uri-map.h \
+	lv2/ns/ext/uri-unmap/uri-unmap.h \
+	lv2/ns/ext/urid/urid.h \
+	lv2/ns/extensions/ui/ui.h \
+	lv2/ns/lv2core/lv2.h
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
