@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import datetime
+import glob
 import os
 import rdflib
 import shutil
@@ -127,8 +128,8 @@ for root, dirs, files in os.walk('ns'):
 
     try:
         model = rdflib.ConjunctiveGraph()
-        model.parse('%s/manifest.ttl' % bundle, format='n3')
-        model.parse('%s/%s.ttl' % (bundle, b), format='n3')
+        for i in glob.glob('%s/*.ttl' % bundle):
+            model.parse(i, format='n3')
     except:
         e = sys.exc_info()[1]
         print('error parsing %s: %s' % (bundle, str(e)))
@@ -181,9 +182,9 @@ for root, dirs, files in os.walk('ns'):
 
     lv2specgen.save(root + '/%s.html' % b, specdoc)
 
-    # Name
-    row = '<tr><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
-        os.path.relpath(root, 'ns'), b)
+    # Name (comment is to act as a sort key)
+    row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
+        b, os.path.relpath(root, 'ns'), b)
 
     # Description
     if shortdesc:
@@ -194,7 +195,7 @@ for root, dirs, files in os.walk('ns'):
     # Version
     version_str = '%s.%s' % (minor, micro)
     if minor == 0 or (micro % 2 != 0):
-        row += '<td><span style="color: red">' + version_str + ' dev</span></td>'
+        row += '<td><span style="color: red">' + version_str + '</span></td>'
     else:
         row += '<td>' + version_str + '</td>'
 
