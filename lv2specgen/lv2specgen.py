@@ -196,6 +196,7 @@ if have_pygments:
             ],
             'predObj': [
                 include('comments'),
+                (r'\s*a\s*', Name.Keyword, 'object'),
                 (r'\s*[a-zA-Z_:][a-zA-Z0-9\-_:]*\b\s*', Name.Tag, 'object'),
                 (r'\s*(<[^>]*\>)', Name.Tag, 'object'),
                 (r'\s*\]\s*', Text, '#pop'),
@@ -214,7 +215,7 @@ if have_pygments:
                 (r'\s*".*?[^\\]"(?:\@[a-z]{2-4}|\^\^<?[a-zA-Z0-9\-\:_#/\.]*>?)?\s*', Literal.String),
                 (r'\s*[0-9]+\.[0-9]*\s*\n?', Literal.Number),
                 (r'\s*[0-9]+\s*\n?', Literal.Number),
-                (r'\s*[a-zA-Z0-9\-_\:]\s*', Name.Tag),
+                (r'\s*[a-zA-Z0-9\-_\:]+\s*', Name.Tag),
                 (r'\s*\(', Text, 'objList'),
                 (r'\s*;\s*\n?', Punctuation, '#pop'),
                 (r'\s*,\s*\n?', Punctuation),  # Added by drobilla so "," is not an error
