@@ -546,7 +546,7 @@ h1, h2, h3, h4, h5, h6, th {
 .nf { color: #222222; font-weight: bold } /* Name.Function */
 .nl { color: #A0A000 } /* Name.Label */
 .nn { color: #000000 } /* Name.Namespace */
-.nt { color: #008000; font-weight: bold } /* Name.Tag */
+.nt { color: #334433; } /* Name.Tag */
 .nv { color: #19177C } /* Name.Variable */
 .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
 .w { color: #bbbbbb } /* Text.Whitespace */
