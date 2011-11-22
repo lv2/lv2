@@ -40,7 +40,7 @@
 	lv2:documentation """
 <p>This extension provides a mechanism for plugins to portably refer to files
 in persistent plugin state (using the <a
-href="http://lv2plug.in/ns/ext/persist">LV2 Persist</a> extension), and create
+href="http://lv2plug.in/ns/ext/state">LV2 State</a> extension), and create
 instance-local files in host-defined locations (e.g. for recording).</p>
 
 <p>The motivating idea behind this extension is that all details of file

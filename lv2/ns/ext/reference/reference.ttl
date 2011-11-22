@@ -40,7 +40,7 @@
 dynamically allocated memory, called a <a href="#Blob">"Blob"</a>, which is
 (unlike an Atom) not necessarily POD.  Blobs are accessed via a
 reference:Reference, which is a special case of <a
-href="http://lv2plug.in/ns/ext/ext#Atom">Atom</a> that always has <code>type =
+href="http://lv2plug.in/ns/ext#Atom">Atom</a> that always has <code>type =
 0</code>, is not POD, and can only be copied using host provided functions.
 This allows plugins and hosts to work with data of any type at all.</p>
 """ .

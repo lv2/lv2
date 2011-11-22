@@ -1028,6 +1028,8 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     prefixes_html = "<span>"
     for i in keys:
         uri = namespaces[i]
+        if uri.startswith('file:'):
+            continue;
         ns_list[str(uri)] = i
         if str(uri) == str(spec_url) + '#':
             spec_pre = i
@@ -1101,7 +1103,7 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     other_files = ''
     if not experimental:
         release_name = "lv2-" + basename
-        if basename == "lv2":
+        if basename == "lv2core":
             release_name = "lv2core"
         other_files += '<a href="http://lv2plug.in/spec/%s-%d.%d.tar.bz2">Release</a>, ' % (release_name, version[0], version[1])
         other_files += '<a href="http://lv2plug.in/spec">All releases</a>, '
