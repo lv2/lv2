@@ -42,8 +42,33 @@ _:larsl
 	doap:name "LV2 URI Map" ;
 	doap:shortdesc "A feature for mapping URIs to integers." ;
 	doap:release [
+		doap:revision "1.4" ;
+		doap:created "2011-11-21" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		doap:file-release <http://lv2plug.in/spec/lv2-uri-map-1.4.tar.bz2> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Update packaging."
+			] , [
+				rdfs:label "Deprecate uri-map in favour of urid."
+			]
+		]
+	] , [
 		doap:revision "1.2" ;
 		doap:created "2011-05-26" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		doap:file-release <http://lv2plug.in/spec/lv2-uri-map-1.2.tar.bz2> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add build system (for installation)."
+			] , [
+				rdfs:label "Mark up documentation in HTML using lv2:docum"
+			]
+		]
+	] , [
+		doap:revision "1.0" ;
+		doap:created "2010-10-18" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-uri-map-1.0.tar.gz> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [

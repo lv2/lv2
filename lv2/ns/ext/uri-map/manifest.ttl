@@ -4,5 +4,5 @@
 <http://lv2plug.in/ns/ext/uri-map>
 	a lv2:Specification ;
 	lv2:minorVersion 1 ;
-	lv2:microVersion 2 ;
+	lv2:microVersion 4 ;
 	rdfs:seeAlso <uri-map.ttl> .
