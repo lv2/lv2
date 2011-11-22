@@ -5,6 +5,6 @@ includedir=@INCLUDEDIR@
 
 Name: lv2core
 Version: @LV2CORE_VERSION@
-Description: Core LV2 plugin header and specification
+Description: An audio plugin interface specification.
 Libs:
 Cflags: -I${includedir}

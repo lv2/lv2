@@ -44,7 +44,7 @@ _:larsl
 	doap:developer _:larsl ;
 	doap:release [
 		doap:revision "1.4" ;
-		doap:created "2011-11-14" ;
+		doap:created "2011-11-21" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-midi-1.4.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [

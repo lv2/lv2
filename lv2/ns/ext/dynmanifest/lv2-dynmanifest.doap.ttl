@@ -24,7 +24,7 @@
 	] ;
 	doap:release [
 		doap:revision "1.2" ;
-		doap:created "2011-11-17" ;
+		doap:created "2011-11-21" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [

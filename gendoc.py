@@ -216,7 +216,7 @@ for root, dirs, files in os.walk('ns'):
 
     subst_file('../doc/htaccess.in', outdir + '/.htaccess',
                { '@NAME@': b,
-                 '@BASE@': '/ns/%s/%s' % (dir, b) })
+                 '@BASE@': '/' + outdir })
 
 index_rows = ''
 extensions.sort()

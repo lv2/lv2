@@ -65,7 +65,7 @@ to a command port).</p>
 
 param:supportsType a rdf:Property ;
     rdfs:domain  param:Parameter ;
-    rdfs:range   atom:AtomType ;
+    rdfs:range   atom:Atom ;
     rdfs:label   "supports type" ;
     lv2:documentation """
 <p>Indicates that a Parameter has values of a particular type.  A Parameter may

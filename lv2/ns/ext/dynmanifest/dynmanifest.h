@@ -19,7 +19,7 @@
    @file dynmanifest.h
    C header for the LV2 Dynamic Manifest extension
    <http://lv2plug.in/ns/ext/dynmanifest>.
-   Revision: 1.1
+   Revision: 1.2
 */
 
 #ifndef LV2_DYN_MANIFEST_H_INCLUDED
