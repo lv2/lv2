@@ -1086,7 +1086,8 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
         date_string = "Undated"
 
     version_string = "%s.%s (%s)" % (version[0], version[1], date_string)
-    if version[0] == 0 or version[1] % 2 == 1:
+    experimental = (version[0] == 0 or version[1] % 2 == 1)
+    if experimental:
         version_string += ' <span class="warning">EXPERIMENTAL</span>'
 
     deprecated = findOne(m, rdflib.URIRef(spec_url), owl.deprecated, None)
@@ -1098,18 +1099,19 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     header_path = bundle_path + '/' + basename + '.h'
 
     other_files = ''
-    if version[0] != '0':
+    if not experimental:
         release_name = "lv2-" + basename
         if basename == "lv2":
             release_name = "lv2core"
-        other_files += '<a href="http://lv2plug.in/spec/%s-%d.%d.tar.bz2">Release</a>' % (release_name, version[0], version[1])
-        other_files += ', <a href="http://lv2plug.in/spec">All releases</a>'
+        other_files += '<a href="http://lv2plug.in/spec/%s-%d.%d.tar.bz2">Release</a>, ' % (release_name, version[0], version[1])
+        other_files += '<a href="http://lv2plug.in/spec">All releases</a>, '
+
     if os.path.exists(os.path.abspath(header_path)):
-        other_files += ', <a href="' + docdir + '/html/%s">API documentation</a>' % (
+        other_files += '<a href="' + docdir + '/html/%s">API documentation</a>, ' % (
             basename + '_8h.html')
 
         header = basename + '.h'
-        other_files += ', <a href="%s">%s</a>' % (header, header)
+        other_files += '<a href="%s">%s</a>, ' % (header, header)
 
     see_also_files = specProperties(m, spec_url, rdfs.seeAlso)
     for f in see_also_files:
@@ -1121,7 +1123,10 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
             else:
                 print("warning: seeAlso file outside bundle: %s" % uri)
 
-        other_files += ', <a href="%s">%s</a>' % (uri, uri)
+        other_files += '<a href="%s">%s</a>, ' % (uri, uri)
+
+    if other_files.endswith(', '):
+        other_files = other_files[:len(other_files) - 2]
 
     other_files = '<tr><th class="metahead">See Also</th><td>%s</td></tr>' % other_files
 
