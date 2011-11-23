@@ -22,58 +22,72 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/ext/state>
-    a lv2:Specification ;
-    doap:name "LV2 State" ;
-    doap:shortdesc "An interface for LV2 plugins to save and restore state." ;
-    doap:license <http://opensource.org/licenses/isc> ;
-    doap:release [
-        doap:revision "0.2" ;
-        doap:created "2011-11-14"
-    ] ;
-    doap:developer [
-        a foaf:Person ;
-        foaf:name "Leonard Ritter" ;
-        foaf:homepage <http://paniq.org> ;
-    ] ;
-    doap:maintainer [
-        a foaf:Person ;
-        foaf:name     "David Robillard" ;
-        foaf:homepage <http://drobilla.net/> ;
-        rdfs:seeAlso  <http://drobilla.net/drobilla.rdf>
-    ] ;
-    lv2:documentation """
+	a lv2:Specification ;
+	doap:name "LV2 State" ;
+	doap:shortdesc "An interface for LV2 plugins to save and restore state." ;
+	doap:license <http://opensource.org/licenses/isc> ;
+	doap:release [
+		doap:revision "0.4" ;
+		doap:created "2011-11-22"
+	] ;
+	doap:developer [
+		a foaf:Person ;
+		foaf:name "Leonard Ritter" ;
+		foaf:homepage <http://paniq.org>
+	] ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
+	] ;
+	lv2:documentation """
 <p>This extension provides a mechanism for plugins to save and restore state
 across instances, allowing hosts to save, restore, clone, or take a snapshot of
 a plugin instance's state at any point in time.  The intention is for a plugin
 instance's state to be <em>completely</em> described by port values (as with all
 LV2 plugins) and a simple dictionary.</p>
 
-<p>The <q>state</q> described by this extension is conceptually a single
-key/value dictionary, where keys are URIDs and values are type-tagged blobs of
-any type.  The plugin provides an LV2_State_Interface for working with this
-state.  To save or restore, the host calls LV2_State_Interface::save() or
+<p>The <q>state</q> described by this extension is conceptually a simple
+key:value dictionary, where keys are URIDs (URIs mapped to integers) and values
+are type-tagged blobs of any type.  A single key:value pair is called a
+<q>property</q>.  The plugin provides an LV2_State_Interface for working with
+this state.  To save or restore, the host calls LV2_State_Interface::save() or
 LV2_State_Interface::restore(), passing a callback to be used for handling a
-single key/value pair.  The host is free to implement saving and restoring in
-any way; the actual mechanism is completely abstract from the plugin's
-perspective.</p>
+single property.  The host is free to implement property storage and retrieval
+in any way.</p>
 
-<p>Because state is a simple dictionary, hosts and plugins can work with it
-easily from many languages and protocols.  Keys are URIDs for performance
-reasons as well as RDF compatibility, which makes it simple to serialise state
-in many formats (e.g. any RDF syntax, JSON, XML, key/value databases such as
-BDB, etc.).  In particular, state can be elegantly described in a plugin's
-Turtle description, which is useful for e.g. presets or default state.
-Specific keys may be described in Turtle on the fly or in extensions,
-allowing plugins to use common well-defined keys.</p>
+<p>This state model is simple yet has many benefits:</p>
+<ul>
+  <li>URID keys provide both fast performance and RDF compatibility.</li>
+  <li>Fully extensible, no limitations on keys or value types.</li>
+  <li>Easy to serialise in many formats (e.g. any RDF syntax, plain
+  text, JSON, XML, key:value databases, SQL, s-expressions, etc.).</li>
+  <li>Elegantly described in Turtle, which is useful for describing presets
+  or default state in LV2 data files (the predicate state:instanceState is
+  provided for this purpose).</li>
+  <li>Does not impose any file formats, data structures, or file system
+  requirements.</li>
+  <li>Suitable for portable persistent state as well as fast in-memory
+  snapshots.</li>
+  <li>Easily stored in a typical <q>map</q> or <q>dictionary</q> data
+  structure.</li>
+  <li>Keys may be defined by extensions, making state meaningful between
+  implementations and enabling dynamic state control.</li>
+</ul>
 
-<p>This extension defines a conceptual model of state and a mechanism for
-saving and restoring it, but no interface for manipulating it dynamically.
-While no such mechanism is defined here, dynamic control of plugins SHOULD be
-achieved by generic manipulations of the same conceptual state dictionary used
-by this extension (e.g. <code>plugin->set(key, value)</code>).  Accordingly,
-plugins SHOULD use meaningful and well-defined keys wherever possible.</p>
+<p>This extension defines a conceptual state model and a mechanism for saving
+and restoring it, but no interface for manipulating it dynamically.  However,
+any such mechanism SHOULD work with the same properties used in this extension
+to avoid complicating the concept of plugin state.  For example, an extension
+to the example plugin below could be to support a message like
+<code>set(eg:greeting, "Bonjour")</code>, which could be sent by the host, UIs,
+or other plugins (via the host) to dynamically control the plugin's state.
+Accordingly, plugins SHOULD use meaningful and well-defined keys wherever
+possible.</p>
 
-<p>In pseudo code, a typical use case in a plugin is:</p>
+<h3>Plugin Code Example</h3>
+
 <pre class="c-code">
 #define NS_EG   "http://example.org/"
 #define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
@@ -92,7 +106,6 @@ void my_save(LV2_Handle                 instance,
              void*                      handle,
              uint32_t                   flags,
              const LV2_Feature *const * features)
-
 {
     MyPlugin*   plugin   = (MyPlugin*)instance;
     const char* greeting = plugin->state.greeting;
@@ -109,18 +122,15 @@ void my_restore(LV2_Handle                  instance,
                 LV2_State_Retrieve_Function retrieve,
                 void*                       handle,
                 uint32_t                    flags,
-                const LV2_Feature *const *   features)
+                const LV2_Feature *const *  features)
 {
     MyPlugin* plugin = (MyPlugin*)instance;
 
     size_t      size;
     uint32_t    type;
     uint32_t    flags;
-    const char* greeting = retrieve(handle,
-                                    plugin->uris.eg_greeting,
-                                    &amp;size,
-                                    &amp;type,
-                                    &amp;flags);
+    const char* greeting = retrieve(
+        handle, plugin->uris.eg_greeting, &amp;size, &amp;type, &amp;flags);
 
     if (greeting) {
         free(plugin->state->greeting);
@@ -139,7 +149,8 @@ const void* my_extension_data(const char* uri)
 }
 </pre>
 
-<p>Similarly, a typical use case in a host is:</p>
+<h3>Host Code Example</h3>
+
 <pre class="c-code">
 int store_callback(void*       handle,
                    uint32_t    key,
@@ -171,12 +182,33 @@ Map get_plugin_state(LV2_Handle instance)
     return state_map;
 }
 </pre>
+
+<h3>Referring to Existing Files</h3>
+
+<p>This extension deliberately avoids imposing any file formats or file system
+dependencies on implementations.  However, some plugins need to refer to
+files in their state.  This is done by storing the file's path as a property
+just like any other value.</p>
+
+<p>Plugins MUST use the type state:Path for all paths in their state.  This
+allows hosts to know about all such files, which is necessary for making
+session export and archival possible (among other things).  Hosts are free to
+map paths in any way, and plugins MUST NOT assume the restored path will be
+identical to the saved path.</p>
+
+<h3>Creating New Files or Directories</h3>
+
+<p>New implementations and basic plugins are strongly encouraged to simply
+store all state as properties using this API.  However, some plugins have an
+existing file or directory formats for state.  Plugins MAY create new files
+or directories by using the state:newPath feature, if it is provided by the
+host.</p>
 """ .
 
 state:Interface
-    a rdfs:Class ;
-    rdfs:subClassOf lv2:ExtensionData ;
-    lv2:documentation """
+	a rdfs:Class ;
+	rdfs:subClassOf lv2:ExtensionData ;
+	lv2:documentation """
 <p>A structure (LV2_State_Interface) which contains functions to be called by
 the host to save and restore state.  In order to support this extension, the
 plugin must return a valid LV2_State_Interface from
@@ -194,23 +226,23 @@ LV2_STATE_INTERFACE_URI.</p>
 """ .
 
 state:InstanceState
-    a rdfs:Class ;
-    rdfs:label "Plugin Instance State" ;
-    rdfs:comment """
-This class is used to express a plugin instance's state in RDF. The key/value
+	a rdfs:Class ;
+	rdfs:label "Plugin Instance State" ;
+	lv2:documentation """
+<p>This class is used to express a plugin instance's state in RDF. The key/value
 properties of the instance form the predicate/object (respectively) of triples
 with a state:InstanceState as the subject (see state:instanceState for an
 example). This may be used wherever it is useful to express a plugin instance's
 state in RDF (e.g. for serialisation, storing in a model, or transmitting over
 a network). Note that this class is provided because it may be useful for
 hosts, plugins, or extensions that work with instance state, but its use is not
-required to support the LV2 State extension.
+required to support the LV2 State extension.</p>
 """ .
 
 state:instanceState
-    a rdf:Property ;
-    rdfs:range state:InstanceState ;
-    lv2:documentation """
+	a rdf:Property ;
+	rdfs:range state:InstanceState ;
+	lv2:documentation """
 <p>Predicate to relate a plugin instance to an InstanceState. This may be used
 wherever the state of a particular plugin instance needs to be represented.
 Note that the domain of this property is unspecified, since LV2 does not define
@@ -219,13 +251,94 @@ sense to do so, e.g.:</p>
 <pre class="turtle-code">
 @prefix eg: &lt;http://example.org/&gt; .
 
-&lt;plugininstance&gt; state:instanceState [
-    eg:somekey "some value" ;
-    eg:someotherkey "some other value" ;
-    eg:favourite-number 2
-] .
+&lt;plugininstance&gt;
+    state:instanceState [
+        eg:somekey "some value" ;
+        eg:someotherkey "some other value" ;
+        eg:favourite-number 2
+    ] .
 </pre>
 <p>Note that this property is provided because it may be useful for hosts,
 plugins, or extensions that work with instance state, but its use is not
-required to support the LV2 State extension.</p>
+required to support this extension.</p>
+""" .
+
+state:mapPath
+	a lv2:Feature ;
+	rdfs:label "Support for storing paths in files" ;
+	lv2:documentation """
+<p>This feature allows plugins to store paths inside files stored in its state
+(if, for example, a plugin saves to an existing file format which contains
+paths).  To support this feature a host must pass an LV2_Feature with URI
+LV2_STATE_MAP_PATH_URI and data pointed to an LV2_State_Map_Path to the
+plugin's LV2_State_Interface methods.</p>
+
+<p>The plugin MUST use the provided functions to map <em>all</em> paths stored
+in any files it creates (using state:makePath) and stores in the state.  This
+is necessary to enable host to handle file system references correctly, e.g.
+for session export or archival.</p>
+
+<p>For example, a plugin may write a path to a state file like so:</p>
+
+<pre class="c-code">
+void write_path(LV2_State_Map_Path* map_path, FILE* myfile, const char* path)
+{
+    char* abstract_path = map_path->abstract_path(map_path->handle, path);
+    fprintf(myfile, "%s", abstract_path);
+    free(abstract_path);
+}
+</pre>
+
+<p>Then, later reload the path like so:</p>
+
+<pre class="c-code">
+char* read_path(LV2_State_Map_Path* map_path, FILE* myfile)
+{
+    /* Obviously this is not production quality code! */
+    char abstract_path[1024];
+    fscanf(myfile, "%s", abstract_path);
+    return map_path->absolute_path(map_path->handle, abstract_path);
+}
+</pre>
+""" .
+
+state:makePath
+	a lv2:Feature ;
+	rdfs:label "Support for creating new files and directories" ;
+	lv2:documentation """
+
+<p>This feature allows plugins to create new files or directories.  To support
+this feature the host passes an LV2_Feature with URI LV2_STATE_MAKE_PATH_URI
+and data pointed to an LV2_State_Make_Path to the plugin.  The host may provide
+this feature during state saving only or at any time, by passing the feature to
+LV2_State_Interface::save() or LV2_Descriptor::instantiate(), respectively.</p>
+
+<p>For example, a plugin may create a file in a subdirectory like so:</p>
+
+<pre class="c-code">
+void save_myfile(LV2_State_Make_Path* make_path)
+{
+    char* path   = make_path->path(make_path->handle, "foo/bar/myfile.txt");
+    FILE* myfile = fopen(path, 'w');
+    fprintf(myfile, "Hello");
+    fclose(myfile);
+}
+</pre>
+""" .
+
+state:Path
+	a rdfs:Class ;
+	rdfs:label "Path" ;
+	lv2:documentation """
+<p>A path to a file or directory.</p>
+
+<p>The format of a state:Path is a C string escaped or otherwise restricted in
+a system-specific manner.  This URI (LV2_STATE_PATH_URI), mapped to an integer,
+MUST be used as the <code>type</code> parameter for any files passed to the
+LV2_State_Store_Function; and will likewise be returned by the corresponding
+call to the LV2_State_Retrieve_Function.</p>
+
+<p>When storing and retrieving a path, the plugin MUST NOT assume the same path
+will be restored.  However, the restored path will refer to a file with
+equivalent contents to the original.</p>
 """ .
