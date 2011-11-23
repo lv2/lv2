@@ -575,7 +575,6 @@ INPUT =  \
 	ns/ext/dynmanifest/dynmanifest.h \
 	ns/ext/event/event-helpers.h \
 	ns/ext/event/event.h \
-	ns/ext/files/files.h \
 	ns/ext/instance-access/instance-access.h \
 	ns/ext/osc/osc-print.h \
 	ns/ext/osc/osc.h \
