@@ -78,10 +78,14 @@ typedef struct {
 	/* Ports */
 	float*           output_port;
 	LV2_Atom_Buffer* event_port;
-	LV2_URID         midi_event_id;
-	LV2_URID         atom_message_id;
-	LV2_URID         set_message_id;
-	LV2_URID         filename_key_id;
+
+	/* URIs */
+	struct {
+		LV2_URID midi_event;
+		LV2_URID atom_message;
+		LV2_URID set_message;
+		LV2_URID filename_key;
+	} uris;
 
 	/* Playback state */
 	bool       play;
@@ -200,11 +204,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 
 	memset(plugin->samp, 0, sizeof(SampleFile));
 	memset(plugin->pending_samp, 0, sizeof(SampleFile));
-
-	plugin->midi_event_id   = -1;
-	plugin->atom_message_id = -1;
-	plugin->set_message_id  = -1;
-	plugin->filename_key_id = -1;
+	memset(&plugin->uris, 0, sizeof(plugin->uris));
 
 	/* Initialise mutexes and conditions for the worker thread */
 	if (pthread_mutex_init(&plugin->pending_samp_mutex, 0)) {
@@ -224,13 +224,13 @@ instantiate(const LV2_Descriptor*     descriptor,
 	for (int i = 0; features[i]; ++i) {
 		if (!strcmp(features[i]->URI, LV2_URID_URI "#map")) {
 			plugin->map = (LV2_URID_Map*)features[i]->data;
-			plugin->midi_event_id = plugin->map->map(
+			plugin->uris.midi_event = plugin->map->map(
 				plugin->map->handle, MIDI_EVENT_URI);
-			plugin->atom_message_id = plugin->map->map(
+			plugin->uris.atom_message = plugin->map->map(
 				plugin->map->handle, ATOM_MESSAGE_URI);
-			plugin->set_message_id = plugin->map->map(
+			plugin->uris.set_message = plugin->map->map(
 				plugin->map->handle, SET_MESSAGE_URI);
-			plugin->filename_key_id = plugin->map->map(
+			plugin->uris.filename_key = plugin->map->map(
 				plugin->map->handle, FILENAME_URI);
 		}
 	}
@@ -269,19 +269,19 @@ run(LV2_Handle instance,
 	     i = lv2_atom_buffer_next(i)) {
 
 		LV2_Atom_Event* const ev = lv2_atom_buffer_get(i);
-		if (ev->body.type == plugin->midi_event_id) {
+		if (ev->body.type == plugin->uris.midi_event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);
 			if ((data[0] & 0xF0) == 0x90) {
 				start_frame   = ev->frames;
 				plugin->frame = 0;
 				plugin->play  = true;
 			}
-		} else if (ev->body.type == plugin->atom_message_id) {
+		} else if (ev->body.type == plugin->uris.atom_message) {
 			const LV2_Thing* msg = (LV2_Thing*)&ev->body;
-			if (msg->id == plugin->set_message_id) {
+			if (msg->id == plugin->uris.set_message) {
 				const LV2_Atom* filename = NULL;
 				LV2_Thing_Query q[] = {
-					{ plugin->filename_key_id, &filename },
+					{ plugin->uris.filename_key, &filename },
 					LV2_THING_QUERY_END
 				};
 				lv2_thing_query(msg, q);
