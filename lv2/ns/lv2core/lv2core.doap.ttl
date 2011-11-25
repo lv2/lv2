@@ -55,7 +55,7 @@
 			] , [
 				rdfs:label "Define lv2:binary (MUST be in manifest.ttl)."
 			] , [
-				rdfs:label "Define lv2:majorVersion and lv2:minorVersion (MUST be in manifest.ttl)."
+				rdfs:label "Define lv2:minorVersion and lv2:microVersion (MUST be in manifest.ttl)."
 			] , [
 				rdfs:label "Define lv2:documentation and use it to document lv2core."
 			] , [
