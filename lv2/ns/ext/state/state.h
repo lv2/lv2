@@ -221,7 +221,6 @@ typedef struct _LV2_State_Interface {
 	             uint32_t                   flags,
 	             const LV2_Feature *const * features);
 
-
 	/**
 	   Restore plugin state using a host-provided @c retrieve callback.
 

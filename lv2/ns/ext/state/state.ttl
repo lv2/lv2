@@ -27,8 +27,8 @@
 	doap:shortdesc "An interface for LV2 plugins to save and restore state." ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:release [
-		doap:revision "0.4" ;
-		doap:created "2011-11-22"
+		doap:revision "0.5" ;
+		doap:created "2011-12-22"
 	] ;
 	doap:developer [
 		a foaf:Person ;
@@ -64,8 +64,8 @@ in any way.</p>
   <li>Easy to serialise in many formats (e.g. any RDF syntax, plain
   text, JSON, XML, key:value databases, SQL, s-expressions, etc.).</li>
   <li>Elegantly described in Turtle, which is useful for describing presets
-  or default state in LV2 data files (the predicate state:instanceState is
-  provided for this purpose).</li>
+  or default state in LV2 data files (the predicate state:state is provided
+  for this purpose).</li>
   <li>Does not impose any file formats, data structures, or file system
   requirements.</li>
   <li>Suitable for portable persistent state as well as fast in-memory
@@ -225,13 +225,13 @@ LV2_STATE_INTERFACE_URI.</p>
 </pre>
 """ .
 
-state:InstanceState
+state:State
 	a rdfs:Class ;
 	rdfs:label "Plugin Instance State" ;
 	lv2:documentation """
-<p>This class is used to express a plugin instance's state in RDF. The key/value
-properties of the instance form the predicate/object (respectively) of triples
-with a state:InstanceState as the subject (see state:instanceState for an
+<p>This class is used to express a plugin instance's state in RDF. The
+key/value properties of the instance form the predicate/object (respectively)
+of triples with a state:State as the subject (see state:state for an
 example). This may be used wherever it is useful to express a plugin instance's
 state in RDF (e.g. for serialisation, storing in a model, or transmitting over
 a network). Note that this class is provided because it may be useful for
@@ -239,11 +239,11 @@ hosts, plugins, or extensions that work with instance state, but its use is not
 required to support the LV2 State extension.</p>
 """ .
 
-state:instanceState
+state:state
 	a rdf:Property ;
-	rdfs:range state:InstanceState ;
+	rdfs:range state:State ;
 	lv2:documentation """
-<p>Predicate to relate a plugin instance to an InstanceState. This may be used
+<p>Predicate to relate a plugin instance to its State.  This may be used
 wherever the state of a particular plugin instance needs to be represented.
 Note that the domain of this property is unspecified, since LV2 does not define
 any RDF class for plugin instance. This predicate may be used wherever it makes
@@ -252,7 +252,7 @@ sense to do so, e.g.:</p>
 @prefix eg: &lt;http://example.org/&gt; .
 
 &lt;plugininstance&gt;
-    state:instanceState [
+    state:state [
         eg:somekey "some value" ;
         eg:someotherkey "some other value" ;
         eg:favourite-number 2
