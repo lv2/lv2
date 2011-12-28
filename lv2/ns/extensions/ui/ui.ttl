@@ -169,6 +169,21 @@ The data pointer for the LV2_Feature for this feature should always be set
 to NULL.</p>
 """ .
 
+ui:parent
+	a lv2:Feature ;
+	lv2:documentation """
+<p>The parent for the UI.</p>
+
+<p>This feature can be used to pass a parent (e.g. a widget, container, canvas,
+etc.) the UI should be a child of.  The format of data pointer of this feature
+is determined by the UI type, and is generally the same type as the LV2_Widget
+the UI would return (e.g. for a GtkUI the data would be a pointer to a
+GtkWidget which is a GtkContainer).  This is particularly useful for
+cross-toolkit embedding, where the parent often must be known at construction
+time for embedding to work correctly.  UIs should not require this feature
+unless it is absolutely necessary for them to work at all.</p>
+""" .
+
 ui:PortNotification
 	a rdfs:Class ,
 		owl:Class ;

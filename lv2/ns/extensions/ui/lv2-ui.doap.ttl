@@ -22,6 +22,14 @@
 	] ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.5" ;
+		doap:created "2011-12-28" ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add ui:parent."
+			]
+		]
+	] , [
 		doap:revision "2.4" ;
 		doap:created "2011-11-21" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-ui-2.4.tar.bz2> ;
