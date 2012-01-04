@@ -106,13 +106,13 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	*widget = NULL;
 
 	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID_URI "#Map")) {
+		if (!strcmp(features[i]->URI, LV2_URID_URI "#map")) {
 			ui->map = (LV2_URID_Map*)features[i]->data;
 		}
 	}
 
 	if (!ui->map) {
-		fprintf(stderr, "sampler_ui: Host does not support uri-map\n");
+		fprintf(stderr, "sampler_ui: Host does not support urid:Map\n");
 		free(ui);
 		return NULL;
 	}
