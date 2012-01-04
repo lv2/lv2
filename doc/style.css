@@ -361,7 +361,7 @@ a:active {
 	color: #C00;
 }
 .sec {
-	background-color: #FBFBFB;
+	background-color: #F7F7F7;
 	border-top: 1px solid #EEE;
 	color: #000;
 	margin: 1em 1ex .5em 1ex;
@@ -415,7 +415,7 @@ ul, ol {
 	padding: 0 1ex 0 0;
 }
 .specterm {
-	background-color: #fbfbfb;
+	background-color: #F7F7F7;
 	border: 0;
 	border-top: 1px solid #ddd;
 	margin: 0;

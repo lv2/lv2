@@ -200,7 +200,7 @@ td.indexkey {
 }
 
 td.indexvalue {
-	background-color: #FBFBFB;
+	background-color: #F7F7F7;
 	border-top: 1px solid #EEE;
 	padding: 0.5ex;
 	margin: 0;
@@ -317,7 +317,7 @@ table.memberdecls {
 }
 
 .mdescLeft,.mdescRight,.memItemLeft,.memItemRight,.memTemplItemLeft,.memTemplItemRight,.memTemplParams {
-	background-color: #FBFBFB;
+	background-color: #F7F7F7;
 	margin: 0;
 	padding: 0.25ex;
 }
@@ -378,7 +378,7 @@ table.memberdecls {
 
 .memdoc {
 	padding: 1ex;
-	background-color: #FBFBFB;
+	background-color: #F7F7F7;
 	border-top-width: 0;
 }
 

@@ -51,6 +51,7 @@ os.chdir('build')
 
 # Generate code (headers) documentation
 print('## Generating header documentation with doxygen ##')
+shutil.copy('../doc/doxy-style.css', './doxy-style.css')
 subprocess.call(['doxygen', '../Doxyfile'], stdout=devnull)
 
 def rescue_tags(in_path, out_path):
