@@ -84,6 +84,7 @@ typedef struct {
 		LV2_URID midi_event;
 		LV2_URID atom_message;
 		LV2_URID set_message;
+		LV2_URID state_path;
 		LV2_URID filename_key;
 	} uris;
 
@@ -230,6 +231,8 @@ instantiate(const LV2_Descriptor*     descriptor,
 				plugin->map->handle, ATOM_MESSAGE_URI);
 			plugin->uris.set_message = plugin->map->map(
 				plugin->map->handle, SET_MESSAGE_URI);
+			plugin->uris.state_path = plugin->map->map(
+				plugin->map->handle, LV2_STATE_PATH_URI);
 			plugin->uris.filename_key = plugin->map->map(
 				plugin->map->handle, FILENAME_URI);
 		}
@@ -363,7 +366,7 @@ save(LV2_Handle                instance,
 	      map_uri(plugin, FILENAME_URI),
 	      plugin->samp->filepath,
 	      strlen(plugin->samp->filepath) + 1,
-	      map_uri(plugin, NS_ATOM "String"),
+	      plugin->uris.state_path,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 }
 
@@ -394,7 +397,7 @@ const void*
 extension_data(const char* uri)
 {
 	static const LV2_State_Interface state = { save, restore };
-	if (!strcmp(uri, LV2_STATE_URI)) {
+	if (!strcmp(uri, LV2_STATE_URI "#Interface")) {
 		return &state;
 	}
 	return NULL;
