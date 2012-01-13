@@ -1,0 +1,74 @@
+# LV2 Log Extension
+# Copyright 2012 David Robillard <d@drobilla.net>
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix log:  <http://lv2plug.in/ns/ext/log#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://lv2plug.in/ns/ext/log>
+	a lv2:Specification ;
+	doap:name "LV2 Log" ;
+	doap:shortdesc "A feature for writing log messages." ;
+	doap:maintainer [
+		a foaf:Person ;
+		foaf:name "David Robillard" ;
+		foaf:homepage <http://drobilla.net/> ;
+		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
+	] ;
+	lv2:documentation """
+    
+<p>This extension defines a feature, LV2_Log_Log, which allows plugins to print
+messages to logs implemented by the host with an API much like the standard C
+printf functions.  This allows, for example, plugin logs to be nicely presented
+to the user in a graphical user interface.</p>
+
+<p>Different log <q>levels</q> (e.g. <q>error</q> or <q>information</q>) are
+defined by URI and passed as an LV2_URID.  Thus, the possible number of log
+levels is unlimited, but implementations SHOULD use the levels defined in this
+extension unless they have a special reason to do otherwise.</p>
+""" .
+
+log:Level
+	a rdfs:Class ;
+	lv2:documentation """
+<p>A log level.  Subclasses of this class can be passed to LV2_Log_Log methods
+to describe the nature of the log message.</p>""" .
+
+log:Error
+	a rdfs:Class ;
+    rdfs:subClassOf log:Level ;
+    rdfs:comment "An error" .
+
+log:Info
+	a rdfs:Class ;
+    rdfs:subClassOf log:Level ;
+    rdfs:comment "An informative message" .
+
+log:Warn
+	a rdfs:Class ;
+    rdfs:subClassOf log:Level ;
+    rdfs:comment "A warning" .
+
+log:log
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature which plugins may use to log messages.  To support this feature,
+the host must pass an LV2_Feature to LV2_Descriptor::instantiate() with URI
+LV2_LOG_LOG_URI and data pointed to an instance of LV2_Log_Log.</p>
+""" .

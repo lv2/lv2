@@ -576,6 +576,7 @@ INPUT =  \
 	ns/ext/event/event-helpers.h \
 	ns/ext/event/event.h \
 	ns/ext/instance-access/instance-access.h \
+	ns/ext/log/log.h \
 	ns/ext/osc/osc-print.h \
 	ns/ext/osc/osc.h \
 	ns/ext/pui/pui.h \
