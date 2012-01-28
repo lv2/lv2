@@ -361,13 +361,25 @@ save(LV2_Handle                instance,
      uint32_t                  flags,
      const LV2_Feature* const* features)
 {
+	LV2_State_Map_Path* map_path = NULL;
+	for (int i = 0; features[i]; ++i) {
+		if (!strcmp(features[i]->URI, LV2_STATE_MAP_PATH_URI)) {
+			map_path = (LV2_State_Map_Path*)features[i]->data;
+		}
+	}
+
 	Sampler* plugin = (Sampler*)instance;
+	char*    apath  = map_path->abstract_path(map_path->handle,
+	                                          plugin->samp->filepath);
+
 	store(callback_data,
 	      map_uri(plugin, FILENAME_URI),
-	      plugin->samp->filepath,
+	      apath,
 	      strlen(plugin->samp->filepath) + 1,
 	      plugin->uris.state_path,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
+
+	free(apath);
 }
 
 static void
@@ -389,7 +401,9 @@ restore(LV2_Handle                  instance,
 		&size, &type, &valflags);
 
 	if (value) {
-		printf("Restored filename %s\n", (const char*)value);
+		printf("Restoring filename %s\n", (const char*)value);
+		strncpy(plugin->pending_samp->filepath, value, STRING_BUF);
+		handle_load_sample(plugin);
 	}
 }
 
