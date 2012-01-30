@@ -55,7 +55,7 @@ typedef struct {
 
 /**
    An atom:String.
-   This type may safely be cast to LV2_Atom.
+   May be cast to LV2_Atom.
 */
 typedef struct {
 	uint32_t type;   /**< Type of this atom (mapped URI). */
@@ -65,7 +65,7 @@ typedef struct {
 
 /**
    An atom:Literal.
-   This type may safely be cast to LV2_Atom.
+   May be cast to LV2_Atom.
 */
 typedef struct {
 	uint32_t type;      /**< Type of this atom (mapped URI). */
@@ -77,17 +77,17 @@ typedef struct {
 
 /**
    An atom:URID or atom:BlankID.
-   This type may safely be cast to LV2_Atom.
+   May be cast to LV2_Atom.
 */
 typedef struct {
 	uint32_t type;  /**< Type of this atom (mapped URI). */
 	uint32_t size;  /**< Size in bytes, not including type and size. */
 	uint32_t id;    /**< URID (integer mapped URI) or blank node ID. */
-} LV2_Atom_ID;
+} LV2_Atom_URID;
 
 /**
    An atom:Vector.
-   This type may safely be cast to LV2_Atom.
+   May be cast to LV2_Atom.
 */
 typedef struct {
 	uint32_t type;        /**< Type of this atom (mapped URI). */
@@ -108,7 +108,7 @@ typedef struct _LV2_Atom_Property {
 
 /**
    An atom:Thing (Resource, Blank, or Message).
-   This type may safely be cast to LV2_Atom.
+   May be cast to LV2_Atom.
 */
 typedef struct {
 	uint32_t type;          /**< Type of this atom (mapped URI). */
@@ -130,7 +130,7 @@ typedef struct {
 
 /**
    An atom:Int32, a signed 32-bit integer.
-   This type may safely be cast to LV2_Atom.
+   May be cast to LV2_Atom.
 */
 typedef struct {
 	uint32_t type;
@@ -140,17 +140,17 @@ typedef struct {
 
 /**
    An atom:Int64, a signed 64-bit integer.
-   This type may safely be cast to LV2_Atom.
+   May be cast to LV2_Atom.
 */
 typedef struct {
 	uint32_t type;
 	uint32_t size;
-	int64_t value;
+	int64_t  value;
 } LV2_Atom_Int64;
 
 /**
    An atom:Float, a 32-bit IEEE-754 floating point number.
-   This type may safely be cast to LV2_Atom.
+   May be cast to LV2_Atom.
 */
 typedef struct {
 	uint32_t type;
@@ -160,7 +160,7 @@ typedef struct {
 
 /**
    An atom:Double, a 64-bit IEEE-754 floating point number.
-   This type may safely be cast to LV2_Atom.
+   May be cast to LV2_Atom.
 */
 typedef struct {
 	uint32_t type;

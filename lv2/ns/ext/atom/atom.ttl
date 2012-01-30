@@ -1,5 +1,5 @@
 # LV2 Atom Extension
-# Copyright 2007-2011 David Robillard <d@drobilla.net>
+# Copyright 2007-2012 David Robillard <d@drobilla.net>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -16,11 +16,11 @@
 @prefix atom: <http://lv2plug.in/ns/ext/atom#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/atom>
 	a lv2:Specification ;
@@ -29,8 +29,8 @@
 	doap:license <http://opensource.org/licenses/isc> ;
 	rdfs:seeAlso <atom-buffer.h> ;
 	doap:release [
-		doap:revision "0.2" ;
-		doap:created "2011-11-05"
+		doap:revision "0.3" ;
+		doap:created "2012-01-28"
 	] ;
 	doap:maintainer [
 		a foaf:Person ;
@@ -137,8 +137,8 @@ sizeof(LV2_Atom_Literal)</code>, including the terminating NULL character.  The
 href="http://www.loc.gov/standards/iso639-2/">ISO 693-2</a> or <a
 href="http://www.loc.gov/standards/iso639-2/">ISO 693-3</a> language code.</p>
 
-<p>For compatibility, a Literal MUST have either a <code>datatype</code>
-or a <code>lang</code>, but never both.</p>
+<p>A Literal may have a <code>datatype</code> OR a <code>lang</code>, but never
+both.</p>
 
 <p>For example, a Literal can be "Hello" in English:</p>
 <pre class="c-code">
