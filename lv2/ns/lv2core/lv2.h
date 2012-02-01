@@ -1,6 +1,6 @@
 /*
   LV2 - An audio plugin interface specification.
-  Copyright 2006-2011 Steve Harris, David Robillard.
+  Copyright 2006-2012 Steve Harris, David Robillard.
 
   Based on LADSPA, Copyright 2000-2002 Richard W.E. Furse,
   Paul Barton-Davis, Stefan Westerfeld.
@@ -21,7 +21,7 @@
 /**
    @file lv2.h
    API for the LV2 specification <http://lv2plug.in/ns/lv2core>.
-   Revision: 6.0
+   Revision: 6.1
 */
 
 #ifndef LV2_H_INCLUDED
@@ -253,6 +253,16 @@ typedef struct _LV2_Descriptor {
 } LV2_Descriptor;
 
 /**
+   Put this (LV2_SYMBOL_EXPORT) before any functions that are to be loaded
+   by the host as a symbol from the dynamic library.
+*/
+#ifdef _WIN32
+#    define LV2_SYMBOL_EXPORT __declspec(dllexport)
+#else
+#    define LV2_SYMBOL_EXPORT
+#endif
+
+/**
    Prototype for plugin accessor function.
  
    Plugins are discovered by hosts using RDF data (not by loading libraries).
@@ -273,6 +283,7 @@ typedef struct _LV2_Descriptor {
    Note that @c index has no meaning, hosts MUST NOT depend on it remaining
    consistent between loads of the plugin library.
 */
+LV2_SYMBOL_EXPORT
 const LV2_Descriptor * lv2_descriptor(uint32_t index);
 
 /**
@@ -280,16 +291,6 @@ const LV2_Descriptor * lv2_descriptor(uint32_t index);
 */
 typedef const LV2_Descriptor *
 (*LV2_Descriptor_Function)(uint32_t index);
-
-/**
-  Put this (LV2_SYMBOL_EXPORT) before any functions that are to be loaded
-  by the host as a symbol from the dynamic library.
-*/
-#ifdef WIN32
-#define LV2_SYMBOL_EXPORT __declspec(dllexport)
-#else
-#define LV2_SYMBOL_EXPORT
-#endif
 
 #ifdef __cplusplus
 }

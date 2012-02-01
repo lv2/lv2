@@ -25,6 +25,15 @@
 	doap:shortdesc "An audio plugin interface specification." ;
 	doap:programming-language "C" ;
 	doap:release [
+		doap:revision "6.1" ;
+		doap:created "2012-02-01" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix LV2_SYMBOL_EXPORT and lv2_descriptor prototype for Windows."
+			]
+		]
+	] , [
 		doap:revision "6.0" ;
 		doap:created "2011-11-21" ;
 		doap:file-release <http://lv2plug.in/spec/lv2core-6.0.tar.bz2> ;
