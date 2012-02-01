@@ -23,7 +23,6 @@
 #ifndef LV2_STATE_H
 #define LV2_STATE_H
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -31,6 +30,8 @@
 
 #ifdef __cplusplus
 extern "C" {
+#else
+#    include <stdbool.h>
 #endif
 
 #define LV2_STATE_URI "http://lv2plug.in/ns/ext/state"
