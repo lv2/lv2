@@ -38,7 +38,7 @@
 		"簡単なアンプ"@jp ,
 		"Просто Усилитель"@ru ;
 	doap:license <http://opensource.org/licenses/isc> ;
-	lv2:property lv2:hardRtCapable ;
+	lv2:optionalFeature lv2:hardRTCapable ;
 	lv2:port [
 		a lv2:InputPort ,
 			lv2:ControlPort ;
