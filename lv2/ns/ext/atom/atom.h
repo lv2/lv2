@@ -190,9 +190,9 @@ typedef struct {
    </pre>
 */
 typedef struct {
-	LV2_Atom atom;      /**< Atom header. */
-	uint32_t capacity;  /**< Maximum size of contents. */
-	uint32_t pad;
+	LV2_Atom atom;       /**< Atom header. */
+	uint32_t capacity;   /**< Maximum size of contents. */
+	uint32_t time_type;  /**< URID type of event time stamps. */
 	/* Contents (a series of events) follow here. */
 } LV2_Atom_Sequence;
 
