@@ -4,6 +4,7 @@ import os
 import shutil
 import sys
 from waflib.extras import autowaf as autowaf
+from waflib.TaskGen import feature, before
 import waflib.Scripting as Scripting
 import waflib.Logs as Logs
 import waflib.Options as Options
@@ -11,6 +12,19 @@ import waflib.Context as Context
 import waflib.Utils as Utils
 
 info = None
+
+# A rule for making a link in the build directory to a source file
+def link(task):
+    func = os.symlink
+    if not func:
+        func = shutil.copy  # Symlinks unavailable, make a copy
+
+    try:
+        os.remove(task.outputs[0].abspath())  # Remove old target
+    except:
+        pass  # No old target, whatever
+
+    func(task.inputs[0].abspath(), task.outputs[0].abspath())
 
 try:
     # Read version information from lv2extinfo.py (in a release tarball)
@@ -58,7 +72,10 @@ top = '.'
 out = 'build'
 
 def options(opt):
+    opt.load('compiler_c')
     autowaf.set_options(opt)
+    opt.add_option('--test', action='store_true', default=False, dest='build_tests',
+                   help="Build unit tests")
     opt.add_option('--copy-headers', action='store_true', default=False,
                    dest='copy_headers',
                    help='Copy headers instead of linking to bundle')
@@ -72,7 +89,15 @@ def should_build(ctx):
         info.MINOR > 0 and info.MICRO % 2 == 0)
 
 def configure(conf):
+    try:
+        conf.load('compiler_c')
+    except:
+        Options.options.build_tests = False
+
+    conf.env['BUILD_TESTS']  = Options.options.build_tests
+    conf.env['COPY_HEADERS'] = Options.options.copy_headers
     conf.env['EXPERIMENTAL'] = Options.options.experimental
+
     if not should_build(conf):
         return
 
@@ -80,9 +105,12 @@ def configure(conf):
         conf.fatal(
             'os.path.relpath missing, get Python 2.6 or use --copy-headers')
 
+    # Check for gcov library (for test coverage)
+    if conf.env['BUILD_TESTS']:
+        conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
+
     autowaf.configure(conf)
     autowaf.display_header('LV2 %s Configuration' % info.NAME)
-    conf.env['COPY_HEADERS'] = Options.options.copy_headers
     autowaf.display_msg(conf, 'LV2 bundle directory', conf.env['LV2DIR'])
     autowaf.display_msg(conf, 'URI', info.URI)
     autowaf.display_msg(conf, 'Version', VERSION)
@@ -108,6 +136,29 @@ def build(bld):
               NAME         = info.NAME,
               VERSION      = VERSION,
               DESCRIPTION  = info.SHORTDESC)
+
+    if bld.env['BUILD_TESTS'] and bld.path.find_node('%s-test.c' % info.NAME):
+        test_lib    = []
+        test_cflags = ['']
+        if bld.is_defined('HAVE_GCOV'):
+            test_lib    += ['gcov']
+            test_cflags += ['-fprofile-arcs', '-ftest-coverage']
+
+        # Copy headers to URI-style include paths in build directory
+        for i in bld.path.ant_glob('*.h'):
+            obj = bld(rule   = link,
+                      name   = 'link',
+                      cwd    = 'build/lv2/%s/%s' % (include_base, info.NAME),
+                      source = '%s' % i,
+                      target = 'lv2/%s/%s/%s' % (include_base, info.NAME, i))
+
+        # Unit test program
+        obj = bld(features     = 'c cprogram',
+                  source       = '%s-test.c' % info.NAME,
+                  lib          = test_lib,
+                  target       = '%s-test' % info.NAME,
+                  install_path = '',
+                  cflags       = test_cflags)
             
     # Install bundle
     bld.install_files(bundle_dir,
@@ -120,6 +171,12 @@ def build(bld):
     else:
         bld.symlink_as(os.path.join(include_dir, info.NAME),
                        os.path.relpath(bundle_dir, include_dir))
+
+def test(ctx):
+    autowaf.pre_test(ctx, APPNAME, dirs=['.'])
+    os.environ['PATH'] = '.' + os.pathsep + os.getenv('PATH')
+    autowaf.run_tests(ctx, APPNAME, ['%s-test' % info.NAME], dirs=['.'])
+    autowaf.post_test(ctx, APPNAME, dirs=['.'])
 
 def write_news():
     import rdflib

@@ -14,12 +14,20 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix state: <http://lv2plug.in/ns/ext/state#> .
+@prefix dcs:   <http://ontologi.es/doap-changeset#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:homepage <http://drobilla.net/> ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
 
 <http://lv2plug.in/ns/ext/state>
 	a lv2:Specification ;
@@ -28,7 +36,8 @@
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:release [
 		doap:revision "0.5" ;
-		doap:created "2012-01-29"
+		doap:created "2012-01-29" ;
+		dcs:blame <http://drobilla.net/drobilla#me>
 	] ;
 	doap:developer [
 		a foaf:Person ;

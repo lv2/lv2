@@ -4,6 +4,6 @@
 <http://lv2plug.in/ns/ext/atom>
 	a lv2:Specification ;
 	lv2:minorVersion 0 ;
-	lv2:microVersion 3 ;
+	lv2:microVersion 4 ;
 	rdfs:seeAlso <atom.ttl> .
 

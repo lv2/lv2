@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2011 David Robillard <http://drobilla.net>
+  Copyright 2008-2012 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -36,148 +36,152 @@
 extern "C" {
 #endif
 
-/**
-   An LV2 Atom.
-
-   An "Atom" is a generic chunk of memory with a given type and size.
-   The type field defines how to interpret an atom.
-
-   All atoms are by definition Plain Old Data (POD) and may be safely copied
-   (e.g. with memcpy) using the size field, except atoms with type 0.  An atom
-   with type 0 is a reference, and may only be used via the functions provided
-   in LV2_Blob_Support (e.g. it MUST NOT be manually copied).
-*/
-typedef struct {
-	uint32_t type;    /**< Type of this atom (mapped URI). */
-	uint32_t size;    /**< Size in bytes, not including type and size. */
-	uint8_t  body[];  /**< Body of length @ref size bytes. */
-} LV2_Atom;
+/** This expression will fail to compile if double does not fit in 64 bits. */
+typedef char lv2_atom_assert_double_fits_in_64_bits[
+	((sizeof(double) <= sizeof(uint64_t)) * 2) - 1];
 
 /**
-   An atom:String.
-   May be cast to LV2_Atom.
+   Return a pointer to the contents of a variable-sized atom.
+   @param type The type of the atom, e.g. LV2_Atom_String.
+   @param atom A variable-sized atom.
 */
-typedef struct {
-	uint32_t type;   /**< Type of this atom (mapped URI). */
-	uint32_t size;   /**< Size in bytes, not including type and size. */
-	uint8_t  str[];  /**< Null-terminated string data in UTF-8 encoding. */
-} LV2_Atom_String;
+#define LV2_ATOM_CONTENTS(type, atom) \
+	((void*)((uint8_t*)(atom) + sizeof(type)))
 
-/**
-   An atom:Literal.
-   May be cast to LV2_Atom.
-*/
-typedef struct {
-	uint32_t type;      /**< Type of this atom (mapped URI). */
-	uint32_t size;      /**< Size in bytes, not including type and size. */
-	uint32_t datatype;  /**< The ID of the datatype of this literal. */
-	uint32_t lang;      /**< The ID of the language of this literal. */
-	uint8_t  str[];     /**< Null-terminated string data in UTF-8 encoding. */
-} LV2_Atom_Literal;
+/** Return a pointer to the body of @p atom (just past the LV2_Atom head). */
+#define LV2_ATOM_BODY(atom) LV2_ATOM_CONTENTS(LV2_Atom, atom)
 
-/**
-   An atom:URID or atom:BlankID.
-   May be cast to LV2_Atom.
-*/
+/** The header of an atom:Atom. */
 typedef struct {
 	uint32_t type;  /**< Type of this atom (mapped URI). */
 	uint32_t size;  /**< Size in bytes, not including type and size. */
-	uint32_t id;    /**< URID (integer mapped URI) or blank node ID. */
-} LV2_Atom_URID;
+} LV2_Atom;
 
-/**
-   An atom:Vector.
-   May be cast to LV2_Atom.
-*/
+/** An atom:Int32 or atom:Bool.  May be cast to LV2_Atom. */
 typedef struct {
-	uint32_t type;        /**< Type of this atom (mapped URI). */
-	uint32_t size;        /**< Size in bytes, not including type and size. */
-	uint32_t elem_count;  /**< The number of elements in the vector */
-	uint32_t elem_type;   /**< The type of each element in the vector */
-	uint8_t  elems[];     /**< Sequence of element bodies */
-} LV2_Atom_Vector;
-
-/**
-   The body of an atom:Property.
-   Note this type is not an LV2_Atom.
-*/
-typedef struct _LV2_Atom_Property {
-	uint32_t key;    /**< Key (predicate) (mapped URI). */
-	LV2_Atom value;  /**< Value (object) */
-} LV2_Atom_Property;
-
-/**
-   An atom:Thing (Resource, Blank, or Message).
-   May be cast to LV2_Atom.
-*/
-typedef struct {
-	uint32_t type;          /**< Type of this atom (mapped URI). */
-	uint32_t size;          /**< Size in bytes, not including type and size. */
-	uint32_t context;       /**< ID of context graph, or 0 for default */
-	uint32_t id;            /**< URID (for Resource) or blank ID (for Blank) */
-	uint8_t  properties[];  /**< Sequence of LV2_Atom_Property */
-} LV2_Thing;
-
-/**
-   An atom:Event, a timestamped Atom.
-   Note this type is not an LV2_Atom, but contains an Atom as payload.
-*/
-typedef struct {
-	uint32_t frames;     /**< Time in frames relative to this block. */
-	uint32_t subframes;  /**< Fractional time in 1/(2^32)ths of a frame. */
-	LV2_Atom body;       /**< Event body. */
-} LV2_Atom_Event;
-
-/**
-   An atom:Int32, a signed 32-bit integer.
-   May be cast to LV2_Atom.
-*/
-typedef struct {
-	uint32_t type;
-	uint32_t size;
+	LV2_Atom atom;
 	int32_t  value;
 } LV2_Atom_Int32;
 
-/**
-   An atom:Int64, a signed 64-bit integer.
-   May be cast to LV2_Atom.
-*/
+/** An atom:Int64.  May be cast to LV2_Atom. */
 typedef struct {
-	uint32_t type;
-	uint32_t size;
+	LV2_Atom atom;
 	int64_t  value;
 } LV2_Atom_Int64;
 
-/**
-   An atom:Float, a 32-bit IEEE-754 floating point number.
-   May be cast to LV2_Atom.
-*/
+/** An atom:Float.  May be cast to LV2_Atom. */
 typedef struct {
-	uint32_t type;
-	uint32_t size;
+	LV2_Atom atom;
 	float    value;
 } LV2_Atom_Float;
 
-/**
-   An atom:Double, a 64-bit IEEE-754 floating point number.
-   May be cast to LV2_Atom.
-*/
+/** An atom:Double.  May be cast to LV2_Atom. */
 typedef struct {
-	uint32_t type;
-	uint32_t size;
+	LV2_Atom atom;
 	double   value;
 } LV2_Atom_Double;
 
+/** An atom:Bool.  May be cast to LV2_Atom. */
+typedef LV2_Atom_Int32 LV2_Atom_Bool;
+
+/** An atom:URID.  May be cast to LV2_Atom. */
+typedef struct {
+	LV2_Atom atom;  /**< Atom header. */
+	uint32_t id;    /**< URID. */
+} LV2_Atom_URID;
+
+/** The complete header of an atom:String. */
+typedef struct {
+	LV2_Atom atom;  /**< Atom header. */
+	/* Contents (a null-terminated UTF-8 string) follow here. */
+} LV2_Atom_String;
+
+/** The header of an atom:Literal body. */
+typedef struct {
+	uint32_t datatype;  /**< The ID of the datatype of this literal. */
+	uint32_t lang;      /**< The ID of the language of this literal. */
+} LV2_Atom_Literal_Head;
+
+/** The complete header of an atom:Literal. */
+typedef struct {
+	LV2_Atom              atom;     /**< Atom header. */
+	LV2_Atom_Literal_Head literal;  /**< Literal body header. */
+	/* Contents (a null-terminated UTF-8 string) follow here. */
+} LV2_Atom_Literal;
+
+/** The complete header of an atom:Tuple. */
+typedef struct {
+	LV2_Atom atom;  /**< Atom header. */
+	/* Contents (a series of complete atoms) follow here. */
+} LV2_Atom_Tuple;
+
+/** The complete header of an atom:Vector. */
+typedef struct {
+	LV2_Atom atom;        /**< Atom header. */
+	uint32_t elem_count;  /**< The number of elements in the vector */
+	uint32_t elem_type;   /**< The type of each element in the vector */
+	/* Contents (a series of packed atom bodies) follow here. */
+} LV2_Atom_Vector;
+
+/** The header of an atom:Property body (e.g. in an atom:Object). */
+typedef struct {
+	uint32_t key;      /**< Key (predicate) (mapped URI). */
+	uint32_t context;  /**< Context URID (may be, and generally is, 0). */
+	LV2_Atom value;    /**< Value atom header. */
+} LV2_Atom_Property_Body;
+
+/** The complete header of an atom:Property. */
+typedef struct {
+	LV2_Atom atom;     /**< Atom header. */
+	uint32_t key;      /**< Key (predicate) (mapped URI). */
+	uint32_t context;  /**< Context URID (may be, and generally is, 0). */
+	LV2_Atom value;    /**< Value atom header. */
+	/* Value atom body follows here. */
+} LV2_Atom_Property;
+
+/** The complete header of an atom:Object. */
+typedef struct {
+	LV2_Atom atom;  /**< Atom header. */
+	uint32_t id;    /**< URID for atom:Resource, or blank ID for atom:Blank. */
+	uint32_t type;  /**< Type URID (same as rdf:type, for fast dispatch). */
+	/* Contents (a series of property bodies) follow here. */
+} LV2_Atom_Object;
+
+/** The complete header of an atom:Response. */
+typedef struct {
+	LV2_Atom atom;    /**< Atom header. */
+	uint32_t source;  /**< ID of message this is a response to (may be 0). */
+	uint32_t type;    /**< Specific response type URID (may be 0). */
+	uint32_t seq;     /**< Response sequence number, 0 for end. */
+	LV2_Atom body;    /**< Body atom header (may be empty). */
+	/* Body optionally follows here. */
+} LV2_Atom_Response;
+
+/** A time stamp in frames.  Note this type is NOT an LV2_Atom. */
+typedef struct {
+	uint32_t frames;     /**< Time in frames relative to this block. */
+	uint32_t subframes;  /**< Fractional time in 1/(2^32)ths of a frame. */
+} LV2_Atom_Audio_Time;
+
+/** The header of an atom:Event.  Note this type is NOT an LV2_Atom. */
+typedef struct {
+	/** Time stamp.  Which type is valid is determined by context. */
+	union {
+		LV2_Atom_Audio_Time audio;  /**< Time in audio frames. */
+		double              beats;  /**< Time in beats. */
+	} time;
+	LV2_Atom body;  /**< Event body atom header. */
+	/* Body atom contents follow here. */
+} LV2_Atom_Event;
+
 /**
-   A buffer of events (the contents of an atom:EventPort).
+   A sequence of events (time-stamped atoms).
 
-   The host MAY elect to allocate buffers as a single chunk of POD by using
-   this struct as a header much like LV2_Atom, or it may choose to point to
-   a fragment of a buffer elsewhere.  In either case, @ref data points to the
-   start of the data contained in this buffer.
+   This is used as the contents of an atom:EventPort, but is a generic Atom
+   type which can be used anywhere.
 
-   The buffer at @ref data contains a sequence of LV2_Atom_Event padded such
-   that the start of each event is aligned to 64 bits, e.g.:
+   The contents of a sequence is a series of LV2_Atom_Event, each aligned
+   to 64-bits, e.g.:
    <pre>
    | Event 1 (size 6)                              | Event 2
    |       |       |       |       |       |       |       |       |
@@ -186,60 +190,11 @@ typedef struct {
    </pre>
 */
 typedef struct {
-
-	/**
-	   The contents of the event buffer. This may or may not reside in the
-	   same block of memory as this header, plugins must not assume either.
-	   The host guarantees this points to at least capacity bytes of allocated
-	   memory (though only size bytes of that are valid events).
-	*/
-	uint8_t* data;
-
-	/**
-	   The number of events in this buffer.
-
-	   INPUTS: The host must set this field to the number of events contained
-	   in the data buffer before calling run(). The plugin must not change
-	   this field.
-
-	   OUTPUTS: The plugin must set this field to the number of events it has
-	   written to the buffer before returning from run(). Any initial value
-	   should be ignored by the plugin.
-	*/
-	uint32_t event_count;
-
-	/**
-	   The capacity of the data buffer in bytes.
-	   This is set by the host and must not be changed by the plugin.
-	   The host is allowed to change this between run() calls.
-	*/
-	uint32_t capacity;
-
-	/**
-	   The size of the initial portion of the data buffer containing data.
-
-	   INPUTS: The host must set this field to the number of bytes used
-	   by all events it has written to the buffer (including headers)
-	   before calling the plugin's run().
-	   The plugin must not change this field.
-
-	   OUTPUTS: The plugin must set this field to the number of bytes
-	   used by all events it has written to the buffer (including headers)
-	   before returning from run().
-	   Any initial value should be ignored by the plugin.
-	*/
-	uint32_t size;
-
-} LV2_Atom_Buffer;
-
-/**
-   Pad a size to 64 bits.
-*/
-static inline uint32_t
-lv2_atom_pad_size(uint32_t size)
-{
-	return (size + 7) & (~7);
-}
+	LV2_Atom atom;      /**< Atom header. */
+	uint32_t capacity;  /**< Maximum size of contents. */
+	uint32_t pad;
+	/* Contents (a series of events) follow here. */
+} LV2_Atom_Sequence;
 
 #ifdef __cplusplus
 }  /* extern "C" */

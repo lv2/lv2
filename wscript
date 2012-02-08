@@ -26,6 +26,8 @@ def options(opt):
     opt.load('compiler_cc')
     opt.load('compiler_cxx')
     autowaf.set_options(opt)
+    opt.add_option('--test', action='store_true', default=False, dest='build_tests',
+                   help="Build unit tests")
     opt.add_option('--experimental', action='store_true', default=False,
                    dest='experimental',
                    help='Install unreleased experimental extensions')

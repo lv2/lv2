@@ -34,8 +34,9 @@
 #define SAMPLER_UI_URI "http://lv2plug.in/plugins/eg-sampler#ui"
 
 typedef struct {
+	LV2_Atom_Forge forge;
+
 	LV2_URID_Map* map;
-	LV2_Atom_Forge*  forge;
 
 	LV2UI_Write_Function write;
 	LV2UI_Controller     controller;
@@ -71,19 +72,20 @@ on_load_clicked(GtkWidget* widget,
 	char*        filename     = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
 	const size_t filename_len = strlen(filename);
 	gtk_widget_destroy(dialog);
-	
-	uint8_t msg_buf[4096];
-	LV2_Thing* msg = (LV2_Thing*)msg_buf;
-	lv2_atom_forge_set_message(ui->forge, msg, uri_to_id(ui, SET_MESSAGE_URI));
-	lv2_thing_append(msg,
-	                 uri_to_id(ui, FILENAME_URI),
-	                 uri_to_id(ui, NS_ATOM "String"),
-	                 filename_len,
-	                 filename);
 
-	ui->write(ui->controller, 0, sizeof(LV2_Atom) + msg->size,
+#define OBJ_BUF_SIZE 1024
+	uint8_t obj_buf[OBJ_BUF_SIZE];
+	lv2_atom_forge_set_buffer(&ui->forge, obj_buf, OBJ_BUF_SIZE);
+
+	LV2_Atom* obj = (LV2_Atom*)lv2_atom_forge_object(
+		&ui->forge, NULL, 0, uri_to_id(ui, SET_MESSAGE_URI));
+	lv2_atom_forge_property_head(&ui->forge, obj,
+	                             uri_to_id(ui, FILENAME_URI), 0);
+	lv2_atom_forge_string(&ui->forge, obj, (uint8_t*)filename, filename_len);
+
+	ui->write(ui->controller, 0, sizeof(LV2_Atom) + obj->size,
 	          uri_to_id(ui, NS_ATOM "atomTransfer"),
-	          msg);
+	          obj);
 
 	g_free(filename);
 }
@@ -98,7 +100,7 @@ instantiate(const LV2UI_Descriptor*   descriptor,
             const LV2_Feature* const* features)
 {
 	SamplerUI* ui = (SamplerUI*)malloc(sizeof(SamplerUI));
-	ui->map     = NULL;
+	ui->map        = NULL;
 	ui->write      = write_function;
 	ui->controller = controller;
 	ui->button     = NULL;
@@ -117,7 +119,7 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 		return NULL;
 	}
 
-	ui->forge = lv2_atom_forge_new(ui->map);
+	lv2_atom_forge_init(&ui->forge, ui->map);
 
 	ui->button = gtk_button_new_with_label("Load Sample");
 	g_signal_connect(ui->button, "clicked",

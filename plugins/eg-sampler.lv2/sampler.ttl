@@ -25,13 +25,14 @@
 	a lv2:Plugin ;
 	doap:name "Example Sampler" ;
 	doap:license <http://opensource.org/licenses/isc> ;
-	lv2:requiredFeature <http://lv2plug.in/ns/ext/urid#Mapper> ;
-	lv2:optionalFeature lv2:hardRtCapable ;
+	lv2:requiredFeature <http://lv2plug.in/ns/ext/urid#map> ;
+	lv2:optionalFeature lv2:hardRTCapable ;
 	lv2:extensionData <http://lv2plug.in/ns/ext/state#Interface> ;
 	ui:ui <http://lv2plug.in/plugins/eg-sampler#ui> ;
 	lv2:port [
 		a lv2:InputPort ,
-			atom:EventPort ;
+			atom:MessagePort ;
+		atom:bufferType atom:Sequence ;
 		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
 		lv2:index 0 ;
 		lv2:symbol "control" ;
@@ -46,5 +47,5 @@
 
 <http://lv2plug.in/plugins/eg-sampler#ui>
 	a ui:GtkUI ;
-	lv2:requiredFeature <http://lv2plug.in/ns/ext/urid#Mapper> ;
+	lv2:requiredFeature <http://lv2plug.in/ns/ext/urid#map> ;
 	ui:binary <sampler_ui.so> .

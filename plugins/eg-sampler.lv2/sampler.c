@@ -1,8 +1,8 @@
 /*
   LV2 Sampler Example Plugin
+  Copyright 2011-2012 David Robillard <d@drobilla.net>
   Copyright 2011 Gabriel M. Beddingfield <gabriel@teuton.org>
   Copyright 2011 James Morris <jwm.art.net@gmail.com>
-  Copyright 2011 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -24,11 +24,11 @@
    incoming events) and also triggers their playback (based on incoming MIDI
    note events).  The sample must be monophonic.
 
-   So that the runSampler() method stays real-time safe, the plugin creates a
-   worker thread (worker_thread_main) that listens for file loading events.  It
-   loads everything in plugin->pending_samp and then signals the runSampler()
-   that it's time to install it.  runSampler() just has to swap pointers... so
-   the change happens very fast and atomically.
+   So that the run() method stays real-time safe, the plugin creates a worker
+   thread (worker_thread_main) that listens for file loading events.  It loads
+   everything in plugin->pending_samp and then signals the run() that it's time
+   to install it.  run() just has to swap pointers... so the change happens
+   very fast and atomically.
 */
 
 #include <assert.h>
@@ -41,7 +41,8 @@
 
 #include <sndfile.h>
 
-#include "lv2/lv2plug.in/ns/ext/atom/atom-buffer.h"
+#include <semaphore.h>
+
 #include "lv2/lv2plug.in/ns/ext/atom/atom-helpers.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
@@ -69,22 +70,21 @@ typedef struct {
 	LV2_URID_Map* map;
 
 	/* Sample */
-	SampleFile*     samp;
-	SampleFile*     pending_samp;
-	pthread_mutex_t pending_samp_mutex;  /**< Protects pending_samp */
-	pthread_cond_t  pending_samp_cond;   /**< Signaling mechanism */
-	int             pending_sample_ready;
+	SampleFile* samp;
+	SampleFile* pending_samp;
+	sem_t       signal;
+	int         pending_sample_ready;
 
 	/* Ports */
-	float*           output_port;
-	LV2_Atom_Buffer* event_port;
+	float*             output_port;
+	LV2_Atom_Sequence* event_port;
 
 	/* URIs */
 	struct {
-		LV2_URID midi_event;
-		LV2_URID atom_message;
+		LV2_URID midi_Event;
+		LV2_URID atom_Object;
 		LV2_URID set_message;
-		LV2_URID state_path;
+		LV2_URID state_Path;
 		LV2_URID filename_key;
 	} uris;
 
@@ -139,16 +139,16 @@ worker_thread_main(void* arg)
 {
 	Sampler* plugin = (Sampler*)arg;
 
-	pthread_mutex_lock(&plugin->pending_samp_mutex);
 	while (true) {
 		/* Wait for run() to signal that we need to load a sample */
-		pthread_cond_wait(&plugin->pending_samp_cond,
-		                  &plugin->pending_samp_mutex);
+		if (sem_wait(&plugin->signal)) {
+			fprintf(stderr, "Odd, sem_wait failed...\n");
+			continue;
+		}
 
 		/* Then load it */
 		handle_load_sample(plugin);
 	}
-	pthread_mutex_unlock(&plugin->pending_samp_mutex);
 
 	return 0;
 }
@@ -159,6 +159,7 @@ cleanup(LV2_Handle instance)
 	Sampler* plugin = (Sampler*)instance;
 	pthread_cancel(plugin->worker_thread);
 	pthread_join(plugin->worker_thread, 0);
+	sem_destroy(&plugin->signal);
 
 	free(plugin->samp->data);
 	free(plugin->pending_samp->data);
@@ -176,7 +177,7 @@ connect_port(LV2_Handle instance,
 
 	switch (port) {
 	case SAMPLER_CONTROL:
-		plugin->event_port = (LV2_Atom_Buffer*)data;
+		plugin->event_port = (LV2_Atom_Sequence*)data;
 		break;
 	case SAMPLER_OUT:
 		plugin->output_port = (float*)data;
@@ -196,7 +197,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	if (!plugin) {
 		return NULL;
 	}
-	
+
 	plugin->samp         = (SampleFile*)malloc(sizeof(SampleFile));
 	plugin->pending_samp = (SampleFile*)malloc(sizeof(SampleFile));
 	if (!plugin->samp || !plugin->pending_samp) {
@@ -207,15 +208,13 @@ instantiate(const LV2_Descriptor*     descriptor,
 	memset(plugin->pending_samp, 0, sizeof(SampleFile));
 	memset(&plugin->uris, 0, sizeof(plugin->uris));
 
-	/* Initialise mutexes and conditions for the worker thread */
-	if (pthread_mutex_init(&plugin->pending_samp_mutex, 0)) {
-		fprintf(stderr, "Could not initialize next_sample_mutex.\n");
+	/* Create signal for waking up worker thread */
+	if (sem_init(&plugin->signal, 0, 0)) {
+		fprintf(stderr, "Could not initialize semaphore.\n");
 		goto fail;
 	}
-	if (pthread_cond_init(&plugin->pending_samp_cond, 0)) {
-		fprintf(stderr, "Could not initialize next_sample_waitcond.\n");
-		goto fail;
-	}
+
+	/* Create worker thread */
 	if (pthread_create(&plugin->worker_thread, 0, worker_thread_main, plugin)) {
 		fprintf(stderr, "Could not initialize worker thread.\n");
 		goto fail;
@@ -225,13 +224,13 @@ instantiate(const LV2_Descriptor*     descriptor,
 	for (int i = 0; features[i]; ++i) {
 		if (!strcmp(features[i]->URI, LV2_URID_URI "#map")) {
 			plugin->map = (LV2_URID_Map*)features[i]->data;
-			plugin->uris.midi_event = plugin->map->map(
+			plugin->uris.midi_Event = plugin->map->map(
 				plugin->map->handle, MIDI_EVENT_URI);
-			plugin->uris.atom_message = plugin->map->map(
-				plugin->map->handle, ATOM_MESSAGE_URI);
+			plugin->uris.atom_Object = plugin->map->map(
+				plugin->map->handle, ATOM_OBJECT_URI);
 			plugin->uris.set_message = plugin->map->map(
 				plugin->map->handle, SET_MESSAGE_URI);
-			plugin->uris.state_path = plugin->map->map(
+			plugin->uris.state_Path = plugin->map->map(
 				plugin->map->handle, LV2_STATE_PATH_URI);
 			plugin->uris.filename_key = plugin->map->map(
 				plugin->map->handle, FILENAME_URI);
@@ -267,39 +266,35 @@ run(LV2_Handle instance,
 	float*     output      = plugin->output_port;
 
 	/* Read incoming events */
-	for (LV2_Atom_Buffer_Iterator i = lv2_atom_buffer_begin(plugin->event_port);
-	     lv2_atom_buffer_is_valid(i);
-	     i = lv2_atom_buffer_next(i)) {
-
-		LV2_Atom_Event* const ev = lv2_atom_buffer_get(i);
-		if (ev->body.type == plugin->uris.midi_event) {
+	LV2_SEQUENCE_FOREACH(plugin->event_port, i) {
+		LV2_Atom_Event* const ev = lv2_sequence_iter_get(i);
+		if (ev->body.type == plugin->uris.midi_Event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);
 			if ((data[0] & 0xF0) == 0x90) {
-				start_frame   = ev->frames;
+				start_frame   = ev->time.audio.frames;
 				plugin->frame = 0;
 				plugin->play  = true;
 			}
-		} else if (ev->body.type == plugin->uris.atom_message) {
-			const LV2_Thing* msg = (LV2_Thing*)&ev->body;
-			if (msg->id == plugin->uris.set_message) {
+		} else if (ev->body.type == plugin->uris.atom_Object) {
+			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
+			if (obj->type == plugin->uris.set_message) {
 				const LV2_Atom* filename = NULL;
-				LV2_Thing_Query q[] = {
+				LV2_Atom_Object_Query q[] = {
 					{ plugin->uris.filename_key, &filename },
-					LV2_THING_QUERY_END
+					LV2_OBJECT_QUERY_END
 				};
-				lv2_thing_query(msg, q);
+				lv2_object_get(obj, q);
 
 				if (filename) {
-					memcpy(plugin->pending_samp->filepath,
-					       filename->body,
-					       filename->size);
-					pthread_cond_signal(&plugin->pending_samp_cond);
-
+					char* str = (char*)LV2_ATOM_BODY(filename);
+					fprintf(stderr, "Request to load %s\n", str);
+					memcpy(plugin->pending_samp->filepath, str, filename->size);
+					sem_post(&plugin->signal);
 				} else {
 					fprintf(stderr, "Ignored set message with no filename\n");
 				}
 			} else {
-				fprintf(stderr, "Unknown message type %d\n", msg->id);
+				fprintf(stderr, "Unknown message type %d\n", obj->id);
 			}
 
 		} else {
@@ -328,18 +323,13 @@ run(LV2_Handle instance,
 	}
 
 	/* Check if we have a sample pending */
-	if (!plugin->play
-	    && plugin->pending_sample_ready
-	    && pthread_mutex_trylock(&plugin->pending_samp_mutex)) {
+	if (!plugin->play && plugin->pending_sample_ready) {
 		/* Install the new sample */
-		SampleFile* tmp;
-		tmp                          = plugin->samp;
+		SampleFile* tmp = plugin->samp;
 		plugin->samp                 = plugin->pending_samp;
 		plugin->pending_samp         = tmp;
 		plugin->pending_sample_ready = 0;
 		free(plugin->pending_samp->data); // FIXME: non-realtime!
-
-		pthread_mutex_unlock(&plugin->pending_samp_mutex);
 	}
 
 	/* Add zeros to end if sample not long enough (or not playing) */
@@ -376,7 +366,7 @@ save(LV2_Handle                instance,
 	      map_uri(plugin, FILENAME_URI),
 	      apath,
 	      strlen(plugin->samp->filepath) + 1,
-	      plugin->uris.state_path,
+	      plugin->uris.state_Path,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 
 	free(apath);

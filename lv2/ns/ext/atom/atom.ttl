@@ -27,10 +27,11 @@
 	doap:name "LV2 Atom" ;
 	doap:shortdesc "A generic value container and several data types." ;
 	doap:license <http://opensource.org/licenses/isc> ;
-	rdfs:seeAlso <atom-buffer.h> ;
+	rdfs:seeAlso <atom-helpers.h> ,
+		<forge.h> ;
 	doap:release [
-		doap:revision "0.3" ;
-		doap:created "2012-01-28"
+		doap:revision "0.4" ;
+		doap:created "2012-02-07"
 	] ;
 	doap:maintainer [
 		a foaf:Person ;
@@ -39,39 +40,45 @@
 		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
 	] ;
 	lv2:documentation """
-<p>This extension defines a generic format for a typed piece of data, called an
-lv2:Atom (e.g. integers, strings, buffers, data structures,
-etc).  Atoms allow LV2 plugins and hosts to communicate, process, serialise,
-and store values of any type via a generic mechanism (e.g. LV2 ports, events,
-disk, shared memory, network).  Atoms are, with one exception, Plain
-Old Data (POD) and may be safely copied (e.g. with a simple call to
-<code>memcpy</code>).</p>
+<p>This extension defines a generic container for data, called an <q>Atom</q>,
+and several basic Atom types which can be used to express structured data.
+Atoms allow LV2 plugins and hosts to communicate, process, serialise, and store
+values of any type via a generic mechanism (e.g. ports, files, networks,
+ringbuffers, etc.).  Atoms are, with one exception, Plain Old Data (POD) which
+may safely be copied (e.g. with a simple call to <code>memcpy</code>).</p>
 
 <p>Since Atom communication can be implemented generically, plugins that
 understand some type can be used together in a host that does not understand
 that type, and plugins (e.g. routers, delays) can process atoms of unknown
 type.</p>
 
-<p>An Atom can be trivially constructed in-place from an
-<a href="http://lv2plug.in/ns/ext/event#Event">Event</a> as defined by the
-<a href="http://lv2plug.in/ns/ext/event">LV2 Event</a> extension.  In other
-words, an Event is simply an Atom with a time stamp header.  Atoms SHOULD
-be used anywhere a "value" needs to be stored or communicated, to allow
-implementations to be polymorphic and extensible.</p>
+<p>Atoms can and should be used anywhere values of various types must be stored
+or transmitted.  This extension defines port types, atom:ValuePort and
+atom:MessagePort, which are connected to an Atom.  The atom:Sequence type in
+conjunction with atom:MessagePort is intended to replace the <a
+href="http://lv2plug.in/ns/ext/event">LV2 event</a> extension.</p>
 
-<p>Atoms (the start of the LV2_Atom header) MUST be 32-bit aligned.</p>
-
-<p>Atoms can be communicated in many ways.  Since an Atom is the payload of an
-Event, an <a href="http://lv2plug.in/ns/ext/event#EventPort">EventPort</a> can
-be used for communicating Atoms in realtime with sub-sample time stamp
-accuracy.  This extension also defines two port types for connecting directly
-to a single Atom: atom:ValuePort and atom:MessagePort, which both have the same
-buffer format but different semantics (with respect to how the run() callback
-interprets the Atom).</p>
+<p>The types defined in this extension should be powerful enough to express
+almost any structure.  Implementers SHOULD build structures out of the types
+provided here, rather than define new binary formats (e.g. use atom:Object
+rather than a new C <code>struct</code> type).  New binary formats are an
+implementation burden which harms interoperabilty, and should only be defined
+where absolutely necessary.</p>
 
 <p>Implementing this extension requires a facility for mapping URIs to
 integers, such as the <a href="http://lv2plug.in/ns/ext/urid">LV2 URID</a>
 extension.</p>
+""" .
+
+atom:cType
+	a rdf:Property ,
+		owl:DatatypeProperty ;
+	rdfs:label "C type" ;
+	rdfs:domain rdfs:Class ;
+	rdfs:range xsd:string ;
+	rdfs:comment """
+The identifier for a C type describing the in-memory representation of
+an instance of this class.
 """ .
 
 atom:Atom
@@ -80,26 +87,70 @@ atom:Atom
 	atom:cType "LV2_Atom" ;
 	lv2:documentation """
 <p>Abstract base class for all atoms.  An LV2_Atom has a 32-bit
-<code>type</code> and <code>size</code> followed by a <code>body</code> of
-<code>size</code> bytes.</p>
+<code>type</code> and <code>size</code> followed by a body of <code>size</code>
+bytes.  Atoms MUST be 64-bit aligned.</p>
 
 <p>All concrete Atom types (subclasses of this class) MUST define a precise
-binary layout for <code>body</code>.</p>
+binary layout for their body.</p>
 
-<p>The <code>type</code> field is the URI of a subclass of Atom mapped to an
-integer using the <a href="http://lv2plug.in/ns/ext/uri-map">URI Map</a>
-extension's LV2_URI_Map_Feature::uri_to_id() with
-<code>map = "http://lv2plug.in/ns/ext/event"</code>.  If a plugin or host
-does not understand <code>type</code>, that atom SHOULD be gracefully ignored
-(or copied if it does not have type 0).</p>
+<p>The <code>type</code> field is the URI of an Atom type mapped to an integer.
+Implementations SHOULD gracefully ignore, or pass through, atoms with unknown
+types.</p>
 
 <p>All atoms are POD by definition except references, which as a special case
 have <code>type = 0</code>.  An Atom MUST NOT contain a Reference.  It is safe
 to copy any non-reference Atom with a simple <code>memcpy</code>, even if the
-implementation does not understand <code>type</code>.  Though this extension reserves
-the type 0 for references, actual specification of how references are used is left
-to another extension.</p>
+implementation does not understand <code>type</code>.  Though this extension
+reserves the type 0 for references, the details of reference handling are
+currently unspecified.  A future revision of this extension, or a different
+extension, may define how to use non-POD data and references.  Implementations
+MUST NOT send references to another implementation unless the receiver is
+explicitly known to support references (e.g. by supporting a feature).  The
+atom with both <code>type</code> <em>and</em> <code>size</code> 0 is
+<q>null</q>, which is not considered a Reference.</p>
 """ .
+
+atom:Bang
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Atom ;
+	rdfs:label "Bang" ;
+    rdfs:comment "Generic activity or trigger, with no body." .
+
+atom:Number
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Atom ;
+	rdfs:label "Number" .
+
+atom:Int32
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Number ;
+	rdfs:label "Signed 32-bit integer" ;
+	atom:cType "LV2_Atom_Int32" .
+
+atom:Int64
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Number ;
+	rdfs:label "Signed 64-bit integer" ;
+	atom:cType "LV2_Atom_Int64" .
+
+atom:Float
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Number ;
+	rdfs:label "32-bit IEEE-754 floating point number" ;
+	atom:cType "LV2_Atom_Float" .
+
+atom:Double
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Number ;
+	rdfs:label "64-bit IEEE-754 floating point number" ;
+	atom:cType "LV2_Atom_Double" .
+
+atom:Bool
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Atom ;
+	rdfs:label "Boolean" ;
+	atom:cType "LV2_Atom_Bool" ;
+	rdfs:comment "An Int32 where 0 is false and any other value is true." .
 
 atom:String
 	a rdfs:Class ;
@@ -128,7 +179,7 @@ atom:Literal
 <p>A UTF-8 encoded string literal, with an optional datatype or language.</p>
 
 <p>This type is compatible with rdf:Literal and is capable of expressing a
-string in any language, or a value of any type.  A Literal has a
+string in any language or a value of any type.  A Literal has a
 <code>datatype</code> and <code>lang</code> followed by string data in UTF-8
 encoding.  The length of the string data in bytes is <code>size -
 sizeof(LV2_Atom_Literal)</code>, including the terminating NULL character.  The
@@ -143,22 +194,26 @@ both.</p>
 <p>For example, a Literal can be "Hello" in English:</p>
 <pre class="c-code">
 void set_to_hello_in_english(LV2_Atom_Literal* lit) {
-     lit->type     = map(expand("atom:Literal"));
-     lit->size     = 14;
-     lit->datatype = 0;
-     lit->lang     = map("http://lexvo.org/id/term/en");
-     memcpy(lit->str, "Hello", sizeof("Hello"));  // Assumes enough space
+     lit->atom.type = map(expand("atom:Literal"));
+     lit->atom.size = 14;
+     lit->datatype  = 0;
+     lit->lang      = map("http://lexvo.org/id/term/en");
+     memcpy(LV2_ATOM_CONTENTS(LV2_Atom_Literal, lit),
+            "Hello",
+            sizeof("Hello"));  // Assumes enough space
 }
 </pre>
 
 <p>or a Turtle string:</p>
 <pre class="c-code">
 void set_to_turtle_string(LV2_Atom_Literal* lit, const char* ttl) {
-     lit->type     = map(expand("atom:Literal"));
-     lit->size     = 64;
-     lit->datatype = map("http://www.w3.org/2008/turtle#turtle");
-     lit->lang     = 0;
-     memcpy(lit->str, ttl, strlen(ttl) + 1);  // Assumes enough space
+     lit->atom.type = map(expand("atom:Literal"));
+     lit->atom.size = 64;
+     lit->datatype  = map("http://www.w3.org/2008/turtle#turtle");
+     lit->lang      = 0;
+     memcpy(LV2_ATOM_CONTENTS(LV2_Atom_Literal, lit),
+            ttl,
+            strlen(ttl) + 1);  // Assumes enough space
 }
 </pre>
 """ .
@@ -169,21 +224,7 @@ atom:URID
 	rdfs:label "Integer ID mapped from a URI" ;
 	atom:cType "LV2_Atom_ID" ;
 	lv2:documentation """
-<p>An unsigned 32-bit integer mapped from a URI using the <a
-href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's
-LV2_URI_Map_Feature::uri_to_id() with <code>map = NULL</code>.</p>
-""" .
-
-atom:BlankID
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Integer ID for a blank node" ;
-	atom:cType "LV2_Atom_ID" ;
-	lv2:documentation """
-<p>An unsigned 32-bit integer identifier for a blank node.  A BlankID is only
-meaningful within a limited scope (e.g. the Atom in which it appears), and
-MUST NOT be used as a global identifier.  In particular, a BlankID is NOT a
-URID, and can not be mapped to/from a URI.</p>
+<p>An unsigned 32-bit integer mapped from a URI (e.g. with LV2_URID_Map).</p>
 """ .
 
 atom:Vector
@@ -192,7 +233,7 @@ atom:Vector
 	rdfs:label "Vector" ;
 	atom:cType "LV2_Atom_Vector" ;
 	lv2:documentation """
-<p>A homogeneous sequence of atoms with equivalent type and size.</p>
+<p>A homogeneous series of atom bodies with equivalent type and size.</p>
 
 <p>An LV2_Atom_Vector is a 32-bit <code>elem_count</code> and
 <code>elem_type</code> followed by <code>elem_count</code> atom bodies of type
@@ -221,125 +262,84 @@ atom:Tuple
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Tuple" ;
 	lv2:documentation """
-<p>A sequence of lv2:Atom with varying <code>type</code>
-and <code>size</code>.</p>
+<p>A series of Atoms with varying <code>type</code> and <code>size</code>.</p>
 
-<p>The body of a Tuple is simply a sequence of complete atoms, each aligned to
-32 bits.</p>
+<p>The body of a Tuple is simply a series of complete atoms, each aligned to
+64 bits.</p>
 """ .
 
-atom:Thing
+atom:Property
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Thing" ;
-	atom:cType "LV2_Thing" ;
+	rdfs:label "Property" ;
+	atom:cType "LV2_Atom_Property" ;
 	lv2:documentation """
-<p>Abstract base class for a "Thing", i.e. an atom:Atom with a number of
-properties.  An LV2_Object is an unsigned 32-bit integer <code>context</code>
-and <code>id</code> followed by a sequence of LV2_Atom_Property .</p>
+<p>A property of an atom:Object.  An LV2_Atom_Property has a URID
+<code>key</code> and <code>context</code>, and an Atom <code>value</code>.
+This corresponds to an RDF Property, where the <q>key</q> is the <q>predicate</q>
+and the <q>value</q> is the object.</p>
 
-<p>The <code>context</code> is mapped using the <a
-href="http://lv2plug.in/ns/ext/uri-map">URI Map</a> extension's
-LV2_URI_Map_Feature::uri_to_id() with <code>map = NULL</code>, and may be 0
-(the default context).</p>
+<p>The <code>context</code> field can be used to specify a different context
+for each property, where this is useful.  Otherwise, it may be 0.</p>
+""" .
 
-<p>Note this is an abstract class, i.e. no Atom can exist with <code>type =
-uri_to_id(atom:Thing)</code>.  An Object is either an atom:Resource or an
-atom:Blank, but the <code>body</code> always has the same binary format,
-LV2_Object.  Thus, both named and anonymous objects can be handled with common
-code using only a 64-bit header for both.</p>
+atom:Object
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Atom ;
+	rdfs:label "Object" ;
+	atom:cType "LV2_Atom_Object" ;
+	lv2:documentation """
+<p>An <q>Object</q> is an atom with a set of properties.  This corresponds to
+an RDF Resource, and can be thought of as a dictionary with URID keys.</p>
+
+<p>An LV2_Atom_Object has a uint32_t <code>id</code> and uint32_t
+<code>type</code>, followed by a series of atom:Property bodies (without
+headers, i.e. LV2_Atom_Property_Body).  The LV2_Atom_Object::type field is
+semantically equivalent to a property with key rdf:type, but is included in the
+structure to allow for fast dispatch.</p>
+
+<p>This is an abstract Atom type, an Object is always either a atom:Resource
+or a atom:Blank.</p>
 """ .
 
 atom:Resource
 	a rdfs:Class ;
-	rdfs:subClassOf atom:Thing ;
-	atom:cType "LV2_Thing" ;
+	rdfs:subClassOf atom:Object ;
+	rdfs:label "Resource" ;
+	atom:cType "LV2_Atom_Object" ;
 	lv2:documentation """
-<p>An atom:Thing where <code>id</code> is the URI of the resource mapped to an
-atom:URID.</p>
+<p>An atom:Object where the <code>id</code> field is a URID, i.e. an Object
+with a URI.</p>
 """ .
 
 atom:Blank
 	a rdfs:Class ;
-	rdfs:subClassOf atom:Thing ;
-	atom:cType "LV2_Thing" ;
+	rdfs:subClassOf atom:Object ;
+	rdfs:label "Blank" ;
+	atom:cType "LV2_Atom_Object" ;
 	lv2:documentation """
-<p>An atom:Thing where <code>id</code> is the blank node ID of the object,
-which is only meaningful within a certain limited scope (e.g. the container of
-the Blank) and MUST NOT be used as a global ID.  In particular, <code>id</code>
-is NOT a URID.</p>
-""" .
-
-atom:Message
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Thing ;
-	atom:cType "LV2_Thing" ;
-	lv2:documentation """
-<p>A atom:Thing where <code>id</code> is a message type ID.  Conceptually, a
-Message is identical to a Blank, but is a distinct type with a single type
-field to allow simple and fast dispatch by handling code.</p>
-
-<p>A Message may be serialised as a Blank by adding an rdf:type property with
-the value <code>id</code> unmapped to a URI.</p>
-""" .
+<p>An atom:Object where the LV2_Atom_Object::id is a blank node ID (NOT a URI).
+The ID of a Blank is valid only within the context the Blank appears in.  For
+ports this is the context of the associated run() call, i.e. all ports share
+the same context so outputs can contain IDs that correspond to IDs of blanks in
+the input.</p> """ .
 
 atom:Event
 	a rdfs:Class ;
 	rdfs:label "Event" ;
 	atom:cType "LV2_Atom_Event" ;
 	lv2:documentation """
-<p>An atom with a time stamp header prepended, typically for sample accurate
-transmission via LV2 ports.  See struct LV2_Atom_Event.</p>
+<p>An atom with a time stamp header prepended, typically an element of an
+atom:Sequence.  Note this is not an Atom type.</p>
 """ .
 
-atom:Bang
+atom:Sequence
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Bang (activity) (size = 0)" .
-
-atom:Number
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Number (abstract class)." .
-
-atom:Int32
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Number ;
-	rdfs:label "Signed 32-bit integer" ;
-	atom:cType "LV2_Atom_Int32" .
-
-atom:Int64
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Number ;
-	rdfs:label "Signed 64-bit integer" ;
-	atom:cType "LV2_Atom_Int64" .
-
-atom:Bool
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
-	rdfs:label "An atom:Int32 where 0 is false and all other values true" ;
-	atom:cType "LV2_Atom_Int32" .
-
-atom:Float
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Number ;
-	rdfs:label "32-bit IEEE-754 floating point number" ;
-	atom:cType "LV2_Atom_Float" .
-
-atom:Double
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Number ;
-	rdfs:label "64-bit IEEE-754 floating point number" ;
-	atom:cType "LV2_Atom_Double" .
-
-atom:blobSupport
-	a lv2:Feature ;
-	rdfs:label "Blob support" ;
+	rdfs:label "Sequence" ;
+	atom:cType "LV2_Atom_Sequence" ;
 	lv2:documentation """
-<p>Support for dynamically allocated blobs.  If a host supports this feature,
-it MUST pass a LV2_Feature with <code>URI</code>
-http://lv2plug.in/ns/ext/atom#blobSupport and <code>data</code> pointing to a
-LV2_Blob_Support.</p>
+<p>A sequence of atom:Event, i.e. a series of time-stamped Atoms.</p>
 """ .
 
 atom:AtomPort
@@ -347,21 +347,20 @@ atom:AtomPort
 	rdfs:subClassOf lv2:Port ;
 	rdfs:label "Atom Port" ;
 	lv2:documentation """
-<p>A port which contains an lv2:Atom.  Ports of this type will
-be connected to a 32-bit aligned LV2_Atom immediately followed by
-<code>size</code> bytes of data.</p>
+<p>A port which contains an lv2:Atom.  Ports of this type will be connected to
+a 64-bit aligned LV2_Atom immediately followed by <code>size</code> bytes of
+data.</p>
 
-<p>This is an abstract port type, i.e. a port MUST NOT only be an AtomPort,
-but must be a more descriptive type that is a subclass of AtomPort which
-defines the port's semantics (typically atom:ValuePort or atom:MessagePort).
-</p>
+<p>This is an abstract port type with incomplete semantics which can not be
+used directly as a port type.  Atom ports should be either a atom:ValuePort or
+a atom:MessagePort.</p>
 
-<p>Before calling a method on the plugin that writes to an AtomPort output,
-the host MUST set the size of the Atom in that output to the amount of
-available memory immediately following the Atom header.  The plugin MUST
-write a valid Atom to that port (leaving it untouched is illegal).  If there
-is no reasonable value to write to the port, the plugin MUST write NULL
-(the Atom with both <code>type = 0</code> and <code>size = 0</code>).</p>
+<p>Before calling a method on a plugin that writes to an AtomPort output, the
+host MUST set the size of the Atom in that output to the amount of available
+memory immediately following the Atom header.  The plugin MUST write a valid
+Atom to that port; leaving it untouched is illegal.  If there is no reasonable
+value to write to the port, the plugin MUST write null (the Atom with both
+<code>type</code> and <code>size</code> 0).</p>
 """ .
 
 atom:ValuePort
@@ -369,67 +368,95 @@ atom:ValuePort
 	rdfs:subClassOf atom:AtomPort ;
 	rdfs:label "Value Port" ;
 	lv2:documentation """
-<p>An AtomPort that interprets its data as a persistent and time-independent
-"value".</p>
+
+<p>An AtomPort that contains a persistent <em>value</em>.  A <q>value</q> is
+time-independent and may be used numerous times.  A ValuePort is <q>pure</q> in
+the sense that it may affect output but MUST NOT affect persistent plugin state
+in any externally visible way.</p>
+
 <ul>
-<li>If a plugin has fixed input values for all ports, all ValuePort outputs
-are also fixed regardless of the number of times the plugin is run.</li>
-<li>If a plugin has fixed input values for all ports except a ValuePort,
-each value V of that ValuePort corresponds to a single set of outputs
-for all ports.</li>
-<li>If a ValuePort contains a reference then the blob it refers to is
-constant; plugin MUST NOT modify the blob in any way.</li>
+<li>If a plugin has fixed values for all inputs, all ValuePort outputs are also
+fixed regardless of the number of times the plugin is run.</li>
+
+<li>If a plugin has fixed input values for all ports except a ValuePort, each
+value of that port corresponds to a single set of values for all
+ValuePort outputs.</li>
+
+<li>If the plugin saves state other than port values (e.g. using the <a
+href="http://lv2plug.in/ns/ext/state">LV2 State</a> extension), changing only
+the value of a ValuePort input MUST NOT change that state.  In other words,
+value port changes MUST NOT trigger a state change that requires a save.</li>
 </ul>
-<p>Value ports can be thought of as purely functional ports: if a plugin
-callback has only value ports, then the plugin callback is a pure function.</p>
+
+<p>Value ports are essentially purely functional ports: if a plugin has only
+value ports, that plugin is purely functional.  Hosts may elect to cache output
+and avoid calling run() if the output is already known according to these
+rules.</p>
 """ .
 
 atom:MessagePort
 	a rdfs:Class ;
 	rdfs:subClassOf atom:AtomPort ;
 	rdfs:label "Message Port" ;
-	rdfs:comment """
-An AtomPort that "receives", "consumes", "executes", or "sends" its value.
-The Atom contained in a MessagePort is considered transient and/or
-time-dependent, and is only valid for a single run invocation.  Unlike a
-ValuePort, a MessagePort may be used to manipulate internal plugin state.
-
-Intuitively, a MessagePort contains a "message" or "command" or "event"
-which is reacted to, NOT a "value" or "signal" (which is computed with).
-""" .
-
-atom:cType
-	a rdf:Property ,
-		owl:DatatypeProperty ;
-	rdfs:label "C type" ;
-	rdfs:domain rdfs:Class ;
-	rdfs:range xsd:string ;
-	rdfs:comment """
-The identifier for a C type describing the in-memory representation of
-an instance of this class.
-""" .
-
-atom:EventPort
-	a rdfs:Class ;
-	rdfs:label "Event port" ;
-	rdfs:subClassOf lv2:Port ;
 	lv2:documentation """
-<p>A port used for communicating time-stamped atoms in the audio context.
-Ports of this type are connected to an LV2_Atom_Buffer, which contains a flat
-time-stamped sequence of atom:Event.</p>
+<p>An AtomPort that contains transient data which is <em>consumed</em> or
+<em>sent</em>.  The Atom contained in a MessagePort is time-dependent and only
+valid for a single run invocation.  Unlike a ValuePort, a MessagePort may be
+used to manipulate internal plugin state.</p>
 
-<p>This port type is intended as a simpler and atom compatible successor to <a
-href="http://lv2plug.in/ns/ext/event#EventPort">ev:EventPort</a>.</p>
+<p>Intuitively, a MessagePort contains a <q>message</q> or <q>event</q> which
+is reacted to <em>once</em> (not a <q>value</q> which is computed with any
+number of times).</p>
+""" .
+
+atom:bufferType
+	a rdf:Property ;
+	rdfs:domain atom:AtomPort ;
+	rdfs:label "buffer type" ;
+	lv2:documentation """
+<p>Indicates that an AtomPort may be connected to a certain Atom type.  A port
+MAY support several buffer types.  The host MUST NOT connect a port to an Atom
+with a type not explicitly listed with this property.  The value of this
+property MUST be a sub-class of atom:Atom.  For example, an input port that is
+connected directly to an LV2_Atom_Double value is described like so:</p>
+
+<pre class="turtle-code">
+&lt;plugin&gt;
+    lv2:port [
+        a lv2:InputPort , atom:ValuePort ;
+        atom:bufferType atom:Double ;
+    ] .
+</pre>
+
+<p>Note this property only indicates the atom types a port may be directly
+connected to, it is not <q>recursive</q>.  If a port can be connected to a
+collection, use atom:supports to indicate which element types are understood.
+If a port supports heterogeneous collections (collections that can contain
+several types of elements at once), implementations MUST gracefully handle any
+types that are present in the collection, even if those types are not
+explicitly supported.</p>
 """ .
 
 atom:supports
 	a rdf:Property ;
-	rdfs:domain lv2:Port ;
-	rdfs:range atom:Atom ;
 	rdfs:label "supports" ;
 	lv2:documentation """
-<p>Indicates that a Port supports a certain atom:Atom type.  This is distinct from
-the port type - e.g. the port type ValuePort can hold atoms with many different
-types.  This property is used to describe which Atom types a Port expects to
-receive or send.</p>
+<p>Indicates that a particular Atom type is supported.</p>
+
+<p>This property is defined loosely, it may be used to indicate that anything
+<q>supports</q> an Atom type, wherever that may be useful.  It applies
+<q>recursively</q> where collections are involved.</p>
+
+<p>In particular, this property can be used to describe which event types are
+supported by a port.  For example, a port that receives MIDI events is
+described like so:</p>
+
+<pre class="turtle-code">
+&lt;plugin&gt;
+    lv2:port [
+        a lv2:InputPort , atom:MessagePort ;
+        atom:bufferType atom:Sequence ;
+        atom:supports midi:MidiEvent ;
+    ] .
+</pre>
 """ .
