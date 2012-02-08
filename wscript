@@ -15,7 +15,7 @@ import waflib.Options as Options
 LV2EXT_VERSION = datetime.date.isoformat(datetime.datetime.now()).replace('-', '.')
 
 # Variables for 'waf dist'
-APPNAME = 'lv2plug.in'
+APPNAME = 'lv2world'
 VERSION = LV2EXT_VERSION
 
 # Mandatory variables
@@ -31,7 +31,7 @@ def options(opt):
     opt.add_option('--experimental', action='store_true', default=False,
                    dest='experimental',
                    help='Install unreleased experimental extensions')
-    for i in ['lv2/ns/lv2core']:
+    for i in ['lv2/lv2plug.in/ns/lv2core']:
         opt.recurse(i)
 
 def configure(conf):
@@ -41,9 +41,9 @@ def configure(conf):
 
     conf.env.append_unique('CFLAGS', '-std=c99')
 
-    subdirs = ['lv2/ns/lv2core']
-    subdirs += glob.glob('lv2/ns/ext/*/')
-    subdirs += glob.glob('lv2/ns/extensions/*/')
+    subdirs = ['lv2/lv2plug.in/ns/lv2core']
+    subdirs += glob.glob('lv2/lv2plug.in/ns/ext/*/')
+    subdirs += glob.glob('lv2/lv2plug.in/ns/extensions/*/')
 
     for i in subdirs:
         conf.recurse(i)
@@ -66,8 +66,8 @@ def release(ctx):
 
     os.makedirs('build/spec')
 
-    manifests = glob.glob('lv2/ns/lv2core/manifest.ttl')
-    manifests += glob.glob('lv2/ns/*/*/manifest.ttl')
+    manifests = glob.glob('lv2/lv2plug.in/ns/lv2core/manifest.ttl')
+    manifests += glob.glob('lv2/lv2plug.in/ns/*/*/manifest.ttl')
     for manifest in manifests:
         dir = os.path.dirname(manifest)
         name = os.path.basename(dir).replace('.lv2', '')
@@ -100,7 +100,7 @@ def release(ctx):
             subprocess.call(['./waf', 'distclean'], cwd=dir)
         
 def lint(ctx):
-    for i in (['lv2/ns/lv2core/lv2.h']
-              + glob.glob('lv2/ns/ext/*/*.h')
-              + glob.glob('lv2/ns/extensions/*/*.h')):
+    for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']
+              + glob.glob('lv2/lv2plug.in/ns/ext/*/*.h')
+              + glob.glob('lv2/lv2plug.in/ns/extensions/*/*.h')):
         subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-whitespace/blank_line,-build/header_guard,-readability/casting,-readability/todo,-build/include ' + i, shell=True)
