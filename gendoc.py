@@ -7,8 +7,6 @@ import rdflib
 import shutil
 import subprocess
 import sys
-import xml.dom
-import xml.dom.minidom
 
 sys.path.append("./lv2specgen")
 import lv2specgen
@@ -19,7 +17,7 @@ except:
     pass
 
 # Copy bundles (less build files) to build directory
-shutil.copytree('lv2/ns', 'build/ns',
+shutil.copytree('lv2/lv2plug.in/ns', 'build/ns',
                 ignore=shutil.ignore_patterns('.*', 'waf', 'wscript', '*.in'))
 
 try:
@@ -34,7 +32,7 @@ URIPREFIX  = 'http://lv2plug.in/ns/'
 DOXPREFIX  = 'ns/doc/html/'
 SPECGENDIR = os.path.abspath('lv2specgen')
 STYLEPATH  = os.path.abspath('build/aux/style.css')
-TAGFILE    = os.path.abspath('build/doclinks')
+TAGFILE    = os.path.abspath('build/tags')
 BUILDDIR   = os.path.abspath('build')
 
 doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
@@ -53,45 +51,6 @@ os.chdir('build')
 print('## Generating header documentation with doxygen ##')
 shutil.copy('../doc/doxy-style.css', './doxy-style.css')
 subprocess.call(['doxygen', '../Doxyfile'], stdout=devnull)
-
-def rescue_tags(in_path, out_path):
-    "Rescue Doxygen tag file from XML hell."
-
-    def getChildText(elt, tagname):
-        "Return the content of the first child node with a certain tag name."
-        elements = elt.getElementsByTagName(tagname)
-        for e in elements:
-            if e.parentNode == elt:
-                return e.firstChild.nodeValue
-        return ''
-
-    tagdoc = xml.dom.minidom.parse(in_path)
-    root = tagdoc.documentElement
-    bettertags = open(out_path, 'w')
-    for cn in root.childNodes:
-        if cn.nodeType == xml.dom.Node.ELEMENT_NODE and cn.tagName == 'compound':
-            if cn.getAttribute('kind') == 'page':
-                continue
-            name = getChildText(cn, 'name')
-            filename = getChildText(cn, 'filename')
-            # Sometimes the .html is there, sometimes it isn't...
-            if not filename.endswith('.html'):
-                filename += '.html'
-            bettertags.write('%s %s%s\n' % (name, DOXPREFIX, filename))
-            if cn.getAttribute('kind') == 'file':
-                prefix = ''
-            else:
-                prefix = name + '::'
-            members = cn.getElementsByTagName('member')
-            for m in members:
-                mname = prefix + getChildText(m, 'name')
-                mafile = getChildText(m, 'anchorfile')
-                manchor = getChildText(m, 'anchor')
-                bettertags.write('%s %s%s#%s\n' % (mname, DOXPREFIX, \
-                                                       mafile, manchor))
-    bettertags.close()
-
-rescue_tags('c_tags', TAGFILE)
 
 def subst_file(template, output, dict):
     i = open(template, 'r')
@@ -224,7 +183,7 @@ extensions.sort()
 for i in extensions:
     index_rows += i + '\n'
 
-subst_file('../lv2/ns/index.html.in', 'ns/index.html',
+subst_file('../lv2/lv2plug.in/ns/index.html.in', 'ns/index.html',
            { '@ROWS@': index_rows,
              '@TIME@': datetime.datetime.utcnow().strftime('%F %H:%M UTC') })
            

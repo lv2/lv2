@@ -45,6 +45,8 @@ import os
 import re
 import sys
 import xml.sax.saxutils
+import xml.dom
+import xml.dom.minidom
 
 try:
     from lxml import etree
@@ -972,8 +974,54 @@ def getInstances(model, classes, properties):
             instances.append(getSubject(i))
     return instances
 
+def load_tags(path, doc_base):
+    "Build a (symbol => URI) map from a Doxygen tag file."
 
-def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=False, mode="spec"):
+    def getChildText(elt, tagname):
+        "Return the content of the first child node with a certain tag name."
+        for e in elt.childNodes:
+            if e.nodeType == xml.dom.Node.ELEMENT_NODE and e.tagName == tagname:
+                return e.firstChild.nodeValue
+        return ''
+
+    def linkTo(sym, url):
+        #print "LINK: ", '<span><a href="%s/%s">%s</a></span>' % (doc_base, url, sym)
+        return '<span><a href="%s/%s">%s</a></span>' % (doc_base, url, sym)
+
+    # FIXME: Parameterize
+    DOXPREFIX = 'ns/doc/html/'
+
+    tagdoc  = xml.dom.minidom.parse(path)
+    root    = tagdoc.documentElement
+    linkmap = {}
+    for cn in root.childNodes:
+        if (cn.nodeType == xml.dom.Node.ELEMENT_NODE
+            and cn.tagName == 'compound'
+            and cn.getAttribute('kind') != 'page'
+            and cn.getAttribute('kind') != 'file'):
+
+            name     = getChildText(cn, 'name')
+            filename = getChildText(cn, 'filename')
+
+            linkmap[name] = linkTo(name, DOXPREFIX + filename)
+
+            prefix = ''
+            if cn.getAttribute('kind') != 'file':
+                prefix = name + '::'
+
+            members = cn.getElementsByTagName('member')
+            for m in members:
+                mname   = prefix + getChildText(m, 'name')
+                mafile  = getChildText(m, 'anchorfile')
+                manchor = getChildText(m, 'anchor')
+                linkmap[mname] = linkTo(
+                    mname, '%s%s#%s' % (DOXPREFIX, mafile, manchor))
+
+    #import pprint
+    #pprint.pprint(linkmap)
+    return linkmap
+
+def specgen(specloc, indir, docdir, style_uri, doc_base, tags, instances=False, mode="spec"):
     """The meat and potatoes: Everything starts here."""
 
     global spec_url
@@ -982,6 +1030,7 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     global spec_pre
     global ns_list
     global specgendir
+    global linkmap
 
     specgendir = os.path.abspath(indir)
 
@@ -991,12 +1040,8 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
     f = open(temploc, "r")
     template = f.read()
 
-    # Build a symbol -> link mapping for external links
-    dlfile = open(doclinks, 'r')
-    for line in dlfile:
-        sym, _, url = line.rstrip().partition(' ')
-        linkmap[sym] = '<span><a href="%s">%s</a></span>' % (
-            os.path.join(doc_base, url), sym)
+    # Load code documentation link map from tags file
+    linkmap = load_tags(tags, doc_base)
 
     m = rdflib.ConjunctiveGraph()
     manifest_path = os.path.join(os.path.dirname(specloc), 'manifest.ttl')
@@ -1195,14 +1240,14 @@ def getOntologyNS(m):
 
 def usage():
     script = os.path.basename(sys.argv[0])
-    print("""Usage: %s ONTOLOGY INDIR STYLE OUTPUT [FLAGS]
+    print("""Usage: %s ONTOLOGY INDIR STYLE OUTPUT BASE TAGS [FLAGS]
 
         ONTOLOGY : Path to ontology file
         INDIR    : Input directory containing template.html and style.css
         STYLE    : Stylesheet URI
         OUTPUT   : HTML output path
         BASE     : Documentation output base URI
-        DOCLINKS : Doxygen links file
+        TAGS     : Doxygen tags file
 
         Optional flags:
                 -i        : Document class/property instances (disabled by default)
@@ -1237,8 +1282,8 @@ if __name__ == "__main__":
         # Doxygen documentation directory
         doc_base = args[4]
 
-        # C symbol -> doxygen link mapping
-        doc_links = args[5]
+        # Doxygen tags file
+        doc_tags = args[5]
 
         docdir = os.path.join(doc_base, 'ns', 'doc')
 
@@ -1256,7 +1301,7 @@ if __name__ == "__main__":
                 i += 1
 
     try:
-        save(dest, specgen(specloc, indir, docdir, style_uri, doc_base, doc_links, instances=instances))
+        save(dest, specgen(specloc, indir, docdir, style_uri, doc_base, tags, instances=instances))
     except:
         e = sys.exc_info()[1]
         print('error: ' + str(e))
