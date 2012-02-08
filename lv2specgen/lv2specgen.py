@@ -1100,14 +1100,23 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
 
     header_path = bundle_path + '/' + basename + '.h'
 
-    other_files = ''
+    releases = ''
     if not experimental:
         release_name = "lv2-" + basename
         if basename == "lv2core":
             release_name = "lv2core"
-        other_files += '<a href="http://lv2plug.in/spec/%s-%d.%d.tar.bz2">Release</a>, ' % (release_name, version[0], version[1])
-        other_files += '<a href="http://lv2plug.in/spec">All releases</a>, '
+        filename = '%s-%d.%d.tar.bz2' % (release_name, version[0], version[1])
+        url      = 'http://lv2plug.in/spec/%s' % filename
+        releases += '<a href="%s">%s</a> (<a href="%s.sig">sig</a>),' % (
+            url, filename, url)
+    if version[0] == 0:
+        releases += ' n/a (unreleased)'
+    else:
+        releases += ' <a href="http://lv2plug.in/spec">other releases</a>'
+    releases = '<tr><th class="metahead">Download</th><td>%s</td></tr>' % releases
+    template = template.replace('@RELEASES@', releases)
 
+    other_files = ''
     if os.path.exists(os.path.abspath(header_path)):
         other_files += '<a href="' + docdir + '/html/%s">API documentation</a>, ' % (
             basename + '_8h.html')
