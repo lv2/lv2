@@ -1125,7 +1125,12 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, doclinks, instances=Fal
             else:
                 print("warning: seeAlso file outside bundle: %s" % uri)
 
-        other_files += '<a href="%s">%s</a>, ' % (uri, uri)
+        other_files += '<a href="%s">%s</a> ' % (uri, uri)
+        if uri.endswith('.h'):
+            name = os.path.basename(uri)
+            other_files += '(<a href="%s">docs</a>) ' % (
+                docdir + '/html/' + name.replace('.', '_8') + '.html')
+        other_files += ', '
 
     if other_files.endswith(', '):
         other_files = other_files[:len(other_files) - 2]
