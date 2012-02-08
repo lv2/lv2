@@ -197,7 +197,7 @@ main()
 
 	// eg_seq = (Sequence)1, 2
 	lv2_atom_forge_property_head(&forge, obj, eg_seq, 0);
-	LV2_Atom_Sequence* seq = lv2_atom_forge_sequence_head(&forge, obj, 0);
+	LV2_Atom_Sequence* seq = lv2_atom_forge_sequence_head(&forge, obj, 0, 0);
 	lv2_atom_forge_audio_time(&forge, (LV2_Atom*)seq, 0, 0);
 	lv2_atom_forge_int32(&forge, (LV2_Atom*)seq, 1);
 	lv2_atom_forge_audio_time(&forge, (LV2_Atom*)seq, 1, 0);
