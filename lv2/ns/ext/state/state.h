@@ -99,16 +99,21 @@ typedef enum {
    @param flags LV2_State_Flags for @c value.
    @return 0 on success, otherwise a non-zero error code.
 
-   The host passes a callback of this type to LV2_State_Interface.save(). This callback
-   is called repeatedly by the plugin within LV2_State_Interface.save() to store all
-   the statements that describe its current state.
+   The host passes a callback of this type to LV2_State_Interface.save(). This
+   callback is called repeatedly by the plugin within
+   LV2_State_Interface.save() to store all the statements that describe its
+   current state.
 
-   The host MAY fail to store a property if the type is not understood and is
-   not LV2_STATE_IS_POD and/or LV2_STATE_IS_PORTABLE. Implementations are
-   encouraged to use POD and portable values (e.g. string literals) wherever
-   possible, and use common types (e.g. types from
-   http://lv2plug.in/ns/ext/atom) regardless, since hosts are likely to already
-   contain the necessary implementation.
+   DO NOT INVENT NONSENSE URI SCHEMES FOR THE KEY.  Best is to use keys from
+   existing vocabularies.  If nothing appropriate is available, use http URIs
+   that point to somewhere you can host documents, so you can make
+   documentation resolvable.  If this is not possible, invent a URN scheme,
+   e.g. urn:myproj:whatever.  The plugin MUST NOT pass an invalid URI key.
+
+   The host MAY fail to store a property for whatever reason, but SHOULD
+   store any property that is LV2_STATE_IS_POD and LV2_STATE_IS_PORTABLE.
+   Implementations SHOULD use the types from the LV2 Atom extension
+   (http://lv2plug.in/ns/ext/atom) wherever possible.
 
    Note that @c size MUST be > 0, and @c value MUST point to a valid region of
    memory @c size bytes long (this is required to make restore unambiguous).
