@@ -22,13 +22,15 @@ def configure(conf):
     autowaf.configure(conf)
     autowaf.display_header('Sampler Configuration')
 
-    autowaf.check_pkg(conf, 'lv2core', uselib_store='LV2CORE')
-    autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-urid',
-                      uselib_store='LV2_URID')
-    autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-atom',
-                      uselib_store='LV2_ATOM')
-    autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-state',
-                      uselib_store='LV2_STATE')
+    if not autowaf.is_child():
+        autowaf.check_pkg(conf, 'lv2core', uselib_store='LV2CORE')
+        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-urid',
+                          uselib_store='LV2_URID')
+        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-atom',
+                          uselib_store='LV2_ATOM')
+        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-state',
+                          uselib_store='LV2_STATE')
+
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)
     autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
@@ -63,6 +65,10 @@ def build(bld):
     penv                   = bld.env.derive()
     penv['cshlib_PATTERN'] = bld.env['pluginlib_PATTERN']
 
+    include = None
+    if autowaf.is_child:
+        include = '../..'
+
     # Build plugin library
     obj = bld(features     = 'c cshlib',
               env          = penv,
@@ -70,7 +76,8 @@ def build(bld):
               name         = 'sampler',
               target       = '%s/sampler' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              use          = 'SNDFILE')
+              use          = 'SNDFILE',
+              include      = include)
 
     # Build UI library
     if bld.is_defined('HAVE_GTK2'):
@@ -80,5 +87,6 @@ def build(bld):
                   name         = 'sampler_ui',
                   target       = '%s/sampler_ui' % bundle,
                   install_path = '${LV2DIR}/%s' % bundle,
-                  use          = 'GTK2')
+                  use          = 'GTK2',
+                  include      = include)
 

@@ -22,7 +22,8 @@ def configure(conf):
     autowaf.configure(conf)
     autowaf.display_header('Amp Configuration')
 
-    autowaf.check_pkg(conf, 'lv2core', uselib_store='LV2CORE')
+    if not autowaf.is_child():
+        autowaf.check_pkg(conf, 'lv2core', uselib_store='LV2CORE')
 
     conf.env.append_value('CFLAGS', '-std=c99')
 
@@ -33,8 +34,7 @@ def configure(conf):
     conf.env['pluginlib_PATTERN'] = pat
     conf.env['pluginlib_EXT'] = pat[pat.rfind('.'):]
 
-    autowaf.display_msg(conf, "LV2 bundle directory",
-                        conf.env['LV2DIR'])
+    autowaf.display_msg(conf, "LV2 bundle directory", conf.env['LV2DIR'])
     print('')
 
 def build(bld):
@@ -53,6 +53,10 @@ def build(bld):
     penv                   = bld.env.derive()
     penv['cshlib_PATTERN'] = bld.env['pluginlib_PATTERN']
 
+    include = None
+    if autowaf.is_child:
+        include = '../..'
+    
     # Build plugin library
     obj = bld(features     = 'c cshlib',
               env          = penv,
@@ -60,5 +64,6 @@ def build(bld):
               name         = 'amp',
               target       = '%s/amp' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              uselib       = 'LV2CORE')
+              uselib       = 'LV2CORE',
+              include      = include)
 

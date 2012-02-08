@@ -38,12 +38,14 @@ def configure(conf):
     conf.load('compiler_cc')
     conf.load('compiler_cxx')
     autowaf.configure(conf)
+    autowaf.set_recursive()
 
     conf.env.append_unique('CFLAGS', '-std=c99')
 
     subdirs = ['lv2/lv2plug.in/ns/lv2core']
     subdirs += glob.glob('lv2/lv2plug.in/ns/ext/*/')
     subdirs += glob.glob('lv2/lv2plug.in/ns/extensions/*/')
+    subdirs += glob.glob('plugins/*/')
 
     for i in subdirs:
         conf.recurse(i)
