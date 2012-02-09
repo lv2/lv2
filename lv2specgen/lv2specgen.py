@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # lv2specgen, an LV2 extension specification page generator
-# Copyright (c) 2009-2011 David Robillard <d@drobilla.net>
+# Copyright (c) 2009-2012 David Robillard <d@drobilla.net>
 #
 # Based on SpecGen:
 # <http://forge.morfeo-project.org/wiki_en/index.php/SpecGen>
@@ -30,7 +30,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-__version__ = "1.0.2"
+__date__    = "2011-10-26"
+__version__ = __date__.replace('-', '.')
 __authors__ = """
 Christopher Schmidt,
 Uldis Bojars,
@@ -38,7 +39,6 @@ Sergio Fernández,
 David Robillard"""
 __license__ = "MIT License <http://www.opensource.org/licenses/mit>"
 __contact__ = "devel@lists.lv2plug.in"
-__date__ = "2011-10-26"
 
 import datetime
 import os
