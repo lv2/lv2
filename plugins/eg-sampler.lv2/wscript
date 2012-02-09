@@ -65,9 +65,9 @@ def build(bld):
     penv                   = bld.env.derive()
     penv['cshlib_PATTERN'] = bld.env['pluginlib_PATTERN']
 
-    include = None
+    includes = None
     if autowaf.is_child:
-        include = '../..'
+        includes = '../..'
 
     # Build plugin library
     obj = bld(features     = 'c cshlib',
@@ -77,7 +77,7 @@ def build(bld):
               target       = '%s/sampler' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
               use          = 'SNDFILE',
-              include      = include)
+              includes     = includes)
 
     # Build UI library
     if bld.is_defined('HAVE_GTK2'):
@@ -88,5 +88,5 @@ def build(bld):
                   target       = '%s/sampler_ui' % bundle,
                   install_path = '${LV2DIR}/%s' % bundle,
                   use          = 'GTK2',
-                  include      = include)
+                  includes     = includes)
 
