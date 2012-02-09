@@ -974,7 +974,7 @@ def getInstances(model, classes, properties):
             instances.append(getSubject(i))
     return instances
 
-def load_tags(path, doc_base):
+def load_tags(path, doc_base, doc_prefix):
     "Build a (symbol => URI) map from a Doxygen tag file."
 
     def getChildText(elt, tagname):
@@ -985,11 +985,7 @@ def load_tags(path, doc_base):
         return ''
 
     def linkTo(sym, url):
-        #print "LINK: ", '<span><a href="%s/%s">%s</a></span>' % (doc_base, url, sym)
         return '<span><a href="%s/%s">%s</a></span>' % (doc_base, url, sym)
-
-    # FIXME: Parameterize
-    DOXPREFIX = 'ns/doc/html/'
 
     tagdoc  = xml.dom.minidom.parse(path)
     root    = tagdoc.documentElement
@@ -1003,7 +999,7 @@ def load_tags(path, doc_base):
             name     = getChildText(cn, 'name')
             filename = getChildText(cn, 'filename')
 
-            linkmap[name] = linkTo(name, DOXPREFIX + filename)
+            linkmap[name] = linkTo(name, doc_prefix + filename)
 
             prefix = ''
             if cn.getAttribute('kind') != 'file':
@@ -1015,13 +1011,11 @@ def load_tags(path, doc_base):
                 mafile  = getChildText(m, 'anchorfile')
                 manchor = getChildText(m, 'anchor')
                 linkmap[mname] = linkTo(
-                    mname, '%s%s#%s' % (DOXPREFIX, mafile, manchor))
+                    mname, '%s%s#%s' % (doc_prefix, mafile, manchor))
 
-    #import pprint
-    #pprint.pprint(linkmap)
     return linkmap
 
-def specgen(specloc, indir, docdir, style_uri, doc_base, tags, instances=False, mode="spec"):
+def specgen(specloc, indir, docdir, style_uri, doc_base, doc_prefix, tags, instances=False, mode="spec"):
     """The meat and potatoes: Everything starts here."""
 
     global spec_url
@@ -1041,7 +1035,7 @@ def specgen(specloc, indir, docdir, style_uri, doc_base, tags, instances=False, 
     template = f.read()
 
     # Load code documentation link map from tags file
-    linkmap = load_tags(tags, doc_base)
+    linkmap = load_tags(tags, doc_base, doc_prefix)
 
     m = rdflib.ConjunctiveGraph()
     manifest_path = os.path.join(os.path.dirname(specloc), 'manifest.ttl')
@@ -1242,12 +1236,13 @@ def usage():
     script = os.path.basename(sys.argv[0])
     print("""Usage: %s ONTOLOGY INDIR STYLE OUTPUT BASE TAGS [FLAGS]
 
-        ONTOLOGY : Path to ontology file
-        INDIR    : Input directory containing template.html and style.css
-        STYLE    : Stylesheet URI
-        OUTPUT   : HTML output path
-        BASE     : Documentation output base URI
-        TAGS     : Doxygen tags file
+        ONTOLOGY  : Path to ontology file
+        INDIR     : Input directory containing template.html and style.css
+        STYLE     : Stylesheet URI
+        OUTPUT    : HTML output path
+        DOCBASE   : Documentation output base URI
+        DOCPREFIX : Documentation link prefix
+        TAGS      : Doxygen tags file
 
         Optional flags:
                 -i        : Document class/property instances (disabled by default)
@@ -1282,15 +1277,18 @@ if __name__ == "__main__":
         # Doxygen documentation directory
         doc_base = args[4]
 
+        # Documentation link prefix
+        doc_prefix = args[5]
+
         # Doxygen tags file
-        doc_tags = args[5]
+        doc_tags = args[6]
 
         docdir = os.path.join(doc_base, 'ns', 'doc')
 
         # Flags
         instances = False
-        if len(args) > 5:
-            flags = args[5:]
+        if len(args) > 7:
+            flags = args[7:]
             i = 0
             while i < len(flags):
                 if flags[i] == '-i':
@@ -1301,7 +1299,7 @@ if __name__ == "__main__":
                 i += 1
 
     try:
-        save(dest, specgen(specloc, indir, docdir, style_uri, doc_base, tags, instances=instances))
+        save(dest, specgen(specloc, indir, docdir, style_uri, doc_base, doc_prefix, tags, instances=instances))
     except:
         e = sys.exc_info()[1]
         print('error: ' + str(e))

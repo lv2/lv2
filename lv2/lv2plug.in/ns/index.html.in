@@ -22,11 +22,11 @@
           <th>Date</th>
           <th>Status</th>
         </tr>
-        @ROWS@
+@ROWS@
       </table>
     </div>
     <div id="footer">
-      <div>Generated on @TIME@ by gendoc.py</div>
+      <div>Generated at @TIME@</div>
     </div>
   </body>
 </html>
