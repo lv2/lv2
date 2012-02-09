@@ -85,7 +85,7 @@ main()
 	uint8_t buf[BUF_SIZE];
 	lv2_atom_forge_set_buffer(&forge, buf, BUF_SIZE);
 
-	LV2_Atom* obj = (LV2_Atom*)lv2_atom_forge_object(
+	LV2_Atom* obj = (LV2_Atom*)lv2_atom_forge_resource(
 		&forge, NULL, 0, eg_Object);
 
 	// eg_one = (Int32)1

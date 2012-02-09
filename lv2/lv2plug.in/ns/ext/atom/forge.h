@@ -55,14 +55,15 @@ typedef struct {
 	size_t   offset;
 	size_t   size;
 
+	LV2_URID Blank;
 	LV2_URID Bool;
 	LV2_URID Double;
 	LV2_URID Float;
 	LV2_URID Int32;
 	LV2_URID Int64;
 	LV2_URID Literal;
-	LV2_URID Object;
 	LV2_URID Property;
+	LV2_URID Resource;
 	LV2_URID Sequence;
 	LV2_URID String;
 	LV2_URID Tuple;
@@ -89,14 +90,15 @@ static inline void
 lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 {
 	lv2_atom_forge_set_buffer(forge, NULL, 0);
+	forge->Blank    = map->map(map->handle, LV2_ATOM_URI "#Blank");
 	forge->Bool     = map->map(map->handle, LV2_ATOM_URI "#Bool");
 	forge->Double   = map->map(map->handle, LV2_ATOM_URI "#Double");
 	forge->Float    = map->map(map->handle, LV2_ATOM_URI "#Float");
 	forge->Int32    = map->map(map->handle, LV2_ATOM_URI "#Int32");
 	forge->Int64    = map->map(map->handle, LV2_ATOM_URI "#Int64");
 	forge->Literal  = map->map(map->handle, LV2_ATOM_URI "#Literal");
-	forge->Object   = map->map(map->handle, LV2_ATOM_URI "#Object");
 	forge->Property = map->map(map->handle, LV2_ATOM_URI "#Property");
+	forge->Resource = map->map(map->handle, LV2_ATOM_URI "#Resource");
 	forge->Sequence = map->map(map->handle, LV2_ATOM_URI "#Sequence");
 	forge->String   = map->map(map->handle, LV2_ATOM_URI "#String");
 	forge->Tuple    = map->map(map->handle, LV2_ATOM_URI "#Tuple");
@@ -324,7 +326,7 @@ lv2_atom_forge_tuple(LV2_Atom_Forge* forge,
 }
 
 /**
-   Write the header of an atom:Object.
+   Write the header of an atom:Resource.
 
    To complete the object, write a sequence of properties, always passing the
    object as the @c parent parameter (or otherwise ensuring the size is updated
@@ -336,7 +338,7 @@ lv2_atom_forge_tuple(LV2_Atom_Forge* forge,
    LV2_URID eg_name = map("http://example.org/name");
 
    // Write object header
-   LV2_Atom* obj = (LV2_Atom*)lv2_atom_forge_object(forge, NULL, 0, eg_Cat);
+   LV2_Atom* obj = (LV2_Atom*)lv2_atom_forge_resource(forge, NULL, 0, eg_Cat);
 
    // Write property: eg:name = "Hobbes"
    lv2_atom_forge_property_head(forge, obj, eg_name, 0);
@@ -344,18 +346,38 @@ lv2_atom_forge_tuple(LV2_Atom_Forge* forge,
    @endcode
 */
 static inline LV2_Atom_Object*
-lv2_atom_forge_object(LV2_Atom_Forge* forge,
-                      LV2_Atom*       parent,
-                      LV2_URID        id,
-                      LV2_URID        type)
+lv2_atom_forge_resource(LV2_Atom_Forge* forge,
+                        LV2_Atom*       parent,
+                        LV2_URID        id,
+                        LV2_URID        otype)
 {
 	LV2_Atom_Object* out = (LV2_Atom_Object*)lv2_atom_forge_reserve(
 		forge, parent, sizeof(LV2_Atom_Object));
 	if (out) {
-		out->atom.type = forge->Object;
+		out->atom.type = forge->Resource;
 		out->atom.size = sizeof(LV2_Atom_Object) - sizeof(LV2_Atom);
 		out->id        = id;
-		out->type      = type;
+		out->type      = otype;
+	}
+	return out;
+}
+
+/**
+   The same as lv2_atom_forge_resource(), but for object:Blank.
+*/
+static inline LV2_Atom_Object*
+lv2_atom_forge_blank(LV2_Atom_Forge* forge,
+                     LV2_Atom*       parent,
+                     uint32_t        id,
+                     LV2_URID        otype)
+{
+	LV2_Atom_Object* out = (LV2_Atom_Object*)lv2_atom_forge_reserve(
+		forge, parent, sizeof(LV2_Atom_Object));
+	if (out) {
+		out->atom.type = forge->Blank;
+		out->atom.size = sizeof(LV2_Atom_Object) - sizeof(LV2_Atom);
+		out->id        = id;
+		out->type      = otype;
 	}
 	return out;
 }
