@@ -1,0 +1,334 @@
+# LV2 Message Extension
+# Copyright 2012 David Robillard <d@drobilla.net>
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix msg:  <http://lv2plug.in/ns/ext/message#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://lv2plug.in/ns/ext/message>
+	a lv2:Specification ;
+	doap:license <http://opensource.org/licenses/isc> ;
+	doap:maintainer [
+		a foaf:Person ;
+		rdfs:seeAlso <http://drobilla.net/drobilla.rdf> ;
+		foaf:homepage <http://drobilla.net/> ;
+		foaf:name "David Robillard"
+	] ;
+	doap:name "LV2 Message" ;
+	doap:release [
+		doap:created "2012-02-08" ;
+		doap:revision "0.1"
+	] ;
+	doap:shortdesc "Messages for accessing and manipulating properties." ;
+	lv2:documentation """
+<p>This extension defines messages which can be used to access and manipulate
+property-based data.  It is designed to provide a powerful dynamic control
+interface for LV2 plugins, but is useful for RDF-like systems in general.</p>
+
+<p>The main feature of this design is that requests and responses are
+themselves completely described in RDF.  Thus, the complete <q>protocol</q> can
+be expressed wherever RDF can without imposing additional implementation
+burdens like a new syntax or binary formats.  In particular, messages can be
+serialised in Turtle, or as an <a
+href="http://lv2plug.in/ns/ext/atom#Object">LV2 Object</a>.</p>
+
+<p>This set of message types is deliberately small to avoid an explosion of
+messages that all implementations would have to explicitly support.  Instead,
+the idea is to achieve control via manipulating properties rather than defining
+custom commands.  However, this is conceptual; there is no requirement that the
+receiver actually implement a store of resources with properties.</p>
+
+<p>For example, consider an object that can blink.  Rather than define a
+specific interface to control this (e.g. <code>obj.start_blinking();
+obj.stop_blinking()</code>), set a <q>blinking</q> property to true or false to
+achieve the desired behaviour.  One benefit of this approach is that a
+persistent state model is available <q>for free</q>: simply serialise the
+<q>blinking</q> property.</p>
+
+<p>Because changes are described in terms of properties, important
+functionality like undo stacks or revision control are simple to implement
+generically.  Accordingly, plugins are strongly encouraged to use these
+property-based messages rather than defining custom methods for every action
+they require (or worse, defining entirely new formats for messages).</p>
+
+<p>These methods are deliberately very similar to HTTP methods, but defined
+specifically for property-based resources.  The <q>properties</q> used here are
+RDF properties, thus predicates from any of the countless pre-existing
+vocabularies may be used.</p>
+""" .
+
+msg:Ack
+	a rdfs:Class ;
+	rdfs:subClassOf msg:Response ;
+    rdfs:label "Ack" ;
+    lv2:documentation """
+<p>An acknowledgement that a request has been successfully processed.  This is
+returned as a reply when a specific reply type is not necessary or
+appropriate.</p>
+""" .
+
+msg:Delete
+	a rdfs:Class ;
+	rdfs:subClassOf msg:Request ;
+	rdfs:label "Delete" ;
+	lv2:documentation """
+<p>Request the subject(s) be deleted.</p>
+""" .
+
+msg:Error
+	a rdfs:Class ;
+	rdfs:subClassOf msg:Response ;
+    rdfs:label "Error" ;
+    lv2:documentation """
+<p>A response indicating an error processing a request.</p>
+""" .
+
+msg:Get
+	a rdfs:Class ;
+	rdfs:subClassOf msg:Request ;
+	rdfs:label "Get" ;
+	lv2:documentation """
+<p>Request a description of the subject.</p>
+
+<p>The detail of the response is not specified, it may be a flat description of
+all the properties of the subject, or a more expressive description with
+several subjects.  A good choice is a <q><a
+href="http://www.w3.org/Submission/CBD/">concise bounded description</a></q>,
+i.e. a description which recursively includes all properties with blank node
+values.</p>
+
+<p>The response should have the same msg:subject property as the request, and
+a msg:body that is a description of that subject.  For example:</p>
+<pre class="turtle-code">
+&lt;get-request&gt;
+    a msg:Get ;
+    msg:subject &lt;something&gt; .
+</pre>
+
+<p>Could result in:</p>
+<pre class="turtle-code">
+[]
+    a msg:Response ;
+    msg:cause &lt;get-request&gt; ;
+    msg:subject &lt;something&gt; ;
+    msg:body [
+        eg:name "Something" ;
+        eg:ratio 1.6180339887 ;
+    ] .
+</pre>
+
+<p>Note the use of blank nodes is not required; the value of msg:body may be
+the actual resource node.  Depending on the transport and syntax used this may
+be preferable.  However, the msg:subject property is required regardless.  For
+example, the same response could be written:</p>
+
+<pre class="turtle-code">
+&lt;something&gt;
+    eg:name "Something" ;
+    eg:ratio 1.6180339887 .
+
+[]
+    a msg:Response ;
+    msg:cause &lt;get-request&gt; ;
+    msg:subject &lt;something&gt; ;
+    msg:body &lt;something&gt; .
+</pre>
+""" .
+
+msg:Insert
+	a rdfs:Class ;
+	rdfs:subClassOf msg:Request ;
+	rdfs:label "Insert" ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:maxCardinality 1 ;
+		owl:onProperty msg:subject
+	] ;
+	lv2:documentation """
+<p>Insert the msg:body at msg:subject.  If the subject does not exist, it is
+created.  If the subject does already exist, it is added to.  This request only
+adds properties, it never removes them.  The user must take care that multiple
+values are not set for properties which should only have one value.</p>
+""" .
+
+msg:Message
+	a rdfs:Class ;
+	rdfs:label "Message" .
+
+msg:Move
+	a rdfs:Class ;
+	rdfs:subClassOf msg:Request ;
+	rdfs:label "Move" ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:maxCardinality 1 ;
+		owl:onProperty msg:subject ;
+	] , [
+		a owl:Restriction ;
+		owl:cardinality 1 ;
+		owl:onProperty msg:destination ;
+	] ;
+	lv2:documentation """
+<p>Move the msg:subject to msg:destination.  After this, msg:destination has
+the description msg:subject had prior to this request's execution, and
+msg:subject does not exist any more.It is an error if the subject does not
+exist or the destination already exists.</p>
+""" .
+
+msg:Patch
+	a rdfs:Class ;
+	rdfs:subClassOf msg:Request , [
+		a owl:Restriction ;
+		owl:minCardinality 1 ;
+		owl:onProperty msg:subject
+	] , [
+		a owl:Restriction ;
+		owl:maxCardinality 1 ;
+		owl:onProperty msg:add
+	] , [
+		a owl:Restriction ;
+		owl:maxCardinality 1 ;
+		owl:onProperty msg:remove
+	] ;
+	lv2:documentation """
+<p>A method for modifying the properties of an object.</p>
+
+<p>This method always has at least one msg:subject, and exactly one msg:add
+and msg:remove property.  The value of msg:add and msg:remove are nodes
+which have the properties to add or remove from the subject(s), respectively.
+The special value msg:wildcard may be used as the value of a remove property
+to remove all properties with the given predicate.  For example:</p>
+
+<pre class="turtle-code">
+[]
+    a msg:Patch ;
+    msg:subject &lt;something&gt; ;
+    msg:add [
+        eg:name "New name" ;
+        eg:age 42 ;
+    ] ;
+    msg:remove [
+        eg:name "Old name" ;
+        eg:age msg:wildcard ;  # Remove all old eg:age properties
+    ] .
+</pre>
+""" .
+
+msg:Put
+	a rdfs:Class ;
+	rdfs:subClassOf msg:Request ;
+	rdfs:label "Put" ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:maxCardinality 1 ;
+		owl:onProperty msg:subject
+	] ;
+	lv2:documentation """
+<p>Put the msg:body as the msg:subject.  If the subject does not already exist,
+it is created.  If the subject does already exist, the msg:body is considered
+an updated version of it, and the previous version is replaced.</p>
+""" .
+
+msg:Request
+	a rdfs:Class ;
+	rdfs:label "Request" ;
+	rdfs:subClassOf msg:Message ;
+	lv2:documentation """
+<p>A request.  A request may have a msg:subject property, which indicates which
+resource the request applies to.  The subject may be omitted in contexts where
+it is implicit (e.g. the recipient is the subject).</p>
+""" .
+
+msg:Response
+	a rdfs:Class ;
+	rdfs:subClassOf msg:Message ;
+	rdfs:label "Response" ;
+	lv2:documentation """
+<p>A response to a method.</p>
+""" .
+
+msg:Set
+	a rdfs:Class ;
+	rdfs:subClassOf msg:Request , [
+		a owl:Restriction ;
+		owl:cardinality 1 ;
+		owl:onProperty msg:body
+	] ;
+	lv2:documentation """
+<p>A method for setting properties of an object to unique values.</p>
+
+<p>This is a simplified version of msg:Patch which only makes sense for
+properties which have at most one value.  This method always has at least one
+msg:subject, and exactly one msg:add property.  All the properties of the
+value of msg:add are set on the subject, with all old values for those
+properties removed.  For example:</p>
+
+<pre class="turtle-code">
+[]
+    a msg:Set ;
+    msg:subject &lt;something&gt; ;
+    msg:body [
+        eg:name "New name" ;
+        eg:age 42 ;
+    ] .
+</pre>
+
+<p>This method is equivalent to a msg:Patch where the msg:remove value has
+every property of msg:add but with wildcard values.  For example, the above
+message is equivalent to:</p>
+<pre class="turtle-code">
+[]
+    a msg:Patch ;
+    msg:subject &lt;something&gt; ;
+    msg:add [
+        eg:name "New name" ;
+        eg:age 42 ;
+    ] ;
+    msg:remove [
+        eg:name msg:wildcare ;
+        eg:age msg:wildcard ;
+    ] ;
+</pre>
+""" .
+
+msg:add
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain msg:Method .
+
+msg:body
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain msg:Message ;
+	lv2:documentation """
+<p>The body of a message.</p>
+
+<p>The details of this property's value depend on the type of message it is a
+part of.</p>
+""" .
+
+msg:cause
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain msg:Response ;
+	rdfs:range msg:Request ;
+	lv2:documentation """
+<p>The request this is a response to.</p>
+""" .

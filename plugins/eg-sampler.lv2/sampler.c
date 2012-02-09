@@ -44,6 +44,7 @@
 #include <semaphore.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom-helpers.h"
+#include "lv2/lv2plug.in/ns/ext/message/message.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
@@ -81,11 +82,13 @@ typedef struct {
 
 	/* URIs */
 	struct {
-		LV2_URID midi_Event;
-		LV2_URID atom_Object;
-		LV2_URID set_message;
-		LV2_URID state_Path;
+		LV2_URID atom_Blank;
+		LV2_URID atom_Resource;
 		LV2_URID filename_key;
+		LV2_URID midi_Event;
+		LV2_URID msg_Set;
+		LV2_URID msg_body;
+		LV2_URID state_Path;
 	} uris;
 
 	/* Playback state */
@@ -221,26 +224,26 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	/* Scan host features for URID map */
+	LV2_URID_Map* map = NULL;
 	for (int i = 0; features[i]; ++i) {
 		if (!strcmp(features[i]->URI, LV2_URID_URI "#map")) {
-			plugin->map = (LV2_URID_Map*)features[i]->data;
-			plugin->uris.midi_Event = plugin->map->map(
-				plugin->map->handle, MIDI_EVENT_URI);
-			plugin->uris.atom_Object = plugin->map->map(
-				plugin->map->handle, ATOM_OBJECT_URI);
-			plugin->uris.set_message = plugin->map->map(
-				plugin->map->handle, SET_MESSAGE_URI);
-			plugin->uris.state_Path = plugin->map->map(
-				plugin->map->handle, LV2_STATE_PATH_URI);
-			plugin->uris.filename_key = plugin->map->map(
-				plugin->map->handle, FILENAME_URI);
+			map = (LV2_URID_Map*)features[i]->data;
 		}
 	}
 
-	if (!plugin->map) {
+	if (!map) {
 		fprintf(stderr, "Host does not support urid:map.\n");
 		goto fail;
 	}
+
+	plugin->map                = map;
+	plugin->uris.atom_Blank    = map->map(map->handle, ATOM_BLANK_URI);
+	plugin->uris.atom_Resource = map->map(map->handle, ATOM_RESOURCE_URI);
+	plugin->uris.filename_key  = map->map(map->handle, FILENAME_URI);
+	plugin->uris.midi_Event    = map->map(map->handle, MIDI_EVENT_URI);
+	plugin->uris.msg_Set       = map->map(map->handle, LV2_MESSAGE_Set);
+	plugin->uris.msg_body      = map->map(map->handle, LV2_MESSAGE_body);
+	plugin->uris.state_Path    = map->map(map->handle, LV2_STATE_PATH_URI);
 
 	/* Open the default sample file */
 	strncpy(plugin->pending_samp->filepath, path, STRING_BUF);
@@ -275,28 +278,41 @@ run(LV2_Handle instance,
 				plugin->frame = 0;
 				plugin->play  = true;
 			}
-		} else if (ev->body.type == plugin->uris.atom_Object) {
+		} else if (ev->body.type == plugin->uris.atom_Resource
+		           || ev->body.type == plugin->uris.atom_Blank) {
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
-			if (obj->type == plugin->uris.set_message) {
+			if (obj->type == plugin->uris.msg_Set) {
+				const LV2_Atom_Object* body = NULL;
+				LV2_Atom_Object_Query q1[] = {
+					{ plugin->uris.msg_body, (const LV2_Atom**)&body },
+					LV2_OBJECT_QUERY_END
+				};
+				lv2_object_get(obj, q1);
+
+				if (!body) {  // TODO: check type
+					fprintf(stderr, "Malformed set message with no body.\n");
+					continue;
+				}
+						
 				const LV2_Atom* filename = NULL;
-				LV2_Atom_Object_Query q[] = {
+				LV2_Atom_Object_Query q2[] = {
 					{ plugin->uris.filename_key, &filename },
 					LV2_OBJECT_QUERY_END
 				};
-				lv2_object_get(obj, q);
+				lv2_object_get((LV2_Atom_Object*)body, q2);
 
-				if (filename) {
-					char* str = (char*)LV2_ATOM_BODY(filename);
-					fprintf(stderr, "Request to load %s\n", str);
-					memcpy(plugin->pending_samp->filepath, str, filename->size);
-					sem_post(&plugin->signal);
-				} else {
+				if (!filename) {
 					fprintf(stderr, "Ignored set message with no filename\n");
+					continue;
 				}
+
+				char* str = (char*)LV2_ATOM_BODY(filename);
+				fprintf(stderr, "Request to load %s\n", str);
+				memcpy(plugin->pending_samp->filepath, str, filename->size);
+				sem_post(&plugin->signal);
 			} else {
 				fprintf(stderr, "Unknown message type %d\n", obj->id);
 			}
-
 		} else {
 			fprintf(stderr, "Unknown event type %d\n", ev->body.type);
 		}

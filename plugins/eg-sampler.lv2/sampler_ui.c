@@ -26,6 +26,7 @@
 #include "lv2/lv2plug.in/ns/ext/atom/atom-helpers.h"
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
+#include "lv2/lv2plug.in/ns/ext/message/message.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
 
@@ -77,15 +78,29 @@ on_load_clicked(GtkWidget* widget,
 	uint8_t obj_buf[OBJ_BUF_SIZE];
 	lv2_atom_forge_set_buffer(&ui->forge, obj_buf, OBJ_BUF_SIZE);
 
-	LV2_Atom* obj = (LV2_Atom*)lv2_atom_forge_object(
-		&ui->forge, NULL, 0, uri_to_id(ui, SET_MESSAGE_URI));
-	lv2_atom_forge_property_head(&ui->forge, obj,
+	/* Send [
+	 *     a msg:Set ;
+	 *     msg:body [
+	 *         eg-sampler:filename "/foo/bar.wav" ;
+	 *     ] ;
+	 * ]
+	 */
+	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
+		&ui->forge, NULL, 0, uri_to_id(ui, LV2_MESSAGE_Set));
+	lv2_atom_forge_property_head(&ui->forge, set,
+	                             uri_to_id(ui, LV2_MESSAGE_body), 0);
+	LV2_Atom* body = (LV2_Atom*)lv2_atom_forge_blank(&ui->forge, set, 0, 0);
+	lv2_atom_forge_property_head(&ui->forge, body,
 	                             uri_to_id(ui, FILENAME_URI), 0);
-	lv2_atom_forge_string(&ui->forge, obj, (uint8_t*)filename, filename_len);
+	lv2_atom_forge_string(&ui->forge, set, (uint8_t*)filename, filename_len);
 
-	ui->write(ui->controller, 0, sizeof(LV2_Atom) + obj->size,
+	lv2_atom_forge_property_head(&ui->forge, body,
+	                             uri_to_id(ui, LV2_MESSAGE_body), 0);
+	set->size += body->size;
+
+	ui->write(ui->controller, 0, sizeof(LV2_Atom) + set->size,
 	          uri_to_id(ui, NS_ATOM "atomTransfer"),
-	          obj);
+	          set);
 
 	g_free(filename);
 }

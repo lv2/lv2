@@ -18,8 +18,8 @@
 #define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
 #define NS_RDF  "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 
-#define SAMPLER_URI     "http://lv2plug.in/plugins/eg-sampler"
-#define MIDI_EVENT_URI  "http://lv2plug.in/ns/ext/midi#MidiEvent"
-#define FILENAME_URI    SAMPLER_URI "#filename"
-#define ATOM_OBJECT_URI NS_ATOM "Object"
-#define SET_MESSAGE_URI "http: //example.org/set"
+#define SAMPLER_URI       "http://lv2plug.in/plugins/eg-sampler"
+#define MIDI_EVENT_URI    "http://lv2plug.in/ns/ext/midi#MidiEvent"
+#define FILENAME_URI      SAMPLER_URI "#filename"
+#define ATOM_BLANK_URI    NS_ATOM "Blank"
+#define ATOM_RESOURCE_URI NS_ATOM "Resource"

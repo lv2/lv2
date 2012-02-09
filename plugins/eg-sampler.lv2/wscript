@@ -30,6 +30,8 @@ def configure(conf):
                           uselib_store='LV2_ATOM')
         autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-state',
                           uselib_store='LV2_STATE')
+        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-message',
+                          uselib_store='LV2_MESSAGE')
 
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)
@@ -76,7 +78,7 @@ def build(bld):
               name         = 'sampler',
               target       = '%s/sampler' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              use          = 'SNDFILE',
+              use          = 'SNDFILE LV2CORE LV2_URID LV2_ATOM LV2_STATE LV2_MESSAGE',
               includes     = includes)
 
     # Build UI library
@@ -87,6 +89,6 @@ def build(bld):
                   name         = 'sampler_ui',
                   target       = '%s/sampler_ui' % bundle,
                   install_path = '${LV2DIR}/%s' % bundle,
-                  use          = 'GTK2',
+                  use          = 'GTK2 LV2CORE LV2_URID LV2_ATOM LV2_STATE LV2_MESSAGE',
                   includes     = includes)
 
