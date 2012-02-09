@@ -41,13 +41,13 @@
 
 #include <sndfile.h>
 
-#include <semaphore.h>
-
 #include "lv2/lv2plug.in/ns/ext/atom/atom-helpers.h"
 #include "lv2/lv2plug.in/ns/ext/message/message.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+
+#include "zix/sem.h"
 
 #include "./uris.h"
 
@@ -73,7 +73,7 @@ typedef struct {
 	/* Sample */
 	SampleFile* samp;
 	SampleFile* pending_samp;
-	sem_t       signal;
+	ZixSem      signal;
 	int         pending_sample_ready;
 
 	/* Ports */
@@ -142,12 +142,10 @@ worker_thread_main(void* arg)
 {
 	Sampler* plugin = (Sampler*)arg;
 
+	/* TODO: This thread never exits cleanly */
 	while (true) {
 		/* Wait for run() to signal that we need to load a sample */
-		if (sem_wait(&plugin->signal)) {
-			fprintf(stderr, "Odd, sem_wait failed...\n");
-			continue;
-		}
+		zix_sem_wait(&plugin->signal);
 
 		/* Then load it */
 		handle_load_sample(plugin);
@@ -162,7 +160,7 @@ cleanup(LV2_Handle instance)
 	Sampler* plugin = (Sampler*)instance;
 	pthread_cancel(plugin->worker_thread);
 	pthread_join(plugin->worker_thread, 0);
-	sem_destroy(&plugin->signal);
+	zix_sem_destroy(&plugin->signal);
 
 	free(plugin->samp->data);
 	free(plugin->pending_samp->data);
@@ -212,7 +210,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	memset(&plugin->uris, 0, sizeof(plugin->uris));
 
 	/* Create signal for waking up worker thread */
-	if (sem_init(&plugin->signal, 0, 0)) {
+	if (zix_sem_init(&plugin->signal, 0)) {
 		fprintf(stderr, "Could not initialize semaphore.\n");
 		goto fail;
 	}
@@ -309,7 +307,7 @@ run(LV2_Handle instance,
 				char* str = (char*)LV2_ATOM_BODY(filename);
 				fprintf(stderr, "Request to load %s\n", str);
 				memcpy(plugin->pending_samp->filepath, str, filename->size);
-				sem_post(&plugin->signal);
+				zix_sem_post(&plugin->signal);
 			} else {
 				fprintf(stderr, "Unknown message type %d\n", obj->id);
 			}

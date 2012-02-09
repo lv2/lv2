@@ -54,11 +54,18 @@ def configure(conf):
 def build(bld):
     bundle = 'eg-sampler.lv2'
 
-    # Copy data files to build bundle (build/eg-sampler.lv2)
-    for i in [ 'sampler.ttl', 'manifest.ttl', 'monosample.wav' ]:
+    # Build manifest.ttl by substitution (for portable lib extension)
+    bld(features     = 'subst',
+        source       = 'manifest.ttl.in',
+        target       = '%s/%s' % (bundle, 'manifest.ttl'),
+        install_path = '${LV2DIR}/%s' % bundle,
+        LIB_EXT      = bld.env['pluginlib_EXT'])
+    
+    # Copy other data files to build bundle (build/eg-sampler.lv2)
+    for i in [ 'sampler.ttl', 'monosample.wav' ]:
         bld(rule         = 'cp ${SRC} ${TGT}',
             source       = i,
-            target       = bld.path.get_bld().make_node('%s/%s' % (bundle, i)),
+            target       = '%s/%s' % (bundle, i),
             install_path = '${LV2DIR}/%s' % bundle)
 
     # Create a build environment that builds module-style library names
@@ -67,9 +74,9 @@ def build(bld):
     penv                   = bld.env.derive()
     penv['cshlib_PATTERN'] = bld.env['pluginlib_PATTERN']
 
-    includes = None
+    includes = ['.']
     if autowaf.is_child:
-        includes = '../..'
+        includes += ['../..']
 
     # Build plugin library
     obj = bld(features     = 'c cshlib',

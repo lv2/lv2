@@ -40,12 +40,20 @@ def configure(conf):
 def build(bld):
     bundle = 'eg-amp.lv2'
 
-    # Copy data files to build bundle (build/eg-amp.lv2)
-    for i in [ 'amp.ttl', 'manifest.ttl' ]:
-        bld(rule         = 'cp ${SRC} ${TGT}',
+    # Build manifest.ttl by substitution (for portable lib extension)
+    bld(features     = 'subst',
+        source       = 'manifest.ttl.in',
+        target       = '%s/%s' % (bundle, 'manifest.ttl'),
+        install_path = '${LV2DIR}/%s' % bundle,
+        LIB_EXT      = bld.env['pluginlib_EXT'])
+
+    # Copy other data files to build bundle (build/eg-amp.lv2)
+    for i in [ 'amp.ttl' ]:
+        bld(features     = 'subst',
             source       = i,
-            target       = bld.path.get_bld().make_node('%s/%s' % (bundle, i)),
-            install_path = '${LV2DIR}/%s' % bundle)
+            target       = '%s/%s' % (bundle, i),
+            install_path = '${LV2DIR}/%s' % bundle,
+            LIB_EXT      = bld.env['pluginlib_EXT'])
 
     # Create a build environment that builds module-style library names
     # e.g. eg-amp.so instead of libeg-amp.so
