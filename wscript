@@ -34,6 +34,14 @@ def options(opt):
     for i in ['lv2/lv2plug.in/ns/lv2core']:
         opt.recurse(i)
 
+def get_subdirs(with_plugins=True):
+    subdirs = ['lv2/lv2plug.in/ns/lv2core/']
+    subdirs += glob.glob('lv2/lv2plug.in/ns/ext/*/')
+    subdirs += glob.glob('lv2/lv2plug.in/ns/extensions/*/')
+    if with_plugins:
+        subdirs += glob.glob('plugins/*/')
+    return subdirs
+    
 def configure(conf):
     conf.load('compiler_cc')
     conf.load('compiler_cxx')
@@ -42,10 +50,7 @@ def configure(conf):
 
     conf.env.append_unique('CFLAGS', '-std=c99')
 
-    subdirs = ['lv2/lv2plug.in/ns/lv2core/']
-    subdirs += glob.glob('lv2/lv2plug.in/ns/ext/*/')
-    subdirs += glob.glob('lv2/lv2plug.in/ns/extensions/*/')
-    subdirs += glob.glob('plugins/*/')
+    subdirs = get_subdirs()
 
     for i in subdirs:
         conf.recurse(i)
@@ -303,7 +308,10 @@ def release(ctx):
                 Logs.error('Error building %s release' % (name, e))
 
             subprocess.call(['./waf', 'distclean'], cwd=dir)
-        
+
+def news(ctx):
+    ctx.recurse(get_subdirs(False))
+
 def lint(ctx):
     for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']
               + glob.glob('lv2/lv2plug.in/ns/ext/*/*.h')

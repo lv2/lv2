@@ -178,54 +178,11 @@ def test(ctx):
     autowaf.run_tests(ctx, APPNAME, ['%s-test' % info.NAME], dirs=['.'])
     autowaf.post_test(ctx, APPNAME, dirs=['.'])
 
-def write_news():
-    import rdflib
-    import textwrap
-    from time import strftime, strptime
-
-    doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
-    dcs  = rdflib.Namespace('http://ontologi.es/doap-changeset#')
-    rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
-    foaf = rdflib.Namespace('http://xmlns.com/foaf/0.1/')
-    rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-
-    m = rdflib.ConjunctiveGraph()
-
-    try:
-        for i in glob.glob('*.ttl'):
-            m.parse(i, format='n3')
-    except:
-        print('warning: error parsing data, unable to generate NEWS')
-        return
-
-    spec = m.value(None, rdf.type, doap.Project)
-
-    entries = {}
-    for r in m.triples([spec, doap.release, None]):
-        release   = r[2]
-        revision  = m.value(release, doap.revision, None) or '9999'
-        date      = m.value(release, doap.created, None) or '9999-01-01'
-        blamee    = m.value(release, dcs.blame, None)
-        changeset = m.value(release, dcs.changeset, None)
-
-        entry = '%s (%s) stable;\n' % (APPNAME, revision)
-
-        if changeset:
-            for i in m.triples([changeset, dcs.item, None]):
-                entry += '\n  * ' + '\n    '.join(
-                    textwrap.wrap(m.value(i[2], rdfs.label, None), width=79))
-
-        entry += '\n\n -- %s <%s>  %s\n\n' % (
-            m.value(blamee, foaf.name, None),
-            m.value(blamee, foaf.mbox, None).replace('mailto:', ''),
-            strftime('%a, %d %b %Y %H:%M:%S +0000', strptime(date, '%Y-%m-%d')))
-
-        entries[revision] = entry
-
-    news = open('NEWS', 'w')
-    for e in sorted(entries.keys(), reverse=True):
-        news.write(entries[e])
-    news.close()
+def news(ctx):
+    path = ctx.path.abspath()
+    autowaf.write_news(APPNAME,
+                       glob.glob(os.path.join(path, '*.ttl')),
+                       os.path.join(path, 'NEWS'))
 
 class Dist(Scripting.Dist):
     fun = 'dist'
@@ -233,6 +190,9 @@ class Dist(Scripting.Dist):
 
     def get_tar_path(self, node):
         "Resolve symbolic links to avoid broken links in tarball."
+        print "TAR PATH %s => %s" % (node.abspath(),
+                                     os.path.realpath(node.abspath()))
+
         return os.path.realpath(node.abspath())
 
     def archive(self):
@@ -244,7 +204,7 @@ class Dist(Scripting.Dist):
         lv2extinfo_py.close()
 
         # Write NEWS file
-        write_news()
+        news(self)
 
         # Build distribution
         Scripting.Dist.archive(self)
