@@ -71,16 +71,12 @@ def build(bld):
             bld.symlink_as(os.path.join(include_dir, 'lv2core'),
                            os.path.relpath(bundle_dir, include_dir))
 
-import pprint
 class Dist(Scripting.Dist):
     fun = 'dist'
     cmd = 'dist'
 
     def get_tar_path(self, node):
         "Resolve symbolic links to avoid broken links in tarball."
-        print "TAR PATH %s => %s" % (node.abspath(),
-                                     os.path.realpath(node.abspath()))
-
         return os.path.realpath(node.abspath())
 
     def archive(self):

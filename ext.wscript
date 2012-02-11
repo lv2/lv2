@@ -190,9 +190,6 @@ class Dist(Scripting.Dist):
 
     def get_tar_path(self, node):
         "Resolve symbolic links to avoid broken links in tarball."
-        print "TAR PATH %s => %s" % (node.abspath(),
-                                     os.path.realpath(node.abspath()))
-
         return os.path.realpath(node.abspath())
 
     def archive(self):
