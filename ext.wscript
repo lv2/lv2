@@ -185,37 +185,49 @@ def news(ctx):
                        os.path.join(path, 'NEWS'))
 
 class Dist(Scripting.Dist):
-    fun = 'dist'
-    cmd = 'dist'
+    def execute(self):
+        "Execute but do not call archive() since dist() has already done so."
+        self.recurse([os.path.dirname(Context.g_module.root_path)])
 
     def get_tar_path(self, node):
         "Resolve symbolic links to avoid broken links in tarball."
         return os.path.realpath(node.abspath())
 
-    def archive(self):
-        # Generate lv2extinfo.py in source tree
-        lv2extinfo_py = open('lv2extinfo.py', 'w')
-        for i in info.__dict__:
-            if i.isupper():
-                lv2extinfo_py.write("%s = %s\n" % (i, repr(info.__dict__[i])))
-        lv2extinfo_py.close()
-
-        # Write NEWS file
-        news(self)
-
-        # Build distribution
-        Scripting.Dist.archive(self)
-
-        # Delete generated files from source tree
-        for i in ['NEWS', 'lv2extinfo.py', 'lv2extinfo.pyc']:
-            try:
-                os.remove(i)
-            except:
-                pass
-
 class DistCheck(Dist, Scripting.DistCheck):
-    fun = 'distcheck'
-    cmd = 'distcheck'
-
+    def execute(self):
+        Dist.execute(self)
+        self.check()
+    
     def archive(self):
         Dist.archive(self)
+
+def pre_dist(ctx):
+    # Write lv2extinfo.py in source directory
+    path = ctx.path.abspath()
+    lv2extinfo_py = open(os.path.join(path, 'lv2extinfo.py'), 'w')
+    for i in info.__dict__:
+        if i.isupper():
+            lv2extinfo_py.write("%s = %s\n" % (i, repr(info.__dict__[i])))
+    lv2extinfo_py.close()
+
+    # Write NEWS file in source directory
+    news(ctx)
+
+def dist(ctx):
+    pre_dist(ctx)
+    ctx.archive()
+    post_dist(ctx)
+
+def distcheck(ctx):
+    dist(ctx)
+
+def post_dist(ctx):
+    # Delete generated files from source tree
+    path = ctx.path.abspath()
+    for i in [os.path.join(path, 'NEWS'),
+              os.path.join(path, 'lv2extinfo.py'),
+              os.path.join(path, 'lv2extinfo.pyc')]:
+        try:
+            os.remove(i)
+        except:
+            pass

@@ -10,6 +10,7 @@ import sys
 from waflib.extras import autowaf as autowaf
 import waflib.Logs as Logs
 import waflib.Options as Options
+import waflib.Scripting as Scripting
 
 # Version of this package (even if built as a child)
 LV2EXT_VERSION = datetime.date.isoformat(datetime.datetime.now()).replace('-', '.')
@@ -311,6 +312,11 @@ def release(ctx):
 
 def news(ctx):
     ctx.recurse(get_subdirs(False))
+
+def dist(ctx):
+    ctx.recurse(get_subdirs(False), name='pre_dist')
+    ctx.archive()
+    ctx.recurse(get_subdirs(False), name='post_dist')
 
 def lint(ctx):
     for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']

@@ -3,6 +3,7 @@ import os
 
 from waflib.extras import autowaf as autowaf
 import waflib.Options as Options
+import waflib.Context as Context
 import waflib.Scripting as Scripting
 import glob
 
@@ -72,29 +73,38 @@ def build(bld):
                            os.path.relpath(bundle_dir, include_dir))
 
 class Dist(Scripting.Dist):
-    fun = 'dist'
-    cmd = 'dist'
+    def execute(self):
+        "Execute but do not call archive() since dist() has already done so."
+        self.recurse([os.path.dirname(Context.g_module.root_path)])
 
     def get_tar_path(self, node):
         "Resolve symbolic links to avoid broken links in tarball."
         return os.path.realpath(node.abspath())
 
-    def archive(self):
-        # Write NEWS file
-        news(self)
-
-        # Build distribution
-        Scripting.Dist.archive(self)
-
-        # Delete generated NEWS file
-        try:
-            os.remove('NEWS')
-        except:
-            pass
-
 class DistCheck(Dist, Scripting.DistCheck):
-    fun = 'distcheck'
-    cmd = 'distcheck'
-
+    def execute(self):
+        Dist.execute(self)
+        self.check()
+    
     def archive(self):
         Dist.archive(self)
+
+def pre_dist(ctx):
+    # Write NEWS file in source directory
+    news(ctx)
+
+def dist(ctx):
+    pre_dist(ctx)
+    ctx.archive()
+    post_dist(ctx)
+
+def distcheck(ctx):
+    dist(ctx)
+
+def post_dist(ctx):
+    # Delete generated NEWS file
+    try:
+        os.remove(os.path.join(ctx.path.abspath(), 'NEWS'))
+    except:
+        pass
+
