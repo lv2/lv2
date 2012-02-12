@@ -410,15 +410,15 @@ static inline LV2_Atom_Sequence*
 lv2_atom_forge_sequence_head(LV2_Atom_Forge* forge,
                              LV2_Atom*       parent,
                              uint32_t        capacity,
-                             uint32_t        time_type)
+                             uint32_t        unit)
 {
 	LV2_Atom_Sequence* out = (LV2_Atom_Sequence*)
 		lv2_atom_forge_reserve(forge, parent, sizeof(LV2_Atom_Sequence));
 	if (out) {
 		out->atom.type = forge->Sequence;
 		out->atom.size = sizeof(LV2_Atom_Sequence) - sizeof(LV2_Atom);
-		out->capacity  = capacity;
-		out->time_type = 0;
+		out->unit      = unit;
+		out->pad       = 0;
 	}
 	return out;
 }

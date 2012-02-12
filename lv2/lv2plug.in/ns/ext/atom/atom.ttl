@@ -114,7 +114,7 @@ atom:Bang
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Bang" ;
-    rdfs:comment "Generic activity or trigger, with no body." .
+	rdfs:comment "Generic activity or trigger, with no body." .
 
 atom:Number
 	a rdfs:Class ;
@@ -322,7 +322,31 @@ atom:Blank
 The ID of a Blank is valid only within the context the Blank appears in.  For
 ports this is the context of the associated run() call, i.e. all ports share
 the same context so outputs can contain IDs that correspond to IDs of blanks in
-the input.</p> """ .
+the input.</p>
+""" .
+
+atom:TimeUnit
+	a rdfs:Class ;
+	rdfs:label "Time Unit" ;
+	lv2:documentation "<p>A unit for atom:Event time stamps.</p>" .
+
+atom:AudioFrames
+	a rdfs:Class ;
+	rdfs:subClassOf atom:TimeUnit ;
+	rdfs:label "Audio frames" ;
+	lv2:documentation """
+<p>Time in audio frames.  Converting this to absolute time depends on the
+sample rate.  When this is the stamp unit for an atom:Sequence, the events in
+that sequence have LV2_Atom_Audio_Time stamps (<code>event.time.audio</code>)</p>""" .
+
+atom:Beats
+	a rdfs:Class ;
+	rdfs:subClassOf atom:TimeUnit ;
+	rdfs:label "Beats" ;
+	lv2:documentation """
+<p>Time in beats.  Converting this to absolute time depends on the tempo.  When
+this is the stamp unit for an atom:Sequence, the events in that sequence have a
+<code>double</code> stamp (<code>event.time.beats</code>).</p>""" .
 
 atom:Event
 	a rdfs:Class ;

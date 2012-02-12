@@ -180,6 +180,11 @@ typedef struct {
    This is used as the contents of an atom:EventPort, but is a generic Atom
    type which can be used anywhere.
 
+   The unit field is either a URID that described an appropriate time stamp
+   type, or may be 0 where a default stamp type is known.  For
+   LV2_Descriptor::run(), the default stamp type is atom:AudioFrames, i.e.
+   LV2_Atom_Audio_Time.
+
    The contents of a sequence is a series of LV2_Atom_Event, each aligned
    to 64-bits, e.g.:
    <pre>
@@ -190,9 +195,9 @@ typedef struct {
    </pre>
 */
 typedef struct {
-	LV2_Atom atom;       /**< Atom header. */
-	uint32_t capacity;   /**< Maximum size of contents. */
-	uint32_t time_type;  /**< URID type of event time stamps. */
+	LV2_Atom atom;  /**< Atom header. */
+	uint32_t unit;  /**< URID of unit of event time stamps. */
+	uint32_t pad;   /**< Currently unused. */
 	/* Contents (a series of events) follow here. */
 } LV2_Atom_Sequence;
 
