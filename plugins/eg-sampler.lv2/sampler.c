@@ -269,7 +269,7 @@ handle_message(Sampler*               plugin,
 
 	if (!body) {  // TODO: check type
 		fprintf(stderr, "Malformed set message with no body.\n");
-		return;
+		return false;
 	}
 
 	/* Get filename from body */
@@ -282,7 +282,7 @@ handle_message(Sampler*               plugin,
 
 	if (!filename) {
 		fprintf(stderr, "Ignored set message with no filename\n");
-		return;
+		return false;
 	}
 
 	char* str = (char*)LV2_ATOM_BODY(filename);
