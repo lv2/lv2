@@ -250,6 +250,49 @@ cleanup(LV2_Handle instance)
 	free(instance);
 }
 
+static bool
+handle_message(Sampler*               plugin,
+               const LV2_Atom_Object* obj)
+{
+	if (obj->type != plugin->uris.msg_Set) {
+		fprintf(stderr, "Ignoring unknown message type %d\n", obj->type);
+		return false;
+	}
+
+	/* Get body of message */
+	const LV2_Atom_Object* body = NULL;
+	LV2_Atom_Object_Query q1[] = {
+		{ plugin->uris.msg_body, (const LV2_Atom**)&body },
+		LV2_OBJECT_QUERY_END
+	};
+	lv2_object_get(obj, q1);
+
+	if (!body) {  // TODO: check type
+		fprintf(stderr, "Malformed set message with no body.\n");
+		return;
+	}
+
+	/* Get filename from body */
+	const LV2_Atom* filename = NULL;
+	LV2_Atom_Object_Query q2[] = {
+		{ plugin->uris.eg_filename, &filename },
+		LV2_OBJECT_QUERY_END
+	};
+	lv2_object_get((LV2_Atom_Object*)body, q2);
+
+	if (!filename) {
+		fprintf(stderr, "Ignored set message with no filename\n");
+		return;
+	}
+
+	char* str = (char*)LV2_ATOM_BODY(filename);
+	fprintf(stderr, "Request to load %s\n", str);
+	memcpy(plugin->pending_samp->filepath, str, filename->size);
+	zix_sem_post(&plugin->signal);
+
+	return true;
+}
+               
 static void
 run(LV2_Handle instance,
     uint32_t   sample_count)
@@ -271,39 +314,7 @@ run(LV2_Handle instance,
 			}
 		} else if (ev->body.type == plugin->uris.atom_Resource
 		           || ev->body.type == plugin->uris.atom_Blank) {
-			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
-			if (obj->type == plugin->uris.msg_Set) {
-				const LV2_Atom_Object* body = NULL;
-				LV2_Atom_Object_Query q1[] = {
-					{ plugin->uris.msg_body, (const LV2_Atom**)&body },
-					LV2_OBJECT_QUERY_END
-				};
-				lv2_object_get(obj, q1);
-
-				if (!body) {  // TODO: check type
-					fprintf(stderr, "Malformed set message with no body.\n");
-					continue;
-				}
-						
-				const LV2_Atom* filename = NULL;
-				LV2_Atom_Object_Query q2[] = {
-					{ plugin->uris.eg_filename, &filename },
-					LV2_OBJECT_QUERY_END
-				};
-				lv2_object_get((LV2_Atom_Object*)body, q2);
-
-				if (!filename) {
-					fprintf(stderr, "Ignored set message with no filename\n");
-					continue;
-				}
-
-				char* str = (char*)LV2_ATOM_BODY(filename);
-				fprintf(stderr, "Request to load %s\n", str);
-				memcpy(plugin->pending_samp->filepath, str, filename->size);
-				zix_sem_post(&plugin->signal);
-			} else {
-				fprintf(stderr, "Unknown message type %d\n", obj->id);
-			}
+			handle_message(plugin, (LV2_Atom_Object*)&ev->body);
 		} else {
 			fprintf(stderr, "Unknown event type %d\n", ev->body.type);
 		}

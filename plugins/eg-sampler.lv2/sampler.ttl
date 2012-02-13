@@ -15,11 +15,11 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
-@prefix doap:  <http://usefulinc.com/ns/doap#> .
-@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
 
 <http://lv2plug.in/plugins/eg-sampler>
 	a lv2:Plugin ;
@@ -33,14 +33,23 @@
 		a lv2:InputPort ,
 			atom:MessagePort ;
 		atom:bufferType atom:Sequence ;
-		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
+		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ,
+			<http://lv2plug.in/ns/ext/message#Message> ;
 		lv2:index 0 ;
 		lv2:symbol "control" ;
 		lv2:name "Control"
 	] , [
+		a lv2:OutputPort ,
+			atom:MessagePort ;
+		atom:bufferType atom:Sequence ;
+		atom:supports <http://lv2plug.in/ns/ext/message#Message> ;
+		lv2:index 1 ;
+		lv2:symbol "response" ;
+		lv2:name "Response"
+	] , [
 		a lv2:AudioPort ,
 			lv2:OutputPort ;
-		lv2:index 1 ;
+		lv2:index 2 ;
 		lv2:symbol "out" ;
 		lv2:name "Out"
 	] .
