@@ -38,6 +38,7 @@ typedef struct {
 	LV2_Atom_Forge forge;
 
 	LV2_URID_Map* map;
+	SamplerURIs   uris;
 
 	LV2UI_Write_Function write;
 	LV2UI_Controller     controller;
@@ -86,16 +87,15 @@ on_load_clicked(GtkWidget* widget,
 	 * ]
 	 */
 	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
-		&ui->forge, NULL, 0, uri_to_id(ui, LV2_MESSAGE_Set));
-	lv2_atom_forge_property_head(&ui->forge, set,
-	                             uri_to_id(ui, LV2_MESSAGE_body), 0);
+		&ui->forge, NULL, 0, ui->uris.msg_Set);
+
+	lv2_atom_forge_property_head(&ui->forge, set, ui->uris.msg_body, 0);
 	LV2_Atom* body = (LV2_Atom*)lv2_atom_forge_blank(&ui->forge, set, 0, 0);
-	lv2_atom_forge_property_head(&ui->forge, body,
-	                             uri_to_id(ui, FILENAME_URI), 0);
+
+	lv2_atom_forge_property_head(&ui->forge, body, ui->uris.eg_filename, 0);
 	lv2_atom_forge_string(&ui->forge, set, (uint8_t*)filename, filename_len);
 
-	lv2_atom_forge_property_head(&ui->forge, body,
-	                             uri_to_id(ui, LV2_MESSAGE_body), 0);
+	lv2_atom_forge_property_head(&ui->forge, body, ui->uris.msg_body, 0);
 	set->size += body->size;
 
 	ui->write(ui->controller, 0, sizeof(LV2_Atom) + set->size,
@@ -133,6 +133,8 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 		free(ui);
 		return NULL;
 	}
+
+	map_sampler_uris(ui->map, &ui->uris);
 
 	lv2_atom_forge_init(&ui->forge, ui->map);
 

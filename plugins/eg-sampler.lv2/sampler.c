@@ -53,8 +53,9 @@
 #define STRING_BUF 8192
 
 enum {
-	SAMPLER_CONTROL = 0,
-	SAMPLER_OUT     = 1
+	SAMPLER_CONTROL  = 0,
+	SAMPLER_RESPONSE = 1,
+	SAMPLER_OUT      = 2
 };
 
 static const char* default_sample_file = "monosample.wav";
@@ -81,18 +82,11 @@ typedef struct {
 
 	/* Ports */
 	float*             output_port;
-	LV2_Atom_Sequence* event_port;
+	LV2_Atom_Sequence* control_port;
+	LV2_Atom_Sequence* response_port;
 
 	/* URIs */
-	struct {
-		LV2_URID atom_Blank;
-		LV2_URID atom_Resource;
-		LV2_URID filename_key;
-		LV2_URID midi_Event;
-		LV2_URID msg_Set;
-		LV2_URID msg_body;
-		LV2_URID state_Path;
-	} uris;
+	SamplerURIs uris;
 
 	/* Playback state */
 	sf_count_t frame;
@@ -129,9 +123,7 @@ handle_load_sample(Sampler* plugin)
 	}
 
 	sf_seek(sample, 0ul, SEEK_SET);
-	sf_read_float(sample,
-	              data,
-	              info->frames);
+	sf_read_float(sample, data, info->frames);
 	sf_close(sample);
 
 	/* Queue the sample for installation on next run() */
@@ -163,7 +155,10 @@ connect_port(LV2_Handle instance,
 
 	switch (port) {
 	case SAMPLER_CONTROL:
-		plugin->event_port = (LV2_Atom_Sequence*)data;
+		plugin->control_port = (LV2_Atom_Sequence*)data;
+		break;
+	case SAMPLER_RESPONSE:
+		plugin->response_port = (LV2_Atom_Sequence*)data;
 		break;
 	case SAMPLER_OUT:
 		plugin->output_port = (float*)data;
@@ -221,14 +216,8 @@ instantiate(const LV2_Descriptor*     descriptor,
 		goto fail;
 	}
 
-	plugin->map                = map;
-	plugin->uris.atom_Blank    = map->map(map->handle, ATOM_BLANK_URI);
-	plugin->uris.atom_Resource = map->map(map->handle, ATOM_RESOURCE_URI);
-	plugin->uris.filename_key  = map->map(map->handle, FILENAME_URI);
-	plugin->uris.midi_Event    = map->map(map->handle, MIDI_EVENT_URI);
-	plugin->uris.msg_Set       = map->map(map->handle, LV2_MESSAGE_Set);
-	plugin->uris.msg_body      = map->map(map->handle, LV2_MESSAGE_body);
-	plugin->uris.state_Path    = map->map(map->handle, LV2_STATE_PATH_URI);
+	plugin->map = map;
+	map_sampler_uris(plugin->map, &plugin->uris);
 
 	/* Open the default sample file */
 	strncpy(plugin->pending_samp->filepath, path, STRING_BUF);
@@ -271,7 +260,7 @@ run(LV2_Handle instance,
 	float*     output      = plugin->output_port;
 
 	/* Read incoming events */
-	LV2_SEQUENCE_FOREACH(plugin->event_port, i) {
+	LV2_SEQUENCE_FOREACH(plugin->control_port, i) {
 		LV2_Atom_Event* const ev = lv2_sequence_iter_get(i);
 		if (ev->body.type == plugin->uris.midi_Event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);
@@ -298,7 +287,7 @@ run(LV2_Handle instance,
 						
 				const LV2_Atom* filename = NULL;
 				LV2_Atom_Object_Query q2[] = {
-					{ plugin->uris.filename_key, &filename },
+					{ plugin->uris.eg_filename, &filename },
 					LV2_OBJECT_QUERY_END
 				};
 				lv2_object_get((LV2_Atom_Object*)body, q2);
