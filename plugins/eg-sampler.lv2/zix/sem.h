@@ -23,6 +23,7 @@
 #    include <windows.h>
 #else
 #    include <semaphore.h>
+#    include <errno.h>
 #endif
 
 #include "zix/common.h"
@@ -80,7 +81,7 @@ zix_sem_post(ZixSem* sem);
    Wait until count is > 0, then decrement.
    Obviously not realtime safe.
 */
-static inline void
+static inline ZixStatus
 zix_sem_wait(ZixSem* sem);
 
 /**
@@ -120,10 +121,13 @@ zix_sem_post(ZixSem* sem)
 	semaphore_signal(sem->sem);
 }
 
-static inline void
+static inline ZixStatus
 zix_sem_wait(ZixSem* sem)
 {
-	semaphore_wait(sem->sem);
+	if (semaphore_wait(sem->sem) != KERN_SUCCESS) {
+		return ZIX_STATUS_ERROR;
+	}
+	return ZIX_STATUS_SUCCESS;
 }
 
 static inline bool
@@ -158,10 +162,13 @@ zix_sem_post(ZixSem* sem)
 	ReleaseSemaphore(sem->sem, 1, NULL);
 }
 
-static inline void
+static inline ZixStatus
 zix_sem_wait(ZixSem* sem)
 {
-	WaitForSingleObject(sem->sem, INFINITE);
+	if (WaitForSingleObject(sem->sem, INFINITE) != WAIT_OBJECT_0) {
+		return ZIX_STATUS_ERROR;
+	}
+	return ZIX_STATUS_SUCCESS;
 }
 
 static inline bool
@@ -195,14 +202,17 @@ zix_sem_post(ZixSem* sem)
 	sem_post(&sem->sem);
 }
 
-static inline void
+static inline ZixStatus
 zix_sem_wait(ZixSem* sem)
 {
-	/* Note that sem_wait always returns 0 in practice, except in
-	   gdb (at least), where it returns nonzero, so the while is
-	   necessary (and is the correct/safe solution in any case).
-	*/
-	while (sem_wait(&sem->sem) != 0) {}
+	while (sem_wait(&sem->sem)) {
+		if (errno != EINTR) {
+			return ZIX_STATUS_ERROR;
+		}
+		/* Otherwise, interrupted, so try again. */
+	}
+
+	return ZIX_STATUS_SUCCESS;
 }
 
 static inline bool

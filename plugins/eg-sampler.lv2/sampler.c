@@ -37,8 +37,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <pthread.h>
-
 #include <sndfile.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom-helpers.h"
@@ -48,6 +46,7 @@
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
 #include "zix/sem.h"
+#include "zix/thread.h"
 
 #include "./uris.h"
 
@@ -70,10 +69,14 @@ typedef struct {
 	/* Features */
 	LV2_URID_Map* map;
 
+	/* Worker thread */
+	ZixThread worker_thread;
+	ZixSem    signal;
+	bool      exit;
+
 	/* Sample */
 	SampleFile* samp;
 	SampleFile* pending_samp;
-	ZixSem      signal;
 	int         pending_sample_ready;
 
 	/* Ports */
@@ -92,11 +95,9 @@ typedef struct {
 	} uris;
 
 	/* Playback state */
-	bool       play;
 	sf_count_t frame;
+	bool       play;
 
-	/* File loading */
-	pthread_t worker_thread;
 } Sampler;
 
 static void
@@ -142,8 +143,7 @@ worker_thread_main(void* arg)
 {
 	Sampler* plugin = (Sampler*)arg;
 
-	/* TODO: This thread never exits cleanly */
-	while (true) {
+	while (!plugin->exit) {
 		/* Wait for run() to signal that we need to load a sample */
 		zix_sem_wait(&plugin->signal);
 
@@ -152,21 +152,6 @@ worker_thread_main(void* arg)
 	}
 
 	return 0;
-}
-
-static void
-cleanup(LV2_Handle instance)
-{
-	Sampler* plugin = (Sampler*)instance;
-	pthread_cancel(plugin->worker_thread);
-	pthread_join(plugin->worker_thread, 0);
-	zix_sem_destroy(&plugin->signal);
-
-	free(plugin->samp->data);
-	free(plugin->pending_samp->data);
-	free(plugin->samp);
-	free(plugin->pending_samp);
-	free(instance);
 }
 
 static void
@@ -216,7 +201,9 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	/* Create worker thread */
-	if (pthread_create(&plugin->worker_thread, 0, worker_thread_main, plugin)) {
+	plugin->exit = false;
+	if (zix_thread_create(
+		    &plugin->worker_thread, 1024, worker_thread_main, plugin)) {
 		fprintf(stderr, "Could not initialize worker thread.\n");
 		goto fail;
 	}
@@ -255,6 +242,23 @@ instantiate(const LV2_Descriptor*     descriptor,
 fail:
 	free(plugin);
 	return 0;
+}
+
+static void
+cleanup(LV2_Handle instance)
+{
+	Sampler* plugin = (Sampler*)instance;
+
+	plugin->exit = true;
+	zix_sem_post(&plugin->signal);
+	zix_thread_join(plugin->worker_thread, 0);
+	zix_sem_destroy(&plugin->signal);
+
+	free(plugin->samp->data);
+	free(plugin->pending_samp->data);
+	free(plugin->samp);
+	free(plugin->pending_samp);
+	free(instance);
 }
 
 static void
