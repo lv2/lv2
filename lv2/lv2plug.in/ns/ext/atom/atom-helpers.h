@@ -25,6 +25,7 @@
 #ifndef LV2_ATOM_HELPERS_H
 #define LV2_ATOM_HELPERS_H
 
+#include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -299,6 +300,60 @@ lv2_object_get(const LV2_Atom_Object* object, LV2_Atom_Object_Query* query)
 				break;
 			}
 		}
+	}
+	return matches;
+}
+
+/**
+   Variable argument version of lv2_object_get().
+
+   This is nicer-looking in code, but a bit more error-prone since it is not
+   type safe and the argument list must be terminated.
+
+   The arguments should be a series of uint32_t key and const LV2_Atom** value
+   pairs, terminated by a zero key.  The value pointers MUST be initialized to
+   NULL.  For example:
+
+   @code
+   const LV2_Atom* name = NULL;
+   const LV2_Atom* age  = NULL;
+   lv2_object_getv(obj,
+                   uris.name_key, &name,
+                   uris.age_key,  &age,
+                   0);
+   @endcode
+*/
+static inline int
+lv2_object_getv(const LV2_Atom_Object* object, ...)
+{
+	int matches   = 0;
+	int n_queries = 0;
+
+	/* Count number of query keys so we can short-circuit when done */
+	va_list args;
+	va_start(args, object);
+	for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
+		if (!va_arg(args, const LV2_Atom**)) {
+			return -1;
+		}
+	}
+	va_end(args);
+
+	LV2_OBJECT_FOREACH(object, o) {
+		const LV2_Atom_Property_Body* prop = lv2_object_iter_get(o);
+		va_start(args, object);
+		for (int i = 0; i < n_queries; ++i) {
+			uint32_t         qkey = va_arg(args, uint32_t);
+			const LV2_Atom** qval = va_arg(args, const LV2_Atom**);
+			if (qkey == prop->key && !*qval) {
+				*qval = &prop->value;
+				if (++matches == n_queries) {
+					return matches;
+				}
+				break;
+			}
+		}
+		va_end(args);
 	}
 	return matches;
 }

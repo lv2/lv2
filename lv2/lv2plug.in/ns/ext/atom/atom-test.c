@@ -242,61 +242,84 @@ main()
 		                 n_props, NUM_PROPS);
 	}
 
-	const LV2_Atom* one_match     = NULL;
-	const LV2_Atom* two_match     = NULL;
-	const LV2_Atom* three_match   = NULL;
-	const LV2_Atom* four_match    = NULL;
-	const LV2_Atom* true_match    = NULL;
-	const LV2_Atom* false_match   = NULL;
-	const LV2_Atom* uri_match     = NULL;
-	const LV2_Atom* string_match  = NULL;
-	const LV2_Atom* literal_match = NULL;
-	const LV2_Atom* tuple_match   = NULL;
-	const LV2_Atom* vector_match  = NULL;
-	const LV2_Atom* seq_match     = NULL;
+	struct {
+		const LV2_Atom* one;
+		const LV2_Atom* two;
+		const LV2_Atom* three;
+		const LV2_Atom* four;
+		const LV2_Atom* affirmative;
+		const LV2_Atom* negative;
+		const LV2_Atom* uri;
+		const LV2_Atom* string;
+		const LV2_Atom* literal;
+		const LV2_Atom* tuple;
+		const LV2_Atom* vector;
+		const LV2_Atom* seq;
+	} matches;
+
+	memset(&matches, 0, sizeof(matches));
+
 	LV2_Atom_Object_Query q[] = {
-		{ eg_one,     &one_match },
-		{ eg_two,     &two_match },
-		{ eg_three,   &three_match },
-		{ eg_four,    &four_match },
-		{ eg_true,    &true_match },
-		{ eg_false,   &false_match },
-		{ eg_uri,     &uri_match },
-		{ eg_string,  &string_match },
-		{ eg_literal, &literal_match },
-		{ eg_tuple,   &tuple_match },
-		{ eg_vector,  &vector_match },
-		{ eg_seq,     &seq_match },
+		{ eg_one,     &matches.one },
+		{ eg_two,     &matches.two },
+		{ eg_three,   &matches.three },
+		{ eg_four,    &matches.four },
+		{ eg_true,    &matches.affirmative },
+		{ eg_false,   &matches.negative },
+		{ eg_uri,     &matches.uri },
+		{ eg_string,  &matches.string },
+		{ eg_literal, &matches.literal },
+		{ eg_tuple,   &matches.tuple },
+		{ eg_vector,  &matches.vector },
+		{ eg_seq,     &matches.seq },
 		LV2_OBJECT_QUERY_END
 	};
 
-	unsigned matches = lv2_object_get((LV2_Atom_Object*)obj, q);
-	if (matches != n_props) {
-		return test_fail("Query failed, %u matches != %u\n", matches, n_props);
-	} else if (!lv2_atom_equals((LV2_Atom*)one, one_match)) {
-		return test_fail("Bad match one\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)two, two_match)) {
-		return test_fail("Bad match two\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)three, three_match)) {
-		return test_fail("Bad match three\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)four, four_match)) {
-		return test_fail("Bad match four\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)t, true_match)) {
-		return test_fail("Bad match true\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)f, false_match)) {
-		return test_fail("Bad match false\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)uri, uri_match)) {
-		return test_fail("Bad match URI\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)string, string_match)) {
-		return test_fail("Bad match string\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)literal, literal_match)) {
-		return test_fail("Bad match literal\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)tuple, tuple_match)) {
-		return test_fail("Bad match tuple\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)vector, vector_match)) {
-		return test_fail("Bad match vector\n");
-	} else if (!lv2_atom_equals((LV2_Atom*)seq, seq_match)) {
-		return test_fail("Bad match sequence\n");
+	unsigned n_matches = lv2_object_get((LV2_Atom_Object*)obj, q);
+	for (int i = 0; i < 2; ++i) {
+		if (n_matches != n_props) {
+			return test_fail("Query failed, %u matches != %u\n",
+			                 n_matches, n_props);
+		} else if (!lv2_atom_equals((LV2_Atom*)one, matches.one)) {
+			return test_fail("Bad match one\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)two, matches.two)) {
+			return test_fail("Bad match two\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)three, matches.three)) {
+			return test_fail("Bad match three\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)four, matches.four)) {
+			return test_fail("Bad match four\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)t, matches.affirmative)) {
+			return test_fail("Bad match true\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)f, matches.negative)) {
+			return test_fail("Bad match false\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)uri, matches.uri)) {
+			return test_fail("Bad match URI\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)string, matches.string)) {
+			return test_fail("Bad match string\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)literal, matches.literal)) {
+			return test_fail("Bad match literal\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)tuple, matches.tuple)) {
+			return test_fail("Bad match tuple\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)vector, matches.vector)) {
+			return test_fail("Bad match vector\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)seq, matches.seq)) {
+			return test_fail("Bad match sequence\n");
+		}
+		memset(&matches, 0, sizeof(matches));
+		n_matches = lv2_object_getv((LV2_Atom_Object*)obj,
+		                            eg_one,     &matches.one,
+		                            eg_two,     &matches.two,
+		                            eg_three,   &matches.three,
+		                            eg_four,    &matches.four,
+		                            eg_true,    &matches.affirmative,
+		                            eg_false,   &matches.negative,
+		                            eg_uri,     &matches.uri,
+		                            eg_string,  &matches.string,
+		                            eg_literal, &matches.literal,
+		                            eg_tuple,   &matches.tuple,
+		                            eg_vector,  &matches.vector,
+		                            eg_seq,     &matches.seq,
+		                            0);
 	}
 
 	printf("All tests passed.\n");

@@ -251,6 +251,13 @@ cleanup(LV2_Handle instance)
 }
 
 static bool
+is_object_type(Sampler* plugin, LV2_URID type)
+{
+	return type == plugin->uris.atom_Resource
+		|| type == plugin->uris.atom_Blank;
+}
+
+static bool
 handle_message(Sampler*               plugin,
                const LV2_Atom_Object* obj)
 {
@@ -259,29 +266,32 @@ handle_message(Sampler*               plugin,
 		return false;
 	}
 
+	/* Message should look like this:
+	 * [
+	 *     a msg:SetMessage ;
+	 *     msg:body [
+	 *         eg:filename "/some/value.wav" ;
+	 *     ] ;
+	 * ]
+	 */
+
 	/* Get body of message */
 	const LV2_Atom_Object* body = NULL;
-	LV2_Atom_Object_Query q1[] = {
-		{ plugin->uris.msg_body, (const LV2_Atom**)&body },
-		LV2_OBJECT_QUERY_END
-	};
-	lv2_object_get(obj, q1);
-
-	if (!body) {  // TODO: check type
-		fprintf(stderr, "Malformed set message with no body.\n");
+	lv2_object_getv(obj, plugin->uris.msg_body, &body, 0);
+	if (!body) {
+		fprintf(stderr, "Malformed set message has no body.\n");
+		return false;
+	}
+	if (!is_object_type(plugin, body->atom.type)) {
+		fprintf(stderr, "Malformed set message has non-object body.\n");
 		return false;
 	}
 
 	/* Get filename from body */
 	const LV2_Atom* filename = NULL;
-	LV2_Atom_Object_Query q2[] = {
-		{ plugin->uris.eg_filename, &filename },
-		LV2_OBJECT_QUERY_END
-	};
-	lv2_object_get((LV2_Atom_Object*)body, q2);
-
+	lv2_object_getv(body, plugin->uris.eg_filename, &filename, 0);
 	if (!filename) {
-		fprintf(stderr, "Ignored set message with no filename\n");
+		fprintf(stderr, "Ignored set message with no filename.\n");
 		return false;
 	}
 
