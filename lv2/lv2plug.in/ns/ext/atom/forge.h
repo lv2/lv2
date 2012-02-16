@@ -47,13 +47,22 @@ extern "C" {
 #    include <stdbool.h>
 #endif
 
+typedef void* LV2_Atom_Forge_Sink_Handle;
+
+typedef uint32_t (*LV2_Atom_Forge_Sink)(LV2_Atom_Forge_Sink_Handle handle,
+                                        const void*                buf,
+                                        uint32_t                   size);
+
 /**
    A "forge" for creating atoms by appending to a buffer.
 */
 typedef struct {
 	uint8_t* buf;
-	size_t   offset;
-	size_t   size;
+	uint32_t offset;
+	uint32_t size;
+
+	LV2_Atom_Forge_Sink        sink;
+	LV2_Atom_Forge_Sink_Handle handle;
 
 	LV2_URID Blank;
 	LV2_URID Bool;
@@ -78,6 +87,17 @@ lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size)
 	forge->buf    = buf;
 	forge->size   = size;
 	forge->offset = 0;
+}
+
+static inline void
+lv2_atom_forge_set_sink(LV2_Atom_Forge*            forge,
+                        LV2_Atom_Forge_Sink        sink,
+                        LV2_Atom_Forge_Sink_Handle handle)
+{
+	forge->buf    = NULL;
+	forge->size   = forge->offset = 0;
+	forge->sink   = sink;
+	forge->handle = handle;
 }
 
 /**
@@ -106,43 +126,43 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 	forge->Vector   = map->map(map->handle, LV2_ATOM_URI "#Vector");
 }
 
-/**
-   Reserve @c size bytes in the output buffer (used internally).
-   @return The start of the reserved memory, or NULL if out of space.
-*/
-static inline uint8_t*
-lv2_atom_forge_reserve(LV2_Atom_Forge* forge,
-                       LV2_Atom*       parent,
-                       uint32_t        size)
+static inline void*
+lv2_atom_forge_write_nopad(LV2_Atom_Forge* forge,
+                           LV2_Atom*       parent,
+                           const void*     data,
+                           uint32_t        size)
 {
-	uint8_t* const out         = forge->buf + forge->offset;
-	const uint32_t padded_size = lv2_atom_pad_size(size);
-	if (forge->offset + padded_size > forge->size) {
+	uint8_t* const out = forge->buf + forge->offset;
+	if (forge->offset + size > forge->size) {
 		return NULL;
 	}
 	if (parent) {
-		parent->size += padded_size;
+		parent->size += size;
 	}
-	forge->offset += padded_size;
+	forge->offset += size;
+	memcpy(out, data, size);
 	return out;
 }
 
-/**
-   Write the header of an atom:Atom.
-
-   Space for the complete atom will be reserved, but uninitialised.
-*/
-static inline LV2_Atom*
-lv2_atom_forge_atom_head(LV2_Atom_Forge* forge,
-                         LV2_Atom*       parent,
-                         uint32_t        type,
-                         uint32_t        size)
+static inline void
+lv2_atom_forge_pad(LV2_Atom_Forge* forge,
+                   LV2_Atom*       parent,
+                   uint32_t        written)
 {
-	LV2_Atom* const out = (LV2_Atom*)lv2_atom_forge_reserve(
-		forge, parent, size);
+	const uint64_t pad      = 0;
+	const uint32_t pad_size = lv2_atom_pad_size(written) - written;
+	lv2_atom_forge_write_nopad(forge, parent, &pad, pad_size);
+}
+
+static inline void*
+lv2_atom_forge_write(LV2_Atom_Forge* forge,
+                     LV2_Atom*       parent,
+                     const void*     data,
+                     uint32_t        size)
+{
+	void* out = lv2_atom_forge_write_nopad(forge, parent, data, size);
 	if (out) {
-		out->type = type;
-		out->size = size - sizeof(LV2_Atom);
+		lv2_atom_forge_pad(forge, parent, size);
 	}
 	return out;
 }
@@ -151,93 +171,71 @@ lv2_atom_forge_atom_head(LV2_Atom_Forge* forge,
 static inline LV2_Atom_Int32*
 lv2_atom_forge_int32(LV2_Atom_Forge* forge, LV2_Atom* parent, int32_t val)
 {
-	LV2_Atom_Int32* out = (LV2_Atom_Int32*)lv2_atom_forge_atom_head(
-		forge, parent, forge->Int32, sizeof(LV2_Atom_Int32));
-	if (out) {
-		out->value = val;
-	}
-	return out;
+	const LV2_Atom_Int32 a = { { forge->Int32, sizeof(val) }, val };
+	return (LV2_Atom_Int32*)lv2_atom_forge_write(forge, parent, &a, sizeof(a));
 }
 
 /** Write an atom:Int64. */
 static inline LV2_Atom_Int64*
 lv2_atom_forge_int64(LV2_Atom_Forge* forge, LV2_Atom* parent, int64_t val)
 {
-	LV2_Atom_Int64* out = (LV2_Atom_Int64*)lv2_atom_forge_atom_head(
-		forge, parent, forge->Int64, sizeof(LV2_Atom_Int64));
-	if (out) {
-		out->value = val;
-	}
-	return out;
+	const LV2_Atom_Int64 a = { { forge->Int64, sizeof(val) }, val };
+	return (LV2_Atom_Int64*)lv2_atom_forge_write(forge, parent, &a, sizeof(a));
 }
 
 /** Write an atom:Float. */
 static inline LV2_Atom_Float*
 lv2_atom_forge_float(LV2_Atom_Forge* forge, LV2_Atom* parent, float val)
 {
-	LV2_Atom_Float* out = (LV2_Atom_Float*)lv2_atom_forge_atom_head(
-		forge, parent, forge->Float, sizeof(LV2_Atom_Float));
-	if (out) {
-		out->value = val;
-	}
-	return out;
+	const LV2_Atom_Float a = { { forge->Float, sizeof(val) }, val };
+	return (LV2_Atom_Float*)lv2_atom_forge_write(forge, parent, &a, sizeof(a));
 }
 
 /** Write an atom:Double. */
 static inline LV2_Atom_Double*
 lv2_atom_forge_double(LV2_Atom_Forge* forge, LV2_Atom* parent, double val)
 {
-	LV2_Atom_Double* out = (LV2_Atom_Double*)lv2_atom_forge_atom_head(
-		forge, parent, forge->Double, sizeof(LV2_Atom_Double));
-	if (out) {
-		out->value = val;
-	}
-	return out;
+	const LV2_Atom_Double a = { { forge->Double, sizeof(val) }, val };
+	return (LV2_Atom_Double*)lv2_atom_forge_write(
+		forge, parent, &a, sizeof(a));
 }
 
 /** Write an atom:Bool. */
 static inline LV2_Atom_Bool*
 lv2_atom_forge_bool(LV2_Atom_Forge* forge, LV2_Atom* parent, bool val)
 {
-	LV2_Atom_Bool* out = (LV2_Atom_Bool*)lv2_atom_forge_atom_head(
-		forge, parent, forge->Bool, sizeof(LV2_Atom_Bool));
-	if (out) {
-		out->value = val ? 1 : 0;
-	}
-	return out;
+	const LV2_Atom_Bool a = { { forge->Bool, sizeof(val) }, val };
+	return (LV2_Atom_Bool*)lv2_atom_forge_write(forge, parent, &a, sizeof(a));
 }
 
 /** Write an atom:URID. */
 static inline LV2_Atom_URID*
 lv2_atom_forge_urid(LV2_Atom_Forge* forge, LV2_Atom* parent, LV2_URID id)
 {
-	LV2_Atom_URID* out = (LV2_Atom_URID*)lv2_atom_forge_reserve(
-		forge, parent, sizeof(LV2_Atom_URID));
-	if (out) {
-		out->atom.type = forge->URID;
-		out->atom.size = sizeof(uint32_t);
-		out->id        = id;
-	}
-	return out;
+	const LV2_Atom_URID a = { { forge->Int32, sizeof(id) }, id };
+	return (LV2_Atom_URID*)lv2_atom_forge_write(forge, parent, &a, sizeof(a));
 }
 
-/** Write an atom:String. */
+/** Write an atom:String.  Note that @p str need not be NULL terminated. */
 static inline LV2_Atom_String*
 lv2_atom_forge_string(LV2_Atom_Forge* forge,
                       LV2_Atom*       parent,
                       const uint8_t*  str,
                       size_t          len)
 {
-	LV2_Atom_String* out = (LV2_Atom_String*)lv2_atom_forge_reserve(
-		forge, parent, sizeof(LV2_Atom_String) + len + 1);
-	if (out) {
-		out->atom.type = forge->String;
-		out->atom.size = len + 1;
-		assert(LV2_ATOM_CONTENTS(LV2_Atom_String, out) == LV2_ATOM_BODY(out));
-		uint8_t* buf = LV2_ATOM_CONTENTS(LV2_Atom_String, out);
-		memcpy(buf, str, len);
-		buf[len] = '\0';
+	const LV2_Atom_String a = { { forge->String, len + 1 } };
+	LV2_Atom_String* out = (LV2_Atom_String*)
+		lv2_atom_forge_write_nopad(forge, parent, &a, sizeof(a));
+	if (!out) {
+		return NULL;
 	}
+	if (!lv2_atom_forge_write_nopad(forge, parent, str, len)
+	    || !lv2_atom_forge_write_nopad(forge, parent, "", 1)) {
+		out->atom.type = 0;
+		out->atom.size = 0;
+		return NULL;
+	}
+	lv2_atom_forge_pad(forge, parent, len + 1);
 	return out;
 }
 
@@ -250,41 +248,46 @@ lv2_atom_forge_literal(LV2_Atom_Forge* forge,
                        uint32_t        datatype,
                        uint32_t        lang)
 {
-	LV2_Atom_Literal* out = (LV2_Atom_Literal*)lv2_atom_forge_reserve(
-		forge, parent, sizeof(LV2_Atom_Literal) + len + 1);
-	if (out) {
-		out->atom.type        = forge->Literal;
-		out->atom.size        = sizeof(LV2_Atom_Literal_Head) + len + 1;
-		out->literal.datatype = datatype;
-		out->literal.lang     = lang;
-		uint8_t* buf = LV2_ATOM_CONTENTS(LV2_Atom_Literal, out);
-		memcpy(buf, str, len);
-		buf[len] = '\0';
+	const LV2_Atom_Literal a = {
+		{ forge->Literal,
+		  sizeof(LV2_Atom_Literal) - sizeof(LV2_Atom) + len + 1 },
+		datatype,
+		lang
+	};
+	LV2_Atom_Literal* out = (LV2_Atom_Literal*)
+		lv2_atom_forge_write_nopad(forge, parent, &a, sizeof(a));
+	if (!out) {
+		return NULL;
 	}
+	if (!lv2_atom_forge_write_nopad(forge, parent, str, len)
+	    || !lv2_atom_forge_write_nopad(forge, parent, "", 1)) {
+		out->atom.type = 0;
+		out->atom.size = 0;
+		return NULL;
+	}
+	lv2_atom_forge_pad(forge, parent, len + 1);
 	return out;
 }
 
-/** Write an atom:Vector header and reserve space for the body. */
+/** Write an atom:Vector header, but not the vector body. */
 static inline LV2_Atom_Vector*
-lv2_atom_forge_reserve_vector(LV2_Atom_Forge* forge,
-                              LV2_Atom*       parent,
-                              uint32_t        elem_count,
-                              uint32_t        elem_type,
-                              uint32_t        elem_size)
+lv2_atom_forge_vector_head(LV2_Atom_Forge* forge,
+                           LV2_Atom*       parent,
+                           uint32_t        elem_count,
+                           uint32_t        elem_type,
+                           uint32_t        elem_size)
 {
-	const size_t     size = sizeof(LV2_Atom_Vector) + (elem_size * elem_count);
-	LV2_Atom_Vector* out  = (LV2_Atom_Vector*)lv2_atom_forge_reserve(
-		forge, parent, size);
-	if (out) {
-		out->atom.type  = forge->Vector;
-		out->atom.size  = size - sizeof(LV2_Atom);
-		out->elem_count = elem_count;
-		out->elem_type  = elem_type;
-	}
-	return out;
+	const size_t size = sizeof(LV2_Atom_Vector) + (elem_size * elem_count);
+	const LV2_Atom_Vector a = {
+		{ forge->Vector, size - sizeof(LV2_Atom) },
+		elem_count,
+		elem_type
+	};
+	return (LV2_Atom_Vector*)lv2_atom_forge_write(
+		forge, parent, &a, sizeof(a));
 }
 
-/** Write an atom:Vector. */
+/** Write a complete atom:Vector. */
 static inline LV2_Atom_Vector*
 lv2_atom_forge_vector(LV2_Atom_Forge* forge,
                       LV2_Atom*       parent,
@@ -293,11 +296,10 @@ lv2_atom_forge_vector(LV2_Atom_Forge* forge,
                       uint32_t        elem_size,
                       void*           elems)
 {
-	LV2_Atom_Vector* out = lv2_atom_forge_reserve_vector(
+	LV2_Atom_Vector* out = lv2_atom_forge_vector_head(
 		forge, parent, elem_count, elem_type, elem_size);
 	if (out) {
-		uint8_t* buf = LV2_ATOM_CONTENTS(LV2_Atom_Vector, out);
-		memcpy(buf, elems, elem_size * elem_count);
+		lv2_atom_forge_write(forge, parent, elems, elem_size * elem_count);
 	}
 	return out;
 }
@@ -321,8 +323,8 @@ static inline LV2_Atom_Tuple*
 lv2_atom_forge_tuple(LV2_Atom_Forge* forge,
                      LV2_Atom*       parent)
 {
-	return (LV2_Atom_Tuple*)lv2_atom_forge_atom_head(
-		forge, parent, forge->Tuple, sizeof(LV2_Atom));
+	const LV2_Atom_Tuple a = { { forge->Tuple, 0 } };
+	return (LV2_Atom_Tuple*)lv2_atom_forge_write(forge, parent, &a, sizeof(a));
 }
 
 /**
@@ -351,15 +353,12 @@ lv2_atom_forge_resource(LV2_Atom_Forge* forge,
                         LV2_URID        id,
                         LV2_URID        otype)
 {
-	LV2_Atom_Object* out = (LV2_Atom_Object*)lv2_atom_forge_reserve(
-		forge, parent, sizeof(LV2_Atom_Object));
-	if (out) {
-		out->atom.type = forge->Resource;
-		out->atom.size = sizeof(LV2_Atom_Object) - sizeof(LV2_Atom);
-		out->id        = id;
-		out->type      = otype;
-	}
-	return out;
+	const LV2_Atom_Object a = {
+		{ forge->Resource, sizeof(LV2_Atom_Object) - sizeof(LV2_Atom) },
+		id,
+		otype
+	};
+	return (LV2_Atom_Object*)lv2_atom_forge_write(forge, parent, &a, sizeof(a));
 }
 
 /**
@@ -371,15 +370,12 @@ lv2_atom_forge_blank(LV2_Atom_Forge* forge,
                      uint32_t        id,
                      LV2_URID        otype)
 {
-	LV2_Atom_Object* out = (LV2_Atom_Object*)lv2_atom_forge_reserve(
-		forge, parent, sizeof(LV2_Atom_Object));
-	if (out) {
-		out->atom.type = forge->Blank;
-		out->atom.size = sizeof(LV2_Atom_Object) - sizeof(LV2_Atom);
-		out->id        = id;
-		out->type      = otype;
-	}
-	return out;
+	const LV2_Atom_Object a = {
+		{ forge->Blank, sizeof(LV2_Atom_Object) - sizeof(LV2_Atom) },
+		id,
+		otype
+	};
+	return (LV2_Atom_Object*)lv2_atom_forge_write(forge, parent, &a, sizeof(a));
 }
 
 /**
@@ -392,13 +388,9 @@ lv2_atom_forge_property_head(LV2_Atom_Forge* forge,
                              LV2_URID        key,
                              LV2_URID        context)
 {
-	LV2_Atom_Property_Body* out = (LV2_Atom_Property_Body*)
-		lv2_atom_forge_reserve(forge, parent, 2 * sizeof(uint32_t));
-	if (out) {
-		out->key     = key;
-		out->context = context;
-	}
-	return out;
+	const LV2_Atom_Property_Body a = { key, context, { 0, 0 } };
+	return (LV2_Atom_Property_Body*)lv2_atom_forge_write(
+		forge, parent, &a, 2 * sizeof(uint32_t));
 }
 
 /**
@@ -412,15 +404,13 @@ lv2_atom_forge_sequence_head(LV2_Atom_Forge* forge,
                              uint32_t        capacity,
                              uint32_t        unit)
 {
-	LV2_Atom_Sequence* out = (LV2_Atom_Sequence*)
-		lv2_atom_forge_reserve(forge, parent, sizeof(LV2_Atom_Sequence));
-	if (out) {
-		out->atom.type = forge->Sequence;
-		out->atom.size = sizeof(LV2_Atom_Sequence) - sizeof(LV2_Atom);
-		out->unit      = unit;
-		out->pad       = 0;
-	}
-	return out;
+	const LV2_Atom_Sequence a = {
+		{ forge->Sequence, sizeof(LV2_Atom_Sequence) - sizeof(LV2_Atom) },
+		unit,
+		0
+	};
+	return (LV2_Atom_Sequence*)lv2_atom_forge_write(
+		forge, parent, &a, sizeof(a));
 }
 
 /**
@@ -434,13 +424,8 @@ lv2_atom_forge_audio_time(LV2_Atom_Forge* forge,
                           uint32_t        frames,
                           uint32_t        subframes)
 {
-	LV2_Atom_Event* out = (LV2_Atom_Event*)
-		lv2_atom_forge_reserve(forge, parent, 2 * sizeof(uint32_t));
-	if (out) {
-		out->time.audio.frames    = frames;
-		out->time.audio.subframes = subframes;
-	}
-	return out;
+	const LV2_Atom_Audio_Time a = { frames, subframes };
+	return (LV2_Atom_Event*)lv2_atom_forge_write(forge, parent, &a, sizeof(a));
 }
 
 /**
@@ -453,12 +438,8 @@ lv2_atom_forge_beat_time(LV2_Atom_Forge* forge,
                          LV2_Atom*       parent,
                          double          beats)
 {
-	LV2_Atom_Event* out = (LV2_Atom_Event*)
-		lv2_atom_forge_reserve(forge, parent, sizeof(double));
-	if (out) {
-		out->time.beats = beats;
-	}
-	return out;
+	return (LV2_Atom_Event*)lv2_atom_forge_write(
+		forge, parent, &beats, sizeof(beats));
 }
 
 #ifdef __cplusplus

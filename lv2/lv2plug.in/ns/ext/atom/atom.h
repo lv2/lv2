@@ -96,16 +96,11 @@ typedef struct {
 	/* Contents (a null-terminated UTF-8 string) follow here. */
 } LV2_Atom_String;
 
-/** The header of an atom:Literal body. */
-typedef struct {
-	uint32_t datatype;  /**< The ID of the datatype of this literal. */
-	uint32_t lang;      /**< The ID of the language of this literal. */
-} LV2_Atom_Literal_Head;
-
 /** The complete header of an atom:Literal. */
 typedef struct {
-	LV2_Atom              atom;     /**< Atom header. */
-	LV2_Atom_Literal_Head literal;  /**< Literal body header. */
+	LV2_Atom atom;      /**< Atom header. */
+	uint32_t datatype;  /**< The ID of the datatype of this literal. */
+	uint32_t lang;      /**< The ID of the language of this literal. */
 	/* Contents (a null-terminated UTF-8 string) follow here. */
 } LV2_Atom_Literal;
 

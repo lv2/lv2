@@ -484,3 +484,16 @@ described like so:</p>
     ] .
 </pre>
 """ .
+
+atom:eventTransfer
+	a <http://lv2plug.in/ns/ext/pui#PortProtocol> ;
+	lv2:documentation """
+<p>Transfer of individual events.  Useful as the
+<code>format</code> for a LV2_UI_Write_Function, or the
+<code>port_protocol</code> for LV2_PUI_Host_Descriptor::write_port().</p>
+
+<p>This protocol applies to ports which contain events, usually in an
+atom:Sequence.  The host must transfer each individual event to the recipient.
+The format of the received data is an LV2_Atom, there is no timestamp
+header.</p>
+""" .

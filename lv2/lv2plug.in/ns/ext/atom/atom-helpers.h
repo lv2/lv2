@@ -45,6 +45,13 @@ lv2_atom_pad_size(uint32_t size)
 	return (size + 7) & (~7);
 }
 
+/** Return the total size of @p atom, including the header. */
+static inline uint32_t
+lv2_atom_total_size(const LV2_Atom* atom)
+{
+	return sizeof(LV2_Atom) + atom->size;
+}
+
 /** Return true iff @p atom is null. */
 static inline bool
 lv2_atom_is_null(const LV2_Atom* atom)
