@@ -106,7 +106,7 @@ def configure(conf):
             'os.path.relpath missing, get Python 2.6 or use --copy-headers')
 
     # Check for gcov library (for test coverage)
-    if conf.env['BUILD_TESTS']:
+    if conf.env['BUILD_TESTS'] and not conf.is_defined('HAVE_GCOV'):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
     autowaf.configure(conf)
