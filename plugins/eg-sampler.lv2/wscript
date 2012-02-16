@@ -33,6 +33,11 @@ def configure(conf):
         autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-message',
                           uselib_store='LV2_MESSAGE')
 
+    conf.check(function_name='mlock',
+               header_name='sys/mman.h',
+               define_name='HAVE_MLOCK',
+               mandatory=False)
+
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)
     autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
@@ -81,7 +86,7 @@ def build(bld):
     # Build plugin library
     obj = bld(features     = 'c cshlib',
               env          = penv,
-              source       = 'sampler.c',
+              source       = ['sampler.c', 'zix/ring.c'],
               name         = 'sampler',
               target       = '%s/sampler' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,

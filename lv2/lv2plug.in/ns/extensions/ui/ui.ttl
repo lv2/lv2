@@ -204,7 +204,17 @@ A PortNotification MUST have exactly one ui:plugin which is a lv2:Plugin.
 A PortNotification MUST have exactly one ui:portIndex which is an xsd:decimal.
 """
 	] ;
-	rdfs:comment "Port Notification" .
+	lv2:documentation """
+<p>A port notification.  This describes which ports the host must send
+notifications to the UI about.  The port can be specific by index, using the
+ui:portIndex property, or symbol, using the lv2:symbol property.  Since port
+indices are not guaranteed to be stable between different revisions (or even
+instantiations) of a plugin, symbol is recommended, and index may only be used
+by UIs shipped in the same bundle as the plugin.</p>
+
+<p>A ui:PortNotification MUST have either a ui:portIndex or a lv2:symbol to
+indicate which port it refers to.</p>
+""" .
 
 ui:portNotification
 	a rdf:Property ,
@@ -232,4 +242,15 @@ ui:portIndex
 	rdfs:range xsd:decimal ;
 	rdfs:comment """
 The index of the port a portNotification applies to.
+""" .
+
+ui:notifyType
+	a rdf:Property ;
+	rdfs:domain ui:PortNotification ;
+	lv2:comment """
+<p>Indicates a particular type that the UI should be notified of.  In the case
+of ports where several types of data can be present (e.g. event ports), this
+can be used to indicate that only a particular type of data should cause
+notification.  This is useful where port traffic is very dense, but only a
+certain small number of events are actually of interest to the UI.</p>
 """ .

@@ -20,12 +20,13 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
+@prefix urid: <http://lv2plug.in/ns/ext/urid#> .
 
 <http://lv2plug.in/plugins/eg-sampler>
 	a lv2:Plugin ;
 	doap:name "Example Sampler" ;
 	doap:license <http://opensource.org/licenses/isc> ;
-	lv2:requiredFeature <http://lv2plug.in/ns/ext/urid#map> ;
+	lv2:requiredFeature urid:map ;
 	lv2:optionalFeature lv2:hardRTCapable ;
 	lv2:extensionData <http://lv2plug.in/ns/ext/state#Interface> ;
 	ui:ui <http://lv2plug.in/plugins/eg-sampler#ui> ;
@@ -44,8 +45,8 @@
 		atom:bufferType atom:Sequence ;
 		atom:supports <http://lv2plug.in/ns/ext/message#Message> ;
 		lv2:index 1 ;
-		lv2:symbol "response" ;
-		lv2:name "Response"
+		lv2:symbol "notify" ;
+		lv2:name "Notify"
 	] , [
 		a lv2:AudioPort ,
 			lv2:OutputPort ;
@@ -56,4 +57,9 @@
 
 <http://lv2plug.in/plugins/eg-sampler#ui>
 	a ui:GtkUI ;
-	lv2:requiredFeature <http://lv2plug.in/ns/ext/urid#map> .
+	lv2:requiredFeature urid:map ;
+	ui:portNotification [
+		ui:plugin <http://lv2plug.in/plugins/eg-sampler> ;
+		lv2:symbol "notify" ;
+        ui:notifyType atom:Blank ;
+	] .

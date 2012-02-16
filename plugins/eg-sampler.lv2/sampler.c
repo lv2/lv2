@@ -47,9 +47,11 @@
 
 #include "zix/sem.h"
 #include "zix/thread.h"
+#include "zix/ring.h"
 
 #include "./uris.h"
 
+#define RING_SIZE 4096
 #define STRING_BUF 8192
 
 enum {
@@ -61,24 +63,24 @@ enum {
 static const char* default_sample_file = "monosample.wav";
 
 typedef struct {
-	char    filepath[STRING_BUF];
 	SF_INFO info;
 	float*  data;
-} SampleFile;
+	char*   path;
+} Sample;
 
 typedef struct {
 	/* Features */
 	LV2_URID_Map* map;
 
-	/* Worker thread */
+	/* Worker thread, communication, and sync */
 	ZixThread worker_thread;
 	ZixSem    signal;
+	ZixRing*  to_worker;
+	ZixRing*  from_worker;
 	bool      exit;
 
 	/* Sample */
-	SampleFile* samp;
-	SampleFile* pending_samp;
-	int         pending_sample_ready;
+	Sample* sample;
 
 	/* Ports */
 	float*             output_port;
@@ -91,56 +93,141 @@ typedef struct {
 	/* Playback state */
 	sf_count_t frame;
 	bool       play;
-
 } Sampler;
 
-static void
-handle_load_sample(Sampler* plugin)
+/** An atom-like message used internally to apply/free samples.
+ *
+ * This is only used internally via ringbuffers, since it is not POD and
+ * therefore not strictly an Atom.
+ */
+typedef struct
 {
-	plugin->pending_sample_ready = 0;
+	LV2_Atom atom;
+	Sample*  sample;
+} SampleMessage;
 
-	printf("Loading sample %s\n", plugin->pending_samp->filepath);
-	SF_INFO* const info   = &plugin->pending_samp->info;
-	SNDFILE* const sample = sf_open(plugin->pending_samp->filepath,
-	                                SFM_READ,
-	                                info);
-
-	if (!sample
-	    || !info->frames
-	    || (info->channels != 1)) {
-		fprintf(stderr, "failed to open sample '%s'.\n",
-		        plugin->pending_samp->filepath);
-		return;
+static Sample*
+load_sample(Sampler* plugin, const char* path, uint32_t path_len)
+{
+	printf("Loading sample %s\n", path);
+	Sample* const  sample  = (Sample*)malloc(sizeof(Sample));
+	SF_INFO* const info    = &sample->info;
+	SNDFILE* const sndfile = sf_open(path, SFM_READ, info);
+	
+	if (!sndfile || !info->frames || (info->channels != 1)) {
+		fprintf(stderr, "failed to open sample '%s'.\n", path);
+		free(sample);
+		return NULL;
 	}
 
 	/* Read data */
 	float* const data = malloc(sizeof(float) * info->frames);
-	plugin->pending_samp->data = data;
-
 	if (!data) {
 		fprintf(stderr, "failed to allocate memory for sample.\n");
-		return;
+		return NULL;
 	}
+	sf_seek(sndfile, 0ul, SEEK_SET);
+	sf_read_float(sndfile, data, info->frames);
+	sf_close(sndfile);
 
-	sf_seek(sample, 0ul, SEEK_SET);
-	sf_read_float(sample, data, info->frames);
-	sf_close(sample);
+	/* Fill sample struct and return it. */
+	sample->data = data;
+	sample->path = (char*)malloc(path_len + 1);
+	memcpy(sample->path, path, path_len + 1);
 
-	/* Queue the sample for installation on next run() */
-	plugin->pending_sample_ready = 1;
+	return sample;
 }
 
+static bool
+is_object_type(Sampler* plugin, LV2_URID type)
+{
+	return type == plugin->uris.atom_Resource
+		|| type == plugin->uris.atom_Blank;
+}
+
+static bool
+handle_set_message(Sampler*               plugin,
+                   const LV2_Atom_Object* obj)
+{
+	if (obj->type != plugin->uris.msg_Set) {
+		fprintf(stderr, "Ignoring unknown message type %d\n", obj->type);
+		return false;
+	}
+
+	/* Message should look like this:
+	 * [
+	 *     a msg:SetMessage ;
+	 *     msg:body [
+	 *         eg:filename "/some/value.wav" ;
+	 *     ] ;
+	 * ]
+	 */
+
+	/* Get body of message. */
+	const LV2_Atom_Object* body = NULL;
+	lv2_object_getv(obj, plugin->uris.msg_body, &body, 0);
+	if (!body) {
+		fprintf(stderr, "Malformed set message has no body.\n");
+		return false;
+	}
+	if (!is_object_type(plugin, body->atom.type)) {
+		fprintf(stderr, "Malformed set message has non-object body.\n");
+		return false;
+	}
+
+	/* Get filename from body. */
+	const LV2_Atom* filename = NULL;
+	lv2_object_getv(body, plugin->uris.eg_filename, &filename, 0);
+	if (!filename) {
+		fprintf(stderr, "Ignored set message with no filename.\n");
+		return false;
+	}
+
+	/* Load sample. */
+	const char* path   = (const char*)LV2_ATOM_BODY(filename);
+	Sample*     sample = load_sample(plugin, path, filename->size - 1);
+
+	if (sample) {
+		/* Loaded sample, send it to run() to be applied. */
+		const SampleMessage msg = {
+			{ plugin->uris.eg_applySample, sizeof(sample) },
+			sample
+		};
+		zix_ring_write(plugin->from_worker,
+		               &msg,
+		               lv2_atom_pad_size(sizeof(msg)));
+	}
+
+	return true;
+}
+               
 void*
 worker_thread_main(void* arg)
 {
 	Sampler* plugin = (Sampler*)arg;
 
-	while (!plugin->exit) {
-		/* Wait for run() to signal that we need to load a sample */
-		zix_sem_wait(&plugin->signal);
+	while (!zix_sem_wait(&plugin->signal) && !plugin->exit) {
+		/* Peek message header to see how much we need to read. */
+		LV2_Atom head;
+		zix_ring_peek(plugin->to_worker, &head, sizeof(head));
 
-		/* Then load it */
-		handle_load_sample(plugin);
+		/* Read message. */
+		const uint32_t size = lv2_atom_pad_size(sizeof(LV2_Atom) + head.size);
+		uint8_t        buf[size];
+		LV2_Atom*      obj  = (LV2_Atom*)buf;
+		zix_ring_read(plugin->to_worker, buf, size);
+
+		if (obj->type == plugin->uris.eg_freeSample) {
+			/* Free old sample */
+			SampleMessage* msg = (SampleMessage*)obj;
+			fprintf(stderr, "Freeing %s\n", msg->sample->path);
+			free(msg->sample->path);
+			free(msg->sample->data);
+			free(msg->sample);
+		} else {
+			/* Handle set message (load sample). */
+			handle_set_message(plugin, (LV2_Atom_Object*)obj);
+		}
 	}
 
 	return 0;
@@ -179,14 +266,12 @@ instantiate(const LV2_Descriptor*     descriptor,
 		return NULL;
 	}
 
-	plugin->samp         = (SampleFile*)malloc(sizeof(SampleFile));
-	plugin->pending_samp = (SampleFile*)malloc(sizeof(SampleFile));
-	if (!plugin->samp || !plugin->pending_samp) {
+	plugin->sample = (Sample*)malloc(sizeof(Sample));
+	if (!plugin->sample) {
 		return NULL;
 	}
 
-	memset(plugin->samp, 0, sizeof(SampleFile));
-	memset(plugin->pending_samp, 0, sizeof(SampleFile));
+	memset(plugin->sample, 0, sizeof(Sample));
 	memset(&plugin->uris, 0, sizeof(plugin->uris));
 
 	/* Create signal for waking up worker thread */
@@ -202,6 +287,10 @@ instantiate(const LV2_Descriptor*     descriptor,
 		fprintf(stderr, "Could not initialize worker thread.\n");
 		goto fail;
 	}
+
+	/* Create ringbuffers for communicating with worker thread */
+	plugin->to_worker   = zix_ring_new(RING_SIZE);
+	plugin->from_worker = zix_ring_new(RING_SIZE);
 
 	/* Scan host features for URID map */
 	LV2_URID_Map* map = NULL;
@@ -219,12 +308,14 @@ instantiate(const LV2_Descriptor*     descriptor,
 	plugin->map = map;
 	map_sampler_uris(plugin->map, &plugin->uris);
 
-	/* Open the default sample file */
-	strncpy(plugin->pending_samp->filepath, path, STRING_BUF);
-	strncat(plugin->pending_samp->filepath,
-	        default_sample_file,
-	        STRING_BUF - strlen(plugin->pending_samp->filepath) );
-	handle_load_sample(plugin);
+	/* Load the default sample file */
+	const size_t path_len        = strlen(path);
+	const size_t sample_file_len = strlen(default_sample_file);
+	const size_t len             = path_len + sample_file_len;
+	char*        sample_path     = (char*)malloc(len + 1);
+	memcpy(sample_path,            path,                path_len);
+	memcpy(sample_path + path_len, default_sample_file, sample_file_len + 1);
+	plugin->sample = load_sample(plugin, sample_path, len);
 
 	return (LV2_Handle)plugin;
 
@@ -242,67 +333,15 @@ cleanup(LV2_Handle instance)
 	zix_sem_post(&plugin->signal);
 	zix_thread_join(plugin->worker_thread, 0);
 	zix_sem_destroy(&plugin->signal);
+	zix_ring_free(plugin->to_worker);
+	zix_ring_free(plugin->from_worker);
 
-	free(plugin->samp->data);
-	free(plugin->pending_samp->data);
-	free(plugin->samp);
-	free(plugin->pending_samp);
+	free(plugin->sample->data);
+	free(plugin->sample->path);
+	free(plugin->sample);
 	free(instance);
 }
 
-static bool
-is_object_type(Sampler* plugin, LV2_URID type)
-{
-	return type == plugin->uris.atom_Resource
-		|| type == plugin->uris.atom_Blank;
-}
-
-static bool
-handle_message(Sampler*               plugin,
-               const LV2_Atom_Object* obj)
-{
-	if (obj->type != plugin->uris.msg_Set) {
-		fprintf(stderr, "Ignoring unknown message type %d\n", obj->type);
-		return false;
-	}
-
-	/* Message should look like this:
-	 * [
-	 *     a msg:SetMessage ;
-	 *     msg:body [
-	 *         eg:filename "/some/value.wav" ;
-	 *     ] ;
-	 * ]
-	 */
-
-	/* Get body of message */
-	const LV2_Atom_Object* body = NULL;
-	lv2_object_getv(obj, plugin->uris.msg_body, &body, 0);
-	if (!body) {
-		fprintf(stderr, "Malformed set message has no body.\n");
-		return false;
-	}
-	if (!is_object_type(plugin, body->atom.type)) {
-		fprintf(stderr, "Malformed set message has non-object body.\n");
-		return false;
-	}
-
-	/* Get filename from body */
-	const LV2_Atom* filename = NULL;
-	lv2_object_getv(body, plugin->uris.eg_filename, &filename, 0);
-	if (!filename) {
-		fprintf(stderr, "Ignored set message with no filename.\n");
-		return false;
-	}
-
-	char* str = (char*)LV2_ATOM_BODY(filename);
-	fprintf(stderr, "Request to load %s\n", str);
-	memcpy(plugin->pending_samp->filepath, str, filename->size);
-	zix_sem_post(&plugin->signal);
-
-	return true;
-}
-               
 static void
 run(LV2_Handle instance,
     uint32_t   sample_count)
@@ -322,9 +361,19 @@ run(LV2_Handle instance,
 				plugin->frame = 0;
 				plugin->play  = true;
 			}
-		} else if (ev->body.type == plugin->uris.atom_Resource
-		           || ev->body.type == plugin->uris.atom_Blank) {
-			handle_message(plugin, (LV2_Atom_Object*)&ev->body);
+		} else if (is_object_type(plugin, ev->body.type)) {
+			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
+			if (obj->type == plugin->uris.msg_Set) {
+				/* Received a set message, send it to the worker thread. */
+				fprintf(stderr, "Queueing set message\n");
+				zix_ring_write(plugin->to_worker,
+				               obj,
+				               lv2_atom_pad_size(
+					               lv2_atom_total_size(&obj->atom)));
+				zix_sem_post(&plugin->signal);
+			} else {
+				fprintf(stderr, "Unknown object type %d\n", obj->type);
+			}
 		} else {
 			fprintf(stderr, "Unknown event type %d\n", ev->body.type);
 		}
@@ -333,14 +382,14 @@ run(LV2_Handle instance,
 	/* Render the sample (possibly already in progress) */
 	if (plugin->play) {
 		uint32_t       f  = plugin->frame;
-		const uint32_t lf = plugin->samp->info.frames;
+		const uint32_t lf = plugin->sample->info.frames;
 
 		for (pos = 0; pos < start_frame; ++pos) {
 			output[pos] = 0;
 		}
 
 		for (; pos < sample_count && f < lf; ++pos, ++f) {
-			output[pos] = plugin->samp->data[f];
+			output[pos] = plugin->sample->data[f];
 		}
 
 		plugin->frame = f;
@@ -350,19 +399,31 @@ run(LV2_Handle instance,
 		}
 	}
 
-	/* Check if we have a sample pending */
-	if (!plugin->play && plugin->pending_sample_ready) {
-		/* Install the new sample */
-		SampleFile* tmp = plugin->samp;
-		plugin->samp                 = plugin->pending_samp;
-		plugin->pending_samp         = tmp;
-		plugin->pending_sample_ready = 0;
-		free(plugin->pending_samp->data); // FIXME: non-realtime!
-	}
-
 	/* Add zeros to end if sample not long enough (or not playing) */
 	for (; pos < sample_count; ++pos) {
 		output[pos] = 0.0f;
+	}
+
+	/* Read messages from worker thread */
+	SampleMessage  m;
+	const uint32_t msize = lv2_atom_pad_size(sizeof(m));
+	while (zix_ring_read(plugin->from_worker, &m, msize) == msize) {
+		if (m.atom.type == plugin->uris.eg_applySample) {
+			/** Send a message to the worker to free the current sample */
+			SampleMessage free_msg = {
+				{ plugin->uris.eg_freeSample, sizeof(plugin->sample) },
+				plugin->sample
+			};
+			zix_ring_write(plugin->to_worker,
+			               &free_msg,
+			               lv2_atom_pad_size(sizeof(free_msg)));
+			zix_sem_post(&plugin->signal);
+
+			/** Install the new sample */
+			plugin->sample = m.sample;
+		} else {
+			fprintf(stderr, "Unknown message from worker\n");
+		}
 	}
 }
 
@@ -388,12 +449,12 @@ save(LV2_Handle                instance,
 
 	Sampler* plugin = (Sampler*)instance;
 	char*    apath  = map_path->abstract_path(map_path->handle,
-	                                          plugin->samp->filepath);
+	                                          plugin->sample->path);
 
 	store(callback_data,
 	      map_uri(plugin, FILENAME_URI),
 	      apath,
-	      strlen(plugin->samp->filepath) + 1,
+	      strlen(plugin->sample->path) + 1,
 	      plugin->uris.state_Path,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 
@@ -419,9 +480,10 @@ restore(LV2_Handle                  instance,
 		&size, &type, &valflags);
 
 	if (value) {
-		printf("Restoring filename %s\n", (const char*)value);
-		strncpy(plugin->pending_samp->filepath, value, STRING_BUF);
-		handle_load_sample(plugin);
+		const char* path = (const char*)value;
+		printf("Restoring filename %s\n", path);
+		// FIXME: leak?
+		plugin->sample = load_sample(plugin, path, size - 1);
 	}
 }
 

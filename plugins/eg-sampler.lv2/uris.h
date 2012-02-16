@@ -23,13 +23,17 @@
 #define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
 #define NS_RDF  "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 
-#define SAMPLER_URI       "http://lv2plug.in/plugins/eg-sampler"
-#define MIDI_EVENT_URI    "http://lv2plug.in/ns/ext/midi#MidiEvent"
-#define FILENAME_URI      SAMPLER_URI "#filename"
+#define SAMPLER_URI      "http://lv2plug.in/plugins/eg-sampler"
+#define MIDI_EVENT_URI   "http://lv2plug.in/ns/ext/midi#MidiEvent"
+#define FILENAME_URI     SAMPLER_URI "#filename"
+#define APPLY_SAMPLE_URI SAMPLER_URI "#applySample"
+#define FREE_SAMPLE_URI  SAMPLER_URI "#freeSample"
 
 typedef struct {
 	LV2_URID atom_Blank;
 	LV2_URID atom_Resource;
+	LV2_URID eg_applySample;
+	LV2_URID eg_freeSample;
 	LV2_URID eg_filename;
 	LV2_URID midi_Event;
 	LV2_URID msg_Set;
@@ -40,13 +44,15 @@ typedef struct {
 static inline void
 map_sampler_uris(LV2_URID_Map* map, SamplerURIs* uris)
 {
-	uris->atom_Blank    = map->map(map->handle, NS_ATOM "Blank");
-	uris->atom_Resource = map->map(map->handle, NS_ATOM "Resource");
-	uris->eg_filename   = map->map(map->handle, FILENAME_URI);
-	uris->midi_Event    = map->map(map->handle, MIDI_EVENT_URI);
-	uris->msg_Set       = map->map(map->handle, LV2_MESSAGE_Set);
-	uris->msg_body      = map->map(map->handle, LV2_MESSAGE_body);
-	uris->state_Path    = map->map(map->handle, LV2_STATE_PATH_URI);
+	uris->atom_Blank     = map->map(map->handle, NS_ATOM "Blank");
+	uris->atom_Resource  = map->map(map->handle, NS_ATOM "Resource");
+	uris->eg_applySample = map->map(map->handle, APPLY_SAMPLE_URI);
+	uris->eg_filename    = map->map(map->handle, FILENAME_URI);
+	uris->eg_freeSample  = map->map(map->handle, FREE_SAMPLE_URI);
+	uris->midi_Event     = map->map(map->handle, MIDI_EVENT_URI);
+	uris->msg_Set        = map->map(map->handle, LV2_MESSAGE_Set);
+	uris->msg_body       = map->map(map->handle, LV2_MESSAGE_body);
+	uris->state_Path     = map->map(map->handle, LV2_STATE_PATH_URI);
 }
 
 #endif  /* SAMPLER_URIS_H */
