@@ -218,6 +218,24 @@ void set_to_turtle_string(LV2_Atom_Literal* lit, const char* ttl) {
 </pre>
 """ .
 
+atom:URI
+	a rdfs:Class ;
+	rdfs:subClassOf atom:String ;
+	rdfs:label "URI string" ;
+	lv2:documentation """
+<p>A URI string.  This is identical in format to atom:String, except the string
+is a URI.  This is occasionally useful when a URI is needed but mapping it is
+inappropriate.  URIs should never be expressed as atom:String, because this
+makes it impossible to distinguish URIs from arbitrary strings, which makes
+functionality like mapping or rewriting URIs impossible.  Similarly, there is
+deliberately no atom type for filesystem paths.  To refer to a filename, use a
+complete file URI, with hostname if at all possible.  This allows hosts to
+properly handle paths in situations like serialisation or network
+transmission.</p>
+
+<p>Pedantically, this is an <q>IRI</q>, since UTF-8 characters are allowed.</p>
+""" .
+
 atom:URID
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
@@ -392,7 +410,6 @@ atom:ValuePort
 	rdfs:subClassOf atom:AtomPort ;
 	rdfs:label "Value Port" ;
 	lv2:documentation """
-
 <p>An AtomPort that contains a persistent <em>value</em>.  A <q>value</q> is
 time-independent and may be used numerous times.  A ValuePort is <q>pure</q> in
 the sense that it may affect output but MUST NOT affect persistent plugin state

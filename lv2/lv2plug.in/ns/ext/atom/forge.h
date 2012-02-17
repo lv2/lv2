@@ -76,6 +76,7 @@ typedef struct {
 	LV2_URID Sequence;
 	LV2_URID String;
 	LV2_URID Tuple;
+	LV2_URID URI;
 	LV2_URID URID;
 	LV2_URID Vector;
 } LV2_Atom_Forge;
@@ -122,6 +123,7 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 	forge->Sequence = map->map(map->handle, LV2_ATOM_URI "#Sequence");
 	forge->String   = map->map(map->handle, LV2_ATOM_URI "#String");
 	forge->Tuple    = map->map(map->handle, LV2_ATOM_URI "#Tuple");
+	forge->URI      = map->map(map->handle, LV2_ATOM_URI "#URI");
 	forge->URID     = map->map(map->handle, LV2_ATOM_URI "#URID");
 	forge->Vector   = map->map(map->handle, LV2_ATOM_URI "#Vector");
 }
@@ -216,6 +218,21 @@ lv2_atom_forge_urid(LV2_Atom_Forge* forge, LV2_Atom* parent, LV2_URID id)
 	return (LV2_Atom_URID*)lv2_atom_forge_write(forge, parent, &a, sizeof(a));
 }
 
+/** Write a string body.  Used internally. */
+static inline uint8_t*
+lv2_atom_forge_string_body(LV2_Atom_Forge* forge,
+                           LV2_Atom*       parent,
+                           const uint8_t*  str,
+                           size_t          len)
+{
+	uint8_t* out = NULL;
+	if ((out = lv2_atom_forge_write_nopad(forge, parent, str, len))
+	    && (out = lv2_atom_forge_write_nopad(forge, parent, "", 1))) {
+		lv2_atom_forge_pad(forge, parent, len + 1);
+	}
+	return out;
+}
+
 /** Write an atom:String.  Note that @p str need not be NULL terminated. */
 static inline LV2_Atom_String*
 lv2_atom_forge_string(LV2_Atom_Forge* forge,
@@ -226,16 +243,38 @@ lv2_atom_forge_string(LV2_Atom_Forge* forge,
 	const LV2_Atom_String a = { { forge->String, len + 1 } };
 	LV2_Atom_String* out = (LV2_Atom_String*)
 		lv2_atom_forge_write_nopad(forge, parent, &a, sizeof(a));
+	if (out) {
+		if (!lv2_atom_forge_string_body(forge, parent, str, len)) {
+			out->atom.type = 0;
+			out->atom.size = 0;
+			out = NULL;
+		}
+	}
+	return out;
+}
+
+/**
+   Write an atom:URI.  Note that @p uri need not be NULL terminated.
+   This does not map the URI, but writes the complete URI string.  To write
+   a mapped URI, use lv2_atom_forge_urid().
+*/
+static inline LV2_Atom_String*
+lv2_atom_forge_uri(LV2_Atom_Forge* forge,
+                   LV2_Atom*       parent,
+                   const uint8_t*  uri,
+                   size_t          len)
+{
+	const LV2_Atom_String a = { { forge->URI, len + 1 } };
+	LV2_Atom_String* out = (LV2_Atom_String*)
+		lv2_atom_forge_write_nopad(forge, parent, &a, sizeof(a));
 	if (!out) {
 		return NULL;
 	}
-	if (!lv2_atom_forge_write_nopad(forge, parent, str, len)
-	    || !lv2_atom_forge_write_nopad(forge, parent, "", 1)) {
+	if (!lv2_atom_forge_string_body(forge, parent, uri, len)) {
 		out->atom.type = 0;
 		out->atom.size = 0;
 		return NULL;
 	}
-	lv2_atom_forge_pad(forge, parent, len + 1);
 	return out;
 }
 
@@ -256,16 +295,13 @@ lv2_atom_forge_literal(LV2_Atom_Forge* forge,
 	};
 	LV2_Atom_Literal* out = (LV2_Atom_Literal*)
 		lv2_atom_forge_write_nopad(forge, parent, &a, sizeof(a));
-	if (!out) {
-		return NULL;
+	if (out) {
+		if (!lv2_atom_forge_string_body(forge, parent, str, len)) {
+			out->atom.type = 0;
+			out->atom.size = 0;
+			out = NULL;
+		}
 	}
-	if (!lv2_atom_forge_write_nopad(forge, parent, str, len)
-	    || !lv2_atom_forge_write_nopad(forge, parent, "", 1)) {
-		out->atom.type = 0;
-		out->atom.size = 0;
-		return NULL;
-	}
-	lv2_atom_forge_pad(forge, parent, len + 1);
 	return out;
 }
 

@@ -73,6 +73,7 @@ main()
 	LV2_URID eg_true    = urid_map(NULL, "http://example.org/true");
 	LV2_URID eg_false   = urid_map(NULL, "http://example.org/false");
 	LV2_URID eg_uri     = urid_map(NULL, "http://example.org/uri");
+	LV2_URID eg_urid    = urid_map(NULL, "http://example.org/urid");
 	LV2_URID eg_string  = urid_map(NULL, "http://example.org/string");
 	LV2_URID eg_literal = urid_map(NULL, "http://example.org/literal");
 	LV2_URID eg_tuple   = urid_map(NULL, "http://example.org/tuple");
@@ -80,7 +81,7 @@ main()
 	LV2_URID eg_seq     = urid_map(NULL, "http://example.org/seq");
 
 #define BUF_SIZE  1024
-#define NUM_PROPS 12
+#define NUM_PROPS 13
 
 	uint8_t buf[BUF_SIZE];
 	lv2_atom_forge_set_buffer(&forge, buf, BUF_SIZE);
@@ -130,20 +131,31 @@ main()
 		return test_fail("%ld != 0 (false)\n", f->value);
 	}
 
-	// eg_uri = (URID)"http://example.org/value"
-	LV2_URID eg_value = urid_map(NULL, "http://example.org/value");
+	// eg_uri = (URI)"http://example.org/value"
+	const uint8_t* ustr     = (const uint8_t*)"http://example.org/value";
+	const size_t   ustr_len = strlen((const char*)ustr);
 	lv2_atom_forge_property_head(&forge, obj, eg_uri, 0);
-	LV2_Atom_URID* uri = lv2_atom_forge_urid(&forge, obj, eg_value);
-	if (uri->id != eg_value) {
-		return test_fail("%u != %u\n", uri->id, eg_value);
+	LV2_Atom_String* uri  = lv2_atom_forge_uri(&forge, obj, ustr, ustr_len);
+	uint8_t*         body = (uint8_t*)LV2_ATOM_BODY(uri);
+	if (strcmp((const char*)body, (const char*)ustr)) {
+		return test_fail("%s != \"%s\"\n",
+		                 (const char*)body, (const char*)ustr);
+	}
+
+	// eg_urid = (URID)"http://example.org/value"
+	LV2_URID eg_value = urid_map(NULL, "http://example.org/value");
+	lv2_atom_forge_property_head(&forge, obj, eg_urid, 0);
+	LV2_Atom_URID* urid = lv2_atom_forge_urid(&forge, obj, eg_value);
+	if (urid->id != eg_value) {
+		return test_fail("%u != %u\n", urid->id, eg_value);
 	}
 
 	// eg_string = (String)"hello"
 	lv2_atom_forge_property_head(&forge, obj, eg_string, 0);
 	LV2_Atom_String* string = lv2_atom_forge_string(
 		&forge, obj, (const uint8_t*)"hello", strlen("hello"));
-	uint8_t* body = (uint8_t*)LV2_ATOM_BODY(string);
-	if (strcmp((const char*)body, "hello")) {
+	uint8_t* sbody = (uint8_t*)LV2_ATOM_BODY(string);
+	if (strcmp((const char*)sbody, "hello")) {
 		return test_fail("%s != \"hello\"\n", (const char*)body);
 	}
 
@@ -250,6 +262,7 @@ main()
 		const LV2_Atom* affirmative;
 		const LV2_Atom* negative;
 		const LV2_Atom* uri;
+		const LV2_Atom* urid;
 		const LV2_Atom* string;
 		const LV2_Atom* literal;
 		const LV2_Atom* tuple;
@@ -266,7 +279,7 @@ main()
 		{ eg_four,    &matches.four },
 		{ eg_true,    &matches.affirmative },
 		{ eg_false,   &matches.negative },
-		{ eg_uri,     &matches.uri },
+		{ eg_urid,    &matches.urid },
 		{ eg_string,  &matches.string },
 		{ eg_literal, &matches.literal },
 		{ eg_tuple,   &matches.tuple },
@@ -314,6 +327,7 @@ main()
 		                            eg_true,    &matches.affirmative,
 		                            eg_false,   &matches.negative,
 		                            eg_uri,     &matches.uri,
+		                            eg_urid,    &matches.urid,
 		                            eg_string,  &matches.string,
 		                            eg_literal, &matches.literal,
 		                            eg_tuple,   &matches.tuple,
