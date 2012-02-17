@@ -389,9 +389,14 @@ atom:AtomPort
 	rdfs:subClassOf lv2:Port ;
 	rdfs:label "Atom Port" ;
 	lv2:documentation """
-<p>A port which contains an lv2:Atom.  Ports of this type will be connected to
-a 64-bit aligned LV2_Atom immediately followed by <code>size</code> bytes of
-data.</p>
+<p>A port which contains an lv2:Atom.  Ports of this type are connected to an
+LV2_Atom_Port_Buffer, which contains a pointer to the port's Atom contents, as
+well as other metadata (such as capacity, for output ports with variably sized
+types).  The host MUST set all fields of LV2_Atom_Port_Buffer to appropriate
+values before calling the plugin's run method.  LV2_Atom_Port_Buffer::capacity
+must be set to the available space for the <em>body</em> of LV2_Atom_Port_Buffer::data,
+i.e. the maximum possible value for its <code>size</code> field, which does
+not include the LV2_Atom header.</p>
 
 <p>This is an abstract port type with incomplete semantics which can not be
 used directly as a port type.  Atom ports should be either a atom:ValuePort or

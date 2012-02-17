@@ -82,9 +82,9 @@ typedef struct {
 	Sample* sample;
 
 	/* Ports */
-	float*             output_port;
-	LV2_Atom_Sequence* control_port;
-	LV2_Atom_Sequence* response_port;
+	float*                output_port;
+	LV2_Atom_Port_Buffer* control_port;
+	LV2_Atom_Port_Buffer* notify_port;
 
 	/* URIs */
 	SamplerURIs uris;
@@ -273,10 +273,10 @@ connect_port(LV2_Handle instance,
 
 	switch (port) {
 	case SAMPLER_CONTROL:
-		plugin->control_port = (LV2_Atom_Sequence*)data;
+		plugin->control_port = (LV2_Atom_Port_Buffer*)data;
 		break;
 	case SAMPLER_RESPONSE:
-		plugin->response_port = (LV2_Atom_Sequence*)data;
+		plugin->notify_port = (LV2_Atom_Port_Buffer*)data;
 		break;
 	case SAMPLER_OUT:
 		plugin->output_port = (float*)data;
@@ -386,7 +386,7 @@ run(LV2_Handle instance,
 	float*     output      = plugin->output_port;
 
 	/* Read incoming events */
-	LV2_SEQUENCE_FOREACH(plugin->control_port, i) {
+	LV2_SEQUENCE_FOREACH((LV2_Atom_Sequence*)plugin->control_port->data, i) {
 		LV2_Atom_Event* const ev = lv2_sequence_iter_get(i);
 		if (ev->body.type == plugin->uris.midi_Event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);

@@ -196,6 +196,29 @@ typedef struct {
 	/* Contents (a series of events) follow here. */
 } LV2_Atom_Sequence;
 
+/**
+   The contents of an atom:AtomPort buffer.
+
+   This contains a pointer to an Atom, which is the data to be
+   processed/written, as well as additional metadata.  This struct may be
+   augmented in the future to add more metadata fields as they become
+   necessary.  The initial version of this struct contains data, size, and
+   capacity.  Implementations MUST check that any other fields they wish to use
+   are actually present by comparing the size with the offset of that field,
+   e.g.:
+
+   @code
+   if (offsetof(LV2_Atom_Port_Buffer, field) < buf->size) {
+       do_stuff_with(buf->field);
+   }
+   @endcode
+*/
+typedef struct {
+	LV2_Atom* data;      /** Pointer to data. */
+	uint32_t  size;      /** Total size of this struct. */
+	uint32_t  capacity;  /** Available space for data body. */
+} LV2_Atom_Port_Buffer;
+
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
