@@ -58,6 +58,7 @@ on_load_clicked(GtkWidget* widget,
 {
 	SamplerUI* ui = (SamplerUI*)handle;
 
+	/* Create a dialog to select a sample file. */
 	GtkWidget* dialog = gtk_file_chooser_dialog_new(
 		"Load Sample",
 		NULL,
@@ -66,14 +67,26 @@ on_load_clicked(GtkWidget* widget,
 		GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
 		NULL);
 
+	/* Run the dialog, and return if it is cancelled. */
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) != GTK_RESPONSE_ACCEPT) {
 		gtk_widget_destroy(dialog);
 		return;
 	}
 
-	char*        filename     = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-	const size_t filename_len = strlen(filename);
+	/* Get the file path from the dialog. */
+	char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+
+	/* Got what we need, destroy the dialog. */
 	gtk_widget_destroy(dialog);
+
+	/* Build a complete file URI with hostname, e.g. file://hal/home/me/foo.wav
+	   This is to precisely specify the file location, even if the plugin is
+	   running on a different host (which is entirely possible).  Plugins
+	   should do this even though some hosts may not support such setups.
+	*/
+	const char*  hostname     = g_get_host_name();
+	char*        file_uri     = g_filename_to_uri(filename, hostname, NULL);
+	const size_t file_uri_len = strlen(file_uri);
 
 #define OBJ_BUF_SIZE 1024
 	uint8_t obj_buf[OBJ_BUF_SIZE];
@@ -82,7 +95,7 @@ on_load_clicked(GtkWidget* widget,
 	/* Send [
 	 *     a msg:Set ;
 	 *     msg:body [
-	 *         eg-sampler:filename "/foo/bar.wav" ;
+	 *         eg-sampler:filename <file://hal/home/me/foo.wav> ;
 	 *     ] ;
 	 * ]
 	 */
@@ -92,8 +105,8 @@ on_load_clicked(GtkWidget* widget,
 	lv2_atom_forge_property_head(&ui->forge, set, ui->uris.msg_body, 0);
 	LV2_Atom* body = (LV2_Atom*)lv2_atom_forge_blank(&ui->forge, set, 0, 0);
 
-	lv2_atom_forge_property_head(&ui->forge, body, ui->uris.eg_filename, 0);
-	lv2_atom_forge_string(&ui->forge, set, (uint8_t*)filename, filename_len);
+	lv2_atom_forge_property_head(&ui->forge, body, ui->uris.eg_file, 0);
+	lv2_atom_forge_uri(&ui->forge, set, (const uint8_t*)file_uri, file_uri_len);
 
 	lv2_atom_forge_property_head(&ui->forge, body, ui->uris.msg_body, 0);
 	set->size += body->size;
@@ -103,6 +116,7 @@ on_load_clicked(GtkWidget* widget,
 	          set);
 
 	g_free(filename);
+	g_free(file_uri);
 }
 
 static LV2UI_Handle

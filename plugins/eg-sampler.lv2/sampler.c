@@ -52,7 +52,6 @@
 #include "./uris.h"
 
 #define RING_SIZE 4096
-#define STRING_BUF 8192
 
 enum {
 	SAMPLER_CONTROL  = 0,
@@ -146,6 +145,26 @@ is_object_type(Sampler* plugin, LV2_URID type)
 }
 
 static bool
+parse_file_uri(const char* uri,
+               const char** host, size_t* host_len,
+               const char** path, size_t* path_len)
+{
+	if (strncmp(uri, "file://", strlen("file://"))) {
+		return false;
+	}
+
+	*host = uri + strlen("file://");
+	const char* host_end = *host;
+	for (; *host_end && *host_end != '/'; ++host_end) {}
+
+	*host_len = host_end - *host;
+	*path = host_end;
+	*path_len = (uri + strlen(uri)) - host_end;
+
+	return true;
+}
+
+static bool
 handle_set_message(Sampler*               plugin,
                    const LV2_Atom_Object* obj)
 {
@@ -156,9 +175,9 @@ handle_set_message(Sampler*               plugin,
 
 	/* Message should look like this:
 	 * [
-	 *     a msg:SetMessage ;
+	 *     a msg:Set ;
 	 *     msg:body [
-	 *         eg:filename "/some/value.wav" ;
+	 *         eg-sampler:file <file://hal/home/me/foo.wav> ;
 	 *     ] ;
 	 * ]
 	 */
@@ -175,17 +194,29 @@ handle_set_message(Sampler*               plugin,
 		return false;
 	}
 
-	/* Get filename from body. */
-	const LV2_Atom* filename = NULL;
-	lv2_object_getv(body, plugin->uris.eg_filename, &filename, 0);
-	if (!filename) {
-		fprintf(stderr, "Ignored set message with no filename.\n");
+	/* Get file URI from body. */
+	const LV2_Atom* file_uri = NULL;
+	lv2_object_getv(body, plugin->uris.eg_file, &file_uri, 0);
+	if (!file_uri) {
+		fprintf(stderr, "Ignored set message with no file URI.\n");
 		return false;
 	}
 
 	/* Load sample. */
-	const char* path   = (const char*)LV2_ATOM_BODY(filename);
-	Sample*     sample = load_sample(plugin, path, filename->size - 1);
+	const char* uri = (const char*)LV2_ATOM_BODY(file_uri);
+	const char* host     = NULL;
+	const char* path     = NULL;
+	size_t      host_len = 0;
+	size_t      path_len = 0;
+	if (!parse_file_uri(uri, &host, &host_len, &path, &path_len)) {
+		fprintf(stderr, "Request to load bad file URI %s\n", uri);
+		return false;
+	}
+
+	/* Probably should check if the host is local here, but we'll just
+	   blissfully attempt to load the path on this machine... */
+
+	Sample* sample = load_sample(plugin, path, path_len);
 
 	if (sample) {
 		/* Loaded sample, send it to run() to be applied. */
@@ -291,6 +322,9 @@ instantiate(const LV2_Descriptor*     descriptor,
 	/* Create ringbuffers for communicating with worker thread */
 	plugin->to_worker   = zix_ring_new(RING_SIZE);
 	plugin->from_worker = zix_ring_new(RING_SIZE);
+
+	zix_ring_mlock(plugin->to_worker);
+	zix_ring_mlock(plugin->from_worker);
 
 	/* Scan host features for URID map */
 	LV2_URID_Map* map = NULL;
@@ -427,12 +461,6 @@ run(LV2_Handle instance,
 	}
 }
 
-static uint32_t
-map_uri(Sampler* plugin, const char* uri)
-{
-	return plugin->map->map(plugin->map->handle, uri);
-}
-
 static void
 save(LV2_Handle                instance,
      LV2_State_Store_Function  store,
@@ -452,7 +480,7 @@ save(LV2_Handle                instance,
 	                                          plugin->sample->path);
 
 	store(callback_data,
-	      map_uri(plugin, FILENAME_URI),
+	      plugin->uris.eg_file,
 	      apath,
 	      strlen(plugin->sample->path) + 1,
 	      plugin->uris.state_Path,
@@ -476,12 +504,12 @@ restore(LV2_Handle                  instance,
 
 	const void* value = retrieve(
 		callback_data,
-		map_uri(plugin, FILENAME_URI),
+		plugin->uris.eg_file,
 		&size, &type, &valflags);
 
 	if (value) {
 		const char* path = (const char*)value;
-		printf("Restoring filename %s\n", path);
+		printf("Restoring file %s\n", path);
 		// FIXME: leak?
 		plugin->sample = load_sample(plugin, path, size - 1);
 	}
