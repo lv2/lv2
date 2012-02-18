@@ -21,9 +21,17 @@
    atoms by calling the provided functions to append atoms (or atom headers) in
    the correct order.
 
-   All output is written to a user-provided buffer.  This entire API is
-   realtime safe and suitable for writing to output port buffers in the run
-   method.
+   The size of containers is automatically handled to any depth.  All functions
+   that start a container take a pointer to an uninitialised stack frame which
+   will be initialised and must be popped when the container is finished.
+
+   All output is written to a user-provided buffer, or sink function.  Thus,
+   this API can be used to create atoms on the stack, on the heap, in LV2 port
+   buffers, or in a ringbuffer.
+
+   This entire API is realtime safe if used with a buffer or a realtime safe
+   sink, except lv2_atom_forge_init(), which is only realtime safe if the URI
+   map function is.
 
    Note these functions are all static inline, do not take their address.
 
@@ -34,7 +42,6 @@
 #define LV2_ATOM_FORGE_H
 
 #include <assert.h>
-#include <string.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom-helpers.h"
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
@@ -86,6 +93,12 @@ typedef struct {
 	LV2_URID Vector;
 } LV2_Atom_Forge;
 
+/**
+   Push a stack frame.
+   This is done automatically by container functions (which take a stack frame
+   pointer), but may be called by the user to push the top level container when
+   writing to an existing Atom.
+*/
 static inline LV2_Atom*
 lv2_atom_forge_push(LV2_Atom_Forge*       forge,
                     LV2_Atom_Forge_Frame* frame,
@@ -97,6 +110,7 @@ lv2_atom_forge_push(LV2_Atom_Forge*       forge,
 	return atom;
 }
 
+/** Pop a stack frame.  This must be called when a container is finished. */
 static inline void
 lv2_atom_forge_pop(LV2_Atom_Forge* forge, LV2_Atom_Forge_Frame* frame)
 {
@@ -158,6 +172,7 @@ lv2_atom_forge_write_nopad(LV2_Atom_Forge* forge,
                            const void*     data,
                            uint32_t        size)
 {
+	/* TODO: Write to sink, if set */
 	uint8_t* const out = forge->buf + forge->offset;
 	if (forge->offset + size > forge->size) {
 		return NULL;
@@ -494,8 +509,7 @@ static inline LV2_Atom_Event*
 lv2_atom_forge_beat_time(LV2_Atom_Forge* forge,
                          double          beats)
 {
-	return (LV2_Atom_Event*)lv2_atom_forge_write(
-		forge, &beats, sizeof(beats));
+	return (LV2_Atom_Event*)lv2_atom_forge_write(forge, &beats, sizeof(beats));
 }
 
 #ifdef __cplusplus
