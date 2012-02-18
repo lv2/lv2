@@ -173,8 +173,8 @@ lv2_tuple_iter_get(LV2_Atom_Tuple_Iter i)
    This macro is used similarly to a for loop (which it expands to), e.g.:
    @code
    LV2_TUPLE_FOREACH(tuple, i) {
-       LV2_Atom_Property* prop = lv2_tuple_iter_get(i);
-       // Do something with prop here...
+       LV2_Atom* elem = lv2_tuple_iter_get(i);
+       // Do something with elem here...
    }
    @endcode
 */
@@ -239,7 +239,7 @@ lv2_object_iter_get(LV2_Atom_Object_Iter i)
    This macro is used similarly to a for loop (which it expands to), e.g.:
    @code
    LV2_OBJECT_FOREACH(object, i) {
-       LV2_Atom_Property* prop = lv2_object_iter_get(i);
+       LV2_Atom_Property_Body* prop = lv2_object_iter_get(i);
        // Do something with prop here...
    }
    @endcode
