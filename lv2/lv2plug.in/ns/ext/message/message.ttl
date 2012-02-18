@@ -126,7 +126,7 @@ a msg:body that is a description of that subject.  For example:</p>
 <pre class="turtle-code">
 []
     a msg:Response ;
-    msg:cause &lt;get-request&gt; ;
+    msg:request &lt;get-request&gt; ;
     msg:subject &lt;something&gt; ;
     msg:body [
         eg:name "Something" ;
@@ -146,7 +146,7 @@ example, the same response could be written:</p>
 
 []
     a msg:Response ;
-    msg:cause &lt;get-request&gt; ;
+    msg:request &lt;get-request&gt; ;
     msg:subject &lt;something&gt; ;
     msg:body &lt;something&gt; .
 </pre>
@@ -324,7 +324,7 @@ msg:body
 part of.</p>
 """ .
 
-msg:cause
+msg:request
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:domain msg:Response ;

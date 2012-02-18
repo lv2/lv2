@@ -41,6 +41,6 @@
 #define LV2_MESSAGE__Set      LV2_MESSAGE_URI "#Set"
 #define LV2_MESSAGE__add      LV2_MESSAGE_URI "#add"
 #define LV2_MESSAGE__body     LV2_MESSAGE_URI "#body"
-#define LV2_MESSAGE__cause    LV2_MESSAGE_URI "#cause"
+#define LV2_MESSAGE__request  LV2_MESSAGE_URI "#request"
 
 #endif  /* LV2_MESSAGE_H */
