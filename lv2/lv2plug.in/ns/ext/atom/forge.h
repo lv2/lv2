@@ -53,11 +53,13 @@ extern "C" {
 #    include <stdbool.h>
 #endif
 
+/** Handle for LV2_Atom_Forge_Sink. */
 typedef void* LV2_Atom_Forge_Sink_Handle;
 
-typedef uint32_t (*LV2_Atom_Forge_Sink)(LV2_Atom_Forge_Sink_Handle handle,
-                                        const void*                buf,
-                                        uint32_t                   size);
+/** Sink function for writing output.  See lv2_atom_forge_set_sink(). */
+typedef void* (*LV2_Atom_Forge_Sink)(LV2_Atom_Forge_Sink_Handle handle,
+                                     const void*                buf,
+                                     uint32_t                   size);
 
 /** A stack frame used for keeping track of nested Atom containers. */
 typedef struct _LV2_Atom_Forge_Frame {
@@ -125,9 +127,22 @@ lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size)
 	forge->buf    = buf;
 	forge->size   = size;
 	forge->offset = 0;
+	forge->sink   = NULL;
+	forge->handle = NULL;
 }
 
-/** Set the sink function where @p forge will write output. */
+/**
+   Set the sink function where @p forge will write output.
+
+   The return value of forge functions is a pointer to the written data, which
+   is used for updating parent sizes.  To enable this, the sink function must
+   return a valid pointer to a contiguous LV2_Atom header.  For ringbuffers,
+   this should be possible as long as the size of the buffer is a multiple of
+   sizeof(LV2_Atom), since atoms are always aligned.  When using a ringbuffer,
+   the returned pointers may not point to a complete atom (including body).
+   The user must take care to only use these return values in a way compatible
+   with the sink used.
+*/
 static inline void
 lv2_atom_forge_set_sink(LV2_Atom_Forge*            forge,
                         LV2_Atom_Forge_Sink        sink,
@@ -172,15 +187,21 @@ lv2_atom_forge_write_nopad(LV2_Atom_Forge* forge,
                            const void*     data,
                            uint32_t        size)
 {
-	/* TODO: Write to sink, if set */
-	uint8_t* const out = forge->buf + forge->offset;
-	if (forge->offset + size > forge->size) {
-		return NULL;
+	uint8_t* out = NULL;
+	if (forge->sink) {
+		out = forge->sink(forge->handle, data, size); 
+	} else {
+		out = forge->buf + forge->offset;
+		if (forge->offset + size > forge->size) {
+			return NULL;
+		}
+		forge->offset += size;
+		memcpy(out, data, size);
 	}
-	forge->offset += size;
-	memcpy(out, data, size);
-	for (LV2_Atom_Forge_Frame* f = forge->stack; f; f = f->parent) {
-		f->atom->size += size;
+	if (out) {
+		for (LV2_Atom_Forge_Frame* f = forge->stack; f; f = f->parent) {
+			f->atom->size += size;
+		}
 	}
 	return out;
 }
@@ -351,8 +372,7 @@ lv2_atom_forge_vector_head(LV2_Atom_Forge* forge,
 		elem_count,
 		elem_type
 	};
-	return (LV2_Atom_Vector*)lv2_atom_forge_write(
-		forge, &a, sizeof(a));
+	return (LV2_Atom_Vector*)lv2_atom_forge_write(forge, &a, sizeof(a));
 }
 
 /** Write a complete atom:Vector. */
@@ -388,12 +408,12 @@ lv2_atom_forge_vector(LV2_Atom_Forge* forge,
    lv2_atom_forge_pop(forge, &frame);
    @endcode
 */
-static inline LV2_Atom*
+static inline LV2_Atom_Tuple*
 lv2_atom_forge_tuple(LV2_Atom_Forge* forge, LV2_Atom_Forge_Frame* frame)
 {
 	const LV2_Atom_Tuple a    = { { forge->Tuple, 0 } };
 	LV2_Atom*            atom = lv2_atom_forge_write(forge, &a, sizeof(a));
-	return lv2_atom_forge_push(forge, frame, atom);
+	return (LV2_Atom_Tuple*)lv2_atom_forge_push(forge, frame, atom);
 }
 
 /**
@@ -420,7 +440,7 @@ lv2_atom_forge_tuple(LV2_Atom_Forge* forge, LV2_Atom_Forge_Frame* frame)
    lv2_atom_forge_pop(forge, &frame);
    @endcode
 */
-static inline LV2_Atom*
+static inline LV2_Atom_Object*
 lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
                         LV2_Atom_Forge_Frame* frame,
                         LV2_URID              id,
@@ -432,13 +452,13 @@ lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
 		otype
 	};
 	LV2_Atom* atom = (LV2_Atom*)lv2_atom_forge_write(forge, &a, sizeof(a));
-	return lv2_atom_forge_push(forge, frame, atom);
+	return (LV2_Atom_Object*)lv2_atom_forge_push(forge, frame, atom);
 }
 
 /**
    The same as lv2_atom_forge_resource(), but for object:Blank.
 */
-static inline LV2_Atom*
+static inline LV2_Atom_Object*
 lv2_atom_forge_blank(LV2_Atom_Forge*       forge,
                      LV2_Atom_Forge_Frame* frame,
                      uint32_t              id,
@@ -450,7 +470,7 @@ lv2_atom_forge_blank(LV2_Atom_Forge*       forge,
 		otype
 	};
 	LV2_Atom* atom = (LV2_Atom*)lv2_atom_forge_write(forge, &a, sizeof(a));
-	return lv2_atom_forge_push(forge, frame, atom);
+	return (LV2_Atom_Object*)lv2_atom_forge_push(forge, frame, atom);
 }
 
 /**
@@ -472,7 +492,7 @@ lv2_atom_forge_property_head(LV2_Atom_Forge* forge,
    The size of the returned sequence will be 0, so passing it as the parent
    parameter to other forge methods will do the right thing.
 */
-static inline LV2_Atom*
+static inline LV2_Atom_Sequence*
 lv2_atom_forge_sequence_head(LV2_Atom_Forge*       forge,
                              LV2_Atom_Forge_Frame* frame,
                              uint32_t              unit)
@@ -483,7 +503,7 @@ lv2_atom_forge_sequence_head(LV2_Atom_Forge*       forge,
 		0
 	};
 	LV2_Atom* atom = (LV2_Atom*)lv2_atom_forge_write(forge, &a, sizeof(a));
-	return lv2_atom_forge_push(forge, frame, atom);
+	return (LV2_Atom_Sequence*)lv2_atom_forge_push(forge, frame, atom);
 }
 
 /**
@@ -491,13 +511,13 @@ lv2_atom_forge_sequence_head(LV2_Atom_Forge*       forge,
    After this, call the appropriate forge method(s) to write the body, passing
    the same @p parent parameter.  Note the returned LV2_Event is NOT an Atom.
 */
-static inline LV2_Atom_Event*
+static inline LV2_Atom_Audio_Time*
 lv2_atom_forge_audio_time(LV2_Atom_Forge* forge,
                           uint32_t        frames,
                           uint32_t        subframes)
 {
 	const LV2_Atom_Audio_Time a = { frames, subframes };
-	return (LV2_Atom_Event*)lv2_atom_forge_write(forge, &a, sizeof(a));
+	return (LV2_Atom_Audio_Time*)lv2_atom_forge_write(forge, &a, sizeof(a));
 }
 
 /**
@@ -505,11 +525,11 @@ lv2_atom_forge_audio_time(LV2_Atom_Forge* forge,
    After this, call the appropriate forge method(s) to write the body, passing
    the same @p parent parameter.  Note the returned LV2_Event is NOT an Atom.
 */
-static inline LV2_Atom_Event*
+static inline double*
 lv2_atom_forge_beat_time(LV2_Atom_Forge* forge,
                          double          beats)
 {
-	return (LV2_Atom_Event*)lv2_atom_forge_write(forge, &beats, sizeof(beats));
+	return (double*)lv2_atom_forge_write(forge, &beats, sizeof(beats));
 }
 
 #ifdef __cplusplus
