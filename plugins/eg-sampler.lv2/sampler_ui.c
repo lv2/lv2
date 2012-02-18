@@ -43,14 +43,10 @@ typedef struct {
 	LV2UI_Write_Function write;
 	LV2UI_Controller     controller;
 
-	GtkWidget*           button;
+	GtkWidget* box;
+	GtkWidget* button;
+	GtkWidget* label;
 } SamplerUI;
-
-static LV2_URID
-uri_to_id(SamplerUI* ui, const char* uri)
-{
-	return ui->map->map(ui->map->handle, uri);
-}
 
 static void
 on_load_clicked(GtkWidget* widget,
@@ -108,11 +104,10 @@ on_load_clicked(GtkWidget* widget,
 	lv2_atom_forge_property_head(&ui->forge, body, ui->uris.eg_file, 0);
 	lv2_atom_forge_uri(&ui->forge, set, (const uint8_t*)file_uri, file_uri_len);
 
-	lv2_atom_forge_property_head(&ui->forge, body, ui->uris.msg_body, 0);
 	set->size += body->size;
 
 	ui->write(ui->controller, 0, sizeof(LV2_Atom) + set->size,
-	          uri_to_id(ui, NS_ATOM "atomTransfer"),
+	          ui->uris.atom_eventTransfer,
 	          set);
 
 	g_free(filename);
@@ -132,7 +127,9 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	ui->map        = NULL;
 	ui->write      = write_function;
 	ui->controller = controller;
+	ui->box        = NULL;
 	ui->button     = NULL;
+	ui->label      = NULL;
 
 	*widget = NULL;
 
@@ -152,12 +149,16 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 
 	lv2_atom_forge_init(&ui->forge, ui->map);
 
+	ui->box = gtk_hbox_new(FALSE, 4);
+	ui->label = gtk_label_new("?");
 	ui->button = gtk_button_new_with_label("Load Sample");
+	gtk_box_pack_start(GTK_BOX(ui->box), ui->label, TRUE, TRUE, 4); 
+	gtk_box_pack_start(GTK_BOX(ui->box), ui->button, FALSE, TRUE, 4); 
 	g_signal_connect(ui->button, "clicked",
 	                 G_CALLBACK(on_load_clicked),
 	                 ui);
 
-	*widget = ui->button;
+	*widget = ui->box;
 
 	return ui;
 }
@@ -177,6 +178,25 @@ port_event(LV2UI_Handle handle,
            uint32_t     format,
            const void*  buffer)
 {
+	SamplerUI* ui = (SamplerUI*)handle;
+	if (format == ui->uris.atom_eventTransfer) {
+		LV2_Atom* atom = (LV2_Atom*)buffer;
+		if (atom->type == ui->uris.atom_Blank) {
+			LV2_Atom_Object* obj      = (LV2_Atom_Object*)atom;
+			const LV2_Atom*  file_uri = get_msg_file_uri(&ui->uris, obj);
+			if (!file_uri) {
+				fprintf(stderr, "Unknown message sent to UI.\n");
+				return;
+			}
+
+			const char* uri = (const char*)LV2_ATOM_BODY(file_uri);
+			gtk_label_set_text(GTK_LABEL(ui->label), uri);
+		} else {
+			fprintf(stderr, "Unknown message type.\n");
+		}
+	} else {
+		fprintf(stderr, "Unknown format.\n");
+	}
 }
 
 const void*
