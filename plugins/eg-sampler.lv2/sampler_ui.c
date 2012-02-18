@@ -95,20 +95,23 @@ on_load_clicked(GtkWidget* widget,
 	 *     ] ;
 	 * ]
 	 */
+	LV2_Atom_Forge_Frame set_frame;
 	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
-		&ui->forge, NULL, 1, ui->uris.msg_Set);
+		&ui->forge, &set_frame, 1, ui->uris.msg_Set);
 
-	lv2_atom_forge_property_head(&ui->forge, set, ui->uris.msg_body, 0);
-	LV2_Atom* body = (LV2_Atom*)lv2_atom_forge_blank(&ui->forge, NULL, 2, 0);
+	lv2_atom_forge_property_head(&ui->forge, ui->uris.msg_body, 0);
+	LV2_Atom_Forge_Frame body_frame;
+	lv2_atom_forge_blank(&ui->forge, &body_frame, 2, 0);
 
-	lv2_atom_forge_property_head(&ui->forge, body, ui->uris.eg_file, 0);
-	lv2_atom_forge_uri(&ui->forge, body, (const uint8_t*)file_uri, file_uri_len);
-
-	set->size += lv2_atom_total_size(body);
+	lv2_atom_forge_property_head(&ui->forge, ui->uris.eg_file, 0);
+	lv2_atom_forge_uri(&ui->forge, (const uint8_t*)file_uri, file_uri_len);
 
 	ui->write(ui->controller, 0, lv2_atom_total_size(set),
 	          ui->uris.atom_eventTransfer,
 	          set);
+
+	lv2_atom_forge_pop(&ui->forge, &body_frame);
+	lv2_atom_forge_pop(&ui->forge, &set_frame);
 
 	g_free(filename);
 	g_free(file_uri);

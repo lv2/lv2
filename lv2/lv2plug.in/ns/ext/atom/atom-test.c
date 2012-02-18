@@ -86,47 +86,48 @@ main()
 	uint8_t buf[BUF_SIZE];
 	lv2_atom_forge_set_buffer(&forge, buf, BUF_SIZE);
 
+	LV2_Atom_Forge_Frame obj_frame;
 	LV2_Atom* obj = (LV2_Atom*)lv2_atom_forge_resource(
-		&forge, NULL, 0, eg_Object);
+		&forge, &obj_frame, 0, eg_Object);
 
 	// eg_one = (Int32)1
-	lv2_atom_forge_property_head(&forge, obj, eg_one, 0);
-	LV2_Atom_Int32* one = lv2_atom_forge_int32(&forge, obj, 1);
+	lv2_atom_forge_property_head(&forge, eg_one, 0);
+	LV2_Atom_Int32* one = lv2_atom_forge_int32(&forge, 1);
 	if (one->value != 1) {
 		return test_fail("%d != 1\n", one->value);
 	}
 
 	// eg_two = (Int64)2
-	lv2_atom_forge_property_head(&forge, obj, eg_two, 0);
-	LV2_Atom_Int64* two = lv2_atom_forge_int64(&forge, obj, 2);
+	lv2_atom_forge_property_head(&forge, eg_two, 0);
+	LV2_Atom_Int64* two = lv2_atom_forge_int64(&forge, 2);
 	if (two->value != 2) {
 		return test_fail("%ld != 2\n", two->value);
 	}
 
 	// eg_three = (Float)3.0
-	lv2_atom_forge_property_head(&forge, obj, eg_three, 0);
-	LV2_Atom_Float* three = lv2_atom_forge_float(&forge, obj, 3.0f);
+	lv2_atom_forge_property_head(&forge, eg_three, 0);
+	LV2_Atom_Float* three = lv2_atom_forge_float(&forge, 3.0f);
 	if (three->value != 3) {
 		return test_fail("%f != 3\n", three->value);
 	}
 
 	// eg_four = (Double)4.0
-	lv2_atom_forge_property_head(&forge, obj, eg_four, 0);
-	LV2_Atom_Double* four = lv2_atom_forge_double(&forge, obj, 4.0);
+	lv2_atom_forge_property_head(&forge, eg_four, 0);
+	LV2_Atom_Double* four = lv2_atom_forge_double(&forge, 4.0);
 	if (four->value != 4) {
 		return test_fail("%ld != 4\n", four->value);
 	}
 
 	// eg_true = (Bool)1
-	lv2_atom_forge_property_head(&forge, obj, eg_true, 0);
-	LV2_Atom_Bool* t = lv2_atom_forge_bool(&forge, obj, true);
+	lv2_atom_forge_property_head(&forge, eg_true, 0);
+	LV2_Atom_Bool* t = lv2_atom_forge_bool(&forge, true);
 	if (t->value != 1) {
 		return test_fail("%ld != 1 (true)\n", t->value);
 	}
 
 	// eg_false = (Bool)0
-	lv2_atom_forge_property_head(&forge, obj, eg_false, 0);
-	LV2_Atom_Bool* f = lv2_atom_forge_bool(&forge, obj, false);
+	lv2_atom_forge_property_head(&forge, eg_false, 0);
+	LV2_Atom_Bool* f = lv2_atom_forge_bool(&forge, false);
 	if (f->value != 0) {
 		return test_fail("%ld != 0 (false)\n", f->value);
 	}
@@ -134,8 +135,8 @@ main()
 	// eg_uri = (URI)"http://example.org/value"
 	const uint8_t* ustr     = (const uint8_t*)"http://example.org/value";
 	const size_t   ustr_len = strlen((const char*)ustr);
-	lv2_atom_forge_property_head(&forge, obj, eg_uri, 0);
-	LV2_Atom_String* uri  = lv2_atom_forge_uri(&forge, obj, ustr, ustr_len);
+	lv2_atom_forge_property_head(&forge, eg_uri, 0);
+	LV2_Atom_String* uri  = lv2_atom_forge_uri(&forge, ustr, ustr_len);
 	uint8_t*         body = (uint8_t*)LV2_ATOM_BODY(uri);
 	if (strcmp((const char*)body, (const char*)ustr)) {
 		return test_fail("%s != \"%s\"\n",
@@ -144,25 +145,25 @@ main()
 
 	// eg_urid = (URID)"http://example.org/value"
 	LV2_URID eg_value = urid_map(NULL, "http://example.org/value");
-	lv2_atom_forge_property_head(&forge, obj, eg_urid, 0);
-	LV2_Atom_URID* urid = lv2_atom_forge_urid(&forge, obj, eg_value);
+	lv2_atom_forge_property_head(&forge, eg_urid, 0);
+	LV2_Atom_URID* urid = lv2_atom_forge_urid(&forge, eg_value);
 	if (urid->id != eg_value) {
 		return test_fail("%u != %u\n", urid->id, eg_value);
 	}
 
 	// eg_string = (String)"hello"
-	lv2_atom_forge_property_head(&forge, obj, eg_string, 0);
+	lv2_atom_forge_property_head(&forge, eg_string, 0);
 	LV2_Atom_String* string = lv2_atom_forge_string(
-		&forge, obj, (const uint8_t*)"hello", strlen("hello"));
+		&forge, (const uint8_t*)"hello", strlen("hello"));
 	uint8_t* sbody = (uint8_t*)LV2_ATOM_BODY(string);
 	if (strcmp((const char*)sbody, "hello")) {
 		return test_fail("%s != \"hello\"\n", (const char*)body);
 	}
 
 	// eg_literal = (Literal)"hello"@fr
-	lv2_atom_forge_property_head(&forge, obj, eg_literal, 0);
+	lv2_atom_forge_property_head(&forge, eg_literal, 0);
 	LV2_Atom_Literal* literal = lv2_atom_forge_literal(
-		&forge, obj, (const uint8_t*)"bonjour", strlen("bonjour"),
+		&forge, (const uint8_t*)"bonjour", strlen("bonjour"),
 		0, urid_map(NULL, "http://lexvo.org/id/term/fr"));
 	body = (uint8_t*)LV2_ATOM_CONTENTS(LV2_Atom_Literal, literal);
 	if (strcmp((const char*)body, "bonjour")) {
@@ -170,12 +171,14 @@ main()
 	}
 
 	// eg_tuple = "foo",true
-	lv2_atom_forge_property_head(&forge, obj, eg_tuple, 0);
-	LV2_Atom_Tuple*  tuple = lv2_atom_forge_tuple(&forge, obj);
-	LV2_Atom_String* tup0  = lv2_atom_forge_string(
-		&forge, (LV2_Atom*)tuple, (const uint8_t*)"foo", strlen("foo"));
-	LV2_Atom_Bool* tup1 = lv2_atom_forge_bool(&forge, (LV2_Atom*)tuple, true);
-	obj->size += ((LV2_Atom*)tuple)->size;
+	lv2_atom_forge_property_head(&forge, eg_tuple, 0);
+	LV2_Atom_Forge_Frame tuple_frame;
+	LV2_Atom_Tuple*      tuple = (LV2_Atom_Tuple*)lv2_atom_forge_tuple(
+		&forge, &tuple_frame);
+	LV2_Atom_String* tup0 = lv2_atom_forge_string(
+		&forge, (const uint8_t*)"foo", strlen("foo"));
+	LV2_Atom_Bool* tup1 = lv2_atom_forge_bool(&forge, true);
+	lv2_atom_forge_pop(&forge, &tuple_frame);
 	LV2_Atom_Tuple_Iter i = lv2_tuple_begin(tuple);
 	if (lv2_tuple_is_end(tuple, i)) {
 		return test_fail("Tuple iterator is empty\n");
@@ -198,23 +201,26 @@ main()
 	}
 
 	// eg_vector = (Vector<Int32>)1,2,3,4
-	lv2_atom_forge_property_head(&forge, obj, eg_vector, 0);
+	lv2_atom_forge_property_head(&forge, eg_vector, 0);
 	int32_t elems[] = { 1, 2, 3, 4 };
 	LV2_Atom_Vector* vector = lv2_atom_forge_vector(
-		&forge, obj, 4, forge.Int32, sizeof(int32_t), elems);
+		&forge, 4, forge.Int32, sizeof(int32_t), elems);
 	void* vec_body = LV2_ATOM_CONTENTS(LV2_Atom_Vector, vector);
 	if (memcmp(elems, vec_body, sizeof(elems))) {
 		return test_fail("Corrupt vector\n");
 	}
 
 	// eg_seq = (Sequence)1, 2
-	lv2_atom_forge_property_head(&forge, obj, eg_seq, 0);
-	LV2_Atom_Sequence* seq = lv2_atom_forge_sequence_head(&forge, obj, 0, 0);
-	lv2_atom_forge_audio_time(&forge, (LV2_Atom*)seq, 0, 0);
-	lv2_atom_forge_int32(&forge, (LV2_Atom*)seq, 1);
-	lv2_atom_forge_audio_time(&forge, (LV2_Atom*)seq, 1, 0);
-	lv2_atom_forge_int32(&forge, (LV2_Atom*)seq, 2);
-	obj->size += seq->atom.size - sizeof(LV2_Atom);
+	lv2_atom_forge_property_head(&forge, eg_seq, 0);
+	LV2_Atom_Forge_Frame seq_frame;
+	LV2_Atom_Sequence* seq = (LV2_Atom_Sequence*)lv2_atom_forge_sequence_head(&forge, &seq_frame, 0);
+	lv2_atom_forge_audio_time(&forge, 0, 0);
+	lv2_atom_forge_int32(&forge, 1);
+	lv2_atom_forge_audio_time(&forge, 1, 0);
+	lv2_atom_forge_int32(&forge, 2);
+	lv2_atom_forge_pop(&forge, &seq_frame);
+
+	lv2_atom_forge_pop(&forge, &obj_frame);
 
 	// Test equality
 	LV2_Atom_Int32 itwo = { { forge.Int32, sizeof(int32_t) }, 2 };
@@ -279,6 +285,7 @@ main()
 		{ eg_four,    &matches.four },
 		{ eg_true,    &matches.affirmative },
 		{ eg_false,   &matches.negative },
+		{ eg_uri,     &matches.uri },
 		{ eg_urid,    &matches.urid },
 		{ eg_string,  &matches.string },
 		{ eg_literal, &matches.literal },

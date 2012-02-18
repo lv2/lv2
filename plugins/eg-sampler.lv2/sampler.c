@@ -354,24 +354,25 @@ static void
 run(LV2_Handle instance,
     uint32_t   sample_count)
 {
-	Sampler*   plugin      = (Sampler*)instance;
-	sf_count_t start_frame = 0;
-	sf_count_t pos         = 0;
-	float*     output      = plugin->output_port;
+	Sampler*     plugin      = (Sampler*)instance;
+	SamplerURIs* uris        = &plugin->uris;
+	sf_count_t   start_frame = 0;
+	sf_count_t   pos         = 0;
+	float*       output      = plugin->output_port;
 
 	/* Read incoming events */
 	LV2_SEQUENCE_FOREACH((LV2_Atom_Sequence*)plugin->control_port->data, i) {
 		LV2_Atom_Event* const ev = lv2_sequence_iter_get(i);
-		if (ev->body.type == plugin->uris.midi_Event) {
+		if (ev->body.type == uris->midi_Event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);
 			if ((data[0] & 0xF0) == 0x90) {
 				start_frame   = ev->time.audio.frames;
 				plugin->frame = 0;
 				plugin->play  = true;
 			}
-		} else if (is_object_type(&plugin->uris, ev->body.type)) {
+		} else if (is_object_type(uris, ev->body.type)) {
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
-			if (obj->type == plugin->uris.msg_Set) {
+			if (obj->type == uris->msg_Set) {
 				/* Received a set message, send it to the worker thread. */
 				fprintf(stderr, "Queueing set message\n");
 				zix_ring_write(plugin->to_worker,
@@ -414,6 +415,8 @@ run(LV2_Handle instance,
 
 	/* Set up forge to write directly to notify output port buffer */
 	LV2_Atom* seq = plugin->notify_port->data;
+	LV2_Atom_Forge_Frame seq_frame;
+	lv2_atom_forge_push(&plugin->forge, &seq_frame, seq);
 	lv2_atom_forge_set_buffer(
 		&plugin->forge,
 		LV2_ATOM_CONTENTS(LV2_Atom_Sequence, seq),
@@ -423,10 +426,10 @@ run(LV2_Handle instance,
 	SampleMessage  m;
 	const uint32_t msize = lv2_atom_pad_size(sizeof(m));
 	while (zix_ring_read(plugin->from_worker, &m, msize) == msize) {
-		if (m.atom.type == plugin->uris.eg_applySample) {
+		if (m.atom.type == uris->eg_applySample) {
 			/* Send a message to the worker to free the current sample */
 			SampleMessage free_msg = {
-				{ plugin->uris.eg_freeSample, sizeof(plugin->sample) },
+				{ uris->eg_freeSample, sizeof(plugin->sample) },
 				plugin->sample
 			};
 			zix_ring_write(plugin->to_worker,
@@ -439,26 +442,29 @@ run(LV2_Handle instance,
 
 			/* Send a notification that we're using a new sample. */
 
-			lv2_atom_forge_audio_time(&plugin->forge, seq, 0, 0);
+			lv2_atom_forge_audio_time(&plugin->forge, 0, 0);
 
-			LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
-				&plugin->forge, NULL, 1, plugin->uris.msg_Set);
+			LV2_Atom_Forge_Frame set_frame;
+			lv2_atom_forge_blank(&plugin->forge, &set_frame, 1, uris->msg_Set);
 
-			lv2_atom_forge_property_head(&plugin->forge, set, plugin->uris.msg_body, 0);
-			LV2_Atom* body = (LV2_Atom*)lv2_atom_forge_blank(&plugin->forge, NULL, 2, 0);
+			lv2_atom_forge_property_head(&plugin->forge, uris->msg_body, 0);
+			LV2_Atom_Forge_Frame body_frame;
+			lv2_atom_forge_blank(&plugin->forge, &body_frame, 2, 0);
 
-			lv2_atom_forge_property_head(&plugin->forge, body, plugin->uris.eg_file, 0);
-			lv2_atom_forge_uri(&plugin->forge, body,
+			lv2_atom_forge_property_head(&plugin->forge, uris->eg_file, 0);
+			lv2_atom_forge_uri(&plugin->forge,
 			                   (const uint8_t*)plugin->sample->uri,
 			                   plugin->sample->uri_len);
 
+			lv2_atom_forge_pop(&plugin->forge, &body_frame);
+			lv2_atom_forge_pop(&plugin->forge, &set_frame);
 
-			set->size += lv2_atom_total_size(body);
-			seq->size += lv2_atom_total_size(set);
 		} else {
 			fprintf(stderr, "Unknown message from worker\n");
 		}
 	}
+
+	lv2_atom_forge_pop(&plugin->forge, &seq_frame);
 }
 
 static void
