@@ -63,11 +63,10 @@ enum {
 static const char* default_sample_file = "monosample.wav";
 
 typedef struct {
-	SF_INFO     info;     /**< Info about sample from sndfile */
-	float*      data;     /**< Sample data in float */
-	char*       uri;      /**< URI of file */
-	const char* path;     /**< Path of file (pointer into uri) */
-	size_t      uri_len;  /**< Length of uri. */
+	SF_INFO info;      /**< Info about sample from sndfile */
+	float*  data;      /**< Sample data in float */
+	char*   path;      /**< Path of file */
+	size_t  path_len;  /**< Length of path */
 } Sample;
 
 typedef struct {
@@ -110,41 +109,10 @@ typedef struct {
 	Sample*  sample;
 } SampleMessage;
 
-static bool
-parse_file_uri(const char* uri,
-               const char** host, size_t* host_len,
-               const char** path, size_t* path_len)
-{
-	if (strncmp(uri, "file://", strlen("file://"))) {
-		return false;
-	}
-
-	*host = uri + strlen("file://");
-	const char* host_end = *host;
-	for (; *host_end && *host_end != '/'; ++host_end) {}
-
-	*host_len = host_end - *host;
-	*path = host_end;
-	*path_len = (uri + strlen(uri)) - host_end;
-
-	return true;
-}
-
 static Sample*
-load_sample(Sampler* plugin, const char* uri)
+load_sample(Sampler* plugin, const char* path)
 {
-	const size_t uri_len  = strlen(uri);
-	const char*  host     = NULL;
-	const char*  path     = NULL;
-	size_t       host_len = 0;
-	size_t       path_len = 0;
-	if (!parse_file_uri(uri, &host, &host_len, &path, &path_len)) {
-		fprintf(stderr, "Request to load bad file URI %s\n", uri);
-		return NULL;
-	}
-
-	/* Probably should check if the host is local here, but we'll just
-	   blissfully attempt to load the path on this machine... */
+	const size_t path_len  = strlen(path);
 
 	printf("Loading sample %s\n", path);
 	Sample* const  sample  = (Sample*)malloc(sizeof(Sample));
@@ -168,11 +136,10 @@ load_sample(Sampler* plugin, const char* uri)
 	sf_close(sndfile);
 
 	/* Fill sample struct and return it. */
-	sample->data    = data;
-	sample->uri     = (char*)malloc(uri_len + 1);
-	sample->path    = sample->uri + (path - uri);
-	sample->uri_len = uri_len;
-	memcpy(sample->uri, uri, uri_len + 1);
+	sample->data     = data;
+	sample->path     = (char*)malloc(path_len + 1);
+	sample->path_len = path_len;
+	memcpy(sample->path, path, path_len + 1);
 
 	return sample;
 }
@@ -181,14 +148,14 @@ static bool
 handle_set_message(Sampler*               plugin,
                    const LV2_Atom_Object* obj)
 {
-	/* Get file URI from message */
-	const LV2_Atom* file_uri = get_msg_file_uri(&plugin->uris, obj);
-	if (!file_uri) {
+	/* Get file path from message */
+	const LV2_Atom* file_path = get_msg_file_path(&plugin->uris, obj);
+	if (!file_path) {
 		return false;
 	}
 
 	/* Load sample. */
-	Sample* sample = load_sample(plugin, LV2_ATOM_BODY(file_uri));
+	Sample* sample = load_sample(plugin, LV2_ATOM_BODY(file_path));
 	if (sample) {
 		/* Loaded sample, send it to run() to be applied. */
 		const SampleMessage msg = {
@@ -206,10 +173,12 @@ handle_set_message(Sampler*               plugin,
 void
 free_sample(Sample* sample)
 {
-	fprintf(stderr, "Freeing %s\n", sample->uri);
-	free(sample->uri);
-	free(sample->data);
-	free(sample);
+	if (sample) {
+		fprintf(stderr, "Freeing %s\n", sample->path);
+		free(sample->path);
+		free(sample->data);
+		free(sample);
+	}
 }
 
 void*
@@ -441,23 +410,10 @@ run(LV2_Handle instance,
 			plugin->sample = m.sample;
 
 			/* Send a notification that we're using a new sample. */
-
 			lv2_atom_forge_audio_time(&plugin->forge, 0, 0);
-
-			LV2_Atom_Forge_Frame set_frame;
-			lv2_atom_forge_blank(&plugin->forge, &set_frame, 1, uris->msg_Set);
-
-			lv2_atom_forge_property_head(&plugin->forge, uris->msg_body, 0);
-			LV2_Atom_Forge_Frame body_frame;
-			lv2_atom_forge_blank(&plugin->forge, &body_frame, 2, 0);
-
-			lv2_atom_forge_property_head(&plugin->forge, uris->eg_file, 0);
-			lv2_atom_forge_uri(&plugin->forge,
-			                   (const uint8_t*)plugin->sample->uri,
-			                   plugin->sample->uri_len);
-
-			lv2_atom_forge_pop(&plugin->forge, &body_frame);
-			lv2_atom_forge_pop(&plugin->forge, &set_frame);
+			write_set_filename_msg(&plugin->forge, uris,
+			                       plugin->sample->path,
+			                       plugin->sample->path_len);
 
 		} else {
 			fprintf(stderr, "Unknown message from worker\n");
@@ -476,7 +432,7 @@ save(LV2_Handle                instance,
 {
 	LV2_State_Map_Path* map_path = NULL;
 	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_STATE_MAP_PATH_URI)) {
+		if (!strcmp(features[i]->URI, LV2_STATE__mapPath)) {
 			map_path = (LV2_State_Map_Path*)features[i]->data;
 		}
 	}
@@ -489,7 +445,7 @@ save(LV2_Handle                instance,
 	      plugin->uris.eg_file,
 	      apath,
 	      strlen(plugin->sample->path) + 1,
-	      plugin->uris.state_Path,
+	      plugin->uris.atom_Path,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 
 	free(apath);

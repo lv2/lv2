@@ -193,7 +193,9 @@ Map get_plugin_state(LV2_Handle instance)
 <p>Plugins may need to refer to files (e.g. loaded samples) in their state.
 This is done by storing the file's path as a property just like any other
 value.  However, there are some rules which MUST be followed when storing
-paths, see <a href="#mapPath">state:mapPath</a> for details.</p>
+paths, see <a href="#mapPath">state:mapPath</a> for details.  Plugins MUST
+use the type <a href="http://lv2plug.in/ns/ext/atom#Path">atom:Path</a>
+for all paths in their state.</p>
 
 <h3>Creating New Files or Directories</h3>
 
@@ -267,7 +269,6 @@ state:mapPath
 	a lv2:Feature ;
 	rdfs:label "Support for storing paths in files" ;
 	lv2:documentation """
-
 <p>This feature maps absolute paths to/from <q>abstract paths</q> which are
 stored in state.  To support this feature a host must pass an LV2_Feature with
 URI LV2_STATE_MAP_PATH_URI and data pointed to an LV2_State_Map_Path to the
@@ -305,7 +306,6 @@ state:makePath
 	a lv2:Feature ;
 	rdfs:label "Support for creating new files and directories" ;
 	lv2:documentation """
-
 <p>This feature allows plugins to create new files and/or directories.  To
 support this feature the host passes an LV2_Feature with URI
 LV2_STATE_MAKE_PATH_URI and data pointed to an LV2_State_Make_Path to the
@@ -339,21 +339,4 @@ char* save_myfile(LV2_State_Make_Path* make_path)
     return path;
 }
 </pre>
-""" .
-
-state:Path
-	a rdfs:Class ;
-	rdfs:label "Path" ;
-	lv2:documentation """
-<p>A path to a file or directory.</p>
-
-<p>The format of a state:Path is a C string, possibly escaped or otherwise
-restricted in a system-specific manner.  This URI (LV2_STATE_PATH_URI), mapped
-to an integer, MUST be used as the <code>type</code> parameter for any files
-passed to the LV2_State_Store_Function; and will likewise be returned by the
-corresponding call to the LV2_State_Retrieve_Function.</p>
-
-<p>When storing and retrieving a path, the plugin MUST NOT assume the same path
-will be restored.  However, the restored path will refer to a file with
-equivalent contents to the original.</p>
 """ .

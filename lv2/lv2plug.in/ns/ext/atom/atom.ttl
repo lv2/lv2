@@ -218,22 +218,28 @@ void set_to_turtle_string(LV2_Atom_Literal* lit, const char* ttl) {
 </pre>
 """ .
 
+atom:Path
+	a rdfs:Class ;
+	rdfs:subClassOf atom:String ;
+	rdfs:label "File path string" ;
+	lv2:documentation """
+<p>A local file path string.  This is identical in format to atom:String,
+except the string is a path.  Since the ability to distinguish paths from plain
+strings is often necessary, paths MUST NOT be transmitted as atom:String.</p>
+""" .
+
 atom:URI
 	a rdfs:Class ;
 	rdfs:subClassOf atom:String ;
 	rdfs:label "URI string" ;
 	lv2:documentation """
 <p>A URI string.  This is identical in format to atom:String, except the string
-is a URI.  This is occasionally useful when a URI is needed but mapping it is
-inappropriate.  URIs should never be expressed as atom:String, because this
-makes it impossible to distinguish URIs from arbitrary strings, which makes
-functionality like mapping or rewriting URIs impossible.  Similarly, there is
-deliberately no atom type for filesystem paths.  To refer to a filename, use a
-complete file URI, with hostname if at all possible.  This allows hosts to
-properly handle paths in situations like serialisation or network
-transmission.</p>
+is a URI.  This is useful when a URI is needed but mapping is inappropriate.
+Since the ability to distinguish URIs from plain strings is often necessary,
+URIs MUST NOT be transmitted as atom:String.</p>
 
-<p>Pedantically, this is an <q>IRI</q>, since UTF-8 characters are allowed.</p>
+<p>This is not strictly a URI, since UTF-8 is allowed.  Escaping and related
+issues issues are the host's responsibility.</p>
 """ .
 
 atom:URID

@@ -72,16 +72,17 @@ main()
 	LV2_URID eg_four    = urid_map(NULL, "http://example.org/four");
 	LV2_URID eg_true    = urid_map(NULL, "http://example.org/true");
 	LV2_URID eg_false   = urid_map(NULL, "http://example.org/false");
+	LV2_URID eg_path    = urid_map(NULL, "http://example.org/path");
 	LV2_URID eg_uri     = urid_map(NULL, "http://example.org/uri");
 	LV2_URID eg_urid    = urid_map(NULL, "http://example.org/urid");
 	LV2_URID eg_string  = urid_map(NULL, "http://example.org/string");
 	LV2_URID eg_literal = urid_map(NULL, "http://example.org/literal");
 	LV2_URID eg_tuple   = urid_map(NULL, "http://example.org/tuple");
 	LV2_URID eg_vector  = urid_map(NULL, "http://example.org/vector");
-	LV2_URID eg_seq     = urid_map(NULL, "http://example.org/seq");
+	LV2_URID eg_seq     = urid_map(NULL, "http: //example.org/seq");
 
 #define BUF_SIZE  1024
-#define NUM_PROPS 13
+#define NUM_PROPS 14
 
 	uint8_t buf[BUF_SIZE];
 	lv2_atom_forge_set_buffer(&forge, buf, BUF_SIZE);
@@ -132,15 +133,26 @@ main()
 		return test_fail("%ld != 0 (false)\n", f->value);
 	}
 
+	// eg_path = (Path)"/foo/bar"
+	const uint8_t* pstr     = (const uint8_t*)"/foo/bar";
+	const size_t   pstr_len = strlen((const char*)pstr);
+	lv2_atom_forge_property_head(&forge, eg_path, 0);
+	LV2_Atom_String* path  = lv2_atom_forge_uri(&forge, pstr, pstr_len);
+	uint8_t*         pbody = (uint8_t*)LV2_ATOM_BODY(path);
+	if (strcmp((const char*)pbody, (const char*)pstr)) {
+		return test_fail("%s != \"%s\"\n",
+		                 (const char*)pbody, (const char*)pstr);
+	}
+
 	// eg_uri = (URI)"http://example.org/value"
 	const uint8_t* ustr     = (const uint8_t*)"http://example.org/value";
 	const size_t   ustr_len = strlen((const char*)ustr);
 	lv2_atom_forge_property_head(&forge, eg_uri, 0);
-	LV2_Atom_String* uri  = lv2_atom_forge_uri(&forge, ustr, ustr_len);
-	uint8_t*         body = (uint8_t*)LV2_ATOM_BODY(uri);
-	if (strcmp((const char*)body, (const char*)ustr)) {
+	LV2_Atom_String* uri   = lv2_atom_forge_uri(&forge, ustr, ustr_len);
+	uint8_t*         ubody = (uint8_t*)LV2_ATOM_BODY(uri);
+	if (strcmp((const char*)ubody, (const char*)ustr)) {
 		return test_fail("%s != \"%s\"\n",
-		                 (const char*)body, (const char*)ustr);
+		                 (const char*)ubody, (const char*)ustr);
 	}
 
 	// eg_urid = (URID)"http://example.org/value"
@@ -157,7 +169,7 @@ main()
 		&forge, (const uint8_t*)"hello", strlen("hello"));
 	uint8_t* sbody = (uint8_t*)LV2_ATOM_BODY(string);
 	if (strcmp((const char*)sbody, "hello")) {
-		return test_fail("%s != \"hello\"\n", (const char*)body);
+		return test_fail("%s != \"hello\"\n", (const char*)sbody);
 	}
 
 	// eg_literal = (Literal)"hello"@fr
@@ -165,9 +177,9 @@ main()
 	LV2_Atom_Literal* literal = lv2_atom_forge_literal(
 		&forge, (const uint8_t*)"bonjour", strlen("bonjour"),
 		0, urid_map(NULL, "http://lexvo.org/id/term/fr"));
-	body = (uint8_t*)LV2_ATOM_CONTENTS(LV2_Atom_Literal, literal);
-	if (strcmp((const char*)body, "bonjour")) {
-		return test_fail("%s != \"bonjour\"\n", (const char*)body);
+	uint8_t* lbody = (uint8_t*)LV2_ATOM_CONTENTS(LV2_Atom_Literal, literal);
+	if (strcmp((const char*)lbody, "bonjour")) {
+		return test_fail("%s != \"bonjour\"\n", (const char*)lbody);
 	}
 
 	// eg_tuple = "foo",true
@@ -267,6 +279,7 @@ main()
 		const LV2_Atom* four;
 		const LV2_Atom* affirmative;
 		const LV2_Atom* negative;
+		const LV2_Atom* path;
 		const LV2_Atom* uri;
 		const LV2_Atom* urid;
 		const LV2_Atom* string;
@@ -285,6 +298,7 @@ main()
 		{ eg_four,    &matches.four },
 		{ eg_true,    &matches.affirmative },
 		{ eg_false,   &matches.negative },
+		{ eg_path,    &matches.path },
 		{ eg_uri,     &matches.uri },
 		{ eg_urid,    &matches.urid },
 		{ eg_string,  &matches.string },
@@ -312,6 +326,8 @@ main()
 			return test_fail("Bad match true\n");
 		} else if (!lv2_atom_equals((LV2_Atom*)f, matches.negative)) {
 			return test_fail("Bad match false\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)path, matches.path)) {
+			return test_fail("Bad match path\n");
 		} else if (!lv2_atom_equals((LV2_Atom*)uri, matches.uri)) {
 			return test_fail("Bad match URI\n");
 		} else if (!lv2_atom_equals((LV2_Atom*)string, matches.string)) {
@@ -333,6 +349,7 @@ main()
 		                            eg_four,    &matches.four,
 		                            eg_true,    &matches.affirmative,
 		                            eg_false,   &matches.negative,
+		                            eg_path,    &matches.path,
 		                            eg_uri,     &matches.uri,
 		                            eg_urid,    &matches.urid,
 		                            eg_string,  &matches.string,

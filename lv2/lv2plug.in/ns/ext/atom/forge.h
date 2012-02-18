@@ -85,6 +85,7 @@ typedef struct {
 	LV2_URID Int32;
 	LV2_URID Int64;
 	LV2_URID Literal;
+	LV2_URID Path;
 	LV2_URID Property;
 	LV2_URID Resource;
 	LV2_URID Sequence;
@@ -172,6 +173,7 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 	forge->Int32    = map->map(map->handle, LV2_ATOM_URI "#Int32");
 	forge->Int64    = map->map(map->handle, LV2_ATOM_URI "#Int64");
 	forge->Literal  = map->map(map->handle, LV2_ATOM_URI "#Literal");
+	forge->Path     = map->map(map->handle, LV2_ATOM_URI "#Path");
 	forge->Property = map->map(map->handle, LV2_ATOM_URI "#Property");
 	forge->Resource = map->map(map->handle, LV2_ATOM_URI "#Resource");
 	forge->Sequence = map->map(map->handle, LV2_ATOM_URI "#Sequence");
@@ -322,13 +324,31 @@ lv2_atom_forge_uri(LV2_Atom_Forge* forge,
 	const LV2_Atom_String a = { { forge->URI, len + 1 } };
 	LV2_Atom_String* out = (LV2_Atom_String*)
 		lv2_atom_forge_write_nopad(forge, &a, sizeof(a));
-	if (!out) {
-		return NULL;
+	if (out) {
+		if (!lv2_atom_forge_string_body(forge, uri, len)) {
+			out->atom.type = 0;
+			out->atom.size = 0;
+			out = NULL;
+		}
 	}
-	if (!lv2_atom_forge_string_body(forge, uri, len)) {
-		out->atom.type = 0;
-		out->atom.size = 0;
-		return NULL;
+	return out;
+}
+
+/** Write an atom:Path.  Note that @p path need not be NULL terminated. */
+static inline LV2_Atom_String*
+lv2_atom_forge_path(LV2_Atom_Forge* forge,
+                    const uint8_t*  path,
+                    size_t          len)
+{
+	const LV2_Atom_String a = { { forge->Path, len + 1 } };
+	LV2_Atom_String* out = (LV2_Atom_String*)
+		lv2_atom_forge_write_nopad(forge, &a, sizeof(a));
+	if (out) {
+		if (!lv2_atom_forge_string_body(forge, path, len)) {
+			out->atom.type = 0;
+			out->atom.size = 0;
+			out = NULL;
+		}
 	}
 	return out;
 }

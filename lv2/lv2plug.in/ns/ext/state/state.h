@@ -36,10 +36,11 @@ extern "C" {
 
 #define LV2_STATE_URI "http://lv2plug.in/ns/ext/state"
 
-#define LV2_STATE_INTERFACE_URI LV2_STATE_URI "#Interface"
-#define LV2_STATE_PATH_URI      LV2_STATE_URI "#Path"
-#define LV2_STATE_MAP_PATH_URI  LV2_STATE_URI "#mapPath"
-#define LV2_STATE_MAKE_PATH_URI LV2_STATE_URI "#makePath"
+#define LV2_STATE__Interface LV2_STATE_URI "#Interface"
+#define LV2_STATE__State     LV2_STATE_URI "#State"
+#define LV2_STATE__state     LV2_STATE_URI "#state"
+#define LV2_STATE__mapPath   LV2_STATE_URI "#mapPath"
+#define LV2_STATE__makePath  LV2_STATE_URI "#makePath"
 
 typedef void* LV2_State_Handle;
 typedef void* LV2_State_Map_Path_Handle;
@@ -315,7 +316,7 @@ typedef struct {
 } LV2_State_Map_Path;
 
 /**
-   Feature data for state:makePath (@ref LV2_STATE_MAKE_PATH_URI).
+   Feature data for state:makePath (@ref LV2_STATE__makePath).
 */
 typedef struct {
 

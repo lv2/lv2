@@ -75,46 +75,18 @@ on_load_clicked(GtkWidget* widget,
 	/* Got what we need, destroy the dialog. */
 	gtk_widget_destroy(dialog);
 
-	/* Build a complete file URI with hostname, e.g. file://hal/home/me/foo.wav
-	   This is to precisely specify the file location, even if the plugin is
-	   running on a different host (which is entirely possible).  Plugins
-	   should do this even though some hosts may not support such setups.
-	*/
-	const char*  hostname     = g_get_host_name();
-	char*        file_uri     = g_filename_to_uri(filename, hostname, NULL);
-	const size_t file_uri_len = strlen(file_uri);
-
 #define OBJ_BUF_SIZE 1024
 	uint8_t obj_buf[OBJ_BUF_SIZE];
 	lv2_atom_forge_set_buffer(&ui->forge, obj_buf, OBJ_BUF_SIZE);
 
-	/* Send [
-	 *     a msg:Set ;
-	 *     msg:body [
-	 *         eg-sampler:filename <file://hal/home/me/foo.wav> ;
-	 *     ] ;
-	 * ]
-	 */
-	LV2_Atom_Forge_Frame set_frame;
-	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
-		&ui->forge, &set_frame, 1, ui->uris.msg_Set);
+	LV2_Atom* msg = write_set_filename_msg(&ui->forge, &ui->uris,
+	                                       filename, strlen(filename));
 
-	lv2_atom_forge_property_head(&ui->forge, ui->uris.msg_body, 0);
-	LV2_Atom_Forge_Frame body_frame;
-	lv2_atom_forge_blank(&ui->forge, &body_frame, 2, 0);
-
-	lv2_atom_forge_property_head(&ui->forge, ui->uris.eg_file, 0);
-	lv2_atom_forge_uri(&ui->forge, (const uint8_t*)file_uri, file_uri_len);
-
-	ui->write(ui->controller, 0, lv2_atom_total_size(set),
+	ui->write(ui->controller, 0, lv2_atom_total_size(msg),
 	          ui->uris.atom_eventTransfer,
-	          set);
-
-	lv2_atom_forge_pop(&ui->forge, &body_frame);
-	lv2_atom_forge_pop(&ui->forge, &set_frame);
+	          msg);
 
 	g_free(filename);
-	g_free(file_uri);
 }
 
 static LV2UI_Handle
@@ -186,7 +158,7 @@ port_event(LV2UI_Handle handle,
 		LV2_Atom* atom = (LV2_Atom*)buffer;
 		if (atom->type == ui->uris.atom_Blank) {
 			LV2_Atom_Object* obj      = (LV2_Atom_Object*)atom;
-			const LV2_Atom*  file_uri = get_msg_file_uri(&ui->uris, obj);
+			const LV2_Atom*  file_uri = get_msg_file_path(&ui->uris, obj);
 			if (!file_uri) {
 				fprintf(stderr, "Unknown message sent to UI.\n");
 				return;

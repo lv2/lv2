@@ -27,6 +27,37 @@
 
 #define LV2_ATOM_URI "http://lv2plug.in/ns/ext/atom"
 
+#define LV2_ATOM__Atom          LV2_ATOM_URI "#Atom"
+#define LV2_ATOM__Bang          LV2_ATOM_URI "#Bang"
+#define LV2_ATOM__Number        LV2_ATOM_URI "#Number"
+#define LV2_ATOM__Int32         LV2_ATOM_URI "#Int32"
+#define LV2_ATOM__Int64         LV2_ATOM_URI "#Int64"
+#define LV2_ATOM__Float         LV2_ATOM_URI "#Float"
+#define LV2_ATOM__Double        LV2_ATOM_URI "#Double"
+#define LV2_ATOM__Bool          LV2_ATOM_URI "#Bool"
+#define LV2_ATOM__String        LV2_ATOM_URI "#String"
+#define LV2_ATOM__Literal       LV2_ATOM_URI "#Literal"
+#define LV2_ATOM__Path          LV2_ATOM_URI "#Path"
+#define LV2_ATOM__URI           LV2_ATOM_URI "#URI"
+#define LV2_ATOM__URID          LV2_ATOM_URI "#URID"
+#define LV2_ATOM__Vector        LV2_ATOM_URI "#Vector"
+#define LV2_ATOM__Tuple         LV2_ATOM_URI "#Tuple"
+#define LV2_ATOM__Property      LV2_ATOM_URI "#Property"
+#define LV2_ATOM__Object        LV2_ATOM_URI "#Object"
+#define LV2_ATOM__Resource      LV2_ATOM_URI "#Resource"
+#define LV2_ATOM__Blank         LV2_ATOM_URI "#Blank"
+#define LV2_ATOM__TimeUnit      LV2_ATOM_URI "#TimeUnit"
+#define LV2_ATOM__AudioFrames   LV2_ATOM_URI "#AudioFrames"
+#define LV2_ATOM__Beats         LV2_ATOM_URI "#Beats"
+#define LV2_ATOM__Event         LV2_ATOM_URI "#Event"
+#define LV2_ATOM__Sequence      LV2_ATOM_URI "#Sequence"
+#define LV2_ATOM__AtomPort      LV2_ATOM_URI "#AtomPort"
+#define LV2_ATOM__ValuePort     LV2_ATOM_URI "#ValuePort"
+#define LV2_ATOM__MessagePort   LV2_ATOM_URI "#MessagePort"
+#define LV2_ATOM__bufferType    LV2_ATOM_URI "#bufferType"
+#define LV2_ATOM__supports      LV2_ATOM_URI "#supports"
+#define LV2_ATOM__eventTransfer LV2_ATOM_URI "#eventTransfer"
+
 #define LV2_ATOM_REFERENCE_TYPE 0
 
 #include <stdint.h>
