@@ -442,17 +442,18 @@ run(LV2_Handle instance,
 			lv2_atom_forge_audio_time(&plugin->forge, seq, 0, 0);
 
 			LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
-				&plugin->forge, NULL, 0, plugin->uris.msg_Set);
+				&plugin->forge, NULL, 1, plugin->uris.msg_Set);
 
 			lv2_atom_forge_property_head(&plugin->forge, set, plugin->uris.msg_body, 0);
-			LV2_Atom* body = (LV2_Atom*)lv2_atom_forge_blank(&plugin->forge, set, 0, 0);
+			LV2_Atom* body = (LV2_Atom*)lv2_atom_forge_blank(&plugin->forge, NULL, 2, 0);
 
 			lv2_atom_forge_property_head(&plugin->forge, body, plugin->uris.eg_file, 0);
-			lv2_atom_forge_uri(&plugin->forge, set,
+			lv2_atom_forge_uri(&plugin->forge, body,
 			                   (const uint8_t*)plugin->sample->uri,
 			                   plugin->sample->uri_len);
 
-			set->size += body->size;
+
+			set->size += lv2_atom_total_size(body);
 			seq->size += lv2_atom_total_size(set);
 		} else {
 			fprintf(stderr, "Unknown message from worker\n");

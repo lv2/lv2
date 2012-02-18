@@ -96,17 +96,17 @@ on_load_clicked(GtkWidget* widget,
 	 * ]
 	 */
 	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
-		&ui->forge, NULL, 0, ui->uris.msg_Set);
+		&ui->forge, NULL, 1, ui->uris.msg_Set);
 
 	lv2_atom_forge_property_head(&ui->forge, set, ui->uris.msg_body, 0);
-	LV2_Atom* body = (LV2_Atom*)lv2_atom_forge_blank(&ui->forge, set, 0, 0);
+	LV2_Atom* body = (LV2_Atom*)lv2_atom_forge_blank(&ui->forge, NULL, 2, 0);
 
 	lv2_atom_forge_property_head(&ui->forge, body, ui->uris.eg_file, 0);
-	lv2_atom_forge_uri(&ui->forge, set, (const uint8_t*)file_uri, file_uri_len);
+	lv2_atom_forge_uri(&ui->forge, body, (const uint8_t*)file_uri, file_uri_len);
 
-	set->size += body->size;
+	set->size += lv2_atom_total_size(body);
 
-	ui->write(ui->controller, 0, sizeof(LV2_Atom) + set->size,
+	ui->write(ui->controller, 0, lv2_atom_total_size(set),
 	          ui->uris.atom_eventTransfer,
 	          set);
 
