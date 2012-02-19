@@ -28,7 +28,6 @@
 #define LV2_ATOM_URI "http://lv2plug.in/ns/ext/atom"
 
 #define LV2_ATOM__Atom          LV2_ATOM_URI "#Atom"
-#define LV2_ATOM__Bang          LV2_ATOM_URI "#Bang"
 #define LV2_ATOM__Number        LV2_ATOM_URI "#Number"
 #define LV2_ATOM__Int32         LV2_ATOM_URI "#Int32"
 #define LV2_ATOM__Int64         LV2_ATOM_URI "#Int64"

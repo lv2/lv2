@@ -109,12 +109,6 @@ atom with both <code>type</code> <em>and</em> <code>size</code> 0 is
 <q>null</q>, which is not considered a Reference.</p>
 """ .
 
-atom:Bang
-	a rdfs:Class ;
-	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Bang" ;
-	rdfs:comment "Generic activity or trigger, with no body." .
-
 atom:Number
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
