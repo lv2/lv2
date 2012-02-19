@@ -275,7 +275,7 @@ lv2_atom_forge_bool(LV2_Atom_Forge* forge, bool val)
 static inline LV2_Atom_URID*
 lv2_atom_forge_urid(LV2_Atom_Forge* forge, LV2_URID id)
 {
-	const LV2_Atom_URID a = { { forge->Int32, sizeof(id) }, id };
+	const LV2_Atom_URID a = { { forge->URID, sizeof(id) }, id };
 	return (LV2_Atom_URID*)lv2_atom_forge_write(forge, &a, sizeof(a));
 }
 
