@@ -107,6 +107,10 @@ def configure(conf):
 
     # Check for gcov library (for test coverage)
     if conf.env['BUILD_TESTS'] and not conf.is_defined('HAVE_GCOV'):
+        if conf.env['MSVC_COMPILER']:
+            conf.env.append_unique('CFLAGS', ['-TP', '-MD'])
+        else:
+            conf.env.append_unique('CFLAGS', '-std=c99')
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
     autowaf.configure(conf)
