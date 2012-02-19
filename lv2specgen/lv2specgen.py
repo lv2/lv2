@@ -752,22 +752,24 @@ def buildIndex(m, classlist, proplist, instalist=None):
     if (len(proplist) > 0):
         azlist += "<dt>Properties</dt><dd>"
         proplist.sort()
+        props = []
         for p in proplist:
             name = termName(m, p)
             if name.startswith(spec_ns_str):
                 name = name.split(spec_ns_str[-1])[1]
-            azlist = """%s <a href="#%s">%s</a>, """ % (azlist, name, name)
-        azlist = """%s</dd>\n""" % azlist
+            props += ['<a href="#%s">%s</a>' % (name, name)]
+        azlist += ', '.join(props) + '</dd>\n'
 
     if (instalist != None and len(instalist) > 0):
         azlist += "<dt>Instances</dt><dd>"
+        instas = []
         for i in instalist:
             p = getShortName(i)
             anchor = getAnchor(i)
-            azlist = """%s <a href="#%s">%s</a>, """ % (azlist, anchor, p)
-        azlist = """%s</dd>\n""" % azlist
+            instas += ['<a href="#%s">%s</a>' % (anchor, p)]
+        azlist += ', '.join(instas) + '</dd>\n'
 
-    azlist = """%s\n</dl>""" % azlist
+    azlist += '\n</dl>'
     return azlist
 
 
