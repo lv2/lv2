@@ -42,24 +42,23 @@
 	lv2:documentation """
 <p>This extension defines a generic container for data, called an <q>Atom</q>,
 and several basic Atom types which can be used to express structured data.
-Atoms allow LV2 plugins and hosts to communicate, process, serialise, and store
-values of any type via a generic mechanism (e.g. ports, files, networks,
-ringbuffers, etc.).  Atoms are, with one exception, Plain Old Data (POD) which
-may safely be copied (e.g. with a simple call to <code>memcpy</code>).</p>
+Atoms are (with one exception) Plain Old Data (POD), which means they can be
+easily copied generically (e.g. using <code>memcpy</code>), and are suitable
+for use in high-performance and real-time code.</p>
 
 <p>Since Atom communication can be implemented generically, plugins that
 understand some type can be used together in a host that does not understand
-that type, and plugins (e.g. routers, delays) can process atoms of unknown
-type.</p>
+that type.  Similarly, plugins (such as routers, delays, or data stores) can
+meaningfully process atoms of a type unknown to them.</p>
 
 <p>Atoms can and should be used anywhere values of various types must be stored
 or transmitted.  This extension defines port types, atom:ValuePort and
-atom:MessagePort, which are connected to an Atom.  The atom:Sequence type in
-conjunction with atom:MessagePort is intended to replace the <a
+atom:MessagePort, which contain Atoms.  The atom:Sequence type in conjunction
+with atom:MessagePort is intended to replace the <a
 href="http://lv2plug.in/ns/ext/event">LV2 event</a> extension.</p>
 
 <p>The types defined in this extension should be powerful enough to express
-almost any structure.  Implementers SHOULD build structures out of the types
+almost any structure.  Implementations SHOULD build structures out of the types
 provided here, rather than define new binary formats (e.g. use atom:Object
 rather than a new C <code>struct</code> type).  New binary formats are an
 implementation burden which harms interoperabilty, and should only be defined
