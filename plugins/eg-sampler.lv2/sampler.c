@@ -341,7 +341,7 @@ run(LV2_Handle instance,
 			}
 		} else if (is_object_type(uris, ev->body.type)) {
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
-			if (obj->type == uris->msg_Set) {
+			if (obj->otype == uris->msg_Set) {
 				/* Received a set message, send it to the worker thread. */
 				fprintf(stderr, "Queueing set message\n");
 				zix_ring_write(plugin->to_worker,
@@ -350,7 +350,7 @@ run(LV2_Handle instance,
 					               lv2_atom_total_size(&obj->atom)));
 				zix_sem_post(&plugin->signal);
 			} else {
-				fprintf(stderr, "Unknown object type %d\n", obj->type);
+				fprintf(stderr, "Unknown object type %d\n", obj->otype);
 			}
 		} else {
 			fprintf(stderr, "Unknown event type %d\n", ev->body.type);

@@ -169,7 +169,7 @@ typedef struct {
 typedef struct {
 	LV2_Atom atom;  /**< Atom header. */
 	uint32_t id;    /**< URID for atom:Resource, or blank ID for atom:Blank. */
-	uint32_t type;  /**< Type URID (same as rdf:type, for fast dispatch). */
+	uint32_t otype;  /**< Type URID (same as rdf:type, for fast dispatch). */
 	/* Contents (a series of property bodies) follow here. */
 } LV2_Atom_Object;
 
