@@ -191,7 +191,7 @@ lv2_atom_forge_write_nopad(LV2_Atom_Forge* forge,
 {
 	uint8_t* out = NULL;
 	if (forge->sink) {
-		out = forge->sink(forge->handle, data, size); 
+		out = forge->sink(forge->handle, data, size);
 	} else {
 		out = forge->buf + forge->offset;
 		if (forge->offset + size > forge->size) {
