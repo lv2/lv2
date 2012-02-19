@@ -309,7 +309,7 @@ main()
 		LV2_OBJECT_QUERY_END
 	};
 
-	unsigned n_matches = lv2_object_get((LV2_Atom_Object*)obj, q);
+	unsigned n_matches = lv2_object_query((LV2_Atom_Object*)obj, q);
 	for (int i = 0; i < 2; ++i) {
 		if (n_matches != n_props) {
 			return test_fail("Query failed, %u matches != %u\n",
@@ -342,22 +342,22 @@ main()
 			return test_fail("Bad match sequence\n");
 		}
 		memset(&matches, 0, sizeof(matches));
-		n_matches = lv2_object_getv((LV2_Atom_Object*)obj,
-		                            eg_one,     &matches.one,
-		                            eg_two,     &matches.two,
-		                            eg_three,   &matches.three,
-		                            eg_four,    &matches.four,
-		                            eg_true,    &matches.affirmative,
-		                            eg_false,   &matches.negative,
-		                            eg_path,    &matches.path,
-		                            eg_uri,     &matches.uri,
-		                            eg_urid,    &matches.urid,
-		                            eg_string,  &matches.string,
-		                            eg_literal, &matches.literal,
-		                            eg_tuple,   &matches.tuple,
-		                            eg_vector,  &matches.vector,
-		                            eg_seq,     &matches.seq,
-		                            0);
+		n_matches = lv2_object_get((LV2_Atom_Object*)obj,
+		                           eg_one,     &matches.one,
+		                           eg_two,     &matches.two,
+		                           eg_three,   &matches.three,
+		                           eg_four,    &matches.four,
+		                           eg_true,    &matches.affirmative,
+		                           eg_false,   &matches.negative,
+		                           eg_path,    &matches.path,
+		                           eg_uri,     &matches.uri,
+		                           eg_urid,    &matches.urid,
+		                           eg_string,  &matches.string,
+		                           eg_literal, &matches.literal,
+		                           eg_tuple,   &matches.tuple,
+		                           eg_vector,  &matches.vector,
+		                           eg_seq,     &matches.seq,
+		                           0);
 	}
 
 	printf("All tests passed.\n");

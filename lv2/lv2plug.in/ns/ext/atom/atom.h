@@ -17,13 +17,13 @@
 /**
    @file atom.h C header for the LV2 Atom extension
    <http://lv2plug.in/ns/ext/atom>.
-
-   This header describes the binary layout of various types defined in the
-   atom extension.
 */
 
 #ifndef LV2_ATOM_H
 #define LV2_ATOM_H
+
+#include <stdint.h>
+#include <stddef.h>
 
 #define LV2_ATOM_URI "http://lv2plug.in/ns/ext/atom"
 
@@ -60,9 +60,6 @@
 
 #define LV2_ATOM_REFERENCE_TYPE 0
 
-#include <stdint.h>
-#include <stddef.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -72,7 +69,7 @@ typedef char lv2_atom_assert_double_fits_in_64_bits[
 	((sizeof(double) <= sizeof(uint64_t)) * 2) - 1];
 
 /**
-   Return a pointer to the contents of a variable-sized atom.
+   Return a pointer to the contents of an Atom.
    @param type The type of the atom, e.g. LV2_Atom_String.
    @param atom A variable-sized atom.
 */
@@ -90,26 +87,26 @@ typedef struct {
 
 /** An atom:Int32 or atom:Bool.  May be cast to LV2_Atom. */
 typedef struct {
-	LV2_Atom atom;
-	int32_t  value;
+	LV2_Atom atom;   /**< Atom header. */
+	int32_t  value;  /**< Integer value. */
 } LV2_Atom_Int32;
 
 /** An atom:Int64.  May be cast to LV2_Atom. */
 typedef struct {
-	LV2_Atom atom;
-	int64_t  value;
+	LV2_Atom atom;   /**< Atom header. */
+	int64_t  value;  /**< Integer value. */
 } LV2_Atom_Int64;
 
 /** An atom:Float.  May be cast to LV2_Atom. */
 typedef struct {
-	LV2_Atom atom;
-	float    value;
+	LV2_Atom atom;   /**< Atom header. */
+	float    value;  /**< Floating point value. */
 } LV2_Atom_Float;
 
 /** An atom:Double.  May be cast to LV2_Atom. */
 typedef struct {
-	LV2_Atom atom;
-	double   value;
+	LV2_Atom atom;   /**< Atom header. */
+	double   value;  /**< Floating point value. */
 } LV2_Atom_Double;
 
 /** An atom:Bool.  May be cast to LV2_Atom. */
@@ -130,8 +127,8 @@ typedef struct {
 /** The complete header of an atom:Literal. */
 typedef struct {
 	LV2_Atom atom;      /**< Atom header. */
-	uint32_t datatype;  /**< The ID of the datatype of this literal. */
-	uint32_t lang;      /**< The ID of the language of this literal. */
+	uint32_t datatype;  /**< Datatype URID. */
+	uint32_t lang;      /**< Language URID. */
 	/* Contents (a null-terminated UTF-8 string) follow here. */
 } LV2_Atom_Literal;
 
@@ -167,8 +164,8 @@ typedef struct {
 
 /** The complete header of an atom:Object. */
 typedef struct {
-	LV2_Atom atom;  /**< Atom header. */
-	uint32_t id;    /**< URID for atom:Resource, or blank ID for atom:Blank. */
+	LV2_Atom atom;   /**< Atom header. */
+	uint32_t id;     /**< URID (atom:Resource) or blank ID (atom:Blank). */
 	uint32_t otype;  /**< Type URID (same as rdf:type, for fast dispatch). */
 	/* Contents (a series of property bodies) follow here. */
 } LV2_Atom_Object;

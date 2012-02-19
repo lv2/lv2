@@ -22,12 +22,11 @@
    This header is non-normative, it is provided for convenience.
 */
 
-#ifndef LV2_ATOM_HELPERS_H
-#define LV2_ATOM_HELPERS_H
+#ifndef LV2_ATOM_UTIL_H
+#define LV2_ATOM_UTIL_H
 
 #include <stdarg.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
@@ -272,6 +271,9 @@ static const LV2_Atom_Object_Query LV2_OBJECT_QUERY_END = { 0, NULL };
    sweep.  By allocating @p query on the stack, objects can be "queried"
    quickly without allocating any memory.  This function is realtime safe.
 
+   This function can only do "flat" queries, it is not smart enough to match
+   variables in nested objects.
+
    For example:
    @code
    const LV2_Atom* name = NULL;
@@ -281,12 +283,12 @@ static const LV2_Atom_Object_Query LV2_OBJECT_QUERY_END = { 0, NULL };
        { urids.eg_age,  &age },
        LV2_OBJECT_QUERY_END
    };
-   lv2_object_get(obj, q);
+   lv2_object_query(obj, q);
    // name and age are now set to the appropriate values in obj, or NULL.
    @endcode
 */
 static inline int
-lv2_object_get(const LV2_Atom_Object* object, LV2_Atom_Object_Query* query)
+lv2_object_query(const LV2_Atom_Object* object, LV2_Atom_Object_Query* query)
 {
 	int matches   = 0;
 	int n_queries = 0;
@@ -324,19 +326,19 @@ lv2_object_get(const LV2_Atom_Object* object, LV2_Atom_Object_Query* query)
    @code
    const LV2_Atom* name = NULL;
    const LV2_Atom* age  = NULL;
-   lv2_object_getv(obj,
-                   uris.name_key, &name,
-                   uris.age_key,  &age,
-                   0);
+   lv2_object_get(obj,
+                  uris.name_key, &name,
+                  uris.age_key,  &age,
+                  0);
    @endcode
 */
 static inline int
-lv2_object_getv(const LV2_Atom_Object* object, ...)
+lv2_object_get(const LV2_Atom_Object* object, ...)
 {
 	int matches   = 0;
 	int n_queries = 0;
 
-	/* Count number of query keys so we can short-circuit when done */
+	/* Count number of keys so we can short-circuit when done */
 	va_list args;
 	va_start(args, object);
 	for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
@@ -369,4 +371,4 @@ lv2_object_getv(const LV2_Atom_Object* object, ...)
    @}
 */
 
-#endif /* LV2_ATOM_HELPERS_H */
+#endif /* LV2_ATOM_UTIL_H */

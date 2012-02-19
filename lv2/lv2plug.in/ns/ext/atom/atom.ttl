@@ -30,8 +30,8 @@
 	rdfs:seeAlso <util.h> ,
 		<forge.h> ;
 	doap:release [
-		doap:revision "0.4" ;
-		doap:created "2012-02-07"
+		doap:revision "0.5" ;
+		doap:created "2012-02-18"
 	] ;
 	doap:maintainer [
 		a foaf:Person ;

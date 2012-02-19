@@ -17,20 +17,21 @@
 /**
    @file forge.h An API for constructing LV2 atoms.
 
-   This file provides a simple API which can be used to create complex nested
-   atoms by calling the provided functions to append atoms (or atom headers) in
-   the correct order.
+   This file provides an API for constructing Atoms which makes it relatively
+   simple to build nested atoms of arbitrary complexity without requiring
+   dynamic memory allocation.
 
-   The size of containers is automatically handled to any depth.  All functions
-   that start a container take a pointer to an uninitialised stack frame which
-   will be initialised and must be popped when the container is finished.
+   The API is based on successively appending the appropriate pieces to build a
+   complete Atom.  The size of containers is automatically updated.  Functions
+   that begin a container return (via their frame argument) a stack frame which
+   must be popped when the container is finished.
 
-   All output is written to a user-provided buffer, or sink function.  Thus,
-   this API can be used to create atoms on the stack, on the heap, in LV2 port
-   buffers, or in a ringbuffer.
+   All output is written to a user-provided buffer or sink function.  This
+   makes it popssible to create create atoms on the stack, on the heap, in LV2
+   port buffers, in a ringbuffer, or elsewhere, all using the same API.
 
    This entire API is realtime safe if used with a buffer or a realtime safe
-   sink, except lv2_atom_forge_init(), which is only realtime safe if the URI
+   sink, except lv2_atom_forge_init() which is only realtime safe if the URI
    map function is.
 
    Note these functions are all static inline, do not take their address.
