@@ -173,16 +173,6 @@ typedef struct {
 	/* Contents (a series of property bodies) follow here. */
 } LV2_Atom_Object;
 
-/** The complete header of an atom:Response. */
-typedef struct {
-	LV2_Atom atom;    /**< Atom header. */
-	uint32_t source;  /**< ID of message this is a response to (may be 0). */
-	uint32_t type;    /**< Specific response type URID (may be 0). */
-	uint32_t seq;     /**< Response sequence number, 0 for end. */
-	LV2_Atom body;    /**< Body atom header (may be empty). */
-	/* Body optionally follows here. */
-} LV2_Atom_Response;
-
 /** A time stamp in frames.  Note this type is NOT an LV2_Atom. */
 typedef struct {
 	uint32_t frames;     /**< Time in frames relative to this block. */
