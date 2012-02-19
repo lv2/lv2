@@ -149,7 +149,7 @@ handle_set_message(Sampler*               plugin,
                    const LV2_Atom_Object* obj)
 {
 	/* Get file path from message */
-	const LV2_Atom* file_path = get_msg_file_path(&plugin->uris, obj);
+	const LV2_Atom* file_path = read_set_file(&plugin->uris, obj);
 	if (!file_path) {
 		return false;
 	}
@@ -411,9 +411,9 @@ run(LV2_Handle instance,
 
 			/* Send a notification that we're using a new sample. */
 			lv2_atom_forge_audio_time(&plugin->forge, 0, 0);
-			write_set_filename_msg(&plugin->forge, uris,
-			                       plugin->sample->path,
-			                       plugin->sample->path_len);
+			write_set_file(&plugin->forge, uris,
+			               plugin->sample->path,
+			               plugin->sample->path_len);
 
 		} else {
 			fprintf(stderr, "Unknown message from worker\n");
@@ -488,7 +488,7 @@ extension_data(const char* uri)
 }
 
 static const LV2_Descriptor descriptor = {
-	SAMPLER_URI,
+	EG_SAMPLER_URI,
 	instantiate,
 	connect_port,
 	NULL, // activate,

@@ -1,6 +1,6 @@
 /*
   LV2 Sampler Example Plugin UI
-  Copyright 2011 David Robillard <d@drobilla.net>
+  Copyright 2011-2012 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -79,8 +79,8 @@ on_load_clicked(GtkWidget* widget,
 	uint8_t obj_buf[OBJ_BUF_SIZE];
 	lv2_atom_forge_set_buffer(&ui->forge, obj_buf, OBJ_BUF_SIZE);
 
-	LV2_Atom* msg = write_set_filename_msg(&ui->forge, &ui->uris,
-	                                       filename, strlen(filename));
+	LV2_Atom* msg = write_set_file(&ui->forge, &ui->uris,
+	                               filename, strlen(filename));
 
 	ui->write(ui->controller, 0, lv2_atom_total_size(msg),
 	          ui->uris.atom_eventTransfer,
@@ -158,7 +158,7 @@ port_event(LV2UI_Handle handle,
 		LV2_Atom* atom = (LV2_Atom*)buffer;
 		if (atom->type == ui->uris.atom_Blank) {
 			LV2_Atom_Object* obj      = (LV2_Atom_Object*)atom;
-			const LV2_Atom*  file_uri = get_msg_file_path(&ui->uris, obj);
+			const LV2_Atom*  file_uri = read_set_file(&ui->uris, obj);
 			if (!file_uri) {
 				fprintf(stderr, "Unknown message sent to UI.\n");
 				return;

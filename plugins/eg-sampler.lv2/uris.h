@@ -1,6 +1,6 @@
 /*
   LV2 Sampler Example Plugin
-  Copyright 2011 David Robillard <d@drobilla.net>
+  Copyright 2011-2012 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -20,14 +20,12 @@
 
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 
-#define NS_ATOM "http://lv2plug.in/ns/ext/atom#"
-#define NS_RDF  "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+#define LV2_MIDI__MidiEvent "http://lv2plug.in/ns/ext/midi#MidiEvent"
 
-#define SAMPLER_URI      "http://lv2plug.in/plugins/eg-sampler"
-#define MIDI_EVENT_URI   "http://lv2plug.in/ns/ext/midi#MidiEvent"
-#define FILE_URI         SAMPLER_URI "#file"
-#define APPLY_SAMPLE_URI SAMPLER_URI "#applySample"
-#define FREE_SAMPLE_URI  SAMPLER_URI "#freeSample"
+#define EG_SAMPLER_URI          "http://lv2plug.in/plugins/eg-sampler"
+#define EG_SAMPLER__file        EG_SAMPLER_URI "#file"
+#define EG_SAMPLER__applySample EG_SAMPLER_URI "#applySample"
+#define EG_SAMPLER__freeSample  EG_SAMPLER_URI "#freeSample"
 
 typedef struct {
 	LV2_URID atom_Blank;
@@ -49,10 +47,10 @@ map_sampler_uris(LV2_URID_Map* map, SamplerURIs* uris)
 	uris->atom_Path          = map->map(map->handle, LV2_ATOM__Path);
 	uris->atom_Resource      = map->map(map->handle, LV2_ATOM__Resource);
 	uris->atom_eventTransfer = map->map(map->handle, LV2_ATOM__eventTransfer);
-	uris->eg_applySample     = map->map(map->handle, APPLY_SAMPLE_URI);
-	uris->eg_file            = map->map(map->handle, FILE_URI);
-	uris->eg_freeSample      = map->map(map->handle, FREE_SAMPLE_URI);
-	uris->midi_Event         = map->map(map->handle, MIDI_EVENT_URI);
+	uris->eg_applySample     = map->map(map->handle, EG_SAMPLER__applySample);
+	uris->eg_file            = map->map(map->handle, EG_SAMPLER__file);
+	uris->eg_freeSample      = map->map(map->handle, EG_SAMPLER__freeSample);
+	uris->midi_Event         = map->map(map->handle, LV2_MIDI__MidiEvent);
 	uris->msg_Set            = map->map(map->handle, LV2_MESSAGE__Set);
 	uris->msg_body           = map->map(map->handle, LV2_MESSAGE__body);
 }
@@ -64,19 +62,21 @@ is_object_type(const SamplerURIs* uris, LV2_URID type)
 		|| type == uris->atom_Blank;
 }
 
+/**
+ * Write a message like the following to @p forge:
+ * [
+ *     a msg:Set ;
+ *     msg:body [
+ *         eg-sampler:file </home/me/foo.wav> ;
+ *     ] ;
+ * ]
+ */
 static inline LV2_Atom*
-write_set_filename_msg(LV2_Atom_Forge*    forge,
-                       const SamplerURIs* uris,
-                       const char*        filename,
-                       const size_t       filename_len)
+write_set_file(LV2_Atom_Forge*    forge,
+               const SamplerURIs* uris,
+               const char*        filename,
+               const size_t       filename_len)
 {
-	/* Send [
-	 *     a msg:Set ;
-	 *     msg:body [
-	 *         eg-sampler:filename </home/me/foo.wav> ;
-	 *     ] ;
-	 * ]
-	 */
 	LV2_Atom_Forge_Frame set_frame;
 	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
 		forge, &set_frame, 1, uris->msg_Set);
@@ -94,19 +94,19 @@ write_set_filename_msg(LV2_Atom_Forge*    forge,
 	return set;
 }
 
+/**
+ * Get the file path from a message like:
+ * [
+ *     a msg:Set ;
+ *     msg:body [
+ *         eg-sampler:file </home/me/foo.wav> ;
+ *     ] ;
+ * ]
+ */
 static inline const LV2_Atom*
-get_msg_file_path(const SamplerURIs*     uris,
-                  const LV2_Atom_Object* obj)
+read_set_file(const SamplerURIs*     uris,
+              const LV2_Atom_Object* obj)
 {
-	/* Message should look like this:
-	 * [
-	 *     a msg:Set ;
-	 *     msg:body [
-	 *         eg-sampler:file </home/me/foo.wav> ;
-	 *     ] ;
-	 * ]
-	 */
-
 	if (obj->type != uris->msg_Set) {
 		fprintf(stderr, "Ignoring unknown message type %d\n", obj->type);
 		return NULL;
