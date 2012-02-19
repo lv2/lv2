@@ -79,7 +79,7 @@ main()
 	LV2_URID eg_literal = urid_map(NULL, "http://example.org/literal");
 	LV2_URID eg_tuple   = urid_map(NULL, "http://example.org/tuple");
 	LV2_URID eg_vector  = urid_map(NULL, "http://example.org/vector");
-	LV2_URID eg_seq     = urid_map(NULL, "http: //example.org/seq");
+	LV2_URID eg_seq     = urid_map(NULL, "http://example.org/seq");
 
 #define BUF_SIZE  1024
 #define NUM_PROPS 14
