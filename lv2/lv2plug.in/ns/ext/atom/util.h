@@ -15,7 +15,7 @@
 */
 
 /**
-   @file atom-helpers.h Helper functions for the LV2 Atom extension.
+   @file util.h Helper functions for the LV2 Atom extension.
 
    Note these functions are all static inline, do not take their address.
 

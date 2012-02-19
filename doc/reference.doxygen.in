@@ -566,9 +566,9 @@ WARN_LOGFILE           =
 
 INPUT =  \
 	@LV2_SRCDIR@/doc/mainpage.dox \
-	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/atom-helpers.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/atom.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/forge.h \
+	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/util.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/contexts/contexts.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/data-access/data-access.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h \
