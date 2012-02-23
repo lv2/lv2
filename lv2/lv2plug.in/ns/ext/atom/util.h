@@ -417,4 +417,8 @@ lv2_object_get(const LV2_Atom_Object* object, ...)
    @}
 */
 
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
 #endif /* LV2_ATOM_UTIL_H */
