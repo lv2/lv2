@@ -335,13 +335,13 @@ run(LV2_Handle instance,
 		if (ev->body.type == uris->midi_Event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);
 			if ((data[0] & 0xF0) == 0x90) {
-				start_frame   = ev->time.audio.frames;
+				start_frame   = ev->time.frames;
 				plugin->frame = 0;
 				plugin->play  = true;
 			}
 		} else if (is_object_type(uris, ev->body.type)) {
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
-			if (obj->otype == uris->msg_Set) {
+			if (obj->body.otype == uris->msg_Set) {
 				/* Received a set message, send it to the worker thread. */
 				fprintf(stderr, "Queueing set message\n");
 				zix_ring_write(plugin->to_worker,
@@ -350,7 +350,7 @@ run(LV2_Handle instance,
 					               lv2_atom_total_size(&obj->atom)));
 				zix_sem_post(&plugin->signal);
 			} else {
-				fprintf(stderr, "Unknown object type %d\n", obj->otype);
+				fprintf(stderr, "Unknown object type %d\n", obj->body.otype);
 			}
 		} else {
 			fprintf(stderr, "Unknown event type %d\n", ev->body.type);
@@ -410,7 +410,7 @@ run(LV2_Handle instance,
 			plugin->sample = m.sample;
 
 			/* Send a notification that we're using a new sample. */
-			lv2_atom_forge_audio_time(&plugin->forge, 0, 0);
+			lv2_atom_forge_frame_time(&plugin->forge, 0);
 			write_set_file(&plugin->forge, uris,
 			               plugin->sample->path,
 			               plugin->sample->path_len);

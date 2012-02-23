@@ -107,8 +107,8 @@ static inline const LV2_Atom*
 read_set_file(const SamplerURIs*     uris,
               const LV2_Atom_Object* obj)
 {
-	if (obj->otype != uris->msg_Set) {
-		fprintf(stderr, "Ignoring unknown message type %d\n", obj->otype);
+	if (obj->body.otype != uris->msg_Set) {
+		fprintf(stderr, "Ignoring unknown message type %d\n", obj->body.otype);
 		return NULL;
 	}
 

@@ -94,43 +94,43 @@ main()
 	// eg_one = (Int32)1
 	lv2_atom_forge_property_head(&forge, eg_one, 0);
 	LV2_Atom_Int32* one = lv2_atom_forge_int32(&forge, 1);
-	if (one->value != 1) {
-		return test_fail("%d != 1\n", one->value);
+	if (one->body != 1) {
+		return test_fail("%d != 1\n", one->body);
 	}
 
 	// eg_two = (Int64)2
 	lv2_atom_forge_property_head(&forge, eg_two, 0);
 	LV2_Atom_Int64* two = lv2_atom_forge_int64(&forge, 2);
-	if (two->value != 2) {
-		return test_fail("%ld != 2\n", two->value);
+	if (two->body != 2) {
+		return test_fail("%ld != 2\n", two->body);
 	}
 
 	// eg_three = (Float)3.0
 	lv2_atom_forge_property_head(&forge, eg_three, 0);
 	LV2_Atom_Float* three = lv2_atom_forge_float(&forge, 3.0f);
-	if (three->value != 3) {
-		return test_fail("%f != 3\n", three->value);
+	if (three->body != 3) {
+		return test_fail("%f != 3\n", three->body);
 	}
 
 	// eg_four = (Double)4.0
 	lv2_atom_forge_property_head(&forge, eg_four, 0);
 	LV2_Atom_Double* four = lv2_atom_forge_double(&forge, 4.0);
-	if (four->value != 4) {
-		return test_fail("%ld != 4\n", four->value);
+	if (four->body != 4) {
+		return test_fail("%ld != 4\n", four->body);
 	}
 
 	// eg_true = (Bool)1
 	lv2_atom_forge_property_head(&forge, eg_true, 0);
 	LV2_Atom_Bool* t = lv2_atom_forge_bool(&forge, true);
-	if (t->value != 1) {
-		return test_fail("%ld != 1 (true)\n", t->value);
+	if (t->body != 1) {
+		return test_fail("%ld != 1 (true)\n", t->body);
 	}
 
 	// eg_false = (Bool)0
 	lv2_atom_forge_property_head(&forge, eg_false, 0);
 	LV2_Atom_Bool* f = lv2_atom_forge_bool(&forge, false);
-	if (f->value != 0) {
-		return test_fail("%ld != 0 (false)\n", f->value);
+	if (f->body != 0) {
+		return test_fail("%ld != 0 (false)\n", f->body);
 	}
 
 	// eg_path = (Path)"/foo/bar"
@@ -159,8 +159,8 @@ main()
 	LV2_URID eg_value = urid_map(NULL, "http://example.org/value");
 	lv2_atom_forge_property_head(&forge, eg_urid, 0);
 	LV2_Atom_URID* urid = lv2_atom_forge_urid(&forge, eg_value);
-	if (urid->id != eg_value) {
-		return test_fail("%u != %u\n", urid->id, eg_value);
+	if (urid->body != eg_value) {
+		return test_fail("%u != %u\n", urid->body, eg_value);
 	}
 
 	// eg_string = (String)"hello"
@@ -226,9 +226,9 @@ main()
 	lv2_atom_forge_property_head(&forge, eg_seq, 0);
 	LV2_Atom_Forge_Frame seq_frame;
 	LV2_Atom_Sequence* seq = (LV2_Atom_Sequence*)lv2_atom_forge_sequence_head(&forge, &seq_frame, 0);
-	lv2_atom_forge_audio_time(&forge, 0, 0);
+	lv2_atom_forge_frame_time(&forge, 0);
 	lv2_atom_forge_int32(&forge, 1);
-	lv2_atom_forge_audio_time(&forge, 1, 0);
+	lv2_atom_forge_frame_time(&forge, 1);
 	lv2_atom_forge_int32(&forge, 2);
 	lv2_atom_forge_pop(&forge, &seq_frame);
 
@@ -240,17 +240,18 @@ main()
 		return test_fail("1 == 2.0\n");
 	} else if (lv2_atom_equals((LV2_Atom*)one, (LV2_Atom*)&itwo)) {
 		return test_fail("1 == 2\n");
+	} else if (!lv2_atom_equals((LV2_Atom*)one, (LV2_Atom*)one)) {
+		return test_fail("1 != 1\n");
 	}
 
 	unsigned n_events = 0;
 	LV2_SEQUENCE_FOREACH(seq, i) {
 		LV2_Atom_Event* ev = lv2_sequence_iter_get(i);
-		if (ev->time.audio.frames != n_events
-		    || ev->time.audio.subframes != 0) {
+		if (ev->time.frames != n_events) {
 			return test_fail("Corrupt event %u has bad time\n", n_events);
 		} else if (ev->body.type != forge.Int32) {
 			return test_fail("Corrupt event %u has bad type\n", n_events);
-		} else if (((LV2_Atom_Int32*)&ev->body)->value != (int)n_events + 1) {
+		} else if (((LV2_Atom_Int32*)&ev->body)->body != (int)n_events + 1) {
 			return test_fail("Event %u != %d\n", n_events, n_events + 1);
 		}
 		++n_events;

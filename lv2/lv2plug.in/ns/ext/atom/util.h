@@ -62,12 +62,9 @@ lv2_atom_is_null(const LV2_Atom* atom)
 static inline bool
 lv2_atom_equals(const LV2_Atom* a, const LV2_Atom* b)
 {
-	return (a == b) || (
-		(a->type == b->type) &&
-		(a->size == b->size) &&
-		!memcmp(LV2_ATOM_CONTENTS(LV2_Atom, a),
-		        LV2_ATOM_CONTENTS(LV2_Atom, b),
-		        a->size));
+	return (a == b) || ((a->type == b->type) &&
+	                    (a->size == b->size) &&
+	                    !memcmp(a + 1, b + 1, a->size));
 }
 
 /**
@@ -78,14 +75,30 @@ lv2_atom_equals(const LV2_Atom* a, const LV2_Atom* b)
 /** An iterator over the elements of an LV2_Atom_Sequence. */
 typedef LV2_Atom_Event* LV2_Atom_Sequence_Iter;
 
-/** Get an iterator pointing to the first element in @p tup. */
+/** Get an iterator pointing to the first element in a Sequence body. */
+static inline LV2_Atom_Sequence_Iter
+lv2_sequence_body_begin(const LV2_Atom_Sequence_Body* body)
+{
+	return (LV2_Atom_Sequence_Iter)(body + 1);
+}
+
+/** Get an iterator pointing to the first element in a Sequence. */
 static inline LV2_Atom_Sequence_Iter
 lv2_sequence_begin(const LV2_Atom_Sequence* seq)
 {
-	return (LV2_Atom_Sequence_Iter)(LV2_ATOM_CONTENTS(LV2_Atom_Sequence, seq));
+	return (LV2_Atom_Sequence_Iter)(seq + 1);
 }
 
-/** Return true iff @p i has reached the end of @p tup. */
+/** Return true iff @p i has reached the end of @p body. */
+static inline bool
+lv2_sequence_body_is_end(const LV2_Atom_Sequence_Body* body,
+                         uint32_t                      size,
+                         LV2_Atom_Sequence_Iter        i)
+{
+	return (uint8_t*)i >= ((uint8_t*)body + size);
+}
+
+/** Return true iff @p i has reached the end of @p seq. */
 static inline bool
 lv2_sequence_is_end(const LV2_Atom_Sequence* seq, LV2_Atom_Sequence_Iter i)
 {
@@ -126,6 +139,12 @@ lv2_sequence_iter_get(LV2_Atom_Sequence_Iter i)
 	     !lv2_sequence_is_end(sequence, (iter)); \
 	     (iter) = lv2_sequence_iter_next(iter))
 
+/** A version of LV2_SEQUENCE_FOREACH for when only the body is available. */
+#define LV2_SEQUENCE_BODY_FOREACH(body, size, iter) \
+	for (LV2_Atom_Sequence_Iter (iter) = lv2_sequence_body_begin(body); \
+	     !lv2_sequence_body_is_end(body, size, (iter)); \
+	     (iter) = lv2_sequence_iter_next(iter))
+
 /**
    @}
    @name Tuple Iterator
@@ -142,11 +161,20 @@ lv2_tuple_begin(const LV2_Atom_Tuple* tup)
 	return (LV2_Atom_Tuple_Iter)(LV2_ATOM_BODY(tup));
 }
 
+/** Return true iff @p i has reached the end of @p body. */
+static inline bool
+lv2_atom_tuple_body_is_end(const void*         body,
+                           uint32_t            size,
+                           LV2_Atom_Tuple_Iter i)
+{
+	return (uint8_t*)i >= ((uint8_t*)body + size);
+}
+
 /** Return true iff @p i has reached the end of @p tup. */
 static inline bool
 lv2_tuple_is_end(const LV2_Atom_Tuple* tup, LV2_Atom_Tuple_Iter i)
 {
-	return (uint8_t*)i >= ((uint8_t*)tup + sizeof(LV2_Atom) + tup->atom.size);
+	return lv2_atom_tuple_body_is_end(LV2_ATOM_BODY(tup), tup->atom.size, i);
 }
 
 /** Return an iterator to the element following @p i. */
@@ -182,6 +210,12 @@ lv2_tuple_iter_get(LV2_Atom_Tuple_Iter i)
 	     !lv2_tuple_is_end(tuple, (iter)); \
 	     (iter) = lv2_tuple_iter_next(iter))
 
+/** A version of LV2_TUPLE_FOREACH for when only the body is available. */
+#define LV2_TUPLE_BODY_FOREACH(body, size, iter) \
+	for (LV2_Atom_Tuple_Iter (iter) = (LV2_Atom_Tuple_Iter)body; \
+	     !lv2_atom_tuple_body_is_end(body, size, (iter)); \
+	     (iter) = lv2_tuple_iter_next(iter))
+
 /**
    @}
    @name Object Iterator
@@ -191,11 +225,25 @@ lv2_tuple_iter_get(LV2_Atom_Tuple_Iter i)
 /** An iterator over the properties of an LV2_Atom_Object. */
 typedef LV2_Atom_Property_Body* LV2_Atom_Object_Iter;
 
+static inline LV2_Atom_Object_Iter
+lv2_object_body_begin(const LV2_Atom_Object_Body* body)
+{
+	return (LV2_Atom_Object_Iter)(body + 1);
+}
+
 /** Get an iterator pointing to the first property in @p obj. */
 static inline LV2_Atom_Object_Iter
 lv2_object_begin(const LV2_Atom_Object* obj)
 {
-	return (LV2_Atom_Object_Iter)(LV2_ATOM_CONTENTS(LV2_Atom_Object, obj));
+	return (LV2_Atom_Object_Iter)(obj + 1);
+}
+
+static inline bool
+lv2_atom_object_body_is_end(const LV2_Atom_Object_Body* body,
+                            uint32_t                    size,
+                            LV2_Atom_Object_Iter        i)
+{
+	return (uint8_t*)i >= ((uint8_t*)body + size);
 }
 
 /** Return true iff @p i has reached the end of @p obj. */
@@ -203,14 +251,6 @@ static inline bool
 lv2_object_is_end(const LV2_Atom_Object* obj, LV2_Atom_Object_Iter i)
 {
 	return (uint8_t*)i >= ((uint8_t*)obj + sizeof(LV2_Atom) + obj->atom.size);
-}
-
-/** Return true iff @p l points to the same property as @p r. */
-static inline bool
-lv2_object_iter_equals(const LV2_Atom_Object_Iter l,
-                       const LV2_Atom_Object_Iter r)
-{
-	return l == r;
 }
 
 /** Return an iterator to the property following @p i. */
@@ -246,6 +286,12 @@ lv2_object_iter_get(LV2_Atom_Object_Iter i)
 #define LV2_OBJECT_FOREACH(object, iter) \
 	for (LV2_Atom_Object_Iter (iter) = lv2_object_begin(object); \
 	     !lv2_object_is_end(object, (iter)); \
+	     (iter) = lv2_object_iter_next(iter))
+
+/** A version of LV2_OBJECT_FOREACH for when only the body is available. */
+#define LV2_OBJECT_BODY_FOREACH(body, size, iter) \
+	for (LV2_Atom_Object_Iter (iter) = lv2_object_body_begin(body); \
+	     !lv2_atom_object_body_is_end(body, size, (iter)); \
 	     (iter) = lv2_object_iter_next(iter))
 
 /**

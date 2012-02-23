@@ -30,14 +30,14 @@
 	rdfs:seeAlso <util.h> ,
 		<forge.h> ;
 	doap:release [
-		doap:revision "0.5" ;
-		doap:created "2012-02-18"
+		doap:revision "0.6" ;
+		doap:created "2012-02-22" ;
 	] ;
 	doap:maintainer [
 		a foaf:Person ;
 		foaf:name "David Robillard" ;
 		foaf:homepage <http://drobilla.net/> ;
-		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
+		rdfs:seeAlso <http://drobilla.net/drobilla.rdf> ;
 	] ;
 	lv2:documentation """
 <p>This extension defines a generic container for data, called an <q>Atom</q>,
@@ -177,9 +177,8 @@ string in any language or a value of any type.  A Literal has a
 encoding.  The length of the string data in bytes is <code>size -
 sizeof(LV2_Atom_Literal)</code>, including the terminating NULL character.  The
 <code>lang</code> field SHOULD be a URI of the form
-&lt;http://lexvo.org/id/term/LANG&gt; where LANG is an <a
-href="http://www.loc.gov/standards/iso639-2/">ISO 693-2</a> or <a
-href="http://www.loc.gov/standards/iso639-2/">ISO 693-3</a> language code.</p>
+&lt;http://lexvo.org/id/iso639-3/LANG&gt; where LANG is an <a
+href="http://www.loc.gov/standards/iso639-3/">ISO 693-3</a> language code.</p>
 
 <p>A Literal may have a <code>datatype</code> OR a <code>lang</code>, but never
 both.</p>
@@ -190,7 +189,7 @@ void set_to_hello_in_english(LV2_Atom_Literal* lit) {
      lit->atom.type = map(expand("atom:Literal"));
      lit->atom.size = 14;
      lit->datatype  = 0;
-     lit->lang      = map("http://lexvo.org/id/term/en");
+     lit->lang      = map("http://lexvo.org/id/iso639-3/eng");
      memcpy(LV2_ATOM_CONTENTS(LV2_Atom_Literal, lit),
             "Hello",
             sizeof("Hello"));  // Assumes enough space
@@ -265,7 +264,7 @@ struct VectorOf42Floats {
     uint32_t size;        // sizeof(LV2_Atom_Vector) + (42 * sizeof(float);
     uint32_t elem_count;  // 42
     uint32_t elem_type;   // map(expand("atom:Float"))
-    float    elems[32];
+    float    elems[42];
 };
 </pre>
 
@@ -347,14 +346,31 @@ atom:TimeUnit
 	rdfs:label "Time Unit" ;
 	lv2:documentation "<p>A unit for atom:Event time stamps.</p>" .
 
-atom:AudioFrames
+atom:frameTime
+	a rdfs:Property ;
+	rdfs:range xsd:decimal ;
+	rdfs:label "Frame time" ;
+	lv2:documentation """
+<p>Time stamp in audio frames.  Typically used for events.</p>
+""" .
+
+atom:beatTime
+	a rdfs:Property ;
+	rdfs:range xsd:decimal ;
+	rdfs:label "Beat time" ;
+	lv2:documentation """
+<p>Time stamp in beats.  Typically used for events.</p>
+""" .
+
+atom:Frames
 	a rdfs:Class ;
 	rdfs:subClassOf atom:TimeUnit ;
-	rdfs:label "Audio frames" ;
+	rdfs:label "Frames" ;
 	lv2:documentation """
 <p>Time in audio frames.  Converting this to absolute time depends on the
-sample rate.  When this is the stamp unit for an atom:Sequence, the events in
-that sequence have LV2_Atom_Audio_Time stamps (<code>event.time.audio</code>)</p>""" .
+sample rate.  When this is the stamp unit for an atom:Sequence, its events have
+int64_t time stamps (<code>event.time.frames</code>)</p>
+""" .
 
 atom:Beats
 	a rdfs:Class ;
