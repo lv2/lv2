@@ -159,12 +159,11 @@ handle_set_message(Sampler*               plugin,
 	if (sample) {
 		/* Loaded sample, send it to run() to be applied. */
 		const SampleMessage msg = {
-			{ plugin->uris.eg_applySample, sizeof(sample) },
+			{ sizeof(sample), plugin->uris.eg_applySample },
 			sample
 		};
-		zix_ring_write(plugin->from_worker,
-		               &msg,
-		               lv2_atom_pad_size(sizeof(msg)));
+		zix_ring_write(
+			plugin->from_worker, &msg, lv2_atom_pad_size(sizeof(msg)));
 	}
 
 	return true;
@@ -398,7 +397,7 @@ run(LV2_Handle instance,
 		if (m.atom.type == uris->eg_applySample) {
 			/* Send a message to the worker to free the current sample */
 			SampleMessage free_msg = {
-				{ uris->eg_freeSample, sizeof(plugin->sample) },
+				{ sizeof(plugin->sample), uris->eg_freeSample },
 				plugin->sample
 			};
 			zix_ring_write(plugin->to_worker,

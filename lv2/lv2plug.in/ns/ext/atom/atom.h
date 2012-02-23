@@ -87,8 +87,8 @@ typedef char lv2_atom_assert_double_fits_in_64_bits[
 
 /** The header of an atom:Atom. */
 typedef struct {
-	uint32_t type;  /**< Type of this atom (mapped URI). */
 	uint32_t size;  /**< Size in bytes, not including type and size. */
+	uint32_t type;  /**< Type of this atom (mapped URI). */
 } LV2_Atom;
 
 /** An atom:Int32 or atom:Bool.  May be cast to LV2_Atom. */
