@@ -289,12 +289,12 @@ instantiate(const LV2_Descriptor*     descriptor,
 	zix_ring_mlock(plugin->from_worker);
 
 	/* Load the default sample file */
-	const size_t path_len   = strlen(path);
-	const size_t file_len   = strlen(default_sample_file);
-	const size_t len        = strlen("file://") + path_len + file_len;
-	char*        sample_uri = (char*)malloc(len + 1);
-	snprintf(sample_uri, len + 1, "file://%s%s", path, default_sample_file);
-	plugin->sample = load_sample(plugin, sample_uri);
+	const size_t path_len    = strlen(path);
+	const size_t file_len    = strlen(default_sample_file);
+	const size_t len         = path_len + file_len;
+	char*        sample_path = (char*)malloc(len + 1);
+	snprintf(sample_path, len + 1, "%s%s", path, default_sample_file);
+	plugin->sample = load_sample(plugin, sample_path);
 
 	return (LV2_Handle)plugin;
 
