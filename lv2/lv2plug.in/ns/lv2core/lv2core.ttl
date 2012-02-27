@@ -449,6 +449,44 @@ port identification. The plugin author may change the values of this
 property without changing the Plugin URI.
 """ .
 
+lv2:relation a rdf:Property , owl:ObjectProperty ;
+    rdfs:domain lv2:Port ;
+    rdfs:label "relation" ;
+    lv2:documentation """
+<p>Indicates the relation the value of a port represents.  The value of this
+property must the URI of some relation (i.e. a predicate).</p>
+
+<p>For example, if a port has lv2:relation foo:volume, then the value of that
+port represents the foo:volume of the plugin instance.  This is used to make
+control ports meaningful and compatible with other methods of control and/or
+state representation.</p>
+
+<p>Plugins SHOULD NOT have several ports with the same lv2:relation.</p>
+""" .
+
+
+####################################
+## Generic Properties (Relations) ##
+####################################
+
+lv2:latency a rdf:Property , owl:DatatypeProperty ;
+    rdfs:label "latency" ;
+    lv2:documentation """
+<p>The latency introduced by the plugin (or similar), in frames.</p>
+""" .
+
+lv2:freeWheeling a rdf:Property , owl:DatatypePropety ;
+    rdfs:label "free-wheeling" ;
+    rdfs:range xsd:boolean ;
+    lv2:documentation """
+<p>Whether or not processing is currently free-wheeling.  If true, this means
+that all processing is happening as quickly as possible, not in real-time.
+When free-wheeling there is no relationship between the passage of real
+wall-clock time and the passage of time in the data being processed (e.g. audio
+frames).</p>
+""" .
+
+
 ###########################
 ## Port Range and Points ##
 ###########################

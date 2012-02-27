@@ -25,12 +25,13 @@
 	doap:shortdesc "An audio plugin interface specification." ;
 	doap:programming-language "C" ;
 	doap:release [
-		doap:revision "6.1" ;
-		doap:created "2012-02-01" ;
+		doap:revision "6.3" ;
+		doap:created "2012-02-27" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Fix LV2_SYMBOL_EXPORT and lv2_descriptor prototype for Windows."
+				rdfs:label "Fix LV2_SYMBOL_EXPORT and lv2_descriptor prototype for Windows." ;
+				rdfs:label "Add lv2:relation, lv2:latency, and lv2:freeWheeling."
 			]
 		]
 	] , [
