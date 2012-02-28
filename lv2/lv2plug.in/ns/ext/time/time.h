@@ -22,107 +22,25 @@
 #ifndef LV2_TIME_H
 #define LV2_TIME_H
 
-#include <stdint.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
-   Time states.
-*/
-typedef enum {
-	LV2_TIME_STOPPED  = 0,  /**< Transport halted */
-	LV2_TIME_ROLLING  = 1,  /**< Transport playing */
-} LV2_Time_State;
+#define LV2_TIME_URI "http://lv2plug.in/ns/ext/time"
 
-/**
-   Bits indicating properties of an LV2_Time_Position.
-*/
-typedef enum {
-	LV2_TIME_HAS_BBT = 1  /**< Has Bar, Beat, Tick */
-} LV2_Time_Flags;
-
-/**
-   Description of a position and/or tempo.
-
-   This struct is used as the payload of an event to notify the plugin about
-   time state, such as position and tempo.
-*/
-typedef struct {
-	/**
-	   @{
-	   @name Mandatory Fields
-	*/
-
-	/**
-	   Frame number on the timeline.
-	*/
-	uint64_t frame;
-
-	/**
-	   Bit field of LV2_Time_Flags values indicating which fields
-	   of this struct are valid.
-	*/
-	uint32_t flags;
-
-	/**
-	   Transport state.
-	*/
-	LV2_Time_State state;
-
-	/**
-	   @}
-	   @{
-	   @name LV2_TIME_BBT fields
-	   These fields are valid iff the LV2_TIME_BBT bit is set in @ref flags.
-	*/
-
-	/**
-	   Current bar.
-	   The first bar is number 0 (but should be represented in a UI as bar 1).
-	*/
-	int64_t bar;
-
-	/**
-	   Beat within the current bar.
-	   The first beat is number 0.
-	   Always <= @ref beats_per_bar.
-	*/
-	int32_t beat;
-
-	/**
-	   Tick within the current beat.
-	   The first tick is number 0.
-	   Always <= @ref ticks_per_beat.
-	*/
-	int32_t tick;
-
-	/**
-	   Number of beats per bar (top of time signature).
-	*/
-	int32_t beats_per_bar;
-
-	/**
-	   Type of note that counts as one beat (bottom of time signature).
-	*/
-	int32_t beat_type;
-
-	/**
-	   Number of ticks per beat.
-	   Typically this is a large integer with many even divisors.
-	*/
-	int32_t ticks_per_beat;
-
-	/**
-	   Current tempo, in beats per minute.
-	*/
-	double beats_per_minute;
-
-	/**
-	   @}
-	*/
-} LV2_Time_Position;
+#define LV2_TIME__Time            LV2_TIME_URI "#Time"
+#define LV2_TIME__Position        LV2_TIME_URI "#Position"
+#define LV2_TIME__Rate            LV2_TIME_URI "#Rate"
+#define LV2_TIME__position        LV2_TIME_URI "#position"
+#define LV2_TIME__barBeat         LV2_TIME_URI "#barBeat"
+#define LV2_TIME__bar             LV2_TIME_URI "#bar"
+#define LV2_TIME__beat            LV2_TIME_URI "#beat"
+#define LV2_TIME__beatUnit        LV2_TIME_URI "#beatUnit"
+#define LV2_TIME__beatsPerBar     LV2_TIME_URI "#beatsPerBar"
+#define LV2_TIME__beatsPerMinute  LV2_TIME_URI "#beatsPerMinute"
+#define LV2_TIME__frame           LV2_TIME_URI "#frame"
+#define LV2_TIME__framesPerSecond LV2_TIME_URI "#framesPerSecond"
+#define LV2_TIME__speed           LV2_TIME_URI "#speed"
 
 #ifdef __cplusplus
 }  /* extern "C" */
