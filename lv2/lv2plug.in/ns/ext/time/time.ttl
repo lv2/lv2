@@ -25,6 +25,10 @@
 	a lv2:Specification ;
 	doap:name "LV2 Time" ;
 	doap:shortdesc "Properties for describing time." ;
+	doap:release [
+		doap:revision "0.2" ;
+		doap:created "2012-02-28" ;
+	] ;
 	doap:maintainer [
 		a foaf:Person ;
 		foaf:name "David Robillard" ;
