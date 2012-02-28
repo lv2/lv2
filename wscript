@@ -143,10 +143,8 @@ def specgen(task):
     specdoc = lv2specgen.specgen(
         spec.abspath(),
         SPECGENDIR,
-        os.path.relpath('build/doc', bundle),
         os.path.relpath(STYLEPATH, bundle),
-        os.path.abspath('build'),
-        'doc/html/',
+        os.path.relpath('build/doc/html', bundle),
         TAGFILE,
         instances=True)
 
