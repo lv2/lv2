@@ -449,20 +449,35 @@ port identification. The plugin author may change the values of this
 property without changing the Plugin URI.
 """ .
 
-lv2:relation a rdf:Property , owl:ObjectProperty ;
+lv2:hasParameter a rdf:Property , owl:ObjectProperty ;
+    rdfs:domain lv2:Resource ;
+    rdfs:range rdf:Property ;
+    rdfs:label "has parameter" ;
+    lv2:documentation """
+<p>Indicates that a plugin or other resource has a certain <q>parameter</q>.  A
+parameter is simply a recognized property, i.e. a URI predicate and any type of
+object.  Parameters may be associated with a control port or controlled using
+another mechanism.  Parameter values may be part of an instance's state.</p>
+
+<p>Any property URI can be used as a parameter, no LV2 specific definition is
+required.  Existing vocabularies SHOULD be used whenever possible.</p>
+""" .
+
+lv2:isParameter a rdf:Property , owl:ObjectProperty ;
     rdfs:domain lv2:Port ;
+    rdfs:range rdf:Property ;
     rdfs:label "relation" ;
     lv2:documentation """
-<p>Indicates the relation the value of a port represents.  The value of this
-property must the URI of some relation (i.e. a predicate).</p>
+<p>Indicates that a port contains the value of a plugin parameter.</p>
 
-<p>For example, if a port has lv2:relation foo:volume, then the value of that
-port represents the foo:volume of the plugin instance.  This is used to make
-control ports meaningful and compatible with other methods of control and/or
-state representation.</p>
+<p>For example, if a port lv2:isParameter foo:volume, then the value of that
+port represents the foo:volume of the plugin instance.  Associating a port with
+a well-defined parameter gives the port's value meaning.  This allows it to be
+handled specially by the host and integrate with other property-based
+mechanisms (e.g. messages or plugin state).</p>
 
-<p>Plugins SHOULD NOT have several ports with the same lv2:relation.</p>
-""" .
+<p>For a given parameter, plugins SHOULD have at most one port per direction
+(lv2:InputPort or lv2:OutputPort).</p> """ .
 
 
 ####################################

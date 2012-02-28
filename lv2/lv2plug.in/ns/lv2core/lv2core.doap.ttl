@@ -31,7 +31,7 @@
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Fix LV2_SYMBOL_EXPORT and lv2_descriptor prototype for Windows." ;
-				rdfs:label "Add lv2:relation, lv2:latency, and lv2:freeWheeling."
+				rdfs:label "Add lv2:isParameter, lv2:hasParameter, lv2:latency, and lv2:freeWheeling."
 			]
 		]
 	] , [
