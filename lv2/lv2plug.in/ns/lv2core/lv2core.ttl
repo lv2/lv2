@@ -480,9 +480,9 @@ mechanisms (e.g. messages or plugin state).</p>
 (lv2:InputPort or lv2:OutputPort).</p> """ .
 
 
-####################################
-## Generic Properties (Relations) ##
-####################################
+################
+## Parameters ##
+################
 
 lv2:latency a rdf:Property , owl:DatatypeProperty ;
     rdfs:label "latency" ;
