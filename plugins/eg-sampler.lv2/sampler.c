@@ -87,9 +87,9 @@ typedef struct {
 	Sample* sample;
 
 	/* Ports */
-	float*                output_port;
-	LV2_Atom_Port_Buffer* control_port;
-	LV2_Atom_Port_Buffer* notify_port;
+	float*             output_port;
+	LV2_Atom_Sequence* control_port;
+	LV2_Atom_Sequence* notify_port;
 
 	/* URIs */
 	SamplerURIs uris;
@@ -218,10 +218,10 @@ connect_port(LV2_Handle instance,
 
 	switch (port) {
 	case SAMPLER_CONTROL:
-		plugin->control_port = (LV2_Atom_Port_Buffer*)data;
+		plugin->control_port = (LV2_Atom_Sequence*)data;
 		break;
 	case SAMPLER_RESPONSE:
-		plugin->notify_port = (LV2_Atom_Port_Buffer*)data;
+		plugin->notify_port = (LV2_Atom_Sequence*)data;
 		break;
 	case SAMPLER_OUT:
 		plugin->output_port = (float*)data;
@@ -329,7 +329,7 @@ run(LV2_Handle instance,
 	float*       output      = plugin->output_port;
 
 	/* Read incoming events */
-	LV2_SEQUENCE_FOREACH((LV2_Atom_Sequence*)plugin->control_port->data, i) {
+	LV2_SEQUENCE_FOREACH(plugin->control_port, i) {
 		LV2_Atom_Event* const ev = lv2_sequence_iter_get(i);
 		if (ev->body.type == uris->midi_Event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);
@@ -382,13 +382,18 @@ run(LV2_Handle instance,
 	}
 
 	/* Set up forge to write directly to notify output port buffer */
-	LV2_Atom* seq = plugin->notify_port->data;
+	const uint32_t notify_capacity = plugin->notify_port->atom.size;
+
+	LV2_Atom_Sequence* seq = (LV2_Atom_Sequence*)plugin->notify_port;
+	seq->atom.type = uris->atom_Sequence;
+	seq->atom.size = seq->body.unit = seq->body.pad = 0;
+
+	lv2_atom_forge_set_buffer(&plugin->forge,
+	                          LV2_ATOM_CONTENTS(LV2_Atom_Sequence, seq),
+	                          notify_capacity);
+
 	LV2_Atom_Forge_Frame seq_frame;
-	lv2_atom_forge_push(&plugin->forge, &seq_frame, seq);
-	lv2_atom_forge_set_buffer(
-		&plugin->forge,
-		LV2_ATOM_CONTENTS(LV2_Atom_Sequence, seq),
-		plugin->notify_port->capacity);
+	lv2_atom_forge_push(&plugin->forge, &seq_frame, &seq->atom);
 
 	/* Read messages from worker thread */
 	SampleMessage  m;

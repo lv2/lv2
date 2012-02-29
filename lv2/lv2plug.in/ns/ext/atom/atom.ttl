@@ -109,6 +109,17 @@ atom with both <code>type</code> <em>and</em> <code>size</code> 0 is
 <q>null</q>, which is not considered a Reference.</p>
 """ .
 
+atom:Chunk
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Atom ;
+	rdfs:label "Chunk of memory" ;
+	lv2:documentation """
+<p>A chunk of memory with undefined contents.  This type is used to indicate a
+certain amount of space is available.  For example, output ports with a
+variably sized type are connected to a Chunk so the plugin knows the size of
+the buffer available for writing.</p>
+""" .
+
 atom:Number
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
@@ -405,24 +416,16 @@ atom:AtomPort
 	rdfs:label "Atom Port" ;
 	lv2:documentation """
 <p>A port which contains an lv2:Atom.  Ports of this type are connected to an
-LV2_Atom_Port_Buffer, which contains a pointer to the port's Atom contents, as
-well as other metadata (such as capacity, for output ports with variably sized
-types).  The host MUST set all fields of LV2_Atom_Port_Buffer to appropriate
-values before calling the plugin's run method.  LV2_Atom_Port_Buffer::capacity
-must be set to the available space for the <em>body</em> of LV2_Atom_Port_Buffer::data,
-i.e. the maximum possible value for its <code>size</code> field, which does
-not include the LV2_Atom header.</p>
+LV2_Atom with a type specified by atom:bufferType.</p>
 
 <p>This is an abstract port type with incomplete semantics which can not be
 used directly as a port type.  Atom ports should be either a atom:ValuePort or
 a atom:MessagePort.</p>
 
-<p>Before calling a method on a plugin that writes to an AtomPort output, the
-host MUST set the size of the Atom in that output to the amount of available
-memory immediately following the Atom header.  The plugin MUST write a valid
-Atom to that port; leaving it untouched is illegal.  If there is no reasonable
-value to write to the port, the plugin MUST write null (the Atom with both
-<code>type</code> and <code>size</code> 0).</p>
+<p>Output ports with a variably sized type should be initialised by the host
+before every run to an atom:Chunk with size set to the available space.  The
+plugin must set the size and type of this atom appropriately when writing
+output.</p>
 """ .
 
 atom:ValuePort
@@ -473,7 +476,7 @@ number of times).</p>
 atom:bufferType
 	a rdf:Property ;
 	rdfs:domain atom:AtomPort ;
-	rdfs:label "buffer type" ;
+	rdfs:label "Buffer type" ;
 	lv2:documentation """
 <p>Indicates that an AtomPort may be connected to a certain Atom type.  A port
 MAY support several buffer types.  The host MUST NOT connect a port to an Atom
@@ -489,18 +492,14 @@ connected directly to an LV2_Atom_Double value is described like so:</p>
     ] .
 </pre>
 
-<p>Note this property only indicates the atom types a port may be directly
-connected to, it is not <q>recursive</q>.  If a port can be connected to a
-collection, use atom:supports to indicate which element types are understood.
-If a port supports heterogeneous collections (collections that can contain
-several types of elements at once), implementations MUST gracefully handle any
-types that are present in the collection, even if those types are not
-explicitly supported.</p>
+<p>This property only describes the types a port may be <em>directly</em>
+connected to.  It says nothing about the expected contents of containers.  For
+that, use atom:supports.</p>
 """ .
 
 atom:supports
 	a rdf:Property ;
-	rdfs:label "supports" ;
+	rdfs:label "Supports" ;
 	lv2:documentation """
 <p>Indicates that a particular Atom type is supported.</p>
 
@@ -509,8 +508,8 @@ atom:supports
 <q>recursively</q> where collections are involved.</p>
 
 <p>In particular, this property can be used to describe which event types are
-supported by a port.  For example, a port that receives MIDI events is
-described like so:</p>
+supported or <q>understood</q> by a port.  For example, a port that receives
+MIDI events is described like so:</p>
 
 <pre class="turtle-code">
 &lt;plugin&gt;
