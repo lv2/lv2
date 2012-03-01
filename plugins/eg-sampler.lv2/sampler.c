@@ -384,16 +384,12 @@ run(LV2_Handle instance,
 	/* Set up forge to write directly to notify output port buffer */
 	const uint32_t notify_capacity = plugin->notify_port->atom.size;
 
-	LV2_Atom_Sequence* seq = (LV2_Atom_Sequence*)plugin->notify_port;
-	seq->atom.type = uris->atom_Sequence;
-	seq->atom.size = seq->body.unit = seq->body.pad = 0;
-
 	lv2_atom_forge_set_buffer(&plugin->forge,
-	                          LV2_ATOM_CONTENTS(LV2_Atom_Sequence, seq),
+	                          (uint8_t*)plugin->notify_port,
 	                          notify_capacity);
 
 	LV2_Atom_Forge_Frame seq_frame;
-	lv2_atom_forge_push(&plugin->forge, &seq_frame, &seq->atom);
+	lv2_atom_forge_sequence_head(&plugin->forge, &seq_frame, 0);
 
 	/* Read messages from worker thread */
 	SampleMessage  m;
