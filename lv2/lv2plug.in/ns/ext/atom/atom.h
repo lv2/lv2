@@ -54,6 +54,7 @@
 #define LV2_ATOM__URID          LV2_ATOM_URI "#URID"
 #define LV2_ATOM__ValuePort     LV2_ATOM_URI "#ValuePort"
 #define LV2_ATOM__Vector        LV2_ATOM_URI "#Vector"
+#define LV2_ATOM__childType     LV2_ATOM_URI "#childType"
 #define LV2_ATOM__beatTime      LV2_ATOM_URI "#beatTime"
 #define LV2_ATOM__bufferType    LV2_ATOM_URI "#bufferType"
 #define LV2_ATOM__eventTransfer LV2_ATOM_URI "#eventTransfer"
@@ -152,8 +153,8 @@ typedef struct {
 
 /** The body of an atom:Vector. */
 typedef struct {
-	uint32_t elem_count;  /**< The number of elements in the vector */
-	uint32_t elem_type;   /**< The type of each element in the vector */
+	uint32_t child_size;  /**< The size of each element in the vector. */
+	uint32_t child_type;  /**< The type of each element in the vector. */
 	/* Contents (a series of packed atom bodies) follow here. */
 } LV2_Atom_Vector_Body;
 

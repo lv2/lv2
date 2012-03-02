@@ -262,26 +262,24 @@ atom:Vector
 	lv2:documentation """
 <p>A homogeneous series of atom bodies with equivalent type and size.</p>
 
-<p>An LV2_Atom_Vector is a 32-bit <code>elem_count</code> and
-<code>elem_type</code> followed by <code>elem_count</code> atom bodies of type
-<code>elem_type</code>.  The element type must be a fixed size atom:Atom type,
-i.e. the size of each element is the vector's <code>size /
-elem_count</code>.</p>
+<p>An LV2_Atom_Vector is a 32-bit <code>child_size</code> and
+<code>child_type</code> followed by <code>size / child_size</code> atom
+bodies.</p>
 
 <p>For example, an atom:Vector containing 42 elements of type atom:Float:</p>
 <pre class="c-code">
 struct VectorOf42Floats {
+    uint32_t size;        // sizeof(LV2_Atom_Vector_Body) + (42 * sizeof(float);
     uint32_t type;        // map(expand("atom:Vector"))
-    uint32_t size;        // sizeof(LV2_Atom_Vector) + (42 * sizeof(float);
-    uint32_t elem_count;  // 42
-    uint32_t elem_type;   // map(expand("atom:Float"))
+    uint32_t child_size;  // sizeof(float)
+    uint32_t child_type;  // map(expand("atom:Float"))
     float    elems[42];
 };
 </pre>
 
 <p>Note that it is possible to construct a valid Atom for each element
 of the vector, even by an implementation which does not understand
-<code>elem_type</code>.</p>
+<code>child_type</code>.</p>
 """ .
 
 atom:Tuple
@@ -496,6 +494,11 @@ connected directly to an LV2_Atom_Double value is described like so:</p>
 connected to.  It says nothing about the expected contents of containers.  For
 that, use atom:supports.</p>
 """ .
+
+atom:childType
+	a rdf:Property ;
+	rdfs:label "Child type" ;
+	rdfs:comment "The type of a container's children." .
 
 atom:supports
 	a rdf:Property ;

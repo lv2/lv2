@@ -79,10 +79,11 @@ main()
 	LV2_URID eg_literal = urid_map(NULL, "http://example.org/literal");
 	LV2_URID eg_tuple   = urid_map(NULL, "http://example.org/tuple");
 	LV2_URID eg_vector  = urid_map(NULL, "http://example.org/vector");
+	LV2_URID eg_vector2 = urid_map(NULL, "http://example.org/vector2");
 	LV2_URID eg_seq     = urid_map(NULL, "http://example.org/seq");
 
 #define BUF_SIZE  1024
-#define NUM_PROPS 14
+#define NUM_PROPS 15
 
 	uint8_t buf[BUF_SIZE];
 	lv2_atom_forge_set_buffer(&forge, buf, BUF_SIZE);
@@ -230,10 +231,24 @@ main()
 	int32_t elems[] = { 1, 2, 3, 4 };
 	LV2_Atom_Vector* vector = (LV2_Atom_Vector*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_vector(
-			&forge, 4, forge.Int32, sizeof(int32_t), elems));;
+			&forge, sizeof(int32_t), forge.Int32, 4, elems));
 	void* vec_body = LV2_ATOM_CONTENTS(LV2_Atom_Vector, vector);
 	if (memcmp(elems, vec_body, sizeof(elems))) {
 		return test_fail("Corrupt vector\n");
+	}
+
+	// eg_vector2 = (Vector<Int32>)1,2,3,4
+	lv2_atom_forge_property_head(&forge, eg_vector2, 0);
+	LV2_Atom_Forge_Frame vec_frame;
+	LV2_Atom_Vector* vector2 = (LV2_Atom_Vector*)lv2_atom_forge_deref(
+		&forge, lv2_atom_forge_vector_head(
+			&forge, &vec_frame, sizeof(int32_t), forge.Int32));
+	for (unsigned i = 0; i < sizeof(elems) / sizeof(int32_t); ++i) {
+		lv2_atom_forge_int32(&forge, elems[i]);
+	}
+	lv2_atom_forge_pop(&forge, &vec_frame);
+	if (!lv2_atom_equals(&vector->atom, &vector2->atom)) {
+		return test_fail("Vector != Vector2\n");
 	}
 
 	// eg_seq = (Sequence)1, 2
@@ -302,6 +317,7 @@ main()
 		const LV2_Atom* literal;
 		const LV2_Atom* tuple;
 		const LV2_Atom* vector;
+		const LV2_Atom* vector2;
 		const LV2_Atom* seq;
 	} matches;
 
@@ -321,6 +337,7 @@ main()
 		{ eg_literal, &matches.literal },
 		{ eg_tuple,   &matches.tuple },
 		{ eg_vector,  &matches.vector },
+		{ eg_vector2, &matches.vector2 },
 		{ eg_seq,     &matches.seq },
 		LV2_OBJECT_QUERY_END
 	};
@@ -354,6 +371,8 @@ main()
 			return test_fail("Bad match tuple\n");
 		} else if (!lv2_atom_equals((LV2_Atom*)vector, matches.vector)) {
 			return test_fail("Bad match vector\n");
+		} else if (!lv2_atom_equals((LV2_Atom*)vector, matches.vector2)) {
+			return test_fail("Bad match vector2\n");
 		} else if (!lv2_atom_equals((LV2_Atom*)seq, matches.seq)) {
 			return test_fail("Bad match sequence\n");
 		}
@@ -372,6 +391,7 @@ main()
 		                           eg_literal, &matches.literal,
 		                           eg_tuple,   &matches.tuple,
 		                           eg_vector,  &matches.vector,
+		                           eg_vector2, &matches.vector2,
 		                           eg_seq,     &matches.seq,
 		                           0);
 	}
