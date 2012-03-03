@@ -145,14 +145,16 @@ lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size)
 /**
    Set the sink function where @p forge will write output.
 
-   The return value of forge functions is a pointer to the written data, which
-   is used for updating parent sizes.  To enable this, the sink function must
-   return a valid pointer to a contiguous LV2_Atom header.  For ringbuffers,
-   this should be possible as long as the size of the buffer is a multiple of
-   sizeof(LV2_Atom), since atoms are always aligned.  When using a ringbuffer,
-   the returned pointers may not point to a complete atom (including body).
-   The user must take care to only use these return values in a way compatible
-   with the sink used.
+   The return value of forge functions is an LV2_Atom_Forge_Ref which is an
+   integer type safe to use as a pointer but is otherwise opaque.  The sink
+   function must return a ref that can be dereferenced to access as least
+   sizeof(LV2_Atom) bytes of the written data, so sizes can be updated.  For
+   ringbuffers, this should be possible as long as the size of the buffer is a
+   multiple of sizeof(LV2_Atom), since atoms are always aligned.
+
+   Note that 0 is an invalid reference, so if you are using a buffer offset be
+   sure to offset it such that 0 is never a valid reference.  You will get
+   confusing errors otherwise.
 */
 static inline void
 lv2_atom_forge_set_sink(LV2_Atom_Forge*            forge,
