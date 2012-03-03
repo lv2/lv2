@@ -201,7 +201,7 @@ static inline LV2_Atom*
 lv2_atom_forge_deref(LV2_Atom_Forge* forge, LV2_Atom_Forge_Ref ref)
 {
 	if (forge->buf) {
-		return (LV2_Atom*)(forge->buf + ref);
+		return (LV2_Atom*)ref;
 	} else {
 		return forge->deref(forge->handle, ref);
 	}
@@ -219,7 +219,7 @@ lv2_atom_forge_raw(LV2_Atom_Forge* forge, const void* data, uint32_t size)
 	if (forge->sink) {
 		out = forge->sink(forge->handle, data, size);
 	} else {
-		out = forge->offset;
+		out = (LV2_Atom_Forge_Ref)forge->buf + forge->offset;
 		uint8_t* mem = forge->buf + forge->offset;
 		if (forge->offset + size > forge->size) {
 			return 0;
@@ -316,7 +316,7 @@ lv2_atom_forge_double(LV2_Atom_Forge* forge, double val)
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_bool(LV2_Atom_Forge* forge, bool val)
 {
-	const LV2_Atom_Bool a = { { sizeof(val), forge->Bool }, val };
+	const LV2_Atom_Bool a = { { sizeof(int32_t), forge->Bool }, val ? 1 : 0 };
 	return lv2_atom_forge_primitive(forge, &a.atom);
 }
 

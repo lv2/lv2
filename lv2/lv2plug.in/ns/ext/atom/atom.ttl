@@ -237,9 +237,10 @@ atom:URI
 	rdfs:label "URI string" ;
 	lv2:documentation """
 <p>A URI string.  This is identical in format to atom:String, except the string
-is a URI.  This is useful when a URI is needed but mapping is inappropriate.
-Since the ability to distinguish URIs from plain strings is often necessary,
-URIs MUST NOT be transmitted as atom:String.</p>
+is a URI.  This is useful when a URI is needed but mapping is inappropriate,
+for example with temporary or relative URIs.  Since the ability to distinguish
+URIs from plain strings is often necessary, URIs MUST NOT be transmitted as
+atom:String.</p>
 
 <p>This is not strictly a URI, since UTF-8 is allowed.  Escaping and related
 issues issues are the host's responsibility.</p>
