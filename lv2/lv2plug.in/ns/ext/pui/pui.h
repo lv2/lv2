@@ -28,7 +28,8 @@
  ***********************************************************************/
 
 /**
-   @file pui.h C API for the LV2 UI extension <http://lv2plug.in/ns/ext/pui>.
+   @file pui.h
+   C API for the LV2 UI extension <http://lv2plug.in/ns/ext/pui>.
 
    This file specifies a C API for communication between an LV2 host and an
    LV2 UI. The interface is similar to the one used for actual LV2 plugins.
