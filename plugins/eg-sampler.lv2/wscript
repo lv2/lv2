@@ -18,7 +18,6 @@ def options(opt):
 
 def configure(conf):
     conf.load('compiler_c')
-    conf.line_just = 51
     autowaf.configure(conf)
     autowaf.display_header('Sampler Configuration')
 
