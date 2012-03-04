@@ -308,10 +308,25 @@ message is equivalent to:</p>
 </pre>
 """ .
 
+msg:subject
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain msg:Message .
+
 msg:add
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain msg:Method .
+	rdfs:domain msg:Message .
+
+msg:remove
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain msg:Message .
+
+msg:destination
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain msg:Message .
 
 msg:body
 	a rdf:Property ,
