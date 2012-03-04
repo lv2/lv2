@@ -999,6 +999,8 @@ def load_tags(path, docdir):
 
             name     = getChildText(cn, 'name')
             filename = getChildText(cn, 'filename')
+            if not filename.endswith('.html'):
+                filename += '.html'
 
             linkmap[name] = linkTo(name, filename)
 
@@ -1158,7 +1160,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
 
     other_files = ''
     if os.path.exists(os.path.abspath(header_path)):
-        other_files += '<a href="' + docdir + '/html/%s">API documentation</a>, ' % (
+        other_files += '<a href="' + docdir + '/%s">API documentation</a>, ' % (
             basename + '_8h.html')
 
         header = basename + '.h'
@@ -1178,7 +1180,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
         if uri.endswith('.h'):
             name = os.path.basename(uri)
             other_files += '(<a href="%s">docs</a>) ' % (
-                docdir + '/html/' + name.replace('.', '_8') + '.html')
+                docdir + '/' + name.replace('.', '_8') + '.html')
         other_files += ', '
 
     if other_files.endswith(', '):
