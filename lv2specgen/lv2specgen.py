@@ -995,8 +995,7 @@ def load_tags(path, docdir):
     for cn in root.childNodes:
         if (cn.nodeType == xml.dom.Node.ELEMENT_NODE
             and cn.tagName == 'compound'
-            and cn.getAttribute('kind') != 'page'
-            and cn.getAttribute('kind') != 'file'):
+            and cn.getAttribute('kind') != 'page'):
 
             name     = getChildText(cn, 'name')
             filename = getChildText(cn, 'filename')
