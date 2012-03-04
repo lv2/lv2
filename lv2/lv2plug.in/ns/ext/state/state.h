@@ -90,6 +90,14 @@ typedef enum {
 
 } LV2_State_Flags;
 
+/** A status code for state functions. */
+typedef enum {
+	LV2_STATE_SUCCESS       = 0,  /**< Completed successfully. */
+	LV2_STATE_ERR_UNKNOWN   = 1,  /**< Unknown error. */
+	LV2_STATE_ERR_BAD_TYPE  = 2,  /**< Failed due to unsupported type. */
+	LV2_STATE_ERR_BAD_FLAGS = 3   /**< Failed due to unsupported flags. */
+} LV2_State_Status;
+
 /**
    A host-provided function to store a property.
    @param handle Must be the handle passed to LV2_State_Interface.save().
@@ -113,7 +121,8 @@ typedef enum {
    The host MAY fail to store a property for whatever reason, but SHOULD
    store any property that is LV2_STATE_IS_POD and LV2_STATE_IS_PORTABLE.
    Implementations SHOULD use the types from the LV2 Atom extension
-   (http://lv2plug.in/ns/ext/atom) wherever possible.
+   (http://lv2plug.in/ns/ext/atom) wherever possible.  The plugin SHOULD
+   attempt to fall-back and avoid the error if possible.
 
    Note that @p size MUST be > 0, and @p value MUST point to a valid region of
    memory @p size bytes long (this is required to make restore unambiguous).
@@ -121,12 +130,13 @@ typedef enum {
    The plugin MUST NOT attempt to use this function outside of the
    LV2_State_Interface.restore() context.
 */
-typedef int (*LV2_State_Store_Function)(LV2_State_Handle handle,
-                                        uint32_t         key,
-                                        const void*      value,
-                                        size_t           size,
-                                        uint32_t         type,
-                                        uint32_t         flags);
+typedef LV2_State_Status (*LV2_State_Store_Function)(
+	LV2_State_Handle handle,
+	uint32_t         key,
+	const void*      value,
+	size_t           size,
+	uint32_t         type,
+	uint32_t         flags);
 
 /**
    A host-provided function to retrieve a property.
@@ -146,11 +156,12 @@ typedef int (*LV2_State_Store_Function)(LV2_State_Handle handle,
    returns.  The plugin MUST NOT attempt to use this function, or any value
    returned from it, outside of the LV2_State_Interface.restore() context.
 */
-typedef const void* (*LV2_State_Retrieve_Function)(LV2_State_Handle handle,
-                                                   uint32_t         key,
-                                                   size_t*          size,
-                                                   uint32_t*        type,
-                                                   uint32_t*        flags);
+typedef const void* (*LV2_State_Retrieve_Function)(
+	LV2_State_Handle handle,
+	uint32_t         key,
+	size_t*          size,
+	uint32_t*        type,
+	uint32_t*        flags);
 
 /**
    State Interface (Extension Data).
