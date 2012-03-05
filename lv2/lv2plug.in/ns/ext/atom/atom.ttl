@@ -188,8 +188,9 @@ string in any language or a value of any type.  A Literal has a
 encoding.  The length of the string data in bytes is <code>size -
 sizeof(LV2_Atom_Literal)</code>, including the terminating NULL character.  The
 <code>lang</code> field SHOULD be a URI of the form
-&lt;http://lexvo.org/id/iso639-3/LANG&gt; where LANG is an <a
-href="http://www.loc.gov/standards/iso639-3/">ISO 693-3</a> language code.</p>
+&lt;http://lexvo.org/id/iso639-3/LANG&gt; or
+&lt;http://lexvo.org/id/iso639-1/LANG&gt; where LANG is a 3-character ISO 693-3
+language code, or a 2-character ISO 693-1 language code, respectively.</p>
 
 <p>A Literal may have a <code>datatype</code> OR a <code>lang</code>, but never
 both.</p>
@@ -200,7 +201,7 @@ void set_to_hello_in_english(LV2_Atom_Literal* lit) {
      lit->atom.type = map(expand("atom:Literal"));
      lit->atom.size = 14;
      lit->datatype  = 0;
-     lit->lang      = map("http://lexvo.org/id/iso639-3/eng");
+     lit->lang      = map("http://lexvo.org/id/iso639-1/en");
      memcpy(LV2_ATOM_CONTENTS(LV2_Atom_Literal, lit),
             "Hello",
             sizeof("Hello"));  // Assumes enough space
