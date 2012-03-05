@@ -358,7 +358,7 @@ atom:TimeUnit
 	lv2:documentation "<p>A unit for atom:Event time stamps.</p>" .
 
 atom:frameTime
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:range xsd:decimal ;
 	rdfs:label "Frame time" ;
 	lv2:documentation """
@@ -366,7 +366,7 @@ atom:frameTime
 """ .
 
 atom:beatTime
-	a rdfs:Property ;
+	a rdf:Property ;
 	rdfs:range xsd:decimal ;
 	rdfs:label "Beat time" ;
 	lv2:documentation """
