@@ -1,5 +1,5 @@
 # LV2 MIDI Extension
-# Copyright 2008-2011 David Robillard <d@drobilla.net>
+# Copyright 2008-2012 David Robillard <d@drobilla.net>
 # Copyright 2006 Lars Luthman <lars.luthman@gmail.com>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
@@ -14,14 +14,16 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix dcs:  <http://ontologi.es/doap-changeset#> .
 @prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix dcs:  <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix ev:   <http://lv2plug.in/ns/ext/event#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix midi: <http://lv2plug.in/ns/ext/midi#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <http://drobilla.net/drobilla#me>
 	a foaf:Person ;
@@ -39,21 +41,30 @@ _:larsl
 	a lv2:Specification ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 MIDI" ;
-	doap:shortdesc "A data type for raw MIDI." ;
+	doap:shortdesc "A normalised definition of raw MIDI." ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:developer _:larsl ;
 	doap:release [
+		doap:revision "1.5" ;
+		doap:created "2012-02-19" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add class definitions for various message types." ;
+			] ;
+		] ;
+	] , [
 		doap:revision "1.4" ;
 		doap:created "2011-11-21" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-midi-1.4.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Update packaging."
+				rdfs:label "Update packaging." ;
 			] , [
-				rdfs:label "Improve documentation."
-			]
-		]
+				rdfs:label "Improve documentation." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "1.2" ;
 		doap:created "2011-05-26" ;
@@ -61,11 +72,11 @@ _:larsl
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add build system for installation."
+				rdfs:label "Add build system for installation." ;
 			] , [
-				rdfs:label "Switch to ISC license."
-			]
-		]
+				rdfs:label "Switch to ISC license." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "1.0" ;
 		doap:created "2010-10-04" ;
@@ -73,21 +84,102 @@ _:larsl
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
+				rdfs:label "Initial release." ;
+			] ;
+		] ;
 	] ;
 	lv2:documentation """
 <p>This extension defines a data type for a MIDI message, midi:MidiEvent, which
-is normalized for fast and convenient processing by plugins.  It is
-particularly useful as the payload of an <a
+is normalised for fast and convenient real-time processing.  MIDI is the
+<q>Musical Instrument Digital Interface</q>, a ubiquitous binary standard for
+controlling digital music devices.</p>
+
+<p>For plugins that process MIDI (or other situations where MIDI is sent via a
+generic transport) the main type defined here, midi:MidiEvent, can be mapped to
+an integer and used as the type of an LV2 <a
 href="http://lv2plug.in/ns/ext/atom#Atom">Atom</a> or <a
 href="http://lv2plug.in/ns/ext/event#Event">Event</a>.</p>
+
+<p>This specification also defines a complete machine readable description of
+the MIDI standard (except for standard controller numbers).  These descriptions
+are detailed enough to express any MIDI message in RDF.  Message types are
+described down to the byte level, so all the information required to convert
+between binary MIDI and RDF MIDI is present.  This specification thus serves as
+both a human and machine readable description of the MIDI specification.</p>
 """ .
+
+midi:ActiveSense
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemRealtime ;
+	rdfs:label "Active sense message. " ;
+	midi:status "FE"^^xsd:hexBinary .
+
+midi:Aftertouch
+	a rdfs:Class ;
+	rdfs:subClassOf midi:VoiceMessage ;
+	rdfs:label "Aftertouch (note pressure) message." ;
+	midi:statusMask "A0"^^xsd:hexBinary ;
+	midi:chunk [
+		midi:byteNumber 0 ;
+		midi:property midi:noteNumber ;
+	] , [
+		midi:byteNumber 1 ;
+		midi:property midi:pressure ;
+	] .
+
+midi:Bender
+	a rdfs:Class ;
+	rdfs:subClassOf midi:VoiceMessage ;
+	rdfs:label "Bender (pitch wheel) message." ;
+	midi:statusMask "E0"^^xsd:hexBinary ;
+	midi:chunk [
+		midi:byteNumber 0 ,
+			1 ;
+		midi:property midi:benderValue ;
+	] .
+
+midi:ChannelPressure
+	a rdfs:Class ;
+	rdfs:subClassOf midi:VoiceMessage ;
+	rdfs:label "Channel pressure message." ;
+	midi:statusMask "D0"^^xsd:hexBinary ;
+	midi:chunk [
+		midi:byteNumber 0 ;
+		midi:property midi:pressure ;
+	] .
+
+midi:Chunk
+	a rdfs:Class ;
+	rdfs:comment "A series of contiguous bytes (usually one) in a message." .
+
+midi:Clock
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemRealtime ;
+	rdfs:label "Clock message. " ;
+	midi:status "F8"^^xsd:hexBinary .
+
+midi:Continue
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemRealtime ;
+	rdfs:label "Continue message. " ;
+	midi:status "FB"^^xsd:hexBinary .
+
+midi:Controller
+	a rdfs:Class ;
+	rdfs:subClassOf midi:VoiceMessage ;
+	rdfs:label "Controller change message." ;
+	midi:statusMask "B0"^^xsd:hexBinary ;
+	midi:chunk [
+		midi:byteNumber 0 ;
+		midi:property midi:controllerNumber ;
+	] , [
+		midi:byteNumber 1 ;
+		midi:property midi:controllerValue ;
+	] .
 
 midi:MidiEvent
 	a rdfs:Class ;
-	rdfs:label "LV2 MIDI message." ;
+	rdfs:label "MIDI message." ;
 	rdfs:subClassOf ev:Event ,
 		atom:Atom ;
 	lv2:documentation """
@@ -113,3 +205,197 @@ restrictions to simplify handling:</p>
   messages, and the reader may assume that all events are valid.</li>
 </ul>
 """ .
+
+midi:NoteOff
+	a rdfs:Class ;
+	rdfs:subClassOf midi:VoiceMessage ;
+	rdfs:label "Note off message." ;
+	midi:statusMask "80"^^xsd:hexBinary ;
+	midi:chunk [
+		midi:byteNumber 0 ;
+		midi:property midi:noteNumber ;
+	] , [
+		midi:byteNumber 1 ;
+		midi:property midi:velocity ;
+	] .
+
+midi:NoteOn
+	a rdfs:Class ;
+	rdfs:subClassOf midi:VoiceMessage ;
+	rdfs:label "Note on message." ;
+	midi:statusMask "90"^^xsd:hexBinary ;
+	midi:chunk [
+		midi:byteNumber 0 ;
+		midi:property midi:noteNumber ;
+	] , [
+		midi:byteNumber 1 ;
+		midi:property midi:velocity ;
+	] .
+
+midi:ProgramChange
+	a rdfs:Class ;
+	rdfs:subClassOf midi:VoiceMessage ;
+	rdfs:label "Program change message." ;
+	midi:statusMask "C0"^^xsd:hexBinary ;
+	midi:chunk [
+		midi:byteNumber 0 ;
+		midi:property midi:programNumber ;
+	] .
+
+midi:QuarterFrame
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemCommon ;
+	rdfs:label "MTC quarter frame message." ;
+	midi:status "F1"^^xsd:hexBinary .
+
+midi:Reset
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemRealtime ;
+	rdfs:label "Reset message. " ;
+	midi:status "FF"^^xsd:hexBinary .
+
+midi:SongPosition
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemCommon ;
+	rdfs:label "Song position pointer message." ;
+	midi:status "F2"^^xsd:hexBinary ;
+	midi:chunk [
+		midi:byteNumber 0 ,
+			1 ;
+		midi:property midi:songPosition ;
+	] .
+
+midi:SongSelect
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemCommon ;
+	rdfs:label "Song select message." ;
+	midi:status "F3"^^xsd:hexBinary .
+
+midi:Start
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemRealtime ;
+	rdfs:label "Start message. " ;
+	midi:status "FA"^^xsd:hexBinary .
+
+midi:Stop
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemRealtime ;
+	rdfs:label "Stop message. " ;
+	midi:status "FC"^^xsd:hexBinary .
+
+midi:SystemCommon
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemMessage ;
+	rdfs:label "System common message." .
+
+midi:SystemExclusive
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemMessage ;
+	rdfs:label "System exclusive message." ;
+	midi:statusMask "F0"^^xsd:hexBinary .
+
+midi:SystemMessage
+	a rdfs:Class ;
+	rdfs:subClassOf midi:MidiEvent ;
+	rdfs:label "System message." ;
+	midi:statusMask "F0"^^xsd:hexBinary .
+
+midi:SystemRealtime
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemMessage ;
+	rdfs:label "System realtime message." .
+
+midi:Tick
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemRealtime ;
+	rdfs:label "Tick message. " ;
+	midi:status "F9"^^xsd:hexBinary .
+
+midi:TuneRequest
+	a rdfs:Class ;
+	rdfs:subClassOf midi:SystemCommon ;
+	rdfs:label "Tune request message." ;
+	midi:status "F6"^^xsd:hexBinary .
+
+midi:VoiceMessage
+	a rdfs:Class ;
+	rdfs:subClassOf midi:MidiEvent ;
+	rdfs:label "Voice message." ;
+	midi:statusMask "F0"^^xsd:hexBinary .
+
+midi:benderValue
+	a rdf:Property ;
+	rdfs:range xsd:short ;
+	rdfs:comment "The value of a pitch bender (-8192 to 8192)." .
+
+midi:byteNumber
+	a rdf:Property ;
+	rdfs:domain midi:Chunk ;
+	rdfs:range xsd:unsignedByte ;
+	rdfs:comment "The 0-based index of a byte which is part of this chunk." .
+
+midi:chunk
+	a rdf:Property ;
+	rdfs:range xsd:byte ,
+		xsd:hexBinary ;
+	rdfs:comment "The exact status byte for a message of this type." .
+
+midi:controllerNumber
+	a rdf:Property ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The numberic ID of a controller (0 to 127)." .
+
+midi:controllerValue
+	a rdf:Property ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The value of a controller (0 to 127)." .
+
+midi:noteNumber
+	a rdf:Property ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The numeric ID of a controller (0 to 127)." .
+
+midi:pressure
+	a rdf:Property ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "Key pressure (0 to 127)." .
+
+midi:programNumber
+	a rdf:Property ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The numeric ID of a program (0 to 127)." .
+
+midi:property
+	a rdf:Property ;
+	rdfs:domain midi:Chunk ;
+	rdfs:range rdf:Property ;
+	rdfs:comment "The property this chunk represents." .
+
+midi:songNumber
+	a rdf:Property ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The numeric ID of a song (0 to 127)." .
+
+midi:songPosition
+	a rdf:Property ;
+	rdfs:range xsd:short ;
+	rdfs:comment "Song position in MIDI beats (16th notes) (-8192 to 8192)." .
+
+midi:status
+	a rdf:Property ;
+	rdfs:range xsd:byte ,
+		xsd:hexBinary ;
+	rdfs:comment "The exact status byte for a message of this type." .
+
+midi:statusMask
+	a rdf:Property ;
+	rdfs:range xsd:byte ,
+		xsd:hexBinary ;
+	rdfs:comment """
+The status byte for a message of this type on channel 1, i.e. a status byte
+with the lower nibble set to zero.""" .
+
+midi:velocity
+	a rdf:Property ;
+	rdfs:range xsd:byte ;
+	rdfs:comment "The velocity of a note message (0 to 127)." .
