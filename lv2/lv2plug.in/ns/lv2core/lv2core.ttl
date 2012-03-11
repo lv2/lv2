@@ -1,7 +1,7 @@
 # This document describes LV2, a plugin interface.
 # See <http://lv2plug.in> for more information.
 # 
-# Copyright 2006-2011 Steve Harris, David Robillard
+# Copyright 2006-2012 Steve Harris, David Robillard
 # 
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above

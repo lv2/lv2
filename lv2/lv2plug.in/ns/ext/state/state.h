@@ -28,19 +28,20 @@
 
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
+#define LV2_STATE_URI    "http://lv2plug.in/ns/ext/state"
+#define LV2_STATE_PREFIX LV2_STATE_URI "#"
+
+#define LV2_STATE__Interface LV2_STATE_PREFIX "Interface"
+#define LV2_STATE__State     LV2_STATE_PREFIX "State"
+#define LV2_STATE__makePath  LV2_STATE_PREFIX "makePath"
+#define LV2_STATE__mapPath   LV2_STATE_PREFIX "mapPath"
+#define LV2_STATE__state     LV2_STATE_PREFIX "state"
+
 #ifdef __cplusplus
 extern "C" {
 #else
 #    include <stdbool.h>
 #endif
-
-#define LV2_STATE_URI "http://lv2plug.in/ns/ext/state"
-
-#define LV2_STATE__Interface LV2_STATE_URI "#Interface"
-#define LV2_STATE__State     LV2_STATE_URI "#State"
-#define LV2_STATE__makePath  LV2_STATE_URI "#makePath"
-#define LV2_STATE__mapPath   LV2_STATE_URI "#mapPath"
-#define LV2_STATE__state     LV2_STATE_URI "#state"
 
 typedef void* LV2_State_Handle;
 typedef void* LV2_State_Map_Path_Handle;

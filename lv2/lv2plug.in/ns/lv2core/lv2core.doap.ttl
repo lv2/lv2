@@ -25,8 +25,8 @@
 	doap:shortdesc "An audio plugin interface specification." ;
 	doap:programming-language "C" ;
 	doap:release [
-		doap:revision "6.3" ;
-		doap:created "2012-02-27" ;
+		doap:revision "6.5" ;
+		doap:created "2012-03-10" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
