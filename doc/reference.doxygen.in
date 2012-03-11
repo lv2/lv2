@@ -583,7 +583,6 @@ INPUT =  \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/reference/reference.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/state/state.h \
-	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/string-port/string-port.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/time/time.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/ui-resize/ui-resize.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/uri-map/uri-map.h \
