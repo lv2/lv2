@@ -426,7 +426,7 @@ run(LV2_Handle instance,
 static void
 save(LV2_Handle                instance,
      LV2_State_Store_Function  store,
-     void*                     callback_data,
+     LV2_State_Handle          handle,
      uint32_t                  flags,
      const LV2_Feature* const* features)
 {
@@ -441,7 +441,7 @@ save(LV2_Handle                instance,
 	char*    apath  = map_path->abstract_path(map_path->handle,
 	                                          plugin->sample->path);
 
-	store(callback_data,
+	store(handle,
 	      plugin->uris.eg_file,
 	      apath,
 	      strlen(plugin->sample->path) + 1,
@@ -454,7 +454,7 @@ save(LV2_Handle                instance,
 static void
 restore(LV2_Handle                  instance,
         LV2_State_Retrieve_Function retrieve,
-        void*                       callback_data,
+        LV2_State_Handle            handle,
         uint32_t                    flags,
         const LV2_Feature* const*   features)
 {
@@ -465,7 +465,7 @@ restore(LV2_Handle                  instance,
 	uint32_t valflags;
 
 	const void* value = retrieve(
-		callback_data,
+		handle,
 		plugin->uris.eg_file,
 		&size, &type, &valflags);
 
@@ -481,7 +481,7 @@ const void*
 extension_data(const char* uri)
 {
 	static const LV2_State_Interface state = { save, restore };
-	if (!strcmp(uri, LV2_STATE_URI "#Interface")) {
+	if (!strcmp(uri, LV2_STATE__Interface)) {
 		return &state;
 	}
 	return NULL;
