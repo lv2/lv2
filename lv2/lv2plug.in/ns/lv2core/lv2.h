@@ -348,6 +348,12 @@ typedef struct _LV2_Descriptor {
 
 /**
    Prototype for plugin accessor function.
+
+   This is part of the old discovery API, which has been replaced due to being
+   inadequate for some plugins.  It is limited because the bundle path is not
+   available during discovery, and it relies on non-portable shared library
+   constructors/destructors.  However, this API is still supported and plugins
+   are not required to migrate.
  
    Plugins are discovered by hosts using RDF data (not by loading libraries).
    See http://lv2plug.in for details on the discovery process, though most
@@ -371,10 +377,72 @@ LV2_SYMBOL_EXPORT
 const LV2_Descriptor * lv2_descriptor(uint32_t index);
 
 /**
-   Type of the lv2_descriptor() function in a plugin library.
+   Type of the lv2_descriptor() function in a library (old discovery API).
 */
 typedef const LV2_Descriptor *
 (*LV2_Descriptor_Function)(uint32_t index);
+
+/**
+   Handle for a library descriptor.
+*/
+typedef void* LV2_Lib_Handle;
+
+/**
+   Descriptor for a plugin library.
+
+   To access a plugin library, the host creates an LV2_Lib_Descriptor via the
+   lv2_lib_descriptor() function in the shared object.
+*/
+typedef struct {
+	/**
+	   Opaque library data which must be passed as the first parameter to all
+	   the methods of this struct.
+	*/
+	LV2_Lib_Handle handle;
+
+	/**
+	   The total size of this struct.  This allows for this struct to be
+	   expanded in the future if necessary.  This MUST be set by the library to
+	   sizeof(LV2_Lib_Descriptor).  The host MUST NOT access any fields of this
+	   struct beyond get_plugin() unless this field indicates they are present.
+	*/
+	uint32_t size;
+
+	/**
+	   Destroy this library descriptor and free all related resources.
+	*/
+	void (*cleanup)(LV2_Lib_Handle handle);
+
+	/**
+	   Plugin accessor.
+
+	   Plugins are accessed by index using values from 0 upwards.  Out of range
+	   indices MUST result in this function returning NULL, so the host can
+	   enumerate plugins by increasing @a index until NULL is returned.
+	*/
+	const LV2_Descriptor * (*get_plugin)(LV2_Lib_Handle handle,
+	                                     uint32_t       index);
+} LV2_Lib_Descriptor;
+
+/**
+   Prototype for library accessor function.
+
+   This is the entry point for a plugin library.  Hosts load this symbol from
+   the library and call this function to obtain a library descriptor which can
+   be used to access all the contained plugins.  The returned object must not
+   be destroyed (using LV2_Lib_Descriptor::cleanup()) until all plugins loaded
+   from that library have been destroyed.
+*/
+const LV2_Lib_Descriptor *
+lv2_lib_descriptor(const char *               bundle_path,
+                   const LV2_Feature *const * features);
+
+/**
+   Type of the lv2_lib_descriptor() function in an LV2 library.
+*/
+typedef const LV2_Lib_Descriptor *
+(*LV2_Lib_Descriptor_Function)(const char *               bundle_path,
+                               const LV2_Feature *const * features);
 
 #ifdef __cplusplus
 }

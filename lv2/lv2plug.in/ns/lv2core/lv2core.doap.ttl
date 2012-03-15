@@ -25,15 +25,18 @@
 	doap:shortdesc "An audio plugin interface specification." ;
 	doap:programming-language "C" ;
 	doap:release [
-		doap:revision "6.5" ;
-		doap:created "2012-03-10" ;
+		doap:revision "6.7" ;
+		doap:created "2012-03-15" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Fix LV2_SYMBOL_EXPORT and lv2_descriptor prototype for Windows." ;
-				rdfs:label "Add lv2:isParameter, lv2:hasParameter, lv2:latency, and lv2:freeWheeling."
-			]
-		]
+			] , [
+				rdfs:label "Add lv2:isParameter, lv2:hasParameter, lv2:latency, and lv2:freeWheeling." ;
+			] , [
+				rdfs:label "Add new discovery API which allows libraries to read bundle files during discovery, makes library construction/destruction explicit, and adds extensibility to prevent future breakage." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "6.0" ;
 		doap:created "2011-11-21" ;
@@ -41,19 +44,19 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Rename core.lv2 and lv2.ttl to lv2core.lv2 and lv2core.ttl to adhere to modern conventions."
+				rdfs:label "Rename core.lv2 and lv2.ttl to lv2core.lv2 and lv2core.ttl to adhere to modern conventions." ;
 			] , [
-				rdfs:label "Add lv2:extensionData and lv2:ExtensionData for plugins to indicate that they support some URI for extension_data()."
+				rdfs:label "Add lv2:extensionData and lv2:ExtensionData for plugins to indicate that they support some URI for extension_data()." ;
 			] , [
-				rdfs:label "Remove lv2config in favour of the simple convention that specifications install headers to standard URI-based paths."
+				rdfs:label "Remove lv2config in favour of the simple convention that specifications install headers to standard URI-based paths." ;
 			] , [
-				rdfs:label "Switch to the ISC license, a simple BSD-style license (with permission of all contributors to lv2.h and its ancestor, ladspa.h)."
+				rdfs:label "Switch to the ISC license, a simple BSD-style license (with permission of all contributors to lv2.h and its ancestor, ladspa.h)." ;
 			] , [
-				rdfs:label "Make lv2core.ttl a valid OWL 2 DL ontology."
+				rdfs:label "Make lv2core.ttl a valid OWL 2 DL ontology." ;
 			] , [
-				rdfs:label "Improve documentation."
-			]
-		]
+				rdfs:label "Improve documentation." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "4.0" ;
 		doap:created "2011-03-18" ;
@@ -61,33 +64,33 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Make doap:license suggested, but not required (for wrappers)."
+				rdfs:label "Make doap:license suggested, but not required (for wrappers)." ;
 			] , [
-				rdfs:label "Define lv2:binary (MUST be in manifest.ttl)."
+				rdfs:label "Define lv2:binary (MUST be in manifest.ttl)." ;
 			] , [
-				rdfs:label "Define lv2:minorVersion and lv2:microVersion (MUST be in manifest.ttl)."
+				rdfs:label "Define lv2:minorVersion and lv2:microVersion (MUST be in manifest.ttl)." ;
 			] , [
-				rdfs:label "Define lv2:documentation and use it to document lv2core."
+				rdfs:label "Define lv2:documentation and use it to document lv2core." ;
 			] , [
-				rdfs:label "Add lv2:FunctionPlugin and lv2:ConstantPlugin classes."
+				rdfs:label "Add lv2:FunctionPlugin and lv2:ConstantPlugin classes." ;
 			] , [
-				rdfs:label "Move lv2:AmplifierPlugin under lv2:DynamicsPlugin."
+				rdfs:label "Move lv2:AmplifierPlugin under lv2:DynamicsPlugin." ;
 			] , [
-				rdfs:label "Loosen domain of lv2:optionalFeature and lv2:requiredFeature (to allow re-use in extensions)."
+				rdfs:label "Loosen domain of lv2:optionalFeature and lv2:requiredFeature (to allow re-use in extensions)." ;
 			] , [
-				rdfs:label "Add generic lv2:Resource and lv2:PluginBase classes."
+				rdfs:label "Add generic lv2:Resource and lv2:PluginBase classes." ;
 			] , [
-				rdfs:label "Fix definition of lv2:minimum etc. (used for values, not scale points)."
+				rdfs:label "Fix definition of lv2:minimum etc. (used for values, not scale points)." ;
 			] , [
-				rdfs:label "More precisely define properties with OWL."
+				rdfs:label "More precisely define properties with OWL." ;
 			] , [
-				rdfs:label "Move project metadata to manifest."
+				rdfs:label "Move project metadata to manifest." ;
 			] , [
-				rdfs:label "Add lv2:enumeration port property."
+				rdfs:label "Add lv2:enumeration port property." ;
 			] , [
-				rdfs:label "Define run() pre-roll special case (sample_count == 0)."
-			]
-		]
+				rdfs:label "Define run() pre-roll special case (sample_count == 0)." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "3.0" ;
 		doap:created "2008-11-08" ;
@@ -95,13 +98,13 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Require that serialisations refer to ports by symbol rather than index."
+				rdfs:label "Require that serialisations refer to ports by symbol rather than index." ;
 			] , [
-				rdfs:label "Minor stylistic changes to lv2.ttl."
+				rdfs:label "Minor stylistic changes to lv2.ttl." ;
 			] , [
-				rdfs:label "No header changes."
-			]
-		]
+				rdfs:label "No header changes." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "2.0" ;
 		doap:created "2008-02-10" ;
@@ -109,9 +112,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
+				rdfs:label "Initial release." ;
+			] ;
+		] ;
 	] ;
 	doap:developer <http://plugin.org.uk/swh.xrdf#me> ,
 		<http://drobilla.net/drobilla#me> ;
