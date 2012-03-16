@@ -29,12 +29,12 @@
 		a foaf:Person ;
 		rdfs:seeAlso <http://drobilla.net/drobilla.rdf> ;
 		foaf:homepage <http://drobilla.net/> ;
-		foaf:name "David Robillard"
+		foaf:name "David Robillard" ;
 	] ;
 	doap:name "LV2 Patch" ;
 	doap:release [
 		doap:created "2012-02-08" ;
-		doap:revision "0.1"
+		doap:revision "0.1" ;
 	] ;
 	doap:shortdesc "Messages for accessing and manipulating properties." ;
 	lv2:documentation """
@@ -77,8 +77,8 @@ vocabularies may be used.</p>
 patch:Ack
 	a rdfs:Class ;
 	rdfs:subClassOf patch:Response ;
-    rdfs:label "Ack" ;
-    lv2:documentation """
+	rdfs:label "Ack" ;
+	lv2:documentation """
 <p>An acknowledgement that a request has been successfully processed.  This is
 returned as a reply when a specific reply type is not necessary or
 appropriate.</p>
@@ -95,8 +95,8 @@ patch:Delete
 patch:Error
 	a rdfs:Class ;
 	rdfs:subClassOf patch:Response ;
-    rdfs:label "Error" ;
-    lv2:documentation """
+	rdfs:label "Error" ;
+	lv2:documentation """
 <p>A response indicating an error processing a request.</p>
 """ .
 
@@ -159,7 +159,7 @@ patch:Insert
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty patch:subject
+		owl:onProperty patch:subject ;
 	] ;
 	lv2:documentation """
 <p>Insert the patch:body at patch:subject.  If the subject does not exist, it is
@@ -168,9 +168,9 @@ adds properties, it never removes them.  The user must take care that multiple
 values are not set for properties which should only have one value.</p>
 """ .
 
-patch:Patch
+patch:Message
 	a rdfs:Class ;
-	rdfs:label "Patch" .
+	rdfs:label "Message" .
 
 patch:Move
 	a rdfs:Class ;
@@ -194,18 +194,19 @@ exist or the destination already exists.</p>
 
 patch:Patch
 	a rdfs:Class ;
-	rdfs:subClassOf patch:Request , [
+	rdfs:subClassOf patch:Request ,
+	[
 		a owl:Restriction ;
 		owl:minCardinality 1 ;
-		owl:onProperty patch:subject
+		owl:onProperty patch:subject ;
 	] , [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty patch:add
+		owl:onProperty patch:add ;
 	] , [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty patch:remove
+		owl:onProperty patch:remove ;
 	] ;
 	lv2:documentation """
 <p>A method for modifying the properties of an object.</p>
@@ -238,7 +239,7 @@ patch:Put
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty patch:subject
+		owl:onProperty patch:subject ;
 	] ;
 	lv2:documentation """
 <p>Put the patch:body as the patch:subject.  If the subject does not already exist,
@@ -249,7 +250,7 @@ an updated version of it, and the previous version is replaced.</p>
 patch:Request
 	a rdfs:Class ;
 	rdfs:label "Request" ;
-	rdfs:subClassOf patch:Patch ;
+	rdfs:subClassOf patch:Message ;
 	lv2:documentation """
 <p>A request.  A request may have a patch:subject property, which indicates which
 resource the request applies to.  The subject may be omitted in contexts where
@@ -258,7 +259,7 @@ it is implicit (e.g. the recipient is the subject).</p>
 
 patch:Response
 	a rdfs:Class ;
-	rdfs:subClassOf patch:Patch ;
+	rdfs:subClassOf patch:Message ;
 	rdfs:label "Response" ;
 	lv2:documentation """
 <p>A response to a method.</p>
@@ -266,10 +267,11 @@ patch:Response
 
 patch:Set
 	a rdfs:Class ;
-	rdfs:subClassOf patch:Request , [
+	rdfs:subClassOf patch:Request ,
+	[
 		a owl:Restriction ;
 		owl:cardinality 1 ;
-		owl:onProperty patch:body
+		owl:onProperty patch:body ;
 	] ;
 	lv2:documentation """
 <p>A method for setting properties of an object to unique values.</p>
@@ -311,31 +313,31 @@ patch is equivalent to:</p>
 patch:subject
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain patch:Patch .
+	rdfs:domain patch:Message .
 
 patch:add
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain patch:Patch .
+	rdfs:domain patch:Message .
 
 patch:remove
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain patch:Patch .
+	rdfs:domain patch:Message .
 
 patch:destination
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain patch:Patch .
+	rdfs:domain patch:Message .
 
 patch:body
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain patch:Patch ;
+	rdfs:domain patch:Message ;
 	lv2:documentation """
-<p>The body of a patch.</p>
+<p>The body of a message.</p>
 
-<p>The details of this property's value depend on the type of patch it is a
+<p>The details of this property's value depend on the type of message it is a
 part of.</p>
 """ .
 
