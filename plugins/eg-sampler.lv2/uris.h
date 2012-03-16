@@ -37,8 +37,8 @@ typedef struct {
 	LV2_URID eg_file;
 	LV2_URID eg_freeSample;
 	LV2_URID midi_Event;
-	LV2_URID msg_Set;
-	LV2_URID msg_body;
+	LV2_URID patch_Set;
+	LV2_URID patch_body;
 } SamplerURIs;
 
 static inline void
@@ -53,8 +53,8 @@ map_sampler_uris(LV2_URID_Map* map, SamplerURIs* uris)
 	uris->eg_file            = map->map(map->handle, EG_SAMPLER__file);
 	uris->eg_freeSample      = map->map(map->handle, EG_SAMPLER__freeSample);
 	uris->midi_Event         = map->map(map->handle, LV2_MIDI__MidiEvent);
-	uris->msg_Set            = map->map(map->handle, LV2_MESSAGE__Set);
-	uris->msg_body           = map->map(map->handle, LV2_MESSAGE__body);
+	uris->patch_Set          = map->map(map->handle, LV2_PATCH__Set);
+	uris->patch_body         = map->map(map->handle, LV2_PATCH__body);
 }
 
 static inline bool
@@ -67,8 +67,8 @@ is_object_type(const SamplerURIs* uris, LV2_URID type)
 /**
  * Write a message like the following to @p forge:
  * [
- *     a msg:Set ;
- *     msg:body [
+ *     a patch:Set ;
+ *     patch:body [
  *         eg-sampler:file </home/me/foo.wav> ;
  *     ] ;
  * ]
@@ -81,9 +81,9 @@ write_set_file(LV2_Atom_Forge*    forge,
 {
 	LV2_Atom_Forge_Frame set_frame;
 	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
-		forge, &set_frame, 1, uris->msg_Set);
+		forge, &set_frame, 1, uris->patch_Set);
 
-	lv2_atom_forge_property_head(forge, uris->msg_body, 0);
+	lv2_atom_forge_property_head(forge, uris->patch_body, 0);
 	LV2_Atom_Forge_Frame body_frame;
 	lv2_atom_forge_blank(forge, &body_frame, 2, 0);
 
@@ -99,8 +99,8 @@ write_set_file(LV2_Atom_Forge*    forge,
 /**
  * Get the file path from a message like:
  * [
- *     a msg:Set ;
- *     msg:body [
+ *     a patch:Set ;
+ *     patch:body [
  *         eg-sampler:file </home/me/foo.wav> ;
  *     ] ;
  * ]
@@ -109,14 +109,14 @@ static inline const LV2_Atom*
 read_set_file(const SamplerURIs*     uris,
               const LV2_Atom_Object* obj)
 {
-	if (obj->body.otype != uris->msg_Set) {
+	if (obj->body.otype != uris->patch_Set) {
 		fprintf(stderr, "Ignoring unknown message type %d\n", obj->body.otype);
 		return NULL;
 	}
 
 	/* Get body of message. */
 	const LV2_Atom_Object* body = NULL;
-	lv2_object_get(obj, uris->msg_body, &body, 0);
+	lv2_object_get(obj, uris->patch_body, &body, 0);
 	if (!body) {
 		fprintf(stderr, "Malformed set message has no body.\n");
 		return NULL;

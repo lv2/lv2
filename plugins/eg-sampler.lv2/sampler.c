@@ -41,7 +41,7 @@
 
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
-#include "lv2/lv2plug.in/ns/ext/message/message.h"
+#include "lv2/lv2plug.in/ns/ext/patch/patch.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
@@ -340,7 +340,7 @@ run(LV2_Handle instance,
 			}
 		} else if (is_object_type(uris, ev->body.type)) {
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
-			if (obj->body.otype == uris->msg_Set) {
+			if (obj->body.otype == uris->patch_Set) {
 				/* Received a set message, send it to the worker thread. */
 				fprintf(stderr, "Queueing set message\n");
 				zix_ring_write(plugin->to_worker,

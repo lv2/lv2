@@ -35,7 +35,7 @@
 			atom:MessagePort ;
 		atom:bufferType atom:Sequence ;
 		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ,
-			<http://lv2plug.in/ns/ext/message#Message> ;
+			<http://lv2plug.in/ns/ext/patch#Message> ;
 		lv2:index 0 ;
 		lv2:symbol "control" ;
 		lv2:name "Control"
@@ -43,7 +43,7 @@
 		a lv2:OutputPort ,
 			atom:MessagePort ;
 		atom:bufferType atom:Sequence ;
-		atom:supports <http://lv2plug.in/ns/ext/message#Message> ;
+		atom:supports <http://lv2plug.in/ns/ext/patch#Message> ;
 		lv2:index 1 ;
 		lv2:symbol "notify" ;
 		lv2:name "Notify"

@@ -27,10 +27,10 @@ def configure(conf):
                           uselib_store='LV2_URID')
         autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-atom',
                           uselib_store='LV2_ATOM')
+        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-patch',
+                          uselib_store='LV2_PATCH')
         autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-state',
                           uselib_store='LV2_STATE')
-        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-message',
-                          uselib_store='LV2_MESSAGE')
 
     conf.check(function_name='mlock',
                header_name='sys/mman.h',
