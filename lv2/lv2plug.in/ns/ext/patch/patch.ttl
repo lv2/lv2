@@ -310,22 +310,7 @@ patch is equivalent to:</p>
 </pre>
 """ .
 
-patch:subject
-	a rdf:Property ,
-		owl:ObjectProperty ;
-	rdfs:domain patch:Message .
-
 patch:add
-	a rdf:Property ,
-		owl:ObjectProperty ;
-	rdfs:domain patch:Message .
-
-patch:remove
-	a rdf:Property ,
-		owl:ObjectProperty ;
-	rdfs:domain patch:Message .
-
-patch:destination
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:domain patch:Message .
@@ -341,6 +326,11 @@ patch:body
 part of.</p>
 """ .
 
+patch:destination
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain patch:Message .
+
 patch:request
 	a rdf:Property ,
 		owl:ObjectProperty ;
@@ -349,3 +339,13 @@ patch:request
 	lv2:documentation """
 <p>The request this is a response to.</p>
 """ .
+
+patch:subject
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain patch:Message .
+
+patch:remove
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain patch:Message .
