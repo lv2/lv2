@@ -38,8 +38,8 @@
 #define LV2_ATOM__Double        LV2_ATOM_PREFIX "Double"
 #define LV2_ATOM__Event         LV2_ATOM_PREFIX "Event"
 #define LV2_ATOM__Float         LV2_ATOM_PREFIX "Float"
-#define LV2_ATOM__Int32         LV2_ATOM_PREFIX "Int32"
-#define LV2_ATOM__Int64         LV2_ATOM_PREFIX "Int64"
+#define LV2_ATOM__Int           LV2_ATOM_PREFIX "Int"
+#define LV2_ATOM__Long          LV2_ATOM_PREFIX "Long"
 #define LV2_ATOM__Literal       LV2_ATOM_PREFIX "Literal"
 #define LV2_ATOM__MessagePort   LV2_ATOM_PREFIX "MessagePort"
 #define LV2_ATOM__Number        LV2_ATOM_PREFIX "Number"
@@ -94,17 +94,17 @@ typedef struct {
 	uint32_t type;  /**< Type of this atom (mapped URI). */
 } LV2_Atom;
 
-/** An atom:Int32 or atom:Bool.  May be cast to LV2_Atom. */
+/** An atom:Int or atom:Bool.  May be cast to LV2_Atom. */
 typedef struct {
 	LV2_Atom atom;  /**< Atom header. */
 	int32_t  body;  /**< Integer value. */
-} LV2_Atom_Int32;
+} LV2_Atom_Int;
 
-/** An atom:Int64.  May be cast to LV2_Atom. */
+/** An atom:Long.  May be cast to LV2_Atom. */
 typedef struct {
 	LV2_Atom atom;  /**< Atom header. */
 	int64_t  body;  /**< Integer value. */
-} LV2_Atom_Int64;
+} LV2_Atom_Long;
 
 /** An atom:Float.  May be cast to LV2_Atom. */
 typedef struct {
@@ -119,7 +119,7 @@ typedef struct {
 } LV2_Atom_Double;
 
 /** An atom:Bool.  May be cast to LV2_Atom. */
-typedef LV2_Atom_Int32 LV2_Atom_Bool;
+typedef LV2_Atom_Int LV2_Atom_Bool;
 
 /** An atom:URID.  May be cast to LV2_Atom. */
 typedef struct {

@@ -125,17 +125,17 @@ atom:Number
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Number" .
 
-atom:Int32
+atom:Int
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Number ;
 	rdfs:label "Signed 32-bit integer" ;
-	atom:cType "LV2_Atom_Int32" .
+	atom:cType "LV2_Atom_Int" .
 
-atom:Int64
+atom:Long
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Number ;
 	rdfs:label "Signed 64-bit integer" ;
-	atom:cType "LV2_Atom_Int64" .
+	atom:cType "LV2_Atom_Long" .
 
 atom:Float
 	a rdfs:Class ;
@@ -154,7 +154,7 @@ atom:Bool
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Boolean" ;
 	atom:cType "LV2_Atom_Bool" ;
-	rdfs:comment "An Int32 where 0 is false and any other value is true." .
+	rdfs:comment "An Int where 0 is false and any other value is true." .
 
 atom:String
 	a rdfs:Class ;

@@ -93,8 +93,8 @@ typedef struct {
 	LV2_URID Bool;
 	LV2_URID Double;
 	LV2_URID Float;
-	LV2_URID Int32;
-	LV2_URID Int64;
+	LV2_URID Int;
+	LV2_URID Long;
 	LV2_URID Literal;
 	LV2_URID Path;
 	LV2_URID Property;
@@ -125,8 +125,8 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 	forge->Bool     = map->map(map->handle, LV2_ATOM__Bool);
 	forge->Double   = map->map(map->handle, LV2_ATOM__Double);
 	forge->Float    = map->map(map->handle, LV2_ATOM__Float);
-	forge->Int32    = map->map(map->handle, LV2_ATOM__Int32);
-	forge->Int64    = map->map(map->handle, LV2_ATOM__Int64);
+	forge->Int      = map->map(map->handle, LV2_ATOM__Int);
+	forge->Long     = map->map(map->handle, LV2_ATOM__Long);
 	forge->Literal  = map->map(map->handle, LV2_ATOM__Literal);
 	forge->Path     = map->map(map->handle, LV2_ATOM__Path);
 	forge->Property = map->map(map->handle, LV2_ATOM__Property);
@@ -324,19 +324,19 @@ lv2_atom_forge_primitive(LV2_Atom_Forge* forge, const LV2_Atom* a)
 	}
 }
 
-/** Write an atom:Int32. */
+/** Write an atom:Int. */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_int32(LV2_Atom_Forge* forge, int32_t val)
 {
-	const LV2_Atom_Int32 a = { { sizeof(val), forge->Int32 }, val };
+	const LV2_Atom_Int a = { { sizeof(val), forge->Int }, val };
 	return lv2_atom_forge_primitive(forge, &a.atom);
 }
 
-/** Write an atom:Int64. */
+/** Write an atom:Long. */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_int64(LV2_Atom_Forge* forge, int64_t val)
 {
-	const LV2_Atom_Int64 a = { { sizeof(val), forge->Int64 }, val };
+	const LV2_Atom_Long a = { { sizeof(val), forge->Long }, val };
 	return lv2_atom_forge_primitive(forge, &a.atom);
 }
 

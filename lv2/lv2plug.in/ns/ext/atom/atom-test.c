@@ -92,17 +92,17 @@ main()
 	LV2_Atom* obj = lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_resource( &forge, &obj_frame, 0, eg_Object));
 
-	// eg_one = (Int32)1
+	// eg_one = (Int)1
 	lv2_atom_forge_property_head(&forge, eg_one, 0);
-	LV2_Atom_Int32* one = (LV2_Atom_Int32*)lv2_atom_forge_deref(
+	LV2_Atom_Int* one = (LV2_Atom_Int*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_int32(&forge, 1));
 	if (one->body != 1) {
 		return test_fail("%d != 1\n", one->body);
 	}
 
-	// eg_two = (Int64)2
+	// eg_two = (Long)2
 	lv2_atom_forge_property_head(&forge, eg_two, 0);
-	LV2_Atom_Int64* two = (LV2_Atom_Int64*)lv2_atom_forge_deref(
+	LV2_Atom_Long* two = (LV2_Atom_Long*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_int64(&forge, 2));
 	if (two->body != 2) {
 		return test_fail("%ld != 2\n", two->body);
@@ -141,27 +141,25 @@ main()
 	}
 
 	// eg_path = (Path)"/foo/bar"
-	const uint8_t* pstr     = (const uint8_t*)"/foo/bar";
-	const size_t   pstr_len = strlen((const char*)pstr);
+	const char*  pstr     = "/foo/bar";
+	const size_t pstr_len = strlen(pstr);
 	lv2_atom_forge_property_head(&forge, eg_path, 0);
 	LV2_Atom_String* path  = (LV2_Atom_String*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_uri(&forge, pstr, pstr_len));
-	uint8_t*         pbody = (uint8_t*)LV2_ATOM_BODY(path);
-	if (strcmp((const char*)pbody, (const char*)pstr)) {
-		return test_fail("%s != \"%s\"\n",
-		                 (const char*)pbody, (const char*)pstr);
+	char* pbody = (char*)LV2_ATOM_BODY(path);
+	if (strcmp(pbody, pstr)) {
+		return test_fail("%s != \"%s\"\n", pbody, pstr);
 	}
 
 	// eg_uri = (URI)"http://example.org/value"
-	const uint8_t* ustr     = (const uint8_t*)"http://example.org/value";
-	const size_t   ustr_len = strlen((const char*)ustr);
+	const char*  ustr     = "http://example.org/value";
+	const size_t ustr_len = strlen(ustr);
 	lv2_atom_forge_property_head(&forge, eg_uri, 0);
 	LV2_Atom_String* uri = (LV2_Atom_String*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_uri(&forge, ustr, ustr_len));
-	uint8_t* ubody = (uint8_t*)LV2_ATOM_BODY(uri);
-	if (strcmp((const char*)ubody, (const char*)ustr)) {
-		return test_fail("%s != \"%s\"\n",
-		                 (const char*)ubody, (const char*)ustr);
+	char* ubody = (char*)LV2_ATOM_BODY(uri);
+	if (strcmp(ubody, ustr)) {
+		return test_fail("%s != \"%s\"\n", ubody, ustr);
 	}
 
 	// eg_urid = (URID)"http://example.org/value"
@@ -177,21 +175,21 @@ main()
 	lv2_atom_forge_property_head(&forge, eg_string, 0);
 	LV2_Atom_String* string = (LV2_Atom_String*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_string(
-			&forge, (const uint8_t*)"hello", strlen("hello")));
-	uint8_t* sbody = (uint8_t*)LV2_ATOM_BODY(string);
-	if (strcmp((const char*)sbody, "hello")) {
-		return test_fail("%s != \"hello\"\n", (const char*)sbody);
+			&forge, "hello", strlen("hello")));
+	char* sbody = LV2_ATOM_BODY(string);
+	if (strcmp(sbody, "hello")) {
+		return test_fail("%s != \"hello\"\n", sbody);
 	}
 
 	// eg_literal = (Literal)"hello"@fr
 	lv2_atom_forge_property_head(&forge, eg_literal, 0);
 	LV2_Atom_Literal* literal = (LV2_Atom_Literal*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_literal(
-			&forge, (const uint8_t*)"bonjour", strlen("bonjour"),
+			&forge, "bonjour", strlen("bonjour"),
 			0, urid_map(NULL, "http://lexvo.org/id/term/fr")));
-	uint8_t* lbody = (uint8_t*)LV2_ATOM_CONTENTS(LV2_Atom_Literal, literal);
-	if (strcmp((const char*)lbody, "bonjour")) {
-		return test_fail("%s != \"bonjour\"\n", (const char*)lbody);
+	char* lbody = LV2_ATOM_CONTENTS(LV2_Atom_Literal, literal);
+	if (strcmp(lbody, "bonjour")) {
+		return test_fail("%s != \"bonjour\"\n", lbody);
 	}
 
 	// eg_tuple = "foo",true
@@ -201,7 +199,7 @@ main()
 		&forge, lv2_atom_forge_tuple(&forge, &tuple_frame));
 	LV2_Atom_String* tup0 = (LV2_Atom_String*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_string(
-			&forge, (const uint8_t*)"foo", strlen("foo")));
+			&forge, "foo", strlen("foo")));
 	LV2_Atom_Bool* tup1 = (LV2_Atom_Bool*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_bool(&forge, true));
 	lv2_atom_forge_pop(&forge, &tuple_frame);
@@ -226,23 +224,23 @@ main()
 		return test_fail("Tuple iter is not at end\n");
 	}
 
-	// eg_vector = (Vector<Int32>)1,2,3,4
+	// eg_vector = (Vector<Int>)1,2,3,4
 	lv2_atom_forge_property_head(&forge, eg_vector, 0);
 	int32_t elems[] = { 1, 2, 3, 4 };
 	LV2_Atom_Vector* vector = (LV2_Atom_Vector*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_vector(
-			&forge, sizeof(int32_t), forge.Int32, 4, elems));
+			&forge, sizeof(int32_t), forge.Int, 4, elems));
 	void* vec_body = LV2_ATOM_CONTENTS(LV2_Atom_Vector, vector);
 	if (memcmp(elems, vec_body, sizeof(elems))) {
 		return test_fail("Corrupt vector\n");
 	}
 
-	// eg_vector2 = (Vector<Int32>)1,2,3,4
+	// eg_vector2 = (Vector<Int>)1,2,3,4
 	lv2_atom_forge_property_head(&forge, eg_vector2, 0);
 	LV2_Atom_Forge_Frame vec_frame;
 	LV2_Atom_Vector* vector2 = (LV2_Atom_Vector*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_vector_head(
-			&forge, &vec_frame, sizeof(int32_t), forge.Int32));
+			&forge, &vec_frame, sizeof(int32_t), forge.Int));
 	for (unsigned i = 0; i < sizeof(elems) / sizeof(int32_t); ++i) {
 		lv2_atom_forge_int32(&forge, elems[i]);
 	}
@@ -265,7 +263,7 @@ main()
 	lv2_atom_forge_pop(&forge, &obj_frame);
 
 	// Test equality
-	LV2_Atom_Int32 itwo = { { forge.Int32, sizeof(int32_t) }, 2 };
+	LV2_Atom_Int itwo = { { forge.Int, sizeof(int32_t) }, 2 };
 	if (lv2_atom_equals((LV2_Atom*)one, (LV2_Atom*)two)) {
 		return test_fail("1 == 2.0\n");
 	} else if (lv2_atom_equals((LV2_Atom*)one, (LV2_Atom*)&itwo)) {
@@ -279,9 +277,9 @@ main()
 		LV2_Atom_Event* ev = lv2_sequence_iter_get(i);
 		if (ev->time.frames != n_events) {
 			return test_fail("Corrupt event %u has bad time\n", n_events);
-		} else if (ev->body.type != forge.Int32) {
+		} else if (ev->body.type != forge.Int) {
 			return test_fail("Corrupt event %u has bad type\n", n_events);
-		} else if (((LV2_Atom_Int32*)&ev->body)->body != (int)n_events + 1) {
+		} else if (((LV2_Atom_Int*)&ev->body)->body != (int)n_events + 1) {
 			return test_fail("Event %u != %d\n", n_events, n_events + 1);
 		}
 		++n_events;
