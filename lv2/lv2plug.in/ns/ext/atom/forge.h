@@ -61,12 +61,15 @@ typedef void* LV2_Atom_Forge_Sink_Handle;
 typedef intptr_t LV2_Atom_Forge_Ref;
 
 /** Sink function for writing output.  See lv2_atom_forge_set_sink(). */
-typedef LV2_Atom_Forge_Ref (*LV2_Atom_Forge_Sink)(
-	LV2_Atom_Forge_Sink_Handle handle, const void* buf, uint32_t size);
+typedef LV2_Atom_Forge_Ref
+(*LV2_Atom_Forge_Sink)(LV2_Atom_Forge_Sink_Handle handle,
+                       const void*                buf,
+                       uint32_t                   size);
 
 /** Function for resolving a reference.  See lv2_atom_forge_set_sink(). */
-typedef LV2_Atom* (*LV2_Atom_Forge_Deref_Func)(
-	LV2_Atom_Forge_Sink_Handle handle, LV2_Atom_Forge_Ref ref);
+typedef LV2_Atom*
+(*LV2_Atom_Forge_Deref_Func)(LV2_Atom_Forge_Sink_Handle handle,
+                             LV2_Atom_Forge_Ref         ref);
 
 /** A stack frame used for keeping track of nested Atom containers. */
 typedef struct _LV2_Atom_Forge_Frame {
@@ -104,6 +107,53 @@ typedef struct {
 	LV2_URID Vector;
 } LV2_Atom_Forge;
 
+static inline void
+lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size);
+
+/**
+   Initialise @p forge.
+
+   URIs will be mapped using @p map and stored, a reference to @p map itself is
+   not held.
+*/
+static inline void
+lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
+{
+	lv2_atom_forge_set_buffer(forge, NULL, 0);
+	forge->stack    = NULL;
+	forge->Blank    = map->map(map->handle, LV2_ATOM__Blank);
+	forge->Bool     = map->map(map->handle, LV2_ATOM__Bool);
+	forge->Double   = map->map(map->handle, LV2_ATOM__Double);
+	forge->Float    = map->map(map->handle, LV2_ATOM__Float);
+	forge->Int32    = map->map(map->handle, LV2_ATOM__Int32);
+	forge->Int64    = map->map(map->handle, LV2_ATOM__Int64);
+	forge->Literal  = map->map(map->handle, LV2_ATOM__Literal);
+	forge->Path     = map->map(map->handle, LV2_ATOM__Path);
+	forge->Property = map->map(map->handle, LV2_ATOM__Property);
+	forge->Resource = map->map(map->handle, LV2_ATOM__Resource);
+	forge->Sequence = map->map(map->handle, LV2_ATOM__Sequence);
+	forge->String   = map->map(map->handle, LV2_ATOM__String);
+	forge->Tuple    = map->map(map->handle, LV2_ATOM__Tuple);
+	forge->URI      = map->map(map->handle, LV2_ATOM__URI);
+	forge->URID     = map->map(map->handle, LV2_ATOM__URID);
+	forge->Vector   = map->map(map->handle, LV2_ATOM__Vector);
+}
+
+static inline LV2_Atom*
+lv2_atom_forge_deref(LV2_Atom_Forge* forge, LV2_Atom_Forge_Ref ref)
+{
+	if (forge->buf) {
+		return (LV2_Atom*)ref;
+	} else {
+		return forge->deref(forge->handle, ref);
+	}
+}
+
+/**
+   @name Object Stack
+   @{
+*/
+
 /**
    Push a stack frame.
    This is done automatically by container functions (which take a stack frame
@@ -128,6 +178,20 @@ lv2_atom_forge_pop(LV2_Atom_Forge* forge, LV2_Atom_Forge_Frame* frame)
 	assert(frame == forge->stack);
 	forge->stack = frame->parent;
 }
+
+/** Return true iff the top of the stack has the given type. */
+static inline bool
+lv2_atom_forge_top_is(LV2_Atom_Forge* forge, uint32_t type)
+{
+	return forge->stack &&
+		lv2_atom_forge_deref(forge, forge->stack->ref)->type == type;
+}
+
+/**
+   @}
+   @name Output Configuration
+   @{
+*/
 
 /** Set the output buffer where @p forge will write atoms. */
 static inline void
@@ -171,43 +235,10 @@ lv2_atom_forge_set_sink(LV2_Atom_Forge*            forge,
 }
 
 /**
-   Initialise @p forge.
-
-   URIs will be mapped using @p map and stored, a reference to @p map itself is
-   not held.
+   @}
+   @name Low Level Output
+   @{
 */
-static inline void
-lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
-{
-	lv2_atom_forge_set_buffer(forge, NULL, 0);
-	forge->stack    = NULL;
-	forge->Blank    = map->map(map->handle, LV2_ATOM__Blank);
-	forge->Bool     = map->map(map->handle, LV2_ATOM__Bool);
-	forge->Double   = map->map(map->handle, LV2_ATOM__Double);
-	forge->Float    = map->map(map->handle, LV2_ATOM__Float);
-	forge->Int32    = map->map(map->handle, LV2_ATOM__Int32);
-	forge->Int64    = map->map(map->handle, LV2_ATOM__Int64);
-	forge->Literal  = map->map(map->handle, LV2_ATOM__Literal);
-	forge->Path     = map->map(map->handle, LV2_ATOM__Path);
-	forge->Property = map->map(map->handle, LV2_ATOM__Property);
-	forge->Resource = map->map(map->handle, LV2_ATOM__Resource);
-	forge->Sequence = map->map(map->handle, LV2_ATOM__Sequence);
-	forge->String   = map->map(map->handle, LV2_ATOM__String);
-	forge->Tuple    = map->map(map->handle, LV2_ATOM__Tuple);
-	forge->URI      = map->map(map->handle, LV2_ATOM__URI);
-	forge->URID     = map->map(map->handle, LV2_ATOM__URID);
-	forge->Vector   = map->map(map->handle, LV2_ATOM__Vector);
-}
-
-static inline LV2_Atom*
-lv2_atom_forge_deref(LV2_Atom_Forge* forge, LV2_Atom_Forge_Ref ref)
-{
-	if (forge->buf) {
-		return (LV2_Atom*)ref;
-	} else {
-		return forge->deref(forge->handle, ref);
-	}
-}
 
 /**
    Write raw output.  This is used internally, but is also useful for writing
@@ -255,20 +286,31 @@ lv2_atom_forge_write(LV2_Atom_Forge* forge, const void* data, uint32_t size)
 	return out;
 }
 
+/** Write a null-terminated string body. */
+static inline LV2_Atom_Forge_Ref
+lv2_atom_forge_string_body(LV2_Atom_Forge* forge,
+                           const char*     str,
+                           uint32_t        len)
+{
+	LV2_Atom_Forge_Ref out = lv2_atom_forge_raw(forge, str, len);
+	if (out && (out = lv2_atom_forge_raw(forge, "", 1))) {
+		lv2_atom_forge_pad(forge, len + 1);
+	}
+	return out;
+}
+
+/**
+   @}
+   @name Atom Output
+   @{
+*/
+
 /** Write an atom:Atom header. */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_atom(LV2_Atom_Forge* forge, uint32_t size, uint32_t type)
 {
 	const LV2_Atom a = { size, type };
 	return lv2_atom_forge_raw(forge, &a, sizeof(a));
-}
-
-/** Return true iff the top of the stack has the given type. */
-static inline bool
-lv2_atom_forge_top_is(LV2_Atom_Forge* forge, uint32_t type)
-{
-	return forge->stack &&
-		lv2_atom_forge_deref(forge, forge->stack->ref)->type == type;
 }
 
 /** Write a primitive (fixed-size) atom. */
@@ -330,25 +372,11 @@ lv2_atom_forge_urid(LV2_Atom_Forge* forge, LV2_URID id)
 	return lv2_atom_forge_primitive(forge, &a.atom);
 }
 
-/** Write a string body.  Used internally. */
-static inline LV2_Atom_Forge_Ref
-lv2_atom_forge_string_body(LV2_Atom_Forge* forge,
-                           const uint8_t*  str,
-                           uint32_t        len)
-{
-	LV2_Atom_Forge_Ref out = 0;
-	if (   (out = lv2_atom_forge_raw(forge, str, len))
-	    && (out = lv2_atom_forge_raw(forge, "", 1))) {
-		lv2_atom_forge_pad(forge, len + 1);
-	}
-	return out;
-}
-
 /** Write an atom compatible with atom:String.  Used internally. */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_typed_string(LV2_Atom_Forge* forge,
                             uint32_t        type,
-                            const uint8_t*  str,
+                            const char*     str,
                             uint32_t        len)
 {
 	const LV2_Atom_String a   = { { len + 1, type } };
@@ -365,7 +393,7 @@ lv2_atom_forge_typed_string(LV2_Atom_Forge* forge,
 
 /** Write an atom:String.  Note that @p str need not be NULL terminated. */
 static inline LV2_Atom_Forge_Ref
-lv2_atom_forge_string(LV2_Atom_Forge* forge, const uint8_t* str, uint32_t len)
+lv2_atom_forge_string(LV2_Atom_Forge* forge, const char* str, uint32_t len)
 {
 	return lv2_atom_forge_typed_string(forge, forge->String, str, len);
 }
@@ -376,14 +404,14 @@ lv2_atom_forge_string(LV2_Atom_Forge* forge, const uint8_t* str, uint32_t len)
    a mapped URI, use lv2_atom_forge_urid().
 */
 static inline LV2_Atom_Forge_Ref
-lv2_atom_forge_uri(LV2_Atom_Forge* forge, const uint8_t* uri, uint32_t len)
+lv2_atom_forge_uri(LV2_Atom_Forge* forge, const char* uri, uint32_t len)
 {
 	return lv2_atom_forge_typed_string(forge, forge->URI, uri, len);
 }
 
 /** Write an atom:Path.  Note that @p path need not be NULL terminated. */
 static inline LV2_Atom_Forge_Ref
-lv2_atom_forge_path(LV2_Atom_Forge* forge, const uint8_t* path, uint32_t len)
+lv2_atom_forge_path(LV2_Atom_Forge* forge, const char* path, uint32_t len)
 {
 	return lv2_atom_forge_typed_string(forge, forge->Path, path, len);
 }
@@ -391,7 +419,7 @@ lv2_atom_forge_path(LV2_Atom_Forge* forge, const uint8_t* path, uint32_t len)
 /** Write an atom:Literal. */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_literal(LV2_Atom_Forge* forge,
-                       const uint8_t*  str,
+                       const char*     str,
                        uint32_t        len,
                        uint32_t        datatype,
                        uint32_t        lang)
@@ -579,6 +607,10 @@ lv2_atom_forge_beat_time(LV2_Atom_Forge* forge, double beats)
 {
 	return lv2_atom_forge_write(forge, &beats, sizeof(beats));
 }
+
+/**
+   @}
+*/
 
 #ifdef __cplusplus
 }  /* extern "C" */
