@@ -181,22 +181,22 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 {
 	lv2_atom_forge_set_buffer(forge, NULL, 0);
 	forge->stack    = NULL;
-	forge->Blank    = map->map(map->handle, LV2_ATOM_URI "#Blank");
-	forge->Bool     = map->map(map->handle, LV2_ATOM_URI "#Bool");
-	forge->Double   = map->map(map->handle, LV2_ATOM_URI "#Double");
-	forge->Float    = map->map(map->handle, LV2_ATOM_URI "#Float");
-	forge->Int32    = map->map(map->handle, LV2_ATOM_URI "#Int32");
-	forge->Int64    = map->map(map->handle, LV2_ATOM_URI "#Int64");
-	forge->Literal  = map->map(map->handle, LV2_ATOM_URI "#Literal");
-	forge->Path     = map->map(map->handle, LV2_ATOM_URI "#Path");
-	forge->Property = map->map(map->handle, LV2_ATOM_URI "#Property");
-	forge->Resource = map->map(map->handle, LV2_ATOM_URI "#Resource");
-	forge->Sequence = map->map(map->handle, LV2_ATOM_URI "#Sequence");
-	forge->String   = map->map(map->handle, LV2_ATOM_URI "#String");
-	forge->Tuple    = map->map(map->handle, LV2_ATOM_URI "#Tuple");
-	forge->URI      = map->map(map->handle, LV2_ATOM_URI "#URI");
-	forge->URID     = map->map(map->handle, LV2_ATOM_URI "#URID");
-	forge->Vector   = map->map(map->handle, LV2_ATOM_URI "#Vector");
+	forge->Blank    = map->map(map->handle, LV2_ATOM__Blank);
+	forge->Bool     = map->map(map->handle, LV2_ATOM__Bool);
+	forge->Double   = map->map(map->handle, LV2_ATOM__Double);
+	forge->Float    = map->map(map->handle, LV2_ATOM__Float);
+	forge->Int32    = map->map(map->handle, LV2_ATOM__Int32);
+	forge->Int64    = map->map(map->handle, LV2_ATOM__Int64);
+	forge->Literal  = map->map(map->handle, LV2_ATOM__Literal);
+	forge->Path     = map->map(map->handle, LV2_ATOM__Path);
+	forge->Property = map->map(map->handle, LV2_ATOM__Property);
+	forge->Resource = map->map(map->handle, LV2_ATOM__Resource);
+	forge->Sequence = map->map(map->handle, LV2_ATOM__Sequence);
+	forge->String   = map->map(map->handle, LV2_ATOM__String);
+	forge->Tuple    = map->map(map->handle, LV2_ATOM__Tuple);
+	forge->URI      = map->map(map->handle, LV2_ATOM__URI);
+	forge->URID     = map->map(map->handle, LV2_ATOM__URID);
+	forge->Vector   = map->map(map->handle, LV2_ATOM__Vector);
 }
 
 static inline LV2_Atom*
