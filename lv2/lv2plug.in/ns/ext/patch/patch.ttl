@@ -1,4 +1,4 @@
-# LV2 Message Extension
+# LV2 Patch Extension
 # Copyright 2012 David Robillard <d@drobilla.net>
 #
 # Permission to use, copy, modify, and/or distribute this software for any
@@ -13,16 +13,16 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix msg:  <http://lv2plug.in/ns/ext/message#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix patch: <http://lv2plug.in/ns/ext/patch#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<http://lv2plug.in/ns/ext/message>
+<http://lv2plug.in/ns/ext/patch>
 	a lv2:Specification ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:maintainer [
@@ -31,7 +31,7 @@
 		foaf:homepage <http://drobilla.net/> ;
 		foaf:name "David Robillard"
 	] ;
-	doap:name "LV2 Message" ;
+	doap:name "LV2 Patch" ;
 	doap:release [
 		doap:created "2012-02-08" ;
 		doap:revision "0.1"
@@ -49,7 +49,7 @@ burdens like a new syntax or binary formats.  In particular, messages can be
 serialised in Turtle, or as an <a
 href="http://lv2plug.in/ns/ext/atom#Object">LV2 Object</a>.</p>
 
-<p>This set of message types is deliberately small to avoid an explosion of
+<p>This set of patch types is deliberately small to avoid an explosion of
 messages that all implementations would have to explicitly support.  Instead,
 the idea is to achieve control via manipulating properties rather than defining
 custom commands.  However, this is conceptual; there is no requirement that the
@@ -74,9 +74,9 @@ RDF properties, thus predicates from any of the countless pre-existing
 vocabularies may be used.</p>
 """ .
 
-msg:Ack
+patch:Ack
 	a rdfs:Class ;
-	rdfs:subClassOf msg:Response ;
+	rdfs:subClassOf patch:Response ;
     rdfs:label "Ack" ;
     lv2:documentation """
 <p>An acknowledgement that a request has been successfully processed.  This is
@@ -84,25 +84,25 @@ returned as a reply when a specific reply type is not necessary or
 appropriate.</p>
 """ .
 
-msg:Delete
+patch:Delete
 	a rdfs:Class ;
-	rdfs:subClassOf msg:Request ;
+	rdfs:subClassOf patch:Request ;
 	rdfs:label "Delete" ;
 	lv2:documentation """
 <p>Request the subject(s) be deleted.</p>
 """ .
 
-msg:Error
+patch:Error
 	a rdfs:Class ;
-	rdfs:subClassOf msg:Response ;
+	rdfs:subClassOf patch:Response ;
     rdfs:label "Error" ;
     lv2:documentation """
 <p>A response indicating an error processing a request.</p>
 """ .
 
-msg:Get
+patch:Get
 	a rdfs:Class ;
-	rdfs:subClassOf msg:Request ;
+	rdfs:subClassOf patch:Request ;
 	rdfs:label "Get" ;
 	lv2:documentation """
 <p>Request a description of the subject.</p>
@@ -114,29 +114,29 @@ href="http://www.w3.org/Submission/CBD/">concise bounded description</a></q>,
 i.e. a description which recursively includes all properties with blank node
 values.</p>
 
-<p>The response should have the same msg:subject property as the request, and
-a msg:body that is a description of that subject.  For example:</p>
+<p>The response should have the same patch:subject property as the request, and
+a patch:body that is a description of that subject.  For example:</p>
 <pre class="turtle-code">
 &lt;get-request&gt;
-    a msg:Get ;
-    msg:subject &lt;something&gt; .
+    a patch:Get ;
+    patch:subject &lt;something&gt; .
 </pre>
 
 <p>Could result in:</p>
 <pre class="turtle-code">
 []
-    a msg:Response ;
-    msg:request &lt;get-request&gt; ;
-    msg:subject &lt;something&gt; ;
-    msg:body [
+    a patch:Response ;
+    patch:request &lt;get-request&gt; ;
+    patch:subject &lt;something&gt; ;
+    patch:body [
         eg:name "Something" ;
         eg:ratio 1.6180339887 ;
     ] .
 </pre>
 
-<p>Note the use of blank nodes is not required; the value of msg:body may be
+<p>Note the use of blank nodes is not required; the value of patch:body may be
 the actual resource node.  Depending on the transport and syntax used this may
-be preferable.  However, the msg:subject property is required regardless.  For
+be preferable.  However, the patch:subject property is required regardless.  For
 example, the same response could be written:</p>
 
 <pre class="turtle-code">
@@ -145,205 +145,205 @@ example, the same response could be written:</p>
     eg:ratio 1.6180339887 .
 
 []
-    a msg:Response ;
-    msg:request &lt;get-request&gt; ;
-    msg:subject &lt;something&gt; ;
-    msg:body &lt;something&gt; .
+    a patch:Response ;
+    patch:request &lt;get-request&gt; ;
+    patch:subject &lt;something&gt; ;
+    patch:body &lt;something&gt; .
 </pre>
 """ .
 
-msg:Insert
+patch:Insert
 	a rdfs:Class ;
-	rdfs:subClassOf msg:Request ;
+	rdfs:subClassOf patch:Request ;
 	rdfs:label "Insert" ;
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty msg:subject
+		owl:onProperty patch:subject
 	] ;
 	lv2:documentation """
-<p>Insert the msg:body at msg:subject.  If the subject does not exist, it is
+<p>Insert the patch:body at patch:subject.  If the subject does not exist, it is
 created.  If the subject does already exist, it is added to.  This request only
 adds properties, it never removes them.  The user must take care that multiple
 values are not set for properties which should only have one value.</p>
 """ .
 
-msg:Message
+patch:Patch
 	a rdfs:Class ;
-	rdfs:label "Message" .
+	rdfs:label "Patch" .
 
-msg:Move
+patch:Move
 	a rdfs:Class ;
-	rdfs:subClassOf msg:Request ;
+	rdfs:subClassOf patch:Request ;
 	rdfs:label "Move" ;
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty msg:subject ;
+		owl:onProperty patch:subject ;
 	] , [
 		a owl:Restriction ;
 		owl:cardinality 1 ;
-		owl:onProperty msg:destination ;
+		owl:onProperty patch:destination ;
 	] ;
 	lv2:documentation """
-<p>Move the msg:subject to msg:destination.  After this, msg:destination has
-the description msg:subject had prior to this request's execution, and
-msg:subject does not exist any more.It is an error if the subject does not
+<p>Move the patch:subject to patch:destination.  After this, patch:destination has
+the description patch:subject had prior to this request's execution, and
+patch:subject does not exist any more.It is an error if the subject does not
 exist or the destination already exists.</p>
 """ .
 
-msg:Patch
+patch:Patch
 	a rdfs:Class ;
-	rdfs:subClassOf msg:Request , [
+	rdfs:subClassOf patch:Request , [
 		a owl:Restriction ;
 		owl:minCardinality 1 ;
-		owl:onProperty msg:subject
+		owl:onProperty patch:subject
 	] , [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty msg:add
+		owl:onProperty patch:add
 	] , [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty msg:remove
+		owl:onProperty patch:remove
 	] ;
 	lv2:documentation """
 <p>A method for modifying the properties of an object.</p>
 
-<p>This method always has at least one msg:subject, and exactly one msg:add
-and msg:remove property.  The value of msg:add and msg:remove are nodes
+<p>This method always has at least one patch:subject, and exactly one patch:add
+and patch:remove property.  The value of patch:add and patch:remove are nodes
 which have the properties to add or remove from the subject(s), respectively.
-The special value msg:wildcard may be used as the value of a remove property
+The special value patch:wildcard may be used as the value of a remove property
 to remove all properties with the given predicate.  For example:</p>
 
 <pre class="turtle-code">
 []
-    a msg:Patch ;
-    msg:subject &lt;something&gt; ;
-    msg:add [
+    a patch:Patch ;
+    patch:subject &lt;something&gt; ;
+    patch:add [
         eg:name "New name" ;
         eg:age 42 ;
     ] ;
-    msg:remove [
+    patch:remove [
         eg:name "Old name" ;
-        eg:age msg:wildcard ;  # Remove all old eg:age properties
+        eg:age patch:wildcard ;  # Remove all old eg:age properties
     ] .
 </pre>
 """ .
 
-msg:Put
+patch:Put
 	a rdfs:Class ;
-	rdfs:subClassOf msg:Request ;
+	rdfs:subClassOf patch:Request ;
 	rdfs:label "Put" ;
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty msg:subject
+		owl:onProperty patch:subject
 	] ;
 	lv2:documentation """
-<p>Put the msg:body as the msg:subject.  If the subject does not already exist,
-it is created.  If the subject does already exist, the msg:body is considered
+<p>Put the patch:body as the patch:subject.  If the subject does not already exist,
+it is created.  If the subject does already exist, the patch:body is considered
 an updated version of it, and the previous version is replaced.</p>
 """ .
 
-msg:Request
+patch:Request
 	a rdfs:Class ;
 	rdfs:label "Request" ;
-	rdfs:subClassOf msg:Message ;
+	rdfs:subClassOf patch:Patch ;
 	lv2:documentation """
-<p>A request.  A request may have a msg:subject property, which indicates which
+<p>A request.  A request may have a patch:subject property, which indicates which
 resource the request applies to.  The subject may be omitted in contexts where
 it is implicit (e.g. the recipient is the subject).</p>
 """ .
 
-msg:Response
+patch:Response
 	a rdfs:Class ;
-	rdfs:subClassOf msg:Message ;
+	rdfs:subClassOf patch:Patch ;
 	rdfs:label "Response" ;
 	lv2:documentation """
 <p>A response to a method.</p>
 """ .
 
-msg:Set
+patch:Set
 	a rdfs:Class ;
-	rdfs:subClassOf msg:Request , [
+	rdfs:subClassOf patch:Request , [
 		a owl:Restriction ;
 		owl:cardinality 1 ;
-		owl:onProperty msg:body
+		owl:onProperty patch:body
 	] ;
 	lv2:documentation """
 <p>A method for setting properties of an object to unique values.</p>
 
-<p>This is a simplified version of msg:Patch which only makes sense for
+<p>This is a simplified version of patch:Patch which only makes sense for
 properties which have at most one value.  This method always has at least one
-msg:subject, and exactly one msg:add property.  All the properties of the
-value of msg:add are set on the subject, with all old values for those
+patch:subject, and exactly one patch:add property.  All the properties of the
+value of patch:add are set on the subject, with all old values for those
 properties removed.  For example:</p>
 
 <pre class="turtle-code">
 []
-    a msg:Set ;
-    msg:subject &lt;something&gt; ;
-    msg:body [
+    a patch:Set ;
+    patch:subject &lt;something&gt; ;
+    patch:body [
         eg:name "New name" ;
         eg:age 42 ;
     ] .
 </pre>
 
-<p>This method is equivalent to a msg:Patch where the msg:remove value has
-every property of msg:add but with wildcard values.  For example, the above
-message is equivalent to:</p>
+<p>This method is equivalent to a patch:Patch where the patch:remove value has
+every property of patch:add but with wildcard values.  For example, the above
+patch is equivalent to:</p>
 <pre class="turtle-code">
 []
-    a msg:Patch ;
-    msg:subject &lt;something&gt; ;
-    msg:add [
+    a patch:Patch ;
+    patch:subject &lt;something&gt; ;
+    patch:add [
         eg:name "New name" ;
         eg:age 42 ;
     ] ;
-    msg:remove [
-        eg:name msg:wildcare ;
-        eg:age msg:wildcard ;
+    patch:remove [
+        eg:name patch:wildcare ;
+        eg:age patch:wildcard ;
     ] ;
 </pre>
 """ .
 
-msg:subject
+patch:subject
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain msg:Message .
+	rdfs:domain patch:Patch .
 
-msg:add
+patch:add
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain msg:Message .
+	rdfs:domain patch:Patch .
 
-msg:remove
+patch:remove
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain msg:Message .
+	rdfs:domain patch:Patch .
 
-msg:destination
+patch:destination
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain msg:Message .
+	rdfs:domain patch:Patch .
 
-msg:body
+patch:body
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain msg:Message ;
+	rdfs:domain patch:Patch ;
 	lv2:documentation """
-<p>The body of a message.</p>
+<p>The body of a patch.</p>
 
-<p>The details of this property's value depend on the type of message it is a
+<p>The details of this property's value depend on the type of patch it is a
 part of.</p>
 """ .
 
-msg:request
+patch:request
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain msg:Response ;
-	rdfs:range msg:Request ;
+	rdfs:domain patch:Response ;
+	rdfs:range patch:Request ;
 	lv2:documentation """
 <p>The request this is a response to.</p>
 """ .
