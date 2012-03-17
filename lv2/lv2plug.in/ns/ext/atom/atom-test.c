@@ -95,7 +95,7 @@ main()
 	// eg_one = (Int)1
 	lv2_atom_forge_property_head(&forge, eg_one, 0);
 	LV2_Atom_Int* one = (LV2_Atom_Int*)lv2_atom_forge_deref(
-		&forge, lv2_atom_forge_int32(&forge, 1));
+		&forge, lv2_atom_forge_int(&forge, 1));
 	if (one->body != 1) {
 		return test_fail("%d != 1\n", one->body);
 	}
@@ -103,7 +103,7 @@ main()
 	// eg_two = (Long)2
 	lv2_atom_forge_property_head(&forge, eg_two, 0);
 	LV2_Atom_Long* two = (LV2_Atom_Long*)lv2_atom_forge_deref(
-		&forge, lv2_atom_forge_int64(&forge, 2));
+		&forge, lv2_atom_forge_long(&forge, 2));
 	if (two->body != 2) {
 		return test_fail("%ld != 2\n", two->body);
 	}
@@ -242,7 +242,7 @@ main()
 		&forge, lv2_atom_forge_vector_head(
 			&forge, &vec_frame, sizeof(int32_t), forge.Int));
 	for (unsigned i = 0; i < sizeof(elems) / sizeof(int32_t); ++i) {
-		lv2_atom_forge_int32(&forge, elems[i]);
+		lv2_atom_forge_int(&forge, elems[i]);
 	}
 	lv2_atom_forge_pop(&forge, &vec_frame);
 	if (!lv2_atom_equals(&vector->atom, &vector2->atom)) {
@@ -255,9 +255,9 @@ main()
 	LV2_Atom_Sequence* seq = (LV2_Atom_Sequence*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_sequence_head(&forge, &seq_frame, 0));
 	lv2_atom_forge_frame_time(&forge, 0);
-	lv2_atom_forge_int32(&forge, 1);
+	lv2_atom_forge_int(&forge, 1);
 	lv2_atom_forge_frame_time(&forge, 1);
-	lv2_atom_forge_int32(&forge, 2);
+	lv2_atom_forge_int(&forge, 2);
 	lv2_atom_forge_pop(&forge, &seq_frame);
 
 	lv2_atom_forge_pop(&forge, &obj_frame);

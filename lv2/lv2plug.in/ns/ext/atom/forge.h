@@ -326,7 +326,7 @@ lv2_atom_forge_primitive(LV2_Atom_Forge* forge, const LV2_Atom* a)
 
 /** Write an atom:Int. */
 static inline LV2_Atom_Forge_Ref
-lv2_atom_forge_int32(LV2_Atom_Forge* forge, int32_t val)
+lv2_atom_forge_int(LV2_Atom_Forge* forge, int32_t val)
 {
 	const LV2_Atom_Int a = { { sizeof(val), forge->Int }, val };
 	return lv2_atom_forge_primitive(forge, &a.atom);
@@ -334,7 +334,7 @@ lv2_atom_forge_int32(LV2_Atom_Forge* forge, int32_t val)
 
 /** Write an atom:Long. */
 static inline LV2_Atom_Forge_Ref
-lv2_atom_forge_int64(LV2_Atom_Forge* forge, int64_t val)
+lv2_atom_forge_long(LV2_Atom_Forge* forge, int64_t val)
 {
 	const LV2_Atom_Long a = { { sizeof(val), forge->Long }, val };
 	return lv2_atom_forge_primitive(forge, &a.atom);
