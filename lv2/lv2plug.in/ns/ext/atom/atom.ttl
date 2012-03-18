@@ -352,6 +352,18 @@ the same context so outputs can contain IDs that correspond to IDs of blanks in
 the input.</p>
 """ .
 
+atom:Sound
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Vector ;
+	rdfs:label "Sound" ;
+	atom:cType "LV2_Atom_Sound" ;
+	lv2:documentation """
+<p>An atom:Vector of atom:Float which represents an audio waveform.  The format
+is the same as the buffer format for lv2:AudioPort (except the size may be
+arbitrary).  An atom:Sound inherently depends on the sample rate, which is
+assumed to be known.</p>
+""" .
+
 atom:TimeUnit
 	a rdfs:Class ;
 	rdfs:label "Time Unit" ;

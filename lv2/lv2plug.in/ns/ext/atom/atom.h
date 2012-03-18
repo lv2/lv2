@@ -48,6 +48,7 @@
 #define LV2_ATOM__Property      LV2_ATOM_PREFIX "Property"
 #define LV2_ATOM__Resource      LV2_ATOM_PREFIX "Resource"
 #define LV2_ATOM__Sequence      LV2_ATOM_PREFIX "Sequence"
+#define LV2_ATOM__Sound         LV2_ATOM_PREFIX "Sound"
 #define LV2_ATOM__String        LV2_ATOM_PREFIX "String"
 #define LV2_ATOM__TimeUnit      LV2_ATOM_PREFIX "TimeUnit"
 #define LV2_ATOM__Tuple         LV2_ATOM_PREFIX "Tuple"
