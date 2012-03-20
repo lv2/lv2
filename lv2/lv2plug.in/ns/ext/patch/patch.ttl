@@ -304,7 +304,7 @@ patch is equivalent to:</p>
         eg:age 42 ;
     ] ;
     patch:remove [
-        eg:name patch:wildcare ;
+        eg:name patch:wildcard ;
         eg:age patch:wildcard ;
     ] ;
 </pre>
