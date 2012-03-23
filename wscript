@@ -257,6 +257,8 @@ def build(bld):
                            target = ['%s%s.html' % (chop_lv2_prefix(i), name),
                                      index_file])
 
+        index_files.sort()
+
         # Build extension index
         obj = bld(rule   = build_index,
                   name   = 'index',
