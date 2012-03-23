@@ -29,9 +29,6 @@ def options(opt):
     autowaf.set_options(opt)
     opt.add_option('--test', action='store_true', default=False, dest='build_tests',
                    help="Build unit tests")
-    opt.add_option('--experimental', action='store_true', default=False,
-                   dest='experimental',
-                   help='Install unreleased experimental extensions')
     for i in ['lv2/lv2plug.in/ns/lv2core']:
         opt.recurse(i)
 

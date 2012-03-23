@@ -79,14 +79,6 @@ def options(opt):
     opt.add_option('--copy-headers', action='store_true', default=False,
                    dest='copy_headers',
                    help='Copy headers instead of linking to bundle')
-    opt.add_option('--experimental', action='store_true', default=False,
-                   dest='experimental',
-                   help='Install unreleased experimental extensions')
-
-def should_build(ctx):
-    top_level = (len(ctx.stack_path) <= 1)
-    return top_level or ctx.env['EXPERIMENTAL'] or (
-        info.MINOR > 0 and info.MICRO % 2 == 0)
 
 def configure(conf):
     try:
@@ -96,10 +88,6 @@ def configure(conf):
 
     conf.env['BUILD_TESTS']  = Options.options.build_tests
     conf.env['COPY_HEADERS'] = Options.options.copy_headers
-    conf.env['EXPERIMENTAL'] = Options.options.experimental
-
-    if not should_build(conf):
-        return
 
     if not hasattr(os.path, 'relpath') and not Options.options.copy_headers:
         conf.fatal(
@@ -122,9 +110,6 @@ def configure(conf):
     print('')
 
 def build(bld):
-    if not should_build(bld):
-        return
-
     uri          = info.URI
     include_base = os.path.dirname(uri[uri.find('://') + 3:])
     bundle_dir   = os.path.join(bld.env['LV2DIR'], info.NAME + '.lv2')
