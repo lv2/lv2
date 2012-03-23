@@ -127,7 +127,7 @@ typedef struct _LV2_Worker_Schedule {
 	   if this function returns LV2_WORKER_SUCCESS.
 
 	   @param handle The handle field of this struct.
-	   @param size   The size of @p body.
+	   @param size   The size of @p data.
 	   @param data   Message to pass to work(), or NULL.
 	*/
 	LV2_Worker_Status (*schedule_work)(LV2_Worker_Schedule_Handle handle,
