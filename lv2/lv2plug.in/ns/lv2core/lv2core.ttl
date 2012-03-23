@@ -449,32 +449,52 @@ port identification. The plugin author may change the values of this
 property without changing the Plugin URI.
 """ .
 
+lv2:Parameter
+	a rdfs:Class ;
+	rdfs:subClassOf rdf:Property ;
+	lv2:documentation """
+<p>A <q>parameter</q> of a plugin.  A parameter is simply a recognized
+property, identified by URI.  Parameters are abstract in the sense that they
+may be controlled by several methods.  The simplest is with an
+lv2:ControlPort, which can be associated with a parameter using
+lv2:isParameter.  Other methods, such as setting dynamic parameters via
+messages, are possible but not defined in this specification.  The concept of a
+parameter is deliberately separate from any particular code mechanism, so that
+a parameter can be defined once and used in several contexts.</p>
+
+<p>Parameters are <em>meaningful</em> controls which allow hosts to act
+intelligently.  For example, if a plugin has a foo:volume parameter, and the
+host understands it, the host knows how to automatically control the volume of
+that plugin.</p>
+
+<p>Any existing property can be used as a parameter, an LV2 specific definition
+is not required.</p>
+""" .
+
 lv2:hasParameter a rdf:Property , owl:ObjectProperty ;
-    rdfs:domain lv2:Resource ;
-    rdfs:range rdf:Property ;
+    rdfs:range lv2:Parameter ;
     rdfs:label "has parameter" ;
     lv2:documentation """
-<p>Indicates that a plugin or other resource has a certain <q>parameter</q>.  A
-parameter is simply a recognized property, i.e. a URI predicate and any type of
-object.  Parameters may be associated with a control port or controlled using
-another mechanism.  Parameter values may be part of an instance's state.</p>
+<p>Indicates that a specific parameter is supported.  This predicate is to
+advertise that a plugin supports a parameter in some way other than a port
+value, such as a message interface.  It is not necessary use for control port
+parameters, simply use lv2:isParameter on the port for that.</p>
 
-<p>Any property URI can be used as a parameter, no LV2 specific definition is
-required.  Existing vocabularies SHOULD be used whenever possible.</p>
+<p>This property may be used to indicate any resource has a parameter, it is
+not restricted to plugins.</p>
 """ .
 
 lv2:isParameter a rdf:Property , owl:ObjectProperty ;
     rdfs:domain lv2:Port ;
-    rdfs:range rdf:Property ;
-    rdfs:label "relation" ;
+    rdfs:range lv2:Parameter ;
+    rdfs:label "is parameter" ;
     lv2:documentation """
 <p>Indicates that a port contains the value of a plugin parameter.</p>
 
-<p>For example, if a port lv2:isParameter foo:volume, then the value of that
-port represents the foo:volume of the plugin instance.  Associating a port with
-a well-defined parameter gives the port's value meaning.  This allows it to be
-handled specially by the host and integrate with other property-based
-mechanisms (e.g. messages or plugin state).</p>
+<p>For example, if a port lv2:isParameter foo:gain, then the value of that port
+represents the foo:gain of the plugin instance.  Associating a port with a
+well-defined parameter gives the port's value meaning, which allows the host
+to use the port more intelligently.</p>
 
 <p>For a given parameter, plugins SHOULD have at most one port per direction
 (lv2:InputPort or lv2:OutputPort).</p> """ .
