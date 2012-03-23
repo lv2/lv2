@@ -216,6 +216,17 @@ ui:portNotification
 	lv2:documentation """
 <p>Indicates that a UI should receive notification (via
 LV2UI_Descriptor::port_event()) when a particular port's value changes.</p>
+
+<p>For example:</p>
+<pre class="turtle-code">
+eg:ui
+    a ui:GtkUI ;
+    ui:portNotification [
+        ui:plugin eg:plugin ;
+        lv2:symbol "gain" ;
+        ui:protocol ui:floatProtocol
+    ] .
+</pre>
 """ .
 
 ui:plugin
@@ -239,7 +250,7 @@ The index of the port a portNotification applies to.
 ui:notifyType
 	a rdf:Property ;
 	rdfs:domain ui:PortNotification ;
-	lv2:comment """
+	lv2:documentation """
 <p>Indicates a particular type that the UI should be notified of.  In the case
 of ports where several types of data can be present (e.g. event ports), this
 can be used to indicate that only a particular type of data should cause
@@ -251,9 +262,139 @@ ui:resize
 	a lv2:Feature ;
 	lv2:documentation """
 <p>A feature that allows the UI to notify the host about its current size, or
-request a size change.  This feature corresponds to the LV2_UI_Resize struct,
+request a size change.  This feature corresponds to the LV2UI_Resize struct,
 which should be passed with the URI LV2_UI__resize.  This struct may also be
 provided by the UI as extension data using the same URI, in which case it is
 used by the host to request that the UI change its size.</p>
 """ .
-o
+
+ui:portMap
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature for accessing the index of a port by symbol.  This makes it
+possible to implement and distribute UIs separately from the plugin binaries
+they control.  This feature corresponds to the LV2UI_Port_Index struct, which
+should be passed with the URI LV2_UI__portIndex.</p>
+""" .
+
+ui:touch
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature to notify the host that the user has grabbed a particular port
+control.  This is useful for automation, so the host can allow the user to take
+control of a port, even if that port would otherwise be automated (much like
+grabbing a physical morotised fader).  It can also be used for MIDI learn or in
+any other situation where the host needs to do something with a particular
+control and it would be convenient for the user to select it directroy from the
+plugin UI.  This feature corresponds to the LV2UI_Touch struct, which
+should be passed with the URI LV2_UI__touch.</p>
+""" .
+
+ui:PortProtocol
+	a rdfs:Class ;
+	rdfs:subClassOf lv2:Feature ;
+	rdfs:label "Port protocol" ;
+	lv2:documentation """
+<p>A PortProtocol defines a method to communicate port data between a UI and
+plugin.</p>
+
+<p>Any PortProtocol MUST define:</p>
+<table>
+<tr><th>Port Type</th>
+    <td>Which plugin port types the buffer type is valid for.</td></tr>
+<tr><th>Feature Data</th>
+    <td>What data (if any) should be passed in the LV2_Feature.</td></tr>
+</table>
+
+<p>Any PortProtocol for an output port MUST define:</p>
+<table>
+<tr><th>Update Frequency</th>
+    <td>When the host should call port_event().</td></tr>
+<tr><th>Update Format</th>
+    <td>The format of the data in the buffer passed to port_event().</td></tr>
+<tr><th>Options</th>
+    <td>The format of the options passed to subscribe() and unsubscribe().</td>
+</tr></table>
+
+<p>Any PortProtocol for an input port MUST define:</p>
+<table>
+<tr><th>Write Format</th>
+    <td>The format of the data in the buffer passed to write_port().</td></tr>
+<tr><th>Write Effect</th>
+    <td>What happens when the UI calls write_port().</td></tr>
+</table>
+
+<p>For an example, see ui:floatProtocol or ui:peakProtocol.
+</p>
+
+<p>PortProtocol is a subclass of lv2:Feature, so UIs use lv2:optionalFeature and
+lv2:requiredFeature to specify which PortProtocols they want to use.
+</p>
+""" .
+
+ui:floatProtocol
+	a ui:PortProtocol ;
+	rdfs:label "Floating point value" ;
+	lv2:documentation """
+
+<p>A protocol for transferring single floating point values.  The rules for
+this protocol are:</p>
+<table>
+<tr><th>Port Type</th>
+    <td>lv2:ControlPort</td></tr>
+<tr><th>Feature Data</th>
+    <td>None.</td></tr>
+<tr><th>Update Frequency</th>
+    <td>The host SHOULD call port_event() as soon as possible when the port
+    value has changed, but there are no timing guarantees.</td></tr>
+<tr><th>Update Format</th>
+    <td>A single <code>float</code>.</td></tr>
+<tr><th>Options</th>
+    <td>None.</td></tr>
+<tr><th>Write Format</th>
+    <td>A single <code>float</code>.</td></tr>
+<tr><th>Write Effect</th>
+    <td>The host SHOULD set the port to the received value as soon as possible,
+    but there is no guarantee that run() actually sees this value.</td></tr>
+</table>
+""" .
+
+ui:peakProtocol
+	a ui:PortProtocol ;
+	rdfs:label "Peak measurement for a period of audio" ;
+	lv2:documentation """
+<p>This port protocol defines a way for the host to send continuous peak
+measurements of the audio signal at a certain port to the UI.  The
+intended use is visualisation, e.g. an animated meter widget that shows
+the level of the audio input or output.</p>
+
+<p>A contiguous sequence of audio samples for which a peak value has been
+computed is called a <em>measurement period</em>.</p>
+
+<p>The rules for this protocol are:</p>
+<table>
+<tr><th>Port Type</th>
+    <td>lv2:AudioPort</td></tr>
+<tr><th>Feature Data</th>
+    <td>None.</td></tr>
+<tr><th>Update Frequency</th>
+    <td>The host SHOULD call port_event() at regular intervals.  The
+    measurement periods used for calls to port_event() for the same port SHOULD
+    be contiguous (i.e. the measurement period for one call should begin right
+    after the end of the measurement period for the previous call ends) unless
+    the UI has removed and re-added the port subscription between those calls.
+    However, UIs MUST NOT depend on either the regularity of the calls or the
+    contiguity of the measurement periods; hosts may change the call rate or
+    skip calls for performance or other reasons.  Measurement periods for
+    different calls to port_event() for the same port MUST NOT
+    overlap.</td></tr>
+<tr><th>Update Format</th>
+    <td>A single LV2UI_Peak_Data object.</td></tr>
+<tr><th>Options</th>
+    <td>None.</td></tr>
+<tr><th>Write Format</th>
+    <td>None.</td></tr>
+<tr><th>Write Effect</th>
+    <td>None.</td></tr>
+</table>
+""" .

@@ -29,6 +29,12 @@
 				rdfs:label "Add ui:parent and ui:resize." ;
 			] , [
 				rdfs:label "Add support for referring to ports by symbol." ;
+			] , [
+				rdfs:label "Add ui:portMap for accessing ports by symbol, allowing for UIs to be distributed separately from plugins." ;
+			] , [
+				rdfs:label "Add port protocols and a dynamic notification subscription mechanism, for more flexible communication, and audio port metering without control port kludges." ;
+			] , [
+				rdfs:label "Add touch feature to notify the host that the user has grabbed a control." ;
 			] ;
 		] ;
 	] , [
