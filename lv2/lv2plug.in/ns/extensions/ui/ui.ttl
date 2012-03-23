@@ -195,14 +195,6 @@ ui:PortNotification
 		rdfs:comment """
 A PortNotification MUST have exactly one ui:plugin which is a lv2:Plugin.
 """
-	] , [
-		a owl:Restriction ;
-		owl:onProperty ui:portIndex ;
-		owl:someValuesFrom xsd:decimal ;
-		owl:cardinality 1 ;
-		rdfs:comment """
-A PortNotification MUST have exactly one ui:portIndex which is an xsd:decimal.
-"""
 	] ;
 	lv2:documentation """
 <p>A port notification.  This describes which ports the host must send
@@ -254,3 +246,14 @@ can be used to indicate that only a particular type of data should cause
 notification.  This is useful where port traffic is very dense, but only a
 certain small number of events are actually of interest to the UI.</p>
 """ .
+
+ui:resize
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature that allows the UI to notify the host about its current size, or
+request a size change.  This feature corresponds to the LV2_UI_Resize struct,
+which should be passed with the URI LV2_UI__resize.  This struct may also be
+provided by the UI as extension data using the same URI, in which case it is
+used by the host to request that the UI change its size.</p>
+""" .
+o

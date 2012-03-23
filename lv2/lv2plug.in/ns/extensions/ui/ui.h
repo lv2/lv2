@@ -26,7 +26,22 @@
 
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
-#define LV2_UI_URI "http://lv2plug.in/ns/extensions/ui"
+#define LV2_UI_URI    "http://lv2plug.in/ns/extensions/ui"
+#define LV2_UI_PREFIX LV2_UI_URI "#"
+
+#define LV2_UI__UI               LV2_UI_PREFIX "UI"
+#define LV2_UI__GtkUI            LV2_UI_PREFIX "GtkUI"
+#define LV2_UI__Qt4UI            LV2_UI_PREFIX "Qt4UI"
+#define LV2_UI__X11UI            LV2_UI_PREFIX "X11UI"
+#define LV2_UI__noUserResize     LV2_UI_PREFIX "noUserResize"
+#define LV2_UI__fixedSize        LV2_UI_PREFIX "fixedSize"
+#define LV2_UI__parent           LV2_UI_PREFIX "parent"
+#define LV2_UI__PortNotification LV2_UI_PREFIX "PortNotification"
+#define LV2_UI__portNotification LV2_UI_PREFIX "portNotification"
+#define LV2_UI__plugin           LV2_UI_PREFIX "plugin"
+#define LV2_UI__portIndex        LV2_UI_PREFIX "portIndex"
+#define LV2_UI__notifyType       LV2_UI_PREFIX "notifyType"
+#define LV2_UI__resize           LV2_UI_PREFIX "resize"
 
 #ifdef __cplusplus
 extern "C" {
@@ -219,6 +234,38 @@ typedef struct _LV2UI_Descriptor {
   const void* (*extension_data)(const char* uri);
 
 } LV2UI_Descriptor;
+
+typedef void* LV2_UI_Resize_Handle;
+
+/**
+   UI Resize Feature (LV2_UI__resize)
+
+   This structure may be used in two ways: as a feature passed by the host
+   (e.g. via the features parameter of LV2UI_Descriptor::instantiate()) or
+   as a feature exposed by a UI (e.g. via LV2UI_Descriptor::extension_data()).
+*/
+typedef struct {
+
+	LV2_UI_Resize_Handle handle;
+
+	/**
+	   Request or notify a size change.
+
+	   When this struct is provided by the host, the UI may call this
+	   function to notify the host that a size change is desired, or notify
+	   the host of the initial size of the UI.
+
+	   When this struct is provided by the plugin, the host may call this
+	   function in the UI thread to notify the UI that it should change its
+	   size to the given dimensions.
+
+	   @return 0 on success.
+	*/
+	int (*ui_resize)(LV2_UI_Resize_Handle handle,
+	                 int                  width,
+	                 int                  height);
+
+} LV2_UI_Resize;
 
 /**
    A plugin UI programmer must include a function called "lv2ui_descriptor"
