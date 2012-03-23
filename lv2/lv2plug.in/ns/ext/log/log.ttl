@@ -32,11 +32,10 @@
 		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
 	] ;
 	lv2:documentation """
-    
-<p>This extension defines a feature, LV2_Log_Log, which allows plugins to print
-messages to logs implemented by the host with an API much like the standard C
-printf functions.  This allows, for example, plugin logs to be nicely presented
-to the user in a graphical user interface.</p>
+<p>This extension defines a feature, <a href="#log">log:log</a>, which allows
+plugins to print log messages with an API much like the standard C printf
+functions.  This allows, for example, plugin logs to be nicely presented to the
+user in a graphical user interface.</p>
 
 <p>Different log <q>levels</q> (e.g. <q>error</q> or <q>information</q>) are
 defined by URI and passed as an LV2_URID.  Thus, the possible number of log

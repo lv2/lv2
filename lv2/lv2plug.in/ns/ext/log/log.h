@@ -22,11 +22,13 @@
 #ifndef LV2_LOG_H
 #define LV2_LOG_H
 
-#define LV2_LOG_URI      "http://lv2plug.in/ns/ext/log"
-#define LV2_LOG_LOG_URI   LV2_LOG_URI "#log"
-#define LV2_LOG_ERROR_URI LV2_LOG_URI "#Error"
-#define LV2_LOG_INFO_URI  LV2_LOG_URI "#Info"
-#define LV2_LOG_WARN_URI  LV2_LOG_URI "#Warn"
+#define LV2_LOG_URI    "http://lv2plug.in/ns/ext/log"
+#define LV2_LOG_PREFIX LV2_LOG_URI "#"
+
+#define LV2_LOG__Error LV2_LOG_PREFIX "Error"
+#define LV2_LOG__Info  LV2_LOG_PREFIX "Info"
+#define LV2_LOG__Warn  LV2_LOG_PREFIX "Warn"
+#define LV2_LOG__log   LV2_LOG_PREFIX "log"
 
 #include <stdarg.h>
 
@@ -49,7 +51,7 @@ extern "C" {
 typedef void* LV2_Log_Handle;
 
 /**
-   Log (http://lv2plug.in/ns/ext/log#log).
+   Log feature (LV2_LOG__log)
 */
 typedef struct _LV2_Log {
 	/**
@@ -64,7 +66,8 @@ typedef struct _LV2_Log {
 	   Log a message, passing format parameters directly.
 
 	   The API of this function matches that of the standard C printf
-	   function, except for the addition of the first two parameters.
+	   function, except for the addition of the first two parameters.  This
+	   function may be called from any non-realtime context.
 	*/
 	LV2_LOG_FUNC(3, 4)
 	int (*printf)(LV2_Log_Handle handle,
@@ -75,7 +78,8 @@ typedef struct _LV2_Log {
 	   Log a message, passing format parameters in a va_list.
 
 	   The API of this function matches that of the standard C vprintf
-	   function, except for the addition of the first two parameters.
+	   function, except for the addition of the first two parameters.  This
+	   function may be called from any non-realtime context.
 	*/
 	LV2_LOG_FUNC(3, 0)
 	int (*vprintf)(LV2_Log_Handle handle,
