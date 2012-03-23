@@ -118,32 +118,6 @@ the port describe discrete values that should be interpreted as steps (and not
 points along a curve).
 """ .
 
-pprops:reportsBpm
-	a lv2:PortProperty ;
-	rdfs:label "Carries the current tempo expressed in BPM" ;
-	rdfs:comment """
-Indicates that the port is used to pass the current tempo in context of the
-plugin (which may be current song tempo, or tempo of a particular subset of the
-song, or the subgraph the plugin resides in).  For input ports, the host may
-automatically feed the port with current tempo and hide the port from the user,
-unless the user or other factors encourage different behaviour.
-""" .
-
-pprops:reportsBeatsPerBar
-	a lv2:PortProperty ;
-	rdfs:label "Carries the current number of beats in a bar" ;
-	rdfs:comment """
-Indicates that the port may be used to pass the current number of beats in a
-bar.  """ .
-
-pprops:reportsBeatUnit
-	a lv2:PortProperty ;
-	rdfs:label "Carries the current beat size" ;
-	rdfs:comment """
-Indicates that the port may be used to pass the current size of a beat (4 for a
-crochet/quarter note, 8 for a quaver/eighth note, etc.).
-""" .
-
 pprops:logarithmic
 	a lv2:PortProperty ;
 	rdfs:label "Port value uses a logarithmic scale" ;
