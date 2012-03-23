@@ -569,15 +569,12 @@ INPUT =  \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/atom.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/forge.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/util.h \
-	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/contexts/contexts.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/data-access/data-access.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/event/event-helpers.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/event/event.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/log/log.h \
-	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/osc/osc-print.h \
-	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/osc/osc.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/patch/patch.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/pui/pui.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/reference/reference.h \
