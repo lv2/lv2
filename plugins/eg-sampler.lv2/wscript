@@ -34,11 +34,6 @@ def configure(conf):
         autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-worker',
                           uselib_store='LV2_WORKER')
 
-    conf.check(function_name='mlock',
-               header_name='sys/mman.h',
-               define_name='HAVE_MLOCK',
-               mandatory=False)
-
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)
     autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
