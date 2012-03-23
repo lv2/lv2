@@ -120,7 +120,6 @@ static inline void
 lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 {
 	lv2_atom_forge_set_buffer(forge, NULL, 0);
-	forge->stack    = NULL;
 	forge->Blank    = map->map(map->handle, LV2_ATOM__Blank);
 	forge->Bool     = map->map(map->handle, LV2_ATOM__Bool);
 	forge->Double   = map->map(map->handle, LV2_ATOM__Double);

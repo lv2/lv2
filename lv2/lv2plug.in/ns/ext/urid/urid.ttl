@@ -68,7 +68,7 @@ urid:map
 	lv2:documentation """
 <p>A feature which is used to map URIs to integers.  To support this feature,
 the host must pass an LV2_Feature to LV2_Descriptor::instantiate() with URI
-LV2_URID_MAP_URI and data pointed to an instance of LV2_URID_Map.</p>
+LV2_URID__map and data pointed to an instance of LV2_URID_Map.</p>
 """ .
 
 urid:unmap
@@ -76,6 +76,6 @@ urid:unmap
 	lv2:documentation """
 <p>A feature which is used to unmap URIs previously mapped to integers by
 urid:map.  To support this feature, the host must pass an LV2_Feature to
-LV2_Descriptor::instantiate() with URI LV2_URID_UNMAP_URI and data pointed to
+LV2_Descriptor::instantiate() with URI LV2_URID__unmapl and data pointed to
 an instance of LV2_URID_Unmap.</p>
 """ .

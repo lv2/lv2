@@ -44,15 +44,10 @@
 #include "lv2/lv2plug.in/ns/ext/patch/patch.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
+#include "lv2/lv2plug.in/ns/ext/worker/worker.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
-#include "zix/sem.h"
-#include "zix/thread.h"
-#include "zix/ring.h"
-
 #include "./uris.h"
-
-#define RING_SIZE 4096
 
 enum {
 	SAMPLER_CONTROL  = 0,
@@ -71,39 +66,38 @@ typedef struct {
 
 typedef struct {
 	/* Features */
-	LV2_URID_Map* map;
+	LV2_URID_Map*        map;
+	LV2_Worker_Schedule* schedule;
 
 	/* Forge for creating atoms */
 	LV2_Atom_Forge forge;
-
-	/* Worker thread, communication, and sync */
-	ZixThread worker_thread;
-	ZixSem    signal;
-	ZixRing*  to_worker;
-	ZixRing*  from_worker;
-	bool      exit;
 
 	/* Sample */
 	Sample* sample;
 
 	/* Ports */
-	float*             output_port;
-	LV2_Atom_Sequence* control_port;
-	LV2_Atom_Sequence* notify_port;
+	float*               output_port;
+	LV2_Atom_Sequence*   control_port;
+	LV2_Atom_Sequence*   notify_port;
+	LV2_Atom_Forge_Frame notify_frame;
 
 	/* URIs */
 	SamplerURIs uris;
+
+	/* Current position in run() */
+	uint32_t frame_offset;
 
 	/* Playback state */
 	sf_count_t frame;
 	bool       play;
 } Sampler;
 
-/** An atom-like message used internally to apply/free samples.
- *
- * This is only used internally via ringbuffers, since it is not POD and
- * therefore not strictly an Atom.
- */
+/**
+   An atom-like message used internally to apply/free samples.
+ 
+   This is only used internally to communicate with the worker, it is not an
+   Atom because it is not POD.
+*/
 typedef struct {
 	LV2_Atom atom;
 	Sample*  sample;
@@ -120,7 +114,7 @@ load_sample(Sampler* plugin, const char* path)
 	SNDFILE* const sndfile = sf_open(path, SFM_READ, info);
 
 	if (!sndfile || !info->frames || (info->channels != 1)) {
-		fprintf(stderr, "failed to open sample '%s'.\n", path);
+		fprintf(stderr, "Failed to open sample '%s'.\n", path);
 		free(sample);
 		return NULL;
 	}
@@ -128,7 +122,7 @@ load_sample(Sampler* plugin, const char* path)
 	/* Read data */
 	float* const data = malloc(sizeof(float) * info->frames);
 	if (!data) {
-		fprintf(stderr, "failed to allocate memory for sample.\n");
+		fprintf(stderr, "Failed to allocate memory for sample.\n");
 		return NULL;
 	}
 	sf_seek(sndfile, 0ul, SEEK_SET);
@@ -144,32 +138,7 @@ load_sample(Sampler* plugin, const char* path)
 	return sample;
 }
 
-static bool
-handle_set_message(Sampler*               plugin,
-                   const LV2_Atom_Object* obj)
-{
-	/* Get file path from message */
-	const LV2_Atom* file_path = read_set_file(&plugin->uris, obj);
-	if (!file_path) {
-		return false;
-	}
-
-	/* Load sample. */
-	Sample* sample = load_sample(plugin, LV2_ATOM_BODY(file_path));
-	if (sample) {
-		/* Loaded sample, send it to run() to be applied. */
-		const SampleMessage msg = {
-			{ sizeof(sample), plugin->uris.eg_applySample },
-			sample
-		};
-		zix_ring_write(
-			plugin->from_worker, &msg, lv2_atom_pad_size(sizeof(msg)));
-	}
-
-	return true;
-}
-
-void
+static void
 free_sample(Sample* sample)
 {
 	if (sample) {
@@ -180,33 +149,65 @@ free_sample(Sample* sample)
 	}
 }
 
-void*
-worker_thread_main(void* arg)
+/** Handle work (load or free a sample) in a non-realtime thread. */
+static LV2_Worker_Status
+work(LV2_Handle                  instance,
+     LV2_Worker_Respond_Function respond,
+     LV2_Worker_Respond_Handle   handle,
+     uint32_t                    size,
+     const void*                 data)
 {
-	Sampler* plugin = (Sampler*)arg;
+	Sampler*  self = (Sampler*)instance;
+	LV2_Atom* atom = (LV2_Atom*)data;
+	if (atom->type == self->uris.eg_freeSample) {
+		/* Free old sample */
+		SampleMessage* msg = (SampleMessage*)data;
+		free_sample(msg->sample);
+	} else {
+		/* Handle set message (load sample). */
+		LV2_Atom_Object* obj = (LV2_Atom_Object*)data;
 
-	while (!zix_sem_wait(&plugin->signal) && !plugin->exit) {
-		/* Peek message header to see how much we need to read. */
-		LV2_Atom head;
-		zix_ring_peek(plugin->to_worker, &head, sizeof(head));
+		/* Get file path from message */
+		const LV2_Atom* file_path = read_set_file(&self->uris, obj);
+		if (!file_path) {
+			return LV2_WORKER_ERR_UNKNOWN;
+		}
 
-		/* Read message. */
-		const uint32_t size = lv2_atom_pad_size(sizeof(LV2_Atom) + head.size);
-		uint8_t        buf[size];
-		LV2_Atom*      obj  = (LV2_Atom*)buf;
-		zix_ring_read(plugin->to_worker, buf, size);
-
-		if (obj->type == plugin->uris.eg_freeSample) {
-			/* Free old sample */
-			SampleMessage* msg = (SampleMessage*)obj;
-			free_sample(msg->sample);
-		} else {
-			/* Handle set message (load sample). */
-			handle_set_message(plugin, (LV2_Atom_Object*)obj);
+		/* Load sample. */
+		Sample* sample = load_sample(self, LV2_ATOM_BODY(file_path));
+		if (sample) {
+			/* Loaded sample, send it to run() to be applied. */
+			respond(handle, sizeof(sample), &sample);
 		}
 	}
 
-	return 0;
+	return LV2_WORKER_SUCCESS;
+}
+
+/** Handle a response from work() in the audio thread. */
+static LV2_Worker_Status
+work_response(LV2_Handle  instance,
+              uint32_t    size,
+              const void* data)
+{
+	Sampler* self = (Sampler*)instance;
+
+	SampleMessage msg = { { sizeof(Sample*), self->uris.eg_freeSample },
+	                      self->sample };
+
+	/* Send a message to the worker to free the current sample */
+	self->schedule->schedule_work(self->schedule->handle, sizeof(msg), &msg);
+	                         
+	/* Install the new sample */
+	self->sample = *(Sample**)data;
+
+	/* Send a notification that we're using a new sample. */
+	lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
+	write_set_file(&self->forge, &self->uris,
+	               self->sample->path,
+	               self->sample->path_len);
+
+	return LV2_WORKER_SUCCESS;
 }
 
 static void
@@ -242,51 +243,33 @@ instantiate(const LV2_Descriptor*     descriptor,
 		return NULL;
 	}
 
+	memset(plugin, 0, sizeof(Sampler));
 	plugin->sample = (Sample*)malloc(sizeof(Sample));
 	if (!plugin->sample) {
 		return NULL;
 	}
 
 	memset(plugin->sample, 0, sizeof(Sample));
-	memset(&plugin->uris, 0, sizeof(plugin->uris));
 
-	/* Scan host features for URID map */
-	LV2_URID_Map* map = NULL;
+	/* Scan and store host features */
 	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID_URI "#map")) {
-			map = (LV2_URID_Map*)features[i]->data;
+		if (!strcmp(features[i]->URI, LV2_URID__map)) {
+			plugin->map = (LV2_URID_Map*)features[i]->data;
+		} else if (!strcmp(features[i]->URI, LV2_WORKER__schedule)) {
+			plugin->schedule = (LV2_Worker_Schedule*)features[i]->data;
 		}
 	}
-	if (!map) {
+	if (!plugin->map) {
 		fprintf(stderr, "Host does not support urid:map.\n");
+		goto fail;
+	} else if (!plugin->schedule) {
+		fprintf(stderr, "Host does not support work:schedule.\n");
 		goto fail;
 	}
 
 	/* Map URIS and initialise forge */
-	plugin->map = map;
 	map_sampler_uris(plugin->map, &plugin->uris);
 	lv2_atom_forge_init(&plugin->forge, plugin->map);
-
-	/* Create signal for waking up worker thread */
-	if (zix_sem_init(&plugin->signal, 0)) {
-		fprintf(stderr, "Could not initialize semaphore.\n");
-		goto fail;
-	}
-
-	/* Create worker thread */
-	plugin->exit = false;
-	if (zix_thread_create(
-		    &plugin->worker_thread, 1024, worker_thread_main, plugin)) {
-		fprintf(stderr, "Could not initialize worker thread.\n");
-		goto fail;
-	}
-
-	/* Create ringbuffers for communicating with worker thread */
-	plugin->to_worker   = zix_ring_new(RING_SIZE);
-	plugin->from_worker = zix_ring_new(RING_SIZE);
-
-	zix_ring_mlock(plugin->to_worker);
-	zix_ring_mlock(plugin->from_worker);
 
 	/* Load the default sample file */
 	const size_t path_len    = strlen(path);
@@ -308,12 +291,6 @@ cleanup(LV2_Handle instance)
 {
 	Sampler* plugin = (Sampler*)instance;
 
-	plugin->exit = true;
-	zix_sem_post(&plugin->signal);
-	zix_thread_join(plugin->worker_thread, 0);
-	zix_sem_destroy(&plugin->signal);
-	zix_ring_free(plugin->to_worker);
-	zix_ring_free(plugin->from_worker);
 	free_sample(plugin->sample);
 	free(plugin);
 }
@@ -328,9 +305,19 @@ run(LV2_Handle instance,
 	sf_count_t   pos         = 0;
 	float*       output      = plugin->output_port;
 
+	/* Set up forge to write directly to notify output port. */
+	const uint32_t notify_capacity = plugin->notify_port->atom.size;
+	lv2_atom_forge_set_buffer(&plugin->forge,
+	                          (uint8_t*)plugin->notify_port,
+	                          notify_capacity);
+
+	/* Start a sequence in the notify output port. */
+	lv2_atom_forge_sequence_head(&plugin->forge, &plugin->notify_frame, 0);
+
 	/* Read incoming events */
 	LV2_SEQUENCE_FOREACH(plugin->control_port, i) {
 		LV2_Atom_Event* const ev = lv2_sequence_iter_get(i);
+		plugin->frame_offset = ev->time.frames;
 		if (ev->body.type == uris->midi_Event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);
 			if ((data[0] & 0xF0) == 0x90) {
@@ -341,13 +328,11 @@ run(LV2_Handle instance,
 		} else if (is_object_type(uris, ev->body.type)) {
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
 			if (obj->body.otype == uris->patch_Set) {
-				/* Received a set message, send it to the worker thread. */
+				/* Received a set message, send it to the worker. */
 				fprintf(stderr, "Queueing set message\n");
-				zix_ring_write(plugin->to_worker,
-				               obj,
-				               lv2_atom_pad_size(
-					               lv2_atom_total_size(&obj->atom)));
-				zix_sem_post(&plugin->signal);
+				plugin->schedule->schedule_work(plugin->schedule->handle,
+				                                lv2_atom_total_size(&ev->body),
+				                                &ev->body);
 			} else {
 				fprintf(stderr, "Unknown object type %d\n", obj->body.otype);
 			}
@@ -380,47 +365,6 @@ run(LV2_Handle instance,
 	for (; pos < sample_count; ++pos) {
 		output[pos] = 0.0f;
 	}
-
-	/* Set up forge to write directly to notify output port buffer */
-	const uint32_t notify_capacity = plugin->notify_port->atom.size;
-
-	lv2_atom_forge_set_buffer(&plugin->forge,
-	                          (uint8_t*)plugin->notify_port,
-	                          notify_capacity);
-
-	LV2_Atom_Forge_Frame seq_frame;
-	lv2_atom_forge_sequence_head(&plugin->forge, &seq_frame, 0);
-
-	/* Read messages from worker thread */
-	SampleMessage  m;
-	const uint32_t msize = lv2_atom_pad_size(sizeof(m));
-	while (zix_ring_read(plugin->from_worker, &m, msize) == msize) {
-		if (m.atom.type == uris->eg_applySample) {
-			/* Send a message to the worker to free the current sample */
-			SampleMessage free_msg = {
-				{ sizeof(plugin->sample), uris->eg_freeSample },
-				plugin->sample
-			};
-			zix_ring_write(plugin->to_worker,
-			               &free_msg,
-			               lv2_atom_pad_size(sizeof(free_msg)));
-			zix_sem_post(&plugin->signal);
-
-			/* Install the new sample */
-			plugin->sample = m.sample;
-
-			/* Send a notification that we're using a new sample. */
-			lv2_atom_forge_frame_time(&plugin->forge, 0);
-			write_set_file(&plugin->forge, uris,
-			               plugin->sample->path,
-			               plugin->sample->path_len);
-
-		} else {
-			fprintf(stderr, "Unknown message from worker\n");
-		}
-	}
-
-	lv2_atom_forge_pop(&plugin->forge, &seq_frame);
 }
 
 static void
@@ -477,12 +421,15 @@ restore(LV2_Handle                  instance,
 	}
 }
 
-const void*
+static const void*
 extension_data(const char* uri)
 {
-	static const LV2_State_Interface state = { save, restore };
+	static const LV2_State_Interface  state  = { save, restore };
+	static const LV2_Worker_Interface worker = { work, work_response };
 	if (!strcmp(uri, LV2_STATE__Interface)) {
 		return &state;
+	} else if (!strcmp(uri, LV2_WORKER__Interface)) {
+		return &worker;
 	}
 	return NULL;
 }

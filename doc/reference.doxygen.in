@@ -587,6 +587,7 @@ INPUT =  \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/ui-resize/ui-resize.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/uri-map/uri-map.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/urid/urid.h \
+	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/worker/worker.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/extensions/ui/ui.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/lv2core/lv2.h
 

@@ -21,12 +21,14 @@
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
 @prefix urid: <http://lv2plug.in/ns/ext/urid#> .
+@prefix work: <http://lv2plug.in/ns/ext/worker#> .
 
 <http://lv2plug.in/plugins/eg-sampler>
 	a lv2:Plugin ;
 	doap:name "Example Sampler" ;
 	doap:license <http://opensource.org/licenses/isc> ;
-	lv2:requiredFeature urid:map ;
+	lv2:requiredFeature urid:map ,
+		work:schedule ;
 	lv2:optionalFeature lv2:hardRTCapable ;
 	lv2:extensionData <http://lv2plug.in/ns/ext/state#Interface> ;
 	ui:ui <http://lv2plug.in/plugins/eg-sampler#ui> ;
@@ -38,7 +40,7 @@
 			<http://lv2plug.in/ns/ext/patch#Message> ;
 		lv2:index 0 ;
 		lv2:symbol "control" ;
-		lv2:name "Control"
+		lv2:name "Control" ;
 	] , [
 		a lv2:OutputPort ,
 			atom:MessagePort ;
@@ -46,13 +48,13 @@
 		atom:supports <http://lv2plug.in/ns/ext/patch#Message> ;
 		lv2:index 1 ;
 		lv2:symbol "notify" ;
-		lv2:name "Notify"
+		lv2:name "Notify" ;
 	] , [
 		a lv2:AudioPort ,
 			lv2:OutputPort ;
 		lv2:index 2 ;
 		lv2:symbol "out" ;
-		lv2:name "Out"
+		lv2:name "Out" ;
 	] .
 
 <http://lv2plug.in/plugins/eg-sampler#ui>
@@ -61,5 +63,5 @@
 	ui:portNotification [
 		ui:plugin <http://lv2plug.in/plugins/eg-sampler> ;
 		lv2:symbol "notify" ;
-        ui:notifyType atom:Blank ;
+		ui:notifyType atom:Blank ;
 	] .
