@@ -16,7 +16,7 @@ import waflib.Scripting as Scripting
 LV2EXT_VERSION = datetime.date.isoformat(datetime.datetime.now()).replace('-', '.')
 
 # Variables for 'waf dist'
-APPNAME = 'lv2world'
+APPNAME = 'lv2'
 VERSION = LV2EXT_VERSION
 
 # Mandatory variables
