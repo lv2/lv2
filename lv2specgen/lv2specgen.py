@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# lv2specgen, an LV2 extension specification page generator
+# lv2specgen, a documentation generator for LV2 specifications.
 # Copyright (c) 2009-2012 David Robillard <d@drobilla.net>
 #
 # Based on SpecGen:

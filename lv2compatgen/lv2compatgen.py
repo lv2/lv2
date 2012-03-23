@@ -1,9 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# lv2compatgen
-# Generates compatiblity documentation for LV2 hosts and plugins.
-# Copyright (c) 2009 David Robillard <d@drobilla.net>
+# lv2compatgen, a generator for LV2 compatibility documentation.
+# Copyright (c) 2009-2012 David Robillard <d@drobilla.net>
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
