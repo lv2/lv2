@@ -539,7 +539,7 @@ MIDI events is described like so:</p>
 """ .
 
 atom:eventTransfer
-	a <http://lv2plug.in/ns/ext/pui#PortProtocol> ;
+	a <http://lv2plug.in/ns/extensions/ui#PortProtocol> ;
 	lv2:documentation """
 <p>Transfer of individual events.  Useful as the
 <code>format</code> for a LV2_UI_Write_Function, or the
