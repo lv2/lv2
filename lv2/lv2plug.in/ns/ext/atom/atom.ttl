@@ -22,6 +22,12 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
 <http://lv2plug.in/ns/ext/atom>
 	a lv2:Specification ;
 	doap:name "LV2 Atom" ;
@@ -33,12 +39,7 @@
 		doap:revision "0.6" ;
 		doap:created "2012-02-22" ;
 	] ;
-	doap:maintainer [
-		a foaf:Person ;
-		foaf:name "David Robillard" ;
-		foaf:homepage <http://drobilla.net/> ;
-		rdfs:seeAlso <http://drobilla.net/drobilla.rdf> ;
-	] ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This extension defines a generic container for data, called an <q>Atom</q>,
 and several basic Atom types which can be used to express structured data.

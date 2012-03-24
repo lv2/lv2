@@ -20,14 +20,16 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
 <http://lv2plug.in/plugins/eg-amp>
 	a lv2:Plugin ,
 		lv2:AmplifierPlugin ;
-	doap:maintainer [
-		foaf:name "David Robillard" ;
-		foaf:homepage <http://drobilla.net/> ;
-		foaf:mbox <mailto:d@drobilla.net>
-	] ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:name "Simple Amplifier" ,
 		"简单放大器"@ch ,
 		"Einfacher Verstärker"@de ,

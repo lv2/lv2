@@ -21,16 +21,17 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
 <http://lv2plug.in/ns/ext/log>
 	a lv2:Specification ;
 	doap:name "LV2 Log" ;
 	doap:shortdesc "A feature for writing log messages." ;
-	doap:maintainer [
-		a foaf:Person ;
-		foaf:name "David Robillard" ;
-		foaf:homepage <http://drobilla.net/> ;
-		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
-	] ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This extension defines a feature, <a href="#log">log:log</a>, which allows
 plugins to print log messages with an API much like the standard C printf

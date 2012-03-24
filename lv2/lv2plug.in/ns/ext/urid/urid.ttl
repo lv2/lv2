@@ -24,7 +24,6 @@
 <http://drobilla.net/drobilla#me>
 	a foaf:Person ;
 	foaf:name "David Robillard" ;
-	foaf:homepage <http://drobilla.net/> ;
 	foaf:mbox <mailto:d@drobilla.net> ;
 	rdfs:seeAlso <http://drobilla.net/drobilla> .
 

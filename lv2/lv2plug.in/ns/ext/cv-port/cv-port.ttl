@@ -20,17 +20,18 @@
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
+<http://drobilla.net/drobilla#me>
+	a foaf:Person ;
+	foaf:name "David Robillard" ;
+	foaf:mbox <mailto:d@drobilla.net> ;
+	rdfs:seeAlso <http://drobilla.net/drobilla> .
+
 <http://lv2plug.in/ns/ext/cv-port>
 	a lv2:Specification ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 CV Port" ;
 	doap:shortdesc "Control Voltage ports for LV2 plugins." ;
-	doap:maintainer [
-		a foaf:Person ;
-		foaf:name "David Robillard" ;
-		foaf:homepage <http://drobilla.net/> ;
-		rdfs:seeAlso <http://drobilla.net/drobilla.rdf>
-	] ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This extension defines Control Voltage (CV) ports, which are audio-rate
 control ports like those used on classical voltage-controlled synthesizers.

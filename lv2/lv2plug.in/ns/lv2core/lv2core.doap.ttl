@@ -6,13 +6,11 @@
 <http://plugin.org.uk/swh.xrdf#me>
 	a foaf:Person ;
 	foaf:name "Steve Harris" ;
-	foaf:homepage <http://plugin.org.uk/> ;
 	rdfs:seeAlso <http://plugin.org.uk/swh.xrdf> .
 
 <http://drobilla.net/drobilla#me>
 	a foaf:Person ;
 	foaf:name "David Robillard" ;
-	foaf:homepage <http://drobilla.net/> ;
 	foaf:mbox <mailto:d@drobilla.net> ;
 	rdfs:seeAlso <http://drobilla.net/drobilla> .
 
