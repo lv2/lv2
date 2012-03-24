@@ -417,13 +417,9 @@ not the plugin itself.</p>
 #####################
 
 lv2:index a rdf:Property , owl:DatatypeProperty ;
-    rdfs:domain lv2:Port ;
     rdfs:range xsd:nonNegativeInteger ;
     rdfs:label "index" ;
-    rdfs:comment """
-Specifies the index of the port, passed as an argument to the connect port
-function. The index uniqely identifies the port on an instance of the plugin.
-""" .
+    rdfs:comment "A non-negative zero-based index." .
 
 lv2:symbol a rdf:Property , owl:DatatypeProperty ;
     rdfs:label "symbol" ;
@@ -449,26 +445,33 @@ port identification. The plugin author may change the values of this
 property without changing the Plugin URI.
 """ .
 
-lv2:Parameter
-	a rdfs:Class ;
-	rdfs:subClassOf rdf:Property ;
+lv2:Designation a rdfs:Class ;
+	rdfs:label "Designation" ;
 	lv2:documentation """
-<p>A <q>parameter</q> of a plugin.  A parameter is simply a recognized
-property, identified by URI.  Parameters are abstract in the sense that they
-may be controlled by several methods.  The simplest is with an
-lv2:ControlPort, which can be associated with a parameter using
-lv2:isParameter.  Other methods, such as setting dynamic parameters via
-messages, are possible but not defined in this specification.  The concept of a
-parameter is deliberately separate from any particular code mechanism, so that
-a parameter can be defined once and used in several contexts.</p>
+<p>The designation (or <q>assignment</q>) of an input or output.  A designation
+is metadata that describes the meaning or role of data.  By assigning a
+designation to a port using lv2:designation, the port's content becomes
+meaningful and can be used more intelligently by the host.</p>
+""" .
 
-<p>Parameters are <em>meaningful</em> controls which allow hosts to act
-intelligently.  For example, if a plugin has a foo:volume parameter, and the
-host understands it, the host knows how to automatically control the volume of
-that plugin.</p>
+lv2:Channel a rdfs:Class ;
+	rdfs:label "Channel" ;
+	rdfs:subClassOf lv2:Designation ;
+	lv2:documentation """
+<p>A specific channel of audio, e.g. <q>left</q> or <q>right</q>.</p>
+""" .
 
-<p>Any existing property can be used as a parameter, an LV2 specific definition
-is not required.</p>
+lv2:Parameter a rdfs:Class ;
+	rdfs:subClassOf rdf:Property , lv2:Designation ;
+	lv2:documentation """
+<p>A parameter, i.e. a recognized property.  A parameter is a designation for a
+control.</p>
+
+<p>A parameter defines the <em>meaning</em> of a control (not the
+<em>method</em> of conveying its value).  The standard way of exposing a plugin
+parameter is via an lv2:ControlPort, which can be given a parameter designation
+with lv2:designation.  Other methods, such as setting dynamic parameters via
+messages, are possible but not defined here.</p>
 """ .
 
 lv2:hasParameter a rdf:Property , owl:ObjectProperty ;
@@ -478,26 +481,27 @@ lv2:hasParameter a rdf:Property , owl:ObjectProperty ;
 <p>Indicates that a specific parameter is supported.  This predicate is to
 advertise that a plugin supports a parameter in some way other than a port
 value, such as a message interface.  It is not necessary use for control port
-parameters, simply use lv2:isParameter on the port for that.</p>
+parameters, simply use lv2:designation on the port for that.</p>
 
 <p>This property may be used to indicate any resource has a parameter, it is
 not restricted to plugins.</p>
 """ .
 
-lv2:isParameter a rdf:Property , owl:ObjectProperty ;
-    rdfs:domain lv2:Port ;
-    rdfs:range lv2:Parameter ;
-    rdfs:label "is parameter" ;
+lv2:designation a rdf:Property , owl:ObjectProperty ;
+    rdfs:range lv2:Designation ;
+    rdfs:label "assignment" ;
     lv2:documentation """
-<p>Indicates that a port contains the value of a plugin parameter.</p>
+<p>Indicates a channel or parameter designation.</p>
 
-<p>For example, if a port lv2:isParameter foo:gain, then the value of that port
-represents the foo:gain of the plugin instance.  Associating a port with a
-well-defined parameter gives the port's value meaning, which allows the host
-to use the port more intelligently.</p>
+<p>This property is used to give the port's contents a well-defined meaning.
+For example, if a port has lv2:designation eg:gain, then the value of that port
+represents the eg:gain of the plugin instance.</p>
 
-<p>For a given parameter, plugins SHOULD have at most one port per direction
-(lv2:InputPort or lv2:OutputPort).</p> """ .
+<p>Ports should be given designations whenever a well-defined designation
+exists.  This allows the host to act more intelligently and/or provide a more
+effective user interface.  For example, if the plugin has a BPM parameter, the
+host may automatically set that parameter to the current tempo.</p>
+""" .
 
 
 ################
