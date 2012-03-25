@@ -361,11 +361,11 @@ a:active {
 	color: #C00;
 }
 .sec {
-	background-color: #F7F7F7;
-	border-top: 1px solid #EEE;
+	/*background-color: #F7F7F7;*/
+	border-bottom: 1px dashed #DDD;
 	color: #000;
-	margin: 1em 1ex .5em 1ex;
-	padding: 1ex;
+	margin: 1em;
+    padding: 1ex 0 1ex 0;
 }
 ul, ol {
 	margin-top: 0;
@@ -373,8 +373,8 @@ ul, ol {
 	margin: 0 0 0.5ex 0;
 }
 .content {
-	margin-left: 1.5em;
-	margin-right: 1.5em;
+	margin-left: 2em;
+	margin-right: 2em;
 }
 .label {
 	font-style: italic;
