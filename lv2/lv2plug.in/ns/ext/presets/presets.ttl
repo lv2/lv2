@@ -23,14 +23,9 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/ext/presets>
 	a lv2:Specification ;
+	rdfs:seeAlso <../../people/people.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Presets" ;
 	doap:shortdesc "Presets for LV2 plugins. " ;
@@ -41,9 +36,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add pset:preset property for describing the preset currently applied to a plugin instance."
-			]
-		]
+				rdfs:label "Add pset:preset property for describing the preset currently applied to a plugin instance." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "2.2" ;
 		doap:created "2011-11-21" ;
@@ -51,11 +46,11 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Update packaging."
+				rdfs:label "Update packaging." ;
 			] , [
-				rdfs:label "Improve documentation."
-			]
-		]
+				rdfs:label "Improve documentation." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "2.0" ;
 		doap:created "2010-10-04" ;
@@ -63,9 +58,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
+				rdfs:label "Initial release." ;
+			] ;
+		] ;
 	] ;
 	lv2:documentation """
 <p>This extension describes a format for presets (i.e. named sets of control
@@ -111,7 +106,7 @@ pset:Preset
 		a owl:Restriction ;
 		owl:onProperty rdfs:label ;
 		owl:someValuesFrom xsd:string ;
-		rdfs:comment "A Preset MUST have at least one string rdfs:label."
+		rdfs:comment "A Preset MUST have at least one string rdfs:label." ;
 	] ;
 	lv2:documentation """
 <p>A Preset for an LV2 Plugin.  A preset can be considered an "overlay" on a

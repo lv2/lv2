@@ -1059,8 +1059,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
     for uri in specProperties(m, spec_url, rdfs.seeAlso):
         if uri[:7] == 'file://':
             path = uri[7:]
-            if (path.startswith(abs_bundle_path)
-                and path != os.path.abspath(specloc)
+            if (path != os.path.abspath(specloc)
                 and path.endswith('.ttl')):
                     m.parse(path, format='n3')
 
@@ -1085,7 +1084,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
     prefixes_html += "</span>"
 
     if spec_pre is None:
-        print('No namespace prefix for specification defined')
+        print('No namespace prefix for %s defined' % specloc)
         sys.exit(1)
 
     ns_list[spec_ns_str] = spec_pre
@@ -1156,7 +1155,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
             if uri[:len(abs_bundle_path)] == abs_bundle_path:
                 uri = uri[len(abs_bundle_path) + 1:]
             else:
-                print("warning: seeAlso file outside bundle: %s" % uri)
+                continue  # Skip seeAlso file outside bundle
 
         other_files += '<a href="%s">%s</a> ' % (uri, uri)
         if uri.endswith('.h'):
@@ -1207,6 +1206,8 @@ def getNamespaces(m):
 def getOntologyNS(m):
     ns = None
     s = findOne(m, None, rdf.type, lv2.Specification)
+    if not s:
+        s = findOne(m, None, rdf.type, owl.Ontology)
     if s:
         if not isBlank(getSubject(s)):
             ns = str(getSubject(s))

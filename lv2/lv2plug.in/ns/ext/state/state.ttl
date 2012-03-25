@@ -22,15 +22,10 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix state: <http://lv2plug.in/ns/ext/state#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/ext/state>
 	a lv2:Specification ;
-	rdfs:seeAlso <state.h> ;
+	rdfs:seeAlso <state.h> ,
+		<../../people/people.ttl> ;
 	doap:name "LV2 State" ;
 	doap:shortdesc "An interface for LV2 plugins to save and restore state." ;
 	doap:license <http://opensource.org/licenses/isc> ;
@@ -39,11 +34,8 @@
 		doap:created "2012-03-03" ;
 		dcs:blame <http://drobilla.net/drobilla#me>
 	] ;
-	doap:developer [
-		a foaf:Person ;
-		foaf:name "Leonard Ritter" ;
-		foaf:homepage <http://paniq.org>
-	] ;
+	doap:developer <http://lv2plug.in/ns/people#paniq> ,
+		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 

@@ -22,16 +22,12 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
-<http://lv2plug.in/ns/ext/host-info> a lv2:Specification ;
-	doap:license <http://usefulinc.com/doap/licenses/mit> ;
-	doap:name    "LV2 Host Info" ;
-    doap:shortdesc "A format for describing LV2 hosts." ;
+<http://lv2plug.in/ns/ext/host-info>
+	a lv2:Specification ;
+	rdfs:seeAlso <../../people/people.ttl> ;
+	doap:license <http://opensource.org/licenses/isc> ;
+	doap:name "LV2 Host Info" ;
+	doap:shortdesc "A format for describing LV2 hosts." ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This specification defines various properties to represent useful information
@@ -52,60 +48,65 @@ extensions are supported by a given host.</p>
 </pre>
 """ .
 
-
-## Core Classes / Properties
-
-hi:Host a rdfs:Class ;
+hi:Host
+	a rdfs:Class ;
 	rdfs:label "LV2 Host" ;
-	rdfs:subClassOf [ a owl:Restriction ;
-		owl:onProperty     doap:name ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty doap:name ;
 		owl:someValuesFrom xsd:string ;
 		owl:minCardinality 1 ;
-		rdfs:comment "A hi:Host MUST have at least one string doap:name"
+		rdfs:comment "A hi:Host MUST have at least one string doap:name" ;
 	] ;
 	rdfs:comment """
 An application that supports loading LV2 plugins, or performs other
 LV2 related functionality.
 """ .
 
-hi:supportsExtension a rdf:Property ;
-	rdfs:domain  hi:Host ;
-	rdfs:range   hi:ExtensionSupport ;
-	rdfs:label   "supports extension" ;
+hi:supportsExtension
+	a rdf:Property ;
+	rdfs:domain hi:Host ;
+	rdfs:range hi:ExtensionSupport ;
+	rdfs:label "supports extension" ;
 	rdfs:comment "Relates a Host to its ExtensionSupport" .
 
-hi:ExtensionSupport a rdfs:Class ;
+hi:ExtensionSupport
+	a rdfs:Class ;
 	rdfs:label "Extension Support" ;
-	rdfs:subClassOf [ a owl:Restriction ;
-		owl:onProperty     hi:sinceVersion ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:onProperty hi:sinceVersion ;
 		owl:someValuesFrom xsd:string ;
 		owl:minCardinality 1 ;
 		rdfs:comment """
 A hi:ExtensionSupport MUST have at least one string hi:sinceVersion
-""" ] ;
+""" ;
+	] ;
 	rdfs:comment "A description of the support for an extension by a Host" .
 
-hi:extension a rdf:Property ;
-	rdfs:domain  hi:ExtensionSupport ;
-	rdfs:range   lv2:Specification ;
-	rdfs:label   "extension" ;
+hi:extension
+	a rdf:Property ;
+	rdfs:domain hi:ExtensionSupport ;
+	rdfs:range lv2:Specification ;
+	rdfs:label "extension" ;
 	rdfs:comment "Indicates the extension supported by a host." .
 
-hi:sinceVersion a rdf:Property ;
-	rdfs:domain  hi:ExtensionSupport ;
-	rdfs:range   xsd:string ;
-	rdfs:label   "since version" ;
+hi:sinceVersion
+	a rdf:Property ;
+	rdfs:domain hi:ExtensionSupport ;
+	rdfs:range xsd:string ;
+	rdfs:label "since version" ;
 	rdfs:comment """
 The initial version of a host which supported an extension.
 This property MUST always be given
 """ .
 
-hi:untilVersion a rdf:Property ;
-	rdfs:domain  hi:ExtensionSupport ;
-	rdfs:range   xsd:string ;
-	rdfs:label   "until version" ;
+hi:untilVersion
+	a rdf:Property ;
+	rdfs:domain hi:ExtensionSupport ;
+	rdfs:range xsd:string ;
+	rdfs:label "until version" ;
 	rdfs:comment """
 The final version of a host which supported an extension.  This property can
 be used if support for an extension was discontinued in a host for some reason.
 """ .
-

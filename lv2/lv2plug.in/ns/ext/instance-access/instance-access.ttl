@@ -22,15 +22,10 @@
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/ext/instance-access>
 	a lv2:Specification ;
-	rdfs:seeAlso <instance-access.h> ;
+	rdfs:seeAlso <instance-access.h> ,
+		<../../people/people.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Instance Access" ;
 	doap:shortdesc "Provides access to the LV2_Handle of a plugin." ;
@@ -42,11 +37,11 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Update packaging."
+				rdfs:label "Update packaging." ;
 			] , [
-				rdfs:label "Improve documentation."
-			]
-		]
+				rdfs:label "Improve documentation." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "1.2" ;
 		doap:created "2011-05-26" ;
@@ -54,11 +49,11 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add build system for installation."
+				rdfs:label "Add build system for installation." ;
 			] , [
-				rdfs:label "Switch to ISC license."
-			]
-		]
+				rdfs:label "Switch to ISC license." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "1.0" ;
 		doap:created "2010-10-04" ;
@@ -66,9 +61,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
+				rdfs:label "Initial release." ;
+			] ;
+		] ;
 	] ;
 	lv2:documentation """
 <p>This extension defines a feature which allows plugin UIs to get a direct

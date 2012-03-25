@@ -22,14 +22,9 @@
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/ext/port-props>
 	a lv2:Specification ;
+	rdfs:seeAlso <../../people/people.ttl> ;
 	doap:name "LV2 Port Properties" ;
 	doap:release [
 		doap:revision "0.2" ;
@@ -38,10 +33,7 @@
 	doap:created "2009-01-01" ;
 	doap:shortdesc "Various port properties." ;
 	doap:maintainer	<http://drobilla.net/drobilla#me> ;
-	doap:developer [
-		a foaf:Person ;
-		foaf:name "Krzysztof Foltman" ;
-	] ;
+	doap:developer <http://lv2plug.in/ns/people#kfoltman> ;
 	lv2:documentation """
 <p>This extension defines various properties for plugin ports, which can be
 used to better describe how a plugin can be controlled.  Using this metadata,

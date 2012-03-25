@@ -21,15 +21,9 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/ext/log>
 	a lv2:Specification ;
-    rdfs:seeAlso <log.h> ;
+    rdfs:seeAlso <log.h> , <../../people/people.ttl> ;
 	doap:name "LV2 Log" ;
 	doap:shortdesc "A feature for writing log messages." ;
 	doap:developer <http://drobilla.net/drobilla#me> ;

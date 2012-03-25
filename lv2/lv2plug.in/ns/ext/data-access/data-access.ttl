@@ -22,16 +22,11 @@
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/ext/data-access>
 	a lv2:Specification ,
 		doap:Project ;
-	rdfs:seeAlso <data-access.h> ;
+	rdfs:seeAlso <data-access.h> ,
+		<../../people/people.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Data Access" ;
 	doap:shortdesc "Provides access to LV2_Descriptor::extension_data()." ;

@@ -21,20 +21,10 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix urid: <http://lv2plug.in/ns/ext/urid#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
-_:gabrbedd
-	a foaf:Person ;
-	foaf:name "Gabriel M. Beddingfield" ;
-	foaf:homepage <http://gabe.is-a-geek.org/> .
-
 <http://lv2plug.in/ns/ext/urid>
 	a lv2:Specification ;
-	rdfs:seeAlso <urid.h> ;
+	rdfs:seeAlso <urid.h> ,
+		<../../people/people.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 URID" ;
 	doap:shortdesc "Features for mapping URIs to and from integers." ;
@@ -48,7 +38,7 @@ _:gabrbedd
 			]
 		]
 	] ;
-	doap:developer _:gabrbedd ;
+	doap:developer <http://lv2plug.in/ns/people#gabrbedd> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This extension defines a simple mechanism for plugins to map URIs to and

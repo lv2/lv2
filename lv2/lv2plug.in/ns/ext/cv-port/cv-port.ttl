@@ -20,14 +20,9 @@
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/ext/cv-port>
 	a lv2:Specification ;
+	rdfs:seeAlso <../../people/people.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 CV Port" ;
 	doap:shortdesc "Control Voltage ports for LV2 plugins." ;
@@ -47,7 +42,6 @@ cv:CVPort
 	rdfs:label "CV Port" ;
 	rdfs:subClassOf lv2:Port ;
 	lv2:documentation """
-
 <p>Ports of this type have identical semantics to <a
 href="http://lv2plug.in/ns/lv2core#AudioPort">lv2:AudioPort</a> in terms of
 buffer format and connection/input/output logistics.  However, rather than the

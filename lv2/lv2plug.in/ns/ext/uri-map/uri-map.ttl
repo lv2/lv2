@@ -23,23 +23,14 @@
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix umap:  <http://lv2plug.in/ns/ext/uri-map#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
-_:larsl
-	a foaf:Person ;
-	foaf:name "Lars Luthman" .
-
 <http://lv2plug.in/ns/ext/uri-map>
 	a lv2:Specification ,
 		lv2:Feature ;
 	owl:deprecated true ;
-	rdfs:seeAlso <uri-map.h> ;
+	rdfs:seeAlso <uri-map.h> ,
+		<../../people/people.ttl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
-	doap:developer _:larsl ,
+	doap:developer <http://lv2plug.in/ns/people#larsl> ,
 		<http://drobilla.net/drobilla#me> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 URI Map" ;

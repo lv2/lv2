@@ -3,19 +3,9 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://plugin.org.uk/swh.xrdf#me>
-	a foaf:Person ;
-	foaf:name "Steve Harris" ;
-	rdfs:seeAlso <http://plugin.org.uk/swh.xrdf> .
-
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/extensions/units>
 	a doap:Project ;
+	rdfs:seeAlso <../../people/people.ttl> ;
 	doap:name "LV2 Units" ;
 	doap:shortdesc "Units for LV2 values." ;
 	doap:created "2007-02-06" ;

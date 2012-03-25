@@ -25,26 +25,16 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
-_:larsl
-	a foaf:Person ;
-	foaf:name "Lars Luthman" ;
-	foaf:mbox <mailto:lars.luthman@gmail.com> .
-
 <http://lv2plug.in/ns/ext/midi>
 	a lv2:Specification ;
-	rdfs:seeAlso <midi.h> ;
+	rdfs:seeAlso <midi.h> ,
+		<../../people/people.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 MIDI" ;
 	doap:shortdesc "A normalised definition of raw MIDI." ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
-	doap:developer <http://drobilla.net/drobilla#me> ,
-		_:larsl ;
+	doap:developer <http://lv2plug.in/ns/people#larsl> ,
+		<http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "1.5" ;
 		doap:created "2012-02-19" ;

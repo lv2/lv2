@@ -3,22 +3,13 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/extensions/ui>
 	a doap:Project ;
+	rdfs:seeAlso <../../people/people.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 UI" ;
 	doap:shortdesc "Generic UI interface for LV2 plugins." ;
-	doap:developer [
-		a foaf:Person ;
-		foaf:name "Lars Luthman" ;
-		foaf:mbox <mailto:lars.luthman@gmail.com> ;
-	] ;
+	doap:developer <http://lv2plug.in/ns/people#larsl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "2.7" ;

@@ -33,7 +33,8 @@ def options(opt):
         opt.recurse(i)
 
 def get_subdirs(with_plugins=True):
-    subdirs = ['lv2/lv2plug.in/ns/lv2core/']
+    subdirs = ['lv2/lv2plug.in/ns/lv2core/',
+               'lv2/lv2plug.in/ns/people/']
     subdirs += glob.glob('lv2/lv2plug.in/ns/ext/*/')
     subdirs += glob.glob('lv2/lv2plug.in/ns/extensions/*/')
     if with_plugins:

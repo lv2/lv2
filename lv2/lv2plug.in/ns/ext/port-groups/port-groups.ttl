@@ -24,23 +24,15 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/ext/port-groups>
 	a lv2:Specification ;
+	rdfs:seeAlso <../../people/people.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Port Groups" ;
 	doap:shortdesc "Multi-channel groups of LV2 ports." ;
 	rdfs:comment "Defines semantic groupings of LV2 ports" ;
-	doap:developer [
-		a foaf:Person ;
-		foaf:name "Lars Luthman" ;
-		foaf:mbox <mailto:lars.luthman@gmail.com> ;
-	] , <http://drobilla.net/drobilla#me> .
+	doap:developer <http://lv2plug.in/ns/people#larsl> ,
+		<http://drobilla.net/drobilla#me> .
 
 pg:Group
 	a rdfs:Class ;
@@ -87,7 +79,7 @@ An element of a group, which has a designation and an optional index.
 pg:element
 	a rdf:Property ;
 	rdfs:domain pg:Group ;
-    rdfs:range pg:Element ;
+	rdfs:range pg:Element ;
 	rdfs:label "element" ;
 	rdfs:comment """
 Indicates that a group has a certain element (a parameter or channel
@@ -676,4 +668,3 @@ pg:AmbisonicBH3P3Group
 		lv2:index 15 ;
 		lv2:designation amb:ACN15 ;
 	] .
-

@@ -21,16 +21,11 @@
 @prefix rsz:  <http://lv2plug.in/ns/ext/resize-port#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-<http://drobilla.net/drobilla#me>
-	a foaf:Person ;
-	foaf:name "David Robillard" ;
-	foaf:mbox <mailto:d@drobilla.net> ;
-	rdfs:seeAlso <http://drobilla.net/drobilla> .
-
 <http://lv2plug.in/ns/ext/resize-port>
 	a lv2:Specification ,
 		lv2:Feature ;
-	rdfs:seeAlso <resize-port.h> ;
+	rdfs:seeAlso <resize-port.h> ,
+		<../../people/people.ttl> ;
 	doap:name "LV2 Resize Port Extension" ;
 	doap:shortdesc "Dynamically sized LV2 port buffers." ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
