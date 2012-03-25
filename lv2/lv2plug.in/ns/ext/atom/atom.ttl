@@ -14,6 +14,7 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 @prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix dcs:  <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
@@ -24,18 +25,19 @@
 
 <http://lv2plug.in/ns/ext/atom>
 	a lv2:Specification ;
-	doap:name "LV2 Atom" ;
-	doap:shortdesc "A generic value container and several data types." ;
-	doap:license <http://opensource.org/licenses/isc> ;
 	rdfs:seeAlso <atom.h> ,
 		<util.h> ,
 		<forge.h> ,
-        <../../people/people.ttl> ;
+		<people/people.ttl> ;
+	doap:name "LV2 Atom" ;
+	doap:shortdesc "A generic value container and several data types." ;
+	doap:license <http://opensource.org/licenses/isc> ;
+	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "0.6" ;
 		doap:created "2012-02-22" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
 	] ;
-	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This extension defines a generic container for data, called an <q>Atom</q>,
 and several basic Atom types which can be used to express structured data.
