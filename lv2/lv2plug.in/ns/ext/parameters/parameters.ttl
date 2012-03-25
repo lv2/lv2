@@ -38,10 +38,12 @@
 	] ;
 	doap:created "2009-01-01" ;
 	doap:shortdesc "Common parameters for audio processing." ;
-	doap:maintainer [
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
+	doap:developer [
 		a foaf:Person ;
-		foaf:name "Krzysztof Foltman" ;
-	] , <http://drobilla.net/drobilla#me> ;
+		foaf:name "Lars Luthman" ;
+		foaf:mbox <mailto:lars.luthman@gmail.com> ;
+	] ;
 	lv2:documentation """
 <p>This extension defines parameters common in audio processing software.  A
 <q>parameter</q> is purely a metadata concept, unrelated to any particular code

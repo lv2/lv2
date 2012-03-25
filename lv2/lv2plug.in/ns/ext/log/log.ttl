@@ -29,9 +29,10 @@
 
 <http://lv2plug.in/ns/ext/log>
 	a lv2:Specification ;
+    rdfs:seeAlso <log.h> ;
 	doap:name "LV2 Log" ;
 	doap:shortdesc "A feature for writing log messages." ;
-	doap:maintainer <http://drobilla.net/drobilla#me> ;
+	doap:developer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This extension defines a feature, <a href="#log">log:log</a>, which allows
 plugins to print log messages with an API much like the standard C printf

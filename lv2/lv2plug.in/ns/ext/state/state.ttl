@@ -30,6 +30,7 @@
 
 <http://lv2plug.in/ns/ext/state>
 	a lv2:Specification ;
+	rdfs:seeAlso <state.h> ;
 	doap:name "LV2 State" ;
 	doap:shortdesc "An interface for LV2 plugins to save and restore state." ;
 	doap:license <http://opensource.org/licenses/isc> ;

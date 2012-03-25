@@ -37,10 +37,11 @@
 	] ;
 	doap:created "2009-01-01" ;
 	doap:shortdesc "Various port properties." ;
-	doap:maintainer [
+	doap:maintainer	<http://drobilla.net/drobilla#me> ;
+	doap:developer [
 		a foaf:Person ;
 		foaf:name "Krzysztof Foltman" ;
-	] , <http://drobilla.net/drobilla#me> ;
+	] ;
 	lv2:documentation """
 <p>This extension defines various properties for plugin ports, which can be
 used to better describe how a plugin can be controlled.  Using this metadata,

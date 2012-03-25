@@ -33,7 +33,8 @@
 	doap:name "LV2 Atom" ;
 	doap:shortdesc "A generic value container and several data types." ;
 	doap:license <http://opensource.org/licenses/isc> ;
-	rdfs:seeAlso <util.h> ,
+	rdfs:seeAlso <atom.h> ,
+		<util.h> ,
 		<forge.h> ;
 	doap:release [
 		doap:revision "0.6" ;

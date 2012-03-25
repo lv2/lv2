@@ -26,6 +26,7 @@
 <http://lv2plug.in/ns/extensions/ui>
 	a owl:Ontology ;
 	owl:imports <http://lv2plug.in/ns/lv2core> ;
+	rdfs:seeAlso <ui.h> ;
 	lv2:documentation """
 <p>This extension defines an interface that can be used in LV2 plugins and
 hosts to create UIs for plugins. The UIs are similar to plugins and reside in

@@ -24,6 +24,7 @@
 
 <http://lv2plug.in/ns/ext/dynmanifest>
 	a lv2:Specification ;
+	rdfs:seeAlso <dynmanifest.h> ;
     lv2:documentation """
 <p>The LV2 API, on its own, cannot be used to write plugin libraries where data
 is dynamically generated at runtime (e.g. API wrappers), since LV2 requires

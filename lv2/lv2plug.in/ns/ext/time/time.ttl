@@ -29,13 +29,14 @@
 
 <http://lv2plug.in/ns/ext/time>
 	a lv2:Specification ;
+	rdfs:seeAlso <time.h> ;
 	doap:name "LV2 Time" ;
 	doap:shortdesc "Properties for describing time." ;
 	doap:release [
 		doap:revision "0.2" ;
 		doap:created "2012-02-28" ;
 	] ;
-	doap:maintainer <http://drobilla.net/drobilla#me> ;
+	doap:developer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This is a vocabulary for precisely describing a position in time and the
 passage of time itself, in both real and musical terms.</p>

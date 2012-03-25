@@ -37,6 +37,10 @@ _:larsl
 	a lv2:Specification ,
 		lv2:Feature ;
 	owl:deprecated true ;
+	rdfs:seeAlso <uri-map.h> ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
+	doap:developer _:larsl ,
+		<http://drobilla.net/drobilla#me> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 URI Map" ;
 	doap:shortdesc "A feature for mapping URIs to integers." ;
@@ -47,11 +51,11 @@ _:larsl
 		doap:file-release <http://lv2plug.in/spec/lv2-uri-map-1.4.tar.bz2> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Update packaging."
+				rdfs:label "Update packaging." ;
 			] , [
-				rdfs:label "Deprecate uri-map in favour of urid."
-			]
-		]
+				rdfs:label "Deprecate uri-map in favour of urid." ;
+			] ;
+		] ;
 	] , [
 		doap:revision "1.2" ;
 		doap:created "2011-05-26" ;
@@ -59,11 +63,11 @@ _:larsl
 		doap:file-release <http://lv2plug.in/spec/lv2-uri-map-1.2.tar.bz2> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add build system (for installation)."
+				rdfs:label "Add build system (for installation)." ;
 			] , [
-				rdfs:label "Mark up documentation in HTML using lv2:docum"
-			]
-		]
+				rdfs:label "Mark up documentation in HTML using lv2:docum" ;
+			] ;
+		] ;
 	] , [
 		doap:revision "1.0" ;
 		doap:created "2010-10-18" ;
@@ -71,12 +75,10 @@ _:larsl
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
+				rdfs:label "Initial release." ;
+			] ;
+		] ;
 	] ;
-	doap:maintainer <http://drobilla.net/drobilla#me> ,
-		_:larsl ;
 	lv2:documentation """
 <p><span class="warning">This extension is deprecated.</span> New
 implementations should use <a href="http://lv2plug.in/ns/ext/urid">LV2 URID</a>

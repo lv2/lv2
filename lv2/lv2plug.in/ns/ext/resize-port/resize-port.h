@@ -1,29 +1,32 @@
-/* LV2 Resize Port Extension
- * Copyright (C) 2007-2009 David Robillard <http://drobilla.net>
- *
- * This header is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the Free
- * Software Foundation; either version 2 of the License, or (at your option)
- * any later version.
- *
- * This header is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * for more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+/*
+  Copyright 2007-2012 David Robillard <http://drobilla.net>
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted, provided that the above
+  copyright notice and this permission notice appear in all copies.
+
+  THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+*/
 
 #ifndef LV2_RESIZE_PORT_H
 #define LV2_RESIZE_PORT_H
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
 #define LV2_RESIZE_PORT_URI "http://lv2plug.in/ns/ext/resize-port"
+
+#ifdef __cplusplus
+extern "C" {
+#else
+#    include <stdbool.h>
+#endif
 
 typedef void* LV2_Resize_Port_Feature_Data;
 
@@ -53,5 +56,9 @@ typedef struct {
 
 } LV2_Resize_Port_Feature;
 
-#endif /* LV2_RESIZE_PORT_H */
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
+#endif  /* LV2_RESIZE_PORT_H */
 

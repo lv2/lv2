@@ -22,6 +22,9 @@
 	doap:created "2004-04-21" ;
 	doap:shortdesc "An audio plugin interface specification." ;
 	doap:programming-language "C" ;
+	doap:developer <http://plugin.org.uk/swh.xrdf#me> ,
+		<http://drobilla.net/drobilla#me> ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "6.7" ;
 		doap:created "2012-03-15" ;
@@ -115,7 +118,4 @@
 				rdfs:label "Initial release." ;
 			] ;
 		] ;
-	] ;
-	doap:developer <http://plugin.org.uk/swh.xrdf#me> ,
-		<http://drobilla.net/drobilla#me> ;
-	doap:maintainer <http://drobilla.net/drobilla#me> .
+	] .

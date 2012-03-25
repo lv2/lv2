@@ -31,7 +31,7 @@
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 CV Port" ;
 	doap:shortdesc "Control Voltage ports for LV2 plugins." ;
-	doap:maintainer <http://drobilla.net/drobilla#me> ;
+	doap:developer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This extension defines Control Voltage (CV) ports, which are audio-rate
 control ports like those used on classical voltage-controlled synthesizers.

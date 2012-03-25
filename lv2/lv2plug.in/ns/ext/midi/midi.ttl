@@ -38,11 +38,13 @@ _:larsl
 
 <http://lv2plug.in/ns/ext/midi>
 	a lv2:Specification ;
+	rdfs:seeAlso <midi.h> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 MIDI" ;
 	doap:shortdesc "A normalised definition of raw MIDI." ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
-	doap:developer _:larsl ;
+	doap:developer <http://drobilla.net/drobilla#me> ,
+		_:larsl ;
 	doap:release [
 		doap:revision "1.5" ;
 		doap:created "2012-02-19" ;

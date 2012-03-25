@@ -38,7 +38,7 @@
 	doap:license <http://usefulinc.com/doap/licenses/mit> ;
 	doap:name    "LV2 Host Info" ;
     doap:shortdesc "A format for describing LV2 hosts." ;
-	doap:maintainer <http://drobilla.net/drobilla#me> ;
+	doap:developer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This specification defines various properties to represent useful information
 about LV2 hosts.  Currently, the primary use of this specification is to describe which

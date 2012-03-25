@@ -851,26 +851,32 @@ def specAuthors(m, subject):
             maint.add(getLiteralString(getObject(j)))
 
     doc = ''
+
+    devdoc = ''
     first = True
     for d in dev:
         if not first:
-            doc += ', '
-        doc += '<span class="author" property="doap:developer">%s</span>' % d
+            devdoc += ', '
+        devdoc += '<span class="author" property="doap:developer">%s</span>' % d
         first = False
+    if len(dev) == 1:
+        doc += '<tr><th class="metahead">Developer</th><td>%s</td></tr>' % devdoc
+    elif len(dev) > 0:
+        doc += '<tr><th class="metahead">Developers</th><td>%s</td></tr>' % devdoc
 
+    maintdoc = ''
+    first = True
     for m in maint:
         if not first:
-            doc += ', '
-        doc += '<span class="author" property="doap:maintainer">%s</span>' % m
+            maintdoc += ', '
+        maintdoc += '<span class="author" property="doap:maintainer">%s</span>' % m
         first = False
+    if len(maint) == 1:
+        doc += '<tr><th class="metahead">Maintainer</th><td>%s</td></tr>' % maintdoc
+    elif len(maint) > 0:
+        doc += '<tr><th class="metahead">Maintainers</th><td>%s</td></tr>' % maintdoc
 
-    n_authors = len(dev) + len(maint)
-    if n_authors == 0:
-        return ''
-    elif n_authors == 1:
-        return '<tr><th class="metahead">Author</th><td>' + doc + '</td></tr>'
-    else:
-        return '<tr><th class="metahead">Authors</th><td>' + doc + '</td></tr>'
+    return doc
 
 
 def specHistory(m, subject):
@@ -1140,33 +1146,9 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
 
     template = template.replace('@REVISION@', version_string)
 
-    header_path = bundle_path + '/' + basename + '.h'
-
-    releases = ''
-    if not experimental:
-        release_name = "lv2-" + basename
-        if basename == "lv2core":
-            release_name = "lv2core"
-        filename = '%s-%d.%d.tar.bz2' % (release_name, version[0], version[1])
-        url      = 'http://lv2plug.in/spec/%s' % filename
-        releases += '<a href="%s">%s</a> (<a href="%s.sig">sig</a>),' % (
-            url, filename, url)
-    if version[0] == 0:
-        releases += ' n/a (unreleased)'
-    else:
-        releases += ' <a href="http://lv2plug.in/spec">other releases</a>'
-    releases = '<tr><th class="metahead">Download</th><td>%s</td></tr>' % releases
-    template = template.replace('@RELEASES@', releases)
-
     other_files = ''
-    if os.path.exists(os.path.abspath(header_path)):
-        other_files += '<a href="' + docdir + '/%s">API documentation</a>, ' % (
-            basename + '_8h.html')
-
-        header = basename + '.h'
-        other_files += '<a href="%s">%s</a>, ' % (header, header)
-
     see_also_files = specProperties(m, spec_url, rdfs.seeAlso)
+    see_also_files.sort()
     for f in see_also_files:
         uri = str(f)
         if uri[:7] == 'file://':
@@ -1216,7 +1198,7 @@ def getNamespaces(m):
     """Return a prefix:URI dictionary of all namespaces seen during parsing"""
     nspaces = {}
     for prefix, uri in m.namespaces():
-        if not re.match('default[0-9]*', prefix):
+        if not re.match('default[0-9]*', prefix) and not prefix == 'xml':
             # Skip silly default namespaces added by rdflib
             nspaces[prefix] = uri
     return nspaces
