@@ -211,6 +211,15 @@ def build(bld):
     for i in bld.env['LV2_SUBDIRS']:
         bld.recurse(i)
 
+    # LV2 pkgconfig file
+    obj = bld(features     = 'subst',
+              source       = 'lv2.pc.in',
+              target       = 'lv2.pc',
+              install_path = '${LIBDIR}/pkgconfig',
+              PREFIX       = bld.env['PREFIX'],
+              INCLUDEDIR   = bld.env['INCLUDEDIR'],
+              VERSION      = VERSION)
+
     if bld.env['DOCS']:
         # Build Doxygen documentation (and tags file)
         autowaf.build_dox(bld, 'LV2', VERSION, top, out)
