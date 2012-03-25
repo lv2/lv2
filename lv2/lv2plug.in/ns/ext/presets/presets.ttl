@@ -36,6 +36,15 @@
 	doap:shortdesc "Presets for LV2 plugins. " ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.3" ;
+		doap:created "2012-03-22" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add pset:preset property for describing the preset currently applied to a plugin instance."
+			]
+		]
+	] , [
 		doap:revision "2.2" ;
 		doap:created "2011-11-21" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-presets-2.2.tar.bz2> ;
@@ -60,9 +69,9 @@
 	] ;
 	lv2:documentation """
 <p>This extension describes a format for presets (i.e. named sets of control
-values) for LV2 plugins.  The structure of pset:Preset is deliberately very
-similar to the description of a plugin and can be thought of as a plugin
-<q>overlay</q>.  For example:</p>
+values and possibly other state) for LV2 plugins.  The structure of a
+pset:Preset is deliberately identical to that of an lv2:Plugin, and can be
+thought of as a plugin template or overlay.  For example:</p>
 
 <pre class="turtle-code">
 @prefix eg: &lt;http://example.org/&gt; .
@@ -73,17 +82,18 @@ eg:mypreset
     pset:appliesTo eg:myplugin ;
     lv2:port [
         lv2:symbol "volume1" ;
-        pset:value 11
+        pset:value 11.0
     ] , [
         lv2:symbol "volume2" ;
         pset:value 11.0
     ] .
 </pre>
 
-<p>Presets may be defined in any bundles, including the plugin's bundle,
-separate third party preset bundles, or user-created preset bundles created by
-hosts.  The manifest.ttl of a bundle containing presets should list the
-presets like so:</p>
+<p>Presets may be defined in any bundle, including the plugin's bundle,
+separate third party preset bundles, or user preset bundles saved by hosts.
+Since preset data tends to be large, it is recommended that plugins describe
+presets in a separate file(s) to avoid slowing down hosts.  The manifest.ttl of
+a bundle containing presets should list the presets like so:</p>
 
 <pre class="turtle-code">
 eg:mypreset
@@ -91,10 +101,6 @@ eg:mypreset
     pset:appliesTo eg:myplugin ;
     rdfs:seeAlso   &lt;mypreset.ttl&gt; .
 </pre>
-
-<p>This extension does not define a dynamic mechanism for changing plugin
-presets for plugins that require such a facility, but may be extended to do
-so.</p>
 """ .
 
 pset:Preset
@@ -107,17 +113,16 @@ pset:Preset
 		owl:someValuesFrom xsd:string ;
 		rdfs:comment "A Preset MUST have at least one string rdfs:label."
 	] ;
-	rdfs:comment """
-A Preset for an LV2 Plugin.  A preset can be considered an "overlay" on a
+	lv2:documentation """
+<p>A Preset for an LV2 Plugin.  A preset can be considered an "overlay" on a
 Plugin.  Rather than attempting to define all valid predicates for a Preset
 (which is not possible since presets may need to specify values for things
-defined in other extensions), the presets extension simply provides this
-class which can be augmented with any data in the exact same fashion as the
-definition of a Plugin.
+defined in other extensions), the presets extension simply provides this class
+which can be augmented with any data in the exact same fashion as the
+definition of a Plugin.</p>
 
-A Preset SHOULD have at least one pset:appliesTo property.
-Each Port on a Preset MUST have at least a lv2:symbol property and a
-pset:value property.
+<p>A Preset SHOULD have at least one pset:appliesTo property.  Each Port on a
+Preset MUST have at least a lv2:symbol property and a pset:value property.</p>
 """ .
 
 pset:appliesTo
@@ -125,16 +130,16 @@ pset:appliesTo
 	rdfs:domain pset:Preset ;
 	rdfs:range lv2:Plugin ;
 	rdfs:label "Applies to" ;
-	rdfs:comment """
-Specifies the Plugin(s) a Preset may be applied to.  When a Preset applies
+	lv2:documentation """
+<p>Specifies the Plugin(s) a Preset may be applied to.  When a Preset applies
 to a Plugin, that Preset SHOULD have ports for every control port on that
 plugin, each of which SHOULD have a pset:value property.  If the Preset is
-missing ports, or refers to ports which do not exist on the Plugin, then
-the host SHOULD apply all the values in the preset that do match the Plugin.
+missing ports, or refers to ports which do not exist on the Plugin, then the
+host SHOULD apply all the values in the preset that do match the Plugin.</p>
 
-The Preset MAY have any other values that should be applied to the Plugin
-in some way.  The host SHOULD simply ignore any values on a Preset it does
-not understand.
+<p>The Preset MAY have any other values that should be applied to the Plugin in
+some way.  The host SHOULD simply ignore any values on a Preset it does not
+understand.</p>
 """ .
 
 pset:value
@@ -144,4 +149,15 @@ pset:value
 	rdfs:comment """
 Specifies the value of a Port on some Preset.  This property is used
 in a similar way to e.g. lv2:default.
+""" .
+
+pset:preset
+	a rdf:Property ;
+	rdfs:domain lv2:PluginBase ;
+	rdfs:range pset:Preset ;
+	rdfs:label "Preset" ;
+	lv2:documentation """
+<p>Specifies the preset currently applied to a plugin instance.  This property
+may be useful for saving state, or notifying a plugin instance at run-time
+about a preset change.</p>
 """ .
