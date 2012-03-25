@@ -53,10 +53,10 @@ that type.  Similarly, plugins (such as routers, delays, or data stores) can
 meaningfully process atoms of a type unknown to them.</p>
 
 <p>Atoms can and should be used anywhere values of various types must be stored
-or transmitted.  This extension defines port types, atom:ValuePort and
-atom:MessagePort, which contain Atoms.  The atom:Sequence type in conjunction
-with atom:MessagePort is intended to replace the <a
-href="http://lv2plug.in/ns/ext/event">LV2 event</a> extension.</p>
+or transmitted.  This extension defines a port type, atom:AtomPort, for
+transmitting atoms via ports.  The atom:Sequence type in an atom:AtomPort
+replaces the <a href="http://lv2plug.in/ns/ext/event">LV2 event</a>
+extension.</p>
 
 <p>The types defined in this extension should be powerful enough to express
 almost any structure.  Implementations SHOULD build structures out of the types
@@ -431,59 +431,12 @@ atom:AtomPort
 <p>A port which contains an lv2:Atom.  Ports of this type are connected to an
 LV2_Atom with a type specified by atom:bufferType.</p>
 
-<p>This is an abstract port type with incomplete semantics which can not be
-used directly as a port type.  Atom ports should be either a atom:ValuePort or
-a atom:MessagePort.</p>
-
-<p>Output ports with a variably sized type should be initialised by the host
-before every run to an atom:Chunk with size set to the available space.  The
-plugin must set the size and type of this atom appropriately when writing
-output.</p>
-""" .
-
-atom:ValuePort
-	a rdfs:Class ;
-	rdfs:subClassOf atom:AtomPort ;
-	rdfs:label "Value Port" ;
-	lv2:documentation """
-<p>An AtomPort that contains a persistent <em>value</em>.  A <q>value</q> is
-time-independent and may be used numerous times.  A ValuePort is <q>pure</q> in
-the sense that it may affect output but MUST NOT affect persistent plugin state
-in any externally visible way.</p>
-
-<ul>
-<li>If a plugin has fixed values for all inputs, all ValuePort outputs are also
-fixed regardless of the number of times the plugin is run.</li>
-
-<li>If a plugin has fixed input values for all ports except a ValuePort, each
-value of that port corresponds to a single set of values for all
-ValuePort outputs.</li>
-
-<li>If the plugin saves state other than port values (e.g. using the <a
-href="http://lv2plug.in/ns/ext/state">LV2 State</a> extension), changing only
-the value of a ValuePort input MUST NOT change that state.  In other words,
-value port changes MUST NOT trigger a state change that requires a save.</li>
-</ul>
-
-<p>Value ports are essentially purely functional ports: if a plugin has only
-value ports, that plugin is purely functional.  Hosts may elect to cache output
-and avoid calling run() if the output is already known according to these
-rules.</p>
-""" .
-
-atom:MessagePort
-	a rdfs:Class ;
-	rdfs:subClassOf atom:AtomPort ;
-	rdfs:label "Message Port" ;
-	lv2:documentation """
-<p>An AtomPort that contains transient data which is <em>consumed</em> or
-<em>sent</em>.  The Atom contained in a MessagePort is time-dependent and only
-valid for a single run invocation.  Unlike a ValuePort, a MessagePort may be
-used to manipulate internal plugin state.</p>
-
-<p>Intuitively, a MessagePort contains a <q>message</q> or <q>event</q> which
-is reacted to <em>once</em> (not a <q>value</q> which is computed with any
-number of times).</p>
+<p>Output ports with a variably sized type MUST be initialised by the host
+before every run() to an atom:Chunk with size set to the available space.  The
+plugin reads this size to know how much space is available for writing.  In all
+cases, the plugin MUST write a complete atom (including header) to outputs.
+However, to be robust, hosts SHOULD initialise output ports to a safe sentinel
+(e.g. the null Atom) before calling run().</p>
 """ .
 
 atom:bufferType
@@ -500,7 +453,7 @@ connected directly to an LV2_Atom_Double value is described like so:</p>
 <pre class="turtle-code">
 &lt;plugin&gt;
     lv2:port [
-        a lv2:InputPort , atom:ValuePort ;
+        a lv2:InputPort , atom:AtomPort ;
         atom:bufferType atom:Double ;
     ] .
 </pre>
@@ -532,7 +485,7 @@ MIDI events is described like so:</p>
 <pre class="turtle-code">
 &lt;plugin&gt;
     lv2:port [
-        a lv2:InputPort , atom:MessagePort ;
+        a lv2:InputPort , atom:AtomPort ;
         atom:bufferType atom:Sequence ;
         atom:supports midi:MidiEvent ;
     ] .
