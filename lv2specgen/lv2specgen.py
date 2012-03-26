@@ -1150,7 +1150,9 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
 
     template = template.replace('@REVISION@', version_string)
 
-    other_files = ''
+    
+    header_files = ''
+    other_files  = ''
     see_also_files = specProperties(m, spec, rdfs.seeAlso)
     see_also_files.sort()
     for f in see_also_files:
@@ -1162,19 +1164,23 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
             else:
                 continue  # Skip seeAlso file outside bundle
 
-        other_files += '<a href="%s">%s</a> ' % (uri, uri)
-        if uri.endswith('.h'):
+        
+        entry = '<a href="%s">%s</a>' % (uri, uri)
+        if uri.endswith('.h') or uri.endswith('.hpp'):
             name = os.path.basename(uri)
-            other_files += '(<a href="%s">docs</a>) ' % (
+            entry += ' (<a href="%s">Documentation</a>) ' % (
                 docdir + '/' + name.replace('.', '_8') + '.html')
-        other_files += ', '
+            header_files += '<li>%s</li>' % entry
+        else:
+            other_files += '<li>%s</li>' % entry
 
-    if other_files.endswith(', '):
-        other_files = other_files[:len(other_files) - 2]
+    files = ''
+    if header_files:
+        files += '<li>API<ul>%s</ul></li>' % header_files
+    if other_files:
+        files += '<li>Data<ul>%s</ul></li>' % other_files
 
-    other_files = '<tr><th class="metahead">See Also</th><td>%s</td></tr>' % other_files
-
-    template = template.replace('@FILES@', other_files)
+    template = template.replace('@FILES@', files)
 
     comment = getComment(m, rdflib.URIRef(spec_url), classlist)
     if comment != '':
