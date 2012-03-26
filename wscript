@@ -12,12 +12,9 @@ import waflib.Logs as Logs
 import waflib.Options as Options
 import waflib.Scripting as Scripting
 
-# Version of this package (even if built as a child)
-LV2EXT_VERSION = datetime.date.isoformat(datetime.datetime.now()).replace('-', '.')
-
 # Variables for 'waf dist'
 APPNAME = 'lv2'
-VERSION = LV2EXT_VERSION
+VERSION = '0.1.0'
 
 # Mandatory variables
 top = '.'
@@ -27,8 +24,13 @@ def options(opt):
     opt.load('compiler_cc')
     opt.load('compiler_cxx')
     autowaf.set_options(opt)
-    opt.add_option('--test', action='store_true', default=False, dest='build_tests',
-                   help="Build unit tests")
+    opt.add_option('--test', action='store_true', default=False,
+                   dest='build_tests', help="Build unit tests")
+    opt.add_option('--plugins', action='store_true', default=True,
+                   dest='build_plugins', help="Build example plugins")
+    opt.add_option('--copy-headers', action='store_true', default=False,
+                   dest='copy_headers',
+                   help='Copy headers instead of linking to bundle')
     for i in ['lv2/lv2plug.in/ns/lv2core']:
         opt.recurse(i)
 
@@ -42,12 +44,32 @@ def get_subdirs(with_plugins=True):
     return subdirs
     
 def configure(conf):
-    conf.load('compiler_cc')
-    conf.load('compiler_cxx')
+    try:
+        conf.load('compiler_c')
+        conf.load('compiler_cxx')
+    except:
+        Options.options.build_tests = False
+        Options.options.build_plugins = False
+
     autowaf.configure(conf)
     autowaf.set_recursive()
 
     conf.env.append_unique('CFLAGS', '-std=c99')
+
+    conf.env['BUILD_TESTS']  = Options.options.build_tests
+    conf.env['COPY_HEADERS'] = Options.options.copy_headers
+
+    if not hasattr(os.path, 'relpath') and not Options.options.copy_headers:
+        conf.fatal(
+            'os.path.relpath missing, get Python 2.6 or use --copy-headers')
+
+    # Check for gcov library (for test coverage)
+    if conf.env['BUILD_TESTS'] and not conf.is_defined('HAVE_GCOV'):
+        if conf.env['MSVC_COMPILER']:
+            conf.env.append_unique('CFLAGS', ['-TP', '-MD'])
+        else:
+            conf.env.append_unique('CFLAGS', '-std=c99')
+        conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
     subdirs = get_subdirs()
 
@@ -55,6 +77,11 @@ def configure(conf):
         conf.recurse(i)
 
     conf.env['LV2_SUBDIRS'] = subdirs
+
+    autowaf.configure(conf)
+    autowaf.display_header('LV2 Configuration')
+    autowaf.display_msg(conf, 'Bundle directory', conf.env['LV2DIR'])
+    autowaf.display_msg(conf, 'Version', VERSION)
 
 # Rule for copying a file to the build directory
 def copy(task):
@@ -232,7 +259,7 @@ def build(bld):
 
         index_files = []
 
-        # Generate .htaccess files (and directory skeleton)
+        # Prepare spec output directories
         for i in bld.env['LV2_SUBDIRS']:
             if i.startswith('lv2/lv2plug.in'):
                 # Copy spec files to build dir
@@ -244,8 +271,6 @@ def build(bld):
 
                 base = i[len('lv2/lv2plug.in'):]
                 name = os.path.basename(i[:len(i)-1])
-                index_file = os.path.join('index_rows', name)
-                index_files += [index_file]
 
                 # Generate .htaccess file
                 obj = bld(features     = 'subst',
@@ -255,7 +280,14 @@ def build(bld):
                           NAME         = name,
                           BASE         = base)
 
-                bld.add_group()
+        # Call lv2specgen for each spec
+        for i in bld.env['LV2_SUBDIRS']:
+            if i.startswith('lv2/lv2plug.in'):
+                name = os.path.basename(i[:len(i)-1])
+                index_file = os.path.join('index_rows', name)
+                index_files += [index_file]
+
+                bld.add_group()  # Barrier (don't call lv2specgen in parallel)
 
                 # Call lv2specgen to generate spec docs
                 obj  = bld(rule   = specgen,
@@ -265,6 +297,7 @@ def build(bld):
                                      index_file])
 
         index_files.sort()
+        bld.add_group()  # Barrier (wait for lv2specgen to build index)
 
         # Build extension index
         obj = bld(rule   = build_index,

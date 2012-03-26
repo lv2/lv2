@@ -1,6 +1,0 @@
-includedir=@INCLUDEDIR@
-
-Name: LV2 @NAME@
-Version: @VERSION@
-Description: @DESCRIPTION@
-Cflags: -I${includedir}
