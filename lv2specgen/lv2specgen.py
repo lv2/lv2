@@ -737,10 +737,16 @@ def buildIndex(m, classlist, proplist, instalist=None):
             def class_tree(c):
                 tree = ''
                 shown[c] = True
+
+                subclasses = []
                 for s in findStatements(m, None, rdfs.subClassOf, c):
-                    s_name = termName(m, getSubject(s))
+                    subclasses += [getSubject(s)]
+                subclasses.sort()
+
+                for s in subclasses:
+                    s_name = termName(m, s)
                     tree += '<li><a href="#%s">%s</a>\n' % (s_name, s_name)
-                    tree += class_tree(getSubject(s))
+                    tree += class_tree(s)
                     tree += '</li>'
                 if tree != '':
                     tree = '<ul>' + tree + '</ul>'
