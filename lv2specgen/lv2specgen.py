@@ -829,30 +829,28 @@ def specInformation(m, ns):
 
 def specProperty(m, subject, predicate):
     "Return a property of the spec."
-    for c in findStatements(m, None, predicate, None):
-        if isResource(getSubject(c)) and str(getSubject(c)) == str(subject):
-            return getLiteralString(getObject(c))
+    for c in findStatements(m, subject, predicate, None):
+        return getLiteralString(getObject(c))
     return ''
 
 
 def specProperties(m, subject, predicate):
     "Return a property of the spec."
     properties = []
-    for c in findStatements(m, None, predicate, None):
-        if isResource(getSubject(c)) and str(getSubject(c)) == str(subject):
-            properties += [getObject(c)]
+    for c in findStatements(m, subject, predicate, None):
+        properties += [getObject(c)]
     return properties
 
 
 def specAuthors(m, subject):
     "Return an HTML description of the authors of the spec."
     dev = set()
-    for i in findStatements(m, None, doap.developer, None):
+    for i in findStatements(m, subject, doap.developer, None):
         for j in findStatements(m, getObject(i), foaf.name, None):
             dev.add(getLiteralString(getObject(j)))
 
     maint = set()
-    for i in findStatements(m, None, doap.maintainer, None):
+    for i in findStatements(m, subject, doap.maintainer, None):
         for j in findStatements(m, getObject(i), foaf.name, None):
             maint.add(getLiteralString(getObject(j)))
 
@@ -887,7 +885,7 @@ def specAuthors(m, subject):
 
 def specHistory(m, subject):
     entries = {}
-    for r in findStatements(m, None, doap.release, None):
+    for r in findStatements(m, subject, doap.release, None):
         release = getObject(r)
         revNode = findOne(m, release, doap.revision, None)
         if not revNode:
@@ -943,7 +941,7 @@ def specVersion(m, subject):
     # Get the date from the latest doap release
     latest_doap_revision = ""
     latest_doap_release = None
-    for i in findStatements(m, None, doap.release, None):
+    for i in findStatements(m, subject, doap.release, None):
         for j in findStatements(m, getObject(i), doap.revision, None):
             revision = getLiteralString(getObject(j))
             if latest_doap_revision == "" or revision > latest_doap_revision:
@@ -1060,9 +1058,10 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
     bundle_path = os.path.split(specloc[specloc.find(':') + 1:])[0]
     abs_bundle_path = os.path.abspath(bundle_path)
     spec_url = getOntologyNS(m)
+    spec = rdflib.URIRef(spec_url)
 
     # Parse all seeAlso files in the bundle
-    for uri in specProperties(m, spec_url, rdfs.seeAlso):
+    for uri in specProperties(m, spec, rdfs.seeAlso):
         if uri[:7] == 'file://':
             path = uri[7:]
             if (path != os.path.abspath(specloc)
@@ -1084,7 +1083,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
         if uri.startswith('file:'):
             continue;
         ns_list[str(uri)] = i
-        if str(uri) == str(spec_url) + '#':
+        if str(uri) == spec_url + '#':
             spec_pre = i
         prefixes_html += '<a href="%s">%s</a> ' % (uri, i)
     prefixes_html += "</span>"
@@ -1112,9 +1111,9 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
     if instances:
         termlist += docTerms('Instance', instalist, m, classlist)
 
-    template = template.replace('@NAME@', specProperty(m, spec_url, doap.name))
-    template = template.replace('@SUBTITLE@', specProperty(m, spec_url, doap.shortdesc))
-    template = template.replace('@URI@', spec_url)
+    template = template.replace('@NAME@', specProperty(m, spec, doap.name))
+    template = template.replace('@SUBTITLE@', specProperty(m, spec, doap.shortdesc))
+    template = template.replace('@URI@', spec)
     template = template.replace('@PREFIX@', spec_pre)
     if spec_pre == 'lv2':
         template = template.replace('@XMLNS@', '')
@@ -1127,15 +1126,15 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
     template = template.replace('@STYLE_URI@', style_uri)
     template = template.replace('@PREFIXES@', str(prefixes_html))
     template = template.replace('@BASE@', spec_ns_str)
-    template = template.replace('@AUTHORS@', specAuthors(m, spec_url))
+    template = template.replace('@AUTHORS@', specAuthors(m, spec))
     template = template.replace('@INDEX@', azlist)
     template = template.replace('@REFERENCE@', termlist.encode("utf-8"))
     template = template.replace('@FILENAME@', filename)
     template = template.replace('@HEADER@', basename + '.h')
     template = template.replace('@MAIL@', 'devel@lists.lv2plug.in')
-    template = template.replace('@HISTORY@', specHistory(m, spec_url))
+    template = template.replace('@HISTORY@', specHistory(m, spec))
 
-    version = specVersion(m, spec_url)  # (minor, micro, date)
+    version = specVersion(m, spec)  # (minor, micro, date)
     date_string = version[2]
     if date_string == "":
         date_string = "Undated"
@@ -1152,7 +1151,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
     template = template.replace('@REVISION@', version_string)
 
     other_files = ''
-    see_also_files = specProperties(m, spec_url, rdfs.seeAlso)
+    see_also_files = specProperties(m, spec, rdfs.seeAlso)
     see_also_files.sort()
     for f in see_also_files:
         uri = str(f)
