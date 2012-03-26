@@ -86,6 +86,7 @@
 #define LV2_CORE__binary             LV2_CORE_PREFIX "binary"
 #define LV2_CORE__connectionOptional LV2_CORE_PREFIX "connectionOptional"
 #define LV2_CORE__default            LV2_CORE_PREFIX "default"
+#define LV2_CORE__designation        LV2_CORE_PREFIX "designation"
 #define LV2_CORE__documentation      LV2_CORE_PREFIX "documentation"
 #define LV2_CORE__enumeration        LV2_CORE_PREFIX "enumeration"
 #define LV2_CORE__extensionData      LV2_CORE_PREFIX "extensionData"
