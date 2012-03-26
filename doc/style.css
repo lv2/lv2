@@ -361,11 +361,10 @@ a:active {
 	color: #C00;
 }
 .sec {
-	/*background-color: #F7F7F7;*/
-	border-bottom: 1px dashed #DDD;
+	border-bottom: 1px dashed #CCC;
 	color: #000;
-	margin: 1em;
-    padding: 1ex 0 1ex 0;
+	margin: 1em 1em 0.5em 1em;
+	padding: 1ex 0 0.5ex 0;
 }
 ul, ol {
 	margin-top: 0;
@@ -417,18 +416,17 @@ ul, ol {
 .specterm {
 	background-color: #F7F7F7;
 	border: 0;
-	border-top: 1px solid #ddd;
+	border: 1px solid #CCC;
 	margin: 0;
 	padding: 0;
 	margin-bottom: 1em;
 }
 .specterm h3 {
-	background-color: #F3F3F3;
 	padding: 0.5ex;
 	margin: 0;
 }
 .spectermbody {
-	padding: 1ex 1ex 1ex 1ex;
+	padding: 0 1em 1ex 1em;
 }
 dl {
 	margin: 0;
