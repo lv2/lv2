@@ -84,6 +84,11 @@ typedef void* LV2UI_Handle;
 typedef void* LV2UI_Controller;
 
 /**
+   A pointer to opaque data for a feature.
+*/
+typedef void* LV2UI_Feature_Handle;
+
+/**
    The type of the host-provided function that the UI can use to
    send data to a plugin's input ports.
 
@@ -233,6 +238,11 @@ typedef struct _LV2UI_Descriptor {
 */
 typedef struct _LV2UI_Resize {
 	/**
+	   Pointer to opaque data which must be passed to ui_resize().
+	*/
+	LV2UI_Feature_Handle handle;
+
+	/**
 	   Request or advertise a size change.
 
 	   When this struct is provided by the host, the UI may call this
@@ -243,7 +253,7 @@ typedef struct _LV2UI_Resize {
 
 	   @return 0 on success.
 	*/
-	int (*ui_resize)(LV2UI_Controller controller, int width, int height);
+	int (*ui_resize)(LV2UI_Feature_Handle handle, int width, int height);
 } LV2UI_Resize;
 
 /**
@@ -256,18 +266,28 @@ typedef struct _LV2UI_Resize {
 */
 typedef struct _LV2UI_Port_Map {
 	/**
+	   Pointer to opaque data which must be passed to ui_resize().
+	*/
+	LV2UI_Feature_Handle handle;
+
+	/**
 	   Get the index for the port with the given @p symbol.
 
 	   @return The index of the port, or LV2_UI_INVALID_PORT_INDEX if no such
 	   port is found.
 	*/
-	uint32_t (*port_index)(LV2UI_Controller controller, const char* symbol);
+	uint32_t (*port_index)(LV2UI_Feature_Handle handle, const char* symbol);
 } LV2UI_Port_Map;
 
 /**
    Port subscription feature (LV2_UI__portSubscribe);
 */
 typedef struct _LV2UI_Port_Subscribe {
+	/**
+	   Pointer to opaque data which must be passed to ui_resize().
+	*/
+	LV2UI_Feature_Handle handle;
+
 	/**
 	   Subscribe to updates for a port.
 
@@ -277,15 +297,15 @@ typedef struct _LV2UI_Port_Subscribe {
 	   Calling this function with the same @c port_index and @c port_protocol
 	   as an already active subscription has no effect.
 
-	   @param controller The @c controller passed to the UI's instantiate().
+	   @param handle The handle field of this struct.
 	   @param port_index The index of the port.
 	   @param port_protocol The URID of the ui:PortProtocol.
 	   @param data Extra data as defined by the port protocol, or NULL.
 	*/
-	void (*subscribe)(LV2UI_Controller controller,
-	                  uint32_t         port_index,
-	                  uint32_t         port_protocol,
-	                  const void*      options);
+	void (*subscribe)(LV2UI_Feature_Handle handle,
+	                  uint32_t             port_index,
+	                  uint32_t             port_protocol,
+	                  const void*          options);
 
 	/**
 	   Unsubscribe from updates for a port.
@@ -296,15 +316,15 @@ typedef struct _LV2UI_Port_Subscribe {
 	   Calling this function with a @c port_index and @c port_protocol that
 	   does not refer to an active port subscription has no effect.
 
-	   @param controller The @c controller passed to the UI's instantiate().
+	   @param handle The handle field of this struct.
 	   @param port_index The index of the port.
 	   @param port_protocol The URID of the ui:PortProtocol.
 	   @param data Extra data as defined by the port protocol, or NULL.
 	*/
-	void (*unsubscribe)(LV2UI_Controller controller,
-	                    uint32_t         port_index,
-	                    uint32_t         port_protocol,
-	                    const void*      options);
+	void (*unsubscribe)(LV2UI_Feature_Handle handle,
+	                    uint32_t             port_index,
+	                    uint32_t             port_protocol,
+	                    const void*          options);
 } LV2UI_Port_Subscribe;
 
 /**
@@ -312,16 +332,21 @@ typedef struct _LV2UI_Port_Subscribe {
 */
 typedef struct _LV2UI_Touch {
 	/**
+	   Pointer to opaque data which must be passed to ui_resize().
+	*/
+	LV2UI_Feature_Handle handle;
+
+	/**
 	   Notify the host that a control has been grabbed or released.
 
-	   @param controller The @c controller passed to the UI's instantiate().
+	   @param handle The handle field of this struct.
 	   @param port_index The index of the port associated with the control.
 	   @param grabbed If true, the control has been grabbed, otherwise the
 	   control has been released.
 	*/
-	void (*touch)(LV2UI_Controller controller,
-	              uint32_t         port_index,
-	              bool             grabbed);
+	void (*touch)(LV2UI_Feature_Handle handle,
+	              uint32_t             port_index,
+	              bool                 grabbed);
 } LV2UI_Touch;
 
 /**
