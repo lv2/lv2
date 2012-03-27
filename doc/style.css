@@ -12,10 +12,10 @@ a:link, a:visited {
 	text-decoration: none;
 }
 a:link {
-	color: #00a;
+	color: #456625;
 }
 a:visited {
-	color: #518;
+	color: #647356;
 }
 a:hover {
 	text-decoration: underline;
@@ -390,8 +390,6 @@ ul, ol {
 	margin-bottom: 0.75em;
 }
 .blankdesc {
-	background-color: #eee;
-	border: 1px solid #ddd;
 	margin: 0;
 	padding: 0;
 }
