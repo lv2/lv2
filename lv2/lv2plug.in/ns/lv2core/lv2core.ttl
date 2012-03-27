@@ -22,10 +22,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
-###########################
-## General LV2 Resources ##
-###########################
-
 lv2:Specification a rdfs:Class , owl:Class ;
     lv2:documentation """
 <p>An LV2 specification (i.e. this specification, or an LV2 extension).</p>
@@ -136,10 +132,6 @@ which of these classes the functions belong, define new classes for them, or
 otherwise precisely describe their threading rules.</p>
 """ .
 
-############
-## Plugin ##
-############
-
 lv2:PluginBase a rdfs:Class , owl:Class ;
     lv2:documentation """
 <p>An abstract plugin-like resource that MAY not actually be an LV2 plugin
@@ -177,10 +169,6 @@ property should be at most a few words in length using title capitalization,
 e.g. <q>Tape Delay Unit</q>. Use doap:shortdesc or doap:description for more
 detailed descriptions.</p>
 """ .
-
-##########
-## Port ##
-##########
 
 lv2:Port a rdfs:Class , owl:Class ;
     rdfs:label   "Port" ;
@@ -264,10 +252,6 @@ lv2:AudioPort a rdfs:Class , owl:Class ;
 <p>Ports of this type will be connected to an array of length sample_count
 with elements of C type <code>float</code>.</p>
 """ .
-
-#######################
-## Plugin Properties ##
-#######################
 
 lv2:port a rdf:Property , owl:ObjectProperty ;
     rdfs:domain lv2:PluginBase ;
@@ -402,10 +386,6 @@ if/when to load the data, knowing that it describes an additional resource and
 not the plugin itself.</p>
 """ .
 
-#####################
-## Port Properties ##
-#####################
-
 lv2:index a rdf:Property , owl:DatatypeProperty ;
     rdfs:range xsd:nonNegativeInteger ;
     rdfs:label "index" ;
@@ -493,11 +473,6 @@ effective user interface.  For example, if the plugin has a BPM parameter, the
 host may automatically set that parameter to the current tempo.</p>
 """ .
 
-
-################
-## Parameters ##
-################
-
 lv2:latency a rdf:Property , owl:DatatypeProperty ;
     rdfs:label "latency" ;
     lv2:documentation """
@@ -514,11 +489,6 @@ When free-wheeling there is no relationship between the passage of real
 wall-clock time and the passage of time in the data being processed (e.g. audio
 frames).</p>
 """ .
-
-
-###########################
-## Port Range and Points ##
-###########################
 
 lv2:Point a rdfs:Class , owl:Class ;
     rdfs:label "Port value point" ;
@@ -571,10 +541,6 @@ This is a <q>soft</q> limit; the plugin is required to gracefully accept all
 values in the range of a port's data type.</p>
 """ .
 
-#############
-## Feature ##
-#############
-
 lv2:Feature a rdfs:Class , owl:Class ;
     rdfs:label "Feature" ;
     rdfs:comment """
@@ -603,10 +569,6 @@ this before attempting to instantiate a plugin (i.e. discovery by attempting to
 instantiate is strongly discouraged).</p>
 """ .
 
-####################
-## Extension Data ##
-####################
-
 lv2:ExtensionData a rdfs:Class , owl:Class ;
     rdfs:label "Extension Data" ;
     rdfs:comment """
@@ -622,10 +584,6 @@ lv2:extensionData a rdf:Property , owl:ObjectProperty ;
 <p>Signifies that a plugin provides additional data or functions (as defined by
 some extension) via LV2:Descriptor::instantiate().</p>
 """ .
-
-#######################
-## Standard Features ##
-#######################
 
 lv2:isLive a lv2:Feature ;
     rdfs:label "Has a live (realtime) dependency" ;
@@ -674,10 +632,6 @@ plugin MUST satisfy all of the following:</p>
 <p>Note these rules apply to the connect_port() function as well as run().</p>
 """ .
 
-##################
-## PortProperty ##
-##################
-
 lv2:PortProperty a rdfs:Class , owl:Class ;
     rdfs:label "Port property" ;
     rdfs:comment """
@@ -694,10 +648,6 @@ Relates Ports to PortProperties. The PortProperty may be ignored without
 catastrophic effects, though it may be useful e.g. for providing a sensible
 interface for the port.
 """ .
-
-#############################
-## Standard PortProperties ##
-#############################
 
 lv2:connectionOptional a lv2:PortProperty ;
     rdfs:label "Optionally connected port" ;
@@ -758,10 +708,6 @@ even if such a port has an input that is not a scale point, preferably by
 simply choosing the largest enumeration value less than or equal to the actual
 input value (i.e. round the input value down).
 """ .
-
-####################
-## Plugin Classes ##
-####################
 
 lv2:GeneratorPlugin a rdfs:Class , owl:Class ;
     rdfs:subClassOf lv2:Plugin ;
