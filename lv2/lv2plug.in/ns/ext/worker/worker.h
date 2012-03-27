@@ -94,6 +94,18 @@ typedef struct _LV2_Worker_Interface {
 	LV2_Worker_Status (*work_response)(LV2_Handle  instance,
 	                                   uint32_t    size,
 	                                   const void* body);
+
+	/**
+	   Called when all responses for this cycle have been delivered.
+
+	   Since work_response() may be called after run() finished, this provides
+	   a hook for code that must run after the cycle is completed.
+
+	   This field may be NULL if the plugin has no use for it.  Otherwise, the
+	   host MUST call it after every run(), regardless of whether or not any
+	   responses were sent that cycle.
+	*/
+	LV2_Worker_Status (*end_run)(LV2_Handle instance);
 } LV2_Worker_Interface;
 
 typedef void* LV2_Worker_Schedule_Handle;

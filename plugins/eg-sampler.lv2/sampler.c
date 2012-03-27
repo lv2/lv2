@@ -425,7 +425,7 @@ static const void*
 extension_data(const char* uri)
 {
 	static const LV2_State_Interface  state  = { save, restore };
-	static const LV2_Worker_Interface worker = { work, work_response };
+	static const LV2_Worker_Interface worker = { work, work_response, NULL };
 	if (!strcmp(uri, LV2_STATE__Interface)) {
 		return &state;
 	} else if (!strcmp(uri, LV2_WORKER__Interface)) {
