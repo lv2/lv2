@@ -20,6 +20,8 @@
 
 <http://lv2plug.in/ns/people>
 	a owl:Ontology ;
+	doap:created "2012-03-25" ;
+	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 People" ;
 	doap:shortdesc "People involved with the LV2 plugin specification." ;
 	doap:maintainer <http://drobilla.net/drobilla#me> .

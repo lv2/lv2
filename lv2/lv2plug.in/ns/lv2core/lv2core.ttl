@@ -1,8 +1,8 @@
 # This document describes LV2, a plugin interface.
 # See <http://lv2plug.in> for more information.
-# 
+#
 # Copyright 2006-2012 Steve Harris, David Robillard
-# 
+#
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
 # copyright notice and this permission notice appear in all copies.
@@ -59,7 +59,6 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
 
 <http://lv2plug.in/ns/lv2core>
 	a owl:Ontology ;
-	owl:imports <http://lv2plug.in/ns/doap.owl> ;
 	rdfs:seeAlso <lv2.h> , <lv2core.doap.ttl> , <../people/people.ttl> ;
 	lv2:documentation """
 <p>LV2 is an interface for writing audio processors, or <q>plugins</q>, in
@@ -157,7 +156,9 @@ lv2:PluginBase a rdfs:Class , owl:Class ;
 ports or otherwise mimic the structure of a Plugin (e.g. a preset), since
 hosts and other tools already <q>understand</q> this structure.</p>
 """ .
-    
+
+doap:name a owl:DatatypeProperty .
+
 lv2:Plugin a rdfs:Class , owl:Class ;
     rdfs:subClassOf lv2:PluginBase ;
     rdfs:label "Plugin" ;
@@ -446,7 +447,7 @@ port identification. The plugin author may change the values of this
 property without changing the Plugin URI.
 """ .
 
-lv2:Designation a rdfs:Class ;
+lv2:Designation a rdfs:Class , owl:Class ;
 	rdfs:label "Designation" ;
 	lv2:documentation """
 <p>The designation (or <q>assignment</q>) of an input or output.  A designation
@@ -455,15 +456,15 @@ designation to a port using lv2:designation, the port's content becomes
 meaningful and can be used more intelligently by the host.</p>
 """ .
 
-lv2:Channel a rdfs:Class ;
+lv2:Channel a rdfs:Class , owl:Class ;
 	rdfs:label "Channel" ;
 	rdfs:subClassOf lv2:Designation ;
 	lv2:documentation """
 <p>A specific channel of audio, e.g. <q>left</q> or <q>right</q>.</p>
 """ .
 
-lv2:Parameter a rdfs:Class ;
-	rdfs:subClassOf rdf:Property , lv2:Designation ;
+lv2:Parameter a rdfs:Class , owl:Class ;
+	rdfs:subClassOf lv2:Designation ;
 	lv2:documentation """
 <p>A parameter, i.e. a recognized property.  A parameter is a designation for a
 control.</p>
@@ -515,7 +516,7 @@ lv2:latency a rdf:Property , owl:DatatypeProperty ;
 <p>The latency introduced by the plugin (or similar), in frames.</p>
 """ .
 
-lv2:freeWheeling a rdf:Property , owl:DatatypePropety ;
+lv2:freeWheeling a rdf:Property , owl:DatatypeProperty ;
     rdfs:label "free-wheeling" ;
     rdfs:range xsd:boolean ;
     lv2:documentation """
@@ -681,7 +682,7 @@ plugin MUST satisfy all of the following:</p>
 <li>The plugin will not access files, devices, pipes, sockets, IPC or any other
     mechanism that might result in process or thread blocking within its Audio
     class functions.</li>
-      
+
 <li>The plugin will take an amount of time to execute a run() call
     approximately of form <code>A + B * sample_count</code> where <code>A</code>
     and <code>B</code> depend on the machine and host in use. This amount of
@@ -706,7 +707,7 @@ lv2:portProperty a rdf:Property , owl:ObjectProperty ;
     rdfs:range lv2:PortProperty ;
     rdfs:label "Port property" ;
     rdfs:comment """
-Relates Ports to PortProperties. The PortProperty may be ignored without 
+Relates Ports to PortProperties. The PortProperty may be ignored without
 catastrophic effects, though it may be useful e.g. for providing a sensible
 interface for the port.
 """ .
@@ -766,7 +767,7 @@ A plugin MUST operate reasonably even if such a port has a non-integer input.
 
 lv2:enumeration a lv2:PortProperty ;
     rdfs:label "Enumeration" ;
-    rdfs:comment """  
+    rdfs:comment """
 Indicates that a port's only reasonable values are the scale points defined for
 that port. A host SHOULD NOT allow a user to set the value of such a port to
 anything other than a scale point. However, a plugin MUST operate reasonably

@@ -31,12 +31,13 @@
 		<../../people/people.ttl> ;
 	doap:name "LV2 Atom" ;
 	doap:shortdesc "A generic value container and several data types." ;
+	doap:created "2007" ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "0.6" ;
 		doap:created "2012-02-22" ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:blame <http://drobilla.net/drobilla#me>
 	] ;
 	lv2:documentation """
 <p>This extension defines a generic container for data, called an <q>Atom</q>,
