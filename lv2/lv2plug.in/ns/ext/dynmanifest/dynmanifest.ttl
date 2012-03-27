@@ -87,7 +87,6 @@ class.</p>
 
 dman:DynManifest
 	a rdfs:Class ;
-	rdfs:subClassOf lv2:Resource ;
 	rdfs:label "Dynamic manifest generator" ;
 	rdfs:subClassOf [
 		a owl:Restriction ;

@@ -26,13 +26,7 @@
 ## General LV2 Resources ##
 ###########################
 
-lv2:Resource a rdfs:Class , owl:Class ;
-    rdfs:comment """
-An LV2 Resource (e.g. plugin, specification, or any other LV2 related thing).
-""" .
-
 lv2:Specification a rdfs:Class , owl:Class ;
-    rdfs:subClassOf lv2:Resource ;
     lv2:documentation """
 <p>An LV2 specification (i.e. this specification, or an LV2 extension).</p>
 
@@ -147,7 +141,6 @@ otherwise precisely describe their threading rules.</p>
 ############
 
 lv2:PluginBase a rdfs:Class , owl:Class ;
-    rdfs:subClassOf lv2:Resource ;
     lv2:documentation """
 <p>An abstract plugin-like resource that MAY not actually be an LV2 plugin
 (e.g. may not actually have a plugin binary).</p>
@@ -190,7 +183,6 @@ detailed descriptions.</p>
 ##########
 
 lv2:Port a rdfs:Class , owl:Class ;
-    rdfs:subClassOf lv2:Resource ;
     rdfs:label   "Port" ;
     rdfs:subClassOf [
          a owl:Restriction ;
@@ -284,7 +276,6 @@ lv2:port a rdf:Property , owl:ObjectProperty ;
     rdfs:comment "Relates a Plugin to the Ports it contains" .
 
 lv2:minorVersion a rdf:Property , owl:DatatypeProperty ;
-    rdfs:domain lv2:Resource ;
     rdfs:range xsd:nonNegativeInteger ;
     rdfs:label "minor version" ;
     lv2:documentation """
@@ -358,7 +349,6 @@ property which describes the other half.</p>
 """ .
 
 lv2:microVersion a rdf:Property , owl:DatatypeProperty ;
-    rdfs:domain lv2:Resource ;
     rdfs:range xsd:nonNegativeInteger ;
     rdfs:label "micro version" ;
     lv2:documentation """
@@ -376,7 +366,6 @@ href="http://lv2plug.in/ns/lv2core#minorVersion">lv2:minorVersion</a>.</p>
 """ .
 
 lv2:binary a rdf:Property , owl:ObjectProperty ;
-    rdfs:domain lv2:Resource ;
     rdfs:range owl:Thing ;
     rdfs:label "binary" ;
     lv2:documentation """
@@ -392,7 +381,6 @@ similarly by extensions to relate other resources to their implementations.</p>
 """ .
 
 lv2:appliesTo a rdf:Property , owl:ObjectProperty ;
-	rdfs:domain lv2:Resource ;
 	rdfs:range lv2:Plugin ;
 	rdfs:label "Applies to" ;
 	lv2:documentation """
@@ -588,14 +576,12 @@ values in the range of a port's data type.</p>
 #############
 
 lv2:Feature a rdfs:Class , owl:Class ;
-    rdfs:subClassOf lv2:Resource ;
     rdfs:label "Feature" ;
     rdfs:comment """
 An additional feature which a plugin or other resource may use or require.
 """.
 
 lv2:optionalFeature a rdf:Property , owl:ObjectProperty ;
-    rdfs:domain lv2:Resource ;
     rdfs:range lv2:Feature ;
     rdfs:label "Optional feature" ;
     lv2:documentation """
@@ -606,7 +592,6 @@ instantiate if an optional feature is not supported by the host.</p>
 """ .
 
 lv2:requiredFeature a rdf:Property , owl:ObjectProperty ;
-    rdfs:domain lv2:Resource ;
     rdfs:range lv2:Feature ;
     rdfs:label "Required feature" ;
     lv2:documentation """
@@ -623,7 +608,6 @@ instantiate is strongly discouraged).</p>
 ####################
 
 lv2:ExtensionData a rdfs:Class , owl:Class ;
-    rdfs:subClassOf lv2:Resource ;
     rdfs:label "Extension Data" ;
     rdfs:comment """
 Additional data and/or functions a plugin may return from
@@ -632,7 +616,6 @@ that defined by LV2_Descriptor.
 """.
 
 lv2:extensionData a rdf:Property , owl:ObjectProperty ;
-    rdfs:domain lv2:Resource ;
     rdfs:range lv2:ExtensionData ;
     rdfs:label "Available extension data" ;
     lv2:documentation """

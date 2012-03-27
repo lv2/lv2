@@ -107,7 +107,6 @@ depending on the RDF class of the UI.</p>
 ui:UI
 	a rdfs:Class ,
 		owl:Class ;
-	rdfs:subClassOf lv2:Resource ;
 	rdfs:label "LV2 UI" ;
 	rdfs:comment "A UI for an LV2 plugin" .
 
