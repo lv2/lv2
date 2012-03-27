@@ -587,7 +587,6 @@ def rdfsInstanceInfo(term, m):
         doc = "<tr><th>Type</th>" + doc
 
     doc += endProperties(first)
-    doc += extraInfo(term, m)
 
     return doc
 
