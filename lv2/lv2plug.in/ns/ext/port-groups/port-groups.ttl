@@ -49,13 +49,28 @@ group symbols and port symbols reside in the same namespace.  In other words,
 a group on a plugin MUST NOT have the same symbol as another group or a port
 on that plugin.  This makes it possible to uniquely reference a port or group
 on a plugin with a single identifier and no context.
-""" ;
+"""
 	] ;
 	rdfs:comment """
-A grouping of ports that can be logically considered a single "stream", e.g.
-two audio ports in a group may form a stereo stream.  The pg:source predicate
-can also be used to describe this correspondence between separate ports/groups.
+A grouping of ports (or any other means of signal transmission) that should
+logically be considered a single "stream", e.g. two audio ports in a group may
+form a stereo stream.  In order to avoid the need to define large numbers of
+identical group definitions, a group definition may be shared.  For example, a
+plugin collection may define a single URI for a pg:StereoGroup with the symbol
+"input" and use it in many plugins.
 """ .
+
+pg:InputGroup
+	a rdfs:Class ;
+	rdfs:subClassOf pg:Group ;
+	rdfs:label "Input Group" ;
+	rdfs:comment "A group which contains exclusively inputs." .
+
+pg:OutputGroup
+	a rdfs:Class ;
+	rdfs:subClassOf pg:Group ;
+	rdfs:label "Output Group" ;
+	rdfs:comment "A group which contains exclusively outputs." .
 
 pg:Element
 	a rdfs:Class ;
@@ -65,12 +80,12 @@ pg:Element
 		a owl:Restriction ;
 		owl:onProperty lv2:index ;
 		owl:maxCardinality 1 ;
-		rdfs:comment "An element has at most one lv2:index." ;
+		rdfs:comment "An element has at most one lv2:index."
 	] , [
 		a owl:Restriction ;
 		owl:onProperty lv2:designation ;
 		owl:cardinality 1 ;
-		rdfs:comment "An element MUST have exactly one lv2:designation." ;
+		rdfs:comment "An element MUST have exactly one lv2:designation."
 	] ;
 	rdfs:comment """
 An element of a group, which has a designation and an optional index.
@@ -111,6 +126,8 @@ symbol.
 
 pg:source
 	a rdf:Property ;
+	rdfs:domain pg:OutputGroup ;
+	rdfs:range pg:InputGroup ;
 	rdfs:label "Source" ;
 	rdfs:comment """
 Indicates that this port or group should be considered the "result" of
@@ -120,26 +137,38 @@ a relationship between corresponding input and output groups with different
 types, e.g. a mono->stereo plugin.
 """ .
 
-pg:mainGroup
-	a rdf:Property ;
+pg:mainInput
+	a rdf:Property ,
+		owl:FunctionalProperty ;
 	rdfs:domain lv2:Plugin ;
-	rdfs:range pg:Group ;
-	rdfs:label "Main port group" ;
+	rdfs:range pg:InputGroup ;
+	rdfs:label "Main input" ;
 	rdfs:comment """
-Indicates that this group should be considered the "main" inputs/outputs of
-the plugin, e.g. it probably makes sense to just connect main groups and set
-some controls.  A plugin MUST NOT have more than one pg:mainGroup property.
-High-level hosts that simply want to insert an plugin in a given stream
-should use this property to determine where the plugin 'fits'.
+Indicates that this group should be considered the "main" input, i.e. the
+primary task is processing the signal in this group.  A plugin MUST NOT have
+more than one pg:mainInput property.
 """ .
 
-pg:inGroup
+pg:mainOutput
+	a rdf:Property ,
+		owl:FunctionalProperty ;
+	rdfs:domain lv2:Plugin ;
+	rdfs:range pg:OutputGroup ;
+	rdfs:label "Main output" ;
+	rdfs:comment """
+Indicates that this group should be considered the "main" output.  The main
+output group SHOULD have the main input group as a pg:source.
+""" .
+
+pg:group
 	a rdf:Property ;
 	rdfs:domain lv2:Port ;
 	rdfs:range pg:Group ;
 	rdfs:label "In port group" ;
 	rdfs:comment """
-Indicates that this port is a part of a group of ports on the plugin.
+Indicates that this port is a part of a group of ports on the plugin.  The port
+should also have an lv2:designation property to define its designation within
+that group.
 """ .
 
 pg:DiscreteGroup
@@ -205,7 +234,7 @@ pg:MonoGroup
 	rdfs:label "Mono" ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation pg:center ;
+		lv2:designation pg:center
 	] .
 
 pg:StereoGroup
@@ -214,10 +243,10 @@ pg:StereoGroup
 	rdfs:label "Stereo" ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation pg:left ;
+		lv2:designation pg:left
 	] , [
 		lv2:index 1 ;
-		lv2:designation pg:right ;
+		lv2:designation pg:right
 	] .
 
 pg:MidSideGroup
@@ -226,10 +255,10 @@ pg:MidSideGroup
 	rdfs:label "Mid-Side Stereo" ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation pg:center ;
+		lv2:designation pg:center
 	] , [
 		lv2:index 1 ;
-		lv2:designation pg:side ;
+		lv2:designation pg:side
 	] .
 
 pg:ThreePointZeroGroup
@@ -238,13 +267,13 @@ pg:ThreePointZeroGroup
 	rdfs:label "3.0 Surround" ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation pg:left ;
+		lv2:designation pg:left
 	] , [
 		lv2:index 1 ;
-		lv2:designation pg:right ;
+		lv2:designation pg:right
 	] , [
 		lv2:index 2 ;
-		lv2:designation pg:rearCenter ;
+		lv2:designation pg:rearCenter
 	] .
 
 pg:FourPointZeroGroup
@@ -253,16 +282,16 @@ pg:FourPointZeroGroup
 	rdfs:label "4.0 Surround (Quadraphonic)" ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation pg:left ;
+		lv2:designation pg:left
 	] , [
 		lv2:index 1 ;
-		lv2:designation pg:center ;
+		lv2:designation pg:center
 	] , [
 		lv2:index 2 ;
-		lv2:designation pg:right ;
+		lv2:designation pg:right
 	] , [
 		lv2:index 3 ;
-		lv2:designation pg:rearCenter ;
+		lv2:designation pg:rearCenter
 	] .
 
 pg:FivePointZeroGroup
@@ -271,19 +300,19 @@ pg:FivePointZeroGroup
 	rdfs:label "5.0 Surround (3-2 stereo)" ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation pg:left ;
+		lv2:designation pg:left
 	] , [
 		lv2:index 1 ;
-		lv2:designation pg:center ;
+		lv2:designation pg:center
 	] , [
 		lv2:index 2 ;
-		lv2:designation pg:right ;
+		lv2:designation pg:right
 	] , [
 		lv2:index 3 ;
-		lv2:designation pg:rearLeft ;
+		lv2:designation pg:rearLeft
 	] , [
 		lv2:index 4 ;
-		lv2:designation pg:rearRight ;
+		lv2:designation pg:rearRight
 	] .
 
 pg:FivePointOneGroup
@@ -292,22 +321,22 @@ pg:FivePointOneGroup
 	rdfs:label "5.1 Surround (3-2 stereo)" ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation pg:left ;
+		lv2:designation pg:left
 	] , [
 		lv2:index 1 ;
-		lv2:designation pg:center ;
+		lv2:designation pg:center
 	] , [
 		lv2:index 2 ;
-		lv2:designation pg:right ;
+		lv2:designation pg:right
 	] , [
 		lv2:index 3 ;
-		lv2:designation pg:rearLeft ;
+		lv2:designation pg:rearLeft
 	] , [
 		lv2:index 4 ;
-		lv2:designation pg:rearRight ;
+		lv2:designation pg:rearRight
 	] , [
 		lv2:index 5 ;
-		lv2:designation pg:lowFrequencyEffects ;
+		lv2:designation pg:lowFrequencyEffects
 	] .
 
 pg:SixPointOneGroup
@@ -316,25 +345,25 @@ pg:SixPointOneGroup
 	rdfs:label "6.1 Surround" ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation pg:left ;
+		lv2:designation pg:left
 	] , [
 		lv2:index 1 ;
-		lv2:designation pg:center ;
+		lv2:designation pg:center
 	] , [
 		lv2:index 2 ;
-		lv2:designation pg:right ;
+		lv2:designation pg:right
 	] , [
 		lv2:index 3 ;
-		lv2:designation pg:sideLeft ;
+		lv2:designation pg:sideLeft
 	] , [
 		lv2:index 4 ;
-		lv2:designation pg:sideRight ;
+		lv2:designation pg:sideRight
 	] , [
 		lv2:index 5 ;
-		lv2:designation pg:rearCenter ;
+		lv2:designation pg:rearCenter
 	] , [
 		lv2:index 6 ;
-		lv2:designation pg:lowFrequencyEffects ;
+		lv2:designation pg:lowFrequencyEffects
 	] .
 
 pg:SevenPointOneGroup
@@ -343,28 +372,28 @@ pg:SevenPointOneGroup
 	rdfs:label "7.1 Surround" ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation pg:left ;
+		lv2:designation pg:left
 	] , [
 		lv2:index 1 ;
-		lv2:designation pg:center ;
+		lv2:designation pg:center
 	] , [
 		lv2:index 2 ;
-		lv2:designation pg:right ;
+		lv2:designation pg:right
 	] , [
 		lv2:index 3 ;
-		lv2:designation pg:sideLeft ;
+		lv2:designation pg:sideLeft
 	] , [
 		lv2:index 4 ;
-		lv2:designation pg:sideRight ;
+		lv2:designation pg:sideRight
 	] , [
 		lv2:index 5 ;
-		lv2:designation pg:rearLeft ;
+		lv2:designation pg:rearLeft
 	] , [
 		lv2:index 6 ;
-		lv2:designation pg:rearRight ;
+		lv2:designation pg:rearRight
 	] , [
 		lv2:index 7 ;
-		lv2:designation pg:lowFrequencyEffects ;
+		lv2:designation pg:lowFrequencyEffects
 	] .
 
 pg:SevenPointOneWideGroup
@@ -373,28 +402,28 @@ pg:SevenPointOneWideGroup
 	rdfs:label "7.1 Surround (Wide)" ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation pg:left ;
+		lv2:designation pg:left
 	] , [
 		lv2:index 1 ;
-		lv2:designation pg:centerLeft ;
+		lv2:designation pg:centerLeft
 	] , [
 		lv2:index 2 ;
-		lv2:designation pg:center ;
+		lv2:designation pg:center
 	] , [
 		lv2:index 3 ;
-		lv2:designation pg:centerRight ;
+		lv2:designation pg:centerRight
 	] , [
 		lv2:index 4 ;
-		lv2:designation pg:right ;
+		lv2:designation pg:right
 	] , [
 		lv2:index 5 ;
-		lv2:designation pg:rearLeft ;
+		lv2:designation pg:rearLeft
 	] , [
 		lv2:index 6 ;
-		lv2:designation pg:rearRight ;
+		lv2:designation pg:rearRight
 	] , [
 		lv2:index 7 ;
-		lv2:designation pg:lowFrequencyEffects ;
+		lv2:designation pg:lowFrequencyEffects
 	] .
 
 pg:AmbisonicGroup
@@ -414,13 +443,13 @@ pg:AmbisonicBH1P0Group
 	rdfs:label "Ambisonic B stream of horizontal order 1 and peripheral order 0." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0 ;
+		lv2:designation amb:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1 ;
+		lv2:designation amb:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN3 ;
+		lv2:designation amb:ACN3
 	] .
 
 pg:AmbisonicBH1P1Group
@@ -429,16 +458,16 @@ pg:AmbisonicBH1P1Group
 	rdfs:label "Ambisonic B stream of horizontal order 1 and peripheral order 1." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0 ;
+		lv2:designation amb:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1 ;
+		lv2:designation amb:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2 ;
+		lv2:designation amb:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3 ;
+		lv2:designation amb:ACN3
 	] .
 
 pg:AmbisonicBH2P0Group
@@ -447,19 +476,19 @@ pg:AmbisonicBH2P0Group
 	rdfs:label "Ambisonic B stream of horizontal order 2 and peripheral order 0." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0 ;
+		lv2:designation amb:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1 ;
+		lv2:designation amb:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN3 ;
+		lv2:designation amb:ACN3
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN4 ;
+		lv2:designation amb:ACN4
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN8 ;
+		lv2:designation amb:ACN8
 	] .
 
 pg:AmbisonicBH2P1Group
@@ -468,22 +497,22 @@ pg:AmbisonicBH2P1Group
 	rdfs:label "Ambisonic B stream of horizontal order 2 and peripheral order 1." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0 ;
+		lv2:designation amb:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1 ;
+		lv2:designation amb:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2 ;
+		lv2:designation amb:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3 ;
+		lv2:designation amb:ACN3
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN4 ;
+		lv2:designation amb:ACN4
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN8 ;
+		lv2:designation amb:ACN8
 	] .
 
 pg:AmbisonicBH2P2Group
@@ -492,31 +521,31 @@ pg:AmbisonicBH2P2Group
 	rdfs:label "Ambisonic B stream of horizontal order 2 and peripheral order 2." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0 ;
+		lv2:designation amb:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1 ;
+		lv2:designation amb:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2 ;
+		lv2:designation amb:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3 ;
+		lv2:designation amb:ACN3
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN4 ;
+		lv2:designation amb:ACN4
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN5 ;
+		lv2:designation amb:ACN5
 	] , [
 		lv2:index 6 ;
-		lv2:designation amb:ACN6 ;
+		lv2:designation amb:ACN6
 	] , [
 		lv2:index 7 ;
-		lv2:designation amb:ACN7 ;
+		lv2:designation amb:ACN7
 	] , [
 		lv2:index 8 ;
-		lv2:designation amb:ACN8 ;
+		lv2:designation amb:ACN8
 	] .
 
 pg:AmbisonicBH3P0Group
@@ -525,25 +554,25 @@ pg:AmbisonicBH3P0Group
 	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 0." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0 ;
+		lv2:designation amb:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1 ;
+		lv2:designation amb:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN3 ;
+		lv2:designation amb:ACN3
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN4 ;
+		lv2:designation amb:ACN4
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN8 ;
+		lv2:designation amb:ACN8
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN9 ;
+		lv2:designation amb:ACN9
 	] , [
 		lv2:index 6 ;
-		lv2:designation amb:ACN15 ;
+		lv2:designation amb:ACN15
 	] .
 
 pg:AmbisonicBH3P1Group
@@ -552,28 +581,28 @@ pg:AmbisonicBH3P1Group
 	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 1." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0 ;
+		lv2:designation amb:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1 ;
+		lv2:designation amb:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2 ;
+		lv2:designation amb:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3 ;
+		lv2:designation amb:ACN3
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN4 ;
+		lv2:designation amb:ACN4
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN8 ;
+		lv2:designation amb:ACN8
 	] , [
 		lv2:index 6 ;
-		lv2:designation amb:ACN9 ;
+		lv2:designation amb:ACN9
 	] , [
 		lv2:index 7 ;
-		lv2:designation amb:ACN15 ;
+		lv2:designation amb:ACN15
 	] .
 
 pg:AmbisonicBH3P2Group
@@ -582,37 +611,37 @@ pg:AmbisonicBH3P2Group
 	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 2." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0 ;
+		lv2:designation amb:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1 ;
+		lv2:designation amb:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2 ;
+		lv2:designation amb:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3 ;
+		lv2:designation amb:ACN3
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN4 ;
+		lv2:designation amb:ACN4
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN5 ;
+		lv2:designation amb:ACN5
 	] , [
 		lv2:index 6 ;
-		lv2:designation amb:ACN6 ;
+		lv2:designation amb:ACN6
 	] , [
 		lv2:index 7 ;
-		lv2:designation amb:ACN7 ;
+		lv2:designation amb:ACN7
 	] , [
 		lv2:index 8 ;
-		lv2:designation amb:ACN8 ;
+		lv2:designation amb:ACN8
 	] , [
 		lv2:index 9 ;
-		lv2:designation amb:ACN9 ;
+		lv2:designation amb:ACN9
 	] , [
 		lv2:index 10 ;
-		lv2:designation amb:ACN15 ;
+		lv2:designation amb:ACN15
 	] .
 
 pg:AmbisonicBH3P3Group
@@ -621,50 +650,50 @@ pg:AmbisonicBH3P3Group
 	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 3." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0 ;
+		lv2:designation amb:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1 ;
+		lv2:designation amb:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2 ;
+		lv2:designation amb:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3 ;
+		lv2:designation amb:ACN3
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN4 ;
+		lv2:designation amb:ACN4
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN5 ;
+		lv2:designation amb:ACN5
 	] , [
 		lv2:index 6 ;
-		lv2:designation amb:ACN6 ;
+		lv2:designation amb:ACN6
 	] , [
 		lv2:index 7 ;
-		lv2:designation amb:ACN7 ;
+		lv2:designation amb:ACN7
 	] , [
 		lv2:index 8 ;
-		lv2:designation amb:ACN8 ;
+		lv2:designation amb:ACN8
 	] , [
 		lv2:index 9 ;
-		lv2:designation amb:ACN9 ;
+		lv2:designation amb:ACN9
 	] , [
 		lv2:index 10 ;
-		lv2:designation amb:ACN10 ;
+		lv2:designation amb:ACN10
 	] , [
 		lv2:index 11 ;
-		lv2:designation amb:ACN11 ;
+		lv2:designation amb:ACN11
 	] , [
 		lv2:index 12 ;
-		lv2:designation amb:ACN12 ;
+		lv2:designation amb:ACN12
 	] , [
 		lv2:index 13 ;
-		lv2:designation amb:ACN13 ;
+		lv2:designation amb:ACN13
 	] , [
 		lv2:index 14 ;
-		lv2:designation amb:ACN14 ;
+		lv2:designation amb:ACN14
 	] , [
 		lv2:index 15 ;
-		lv2:designation amb:ACN15 ;
+		lv2:designation amb:ACN15
 	] .
