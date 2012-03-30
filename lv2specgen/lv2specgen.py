@@ -241,33 +241,10 @@ def linkify(string):
     
     return rgx.sub(translateCodeLink, string)
 
-def getComment(m, urinode, classlist):
+def getComment(m, urinode, classlist, proplist, instalist):
     c = findOne(m, urinode, lv2.documentation, None)
     if c:
         markup = getLiteralString(getObject(c))
-        if have_lxml:
-            try:
-                # Parse and validate documentation as XHTML Basic 1.1
-                doc = """<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
-                      "DTD/xhtml-basic11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-  <head xml:lang="en" profile="profile">
-    <title>Validation Skeleton Document</title>
-  </head>
-  <body>
-%s
-  </body>
-</html>
-""" % str(markup.decode())
-
-                oldcwd = os.getcwd()
-                os.chdir(specgendir)
-                parser = etree.XMLParser(dtd_validation=True, no_network=True)
-                root = etree.fromstring(doc, parser)
-                os.chdir(oldcwd)
-            except Exception as e:
-                print("Invalid lv2:documentation for %s\n%s" % (urinode, e))
 
         # Syntax highlight all C code
         if have_pygments:
@@ -300,19 +277,54 @@ def getComment(m, urinode, classlist):
         # Add links to code documentation for identifiers
         markup = linkify(markup)
 
-        # Replace ext:ClassName with links to appropriate fragment
+        # Replace ext:ClassName with link to appropriate fragment
         rgx = re.compile(spec_pre + ':([A-Z][a-zA-Z0-9_-]*)')
-
         def translateClassLink(match):
             curie = match.group(0)
             name  = curie[curie.find(':') + 1:]
             uri   = spec_ns + name
             if rdflib.URIRef(uri) not in classlist:
                 print("warning: Link to undefined class %s\n" % curie)
-            
             return '<a href="#%s">%s</a>' % (name, curie)
+        markup = rgx.sub(translateClassLink, markup)
 
-        return rgx.sub(translateClassLink, markup)
+        # Replace ext:instanceName with link to appropriate fragment
+        rgx = re.compile(spec_pre + ':([a-z][a-zA-Z0-9_-]*)')
+        def translateInstanceLink(match):
+            curie = match.group(0)
+            name  = curie[curie.find(':') + 1:]
+            uri   = spec_ns + name
+            if (rdflib.URIRef(uri) not in instalist and
+                rdflib.URIRef(uri) not in proplist):
+                print("warning: Link to undefined instance/property %s\n" % curie)
+            return '<a href="#%s">%s</a>' % (name, curie)
+        markup = rgx.sub(translateInstanceLink, markup)
+
+        if have_lxml:
+            try:
+                # Parse and validate documentation as XHTML Basic 1.1
+                doc = """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
+                      "DTD/xhtml-basic11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head xml:lang="en" profile="profile">
+    <title>Validation Skeleton Document</title>
+  </head>
+  <body>
+%s
+  </body>
+</html>
+""" % str(markup.decode())
+
+                oldcwd = os.getcwd()
+                os.chdir(specgendir)
+                parser = etree.XMLParser(dtd_validation=True, no_network=True)
+                root = etree.fromstring(doc, parser)
+                os.chdir(oldcwd)
+            except Exception as e:
+                print("Invalid lv2:documentation for %s\n%s" % (urinode, e))
+
+        return markup
 
     c = findOne(m, urinode, rdfs.comment, None)
     if c:
@@ -619,7 +631,7 @@ def owlInfo(term, m):
     return res
 
 
-def docTerms(category, list, m, classlist):
+def docTerms(category, list, m, classlist, proplist, instalist):
     """
     A wrapper class for listing all the terms in a specific class (either
     Properties, or Classes. Category is 'Property' or 'Class', list is a
@@ -648,7 +660,7 @@ def docTerms(category, list, m, classlist):
         doc += """<div class="specterm" id="%s" about="%s">\n<h3>%s <a href="#%s">%s</a></h3>\n""" % (t, term_uri, category, getAnchor(str(term_uri)), curie)
 
         label = getLabel(m, term)
-        comment = getComment(m, term, classlist)
+        comment = getComment(m, term, classlist, proplist, instalist)
 
         doc += '<div class="spectermbody">'
         if label != '' or comment != '':
@@ -1105,10 +1117,10 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
     azlist = buildIndex(m, classlist, proplist, instalist)
 
     # Generate Term HTML
-    termlist = docTerms('Property', proplist, m, classlist)
-    termlist = docTerms('Class', classlist, m, classlist) + termlist
+    termlist = docTerms('Property', proplist, m, classlist, proplist, instalist)
+    termlist = docTerms('Class', classlist, m, classlist, proplist, instalist) + termlist
     if instances:
-        termlist += docTerms('Instance', instalist, m, classlist)
+        termlist += docTerms('Instance', instalist, m, classlist, proplist, instalist)
 
     template = template.replace('@NAME@', specProperty(m, spec, doap.name))
     template = template.replace('@SUBTITLE@', specProperty(m, spec, doap.shortdesc))
@@ -1181,7 +1193,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
 
     template = template.replace('@FILES@', files)
 
-    comment = getComment(m, rdflib.URIRef(spec_url), classlist)
+    comment = getComment(m, rdflib.URIRef(spec_url), classlist, proplist, instalist)
     if comment != '':
         template = template.replace('@COMMENT@', comment)
     else:
