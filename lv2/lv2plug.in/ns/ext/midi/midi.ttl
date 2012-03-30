@@ -21,6 +21,7 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix midi: <http://lv2plug.in/ns/ext/midi#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
@@ -112,10 +113,10 @@ midi:Aftertouch
 	midi:statusMask "A0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
-		midi:property midi:noteNumber ;
+		midi:property midi:noteNumber
 	] , [
 		midi:byteNumber 1 ;
-		midi:property midi:pressure ;
+		midi:property midi:pressure
 	] .
 
 midi:Bender
@@ -126,7 +127,7 @@ midi:Bender
 	midi:chunk [
 		midi:byteNumber 0 ,
 			1 ;
-		midi:property midi:benderValue ;
+		midi:property midi:benderValue
 	] .
 
 midi:ChannelPressure
@@ -136,7 +137,7 @@ midi:ChannelPressure
 	midi:statusMask "D0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
-		midi:property midi:pressure ;
+		midi:property midi:pressure
 	] .
 
 midi:Chunk
@@ -162,10 +163,10 @@ midi:Controller
 	midi:statusMask "B0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
-		midi:property midi:controllerNumber ;
+		midi:property midi:controllerNumber
 	] , [
 		midi:byteNumber 1 ;
-		midi:property midi:controllerValue ;
+		midi:property midi:controllerValue
 	] .
 
 midi:MidiEvent
@@ -204,10 +205,10 @@ midi:NoteOff
 	midi:statusMask "80"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
-		midi:property midi:noteNumber ;
+		midi:property midi:noteNumber
 	] , [
 		midi:byteNumber 1 ;
-		midi:property midi:velocity ;
+		midi:property midi:velocity
 	] .
 
 midi:NoteOn
@@ -217,10 +218,10 @@ midi:NoteOn
 	midi:statusMask "90"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
-		midi:property midi:noteNumber ;
+		midi:property midi:noteNumber
 	] , [
 		midi:byteNumber 1 ;
-		midi:property midi:velocity ;
+		midi:property midi:velocity
 	] .
 
 midi:ProgramChange
@@ -230,7 +231,7 @@ midi:ProgramChange
 	midi:statusMask "C0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
-		midi:property midi:programNumber ;
+		midi:property midi:programNumber
 	] .
 
 midi:QuarterFrame
@@ -253,7 +254,7 @@ midi:SongPosition
 	midi:chunk [
 		midi:byteNumber 0 ,
 			1 ;
-		midi:property midi:songPosition ;
+		midi:property midi:songPosition
 	] .
 
 midi:SongSelect
@@ -315,12 +316,15 @@ midi:VoiceMessage
 	midi:statusMask "F0"^^xsd:hexBinary .
 
 midi:benderValue
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:short ;
 	rdfs:comment "The value of a pitch bender (-8192 to 8192)." .
 
 midi:byteNumber
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:domain midi:Chunk ;
 	rdfs:range xsd:unsignedByte ;
 	rdfs:comment "The 0-based index of a byte which is part of this chunk." .
@@ -329,57 +333,77 @@ midi:chunk
 	a rdf:Property ;
 	rdfs:range xsd:byte ,
 		xsd:hexBinary ;
-	rdfs:comment "The exact status byte for a message of this type." .
+	rdfs:comment "A chunk of a MIDI message." .
 
 midi:controllerNumber
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:byte ;
 	rdfs:comment "The numberic ID of a controller (0 to 127)." .
 
 midi:controllerValue
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:byte ;
 	rdfs:comment "The value of a controller (0 to 127)." .
 
 midi:noteNumber
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:byte ;
-	rdfs:comment "The numeric ID of a controller (0 to 127)." .
+	rdfs:comment "The numeric ID of a note (0 to 127)." .
 
 midi:pressure
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:byte ;
 	rdfs:comment "Key pressure (0 to 127)." .
 
 midi:programNumber
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:byte ;
 	rdfs:comment "The numeric ID of a program (0 to 127)." .
 
 midi:property
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain midi:Chunk ;
 	rdfs:range rdf:Property ;
 	rdfs:comment "The property this chunk represents." .
 
 midi:songNumber
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:byte ;
 	rdfs:comment "The numeric ID of a song (0 to 127)." .
 
 midi:songPosition
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:short ;
 	rdfs:comment "Song position in MIDI beats (16th notes) (-8192 to 8192)." .
 
 midi:status
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:byte ,
 		xsd:hexBinary ;
 	rdfs:comment "The exact status byte for a message of this type." .
 
 midi:statusMask
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:byte ,
 		xsd:hexBinary ;
 	rdfs:comment """
@@ -387,6 +411,8 @@ The status byte for a message of this type on channel 1, i.e. a status byte
 with the lower nibble set to zero.""" .
 
 midi:velocity
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:byte ;
 	rdfs:comment "The velocity of a note message (0 to 127)." .

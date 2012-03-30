@@ -23,6 +23,7 @@
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 lv2:Specification a rdfs:Class , owl:Class ;
+    rdfs:subClassOf doap:Project ;
     lv2:documentation """
 <p>An LV2 specification (i.e. this specification, or an LV2 extension).</p>
 
@@ -185,7 +186,8 @@ will do), but the value itself MUST be non-negative.
 """  ] , [
          a owl:Restriction ;
          owl:onProperty lv2:symbol ;
-         owl:someValuesFrom xsd:string ;
+         owl:allValuesFrom xsd:string ;
+         owl:cardinality 1 ;
          rdfs:comment """
 A port MUST have a single lv2:symbol which is of type xsd:string with no
 language tag.
@@ -386,29 +388,40 @@ if/when to load the data, knowing that it describes an additional resource and
 not the plugin itself.</p>
 """ .
 
-lv2:index a rdf:Property , owl:DatatypeProperty ;
+lv2:index a rdf:Property , owl:DatatypeProperty , owl:FunctionalProperty ;
     rdfs:range xsd:nonNegativeInteger ;
     rdfs:label "index" ;
     rdfs:comment "A non-negative zero-based index." .
 
-lv2:symbol a rdf:Property , owl:DatatypeProperty ;
-    rdfs:label "symbol" ;
+lv2:Symbol a rdfs:Datatype ;
+    rdfs:subClassOf xsd:string ;
+    xsd:pattern "[_a-zA-Z][_a-zA-Z0-9]*$" ;
     rdfs:comment """
-A short name used as a machine and human readable identifier.
+A short restricted name used as a machine and human readable identifier.
 
-The first character must be one of _, a-z or A-Z and subsequenct characters can
-be from _, a-z, A-Z and 0-9.
+The first character must be one of _, a-z or A-Z and subsequent characters can
+be from _, a-z, A-Z and 0-9.  This is a valid C identifier, and compatible in
+most other contexts with restricted string identifiers (e.g. file paths).
+""" .
 
-A language tag MUST NOT be used on this property. The symbol uniquely
-identifies the port on a plugin with a given URI (i.e. the plugin author MUST
-change the plugin URI if a port symbol is changed or removed).
+lv2:symbol a rdf:Property , owl:DatatypeProperty , owl:FunctionalProperty ;
+    rdfs:label "symbol" ;
+    rdfs:range lv2:Symbol ;
+    lv2:documentation """
+<p>The value of this property MUST conform to the rules for lv2:Symbol, and
+MUST NOT have a language tag.</p>
+
+<p>A symbol is a unique identifier with respect to the parent (e.g. a port's
+symbol is a unique identifier with respect to its plugin).  The plugin author
+MUST change the plugin URI if a port symbol is changed or removed.</p>
 """ .
 
 lv2:name a rdf:Property , owl:DatatypeProperty ;
-    rdfs:domain lv2:Port ;
     rdfs:label "name" ;
     rdfs:comment """
-A display name for labeling the Port in a user interface.
+A display name for labeling in a user interface.  Unlike lv2:symbol this is
+unrestricted and may be translated.  The lv2:name MUST NOT be used as an
+identifier.
 
 This property is required for Ports, but MUST NOT be used by the host for
 port identification. The plugin author may change the values of this
@@ -433,6 +446,7 @@ lv2:Channel a rdfs:Class , owl:Class ;
 
 lv2:Parameter a rdfs:Class , owl:Class ;
 	rdfs:subClassOf lv2:Designation ;
+    #owl:equivalentClass rdf:Property ;
 	lv2:documentation """
 <p>A parameter, i.e. a recognized property.  A parameter is a designation for a
 control.</p>
@@ -445,7 +459,7 @@ messages, are possible but not defined here.</p>
 """ .
 
 lv2:hasParameter a rdf:Property , owl:ObjectProperty ;
-    rdfs:range lv2:Parameter ;
+    #rdfs:range lv2:Parameter ;
     rdfs:label "has parameter" ;
     lv2:documentation """
 <p>Indicates that a specific parameter is supported.  This predicate is to
@@ -457,8 +471,8 @@ parameters, simply use lv2:designation on the port for that.</p>
 not restricted to plugins.</p>
 """ .
 
-lv2:designation a rdf:Property , owl:ObjectProperty ;
-    rdfs:range lv2:Designation ;
+lv2:designation a rdf:Property , owl:ObjectProperty , owl:FunctionalProperty ;
+    #rdfs:range lv2:Designation ;
     rdfs:label "assignment" ;
     lv2:documentation """
 <p>Indicates a channel or parameter designation.</p>
@@ -515,7 +529,7 @@ lv2:scalePoint a rdf:Property , owl:ObjectProperty ;
     rdfs:label "Scale point" ;
     rdfs:comment "Relates a Port to its ScalePoints." .
 
-lv2:default a rdf:Property , owl:DatatypeProperty ;
+lv2:default a rdf:Property , owl:DatatypeProperty , owl:FunctionalProperty ;
     rdfs:domain lv2:Port ;
     rdfs:label "Default value" ;
     rdfs:comment """
@@ -523,7 +537,7 @@ The default value that the host SHOULD set this port to when there is no
 other information available.
 """ .
 
-lv2:minimum a rdf:Property , owl:DatatypeProperty ;
+lv2:minimum a rdf:Property , owl:DatatypeProperty  , owl:FunctionalProperty ;
     rdfs:domain lv2:Port ;
     rdfs:label "Minimum value" ;
     lv2:documentation """
@@ -532,7 +546,7 @@ is a <q>soft</q> limit; the plugin is required to gracefully accept all values
 in the range of a port's data type.</p>
 """ .
 
-lv2:maximum a rdf:Property , owl:DatatypeProperty ;
+lv2:maximum a rdf:Property , owl:DatatypeProperty  , owl:FunctionalProperty ;
     rdfs:domain lv2:Port ;
     rdfs:label "Maximum value" ;
     lv2:documentation """

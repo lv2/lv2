@@ -71,7 +71,8 @@ extension.</p>
 
 atom:cType
 	a rdf:Property ,
-		owl:DatatypeProperty ;
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:label "C type" ;
 	rdfs:domain rdfs:Class ;
 	rdfs:range xsd:string ;
@@ -370,7 +371,9 @@ atom:TimeUnit
 	lv2:documentation "<p>A unit for atom:Event time stamps.</p>" .
 
 atom:frameTime
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:decimal ;
 	rdfs:label "Frame time" ;
 	lv2:documentation """
@@ -378,7 +381,9 @@ atom:frameTime
 """ .
 
 atom:beatTime
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range xsd:decimal ;
 	rdfs:label "Beat time" ;
 	lv2:documentation """
@@ -439,7 +444,8 @@ However, to be robust, hosts SHOULD initialise output ports to a safe sentinel
 """ .
 
 atom:bufferType
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:domain atom:AtomPort ;
 	rdfs:label "Buffer type" ;
 	lv2:documentation """
@@ -463,7 +469,8 @@ that, use atom:supports.</p>
 """ .
 
 atom:childType
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:label "Child type" ;
 	rdfs:comment "The type of a container's children." .
 

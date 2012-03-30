@@ -31,7 +31,7 @@
 	doap:name "LV2 Patch" ;
 	doap:release [
 		doap:created "2012-02-08" ;
-		doap:revision "0.1" ;
+		doap:revision "0.1"
 	] ;
 	doap:shortdesc "Messages for accessing and manipulating properties." ;
 	lv2:documentation """
@@ -156,7 +156,7 @@ patch:Insert
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty patch:subject ;
+		owl:onProperty patch:subject
 	] ;
 	lv2:documentation """
 <p>Insert the patch:body at patch:subject.  If the subject does not exist, it is
@@ -176,11 +176,11 @@ patch:Move
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty patch:subject ;
+		owl:onProperty patch:subject
 	] , [
 		a owl:Restriction ;
 		owl:cardinality 1 ;
-		owl:onProperty patch:destination ;
+		owl:onProperty patch:destination
 	] ;
 	lv2:documentation """
 <p>Move the patch:subject to patch:destination.  After this, patch:destination has
@@ -195,15 +195,15 @@ patch:Patch
 	[
 		a owl:Restriction ;
 		owl:minCardinality 1 ;
-		owl:onProperty patch:subject ;
+		owl:onProperty patch:subject
 	] , [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty patch:add ;
+		owl:onProperty patch:add
 	] , [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty patch:remove ;
+		owl:onProperty patch:remove
 	] ;
 	lv2:documentation """
 <p>A method for modifying the properties of an object.</p>
@@ -236,7 +236,7 @@ patch:Put
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:maxCardinality 1 ;
-		owl:onProperty patch:subject ;
+		owl:onProperty patch:subject
 	] ;
 	lv2:documentation """
 <p>Put the patch:body as the patch:subject.  If the subject does not already exist,
@@ -268,7 +268,7 @@ patch:Set
 	[
 		a owl:Restriction ;
 		owl:cardinality 1 ;
-		owl:onProperty patch:body ;
+		owl:onProperty patch:body
 	] ;
 	lv2:documentation """
 <p>A method for setting properties of an object to unique values.</p>
@@ -309,12 +309,14 @@ patch is equivalent to:</p>
 
 patch:add
 	a rdf:Property ,
-		owl:ObjectProperty ;
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain patch:Message .
 
 patch:body
 	a rdf:Property ,
-		owl:ObjectProperty ;
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain patch:Message ;
 	lv2:documentation """
 <p>The body of a message.</p>
@@ -325,12 +327,14 @@ part of.</p>
 
 patch:destination
 	a rdf:Property ,
-		owl:ObjectProperty ;
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain patch:Message .
 
 patch:request
 	a rdf:Property ,
-		owl:ObjectProperty ;
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain patch:Response ;
 	rdfs:range patch:Request ;
 	lv2:documentation """
@@ -339,10 +343,12 @@ patch:request
 
 patch:subject
 	a rdf:Property ,
-		owl:ObjectProperty ;
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain patch:Message .
 
 patch:remove
 	a rdf:Property ,
-		owl:ObjectProperty ;
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain patch:Message .

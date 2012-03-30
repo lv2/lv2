@@ -92,8 +92,8 @@ An element of a group, which has a designation and an optional index.
 """ .
 
 pg:element
-	a rdf:Property ;
-	rdfs:domain pg:Group ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:range pg:Element ;
 	rdfs:label "element" ;
 	rdfs:comment """
@@ -102,7 +102,8 @@ designation with a possible index).
 """ .
 
 pg:sideChainOf
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:label "Side-chain of" ;
 	rdfs:comment """
 Indicates that this port or group should be considered a "side chain" of
@@ -112,7 +113,9 @@ some other group, rather than an independent input itself.
 """ .
 
 pg:subGroupOf
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain pg:Group ;
 	rdfs:range pg:Group ;
 	rdfs:label "Sub-group of" ;
@@ -125,7 +128,8 @@ symbol.
 """ .
 
 pg:source
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:domain pg:OutputGroup ;
 	rdfs:range pg:InputGroup ;
 	rdfs:label "Source" ;
@@ -139,6 +143,7 @@ types, e.g. a mono->stereo plugin.
 
 pg:mainInput
 	a rdf:Property ,
+		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
 	rdfs:domain lv2:Plugin ;
 	rdfs:range pg:InputGroup ;
@@ -151,6 +156,7 @@ more than one pg:mainInput property.
 
 pg:mainOutput
 	a rdf:Property ,
+		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
 	rdfs:domain lv2:Plugin ;
 	rdfs:range pg:OutputGroup ;
@@ -161,7 +167,9 @@ output group SHOULD have the main input group as a pg:source.
 """ .
 
 pg:group
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain lv2:Port ;
 	rdfs:range pg:Group ;
 	rdfs:label "In port group" ;
@@ -425,6 +433,54 @@ pg:SevenPointOneWideGroup
 		lv2:index 7 ;
 		lv2:designation pg:lowFrequencyEffects
 	] .
+
+amb:ACN0
+	a lv2:Channel .
+
+amb:ACN1
+	a lv2:Channel .
+
+amb:ACN2
+	a lv2:Channel .
+
+amb:ACN3
+	a lv2:Channel .
+
+amb:ACN4
+	a lv2:Channel .
+
+amb:ACN5
+	a lv2:Channel .
+
+amb:ACN6
+	a lv2:Channel .
+
+amb:ACN7
+	a lv2:Channel .
+
+amb:ACN8
+	a lv2:Channel .
+
+amb:ACN9
+	a lv2:Channel .
+
+amb:ACN10
+	a lv2:Channel .
+
+amb:ACN11
+	a lv2:Channel .
+
+amb:ACN12
+	a lv2:Channel .
+
+amb:ACN13
+	a lv2:Channel .
+
+amb:ACN14
+	a lv2:Channel .
+
+amb:ACN15
+	a lv2:Channel .
 
 pg:AmbisonicGroup
 	a rdfs:Class ;

@@ -13,12 +13,13 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix time: <http://lv2plug.in/ns/ext/time#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix time: <http://lv2plug.in/ns/ext/time#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/time>
@@ -50,7 +51,7 @@ The meter describes how many beats are in one bar.</p>
 
 time:Time
 	a rdfs:Class ;
-    rdfs:subClassOf time:Position ;
+	rdfs:subClassOf time:Position ;
 	rdfs:label "A point in time" ;
 	rdfs:comment "A point in time in some unit/dimension." .
 
@@ -63,73 +64,93 @@ both a point and a speed, which precisely defines a time within a timeline.</p>
 
 time:Rate
 	a rdfs:Class ;
-    rdfs:subClassOf time:Position ;
+	rdfs:subClassOf time:Position ;
 	rdfs:label "Rate" ;
 	lv2:documentation """
 <p>The rate of passage of time in terms of one unit with respect to
 another.</p> """ .
 
 time:position
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
 	rdfs:range time:Position ;
 	rdfs:label "Position in time" .
 
 time:barBeat
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain time:Time ;
 	rdfs:range xsd:float ;
 	rdfs:label "Beat within this bar" ;
 	rdfs:comment "The beat number within the bar, from 0 to beatsPerBar." .
 
 time:bar
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain time:Time ;
 	rdfs:range xsd:long ;
 	rdfs:label "Global position in bars" .
 
 time:beat
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain time:Time ;
 	rdfs:range xsd:double ;
 	rdfs:label "Global position in beats" .
 
 time:beatUnit
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain time:Rate ;
-	rdfs:range xsd:double ;
+	rdfs:range xsd:nonNegativeInteger ;
 	lv2:documentation """
 <p>Beat unit, the note value that counts as one beat.  This is the bottom number
 in a time signature: 2 for half note, 4 for quarter note, and so on.</p>
 """ .
 
 time:beatsPerBar
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain time:Rate ;
 	rdfs:range xsd:float ;
 	rdfs:label "Beats per bar" .
 
 time:beatsPerMinute
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain time:Rate ;
 	rdfs:range xsd:float ;
 	rdfs:label "Beats per minute" ;
 	rdfs:comment "Tempo in beats per minute." .
 
 time:frame
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain time:Time ;
 	rdfs:range xsd:long ;
 	rdfs:label "Global position in frames" .
 
 time:framesPerSecond
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain time:Rate ;
 	rdfs:range xsd:float ;
 	rdfs:label "Frames per second" ;
 	rdfs:comment "Frame rate in frames per second." .
 
 time:speed
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain time:Rate ;
 	rdfs:range xsd:float ;
 	rdfs:label "Speed" ;

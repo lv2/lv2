@@ -137,6 +137,23 @@ A UI where the LV2_Widget is an X11 window ID.  Note this is actually an
 integer, i.e. the LV2_Widget is not a pointer to an X11 window ID, but should
 be itself taken as an integer value.""" .
 
+ui:ui
+	a rdf:Property ;
+	rdfs:domain lv2:Plugin ;
+	rdfs:range ui:UI ;
+	rdfs:comment """
+Relates a plugin to a UI that applies to it.
+""" .
+
+ui:binary
+	a rdf:Property ;
+	owl:sameAs lv2:binary ;
+	owl:deprecated "true"^^xsd:boolean ;
+	rdfs:comment """
+The shared library a UI resides in.  This property is redundant, new UIs SHOULD
+use lv2:binary, however hosts MUST still support ui:binary at this time.
+""" .
+
 ui:makeSONameResident
 	a lv2:Feature ;
 	owl:deprecated "true"^^xsd:boolean ;
