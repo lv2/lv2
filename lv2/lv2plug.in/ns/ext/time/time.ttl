@@ -39,10 +39,9 @@ passage of time itself, in both real and musical terms.</p>
 
 <p>In addition to real time (e.g. seconds), two units of time are used:
 <q>frames</q> and <q>beats</q>.  A frame is a numbered quantum of time.  Frame
-time is related to real-time by the <q>frame rate</q> or <q>sample rate</q>, <a
-href="#framesPerSecond">time:framesPerSecond</a>.  A beat is a single pulse of
-musical time.  Beat time is related to real-time by the <q>tempo</q>, <a
-href="#beatsPerMinute">time:beatsPerMinute</a>.</p>
+time is related to real-time by the <q>frame rate</q> or <q>sample rate</q>,
+time:framesPerSecond.  A beat is a single pulse of musical time.  Beat time is
+related to real-time by the <q>tempo</q>, time:beatsPerMinute.</p>
 
 <p>Musical time additionally has a <q>meter</q> which describes passage of time
 in terms of musical <q>bars</q>.  A bar is a higher level grouping of beats.
