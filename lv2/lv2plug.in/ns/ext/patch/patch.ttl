@@ -352,3 +352,9 @@ patch:remove
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
 	rdfs:domain patch:Message .
+
+patch:wildcard
+	a rdfs:Resource ;
+	rdfs:comment """
+A wildcard which matches any resource.  This makes it possible to describe the removal of all values for a given property.
+""" .

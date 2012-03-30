@@ -46,5 +46,6 @@
 #define LV2_PATCH__remove      LV2_PATCH_PREFIX "remove"
 #define LV2_PATCH__request     LV2_PATCH_PREFIX "request"
 #define LV2_PATCH__subject     LV2_PATCH_PREFIX "subject"
+#define LV2_PATCH__wildcard    LV2_PATCH_PREFIX "wildcard"
 
 #endif  /* LV2_PATCH_H */
