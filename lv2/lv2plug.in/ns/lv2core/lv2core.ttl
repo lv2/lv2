@@ -329,9 +329,8 @@ may exist; i.e. it is acceptable to work on a development version of a resource
 (e.g. in source control) without worrying about version numbers as long as
 either the minor or micro version is odd.</p>
 
-<p>This property describes half of a resource version. See also <a
-href="http://lv2plug.in/ns/lv2core#minorVersion">lv2:minorVersion</a>, the
-property which describes the other half.</p>
+<p>This property describes half of a resource version.  See lv2:minorVersion
+for the description of the other half.</p>
 """ .
 
 lv2:microVersion a rdf:Property , owl:DatatypeProperty ;
@@ -347,8 +346,7 @@ version in source control, the micro version MUST be incremented (to an odd
 number) to distinguish this modified version from the previous release.</p>
 
 <p>This property describes half of a resource version. For detailed
-documentation on LV2 resource versioning, see <a
-href="http://lv2plug.in/ns/lv2core#minorVersion">lv2:minorVersion</a>.</p>
+documentation on LV2 resource versioning, see lv2:minorVersion.</p>
 """ .
 
 lv2:binary a rdf:Property , owl:ObjectProperty ;
