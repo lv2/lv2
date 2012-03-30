@@ -30,8 +30,8 @@
 	doap:shortdesc "An interface for LV2 plugins to save and restore state." ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:release [
-		doap:revision "0.6" ;
-		doap:created "2012-03-03" ;
+		doap:revision "0.8" ;
+		doap:created "2012-03-30" ;
 		dcs:blame <http://drobilla.net/drobilla#me>
 	] ;
 	doap:developer <http://lv2plug.in/ns/people#paniq> ,
@@ -68,7 +68,7 @@ key:value pair is called a <q>property</q>.</p>
   dynamic dictionary data structure available.</li>
 </ul>
 
-<p>To implement state, the plugin provides a state:Interface to the host.  To
+<p>To implement state, the plugin provides a state:interface to the host.  To
 save or restore, the host calls LV2_State_Interface::save() or
 LV2_State_Interface::restore(), passing a callback to be used for handling a
 single property.  The host is free to implement property storage and retrieval
@@ -85,15 +85,15 @@ is simply a C string.</p>
 <p>Plugins may need to refer to existing files (e.g. loaded samples) in their
 state.  This is done by storing the file's path as a property just like any
 other value.  However, there are some rules which MUST be followed when storing
-paths, see <a href="#mapPath">state:mapPath</a> for details.  Plugins MUST use
-the type <a href="http://lv2plug.in/ns/ext/atom#Path">atom:Path</a> for all
-paths in their state.</p>
+paths, see state:mapPath for details.  Plugins MUST use the type <a
+href="http://lv2plug.in/ns/ext/atom#Path">atom:Path</a> for all paths in their
+state.</p>
 
 <p>Plugins are strongly encouraged to avoid creating files, instead storing all
 state as properties.  However, occasionally the ability to create files is
-necessary.  To make this possible, the host can provide the feature <a
-href="#makePath">state:makePath</a> which allocates paths for plugin-created
-files.  Plugins MUST NOT create files in any other locations.</p>
+necessary.  To make this possible, the host can provide the feature
+state:makePath which allocates paths for plugin-created files.  Plugins MUST
+NOT create files in any other locations.</p>
 
 <h3>Plugin Code Example</h3>
 
@@ -104,20 +104,24 @@ files.  Plugins MUST NOT create files in any other locations.</p>
 */
 #define NS_MY "http://example.org/myplugin/schema#"
 
-LV2_Handle my_instantiate(...)
+#define DEFAULT_GREETING "Hello"
+
+LV2_Handle
+my_instantiate(...)
 {
     MyPlugin* plugin = ...;
     plugin->uris.atom_String = map_uri(LV2_ATOM__String);
     plugin->uris.my_greeting = map_uri(NS_MY "greeting");
-    plugin->state.greeting   = strdup("Hello");  // Default value
+    plugin->state.greeting   = strdup(DEFAULT_GREETING);
     return plugin;
 }
 
-void my_save(LV2_Handle                 instance,
-             LV2_State_Store_Function   store,
-             LV2_State_Handle           handle,
-             uint32_t                   flags,
-             const LV2_Feature *const * features)
+LV2_State_Status
+my_save(LV2_Handle                 instance,
+        LV2_State_Store_Function   store,
+        LV2_State_Handle           handle,
+        uint32_t                   flags,
+        const LV2_Feature *const * features)
 {
     MyPlugin*   plugin   = (MyPlugin*)instance;
     const char* greeting = plugin->state.greeting;
@@ -128,13 +132,16 @@ void my_save(LV2_Handle                 instance,
           strlen(greeting) + 1,  // Careful!  Need space for terminator
           plugin->uris.atom_String,
           LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
+
+    return LV2_STATUS_SUCCESS;
 }
 
-void my_restore(LV2_Handle                  instance,
-                LV2_State_Retrieve_Function retrieve,
-                LV2_State_Handle            handle,
-                uint32_t                    flags,
-                const LV2_Feature *const *  features)
+LV2_State_Status
+my_restore(LV2_Handle                  instance,
+           LV2_State_Retrieve_Function retrieve,
+           LV2_State_Handle            handle,
+           uint32_t                    flags,
+           const LV2_Feature *const *  features)
 {
     MyPlugin* plugin = (MyPlugin*)instance;
 
@@ -148,14 +155,17 @@ void my_restore(LV2_Handle                  instance,
         free(plugin->state->greeting);
         plugin->state->greeting = strdup(greeting);
     } else {
-        plugin->state->greeting = strdup("Hello");
+        plugin->state->greeting = strdup(DEFAULT_GREETING);
     }
+
+    return LV2_STATUS_SUCCESS;
 }
 
-const void* my_extension_data(const char* uri)
+const void*
+my_extension_data(const char* uri)
 {
     static const LV2_State_Interface state_iface = { my_save, my_restore };
-    if (!strcmp(uri, LV2_STATE_INTERFACE_URI)) {
+    if (!strcmp(uri, LV2_STATE__interface)) {
         return &amp;state_iface;
     }
 }
@@ -164,12 +174,13 @@ const void* my_extension_data(const char* uri)
 <h3>Host Code Example</h3>
 
 <pre class="c-code">
-int store_callback(LV2_State_Handle handle,
-                   uint32_t         key,
-                   const void*      value,
-                   size_t           size,
-                   uint32_t         type,
-                   uint32_t         flags)
+LV2_State_Status
+store_callback(LV2_State_Handle handle,
+               uint32_t         key,
+               const void*      value,
+               size_t           size,
+               uint32_t         type,
+               uint32_t         flags)
 {
     if ((flags &amp; LV2_STATE_IS_POD)) {
         /* We only care about POD since we're keeping state in memory only.
@@ -183,9 +194,10 @@ int store_callback(LV2_State_Handle handle,
     }
 }
 
-Map get_plugin_state(LV2_Handle instance)
+Map
+get_plugin_state(LV2_Handle instance)
 {
-    LV2_State* state = instance.extension_data(LV2_STATE__Interface);
+    LV2_State* state = instance.extension_data(LV2_STATE__interface);
     Map state_map;
     /** Request a fast/native/POD save, since we're just copying in memory */
     state.save(instance, store_callback, &amp;state_map,
@@ -209,26 +221,36 @@ instance, at least well enough that saving and restoring will yield an
 plugin instance.</li>
 </ul>
 
-<p>The recommended way to add new functionality that may affect state is to
-simply define it in terms of properties.  For example, instead of defining a
-new set of commands, define properties whose values can be set appropriately.
-This provides persistence <q>for free</q>, since rather than having to define a
-set of commands <em>and</em> a set of properties for storing their effects,
-only the properties need to be defined.</p>
+<h3>The <q>Property Principle</q></h3>
 
-<p>This <q>property principle</q> is summed up in the phrase: <q>Don't
-stop; set playing to false</q>.</p>
+<p>The main benefit of this meaningful state model is that it can double as a
+plugin control/query mechanism.  For plugins that require more advanced control
+than simple control ports, instead of defining a set of commands, define
+properties whose values can be set appropriately.  This provides both a way to
+control and save that state <q>for free</q>, since there is no need to define
+commands <em>and</em> a set of properties for storing their effects.  In
+particular, this is a good way for UIs to achieve more advanced control of
+plugins.</p>
+
+<p>This <q>property principle</q> is summed up in the phrase:
+<q>Don't stop; set playing to false</q>.</p>
+
+<p>This extension does not define a dynamic mechanism for state access and
+manipulation.  The <a href="http://lv2plug.in/ns/ext/patch">LV2 Patch</a>
+extension defines a generic set of messages which can be used to access or
+manipulate properties, and the <a href="http://lv2plug.in/ns/ext/atom">LV2
+Atom</a> extension defines a port type and data container capable of
+transmitting those messages.</p>
 """ .
 
-state:Interface
-	a rdfs:Class ;
-	rdfs:subClassOf lv2:ExtensionData ;
+state:interface
+	a lv2:ExtensionData ;
 	lv2:documentation """
 <p>A structure (LV2_State_Interface) which contains functions to be called by
 the host to save and restore state.  In order to support this extension, the
 plugin must return a valid LV2_State_Interface from
 LV2_Descriptor::extension_data() when it is called with URI
-LV2_STATE__Interface.</p>
+LV2_STATE__interface.</p>
 
 <p>The plugin data file should describe this like so:</p>
 <pre class="turtle-code">
@@ -236,7 +258,7 @@ LV2_STATE__Interface.</p>
 
 &lt;plugin&gt;
     a lv2:Plugin ;
-    lv2:extensionData state:Interface .
+    lv2:extensionData state:interface .
 </pre>
 """ .
 
@@ -245,9 +267,9 @@ state:State
 	rdfs:label "Plugin Instance State" ;
 	lv2:documentation """
 <p>A state dictionary.  This type should be used wherever instance state is
-described in RDF, or any other context that uses type URIs.  The properties of
-a resource with this type correspond directly to the properties of the state
-dictionary (except the property that states it has this type).</p>
+described.  The properties of a resource with this type correspond directly to
+the properties of the state dictionary (except the property that states it has
+this type).</p>
 """ .
 
 state:state
@@ -255,13 +277,13 @@ state:state
 	rdfs:label "State" ;
 	rdfs:range state:State ;
 	lv2:documentation """
-<p>The state of this plugin instance, or similar resource.  This property may
-be used anywhere a state needs to be described, for example:</p>
+<p>The state of this instance.  This property may be used anywhere a state
+needs to be described, for example:</p>
 
 <pre class="turtle-code">
 @prefix eg: &lt;http://example.org/&gt; .
 
-&lt;plugininstance&gt;
+&lt;plugin-instance&gt;
     state:state [
         eg:somekey "some value" ;
         eg:someotherkey "some other value" ;
@@ -313,24 +335,23 @@ state:makePath
 	lv2:documentation """
 <p>This feature allows plugins to create new files and/or directories.  To
 support this feature the host passes an LV2_Feature with URI
-LV2_STATE__makePath and data pointed to an LV2_State_Make_Path to the
-plugin.  The host may make this feature available only during save by passing
-it to LV2_State_Interface::save(), or available any time by passing it to
+LV2_STATE__makePath and data pointed to an LV2_State_Make_Path to the plugin.
+The host may make this feature available only during save by passing it to
+LV2_State_Interface::save(), or available any time by passing it to
 LV2_Descriptor::instantiate().  If passed to LV2_State_Interface::save(), the
 feature MUST NOT be used beyond the scope of that call.</p>
 
-<p>The plugin is guaranteed a hierarchial namespace unique to that plugin
+<p>The plugin is guaranteed a hierarchical namespace unique to that plugin
 instance, and may expect the returned path to have the requested path as a
 suffix.  There is <em>one</em> such namespace, even if the feature is passed to
-both LV2_Descriptor::instantiate() <em>and</em>
-LV2_State_Interface::save().  Beyond this, the plugin MUST NOT make any
-assumptions about the returned paths.</p>
+both LV2_Descriptor::instantiate() <em>and</em> LV2_State_Interface::save().
+Beyond this, the plugin MUST NOT make any assumptions about the returned
+paths.</p>
 
-<p>Like any other paths, the plugin MUST map these paths using <a
-href="#mapPath">state:mapPath</a> before storing them in state.  The plugin
-MUST NOT assume these paths will be available across a save/restore otherwise,
-i.e.  only mapped paths saved to state are persistent, any other created paths
-are temporary.</p>
+<p>Like any other paths, the plugin MUST map these paths using state:mapPath
+before storing them in state.  The plugin MUST NOT assume these paths will be
+available across a save/restore otherwise, i.e.  only mapped paths saved to
+state are persistent, any other created paths are temporary.</p>
 
 <p>For example, a plugin may create a file in a subdirectory like so:</p>
 
@@ -339,7 +360,7 @@ char* save_myfile(LV2_State_Make_Path* make_path)
 {
     char* path   = make_path->path(make_path->handle, "foo/bar/myfile.txt");
     FILE* myfile = fopen(path, 'w');
-    fprintf(myfile, "Hello");
+    fprintf(myfile, "I am some data");
     fclose(myfile);
     return path;
 }

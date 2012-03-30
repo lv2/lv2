@@ -367,7 +367,7 @@ run(LV2_Handle instance,
 	}
 }
 
-static void
+static LV2_State_Status
 save(LV2_Handle                instance,
      LV2_State_Store_Function  store,
      LV2_State_Handle          handle,
@@ -393,9 +393,11 @@ save(LV2_Handle                instance,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 
 	free(apath);
+
+	return LV2_STATE_SUCCESS;
 }
 
-static void
+static LV2_State_Status
 restore(LV2_Handle                  instance,
         LV2_State_Retrieve_Function retrieve,
         LV2_State_Handle            handle,
@@ -419,6 +421,8 @@ restore(LV2_Handle                  instance,
 		free_sample(plugin->sample);
 		plugin->sample = load_sample(plugin, path);
 	}
+
+	return LV2_STATE_SUCCESS;
 }
 
 static const void*
@@ -426,9 +430,9 @@ extension_data(const char* uri)
 {
 	static const LV2_State_Interface  state  = { save, restore };
 	static const LV2_Worker_Interface worker = { work, work_response, NULL };
-	if (!strcmp(uri, LV2_STATE__Interface)) {
+	if (!strcmp(uri, LV2_STATE__interface)) {
 		return &state;
-	} else if (!strcmp(uri, LV2_WORKER__Interface)) {
+	} else if (!strcmp(uri, LV2_WORKER__interface)) {
 		return &worker;
 	}
 	return NULL;

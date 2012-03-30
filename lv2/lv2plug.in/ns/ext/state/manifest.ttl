@@ -4,5 +4,5 @@
 <http://lv2plug.in/ns/ext/state>
 	a lv2:Specification ;
 	lv2:minorVersion 0 ;
-	lv2:microVersion 6 ;
+	lv2:microVersion 8 ;
 	rdfs:seeAlso <state.ttl> .

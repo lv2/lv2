@@ -29,7 +29,7 @@
 #define LV2_WORKER_URI    "http://lv2plug.in/ns/ext/worker"
 #define LV2_WORKER_PREFIX LV2_WORKER_URI "#"
 
-#define LV2_WORKER__Interface LV2_WORKER_PREFIX "Interface"
+#define LV2_WORKER__interface LV2_WORKER_PREFIX "interface"
 #define LV2_WORKER__schedule  LV2_WORKER_PREFIX "schedule"
 
 /**
@@ -60,7 +60,7 @@ typedef LV2_Worker_Status (*LV2_Worker_Respond_Function)(
 
    This is the interface provided by the plugin to implement a worker method.
    The plugin's extension_data() method should return an LV2_Worker_Interface
-   when called with LV2_WORKER__Interface as its argument.
+   when called with LV2_WORKER__interface as its argument.
 */
 typedef struct _LV2_Worker_Interface {
 	/**

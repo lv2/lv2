@@ -49,14 +49,13 @@ offline rendering, or in real-time with non-real-time work taking place in a
 separate thread.</p>
 """ .
 
-work:Interface
-	a rdfs:Class ;
-	rdfs:subClassOf lv2:ExtensionData ;
+work:interface
+	a lv2:ExtensionData ;
 	lv2:documentation """
 <p>The interface provided by the plugin to implement a worker.  To implement
 this extension, the plugin must return a valid LV2_Worker_Interface from
 LV2_Descriptor::extension_data() when it is called with URI
-LV2_WORKER__Interface.</p>
+LV2_WORKER__interface.</p>
 
 <p>The plugin data file should describe this like so:</p>
 <pre class="turtle-code">
@@ -64,7 +63,7 @@ LV2_WORKER__Interface.</p>
 
 &lt;plugin&gt;
     a lv2:Plugin ;
-    lv2:extensionData work:Interface .
+    lv2:extensionData work:interface .
 </pre>
 """ .
 

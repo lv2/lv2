@@ -15,13 +15,14 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
-@prefix urid: <http://lv2plug.in/ns/ext/urid#> .
-@prefix work: <http://lv2plug.in/ns/ext/worker#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+@prefix work:  <http://lv2plug.in/ns/ext/worker#> .
 
 <http://lv2plug.in/plugins/eg-sampler>
 	a lv2:Plugin ;
@@ -30,7 +31,8 @@
 	lv2:requiredFeature urid:map ,
 		work:schedule ;
 	lv2:optionalFeature lv2:hardRTCapable ;
-	lv2:extensionData <http://lv2plug.in/ns/ext/state#Interface> ;
+	lv2:extensionData state:interface ,
+		work:interface ;
 	ui:ui <http://lv2plug.in/plugins/eg-sampler#ui> ;
 	lv2:port [
 		a lv2:InputPort ,
@@ -40,7 +42,7 @@
 			<http://lv2plug.in/ns/ext/patch#Message> ;
 		lv2:index 0 ;
 		lv2:symbol "control" ;
-		lv2:name "Control" ;
+		lv2:name "Control"
 	] , [
 		a lv2:OutputPort ,
 			atom:AtomPort ;
@@ -48,13 +50,13 @@
 		atom:supports <http://lv2plug.in/ns/ext/patch#Message> ;
 		lv2:index 1 ;
 		lv2:symbol "notify" ;
-		lv2:name "Notify" ;
+		lv2:name "Notify"
 	] , [
 		a lv2:AudioPort ,
 			lv2:OutputPort ;
 		lv2:index 2 ;
 		lv2:symbol "out" ;
-		lv2:name "Out" ;
+		lv2:name "Out"
 	] .
 
 <http://lv2plug.in/plugins/eg-sampler#ui>
@@ -63,5 +65,5 @@
 	ui:portNotification [
 		ui:plugin <http://lv2plug.in/plugins/eg-sampler> ;
 		lv2:symbol "notify" ;
-		ui:notifyType atom:Blank ;
+		ui:notifyType atom:Blank
 	] .
