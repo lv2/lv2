@@ -41,6 +41,7 @@
 
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
+#include "lv2/lv2plug.in/ns/ext/log/log.h"
 #include "lv2/lv2plug.in/ns/ext/patch/patch.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
@@ -68,6 +69,7 @@ typedef struct {
 	/* Features */
 	LV2_URID_Map*        map;
 	LV2_Worker_Schedule* schedule;
+	LV2_Log_Log*         log;
 
 	/* Forge for creating atoms */
 	LV2_Atom_Forge forge;
@@ -93,6 +95,23 @@ typedef struct {
 } Sampler;
 
 /**
+   Print an error message to the host log if available, or stderr otherwise.
+*/
+LV2_LOG_FUNC(3, 4)
+static void
+print(Sampler* self, LV2_URID type, const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	if (self->log) {
+		self->log->vprintf(self->log->handle, type, fmt, args);
+	} else {
+		vfprintf(stderr, fmt, args);
+	}
+	va_end(args);
+}
+
+/**
    An atom-like message used internally to apply/free samples.
  
    This is only used internally to communicate with the worker, it is not an
@@ -104,17 +123,20 @@ typedef struct {
 } SampleMessage;
 
 static Sample*
-load_sample(Sampler* plugin, const char* path)
+load_sample(Sampler* self, const char* path)
 {
 	const size_t path_len  = strlen(path);
 
-	printf("Loading sample %s\n", path);
+	print(self, self->uris.log_Trace,
+	    "Loading sample %s\n", path);
+
 	Sample* const  sample  = (Sample*)malloc(sizeof(Sample));
 	SF_INFO* const info    = &sample->info;
 	SNDFILE* const sndfile = sf_open(path, SFM_READ, info);
 
 	if (!sndfile || !info->frames || (info->channels != 1)) {
-		fprintf(stderr, "Failed to open sample '%s'.\n", path);
+		print(self, self->uris.log_Error,
+		    "Failed to open sample '%s'.\n", path);
 		free(sample);
 		return NULL;
 	}
@@ -122,7 +144,8 @@ load_sample(Sampler* plugin, const char* path)
 	/* Read data */
 	float* const data = malloc(sizeof(float) * info->frames);
 	if (!data) {
-		fprintf(stderr, "Failed to allocate memory for sample.\n");
+		print(self, self->uris.log_Error,
+		    "Failed to allocate memory for sample.\n");
 		return NULL;
 	}
 	sf_seek(sndfile, 0ul, SEEK_SET);
@@ -139,10 +162,10 @@ load_sample(Sampler* plugin, const char* path)
 }
 
 static void
-free_sample(Sample* sample)
+free_sample(Sampler* self, Sample* sample)
 {
 	if (sample) {
-		fprintf(stderr, "Freeing %s\n", sample->path);
+		print(self, self->uris.log_Trace, "Freeing %s\n", sample->path);
 		free(sample->path);
 		free(sample->data);
 		free(sample);
@@ -162,7 +185,7 @@ work(LV2_Handle                  instance,
 	if (atom->type == self->uris.eg_freeSample) {
 		/* Free old sample */
 		SampleMessage* msg = (SampleMessage*)data;
-		free_sample(msg->sample);
+		free_sample(self, msg->sample);
 	} else {
 		/* Handle set message (load sample). */
 		LV2_Atom_Object* obj = (LV2_Atom_Object*)data;
@@ -215,17 +238,17 @@ connect_port(LV2_Handle instance,
              uint32_t   port,
              void*      data)
 {
-	Sampler* plugin = (Sampler*)instance;
+	Sampler* self = (Sampler*)instance;
 
 	switch (port) {
 	case SAMPLER_CONTROL:
-		plugin->control_port = (LV2_Atom_Sequence*)data;
+		self->control_port = (LV2_Atom_Sequence*)data;
 		break;
 	case SAMPLER_RESPONSE:
-		plugin->notify_port = (LV2_Atom_Sequence*)data;
+		self->notify_port = (LV2_Atom_Sequence*)data;
 		break;
 	case SAMPLER_OUT:
-		plugin->output_port = (float*)data;
+		self->output_port = (float*)data;
 		break;
 	default:
 		break;
@@ -238,38 +261,40 @@ instantiate(const LV2_Descriptor*     descriptor,
             const char*               path,
             const LV2_Feature* const* features)
 {
-	Sampler* plugin = (Sampler*)malloc(sizeof(Sampler));
-	if (!plugin) {
+	Sampler* self = (Sampler*)malloc(sizeof(Sampler));
+	if (!self) {
 		return NULL;
 	}
 
-	memset(plugin, 0, sizeof(Sampler));
-	plugin->sample = (Sample*)malloc(sizeof(Sample));
-	if (!plugin->sample) {
+	memset(self, 0, sizeof(Sampler));
+	self->sample = (Sample*)malloc(sizeof(Sample));
+	if (!self->sample) {
 		return NULL;
 	}
 
-	memset(plugin->sample, 0, sizeof(Sample));
+	memset(self->sample, 0, sizeof(Sample));
 
 	/* Scan and store host features */
 	for (int i = 0; features[i]; ++i) {
 		if (!strcmp(features[i]->URI, LV2_URID__map)) {
-			plugin->map = (LV2_URID_Map*)features[i]->data;
+			self->map = (LV2_URID_Map*)features[i]->data;
 		} else if (!strcmp(features[i]->URI, LV2_WORKER__schedule)) {
-			plugin->schedule = (LV2_Worker_Schedule*)features[i]->data;
+			self->schedule = (LV2_Worker_Schedule*)features[i]->data;
+		} else if (!strcmp(features[i]->URI, LV2_LOG__log)) {
+			self->log = (LV2_Log_Log*)features[i]->data;
 		}
 	}
-	if (!plugin->map) {
-		fprintf(stderr, "Host does not support urid:map.\n");
+	if (!self->map) {
+		print(self, self->uris.log_Error, "Missing feature urid:map.\n");
 		goto fail;
-	} else if (!plugin->schedule) {
-		fprintf(stderr, "Host does not support work:schedule.\n");
+	} else if (!self->schedule) {
+		print(self, self->uris.log_Error, "Missing feature work:schedule.\n");
 		goto fail;
 	}
 
 	/* Map URIS and initialise forge */
-	map_sampler_uris(plugin->map, &plugin->uris);
-	lv2_atom_forge_init(&plugin->forge, plugin->map);
+	map_sampler_uris(self->map, &self->uris);
+	lv2_atom_forge_init(&self->forge, self->map);
 
 	/* Load the default sample file */
 	const size_t path_len    = strlen(path);
@@ -277,87 +302,88 @@ instantiate(const LV2_Descriptor*     descriptor,
 	const size_t len         = path_len + file_len;
 	char*        sample_path = (char*)malloc(len + 1);
 	snprintf(sample_path, len + 1, "%s%s", path, default_sample_file);
-	plugin->sample = load_sample(plugin, sample_path);
+	self->sample = load_sample(self, sample_path);
 
-	return (LV2_Handle)plugin;
+	return (LV2_Handle)self;
 
 fail:
-	free(plugin);
+	free(self);
 	return 0;
 }
 
 static void
 cleanup(LV2_Handle instance)
 {
-	Sampler* plugin = (Sampler*)instance;
-
-	free_sample(plugin->sample);
-	free(plugin);
+	Sampler* self = (Sampler*)instance;
+	free_sample(self, self->sample);
+	free(self);
 }
 
 static void
 run(LV2_Handle instance,
     uint32_t   sample_count)
 {
-	Sampler*     plugin      = (Sampler*)instance;
-	SamplerURIs* uris        = &plugin->uris;
+	Sampler*     self      = (Sampler*)instance;
+	SamplerURIs* uris        = &self->uris;
 	sf_count_t   start_frame = 0;
 	sf_count_t   pos         = 0;
-	float*       output      = plugin->output_port;
+	float*       output      = self->output_port;
 
 	/* Set up forge to write directly to notify output port. */
-	const uint32_t notify_capacity = plugin->notify_port->atom.size;
-	lv2_atom_forge_set_buffer(&plugin->forge,
-	                          (uint8_t*)plugin->notify_port,
+	const uint32_t notify_capacity = self->notify_port->atom.size;
+	lv2_atom_forge_set_buffer(&self->forge,
+	                          (uint8_t*)self->notify_port,
 	                          notify_capacity);
 
 	/* Start a sequence in the notify output port. */
-	lv2_atom_forge_sequence_head(&plugin->forge, &plugin->notify_frame, 0);
+	lv2_atom_forge_sequence_head(&self->forge, &self->notify_frame, 0);
 
 	/* Read incoming events */
-	LV2_SEQUENCE_FOREACH(plugin->control_port, i) {
+	LV2_SEQUENCE_FOREACH(self->control_port, i) {
 		LV2_Atom_Event* const ev = lv2_sequence_iter_get(i);
-		plugin->frame_offset = ev->time.frames;
+		self->frame_offset = ev->time.frames;
 		if (ev->body.type == uris->midi_Event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);
 			if ((data[0] & 0xF0) == 0x90) {
 				start_frame   = ev->time.frames;
-				plugin->frame = 0;
-				plugin->play  = true;
+				self->frame = 0;
+				self->play  = true;
 			}
 		} else if (is_object_type(uris, ev->body.type)) {
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
 			if (obj->body.otype == uris->patch_Set) {
 				/* Received a set message, send it to the worker. */
-				fprintf(stderr, "Queueing set message\n");
-				plugin->schedule->schedule_work(plugin->schedule->handle,
+				print(self, self->uris.log_Trace, "Queueing set message\n");
+				self->schedule->schedule_work(self->schedule->handle,
 				                                lv2_atom_total_size(&ev->body),
 				                                &ev->body);
 			} else {
-				fprintf(stderr, "Unknown object type %d\n", obj->body.otype);
+				print(self, self->uris.log_Trace,
+				    "Unknown object type %d\n", obj->body.otype);
 			}
 		} else {
-			fprintf(stderr, "Unknown event type %d\n", ev->body.type);
+			print(self, self->uris.log_Trace,
+			    "Unknown event type %d\n", ev->body.type);
 		}
 	}
 
 	/* Render the sample (possibly already in progress) */
-	if (plugin->play) {
-		uint32_t       f  = plugin->frame;
-		const uint32_t lf = plugin->sample->info.frames;
+	if (self->play) {
+		uint32_t       f  = self->frame;
+		const uint32_t lf = self->sample->info.frames;
 
 		for (pos = 0; pos < start_frame; ++pos) {
 			output[pos] = 0;
 		}
 
 		for (; pos < sample_count && f < lf; ++pos, ++f) {
-			output[pos] = plugin->sample->data[f];
+			output[pos] = self->sample->data[f];
 		}
 
-		plugin->frame = f;
+		self->frame = f;
 
 		if (f == lf) {
-			plugin->play = false;
+			self->play = false;
 		}
 	}
 
@@ -381,15 +407,15 @@ save(LV2_Handle                instance,
 		}
 	}
 
-	Sampler* plugin = (Sampler*)instance;
+	Sampler* self = (Sampler*)instance;
 	char*    apath  = map_path->abstract_path(map_path->handle,
-	                                          plugin->sample->path);
+	                                          self->sample->path);
 
 	store(handle,
-	      plugin->uris.eg_file,
+	      self->uris.eg_file,
 	      apath,
-	      strlen(plugin->sample->path) + 1,
-	      plugin->uris.atom_Path,
+	      strlen(self->sample->path) + 1,
+	      self->uris.atom_Path,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 
 	free(apath);
@@ -404,7 +430,7 @@ restore(LV2_Handle                  instance,
         uint32_t                    flags,
         const LV2_Feature* const*   features)
 {
-	Sampler* plugin = (Sampler*)instance;
+	Sampler* self = (Sampler*)instance;
 
 	size_t   size;
 	uint32_t type;
@@ -412,14 +438,14 @@ restore(LV2_Handle                  instance,
 
 	const void* value = retrieve(
 		handle,
-		plugin->uris.eg_file,
+		self->uris.eg_file,
 		&size, &type, &valflags);
 
 	if (value) {
 		const char* path = (const char*)value;
-		printf("Restoring file %s\n", path);
-		free_sample(plugin->sample);
-		plugin->sample = load_sample(plugin, path);
+		print(self, self->uris.log_Trace, "Restoring file %s\n", path);
+		free_sample(self, self->sample);
+		self->sample = load_sample(self, path);
 	}
 
 	return LV2_STATE_SUCCESS;

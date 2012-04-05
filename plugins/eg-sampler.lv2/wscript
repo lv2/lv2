@@ -22,17 +22,7 @@ def configure(conf):
     autowaf.display_header('Sampler Configuration')
 
     if not autowaf.is_child():
-        autowaf.check_pkg(conf, 'lv2core', uselib_store='LV2CORE')
-        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-urid',
-                          uselib_store='LV2_URID')
-        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-atom',
-                          uselib_store='LV2_ATOM')
-        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-patch',
-                          uselib_store='LV2_PATCH')
-        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-state',
-                          uselib_store='LV2_STATE')
-        autowaf.check_pkg(conf, 'lv2-lv2plug.in-ns-ext-worker',
-                          uselib_store='LV2_WORKER')
+        autowaf.check_pkg(conf, 'lv2', atleast_version='0.2.0', uselib_store='LV2')
 
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)
@@ -86,7 +76,7 @@ def build(bld):
               name         = 'sampler',
               target       = '%s/sampler' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              use          = 'SNDFILE LV2CORE LV2_URID LV2_ATOM LV2_STATE LV2_PATCH LV2_WORKER',
+              use          = 'SNDFILE LV2',
               includes     = includes)
 
     # Build UI library
@@ -97,6 +87,6 @@ def build(bld):
                   name         = 'sampler_ui',
                   target       = '%s/sampler_ui' % bundle,
                   install_path = '${LV2DIR}/%s' % bundle,
-                  use          = 'GTK2 LV2CORE LV2_URID LV2_ATOM LV2_PATCH',
+                  use          = 'GTK2 LV2',
                   includes     = includes)
 

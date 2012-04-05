@@ -39,31 +39,44 @@ levels is unlimited, but implementations SHOULD use the levels defined in this
 extension unless they have a special reason to do otherwise.</p>
 """ .
 
-log:Level
+log:Entry
 	a rdfs:Class ;
 	lv2:documentation """
-<p>A log level.  Subclasses of this class can be passed to LV2_Log_Log methods
+<p>A log entry.  Subclasses of this class can be passed to LV2_Log_Log methods
 to describe the nature of the log message.</p>""" .
 
 log:Error
 	a rdfs:Class ;
-    rdfs:subClassOf log:Level ;
+    rdfs:subClassOf log:Entry ;
     rdfs:comment "An error" .
 
-log:Info
+log:Note
 	a rdfs:Class ;
-    rdfs:subClassOf log:Level ;
+    rdfs:subClassOf log:Entry ;
     rdfs:comment "An informative message" .
 
-log:Warn
+log:Warning
 	a rdfs:Class ;
-    rdfs:subClassOf log:Level ;
+    rdfs:subClassOf log:Entry ;
     rdfs:comment "A warning" .
+
+log:Trace
+	a rdfs:Class ;
+    rdfs:subClassOf log:Entry ;
+    lv2:documentation """
+<p>A debugging trace.  These entries should not be displayed during normal
+operation, but the host may implement an option to display them for debugging
+purposes.</p>
+
+<p>This entry type is special in that it may be written to in a real-time
+thread.  It is assumed that if debug tracing is enabled, real-time
+considerations are not a concern.</p>
+""" .
 
 log:log
 	a lv2:Feature ;
 	lv2:documentation """
 <p>A feature which plugins may use to log messages.  To support this feature,
 the host must pass an LV2_Feature to LV2_Descriptor::instantiate() with URI
-LV2_LOG_LOG_URI and data pointed to an instance of LV2_Log_Log.</p>
+LV2_LOG__log and data pointed to an instance of LV2_Log_Log.</p>
 """ .

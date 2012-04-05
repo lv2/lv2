@@ -19,6 +19,7 @@
 #define SAMPLER_URIS_H
 
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
+#include "lv2/lv2plug.in/ns/ext/log/log.h"
 
 #define LV2_MIDI__MidiEvent "http://lv2plug.in/ns/ext/midi#MidiEvent"
 
@@ -36,6 +37,8 @@ typedef struct {
 	LV2_URID eg_applySample;
 	LV2_URID eg_file;
 	LV2_URID eg_freeSample;
+	LV2_URID log_Error;
+	LV2_URID log_Trace;
 	LV2_URID midi_Event;
 	LV2_URID patch_Set;
 	LV2_URID patch_body;
@@ -52,6 +55,8 @@ map_sampler_uris(LV2_URID_Map* map, SamplerURIs* uris)
 	uris->eg_applySample     = map->map(map->handle, EG_SAMPLER__applySample);
 	uris->eg_file            = map->map(map->handle, EG_SAMPLER__file);
 	uris->eg_freeSample      = map->map(map->handle, EG_SAMPLER__freeSample);
+	uris->log_Error          = map->map(map->handle, LV2_LOG__Error);
+	uris->log_Trace          = map->map(map->handle, LV2_LOG__Trace);
 	uris->midi_Event         = map->map(map->handle, LV2_MIDI__MidiEvent);
 	uris->patch_Set          = map->map(map->handle, LV2_PATCH__Set);
 	uris->patch_body         = map->map(map->handle, LV2_PATCH__body);
