@@ -74,7 +74,11 @@ def configure(conf):
     subdirs = get_subdirs()
 
     for i in subdirs:
-        conf.recurse(i)
+        try:
+            conf.recurse(i)
+        except:
+            Logs.warn('Configuration failed, %s will not be built\n' % i)
+            subdirs.remove(i)
 
     conf.env['LV2_SUBDIRS'] = subdirs
 
