@@ -31,6 +31,15 @@
 		<event-helpers.h> ,
 		<../../people/people.ttl> ;
 	doap:release [
+		doap:revision "1.5" ;
+		doap:created "2012-04-05" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix bug in lv2_event_reserve()." ;
+			] ;
+		] ;
+	] , [
 		doap:revision "1.4" ;
 		doap:created "2011-11-21" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-event-1.4.tar.bz2> ;
