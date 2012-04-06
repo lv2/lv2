@@ -26,8 +26,8 @@ def options(opt):
     autowaf.set_options(opt)
     opt.add_option('--test', action='store_true', default=False,
                    dest='build_tests', help="Build unit tests")
-    opt.add_option('--plugins', action='store_true', default=True,
-                   dest='build_plugins', help="Build example plugins")
+    opt.add_option('--no-plugins', action='store_true', default=False,
+                   dest='no_plugins', help="Do not build example plugins")
     opt.add_option('--copy-headers', action='store_true', default=False,
                    dest='copy_headers',
                    help='Copy headers instead of linking to bundle')
@@ -49,15 +49,16 @@ def configure(conf):
         conf.load('compiler_cxx')
     except:
         Options.options.build_tests = False
-        Options.options.build_plugins = False
+        Options.options.no_plugins = True
 
     autowaf.configure(conf)
     autowaf.set_recursive()
 
     conf.env.append_unique('CFLAGS', '-std=c99')
 
-    conf.env['BUILD_TESTS']  = Options.options.build_tests
-    conf.env['COPY_HEADERS'] = Options.options.copy_headers
+    conf.env['BUILD_TESTS']   = Options.options.build_tests
+    conf.env['BUILD_PLUGINS'] = not Options.options.no_plugins
+    conf.env['COPY_HEADERS']  = Options.options.copy_headers
 
     if not hasattr(os.path, 'relpath') and not Options.options.copy_headers:
         conf.fatal(
@@ -71,7 +72,7 @@ def configure(conf):
             conf.env.append_unique('CFLAGS', '-std=c99')
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
-    subdirs = get_subdirs()
+    subdirs = get_subdirs(conf.env['BUILD_PLUGINS'])
 
     for i in subdirs:
         try:
