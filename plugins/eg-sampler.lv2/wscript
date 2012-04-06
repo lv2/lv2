@@ -53,7 +53,7 @@ def build(bld):
         LIB_EXT      = bld.env['pluginlib_EXT'])
     
     # Copy other data files to build bundle (build/eg-sampler.lv2)
-    for i in [ 'sampler.ttl', 'monosample.wav' ]:
+    for i in [ 'sampler.ttl', 'click.wav' ]:
         bld(rule         = 'cp ${SRC} ${TGT}',
             source       = i,
             target       = '%s/%s' % (bundle, i),

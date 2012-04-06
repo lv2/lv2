@@ -56,7 +56,7 @@ enum {
 	SAMPLER_OUT      = 2
 };
 
-static const char* default_sample_file = "monosample.wav";
+static const char* default_sample_file = "click.wav";
 
 typedef struct {
 	SF_INFO info;      /**< Info about sample from sndfile */
