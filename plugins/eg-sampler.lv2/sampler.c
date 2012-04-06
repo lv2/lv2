@@ -20,18 +20,18 @@
 /**
    @file sampler.c Sampler Plugin
 
-   A simple example of an LV2 sampler that dynamically loads samples (based on
-   incoming events) and also triggers their playback (based on incoming MIDI
-   note events).  The sample must be monophonic.
+   A simple example of an LV2 sampler that dynamically loads a single sample
+   (based on incoming events) and triggers their playback (based on incoming
+   MIDI note events).
 
-   So that the run() method stays real-time safe, the plugin creates a worker
-   thread (worker_thread_main) that listens for file loading events.  It loads
-   everything in plugin->pending_samp and then signals the run() that it's time
-   to install it.  run() just has to swap pointers... so the change happens
-   very fast and atomically.
+   This plugin illustrates:
+   - UI <=> Plugin communication via events
+   - Use of the worker extension for non-realtime tasks (sample loading)
+   - Use of the log extension to print log messages via the host
+   - Saving plugin state via the state extension
+   - Dynamic plugin control via the same properties saved to state
 */
 
-#include <assert.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -81,6 +81,8 @@ typedef struct {
 	float*               output_port;
 	LV2_Atom_Sequence*   control_port;
 	LV2_Atom_Sequence*   notify_port;
+
+	/* Forge frame for notify port (for writing worker replies). */
 	LV2_Atom_Forge_Frame notify_frame;
 
 	/* URIs */
@@ -113,22 +115,31 @@ print(Sampler* self, LV2_URID type, const char* fmt, ...)
 
 /**
    An atom-like message used internally to apply/free samples.
- 
-   This is only used internally to communicate with the worker, it is not an
-   Atom because it is not POD.
+
+   This is only used internally to communicate with the worker, it is never
+   sent to the outside world via a port since it is not POD.  It is convenient
+   to use an Atom header so actual atoms can be easily sent through the same
+   ringbuffer.
 */
 typedef struct {
 	LV2_Atom atom;
 	Sample*  sample;
 } SampleMessage;
 
+/**
+   Load a new sample and return it.
+
+   Since this is of course not a real-time safe action, this is called in the
+   worker thread only.  The sample is loaded and returned only, plugin state is
+   not modified.
+*/
 static Sample*
 load_sample(Sampler* self, const char* path)
 {
 	const size_t path_len  = strlen(path);
 
 	print(self, self->uris.log_Trace,
-	    "Loading sample %s\n", path);
+	      "Loading sample %s\n", path);
 
 	Sample* const  sample  = (Sample*)malloc(sizeof(Sample));
 	SF_INFO* const info    = &sample->info;
@@ -136,7 +147,7 @@ load_sample(Sampler* self, const char* path)
 
 	if (!sndfile || !info->frames || (info->channels != 1)) {
 		print(self, self->uris.log_Error,
-		    "Failed to open sample '%s'.\n", path);
+		      "Failed to open sample '%s'.\n", path);
 		free(sample);
 		return NULL;
 	}
@@ -145,7 +156,7 @@ load_sample(Sampler* self, const char* path)
 	float* const data = malloc(sizeof(float) * info->frames);
 	if (!data) {
 		print(self, self->uris.log_Error,
-		    "Failed to allocate memory for sample.\n");
+		      "Failed to allocate memory for sample.\n");
 		return NULL;
 	}
 	sf_seek(sndfile, 0ul, SEEK_SET);
@@ -172,7 +183,13 @@ free_sample(Sampler* self, Sample* sample)
 	}
 }
 
-/** Handle work (load or free a sample) in a non-realtime thread. */
+/**
+   Do work in a non-realtime thread.
+
+   This is called for every piece of work scheduled in the audio thread using
+   self->schedule->schedule_work().  A reply can be sent back to the audio
+   thread using the provided respond function.
+*/
 static LV2_Worker_Status
 work(LV2_Handle                  instance,
      LV2_Worker_Respond_Function respond,
@@ -207,7 +224,13 @@ work(LV2_Handle                  instance,
 	return LV2_WORKER_SUCCESS;
 }
 
-/** Handle a response from work() in the audio thread. */
+/**
+   Handle a response from work() in the audio thread.
+
+   When running normally, this will be called by the host after run().  When
+   freewheeling, this will be called immediately at the point the work was
+   scheduled.
+*/
 static LV2_Worker_Status
 work_response(LV2_Handle  instance,
               uint32_t    size,
@@ -220,7 +243,7 @@ work_response(LV2_Handle  instance,
 
 	/* Send a message to the worker to free the current sample */
 	self->schedule->schedule_work(self->schedule->handle, sizeof(msg), &msg);
-	                         
+
 	/* Install the new sample */
 	self->sample = *(Sample**)data;
 
@@ -239,7 +262,6 @@ connect_port(LV2_Handle instance,
              void*      data)
 {
 	Sampler* self = (Sampler*)instance;
-
 	switch (port) {
 	case SAMPLER_CONTROL:
 		self->control_port = (LV2_Atom_Sequence*)data;
@@ -261,20 +283,14 @@ instantiate(const LV2_Descriptor*     descriptor,
             const char*               path,
             const LV2_Feature* const* features)
 {
+	/* Allocate and initialise instance structure. */
 	Sampler* self = (Sampler*)malloc(sizeof(Sampler));
 	if (!self) {
 		return NULL;
 	}
-
 	memset(self, 0, sizeof(Sampler));
-	self->sample = (Sample*)malloc(sizeof(Sample));
-	if (!self->sample) {
-		return NULL;
-	}
 
-	memset(self->sample, 0, sizeof(Sample));
-
-	/* Scan and store host features */
+	/* Get host features */
 	for (int i = 0; features[i]; ++i) {
 		if (!strcmp(features[i]->URI, LV2_URID__map)) {
 			self->map = (LV2_URID_Map*)features[i]->data;
@@ -292,7 +308,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 		goto fail;
 	}
 
-	/* Map URIS and initialise forge */
+	/* Map URIs and initialise forge */
 	map_sampler_uris(self->map, &self->uris);
 	lv2_atom_forge_init(&self->forge, self->map);
 
@@ -303,6 +319,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	char*        sample_path = (char*)malloc(len + 1);
 	snprintf(sample_path, len + 1, "%s%s", path, default_sample_file);
 	self->sample = load_sample(self, sample_path);
+	free(sample_path);
 
 	return (LV2_Handle)self;
 
@@ -323,7 +340,7 @@ static void
 run(LV2_Handle instance,
     uint32_t   sample_count)
 {
-	Sampler*     self      = (Sampler*)instance;
+	Sampler*     self        = (Sampler*)instance;
 	SamplerURIs* uris        = &self->uris;
 	sf_count_t   start_frame = 0;
 	sf_count_t   pos         = 0;
@@ -345,7 +362,7 @@ run(LV2_Handle instance,
 		if (ev->body.type == uris->midi_Event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);
 			if ((data[0] & 0xF0) == 0x90) {
-				start_frame   = ev->time.frames;
+				start_frame = ev->time.frames;
 				self->frame = 0;
 				self->play  = true;
 			}
@@ -355,15 +372,15 @@ run(LV2_Handle instance,
 				/* Received a set message, send it to the worker. */
 				print(self, self->uris.log_Trace, "Queueing set message\n");
 				self->schedule->schedule_work(self->schedule->handle,
-				                                lv2_atom_total_size(&ev->body),
-				                                &ev->body);
+				                              lv2_atom_total_size(&ev->body),
+				                              &ev->body);
 			} else {
 				print(self, self->uris.log_Trace,
-				    "Unknown object type %d\n", obj->body.otype);
+				      "Unknown object type %d\n", obj->body.otype);
 			}
 		} else {
 			print(self, self->uris.log_Trace,
-			    "Unknown event type %d\n", ev->body.type);
+			      "Unknown event type %d\n", ev->body.type);
 		}
 	}
 
@@ -407,9 +424,9 @@ save(LV2_Handle                instance,
 		}
 	}
 
-	Sampler* self = (Sampler*)instance;
-	char*    apath  = map_path->abstract_path(map_path->handle,
-	                                          self->sample->path);
+	Sampler* self  = (Sampler*)instance;
+	char*    apath = map_path->abstract_path(map_path->handle,
+	                                         self->sample->path);
 
 	store(handle,
 	      self->uris.eg_file,
@@ -468,9 +485,9 @@ static const LV2_Descriptor descriptor = {
 	EG_SAMPLER_URI,
 	instantiate,
 	connect_port,
-	NULL, // activate,
+	NULL,  // activate,
 	run,
-	NULL, // deactivate,
+	NULL,  // deactivate,
 	cleanup,
 	extension_data
 };

@@ -127,8 +127,8 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	ui->box = gtk_hbox_new(FALSE, 4);
 	ui->label = gtk_label_new("?");
 	ui->button = gtk_button_new_with_label("Load Sample");
-	gtk_box_pack_start(GTK_BOX(ui->box), ui->label, TRUE, TRUE, 4); 
-	gtk_box_pack_start(GTK_BOX(ui->box), ui->button, FALSE, TRUE, 4); 
+	gtk_box_pack_start(GTK_BOX(ui->box), ui->label, TRUE, TRUE, 4);
+	gtk_box_pack_start(GTK_BOX(ui->box), ui->button, FALSE, TRUE, 4);
 	g_signal_connect(ui->button, "clicked",
 	                 G_CALLBACK(on_load_clicked),
 	                 ui);

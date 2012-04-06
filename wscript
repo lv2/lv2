@@ -361,5 +361,6 @@ def dist(ctx):
 def lint(ctx):
     for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']
               + glob.glob('lv2/lv2plug.in/ns/ext/*/*.h')
-              + glob.glob('lv2/lv2plug.in/ns/extensions/*/*.h')):
+              + glob.glob('lv2/lv2plug.in/ns/extensions/*/*.h')
+              + glob.glob('plugins/*/*.c') + glob.glob('plugins/*.*.h')):
         subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-whitespace/blank_line,-build/header_guard,-readability/casting,-readability/todo,-build/include ' + i, shell=True)
