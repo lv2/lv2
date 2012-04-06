@@ -7,8 +7,9 @@ from waflib.extras import autowaf as autowaf
 
 # A rule for making a link in the build directory to a source file
 def link(task):
-    func = os.symlink
-    if not func:
+    if hasattr(os, 'symlink'):
+        func = os.symlink
+    else:
         func = shutil.copy  # Symlinks unavailable, make a copy
 
     try:
