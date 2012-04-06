@@ -44,6 +44,7 @@
 #define LV2_UI__portIndex        LV2_UI_PREFIX "portIndex"
 #define LV2_UI__portMap          LV2_UI_PREFIX "portMap"
 #define LV2_UI__portNotification LV2_UI_PREFIX "portNotification"
+#define LV2_UI__portSubscribe    LV2_UI_PREFIX "portSubscribe"
 #define LV2_UI__resize           LV2_UI_PREFIX "resize"
 #define LV2_UI__touch            LV2_UI_PREFIX "touch"
 

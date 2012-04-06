@@ -294,6 +294,17 @@ they control.  This feature corresponds to the LV2UI_Port_Index struct, which
 should be passed with the URI LV2_UI__portIndex.</p>
 """ .
 
+ui:portSubscribe
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature for dynamically subscribing to updates from a port.  This makes it
+possible for a UI to explicitly request a particular style of update from a
+port at run-time, in a more flexible and powerful way than listing
+subscriptions statically allows.  This feature corresponds to the
+LV2UI_Port_Subscribe struct, which should be passed with the URI
+LV2_UI__portSubscribe.</p>
+""" .
+
 ui:touch
 	a lv2:Feature ;
 	lv2:documentation """
@@ -302,7 +313,7 @@ control.  This is useful for automation, so the host can allow the user to take
 control of a port, even if that port would otherwise be automated (much like
 grabbing a physical morotised fader).  It can also be used for MIDI learn or in
 any other situation where the host needs to do something with a particular
-control and it would be convenient for the user to select it directroy from the
+control and it would be convenient for the user to select it directly from the
 plugin UI.  This feature corresponds to the LV2UI_Touch struct, which
 should be passed with the URI LV2_UI__touch.</p>
 """ .
