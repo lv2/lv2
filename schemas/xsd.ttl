@@ -1,0 +1,170 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+xsd:ID
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:anyURI ,
+		xsd:Name .
+
+xsd:IDREF
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:anyURI ,
+		xsd:Name .
+
+xsd:NCName
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:anyURI ,
+		xsd:Name .
+
+xsd:NMTOKEN
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:token .
+
+xsd:Name
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:NMTOKEN .
+
+xsd:pattern
+	a rdf:Property ;
+	rdfs:domain rdfs:Datatype ;
+	rdfs:range xsd:string ;
+	rdfs:comment "A regular expression that matches literals of this type." .
+
+xsd:anyURI
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:token .
+
+xsd:base64Binary
+	a rdfs:Datatype .
+
+xsd:boolean
+	a rdfs:Datatype ;
+	xsd:pattern "(true|false)$" .
+
+xsd:byte
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:short ;
+	xsd:pattern "[0-9A-F][0-9A-F]$" .
+
+xsd:date
+	a rdfs:Datatype ;
+    xsd:pattern "-?[0-9][0-9][0-9][0-9]([0-9]*)?-(0[1-9]|1[0-1])-([0-3][1-9])([+-][0-1][0-9]:[0-6][0-9])?$" .
+
+xsd:dateTime
+	a rdfs:Datatype .
+
+xsd:decimal
+	a rdfs:Datatype ;
+	xsd:pattern "[+-]?[0-9]*\\.?[0-9]*$" .
+
+xsd:double
+	a rdfs:Datatype ;
+    xsd:pattern "[+-]?[0-9]*\\.?[0-9]*([eE][-+]?[0-9]+)$" .
+
+xsd:duration
+	a rdfs:Datatype .
+
+xsd:float
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:double .
+
+xsd:gDay
+	a rdfs:Datatype .
+
+xsd:gMonth
+	a rdfs:Datatype .
+
+xsd:gMonthDay
+	a rdfs:Datatype .
+
+xsd:gYear
+	a rdfs:Datatype .
+
+xsd:gYearMonth
+	a rdfs:Datatype .
+
+xsd:hexBinary
+	a rdfs:Datatype ;
+	xsd:pattern "[0-9A-F]*$" .
+
+xsd:int
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:long ,
+		xsd:double .
+
+xsd:integer
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:decimal ;
+	xsd:pattern "[-+]?[0-9]+$" .
+
+xsd:language
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:NCName ,
+		xsd:ID ,
+		xsd:IDREF ;
+	xsd:pattern "[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*$" .
+
+xsd:long
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:integer .
+
+xsd:negativeInteger
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:nonPositiveInteger .
+
+xsd:nonNegativeInteger
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:integer ;
+	xsd:pattern "[0-9]*$" .
+
+xsd:nonPositiveInteger
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:integer ;
+	xsd:pattern "(0|-[0-9]+)$" .
+
+xsd:normalizedString
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:string .
+
+xsd:positiveInteger
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:nonNegativeInteger ;
+	xsd:pattern "+?[0-9]+$" .
+
+xsd:short
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:int ,
+		xsd:float .
+
+xsd:string
+	a rdfs:Datatype .
+
+xsd:time
+	a rdfs:Datatype ;
+	xsd:pattern "[1-2][0-9]:[0-5][0-9]:[0-5][0-9].[0-9][0-9][0-9]$" .
+
+xsd:token
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:normalizedString .
+
+xsd:unsignedByte
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:short ,
+		xsd:unsignedShort ;
+	xsd:pattern "([0-9]|[0-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])$" .
+
+xsd:unsignedInt
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:long ,
+		xsd:double ,
+		xsd:unsignedLong .
+
+xsd:unsignedLong
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:nonNegativeInteger .
+
+xsd:unsignedShort
+	a rdfs:Datatype ;
+	rdfs:subClassOf xsd:int ,
+		xsd:float ,
+		xsd:unsignedInt .
