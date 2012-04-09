@@ -33,7 +33,20 @@
 #ifndef LV2_EVENT_H
 #define LV2_EVENT_H
 
-#define LV2_EVENT_URI "http://lv2plug.in/ns/ext/event"
+#define LV2_EVENT_URI    "http://lv2plug.in/ns/ext/event"
+#define LV2_EVENT_PREFIX LV2_EVENT_URI "#"
+
+#define LV2_EVENT__Event              LV2_EVENT_PREFIX "Event"
+#define LV2_EVENT__EventPort          LV2_EVENT_PREFIX "EventPort"
+#define LV2_EVENT__FrameStamp         LV2_EVENT_PREFIX "FrameStamp"
+#define LV2_EVENT__TimeStamp          LV2_EVENT_PREFIX "TimeStamp"
+#define LV2_EVENT__generatesTimeStamp LV2_EVENT_PREFIX "generatesTimeStamp"
+#define LV2_EVENT__generic            LV2_EVENT_PREFIX "generic"
+#define LV2_EVENT__inheritsEvent      LV2_EVENT_PREFIX "inheritsEvent"
+#define LV2_EVENT__inheritsTimeStamp  LV2_EVENT_PREFIX "inheritsTimeStamp"
+#define LV2_EVENT__supportsEvent      LV2_EVENT_PREFIX "supportsEvent"
+#define LV2_EVENT__supportsTimeStamp  LV2_EVENT_PREFIX "supportsTimeStamp"
+
 #define LV2_EVENT_AUDIO_STAMP 0
 
 #include <stdint.h>
