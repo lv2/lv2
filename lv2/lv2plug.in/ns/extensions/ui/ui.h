@@ -301,12 +301,13 @@ typedef struct _LV2UI_Port_Subscribe {
 	   @param handle The handle field of this struct.
 	   @param port_index The index of the port.
 	   @param port_protocol The URID of the ui:PortProtocol.
-	   @param data Extra data as defined by the port protocol, or NULL.
+	   @param features Features for this subscription.
+	   @return 0 on success.
 	*/
-	void (*subscribe)(LV2UI_Feature_Handle handle,
-	                  uint32_t             port_index,
-	                  uint32_t             port_protocol,
-	                  const void*          options);
+	uint32_t (*subscribe)(LV2UI_Feature_Handle      handle,
+	                      uint32_t                  port_index,
+	                      uint32_t                  port_protocol,
+	                      const LV2_Feature* const* features);
 
 	/**
 	   Unsubscribe from updates for a port.
@@ -320,12 +321,13 @@ typedef struct _LV2UI_Port_Subscribe {
 	   @param handle The handle field of this struct.
 	   @param port_index The index of the port.
 	   @param port_protocol The URID of the ui:PortProtocol.
-	   @param data Extra data as defined by the port protocol, or NULL.
+	   @param features Features for this subscription.
+	   @return 0 on success.
 	*/
-	void (*unsubscribe)(LV2UI_Feature_Handle handle,
-	                    uint32_t             port_index,
-	                    uint32_t             port_protocol,
-	                    const void*          options);
+	uint32_t (*unsubscribe)(LV2UI_Feature_Handle      handle,
+	                        uint32_t                  port_index,
+	                        uint32_t                  port_protocol,
+	                        const LV2_Feature* const* features);
 } LV2UI_Port_Subscribe;
 
 /**
