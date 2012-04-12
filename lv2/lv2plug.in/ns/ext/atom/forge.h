@@ -91,6 +91,7 @@ typedef struct {
 
 	LV2_URID Blank;
 	LV2_URID Bool;
+	LV2_URID Chunk;
 	LV2_URID Double;
 	LV2_URID Float;
 	LV2_URID Int;
@@ -122,6 +123,7 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 	lv2_atom_forge_set_buffer(forge, NULL, 0);
 	forge->Blank    = map->map(map->handle, LV2_ATOM__Blank);
 	forge->Bool     = map->map(map->handle, LV2_ATOM__Bool);
+	forge->Chunk    = map->map(map->handle, LV2_ATOM__Chunk);
 	forge->Double   = map->map(map->handle, LV2_ATOM__Double);
 	forge->Float    = map->map(map->handle, LV2_ATOM__Float);
 	forge->Int      = map->map(map->handle, LV2_ATOM__Int);
