@@ -356,8 +356,7 @@ run(LV2_Handle instance,
 	lv2_atom_forge_sequence_head(&self->forge, &self->notify_frame, 0);
 
 	/* Read incoming events */
-	LV2_SEQUENCE_FOREACH(self->control_port, i) {
-		LV2_Atom_Event* const ev = lv2_sequence_iter_get(i);
+	LV2_ATOM_SEQUENCE_FOREACH(self->control_port, ev) {
 		self->frame_offset = ev->time.frames;
 		if (ev->body.type == uris->midi_Event) {
 			uint8_t* const data = (uint8_t* const)(ev + 1);

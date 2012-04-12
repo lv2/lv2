@@ -72,78 +72,60 @@ lv2_atom_equals(const LV2_Atom* a, const LV2_Atom* b)
    @{
 */
 
-/** An iterator over the elements of an LV2_Atom_Sequence. */
-typedef LV2_Atom_Event* LV2_Atom_Sequence_Iter;
-
-/** Get an iterator pointing to the first element in a Sequence body. */
-static inline LV2_Atom_Sequence_Iter
-lv2_sequence_body_begin(const LV2_Atom_Sequence_Body* body)
+/** Get an iterator pointing to the first event in a Sequence body. */
+static inline LV2_Atom_Event*
+lv2_atom_sequence_begin(const LV2_Atom_Sequence_Body* body)
 {
-	return (LV2_Atom_Sequence_Iter)(body + 1);
+	return (LV2_Atom_Event*)(body + 1);
 }
 
-/** Get an iterator pointing to the first element in a Sequence. */
-static inline LV2_Atom_Sequence_Iter
-lv2_sequence_begin(const LV2_Atom_Sequence* seq)
+/** Get an iterator pointing to the end of a Sequence body. */
+static inline LV2_Atom_Event*
+lv2_atom_sequence_end(const LV2_Atom_Sequence_Body* body, uint32_t size)
 {
-	return (LV2_Atom_Sequence_Iter)(seq + 1);
+	return (LV2_Atom_Event*)(body + lv2_atom_pad_size(size));
 }
 
 /** Return true iff @p i has reached the end of @p body. */
 static inline bool
-lv2_sequence_body_is_end(const LV2_Atom_Sequence_Body* body,
+lv2_atom_sequence_is_end(const LV2_Atom_Sequence_Body* body,
                          uint32_t                      size,
-                         LV2_Atom_Sequence_Iter        i)
+                         LV2_Atom_Event*               i)
 {
 	return (uint8_t*)i >= ((uint8_t*)body + size);
 }
 
-/** Return true iff @p i has reached the end of @p seq. */
-static inline bool
-lv2_sequence_is_end(const LV2_Atom_Sequence* seq, LV2_Atom_Sequence_Iter i)
-{
-	return (uint8_t*)i >= ((uint8_t*)seq + sizeof(LV2_Atom) + seq->atom.size);
-}
-
 /** Return an iterator to the element following @p i. */
-static inline LV2_Atom_Sequence_Iter
-lv2_sequence_iter_next(const LV2_Atom_Sequence_Iter i)
-{
-	return (LV2_Atom_Sequence_Iter)((uint8_t*)i
-	                                + sizeof(LV2_Atom_Event)
-	                                + lv2_atom_pad_size(i->body.size));
-}
-
-/** Return the element pointed to by @p i. */
 static inline LV2_Atom_Event*
-lv2_sequence_iter_get(LV2_Atom_Sequence_Iter i)
+lv2_atom_sequence_next(const LV2_Atom_Event* i)
 {
-	return (LV2_Atom_Event*)i;
+	return (LV2_Atom_Event*)((uint8_t*)i
+	                         + sizeof(LV2_Atom_Event)
+	                         + lv2_atom_pad_size(i->body.size));
 }
 
 /**
    A macro for iterating over all events in a Sequence.
-   @param sequence The sequence to iterate over
+   @param seq  The sequence to iterate over
    @param iter The name of the iterator
 
    This macro is used similarly to a for loop (which it expands to), e.g.:
    @code
-   LV2_SEQUENCE_FOREACH(sequence, i) {
-       LV2_Atom_Event* ev = lv2_sequence_iter_get(i);
-       // Do something with ev here...
+   LV2_ATOM_SEQUENCE_FOREACH(sequence, ev) {
+       // Do something with ev (an LV2_Atom_Event*) here...
    }
    @endcode
 */
-#define LV2_SEQUENCE_FOREACH(sequence, iter) \
-	for (LV2_Atom_Sequence_Iter (iter) = lv2_sequence_begin(sequence); \
-	     !lv2_sequence_is_end(sequence, (iter)); \
-	     (iter) = lv2_sequence_iter_next(iter))
+#define LV2_ATOM_SEQUENCE_FOREACH(seq, iter) \
+	for (LV2_Atom_Event* (iter) = lv2_atom_sequence_begin(&(seq)->body); \
+	     !lv2_atom_sequence_is_end(&(seq)->body, (seq)->atom.size, (iter)); \
+	     (iter) = lv2_atom_sequence_next(iter))
 
-/** A version of LV2_SEQUENCE_FOREACH for when only the body is available. */
-#define LV2_SEQUENCE_BODY_FOREACH(body, size, iter) \
-	for (LV2_Atom_Sequence_Iter (iter) = lv2_sequence_body_begin(body); \
-	     !lv2_sequence_body_is_end(body, size, (iter)); \
-	     (iter) = lv2_sequence_iter_next(iter))
+/** Like LV2_ATOM_SEQUENCE_FOREACH but for a headerless sequence body. */
+#define LV2_ATOM_SEQUENCE_BODY_FOREACH(body, size, iter) \
+	for (LV2_Atom_Event* (iter) = lv2_atom_sequence_begin(body); \
+	     !lv2_atom_sequence_is_end(body, size, (iter)); \
+	     (iter) = lv2_atom_sequence_next(iter))
 
 /**
    @}
@@ -151,45 +133,26 @@ lv2_sequence_iter_get(LV2_Atom_Sequence_Iter i)
    @{
 */
 
-/** An iterator over the elements of an LV2_Atom_Tuple. */
-typedef LV2_Atom* LV2_Atom_Tuple_Iter;
-
 /** Get an iterator pointing to the first element in @p tup. */
-static inline LV2_Atom_Tuple_Iter
-lv2_tuple_begin(const LV2_Atom_Tuple* tup)
+static inline LV2_Atom*
+lv2_atom_tuple_begin(const LV2_Atom_Tuple* tup)
 {
-	return (LV2_Atom_Tuple_Iter)(LV2_ATOM_BODY(tup));
+	return (LV2_Atom*)(LV2_ATOM_BODY(tup));
 }
 
 /** Return true iff @p i has reached the end of @p body. */
 static inline bool
-lv2_atom_tuple_body_is_end(const void*         body,
-                           uint32_t            size,
-                           LV2_Atom_Tuple_Iter i)
+lv2_atom_tuple_is_end(const void* body, uint32_t size, LV2_Atom* i)
 {
 	return (uint8_t*)i >= ((uint8_t*)body + size);
 }
 
-/** Return true iff @p i has reached the end of @p tup. */
-static inline bool
-lv2_tuple_is_end(const LV2_Atom_Tuple* tup, LV2_Atom_Tuple_Iter i)
-{
-	return lv2_atom_tuple_body_is_end(LV2_ATOM_BODY(tup), tup->atom.size, i);
-}
-
 /** Return an iterator to the element following @p i. */
-static inline LV2_Atom_Tuple_Iter
-lv2_tuple_iter_next(const LV2_Atom_Tuple_Iter i)
-{
-	return (LV2_Atom_Tuple_Iter)(
-		(uint8_t*)i + sizeof(LV2_Atom) + lv2_atom_pad_size(i->size));
-}
-
-/** Return the element pointed to by @p i. */
 static inline LV2_Atom*
-lv2_tuple_iter_get(LV2_Atom_Tuple_Iter i)
+lv2_atom_tuple_next(const LV2_Atom* i)
 {
-	return (LV2_Atom*)i;
+	return (LV2_Atom*)(
+		(uint8_t*)i + sizeof(LV2_Atom) + lv2_atom_pad_size(i->size));
 }
 
 /**
@@ -199,22 +162,21 @@ lv2_tuple_iter_get(LV2_Atom_Tuple_Iter i)
 
    This macro is used similarly to a for loop (which it expands to), e.g.:
    @code
-   LV2_TUPLE_FOREACH(tuple, i) {
-       LV2_Atom* elem = lv2_tuple_iter_get(i);
-       // Do something with elem here...
+   LV2_ATOMO_TUPLE_FOREACH(tuple, elem) {
+       // Do something with elem (an LV2_Atom*) here...
    }
    @endcode
 */
-#define LV2_TUPLE_FOREACH(tuple, iter) \
-	for (LV2_Atom_Tuple_Iter (iter) = lv2_tuple_begin(tuple); \
-	     !lv2_tuple_is_end(tuple, (iter)); \
-	     (iter) = lv2_tuple_iter_next(iter))
+#define LV2_ATOM_TUPLE_FOREACH(tuple, iter) \
+	for (LV2_Atom* (iter) = lv2_atom_tuple_begin(tuple); \
+	     !lv2_atom_tuple_is_end(LV2_ATOM_BODY(tuple), (tuple)->size, (iter)); \
+	     (iter) = lv2_atom_tuple_next(iter))
 
-/** A version of LV2_TUPLE_FOREACH for when only the body is available. */
-#define LV2_TUPLE_BODY_FOREACH(body, size, iter) \
-	for (LV2_Atom_Tuple_Iter (iter) = (LV2_Atom_Tuple_Iter)body; \
-	     !lv2_atom_tuple_body_is_end(body, size, (iter)); \
-	     (iter) = lv2_tuple_iter_next(iter))
+/** Like LV2_ATOM_TUPLE_FOREACH but for a headerless tuple body. */
+#define LV2_ATOM_TUPLE_BODY_FOREACH(body, size, iter) \
+	for (LV2_Atom* (iter) = (LV2_Atom*)body; \
+	     !lv2_atom_tuple_is_end(body, size, (iter)); \
+	     (iter) = lv2_atom_tuple_next(iter))
 
 /**
    @}
@@ -222,52 +184,30 @@ lv2_tuple_iter_get(LV2_Atom_Tuple_Iter i)
    @{
 */
 
-/** An iterator over the properties of an LV2_Atom_Object. */
-typedef LV2_Atom_Property_Body* LV2_Atom_Object_Iter;
-
-static inline LV2_Atom_Object_Iter
-lv2_object_body_begin(const LV2_Atom_Object_Body* body)
+/** Return a pointer to the first property in @p body. */
+static inline LV2_Atom_Property_Body*
+lv2_atom_object_begin(const LV2_Atom_Object_Body* body)
 {
-	return (LV2_Atom_Object_Iter)(body + 1);
-}
-
-/** Get an iterator pointing to the first property in @p obj. */
-static inline LV2_Atom_Object_Iter
-lv2_object_begin(const LV2_Atom_Object* obj)
-{
-	return (LV2_Atom_Object_Iter)(obj + 1);
-}
-
-static inline bool
-lv2_atom_object_body_is_end(const LV2_Atom_Object_Body* body,
-                            uint32_t                    size,
-                            LV2_Atom_Object_Iter        i)
-{
-	return (uint8_t*)i >= ((uint8_t*)body + size);
+	return (LV2_Atom_Property_Body*)(body + 1);
 }
 
 /** Return true iff @p i has reached the end of @p obj. */
 static inline bool
-lv2_object_is_end(const LV2_Atom_Object* obj, LV2_Atom_Object_Iter i)
+lv2_atom_object_is_end(const LV2_Atom_Object_Body* body,
+                       uint32_t                    size,
+                       LV2_Atom_Property_Body*     i)
 {
-	return (uint8_t*)i >= ((uint8_t*)obj + sizeof(LV2_Atom) + obj->atom.size);
+	return (uint8_t*)i >= ((uint8_t*)body + size);
 }
 
 /** Return an iterator to the property following @p i. */
-static inline LV2_Atom_Object_Iter
-lv2_object_iter_next(const LV2_Atom_Object_Iter i)
+static inline LV2_Atom_Property_Body*
+lv2_atom_object_next(const LV2_Atom_Property_Body* i)
 {
 	const LV2_Atom* const value = (LV2_Atom*)((uint8_t*)i + sizeof(i));
-	return (LV2_Atom_Object_Iter)((uint8_t*)i
+	return (LV2_Atom_Property_Body*)((uint8_t*)i
 	                              + sizeof(LV2_Atom_Property_Body)
 	                              + lv2_atom_pad_size(value->size));
-}
-
-/** Return the property pointed to by @p i. */
-static inline LV2_Atom_Property_Body*
-lv2_object_iter_get(LV2_Atom_Object_Iter i)
-{
-	return (LV2_Atom_Property_Body*)i;
 }
 
 /**
@@ -277,22 +217,21 @@ lv2_object_iter_get(LV2_Atom_Object_Iter i)
 
    This macro is used similarly to a for loop (which it expands to), e.g.:
    @code
-   LV2_OBJECT_FOREACH(object, i) {
-       LV2_Atom_Property_Body* prop = lv2_object_iter_get(i);
-       // Do something with prop here...
+   LV2_ATOM_OBJECT_FOREACH(object, i) {
+       // Do something with prop (an LV2_Atom_Property_Body*) here...
    }
    @endcode
 */
-#define LV2_OBJECT_FOREACH(object, iter) \
-	for (LV2_Atom_Object_Iter (iter) = lv2_object_begin(object); \
-	     !lv2_object_is_end(object, (iter)); \
-	     (iter) = lv2_object_iter_next(iter))
+#define LV2_ATOM_OBJECT_FOREACH(obj, iter) \
+	for (LV2_Atom_Property_Body* (iter) = lv2_atom_object_begin(&(obj)->body); \
+	     !lv2_atom_object_is_end(&(obj)->body, (obj)->atom.size, (iter)); \
+	     (iter) = lv2_atom_object_next(iter))
 
-/** A version of LV2_OBJECT_FOREACH for when only the body is available. */
-#define LV2_OBJECT_BODY_FOREACH(body, size, iter) \
-	for (LV2_Atom_Object_Iter (iter) = lv2_object_body_begin(body); \
-	     !lv2_atom_object_body_is_end(body, size, (iter)); \
-	     (iter) = lv2_object_iter_next(iter))
+/** Like LV2_ATOM_OBJECT_FOREACH but for a headerless object body. */
+#define LV2_ATOM_OBJECT_BODY_FOREACH(body, size, iter) \
+	for (LV2_Atom_Property_Body* (iter) = lv2_atom_object_begin(body); \
+	     !lv2_atom_object_is_end(body, size, (iter)); \
+	     (iter) = lv2_atom_object_next(iter))
 
 /**
    @}
@@ -306,7 +245,7 @@ typedef struct {
 	const LV2_Atom** value;  /**< Found value (output set by query function) */
 } LV2_Atom_Object_Query;
 
-static const LV2_Atom_Object_Query LV2_OBJECT_QUERY_END = { 0, NULL };
+static const LV2_Atom_Object_Query LV2_ATOM_OBJECT_QUERY_END = { 0, NULL };
 
 /**
    Get an object's values for various keys.
@@ -327,14 +266,15 @@ static const LV2_Atom_Object_Query LV2_OBJECT_QUERY_END = { 0, NULL };
    LV2_Atom_Object_Query q[] = {
        { urids.eg_name, &name },
        { urids.eg_age,  &age },
-       LV2_OBJECT_QUERY_END
+       LV2_ATOM_OBJECT_QUERY_END
    };
-   lv2_object_query(obj, q);
+   lv2_atom_object_query(obj, q);
    // name and age are now set to the appropriate values in obj, or NULL.
    @endcode
 */
 static inline int
-lv2_object_query(const LV2_Atom_Object* object, LV2_Atom_Object_Query* query)
+lv2_atom_object_query(const LV2_Atom_Object* object,
+                      LV2_Atom_Object_Query* query)
 {
 	int matches   = 0;
 	int n_queries = 0;
@@ -344,8 +284,7 @@ lv2_object_query(const LV2_Atom_Object* object, LV2_Atom_Object_Query* query)
 		++n_queries;
 	}
 
-	LV2_OBJECT_FOREACH(object, o) {
-		const LV2_Atom_Property_Body* prop = lv2_object_iter_get(o);
+	LV2_ATOM_OBJECT_FOREACH(object, prop) {
 		for (LV2_Atom_Object_Query* q = query; q->key; ++q) {
 			if (q->key == prop->key && !*q->value) {
 				*q->value = &prop->value;
@@ -360,7 +299,7 @@ lv2_object_query(const LV2_Atom_Object* object, LV2_Atom_Object_Query* query)
 }
 
 /**
-   Variable argument version of lv2_object_get().
+   Variable argument version of lv2_atom_object_get().
 
    This is nicer-looking in code, but a bit more error-prone since it is not
    type safe and the argument list must be terminated.
@@ -372,14 +311,14 @@ lv2_object_query(const LV2_Atom_Object* object, LV2_Atom_Object_Query* query)
    @code
    const LV2_Atom* name = NULL;
    const LV2_Atom* age  = NULL;
-   lv2_object_get(obj,
-                  uris.name_key, &name,
-                  uris.age_key,  &age,
-                  0);
+   lv2_atom_object_get(obj,
+                       uris.name_key, &name,
+                       uris.age_key,  &age,
+                       0);
    @endcode
 */
 static inline int
-lv2_object_get(const LV2_Atom_Object* object, ...)
+lv2_atom_object_get(const LV2_Atom_Object* object, ...)
 {
 	int matches   = 0;
 	int n_queries = 0;
@@ -394,8 +333,7 @@ lv2_object_get(const LV2_Atom_Object* object, ...)
 	}
 	va_end(args);
 
-	LV2_OBJECT_FOREACH(object, o) {
-		const LV2_Atom_Property_Body* prop = lv2_object_iter_get(o);
+	LV2_ATOM_OBJECT_FOREACH(object, prop) {
 		va_start(args, object);
 		for (int i = 0; i < n_queries; ++i) {
 			uint32_t         qkey = va_arg(args, uint32_t);

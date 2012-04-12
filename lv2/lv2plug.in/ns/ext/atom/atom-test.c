@@ -203,24 +203,24 @@ main()
 	LV2_Atom_Bool* tup1 = (LV2_Atom_Bool*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_bool(&forge, true));
 	lv2_atom_forge_pop(&forge, &tuple_frame);
-	LV2_Atom_Tuple_Iter i = lv2_tuple_begin(tuple);
-	if (lv2_tuple_is_end(tuple, i)) {
+	LV2_Atom* i = lv2_atom_tuple_begin(tuple);
+	if (lv2_atom_tuple_is_end(LV2_ATOM_BODY(tuple), tuple->atom.size, i)) {
 		return test_fail("Tuple iterator is empty\n");
 	}
-	LV2_Atom* tup0i = (LV2_Atom*)lv2_tuple_iter_get(i);
+	LV2_Atom* tup0i = i;
 	if (!lv2_atom_equals((LV2_Atom*)tup0, tup0i)) {
 		return test_fail("Corrupt tuple element 0\n");
 	}
-	i = lv2_tuple_iter_next(i);
-	if (lv2_tuple_is_end(tuple, i)) {
+	i = lv2_atom_tuple_next(i);
+	if (lv2_atom_tuple_is_end(LV2_ATOM_BODY(tuple), tuple->atom.size, i)) {
 		return test_fail("Premature end of tuple iterator\n");
 	}
-	LV2_Atom* tup1i = lv2_tuple_iter_get(i);
+	LV2_Atom* tup1i = i;
 	if (!lv2_atom_equals((LV2_Atom*)tup1, tup1i)) {
 		return test_fail("Corrupt tuple element 1\n");
 	}
-	i = lv2_tuple_iter_next(i);
-	if (!lv2_tuple_is_end(tuple, i)) {
+	i = lv2_atom_tuple_next(i);
+	if (!lv2_atom_tuple_is_end(LV2_ATOM_BODY(tuple), tuple->atom.size, i)) {
 		return test_fail("Tuple iter is not at end\n");
 	}
 
@@ -273,8 +273,7 @@ main()
 	}
 
 	unsigned n_events = 0;
-	LV2_SEQUENCE_FOREACH(seq, i) {
-		LV2_Atom_Event* ev = lv2_sequence_iter_get(i);
+	LV2_ATOM_SEQUENCE_FOREACH(seq, ev) {
 		if (ev->time.frames != n_events) {
 			return test_fail("Corrupt event %u has bad time\n", n_events);
 		} else if (ev->body.type != forge.Int) {
@@ -286,8 +285,7 @@ main()
 	}
 	
 	unsigned n_props = 0;
-	LV2_OBJECT_FOREACH((LV2_Atom_Object*)obj, i) {
-		LV2_Atom_Property_Body* prop = lv2_object_iter_get(i);
+	LV2_ATOM_OBJECT_FOREACH((LV2_Atom_Object*)obj, prop) {
 		if (!prop->key) {
 			return test_fail("Corrupt property %u has no key\n", n_props);
 		} else if (prop->context) {
@@ -337,10 +335,10 @@ main()
 		{ eg_vector,  &matches.vector },
 		{ eg_vector2, &matches.vector2 },
 		{ eg_seq,     &matches.seq },
-		LV2_OBJECT_QUERY_END
+		LV2_ATOM_OBJECT_QUERY_END
 	};
 
-	unsigned n_matches = lv2_object_query((LV2_Atom_Object*)obj, q);
+	unsigned n_matches = lv2_atom_object_query((LV2_Atom_Object*)obj, q);
 	for (int i = 0; i < 2; ++i) {
 		if (n_matches != n_props) {
 			return test_fail("Query failed, %u matches != %u\n",
@@ -375,23 +373,23 @@ main()
 			return test_fail("Bad match sequence\n");
 		}
 		memset(&matches, 0, sizeof(matches));
-		n_matches = lv2_object_get((LV2_Atom_Object*)obj,
-		                           eg_one,     &matches.one,
-		                           eg_two,     &matches.two,
-		                           eg_three,   &matches.three,
-		                           eg_four,    &matches.four,
-		                           eg_true,    &matches.affirmative,
-		                           eg_false,   &matches.negative,
-		                           eg_path,    &matches.path,
-		                           eg_uri,     &matches.uri,
-		                           eg_urid,    &matches.urid,
-		                           eg_string,  &matches.string,
-		                           eg_literal, &matches.literal,
-		                           eg_tuple,   &matches.tuple,
-		                           eg_vector,  &matches.vector,
-		                           eg_vector2, &matches.vector2,
-		                           eg_seq,     &matches.seq,
-		                           0);
+		n_matches = lv2_atom_object_get((LV2_Atom_Object*)obj,
+		                                eg_one,     &matches.one,
+		                                eg_two,     &matches.two,
+		                                eg_three,   &matches.three,
+		                                eg_four,    &matches.four,
+		                                eg_true,    &matches.affirmative,
+		                                eg_false,   &matches.negative,
+		                                eg_path,    &matches.path,
+		                                eg_uri,     &matches.uri,
+		                                eg_urid,    &matches.urid,
+		                                eg_string,  &matches.string,
+		                                eg_literal, &matches.literal,
+		                                eg_tuple,   &matches.tuple,
+		                                eg_vector,  &matches.vector,
+		                                eg_vector2, &matches.vector2,
+		                                eg_seq,     &matches.seq,
+		                                0);
 	}
 
 	printf("All tests passed.\n");

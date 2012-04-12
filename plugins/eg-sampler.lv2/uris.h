@@ -121,7 +121,7 @@ read_set_file(const SamplerURIs*     uris,
 
 	/* Get body of message. */
 	const LV2_Atom_Object* body = NULL;
-	lv2_object_get(obj, uris->patch_body, &body, 0);
+	lv2_atom_object_get(obj, uris->patch_body, &body, 0);
 	if (!body) {
 		fprintf(stderr, "Malformed set message has no body.\n");
 		return NULL;
@@ -133,7 +133,7 @@ read_set_file(const SamplerURIs*     uris,
 
 	/* Get file path from body. */
 	const LV2_Atom* file_path = NULL;
-	lv2_object_get(body, uris->eg_file, &file_path, 0);
+	lv2_atom_object_get(body, uris->eg_file, &file_path, 0);
 	if (!file_path) {
 		fprintf(stderr, "Ignored set message with no file PATH.\n");
 		return NULL;
