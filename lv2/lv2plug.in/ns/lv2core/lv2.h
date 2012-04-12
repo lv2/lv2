@@ -272,12 +272,12 @@ typedef struct _LV2_Descriptor {
 	   things that the plugin MUST NOT do within the run() function (see
 	   lv2core.ttl for details).
 
-	   As a special case, when @c sample_count == 0, the plugin should update
+	   As a special case, when @p sample_count == 0, the plugin should update
 	   any output ports that represent a single instant in time (e.g. control
 	   ports, but not audio ports). This is particularly useful for latent
 	   plugins, which should update their latency output port so hosts can
 	   pre-roll plugins to compute latency. Plugins MUST NOT crash when
-	   @c sample_count == 0.
+	   @p sample_count == 0.
 
 	   @param instance Instance to be run.
 
@@ -368,9 +368,9 @@ typedef struct _LV2_Descriptor {
    function to find the LV2_Descriptor for the desired plugin.  Plugins are
    accessed by index using values from 0 upwards.  This function MUST return
    NULL for out of range indices, so the host can enumerate plugins by
-   increasing @c index until NULL is returned.
+   increasing @p index until NULL is returned.
 
-   Note that @c index has no meaning, hosts MUST NOT depend on it remaining
+   Note that @p index has no meaning, hosts MUST NOT depend on it remaining
    consistent between loads of the plugin library.
 */
 LV2_SYMBOL_EXPORT

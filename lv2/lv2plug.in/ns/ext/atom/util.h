@@ -212,7 +212,7 @@ lv2_atom_object_next(const LV2_Atom_Property_Body* i)
 
 /**
    A macro for iterating over all properties of an Object.
-   @param object The object to iterate over
+   @param obj The object to iterate over
    @param iter The name of the iterator
 
    This macro is used similarly to a for loop (which it expands to), e.g.:

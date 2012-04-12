@@ -93,12 +93,12 @@ typedef void* LV2UI_Feature_Handle;
    The type of the host-provided function that the UI can use to
    send data to a plugin's input ports.
 
-   The @c buffer parameter must point to a block of data, @c buffer_size bytes
+   The @p buffer parameter must point to a block of data, @c buffer_size bytes
    large.  The format of this data and how the host should use it is defined by
-   the @c port_protocol.  This buffer is owned by the UI and is only valid for
+   the @p port_protocol.  This buffer is owned by the UI and is only valid for
    the duration of this call.
 
-   The @c port_protocol parameter should either be 0 or the URID for a
+   The @p port_protocol parameter should either be 0 or the URID for a
    ui:PortProtocol.  If it is 0, the protocol is implicitly ui:floatProtocol,
    the port must be an lv2:ControlPort input, @c buffer must point to a single
    float value, and @c buffer_size must be sizeof(float).
@@ -140,7 +140,7 @@ typedef struct _LV2UI_Descriptor {
 	   to send data to the plugin's input ports.
 
 	   @param controller A handle for the plugin instance that should be passed
-	   as the first parameter of @c write_function.
+	   as the first parameter of @p write_function.
 
 	   @param widget A pointer to an LV2UI_Widget.  The UI will write a widget
 	   pointer to this location (what type of widget depends on the RDF class of
@@ -173,19 +173,19 @@ typedef struct _LV2UI_Descriptor {
 	   Tell the UI that something interesting has happened at a plugin port.
 
 	   What is interesting and how it is written to the buffer passed to this
-	   function is defined by the @c format parameter, which has the same
+	   function is defined by the @p format parameter, which has the same
 	   meaning as in LV2UI_Write_Function.  The only exception is ports of the
 	   class lv2:ControlPort, for which this function should be called when the
 	   port value changes (it does not have to be called for every single change
 	   if the host's UI thread has problems keeping up with the thread the
-	   plugin is running in), @c buffer_size should be 4, the buffer should
-	   contain a single IEEE-754 float, and @c format should be 0.
+	   plugin is running in), @p buffer_size should be 4, the buffer should
+	   contain a single IEEE-754 float, and @p format should be 0.
 
 	   By default, the host should only call this function for input ports of
 	   the lv2:ControlPort class.  However, this can be modified by using
 	   ui:portNotification in the UI data, or the ui:portSubscribe feature.
 
-	   The @c buffer is only valid during the time of this function call, so if
+	   The @p buffer is only valid during the time of this function call, so if
 	   the UI wants to keep it for later use it has to copy the contents to an
 	   internal buffer.
 
@@ -275,7 +275,7 @@ typedef struct _LV2UI_Port_Subscribe {
 	   This means that the host will call the UI's port_event() function when
 	   the port value changes (as defined by protocol).
 
-	   Calling this function with the same @c port_index and @c port_protocol
+	   Calling this function with the same @p port_index and @p port_protocol
 	   as an already active subscription has no effect.
 
 	   @param handle The handle field of this struct.
@@ -295,7 +295,7 @@ typedef struct _LV2UI_Port_Subscribe {
 	   This means that the host will cease calling calling port_event() when
 	   the port value changes.
 
-	   Calling this function with a @c port_index and @c port_protocol that
+	   Calling this function with a @p port_index and @p port_protocol that
 	   does not refer to an active port subscription has no effect.
 
 	   @param handle The handle field of this struct.
