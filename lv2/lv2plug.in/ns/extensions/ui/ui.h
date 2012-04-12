@@ -36,6 +36,7 @@
 #define LV2_UI__Qt4UI            LV2_UI_PREFIX "Qt4UI"
 #define LV2_UI__UI               LV2_UI_PREFIX "UI"
 #define LV2_UI__X11UI            LV2_UI_PREFIX "X11UI"
+#define LV2_UI__binary           LV2_UI_PREFIX "binary"
 #define LV2_UI__fixedSize        LV2_UI_PREFIX "fixedSize"
 #define LV2_UI__noUserResize     LV2_UI_PREFIX "noUserResize"
 #define LV2_UI__notifyType       LV2_UI_PREFIX "notifyType"
@@ -47,6 +48,7 @@
 #define LV2_UI__portSubscribe    LV2_UI_PREFIX "portSubscribe"
 #define LV2_UI__resize           LV2_UI_PREFIX "resize"
 #define LV2_UI__touch            LV2_UI_PREFIX "touch"
+#define LV2_UI__ui               LV2_UI_PREFIX "ui"
 
 /**
    The index returned by LV2_UI_Port_Port::port_index() for unknown ports.
