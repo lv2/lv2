@@ -25,7 +25,7 @@
 
 <http://lv2plug.in/ns/ext/parameters>
 	a lv2:Specification ;
-	rdfs:seeAlso <../../people/people.ttl> ;
+	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Parameters" ;
 	doap:release [
 		doap:revision "0.2" ;
@@ -34,7 +34,7 @@
 	doap:created "2009-01-01" ;
 	doap:shortdesc "Common parameters for audio processing." ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
-	doap:developer <http://lv2plug.in/ns/people#larsl> ;
+	doap:developer <http://lv2plug.in/ns/meta#larsl> ;
 	lv2:documentation """
 <p>This extension defines parameters common in audio processing software.  A
 <q>parameter</q> is purely a metadata concept, unrelated to any particular code

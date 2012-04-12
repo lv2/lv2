@@ -24,7 +24,7 @@
 
 <http://lv2plug.in/ns/ext/host-info>
 	a lv2:Specification ;
-	rdfs:seeAlso <../../people/people.ttl> ;
+	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Host Info" ;
 	doap:shortdesc "A format for describing LV2 hosts." ;

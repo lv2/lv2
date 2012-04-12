@@ -12,19 +12,23 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-@prefix doap:   <http://usefulinc.com/ns/doap#> .
-@prefix foaf:   <http://xmlns.com/foaf/0.1/> .
-@prefix owl:    <http://www.w3.org/2002/07/owl#> .
-@prefix people: <http://lv2plug.in/ns/people#> .
-@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix meta: <http://lv2plug.in/ns/meta#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://lv2plug.in/ns/people>
+<http://lv2plug.in/ns/meta>
 	a owl:Ontology ;
 	doap:created "2012-03-25" ;
 	doap:license <http://opensource.org/licenses/isc> ;
-	doap:name "LV2 People" ;
-	doap:shortdesc "People involved with the LV2 plugin specification." ;
-	doap:maintainer <http://drobilla.net/drobilla#me> .
+	doap:name "LV2 Meta" ;
+	doap:shortdesc "LV2 project metadata" ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
+    rdfs:comment """
+This vocabulary describes metadata relevant to the LV2 project (e.g. people
+involved and the license).
+""" .
 
 <http://drobilla.net/drobilla#me>
 	a foaf:Person ;
@@ -38,27 +42,27 @@
 	foaf:mbox <mailto:steve@plugin.org.uk> ;
 	rdfs:seeAlso <http://plugin.org.uk/swh.xrdf> .
 
-<http://lv2plug.in/ns/people#larsl>
+meta:larsl
 	a foaf:Person ;
 	foaf:name "Lars Luthman" ;
 	foaf:mbox <mailto:lars.luthman@gmail.com> .
 
-<http://lv2plug.in/ns/people#gabrbedd>
+meta:gabrbedd
 	a foaf:Person ;
 	foaf:name "Gabriel M. Beddingfield" ;
 	foaf:mbox <mailto:gabrbedd@gmail.com> .
 
-<http://lv2plug.in/ns/people#daste>
+meta:daste
 	a foaf:Person ;
 	foaf:name "Stefano D'Angelo" ;
 	foaf:mbox <mailto:zanga.mail@gmail.com> .
 
-<http://lv2plug.in/ns/people#kfoltman>
+meta:kfoltman
 	a foaf:Person ;
 	foaf:name "Krzysztof Foltman" ;
 	foaf:mbox <mailto:wdev@foltman.com> .
 
-<http://lv2plug.in/ns/people#paniq>
+meta:paniq
 	a foaf:Person ;
 	foaf:name "Leonard Ritter" ;
 	foaf:mbox <mailto:paniq@paniq.org> .

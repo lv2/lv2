@@ -26,12 +26,12 @@
 
 <http://lv2plug.in/ns/ext/port-groups>
 	a lv2:Specification ;
-	rdfs:seeAlso <../../people/people.ttl> ;
+	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Port Groups" ;
 	doap:shortdesc "Multi-channel groups of LV2 ports." ;
 	rdfs:comment "Defines semantic groupings of LV2 ports" ;
-	doap:developer <http://lv2plug.in/ns/people#larsl> ,
+	doap:developer <http://lv2plug.in/ns/meta#larsl> ,
 		<http://drobilla.net/drobilla#me> .
 
 pg:Group

@@ -29,7 +29,7 @@
 	rdfs:seeAlso <atom.h> ,
 		<util.h> ,
 		<forge.h> ,
-		<../../people/people.ttl> ;
+		<../../meta/meta.ttl> ;
 	doap:name "LV2 Atom" ;
 	doap:shortdesc "A generic value container and several data types." ;
 	doap:created "2007" ;

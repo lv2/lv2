@@ -29,7 +29,7 @@
 	doap:shortdesc "A port-based real-time generic event interface." ;
 	rdfs:seeAlso <event.h> ,
 		<event-helpers.h> ,
-		<../../people/people.ttl> ;
+		<../../meta/meta.ttl> ;
 	doap:release [
 		doap:revision "1.5" ;
 		doap:created "2012-04-05" ;
@@ -75,7 +75,7 @@
 		] ;
 	] ;
 	doap:developer <http://drobilla.net/drobilla#me> ,
-		<http://lv2plug.in/ns/people#larsl> ;
+		<http://lv2plug.in/ns/meta#larsl> ;
 	lv2:documentation """
 <p>This extension defines a generic time-stamped event port type, which can be
 used to create plugins that read and write real-time events, such as MIDI,

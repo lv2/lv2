@@ -28,9 +28,9 @@
 		lv2:Feature ;
 	owl:deprecated true ;
 	rdfs:seeAlso <uri-map.h> ,
-		<../../people/people.ttl> ;
+		<../../meta/meta.ttl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
-	doap:developer <http://lv2plug.in/ns/people#larsl> ,
+	doap:developer <http://lv2plug.in/ns/meta#larsl> ,
 		<http://drobilla.net/drobilla#me> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 URI Map" ;

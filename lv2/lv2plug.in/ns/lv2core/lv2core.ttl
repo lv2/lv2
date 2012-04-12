@@ -50,7 +50,7 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
 
 <http://lv2plug.in/ns/lv2core>
 	a owl:Ontology ;
-	rdfs:seeAlso <lv2.h> , <lv2core.doap.ttl> , <../people/people.ttl> ;
+	rdfs:seeAlso <lv2.h> , <lv2core.doap.ttl> , <../meta/meta.ttl> ;
 	lv2:documentation """
 <p>LV2 is an interface for writing audio processors, or <q>plugins</q>, in
 C/C++ which can be dynamically loaded into many applications, or <q>hosts</q>.

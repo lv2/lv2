@@ -25,7 +25,7 @@
 <http://lv2plug.in/ns/ext/instance-access>
 	a lv2:Specification ;
 	rdfs:seeAlso <instance-access.h> ,
-		<../../people/people.ttl> ;
+		<../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Instance Access" ;
 	doap:shortdesc "Provides access to the LV2_Handle of a plugin." ;

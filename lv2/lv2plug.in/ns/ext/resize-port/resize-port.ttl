@@ -26,7 +26,7 @@
 	a lv2:Specification ,
 		lv2:Feature ;
 	rdfs:seeAlso <resize-port.h> ,
-		<../../people/people.ttl> ;
+		<../../meta/meta.ttl> ;
 	doap:name "LV2 Resize Port Extension" ;
 	doap:shortdesc "Dynamically sized LV2 port buffers." ;
 	doap:developer <http://drobilla.net/drobilla#me> ;

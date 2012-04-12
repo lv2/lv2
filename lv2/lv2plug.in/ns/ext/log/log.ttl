@@ -23,7 +23,7 @@
 
 <http://lv2plug.in/ns/ext/log>
 	a lv2:Specification ;
-    rdfs:seeAlso <log.h> , <../../people/people.ttl> ;
+    rdfs:seeAlso <log.h> , <../../meta/meta.ttl> ;
 	doap:name "LV2 Log" ;
 	doap:shortdesc "A feature for writing log messages." ;
 	doap:developer <http://drobilla.net/drobilla#me> ;

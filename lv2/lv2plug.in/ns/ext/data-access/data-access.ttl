@@ -26,7 +26,7 @@
 	a lv2:Specification ,
 		doap:Project ;
 	rdfs:seeAlso <data-access.h> ,
-		<../../people/people.ttl> ;
+		<../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Data Access" ;
 	doap:shortdesc "Provides access to LV2_Descriptor::extension_data()." ;

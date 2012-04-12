@@ -5,11 +5,11 @@
 
 <http://lv2plug.in/ns/extensions/ui>
 	a doap:Project ;
-	rdfs:seeAlso <../../people/people.ttl> ;
+	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 UI" ;
 	doap:shortdesc "Generic UI interface for LV2 plugins." ;
-	doap:developer <http://lv2plug.in/ns/people#larsl> ;
+	doap:developer <http://lv2plug.in/ns/meta#larsl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "2.7" ;

@@ -29,12 +29,12 @@
 <http://lv2plug.in/ns/ext/midi>
 	a lv2:Specification ;
 	rdfs:seeAlso <midi.h> ,
-		<../../people/people.ttl> ;
+		<../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 MIDI" ;
 	doap:shortdesc "A normalised definition of raw MIDI." ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
-	doap:developer <http://lv2plug.in/ns/people#larsl> ,
+	doap:developer <http://lv2plug.in/ns/meta#larsl> ,
 		<http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "1.5" ;

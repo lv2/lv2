@@ -25,7 +25,7 @@
 <http://lv2plug.in/ns/ext/patch>
 	a lv2:Specification ;
 	rdfs:seeAlso <patch.h> ,
-		<../../people/people.ttl> ;
+		<../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:name "LV2 Patch" ;

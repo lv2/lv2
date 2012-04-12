@@ -25,7 +25,7 @@
 
 <http://lv2plug.in/ns/ext/presets>
 	a lv2:Specification ;
-	rdfs:seeAlso <../../people/people.ttl> ;
+	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Presets" ;
 	doap:shortdesc "Presets for LV2 plugins. " ;

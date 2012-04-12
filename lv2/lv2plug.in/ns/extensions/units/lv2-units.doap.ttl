@@ -5,7 +5,7 @@
 
 <http://lv2plug.in/ns/extensions/units>
 	a doap:Project ;
-	rdfs:seeAlso <../../people/people.ttl> ;
+	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Units" ;
 	doap:shortdesc "Units for LV2 values." ;
 	doap:created "2007-02-06" ;

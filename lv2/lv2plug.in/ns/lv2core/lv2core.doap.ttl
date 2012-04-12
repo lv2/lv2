@@ -5,7 +5,7 @@
 
 <http://lv2plug.in/ns/lv2core>
 	a doap:Project ;
-	rdfs:seeAlso <../people/people.ttl> ;
+	rdfs:seeAlso <../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2" ;
 	doap:homepage <http://lv2plug.in> ;
