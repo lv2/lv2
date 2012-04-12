@@ -42,7 +42,7 @@ hi:Host
 		owl:onProperty doap:name ;
 		owl:someValuesFrom xsd:string ;
 		owl:minCardinality 1 ;
-		rdfs:comment "A hi:Host MUST have at least one string doap:name" ;
+		rdfs:comment "A hi:Host MUST have at least one string doap:name"
 	] ;
 	rdfs:comment """
 An application that supports loading LV2 plugins, or performs other
@@ -66,7 +66,7 @@ hi:ExtensionSupport
 		owl:minCardinality 1 ;
 		rdfs:comment """
 A hi:ExtensionSupport MUST have at least one string hi:sinceVersion
-""" ;
+"""
 	] ;
 	rdfs:comment "A description of the support for an extension by a Host" .
 

@@ -21,9 +21,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Fix bug in lv2_event_reserve()." ;
-			] ;
-		] ;
+				rdfs:label "Fix bug in lv2_event_reserve()."
+			]
+		]
 	] , [
 		doap:revision "1.4" ;
 		doap:created "2011-11-21" ;
@@ -31,9 +31,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Update packaging." ;
-			] ;
-		] ;
+				rdfs:label "Update packaging."
+			]
+		]
 	] , [
 		doap:revision "1.2" ;
 		doap:created "2011-05-26" ;
@@ -41,13 +41,13 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add build system (for installation)." ;
+				rdfs:label "Add build system (for installation)."
 			] , [
-				rdfs:label "Convert documentation to HTML and use lv2:documentation." ;
+				rdfs:label "Convert documentation to HTML and use lv2:documentation."
 			] , [
-				rdfs:label "Use lv2:Specification to be discovered as an extension." ;
-			] ;
-		] ;
+				rdfs:label "Use lv2:Specification to be discovered as an extension."
+			]
+		]
 	] , [
 		doap:revision "1.0" ;
 		doap:created "2010-11-24" ;
@@ -55,9 +55,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial release." ;
-			] ;
-		] ;
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
 	doap:created "2008-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ,

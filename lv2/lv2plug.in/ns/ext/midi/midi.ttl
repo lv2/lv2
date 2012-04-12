@@ -27,9 +27,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add class definitions for various message types." ;
-			] ;
-		] ;
+				rdfs:label "Add class definitions for various message types."
+			]
+		]
 	] , [
 		doap:revision "1.4" ;
 		doap:created "2011-11-21" ;
@@ -37,11 +37,11 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Update packaging." ;
+				rdfs:label "Update packaging."
 			] , [
-				rdfs:label "Improve documentation." ;
-			] ;
-		] ;
+				rdfs:label "Improve documentation."
+			]
+		]
 	] , [
 		doap:revision "1.2" ;
 		doap:created "2011-05-26" ;
@@ -49,11 +49,11 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add build system for installation." ;
+				rdfs:label "Add build system for installation."
 			] , [
-				rdfs:label "Switch to ISC license." ;
-			] ;
-		] ;
+				rdfs:label "Switch to ISC license."
+			]
+		]
 	] , [
 		doap:revision "1.0" ;
 		doap:created "2010-10-04" ;
@@ -61,9 +61,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial release." ;
-			] ;
-		] ;
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
 	lv2:documentation """
 <p>This extension defines a data type for a MIDI message, midi:MidiEvent, which

@@ -8,7 +8,8 @@
 
 <http://lv2plug.in/ns/ext/log>
 	a lv2:Specification ;
-    rdfs:seeAlso <log.h> , <../../meta/meta.ttl> ;
+	rdfs:seeAlso <log.h> ,
+		<../../meta/meta.ttl> ;
 	doap:name "LV2 Log" ;
 	doap:shortdesc "A feature for writing log messages." ;
 	doap:created "2012-01-12" ;
@@ -33,23 +34,23 @@ to describe the nature of the log message.</p>""" .
 
 log:Error
 	a rdfs:Class ;
-    rdfs:subClassOf log:Entry ;
-    rdfs:comment "An error" .
+	rdfs:subClassOf log:Entry ;
+	rdfs:comment "An error" .
 
 log:Note
 	a rdfs:Class ;
-    rdfs:subClassOf log:Entry ;
-    rdfs:comment "An informative message" .
+	rdfs:subClassOf log:Entry ;
+	rdfs:comment "An informative message" .
 
 log:Warning
 	a rdfs:Class ;
-    rdfs:subClassOf log:Entry ;
-    rdfs:comment "A warning" .
+	rdfs:subClassOf log:Entry ;
+	rdfs:comment "A warning" .
 
 log:Trace
 	a rdfs:Class ;
-    rdfs:subClassOf log:Entry ;
-    lv2:documentation """
+	rdfs:subClassOf log:Entry ;
+	lv2:documentation """
 <p>A debugging trace.  These entries should not be displayed during normal
 operation, but the host may implement an option to display them for debugging
 purposes.</p>

@@ -17,7 +17,6 @@
 		<http://drobilla.net/drobilla#me> ;
 	rdfs:comment "Defines semantic groupings of LV2 ports" .
 
-
 pg:Group
 	a rdfs:Class ;
 	rdfs:label "A group of channels or parameters." ;

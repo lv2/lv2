@@ -12,7 +12,7 @@
 	doap:shortdesc "LV2 project metadata" ;
 	doap:created "2012-03-25" ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
-    rdfs:comment """
+	rdfs:comment """
 This vocabulary describes metadata relevant to the LV2 project (e.g. people
 involved and the license).
 """ .

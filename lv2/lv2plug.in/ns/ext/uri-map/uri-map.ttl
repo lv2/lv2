@@ -28,11 +28,11 @@
 		doap:file-release <http://lv2plug.in/spec/lv2-uri-map-1.4.tar.bz2> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Update packaging." ;
+				rdfs:label "Update packaging."
 			] , [
-				rdfs:label "Deprecate uri-map in favour of urid." ;
-			] ;
-		] ;
+				rdfs:label "Deprecate uri-map in favour of urid."
+			]
+		]
 	] , [
 		doap:revision "1.2" ;
 		doap:created "2011-05-26" ;
@@ -40,11 +40,11 @@
 		doap:file-release <http://lv2plug.in/spec/lv2-uri-map-1.2.tar.bz2> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add build system (for installation)." ;
+				rdfs:label "Add build system (for installation)."
 			] , [
-				rdfs:label "Mark up documentation in HTML using lv2:docum" ;
-			] ;
-		] ;
+				rdfs:label "Mark up documentation in HTML using lv2:documentation."
+			]
+		]
 	] , [
 		doap:revision "1.0" ;
 		doap:created "2010-10-18" ;
@@ -52,9 +52,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial release." ;
-			] ;
-		] ;
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
 	lv2:documentation """
 <p><span class="warning">This extension is deprecated.</span> New

@@ -12,11 +12,11 @@
 	doap:name "LV2 Port Properties" ;
 	doap:release [
 		doap:revision "0.2" ;
-		doap:created "2012-03-23" ;
+		doap:created "2012-03-23"
 	] ;
 	doap:created "2009-01-01" ;
 	doap:shortdesc "Various port properties." ;
-	doap:maintainer	<http://drobilla.net/drobilla#me> ;
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:developer <http://lv2plug.in/ns/meta#kfoltman> ;
 	lv2:documentation """
 <p>This extension defines various properties for plugin ports, which can be
