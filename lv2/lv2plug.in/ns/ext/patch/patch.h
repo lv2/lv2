@@ -15,7 +15,7 @@
 */
 
 /**
-   @file patch.h C header for the LV2 Message extension
+   @file patch.h C header for the LV2 Patch extension
    <http://lv2plug.in/ns/ext/patch>.
 
    The patch extension is purely data, this header merely defines URIs

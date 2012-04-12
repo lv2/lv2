@@ -72,7 +72,6 @@ static const uint32_t LV2_EVENT_PPQN = 3136573440U;
    memcpy(ev_copy, ev, sizeof(LV2_Event) + ev->size);  (or equivalent)
 */
 typedef struct {
-
 	/**
 	   The frames portion of timestamp. The units used here can optionally be
 	   set for a port (with the lv2ev:timeUnits property), otherwise this is
@@ -113,7 +112,6 @@ typedef struct {
 	uint16_t size;
 
 	/* size bytes of data follow here */
-
 } LV2_Event;
 
 
@@ -134,7 +132,6 @@ typedef struct {
    |FRAMES |SUBFRMS|TYP|LEN|DATA..DATA..PAD|FRAMES | ...
 */
 typedef struct {
-
 	/**
 	   The contents of the event buffer. This may or may not reside in the
 	   same block of memory as this header, plugins must not assume either.
@@ -211,7 +208,6 @@ typedef struct {
 	   Any initial value should be ignored by the plugin.
 	*/
 	uint32_t size;
-
 } LV2_Event_Buffer;
 
 
@@ -230,7 +226,6 @@ typedef void* LV2_Event_Callback_Data;
    is not mandatory to support the event extension.
 */
 typedef struct {
-
 	/**
 	   Opaque pointer to host data.
 
@@ -286,7 +281,6 @@ typedef struct {
 	*/
 	uint32_t (*lv2_event_unref)(LV2_Event_Callback_Data callback_data,
 	                            LV2_Event*              event);
-
 } LV2_Event_Feature;
 
 

@@ -47,7 +47,6 @@ typedef void* LV2_URI_Map_Callback_Data;
    and data pointed to an instance of this struct.
 */
 typedef struct {
-
 	/**
 	   Opaque pointer to host data.
 
@@ -86,7 +85,6 @@ typedef struct {
 	uint32_t (*uri_to_id)(LV2_URI_Map_Callback_Data callback_data,
 	                      const char*               map,
 	                      const char*               uri);
-
 } LV2_URI_Map_Feature;
 
 #endif /* LV2_URI_MAP_H */

@@ -50,7 +50,6 @@ typedef struct {
 	   the normal LV2 UI communication system.
 	*/
 	const void* (*data_access)(const char* uri);
-
 } LV2_Extension_Data_Feature;
 
-#endif /* LV2_DATA_ACCESS_H */
+#endif  /* LV2_DATA_ACCESS_H */

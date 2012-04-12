@@ -31,7 +31,6 @@ extern "C" {
 typedef void* LV2_Resize_Port_Feature_Data;
 
 typedef struct {
-
 	LV2_Resize_Port_Feature_Data data;
 
 	/** Resize a port buffer to at least @a size bytes.
@@ -53,7 +52,6 @@ typedef struct {
 	bool (*resize_port)(LV2_Resize_Port_Feature_Data data,
 	                    uint32_t                     index,
 	                    size_t                       size);
-
 } LV2_Resize_Port_Feature;
 
 #ifdef __cplusplus
