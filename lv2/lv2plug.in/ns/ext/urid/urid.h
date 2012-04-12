@@ -1,6 +1,6 @@
 /*
+  Copyright 2008-2012 David Robillard <http://drobilla.net>
   Copyright 2011 Gabriel M. Beddingfield <gabrbedd@gmail.com>
-  Copyright 2008-2011 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -16,7 +16,7 @@
 */
 
 /**
-   @file
+   @file urid.h
    C header for the LV2 URID extension <http://lv2plug.in/ns/ext/urid>
 */
 
@@ -51,9 +51,9 @@ typedef void* LV2_URID_Unmap_Handle;
 typedef uint32_t LV2_URID;
 
 /**
-   URI Map (http://lv2plug.in/ns/ext/urid#map).
+   URID Map Feature (LV2_URID__map)
 */
-typedef struct {
+typedef struct _LV2_URID_Map {
 	/**
 	   Opaque pointer to host data.
 
@@ -88,9 +88,9 @@ typedef struct {
 } LV2_URID_Map;
 
 /**
-   URI Unmap (http://lv2plug.in/ns/ext/urid#unmap).
+   URI Unmap Feature (LV2_URID__unmap)
 */
-typedef struct {
+typedef struct _LV2_URID_Unmap {
 	/**
 	   Opaque pointer to host data.
 
