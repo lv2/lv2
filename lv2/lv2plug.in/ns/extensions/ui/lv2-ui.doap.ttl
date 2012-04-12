@@ -9,6 +9,7 @@
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 UI" ;
 	doap:shortdesc "Generic UI interface for LV2 plugins." ;
+	doap:created "2006-00-00" ;
 	doap:developer <http://lv2plug.in/ns/meta#larsl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
