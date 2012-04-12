@@ -18,12 +18,12 @@
 /**
    @file event.h
    C API for the LV2 Event extension <http://lv2plug.in/ns/ext/event>.
- 
+
    This extension is a generic transport mechanism for time stamped events
    of any type (e.g. MIDI, OSC, ramps, etc). Each port can transport mixed
    events of any type; the type of events and timestamps are defined by a URI
    which is mapped to an integer by the host for performance reasons.
- 
+
    This extension requires the host to support the LV2 URI Map extension.
    Any host which supports this extension MUST guarantee that any call to
    the LV2 URI Map uri_to_id function with the URI of this extension as the
@@ -60,15 +60,15 @@ static const uint32_t LV2_EVENT_PPQN = 3136573440U;
 
 /**
    An LV2 event (header only).
- 
+
    LV2 events are generic time-stamped containers for any type of event.
    The type field defines the format of a given event's contents.
- 
+
    This struct defines the header of an LV2 event. An LV2 event is a single
    chunk of POD (plain old data), usually contained in a flat buffer (see
    LV2_EventBuffer below). Unless a required feature says otherwise, hosts may
    assume a deep copy of an LV2 event can be created safely using a simple:
- 
+
    memcpy(ev_copy, ev, sizeof(LV2_Event) + ev->size);  (or equivalent)
 */
 typedef struct {
@@ -119,16 +119,16 @@ typedef struct {
 
 /**
    A buffer of LV2 events (header only).
- 
+
    Like events (which this contains) an event buffer is a single chunk of POD:
    the entire buffer (including contents) can be copied with a single memcpy.
    The first contained event begins sizeof(LV2_EventBuffer) bytes after the
    start of this struct.
- 
+
    After this header, the buffer contains an event header (defined by struct
    LV2_Event), followed by that event's contents (padded to 64 bits), followed
    by another header, etc:
- 
+
    |       |       |       |       |       |       |
    | | | | | | | | | | | | | | | | | | | | | | | | |
    |FRAMES |SUBFRMS|TYP|LEN|DATA..DATA..PAD|FRAMES | ...
@@ -145,7 +145,7 @@ typedef struct {
 
 	/**
 	   The size of this event header in bytes (including everything).
-	 
+
 	   This is to allow for extending this header in the future without
 	   breaking binary compatibility. Whenever this header is copied,
 	   it MUST be done using this field (and NOT the sizeof this struct).
@@ -166,7 +166,7 @@ typedef struct {
 	   connect_port is called on the input port, at which time the host MUST
 	   have set the stamp_type field to the value that will be used for all
 	   subsequent run calls.
-	   
+
 	   OUTPUTS: The plugin may set this to any value that has been returned
 	   from uri_to_id with the URI of this extension for a 'map' argument.
 	   When connected to a buffer with connect_port, output ports MUST set this
@@ -223,7 +223,7 @@ typedef void* LV2_Event_Callback_Data;
 
 /**
    Non-POD events feature.
- 
+
    To support this feature the host must pass an LV2_Feature struct to the
    plugin's instantiate method with URI "http://lv2plug.in/ns/ext/event"
    and data pointed to an instance of this struct.  Note this feature
@@ -233,7 +233,7 @@ typedef struct {
 
 	/**
 	   Opaque pointer to host data.
-	 
+
 	   The plugin MUST pass this to any call to functions in this struct.
 	   Otherwise, it must not be interpreted in any way.
 	*/
@@ -241,7 +241,7 @@ typedef struct {
 
 	/**
 	   Take a reference to a non-POD event.
-	 
+
 	   If a plugin receives an event with type 0, it means the event is a
 	   pointer to some object in memory and not a flat sequence of bytes
 	   in the buffer. When receiving a non-POD event, the plugin already
@@ -249,16 +249,16 @@ typedef struct {
 	   passed to an output, lv2_event_ref MUST be called on that event.
 	   If the event is only stored OR passed through, this is not necessary
 	   (as the plugin already has 1 implicit reference).
-	 
+
 	   @param event An event received at an input that will not be copied to
 	   an output or stored in any way.
-	   
+
 	   @param context The calling context. Like event types, this is a mapped
 	   URI, see lv2_context.h. Simple plugin with just a run() method should
 	   pass 0 here (the ID of the 'standard' LV2 run context). The host
 	   guarantees that this function is realtime safe iff @a context is
 	   realtime safe.
-	 
+
 	   PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS.
 	*/
 	uint32_t (*lv2_event_ref)(LV2_Event_Callback_Data callback_data,
@@ -266,22 +266,22 @@ typedef struct {
 
 	/**
 	   Drop a reference to a non-POD event.
-	 
+
 	   If a plugin receives an event with type 0, it means the event is a
 	   pointer to some object in memory and not a flat sequence of bytes
 	   in the buffer. If the plugin does not pass the event through to
 	   an output or store it internally somehow, it MUST call this function
 	   on the event (more information on using non-POD events below).
-	 
+
 	   @param event An event received at an input that will not be copied to an
 	   output or stored in any way.
-	   
+
 	   @param context The calling context. Like event types, this is a mapped
 	   URI, see lv2_context.h. Simple plugin with just a run() method should
 	   pass 0 here (the ID of the 'standard' LV2 run context). The host
 	   guarantees that this function is realtime safe iff @a context is
 	   realtime safe.
-	 
+
 	   PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS.
 	*/
 	uint32_t (*lv2_event_unref)(LV2_Event_Callback_Data callback_data,

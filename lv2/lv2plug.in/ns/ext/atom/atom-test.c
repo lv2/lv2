@@ -283,7 +283,7 @@ main()
 		}
 		++n_events;
 	}
-	
+
 	unsigned n_props = 0;
 	LV2_ATOM_OBJECT_FOREACH((LV2_Atom_Object*)obj, prop) {
 		if (!prop->key) {
