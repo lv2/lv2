@@ -17,14 +17,16 @@
 	doap:created "2009-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "2.3" ;
-		doap:created "2012-03-22" ;
+		doap:revision "2.5" ;
+		doap:created "2012-04-12" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add pset:preset property for describing the preset currently applied to a plugin instance." ;
-			] ;
-		] ;
+				rdfs:label "Add pset:preset property for describing the preset currently applied to a plugin instance."
+			] , [
+				rdfs:label "Remove pset:appliesTo property, use lv2:appliesTo instead."
+			]
+		]
 	] , [
 		doap:revision "2.2" ;
 		doap:created "2011-11-21" ;
@@ -32,11 +34,11 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Update packaging." ;
+				rdfs:label "Update packaging."
 			] , [
-				rdfs:label "Improve documentation." ;
-			] ;
-		] ;
+				rdfs:label "Improve documentation."
+			]
+		]
 	] , [
 		doap:revision "2.0" ;
 		doap:created "2010-10-04" ;
@@ -44,9 +46,9 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial release." ;
-			] ;
-		] ;
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
 	lv2:documentation """
 <p>This extension describes a format for presets (i.e. named sets of control
@@ -60,7 +62,7 @@ thought of as a plugin template or overlay.  For example:</p>
 eg:mypreset
     a pset:Preset ;
     rdfs:label "One louder" ;
-    pset:appliesTo eg:myplugin ;
+    lv2:appliesTo eg:myplugin ;
     lv2:port [
         lv2:symbol "volume1" ;
         pset:value 11.0
@@ -78,9 +80,9 @@ a bundle containing presets should list the presets like so:</p>
 
 <pre class="turtle-code">
 eg:mypreset
-    a              pset:Preset ;
-    pset:appliesTo eg:myplugin ;
-    rdfs:seeAlso   &lt;mypreset.ttl&gt; .
+    a             pset:Preset ;
+    lv2:appliesTo eg:myplugin ;
+    rdfs:seeAlso  &lt;mypreset.ttl&gt; .
 </pre>
 """ .
 
@@ -92,7 +94,7 @@ pset:Preset
 		a owl:Restriction ;
 		owl:onProperty rdfs:label ;
 		owl:someValuesFrom xsd:string ;
-		rdfs:comment "A Preset MUST have at least one string rdfs:label." ;
+		rdfs:comment "A Preset MUST have at least one string rdfs:label."
 	] ;
 	lv2:documentation """
 <p>A Preset for an LV2 Plugin.  A preset can be considered an "overlay" on a
@@ -102,25 +104,8 @@ defined in other extensions), the presets extension simply provides this class
 which can be augmented with any data in the exact same fashion as the
 definition of a Plugin.</p>
 
-<p>A Preset SHOULD have at least one pset:appliesTo property.  Each Port on a
+<p>A Preset SHOULD have at least one lv2:appliesTo property.  Each Port on a
 Preset MUST have at least a lv2:symbol property and a pset:value property.</p>
-""" .
-
-pset:appliesTo
-	a rdf:Property ;
-	rdfs:domain pset:Preset ;
-	rdfs:range lv2:Plugin ;
-	rdfs:label "Applies to" ;
-	lv2:documentation """
-<p>Specifies the Plugin(s) a Preset may be applied to.  When a Preset applies
-to a Plugin, that Preset SHOULD have ports for every control port on that
-plugin, each of which SHOULD have a pset:value property.  If the Preset is
-missing ports, or refers to ports which do not exist on the Plugin, then the
-host SHOULD apply all the values in the preset that do match the Plugin.</p>
-
-<p>The Preset MAY have any other values that should be applied to the Plugin in
-some way.  The host SHOULD simply ignore any values on a Preset it does not
-understand.</p>
 """ .
 
 pset:value
