@@ -4,7 +4,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/lv2core>
-	a doap:Project , lv2:Specification , owl:Ontology ;
+	a lv2:Specification ;
 	lv2:minorVersion 6 ;
 	lv2:microVersion 7 ;
-	rdfs:seeAlso <lv2core.ttl> , <lv2core.doap.ttl> .
+	rdfs:seeAlso <lv2core.ttl> ,
+		<lv2core.doap.ttl> .
