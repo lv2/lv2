@@ -419,15 +419,15 @@ meaningful and can be used more intelligently by the host.</p>
 """ .
 
 lv2:Channel a rdfs:Class , owl:Class ;
-	rdfs:label "Channel" ;
 	rdfs:subClassOf lv2:Designation ;
+	rdfs:label "Channel" ;
 	lv2:documentation """
 <p>A specific channel of audio, e.g. <q>left</q> or <q>right</q>.</p>
 """ .
 
 lv2:Parameter a rdfs:Class , owl:Class ;
 	rdfs:subClassOf lv2:Designation ;
-    #owl:equivalentClass rdf:Property ;
+	rdfs:label "Parameter" ;
 	lv2:documentation """
 <p>A parameter, i.e. a recognized property.  A parameter is a designation for a
 control.</p>
@@ -487,9 +487,6 @@ frames).</p>
 
 lv2:Point a rdfs:Class , owl:Class ;
     rdfs:label "Port value point" ;
-    # Unfortunately, it is illegal to specify restrictions on rdfs:label or
-    # rdf:value.  If the migration can be handled gracefully, it would be
-    # good to switch to more appropriate predicates here for validators.
     lv2:documentation """
 <p>A Point describes an interesting value in a Port's range (much like a labeled
 <q>notch</q> on a physical knob).</p>
