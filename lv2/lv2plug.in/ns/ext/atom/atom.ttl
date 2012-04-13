@@ -26,22 +26,23 @@
 		dcs:blame <http://drobilla.net/drobilla#me>
 	] ;
 	lv2:documentation """
-<p>This extension defines a generic container for data, called an <q>Atom</q>,
-and several basic Atom types which can be used to express structured data.
-Atoms are (with one exception) Plain Old Data (POD), which means they can be
-easily copied generically (e.g. using <code>memcpy</code>), and are suitable
-for use in high-performance and real-time code.</p>
+<p>This specification defines a generic container for data, called an
+<q>Atom</q>, and several basic Atom types which can be used to express
+structured data.  An atom:Atom is (with one exception) Plain Old Data (POD),
+which means it can be copied generically (e.g. using a simple
+<code>memcpy</code>), and is suitable for use in real-time code.</p>
 
-<p>Since Atom communication can be implemented generically, plugins that
-understand some type can be used together in a host that does not understand
-that type.  Similarly, plugins (such as routers, delays, or data stores) can
+<p>The purpose of Atoms is to allow implementations that process and/or
+transmit data to be independent of that data's type.  For example, plugins that
+mutually understand a type can be used together in a host that does not
+understand that type, because the host's required facilities are generic.
+Similarly, plugins (such as routers, delays, or data structures) can
 meaningfully process atoms of a type unknown to them.</p>
 
 <p>Atoms can and should be used anywhere values of various types must be stored
-or transmitted.  This extension defines a port type, atom:AtomPort, for
-transmitting atoms via ports.  The atom:Sequence type in an atom:AtomPort
-replaces the <a href="http://lv2plug.in/ns/ext/event">LV2 event</a>
-extension.</p>
+or transmitted.  The port type atom:AtomPort can be used to transmit atoms via
+ports.  The atom:Sequence type in an atom:AtomPort replaces the <a
+href="http://lv2plug.in/ns/ext/event">LV2 event</a> extension.</p>
 
 <p>The types defined in this extension should be powerful enough to express
 almost any structure.  Implementations SHOULD build structures out of the types
@@ -53,6 +54,16 @@ where absolutely necessary.</p>
 <p>Implementing this extension requires a facility for mapping URIs to
 integers, such as the <a href="http://lv2plug.in/ns/ext/urid">LV2 URID</a>
 extension.</p>
+
+<h3>Serialisation</h3>
+
+<p>An Atom type primarily defines a binary format (i.e. a C data type) for use
+at runtime.  However, each Atom type also has a standard serialisation format
+which SHOULD be used wherever an atom needs to be expressed as a string or in
+Turtle.  Thus, this specification not only defines binary data types for
+plugins to use, but a complete data model with a portable RDF-compatible
+serialisation.  This is useful for inter-process communication as well as
+saving state.</p>
 """ .
 
 atom:cType
@@ -61,10 +72,23 @@ atom:cType
 		owl:FunctionalProperty ;
 	rdfs:label "C type" ;
 	rdfs:domain rdfs:Class ;
-	rdfs:range xsd:string ;
+	rdfs:range lv2:Symbol ;
 	rdfs:comment """
-The identifier for a C type describing the in-memory representation of
-an instance of this class.
+The identifier for a C type describing the binary representation of an Atom of
+this type.
+""" .
+
+atom:stringType
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "String type" ;
+	rdfs:domain rdfs:Class ;
+	rdfs:range rdfs:Datatype ;
+	lv2:documentation """
+<p>The type to be used when representing an Atom of this type as a string
+(e.g. in XML or RDF).  Typically an <a
+href="http://www.w3.org/TR/xmlschema-2/">XML Schema Datatype</a> URI.</p>
 """ .
 
 atom:Atom
@@ -73,14 +97,14 @@ atom:Atom
 	atom:cType "LV2_Atom" ;
 	lv2:documentation """
 <p>Abstract base class for all atoms.  An LV2_Atom has a 32-bit
-<code>type</code> and <code>size</code> followed by a body of <code>size</code>
+<code>size</code> and <code>type</code> followed by a body of <code>size</code>
 bytes.  Atoms MUST be 64-bit aligned.</p>
 
 <p>All concrete Atom types (subclasses of this class) MUST define a precise
 binary layout for their body.</p>
 
 <p>The <code>type</code> field is the URI of an Atom type mapped to an integer.
-Implementations SHOULD gracefully ignore, or pass through, atoms with unknown
+Implementations SHOULD gracefully pass through, or ignore, atoms with unknown
 types.</p>
 
 <p>All atoms are POD by definition except references, which as a special case
@@ -91,8 +115,9 @@ reserves the type 0 for references, the details of reference handling are
 currently unspecified.  A future revision of this extension, or a different
 extension, may define how to use non-POD data and references.  Implementations
 MUST NOT send references to another implementation unless the receiver is
-explicitly known to support references (e.g. by supporting a feature).  The
-atom with both <code>type</code> <em>and</em> <code>size</code> 0 is
+explicitly known to support references (e.g. by supporting a feature).</p>
+
+<p>The atom with both <code>type</code> <em>and</em> <code>size</code> 0 is
 <q>null</q>, which is not considered a Reference.</p>
 """ .
 
@@ -100,11 +125,20 @@ atom:Chunk
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Chunk of memory" ;
+	atom:stringType xsd:base64Binary ;
 	lv2:documentation """
 <p>A chunk of memory with undefined contents.  This type is used to indicate a
 certain amount of space is available.  For example, output ports with a
 variably sized type are connected to a Chunk so the plugin knows the size of
 the buffer available for writing.</p>
+
+<p>The use of a Chunk should be constrained to a local scope, since
+interpreting it is impossible without context.  However, if serialised to RDF,
+a Chunk may be represented directly as an xsd:base64Binary string, e.g.:</p>
+
+<pre class="turtle-code">
+[] eg:someChunk "vu/erQ=="^^xsd:base64Binary .
+</pre>
 """ .
 
 atom:Number
@@ -116,31 +150,36 @@ atom:Int
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Number ;
 	rdfs:label "Signed 32-bit integer" ;
-	atom:cType "LV2_Atom_Int" .
+	atom:cType "LV2_Atom_Int" ;
+	atom:stringType xsd:int .
 
 atom:Long
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Number ;
 	rdfs:label "Signed 64-bit integer" ;
-	atom:cType "LV2_Atom_Long" .
+	atom:cType "LV2_Atom_Long" ;
+	atom:stringType xsd:long .
 
 atom:Float
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Number ;
 	rdfs:label "32-bit IEEE-754 floating point number" ;
-	atom:cType "LV2_Atom_Float" .
+	atom:cType "LV2_Atom_Float" ;
+	atom:stringType xsd:float .
 
 atom:Double
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Number ;
 	rdfs:label "64-bit IEEE-754 floating point number" ;
-	atom:cType "LV2_Atom_Double" .
+	atom:cType "LV2_Atom_Double" ;
+	atom:stringType xsd:double .
 
 atom:Bool
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Boolean" ;
 	atom:cType "LV2_Atom_Bool" ;
+	atom:stringType xsd:boolean ;
 	rdfs:comment "An Int where 0 is false and any other value is true." .
 
 atom:String
@@ -148,6 +187,7 @@ atom:String
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "String" ;
 	atom:cType "LV2_Atom_String" ;
+	atom:stringType xsd:string ;
 	lv2:documentation """
 <p>A UTF-8 encoded string.</p>
 
@@ -155,10 +195,9 @@ atom:String
 array of bytes (<code>uint8_t</code>) terminated with a NULL byte
 (<code>'\\0'</code>).</p>
 
-<p>This type can be used for free-form strings, but in most cases it is better to
-use atom:Literal since this supports a language tag or datatype.  Implementations
-SHOULD NOT use atom:String unless translating the string does not make sense and
-the string has no meaningful datatype.</p>
+<p>This type is for free-form strings, but SHOULD NOT be used for typed data or
+text in any language.  Use atom:Literal unless translating the string does not
+make sense and the string has no meaningful datatype.</p>
 """ .
 
 atom:Literal
@@ -169,7 +208,7 @@ atom:Literal
 	lv2:documentation """
 <p>A UTF-8 encoded string literal, with an optional datatype or language.</p>
 
-<p>This type is compatible with rdf:Literal and is capable of expressing a
+<p>This type is compatible with rdfs:Literal and is capable of expressing a
 string in any language or a value of any type.  A Literal has a
 <code>datatype</code> and <code>lang</code> followed by string data in UTF-8
 encoding.  The length of the string data in bytes is <code>size -
@@ -185,10 +224,10 @@ both.</p>
 <p>For example, a Literal can be "Hello" in English:</p>
 <pre class="c-code">
 void set_to_hello_in_english(LV2_Atom_Literal* lit) {
-     lit->atom.type = map(expand("atom:Literal"));
-     lit->atom.size = 14;
-     lit->datatype  = 0;
-     lit->lang      = map("http://lexvo.org/id/iso639-1/en");
+     lit->atom.type     = map(expand("atom:Literal"));
+     lit->atom.size     = 14;
+     lit->body.datatype = 0;
+     lit->body.lang     = map("http://lexvo.org/id/iso639-1/en");
      memcpy(LV2_ATOM_CONTENTS(LV2_Atom_Literal, lit),
             "Hello",
             sizeof("Hello"));  // Assumes enough space
@@ -198,10 +237,10 @@ void set_to_hello_in_english(LV2_Atom_Literal* lit) {
 <p>or a Turtle string:</p>
 <pre class="c-code">
 void set_to_turtle_string(LV2_Atom_Literal* lit, const char* ttl) {
-     lit->atom.type = map(expand("atom:Literal"));
-     lit->atom.size = 64;
-     lit->datatype  = map("http://www.w3.org/2008/turtle#turtle");
-     lit->lang      = 0;
+     lit->atom.type     = map(expand("atom:Literal"));
+     lit->atom.size     = 64;
+     lit->body.datatype = map("http://www.w3.org/2008/turtle#turtle");
+     lit->body.lang     = 0;
      memcpy(LV2_ATOM_CONTENTS(LV2_Atom_Literal, lit),
             ttl,
             strlen(ttl) + 1);  // Assumes enough space
@@ -223,6 +262,7 @@ atom:URI
 	a rdfs:Class ;
 	rdfs:subClassOf atom:String ;
 	rdfs:label "URI string" ;
+	atom:stringType xsd:anyURI ;
 	lv2:documentation """
 <p>A URI string.  This is identical in format to atom:String, except the string
 is a URI.  This is useful when a URI is needed but mapping is inappropriate,
@@ -269,6 +309,20 @@ struct VectorOf42Floats {
 <p>Note that it is possible to construct a valid Atom for each element
 of the vector, even by an implementation which does not understand
 <code>child_type</code>.</p>
+
+<p>If serialised to RDF, a Vector SHOULD have the form:</p>
+
+<pre class="turtle-code">
+eg:someVector
+     a atom:Vector ;
+     atom:childType atom:Int ;
+     rdf:value (
+         "1"^^xsd:int
+         "2"^^xsd:int
+         "3"^^xsd:int
+         "4"^^xsd:int
+     ) .
+</pre>
 """ .
 
 atom:Tuple
@@ -280,6 +334,19 @@ atom:Tuple
 
 <p>The body of a Tuple is simply a series of complete atoms, each aligned to
 64 bits.</p>
+
+<p>If serialised to RDF, a Tuple SHOULD have the form:</p>
+
+<pre class="turtle-code">
+eg:someVector
+     a atom:Tuple ;
+     rdf:value (
+         "1"^^xsd:int
+         "3.5"^^xsd:float
+         "etc"
+     ) .
+</pre>
+
 """ .
 
 atom:Property
@@ -295,6 +362,17 @@ and the <q>value</q> is the object.</p>
 
 <p>The <code>context</code> field can be used to specify a different context
 for each property, where this is useful.  Otherwise, it may be 0.</p>
+
+<p>Properties generally only exist as part of an atom:Object.  Accordingly,
+they will typically be represented directly as properties in RDF (see
+atom:Object).  If this is not possible, they may be expressed as partial
+reified statements, e.g.:</p>
+
+<pre class="turtle-code">
+eg:someProperty
+    rdf:predicate eg:theKey ;
+    rdf:object eg:theValue .
+</pre>
 """ .
 
 atom:Object
@@ -314,6 +392,16 @@ structure to allow for fast dispatch.</p>
 
 <p>This is an abstract Atom type, an Object is always either a atom:Resource
 or a atom:Blank.</p>
+
+<p>If serialised to RDF, an Object SHOULD be represented directly as a
+resource, e.g.:</p>
+
+<pre class="turtle-code">
+eg:someObject
+    eg:firstPropertyKey "first property value" ;
+    eg:secondPropertyKey "first loser" ;
+    eg:andSoOn "and so on" .
+</pre>
 """ .
 
 atom:Resource
@@ -348,7 +436,8 @@ atom:Sound
 <p>An atom:Vector of atom:Float which represents an audio waveform.  The format
 is the same as the buffer format for lv2:AudioPort (except the size may be
 arbitrary).  An atom:Sound inherently depends on the sample rate, which is
-assumed to be known.</p>
+assumed to be known from context.  Because of this, directly serialising an
+atom:Sound is probably a bad idea, use a standard format like WAV instead.</p>
 """ .
 
 atom:TimeUnit
@@ -383,7 +472,7 @@ atom:Frames
 	lv2:documentation """
 <p>Time in audio frames.  Converting this to absolute time depends on the
 sample rate.  When this is the stamp unit for an atom:Sequence, its events have
-int64_t time stamps (<code>event.time.frames</code>)</p>
+int64_t time stamps (<code>LV2_Atom_Event.time.frames</code>)</p>
 """ .
 
 atom:Beats
@@ -393,15 +482,16 @@ atom:Beats
 	lv2:documentation """
 <p>Time in beats.  Converting this to absolute time depends on the tempo.  When
 this is the stamp unit for an atom:Sequence, the events in that sequence have a
-<code>double</code> stamp (<code>event.time.beats</code>).</p>""" .
+<code>double</code> stamp (<code>LV2_Atom_Event.time.beats</code>).</p>
+""" .
 
 atom:Event
 	a rdfs:Class ;
 	rdfs:label "Event" ;
 	atom:cType "LV2_Atom_Event" ;
 	lv2:documentation """
-<p>An atom with a time stamp header prepended, typically an element of an
-atom:Sequence.  Note this is not an Atom type.</p>
+<p>An atom with a time stamp prefix, typically an element of an atom:Sequence.
+Note this is not an Atom type.</p>
 """ .
 
 atom:Sequence
@@ -411,6 +501,23 @@ atom:Sequence
 	atom:cType "LV2_Atom_Sequence" ;
 	lv2:documentation """
 <p>A sequence of atom:Event, i.e. a series of time-stamped Atoms.</p>
+
+<p>If serialised to RDF, a Sequence has a similar form to atom:Vector, but for
+brevity the elements may be assumed to be atom:Event, e.g.:</p>
+
+<pre class="turtle-code">
+eg:someSequence
+    a atom:Sequence ;
+    rdf:value (
+        [
+            atom:frameTime 1 ;
+            rdf:value "901A01"^^midi:MidiEvent
+        ] [
+            atom:frameTime 3 ;
+            rdf:value "902B02"^^midi:MidiEvent
+        ]
+    ) .
+</pre>
 """ .
 
 atom:AtomPort
@@ -418,7 +525,7 @@ atom:AtomPort
 	rdfs:subClassOf lv2:Port ;
 	rdfs:label "Atom Port" ;
 	lv2:documentation """
-<p>A port which contains an lv2:Atom.  Ports of this type are connected to an
+<p>A port which contains an atom:Atom.  Ports of this type are connected to an
 LV2_Atom with a type specified by atom:bufferType.</p>
 
 <p>Output ports with a variably sized type MUST be initialised by the host
