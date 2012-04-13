@@ -160,7 +160,7 @@ pprops:rangeSteps
 	rdfs:label "Number of value quantization steps" ;
 	lv2:documentation """
 <p>This value indicates into how many evenly-divided points the (control) port
-range shoujld be divided for step-wise control. This may be used for changing
+range should be divided for step-wise control. This may be used for changing
 the value with step-based controllers like arrow keys, mouse wheel, rotary
 encoders, etc.</p>
 
