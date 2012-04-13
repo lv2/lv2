@@ -23,7 +23,7 @@
 #ifndef LV2_PORT_GROUPS_H
 #define LV2_PORT_GROUPS_H
 
-#define LV2_PORT_GROUPS_URI    "http://lv2plug.in/ns/ext/port_groups"
+#define LV2_PORT_GROUPS_URI    "http://lv2plug.in/ns/ext/port-groups"
 #define LV2_PORT_GROUPS_PREFIX LV2_PORT_GROUPS_URI "#"
 
 #define LV2_PORT_GROUPS__DiscreteGroup          LV2_PORT_GROUPS_PREFIX "DiscreteGroup"
