@@ -23,12 +23,14 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "1.5" ;
-		doap:created "2012-02-19" ;
+		doap:created "2012-04-13" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add class definitions for various message types."
-			]
+			] , [
+            rdfs:label "Document how to serialise a MidiEvent to a string."
+            ]
 		]
 	] , [
 		doap:revision "1.4" ;
@@ -159,6 +161,7 @@ midi:MidiEvent
 	rdfs:label "MIDI message." ;
 	rdfs:subClassOf ev:Event ,
 		atom:Atom ;
+	atom:stringType xsd:hexBinary ;
 	lv2:documentation """
 <p>A single raw MIDI message (i.e. a sequence of bytes).</p>
 
@@ -181,6 +184,13 @@ restrictions to simplify handling:</p>
   Where messages are communicated, the writer is responsible for writing valid
   messages, and the reader may assume that all events are valid.</li>
 </ul>
+
+<p>If a midi:MidiEvent is serialised to a string, the format should be
+xsd:hexBinary, e.g. (in Turtle notation):</p>
+
+<pre class="turtle-code">
+[] eg:someEvent "901A01"^^midi:MidiEvent .
+</pre>
 """ .
 
 midi:NoteOff
