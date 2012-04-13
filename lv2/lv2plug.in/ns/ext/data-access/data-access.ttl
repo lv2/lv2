@@ -9,6 +9,7 @@
 
 <http://lv2plug.in/ns/ext/data-access>
 	a lv2:Specification ,
+		lv2:Feature ,
 		doap:Project ;
 	rdfs:seeAlso <data-access.h> ,
 		<../../meta/meta.ttl> ;
