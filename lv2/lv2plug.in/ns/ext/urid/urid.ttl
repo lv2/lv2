@@ -13,8 +13,18 @@
 	doap:name "LV2 URID" ;
 	doap:shortdesc "Features for mapping URIs to and from integers." ;
 	doap:release [
+		doap:revision "1.1" ;
+		doap:created "2012-04-13" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add feature struct names."
+			]
+		]
+	] , [
 		doap:revision "1.0" ;
 		doap:created "2011-11-21" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-urid-1.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
@@ -35,8 +45,9 @@ of RDF but with the performance of integers.</p>
 
 <p>This extension is intended as an improved and simplified replacement for the
 <a href="http://lv2plug.in/ns/ext/uri-map">uri-map</a> extension, since the
-<q>map</q> context parameter has been found problematic.  New implementations
-are strongly encouraged to use this extension for URI mapping.</p>
+<q>map</q> context parameter has been found problematic.  This extension is
+functionally equivalent to the uri-map extension with a NULL context.  New
+implementations are encouraged to use this extension for URI mapping.</p>
 """ .
 
 urid:map
