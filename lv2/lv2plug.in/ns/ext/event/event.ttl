@@ -22,6 +22,8 @@
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Fix bug in lv2_event_reserve()."
+			] , [
+				rdfs:label "Fix incorrect ranges of some properties."
 			]
 		]
 	] , [
@@ -139,7 +141,7 @@ event types whether or not this property is present.
 ev:supportsEvent
 	a rdf:Property ;
 	rdfs:domain lv2:Port ;
-	rdfs:range ev:Event ;
+	rdfs:range rdfs:Class ;
 	rdfs:label "Supports event type" ;
 	rdfs:comment """
 Indicates that this port supports or "understands" a certain event type.
@@ -172,7 +174,7 @@ connecting an input, but this property should be set whenever it applies.
 ev:supportsTimeStamp
 	a rdf:Property ;
 	rdfs:domain lv2:Port ;
-	rdfs:range ev:TimeStamp ;
+	rdfs:range rdfs:Class ;
 	rdfs:label "Supports time stamp type" ;
 	rdfs:comment """
 Indicates that this port supports or "understands" a certain time stamp type.
@@ -183,7 +185,7 @@ event buffer with a time stamp type that isn't supported by the port.
 ev:generatesTimeStamp
 	a rdf:Property ;
 	rdfs:domain lv2:Port ;
-	rdfs:range ev:TimeStamp ;
+	rdfs:range rdfs:Class ;
 	rdfs:label "Outputs time stamp type" ;
 	rdfs:comment """
 Indicates that this port may output a certain time stamp type, regardless of
