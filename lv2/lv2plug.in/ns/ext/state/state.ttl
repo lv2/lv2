@@ -23,7 +23,6 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
-
 <p>This extension defines a simple mechanism which allows hosts to save and
 restore a plugin instance's state.  The goal is for an instance's state to be
 <em>completely</em> described by port values (as with all LV2 plugins) and a
