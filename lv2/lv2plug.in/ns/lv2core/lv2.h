@@ -37,6 +37,7 @@
 #define LV2_CORE__AnalyserPlugin     LV2_CORE_PREFIX "AnalyserPlugin"
 #define LV2_CORE__AudioPort          LV2_CORE_PREFIX "AudioPort"
 #define LV2_CORE__BandpassPlugin     LV2_CORE_PREFIX "BandpassPlugin"
+#define LV2_CORE__CVPort             LV2_CORE_PREFIX "CVPort"
 #define LV2_CORE__ChorusPlugin       LV2_CORE_PREFIX "ChorusPlugin"
 #define LV2_CORE__CombPlugin         LV2_CORE_PREFIX "CombPlugin"
 #define LV2_CORE__CompressorPlugin   LV2_CORE_PREFIX "CompressorPlugin"

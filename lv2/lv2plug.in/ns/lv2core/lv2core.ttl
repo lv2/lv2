@@ -263,6 +263,23 @@ lv2:AudioPort
 with elements of C type <code>float</code>.</p>
 """ .
 
+lv2:CVPort
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf lv2:Port ;
+	rdfs:label "CV Port" ;
+	lv2:documentation """
+<p>Ports of this type have the same buffer format as an lv2:AudioPort, except
+the buffer represents audio-rate control data rather than audio.  Like an
+lv2:ControlPort, a CVPort SHOULD have properties describing its value
+(e.g. lv2:minimum, lv2:maximum, and lv2:default), and may be presented to the
+user as a control.</p>
+
+<p>It is generally safe to connect an audio output to a CV input, but not vice
+versa.  Hosts SHOULD take care to prevent data from a CVPort port from being
+used as audio.</p>
+""" .
+
 lv2:port
 	a rdf:Property ,
 		owl:ObjectProperty ;

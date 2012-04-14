@@ -16,8 +16,8 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "6.7" ;
-		doap:created "2012-03-15" ;
+		doap:revision "6.9" ;
+		doap:created "2012-04-13" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
@@ -30,6 +30,8 @@
 				rdfs:label "Relax the range of lv2:index so it can be used for things other than ports."
 			] , [
 				rdfs:label "Remove lv2:Resource, which turned out to be meaningless."
+			] , [
+				rdfs:label "Add lv2:CVPort."
 			]
 		]
 	] , [
