@@ -93,7 +93,6 @@
 #define LV2_CORE__extensionData      LV2_CORE_PREFIX "extensionData"
 #define LV2_CORE__freeWheeling       LV2_CORE_PREFIX "freeWheeling"
 #define LV2_CORE__hardRTCapable      LV2_CORE_PREFIX "hardRTCapable"
-#define LV2_CORE__hasParameter       LV2_CORE_PREFIX "hasParameter"
 #define LV2_CORE__inPlaceBroken      LV2_CORE_PREFIX "inPlaceBroken"
 #define LV2_CORE__index              LV2_CORE_PREFIX "index"
 #define LV2_CORE__integer            LV2_CORE_PREFIX "integer"

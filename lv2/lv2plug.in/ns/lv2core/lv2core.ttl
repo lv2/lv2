@@ -506,20 +506,6 @@ with lv2:designation.  Other methods, such as setting dynamic parameters via
 messages, are possible but not defined here.</p>
 """ .
 
-lv2:hasParameter
-	a rdf:Property ,
-		owl:ObjectProperty ;
-	rdfs:label "has parameter" ;
-	lv2:documentation """
-<p>Indicates that a specific parameter is supported.  This predicate is to
-advertise that a plugin supports a parameter in some way other than a port
-value, such as a message interface.  It is not necessary use for control port
-parameters, simply use lv2:designation on the port for that.</p>
-
-<p>This property may be used to indicate any resource has a parameter, it is
-not restricted to plugins.</p>
-""" .
-
 lv2:designation
 	a rdf:Property ,
 		owl:ObjectProperty ,
