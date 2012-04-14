@@ -20,10 +20,10 @@ messages with an API much like the standard C printf functions.  This allows,
 for example, plugin logs to be nicely presented to the user in a graphical user
 interface.</p>
 
-<p>Different log <q>levels</q> (e.g. <q>error</q> or <q>information</q>) are
-defined by URI and passed as an LV2_URID.  Thus, the possible number of log
-levels is unlimited, but implementations SHOULD use the levels defined in this
-extension unless they have a special reason to do otherwise.</p>
+<p>Different log levels (e.g. <q>error</q> or <q>information</q>) are defined
+by URI and passed as an LV2_URID.  This document defines the typical levels
+which should be sufficient, but implementations may define and use additional
+levels to suit their needs.</p>
 """ .
 
 log:Entry

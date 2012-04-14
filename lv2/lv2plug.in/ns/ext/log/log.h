@@ -59,7 +59,7 @@ typedef struct _LV2_Log {
 	/**
 	   Opaque pointer to host data.
 
-	   This MUST be passed to methods in this struct henever they are called.
+	   This MUST be passed to methods in this struct whenever they are called.
 	   Otherwise, it must not be interpreted in any way.
 	*/
 	LV2_Log_Handle handle;
@@ -67,10 +67,10 @@ typedef struct _LV2_Log {
 	/**
 	   Log a message, passing format parameters directly.
 
-	   The API of this function matches that of the standard C printf
-	   function, except for the addition of the first two parameters.  This
-	   function may be called from any non-realtime context, or from any
-	   context if @p type is @ref LV2_LOG__Trace.
+	   The API of this function matches that of the standard C printf function,
+	   except for the addition of the first two parameters.  This function may
+	   be called from any non-realtime context, or from any context if @p type
+	   is @ref LV2_LOG__Trace.
 	*/
 	LV2_LOG_FUNC(3, 4)
 	int (*printf)(LV2_Log_Handle handle,
