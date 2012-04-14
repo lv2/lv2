@@ -1,13 +1,14 @@
-@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
-@prefix dcs:  <http://ontologi.es/doap-changeset#> .
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix dcs:   <http://ontologi.es/doap-changeset#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/atom>
 	a lv2:Specification ;
@@ -440,11 +441,6 @@ assumed to be known from context.  Because of this, directly serialising an
 atom:Sound is probably a bad idea, use a standard format like WAV instead.</p>
 """ .
 
-atom:TimeUnit
-	a rdfs:Class ;
-	rdfs:label "Time Unit" ;
-	lv2:documentation "<p>A unit for atom:Event time stamps.</p>" .
-
 atom:frameTime
 	a rdf:Property ,
 		owl:DatatypeProperty ,
@@ -465,26 +461,6 @@ atom:beatTime
 <p>Time stamp in beats.  Typically used for events.</p>
 """ .
 
-atom:Frames
-	a rdfs:Class ;
-	rdfs:subClassOf atom:TimeUnit ;
-	rdfs:label "Frames" ;
-	lv2:documentation """
-<p>Time in audio frames.  Converting this to absolute time depends on the
-sample rate.  When this is the stamp unit for an atom:Sequence, its events have
-int64_t time stamps (<code>LV2_Atom_Event.time.frames</code>)</p>
-""" .
-
-atom:Beats
-	a rdfs:Class ;
-	rdfs:subClassOf atom:TimeUnit ;
-	rdfs:label "Beats" ;
-	lv2:documentation """
-<p>Time in beats.  Converting this to absolute time depends on the tempo.  When
-this is the stamp unit for an atom:Sequence, the events in that sequence have a
-<code>double</code> stamp (<code>LV2_Atom_Event.time.beats</code>).</p>
-""" .
-
 atom:Event
 	a rdfs:Class ;
 	rdfs:label "Event" ;
@@ -501,6 +477,12 @@ atom:Sequence
 	atom:cType "LV2_Atom_Sequence" ;
 	lv2:documentation """
 <p>A sequence of atom:Event, i.e. a series of time-stamped Atoms.</p>
+
+<p>LV2_Atom_Sequence_Body.unit describes the time unit for the contained atoms.
+If the unit is known from context (e.g. run() stamps are always audio frames),
+this field may be zero.  Otherwise, it SHOULD be either units:frame or
+units:beat, in which case ev.time.frames or ev.time.beats is valid,
+respectively.</p>
 
 <p>If serialised to RDF, a Sequence has a similar form to atom:Vector, but for
 brevity the elements may be assumed to be atom:Event, e.g.:</p>
