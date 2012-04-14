@@ -272,14 +272,14 @@ URIs from plain strings is often necessary, URIs MUST NOT be transmitted as
 atom:String.</p>
 
 <p>This is not strictly a URI, since UTF-8 is allowed.  Escaping and related
-issues issues are the host's responsibility.</p>
+issues are the host's responsibility.</p>
 """ .
 
 atom:URID
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Integer ID mapped from a URI" ;
-	atom:cType "LV2_Atom_ID" ;
+	atom:cType "LV2_Atom_URID" ;
 	lv2:documentation """
 <p>An unsigned 32-bit integer mapped from a URI (e.g. with LV2_URID_Map).</p>
 """ .
@@ -560,8 +560,8 @@ atom:supports
 <q>recursively</q> where collections are involved.</p>
 
 <p>In particular, this property can be used to describe which event types are
-supported or <q>understood</q> by a port.  For example, a port that receives
-MIDI events is described like so:</p>
+expected by a port.  For example, a port that receives MIDI events is described
+like so:</p>
 
 <pre class="turtle-code">
 &lt;plugin&gt;
@@ -577,7 +577,7 @@ atom:eventTransfer
 	a ui:PortProtocol ;
 	lv2:documentation """
 <p>Transfer of individual events in a port buffer.  Useful as the
-<code>format</code> for a LV2_UI_Write_Function.</p>
+<code>format</code> for a LV2UI_Write_Function.</p>
 
 <p>This protocol applies to ports which contain events, usually in an
 atom:Sequence.  The host must transfer each individual event to the recipient.
@@ -589,7 +589,7 @@ atom:atomTransfer
 	a ui:PortProtocol ;
 	lv2:documentation """
 <p>Transfer of the complete atom in a port buffer.  Useful as the
-<code>format</code> for a LV2_UI_Write_Function.</p>
+<code>format</code> for a LV2UI_Write_Function.</p>
 
 <p>This protocol applies to atom ports.  The host must transfer the complete
 atom contained in the port, including header.</p>
