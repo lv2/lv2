@@ -285,6 +285,26 @@ lv2:port
 	rdfs:label "port" ;
 	rdfs:comment "Relates a Plugin to the Ports it contains" .
 
+lv2:project
+	a rdf:Property ;
+	rdfs:range doap:Project ;
+	rdfs:label "project" ;
+	lv2:documentation """
+<p>The project this is a component of.</p>
+
+<p>This property provides a way to group plugins and/or related resources.  A
+project may have useful metadata common to all plugins (such as homepage,
+author, version history) which would be wasteful to list separately for each
+plugin.</p>
+
+<p>Grouping via projects also allows users to find plugins in hosts by project,
+which is often how they are remembered.  For this reason, a project that
+contains plugins SHOULD always have a rdfs:label.  It is also a good idea for
+each plugin and the project itself to have an lv2:symbol property, which allows
+nice quasi-global identifiers for plugins, e.g. <q>myproj.superamp</q> which
+can be useful for display or fast user entry.</p>
+""" .
+
 lv2:minorVersion
 	a rdf:Property ,
 		owl:DatatypeProperty ;
