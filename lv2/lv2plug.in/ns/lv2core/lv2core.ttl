@@ -134,9 +134,6 @@ ports or otherwise mimic the structure of a Plugin (e.g. a preset), since
 hosts and other tools already <q>understand</q> this structure.</p>
 """ .
 
-doap:name
-	a owl:DatatypeProperty .
-
 lv2:Plugin
 	a rdfs:Class ,
 		owl:Class ;
