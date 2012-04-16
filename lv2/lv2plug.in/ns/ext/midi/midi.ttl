@@ -68,8 +68,8 @@
 		]
 	] ;
 	lv2:documentation """
-<p>This extension defines a data type for a MIDI message, midi:MidiEvent, which
-is normalised for fast and convenient real-time processing.  MIDI is the
+<p>This specification defines a data type for a MIDI message, midi:MidiEvent,
+which is normalised for fast and convenient real-time processing.  MIDI is the
 <q>Musical Instrument Digital Interface</q>, a ubiquitous binary standard for
 controlling digital music devices.</p>
 
@@ -79,12 +79,10 @@ an integer and used as the type of an LV2 <a
 href="http://lv2plug.in/ns/ext/atom#Atom">Atom</a> or <a
 href="http://lv2plug.in/ns/ext/event#Event">Event</a>.</p>
 
-<p>This specification also defines a complete machine readable description of
-the MIDI standard (except for standard controller numbers).  These descriptions
-are detailed enough to express any MIDI message in RDF.  Message types are
-described down to the byte level, so all the information required to convert
-between binary MIDI and RDF MIDI is present.  This specification thus serves as
-both a human and machine readable description of the MIDI specification.</p>
+<p>This specification also defines a complete human and machine readable
+description of the MIDI standard (except for standard controller numbers).
+These descriptions are detailed enough to express any MIDI message as
+properties.</p>
 """ .
 
 midi:ActiveSense

@@ -9,7 +9,7 @@
 	a owl:Ontology ;
 	owl:imports <http://lv2plug.in/ns/lv2core> ;
 	lv2:documentation """
-<p>This extension defines a number of units for use in audio processing.</p>
+<p>This vocabulary defines a number of units for use in audio processing.</p>
 
 <p>For example, to say that a gain port's value is in decibels (units:db)</p>
 <pre class="turtle-code">

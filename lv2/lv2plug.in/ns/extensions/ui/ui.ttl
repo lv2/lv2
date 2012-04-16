@@ -44,20 +44,15 @@ the original plugin bundle.</p>
 <p>Note that the process that loads the shared object file containing the UI
 code and the process that loads the shared object file containing the actual
 plugin implementation are not necessarily the same process (and not even
-necessarily on the same machine).  This means that plugin and UI code can
-<strong>not</strong> use singletons and global variables and expect them to
-refer to the same objects in the UI and the actual plugin. The function
-callback interface defined in this header is the only method of communication
-between UIs and plugin instances (extensions may define more, though this is
-discouraged unless absolutely necessary since the significant benefits of
-network transparency and serialisability are lost).</p>
+necessarily on the same machine).  This means that plugin and UI code MUST NOT
+use singletons and global variables and expect them to refer to the same
+objects in the UI and the actual plugin. The function callback interface
+defined in this header is the only method of communication between UIs and
+plugin instances (extensions may define more, though this is discouraged unless
+absolutely necessary since the significant benefits of network transparency and
+serialisability are lost).</p>
 
-<p>Since the LV2 specification itself allows for extensions that may add new
-functionality that could be useful to control with a UI, this extension allows
-for meta-extensions that can extend the interface between the UI and the
-host. These extensions mirror the extensions used for plugins - there are
-required and optional "features" that you declare in the RDF data for the
-UI:</p>
+<p>UI functionality may be extended via features, much like plugins:</p>
 
 <pre class="turtle-code">
 &lt;http://my.pluginui&gt; lv2:requiredFeature &lt;http://my.feature&gt; .
@@ -68,24 +63,17 @@ UI:</p>
 those of lv2:Plugin instances: if a UI declares a feature as required, the host
 is NOT allowed to load it unless it supports that feature; and if it does
 support a feature, it MUST pass an appropriate LV2_Feature struct to the UI's
-instantiate() method.  These features may be used to specify how to pass
-specific types of data between the UI and the plugin port buffers (see
-LV2UI_Write_Function for details).</p>
+instantiate() method.  This extension defines several standard features for
+common functionality.</p>
 
-<p>UIs written to this specification do not need to be threadsafe - the
-functions defined below may only be called in the same thread the UI main loop
-is running in.</p>
+<p>UIs written to this specification do not need to be thread-safe.  All
+functions may only be called in the <q>UI thread</q>.  There is only one UI
+thread (for toolkits, the one the UI main loop runs in).  There is no
+requirement that a <q>UI</q> actually be a graphical widget.</p>
 
-<p>Note that this UI extension is NOT a lv2:Feature. There is no way for a
-plugin to know whether the host that loads it supports UIs or not, and the
-plugin must always work without the UI (although it may be rather useless
-unless it has been configured using the UI in a previous session).  From the
-plugin perspective, control from a UI is the same as control from anywhere else
-(e.g. the host, the user): via ports.</p>
-
-<p>A UI does not have to be a graphical widget, it could just as well be a
-server listening for OSC input or an interface to some sort of hardware device,
-depending on the RDF class of the UI.</p>
+<p>Note that UIs are completely separate from plugins.  From the plugin's
+perspective, control from a UI is indistinguishable from any other control, as
+it all occcurs via ports.</p>
 """ .
 
 ui:UI

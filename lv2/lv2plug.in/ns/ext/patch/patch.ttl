@@ -21,40 +21,35 @@
 	] ;
 	doap:shortdesc "Messages for accessing and manipulating properties." ;
 	lv2:documentation """
-<p>This extension defines messages which can be used to access and manipulate
-property-based data.  It is designed to provide a powerful dynamic control
-interface for LV2 plugins, but is useful for RDF-like systems in general.</p>
+<p>This vocabulary defines messages which can be used to access and manipulate
+properties.  It is designed to provide a dynamic control interface for LV2
+plugins, but is useful in many contexts.</p>
 
-<p>The main feature of this design is that requests and responses are
-themselves completely described in RDF.  Thus, the complete <q>protocol</q> can
-be expressed wherever RDF can without imposing additional implementation
-burdens like a new syntax or binary formats.  In particular, messages can be
-serialised in Turtle, or as an <a
-href="http://lv2plug.in/ns/ext/atom#Object">LV2 Object</a>.</p>
+<p>The main feature of this design is that the messages themselves are
+described in the same format as the data they work with.  In particular,
+messages can be serialised as an <a
+href="http://lv2plug.in/ns/ext/atom#Object">LV2 Object</a> or in Turtle (or any
+other RDF serialisation).</p>
 
-<p>This set of patch types is deliberately small to avoid an explosion of
-messages that all implementations would have to explicitly support.  Instead,
-the idea is to achieve control via manipulating properties rather than defining
-custom commands.  However, this is conceptual; there is no requirement that the
-receiver actually implement a store of resources with properties.</p>
+<p>The idea behind using a property-based interface for control is to prevent
+an an explosion of message types.  Instead of a custom message for each action,
+control is achieved via manipulating properties (which are likely already
+defined for other reasons).  Note, however, that this is purely conceptual;
+there is no requirement that the receiver actually implement a store of
+resources with properties.</p>
 
 <p>For example, consider an object that can blink.  Rather than define a
 specific interface to control this (e.g. <code>obj.start_blinking();
-obj.stop_blinking()</code>), set a <q>blinking</q> property to true or false to
-achieve the desired behaviour.  One benefit of this approach is that a
-persistent state model is available <q>for free</q>: simply serialise the
-<q>blinking</q> property.</p>
+obj.stop_blinking()</code>), set a <q>blinking</q> property to true or false
+(e.g. <code>obj.set(blinking, true)</code>) to achieve the desired behaviour.
+One benefit of this approach is that a persistent state model is available
+<q>for free</q>: simply serialise the <q>blinking</q> property.</p>
 
-<p>Because changes are described in terms of properties, important
-functionality like undo stacks or revision control are simple to implement
-generically.  Accordingly, plugins are strongly encouraged to use these
-property-based messages rather than defining custom methods for every action
-they require (or worse, defining entirely new formats for messages).</p>
-
-<p>These methods are deliberately very similar to HTTP methods, but defined
-specifically for property-based resources.  The <q>properties</q> used here are
-RDF properties, thus predicates from any of the countless pre-existing
-vocabularies may be used.</p>
+<p>This specification is strictly metadata and does not define any binary
+mechanism, though it can be completely expressed by standard types in the <a
+href="http://lv2plug.in/ns/ext/atom">LV2 Atom</a> extension.  Thus, hosts can
+be expected to be capable of transmitting it between plugins, or between a
+plugin and its UI, making it a good choice for advanced plugin control.</p>
 """ .
 
 patch:Ack
@@ -141,7 +136,7 @@ patch:Insert
 	rdfs:label "Insert" ;
 	rdfs:subClassOf [
 		a owl:Restriction ;
-		owl:maxCardinality 1 ;
+		owl:cardinality 1 ;
 		owl:onProperty patch:subject
 	] ;
 	lv2:documentation """
@@ -161,7 +156,7 @@ patch:Move
 	rdfs:label "Move" ;
 	rdfs:subClassOf [
 		a owl:Restriction ;
-		owl:maxCardinality 1 ;
+		owl:cardinality 1 ;
 		owl:onProperty patch:subject
 	] , [
 		a owl:Restriction ;
@@ -182,14 +177,6 @@ patch:Patch
 		a owl:Restriction ;
 		owl:minCardinality 1 ;
 		owl:onProperty patch:subject
-	] , [
-		a owl:Restriction ;
-		owl:maxCardinality 1 ;
-		owl:onProperty patch:add
-	] , [
-		a owl:Restriction ;
-		owl:maxCardinality 1 ;
-		owl:onProperty patch:remove
 	] ;
 	lv2:documentation """
 <p>A method for modifying the properties of an object.</p>
@@ -221,7 +208,7 @@ patch:Put
 	rdfs:label "Put" ;
 	rdfs:subClassOf [
 		a owl:Restriction ;
-		owl:maxCardinality 1 ;
+		owl:cardinality 1 ;
 		owl:onProperty patch:subject
 	] ;
 	lv2:documentation """

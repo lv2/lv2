@@ -34,12 +34,11 @@ on a plugin with a single identifier and no context.
 """
 	] ;
 	rdfs:comment """
-A grouping of ports (or any other means of signal transmission) that should
-logically be considered a single "stream", e.g. two audio ports in a group may
-form a stereo stream.  In order to avoid the need to define large numbers of
-identical group definitions, a group definition may be shared.  For example, a
-plugin collection may define a single URI for a pg:StereoGroup with the symbol
-"input" and use it in many plugins.
+A set of ports/channels/controls/etc that are are logically grouped together,
+e.g. two audio ports in a group may form a stereo stream.  In order to avoid
+the need to define large numbers of identical group definitions, a group
+definition may be shared.  For example, a plugin collection may define a single
+URI for a pg:StereoGroup with the symbol "input" and use it in many plugins.
 """ .
 
 pg:InputGroup
@@ -59,11 +58,6 @@ pg:Element
 	rdfs:label "Element" ;
 	rdfs:comment "An ordered element of a group." ;
 	rdfs:subClassOf [
-		a owl:Restriction ;
-		owl:onProperty lv2:index ;
-		owl:maxCardinality 1 ;
-		rdfs:comment "An element has at most one lv2:index."
-	] , [
 		a owl:Restriction ;
 		owl:onProperty lv2:designation ;
 		owl:cardinality 1 ;
@@ -106,7 +100,7 @@ Indicates that this group is a child of another group.  This property has no
 meaning with respect to plugin execution, but the host may find this
 information useful (e.g. to provide a compact user interface).  Note that being
 a sub-group does not relax the restriction that the group MUST have a unique
-symbol.
+symbol with respect to the plugin.
 """ .
 
 pg:source

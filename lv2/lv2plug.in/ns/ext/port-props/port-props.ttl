@@ -19,7 +19,7 @@
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:developer <http://lv2plug.in/ns/meta#kfoltman> ;
 	lv2:documentation """
-<p>This extension defines various properties for plugin ports, which can be
+<p>This vocabulary defines various properties for plugin ports, which can be
 used to better describe how a plugin can be controlled.  Using this metadata,
 hosts can build better UIs for plugins, and provide more advanced automatic
 functionality.</p>
