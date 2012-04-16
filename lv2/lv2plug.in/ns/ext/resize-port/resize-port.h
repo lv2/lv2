@@ -20,7 +20,12 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define LV2_RESIZE_PORT_URI "http://lv2plug.in/ns/ext/resize-port"
+#define LV2_RESIZE_PORT_URI    "http://lv2plug.in/ns/ext/resize-port"
+#define LV2_RESIZE_PORT_PREFIX LV2_RESIZE_PORT_URI "#"
+
+#define LV2_RESIZE_PORT__asLargeAs   LV2_RESIZE_PORT_PREFIX "asLargeAs"
+#define LV2_RESIZE_PORT__minimumSize LV2_RESIZE_PORT_PREFIX "minimumSize"
+#define LV2_RESIZE_PORT__resize      LV2_RESIZE_PORT_PREFIX "resize"
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,31 +33,36 @@ extern "C" {
 #    include <stdbool.h>
 #endif
 
+/** A status code for state functions. */
+typedef enum {
+	LV2_RESIZE_PORT_SUCCESS      = 0,  /**< Completed successfully. */
+	LV2_RESIZE_PORT_ERR_UNKNOWN  = 1,  /**< Unknown error. */
+	LV2_RESIZE_PORT_ERR_NO_SPACE = 2   /**< Insufficient space. */
+} LV2_Resize_Port_Status;
+
 typedef void* LV2_Resize_Port_Feature_Data;
 
 typedef struct {
 	LV2_Resize_Port_Feature_Data data;
 
-	/** Resize a port buffer to at least @a size bytes.
-	 *
-	 * This function MAY return false, in which case the port buffer was
-	 * not resized and the port is still connected to the same location.
-	 * Plugins MUST gracefully handle this situation.
-	 *
-	 * This function MUST NOT be called from any context other than
-	 * the context associated with the port of the given index.
-	 *
-	 * The host MUST preserve the contents of the port buffer when
-	 * resizing.
-	 *
-	 * Plugins MAY resize a port many times in a single run callback.
-	 * Hosts SHOULD make this an inexpensive as possible (i.e. plugins
-	 * can liberally use this function in a similar way to realloc).
-	 */
-	bool (*resize_port)(LV2_Resize_Port_Feature_Data data,
-	                    uint32_t                     index,
-	                    size_t                       size);
-} LV2_Resize_Port_Feature;
+	/**
+	   Resize a port buffer to at least @a size bytes.
+	 
+	   This function MAY return an error, in which case the port buffer was not
+	   resized and the port is still connected to the same location.  Plugins
+	   MUST gracefully handle this situation.
+	 
+	   This function is in the audio threading class.
+	 
+	   The host MUST preserve the contents of the port buffer when resizing.
+	 
+	   Plugins MAY resize a port many times in a single run callback.  Hosts
+	   SHOULD make this as inexpensive as possible.
+	*/
+	LV2_Resize_Port_Status (*resize)(LV2_Resize_Port_Feature_Data data,
+	                                 uint32_t                     index,
+	                                 size_t                       size);
+} LV2_Resize_Port_Resize;
 
 #ifdef __cplusplus
 }  /* extern "C" */
