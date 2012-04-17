@@ -807,7 +807,7 @@ def specInformation(m, ns):
     global classdomains
 
     # Find the class information: Ranges, domains, and list of all names.
-    classtypes = [rdfs.Class, owl.Class]
+    classtypes = [rdfs.Class, owl.Class, rdfs.Datatype]
     classlist = []
     for onetype in classtypes:
         for classStatement in findStatements(m, None, rdf.type, onetype):
