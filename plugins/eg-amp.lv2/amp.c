@@ -56,13 +56,13 @@ connect_port(LV2_Handle instance,
 
 	switch ((PortIndex)port) {
 	case AMP_GAIN:
-		amp->gain = data;
+		amp->gain = (float*)data;
 		break;
 	case AMP_INPUT:
-		amp->input = data;
+		amp->input = (float*)data;
 		break;
 	case AMP_OUTPUT:
-		amp->output = data;
+		amp->output = (float*)data;
 		break;
 	}
 }
