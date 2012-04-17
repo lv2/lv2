@@ -21,10 +21,13 @@ def configure(conf):
     autowaf.configure(conf)
     autowaf.display_header('Amp Configuration')
 
+    if conf.env['MSVC_COMPILER']:
+        conf.env.append_unique('CFLAGS', ['-TP', '-MD'])
+    else:
+        conf.env.append_unique('CFLAGS', '-std=c99')
+
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2core', uselib_store='LV2CORE')
-
-    conf.env.append_value('CFLAGS', '-std=c99')
 
     # Set env['pluginlib_PATTERN']
     pat = conf.env['cshlib_PATTERN']
@@ -63,7 +66,7 @@ def build(bld):
     includes = None
     if autowaf.is_child:
         includes = '../..'
-    
+
     # Build plugin library
     obj = bld(features     = 'c cshlib',
               env          = penv,
