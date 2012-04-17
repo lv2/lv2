@@ -22,6 +22,16 @@
 	doap:name "LV2 URI Map" ;
 	doap:shortdesc "A feature for mapping URIs to integers." ;
 	doap:release [
+		doap:revision "1.6" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Merge with unified LV2 package."
+			]
+		]
+	] , [
 		doap:revision "1.4" ;
 		doap:created "2011-11-21" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;

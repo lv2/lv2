@@ -12,14 +12,17 @@
 	doap:homepage <http://lv2plug.in/ns/extensions/units> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:release [
-		doap:revision "5.5" ;
-		doap:created "2012-04-13" ;
+		doap:revision "5.6" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add unit for audio frames."
 			] , [
 				rdfs:label "Add header of URI defines."
+			] , [
+				rdfs:label "Merge with unified LV2 package."
 			]
 		]
 	] , [

@@ -13,12 +13,15 @@
 	doap:name "LV2 URID" ;
 	doap:shortdesc "Features for mapping URIs to and from integers." ;
 	doap:release [
-		doap:revision "1.1" ;
-		doap:created "2012-04-13" ;
+		doap:revision "1.2" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add feature struct names."
+			] , [
+				rdfs:label "Merge with unified LV2 package."
 			]
 		]
 	] , [

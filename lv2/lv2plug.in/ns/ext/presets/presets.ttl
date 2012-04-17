@@ -17,14 +17,17 @@
 	doap:created "2009-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "2.5" ;
-		doap:created "2012-04-12" ;
+		doap:revision "2.6" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add pset:preset property for describing the preset currently applied to a plugin instance."
 			] , [
 				rdfs:label "Remove pset:appliesTo property, use lv2:appliesTo instead."
+			] , [
+				rdfs:label "Merge with unified LV2 package."
 			]
 		]
 	] , [

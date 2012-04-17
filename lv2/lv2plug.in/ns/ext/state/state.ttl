@@ -14,9 +14,15 @@
 	doap:shortdesc "An interface for LV2 plugins to save and restore state." ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:release [
-		doap:revision "0.8" ;
-		doap:created "2012-03-30" ;
-		dcs:blame <http://drobilla.net/drobilla#me>
+		doap:revision "1.0" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
 	doap:created "2010-11-09" ;
 	doap:developer <http://lv2plug.in/ns/meta#paniq> ,

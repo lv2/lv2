@@ -1,3 +1,4 @@
+@prefix dcs:   <http://ontologi.es/doap-changeset#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
@@ -16,8 +17,15 @@
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:name "LV2 Patch" ;
 	doap:release [
-		doap:created "2012-02-08" ;
-		doap:revision "0.1"
+		doap:revision "1.0" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
 	doap:shortdesc "Messages for accessing and manipulating properties." ;
 	lv2:documentation """

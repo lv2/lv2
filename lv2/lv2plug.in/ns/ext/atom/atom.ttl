@@ -22,9 +22,15 @@
 	doap:created "2007-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "0.6" ;
-		doap:created "2012-02-22" ;
-		dcs:blame <http://drobilla.net/drobilla#me>
+		doap:revision "1.0" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
 	] ;
 	lv2:documentation """
 <p>This specification defines a generic container for data, called an

@@ -16,8 +16,9 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "6.9" ;
-		doap:created "2012-04-13" ;
+		doap:revision "8.0" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
@@ -32,6 +33,8 @@
 				rdfs:label "Remove lv2:Resource, which turned out to be meaningless."
 			] , [
 				rdfs:label "Add lv2:CVPort."
+			] , [
+				rdfs:label "Merge with unified LV2 package."
 			]
 		]
 	] , [

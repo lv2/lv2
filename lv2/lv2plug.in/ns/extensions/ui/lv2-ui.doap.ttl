@@ -13,8 +13,10 @@
 	doap:developer <http://lv2plug.in/ns/meta#larsl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "2.7" ;
-		doap:created "2012-03-22" ;
+		doap:revision "2.8" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add ui:parent and ui:resize."
@@ -26,6 +28,8 @@
 				rdfs:label "Add port protocols and a dynamic notification subscription mechanism, for more flexible communication, and audio port metering without control port kludges."
 			] , [
 				rdfs:label "Add touch feature to notify the host that the user has grabbed a control."
+			] , [
+				rdfs:label "Merge with unified LV2 package."
 			]
 		]
 	] , [

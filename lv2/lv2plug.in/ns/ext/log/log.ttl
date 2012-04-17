@@ -1,4 +1,5 @@
 @prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix dcs:  <http://ontologi.es/doap-changeset#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix log:  <http://lv2plug.in/ns/ext/log#> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
@@ -14,6 +15,17 @@
 	doap:shortdesc "A feature for writing log messages." ;
 	doap:created "2012-01-12" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
+	doap:release [
+		doap:revision "1.0" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
+	] ;
 	lv2:documentation """
 <p>This extension defines a feature, log:log, which allows plugins to print log
 messages with an API much like the standard C printf functions.  This allows,

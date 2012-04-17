@@ -19,7 +19,6 @@
           <th>Name</th>
           <th>Description</th>
           <th>Version</th>
-          <th>Date</th>
           <th>Status</th>
         </tr>
 @ROWS@

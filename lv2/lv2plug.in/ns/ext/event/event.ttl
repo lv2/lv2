@@ -9,6 +9,7 @@
 
 <http://lv2plug.in/ns/ext/event>
 	a lv2:Specification ;
+	owl:deprecated true ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Event" ;
 	doap:shortdesc "A port-based real-time generic event interface." ;
@@ -16,14 +17,17 @@
 		<event-helpers.h> ,
 		<../../meta/meta.ttl> ;
 	doap:release [
-		doap:revision "1.5" ;
-		doap:created "2012-04-05" ;
+		doap:revision "1.6" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Fix bug in lv2_event_reserve()."
 			] , [
 				rdfs:label "Fix incorrect ranges of some properties."
+			] , [
+				rdfs:label "Merge with unified LV2 package."
 			]
 		]
 	] , [

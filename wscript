@@ -2,7 +2,6 @@
 import datetime
 import glob
 import os
-import rdflib
 import shutil
 import subprocess
 import sys
@@ -14,7 +13,7 @@ import waflib.Scripting as Scripting
 
 # Variables for 'waf dist'
 APPNAME = 'lv2'
-VERSION = '0.6.0'
+VERSION = '1.0.0'
 
 # Mandatory variables
 top = '.'
@@ -143,7 +142,8 @@ def specgen(task):
     try:
         minor = int(model.value(ext_node, lv2.minorVersion, None))
         micro = int(model.value(ext_node, lv2.microVersion, None))
-    except Exception as e:
+    except:
+        e = sys.exc_info()[1]
         print("warning: %s: failed to find version for %s" % (bundle, ext))
 
     # Get date
@@ -196,9 +196,6 @@ def specgen(task):
         row += '<td><span style="color: red">' + version_str + '</span></td>'
     else:
         row += '<td>' + version_str + '</td>'
-
-    # Date
-    row += '<td>%s</td>' % (str(date) if date else '')
 
     # Status
     deprecated = model.value(ext_node, owl.deprecated, None)
@@ -311,6 +308,7 @@ def build(bld):
                   target = 'ns/index.html')
 
 def release(ctx):
+    import rdflib
     lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
     rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
     doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
@@ -356,12 +354,26 @@ def release(ctx):
             subprocess.call(['./waf', 'distclean'], cwd=dir)
 
 def news(ctx):
-    ctx.recurse(get_subdirs(False))
+    path = ctx.path.abspath()
+    autowaf.write_news('lv2',
+                       [os.path.join(path, 'lv2/lv2plug.in/ns/meta/meta.ttl')],
+                       'NEWS')
+
+def pre_dist(ctx):
+    # Write NEWS file in source directory
+    news(ctx)
+
+def post_dist(ctx):
+    # Delete generated NEWS file from source directory
+    try:
+        os.remove(os.path.join(ctx.path.abspath(), 'NEWS'))
+    except:
+        pass
 
 def dist(ctx):
-    ctx.recurse(get_subdirs(False), name='pre_dist')
+    ctx.recurse(['.'] + get_subdirs(False), name='pre_dist')
     ctx.archive()
-    ctx.recurse(get_subdirs(False), name='post_dist')
+    ctx.recurse(['.'] + get_subdirs(False), name='post_dist')
 
 def lint(ctx):
     for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']
