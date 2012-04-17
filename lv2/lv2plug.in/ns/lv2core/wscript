@@ -39,12 +39,6 @@ def configure(conf):
     autowaf.display_msg(conf, "LV2 bundle directory", conf.env['LV2DIR'])
     print('')
 
-def news(ctx):
-    path = ctx.path.abspath()
-    autowaf.write_news(APPNAME,
-                       glob.glob(os.path.join(path, '*.ttl')),
-                       os.path.join(path, 'NEWS'))
-
 def build(bld):
     # Header "library"
     obj = bld(export_includes = ['.'],
@@ -72,34 +66,15 @@ def build(bld):
             bld.symlink_as(os.path.join(include_dir, 'lv2core'),
                            os.path.relpath(bundle_dir, include_dir))
 
-class Dist(Scripting.Dist):
-    def execute(self):
-        "Execute but do not call archive() since dist() has already done so."
-        self.recurse([os.path.dirname(Context.g_module.root_path)])
-
-    def get_tar_path(self, node):
-        "Resolve symbolic links to avoid broken links in tarball."
-        return os.path.realpath(node.abspath())
-
-class DistCheck(Dist, Scripting.DistCheck):
-    def execute(self):
-        Dist.execute(self)
-        self.check()
-    
-    def archive(self):
-        Dist.archive(self)
+def news(ctx):
+    path = ctx.path.abspath()
+    autowaf.write_news(APPNAME,
+                       glob.glob(os.path.join(path, '*.ttl')),
+                       os.path.join(path, 'NEWS'))
 
 def pre_dist(ctx):
     # Write NEWS file in source directory
     news(ctx)
-
-def dist(ctx):
-    pre_dist(ctx)
-    ctx.archive()
-    post_dist(ctx)
-
-def distcheck(ctx):
-    dist(ctx)
 
 def post_dist(ctx):
     # Delete generated NEWS file
