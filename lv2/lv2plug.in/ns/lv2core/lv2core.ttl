@@ -299,7 +299,7 @@ plugin.</p>
 
 <p>Grouping via projects also allows users to find plugins in hosts by project,
 which is often how they are remembered.  For this reason, a project that
-contains plugins SHOULD always have a rdfs:label.  It is also a good idea for
+contains plugins SHOULD always have a doap:name.  It is also a good idea for
 each plugin and the project itself to have an lv2:symbol property, which allows
 nice quasi-global identifiers for plugins, e.g. <q>myproj.superamp</q> which
 can be useful for display or fast user entry.</p>
