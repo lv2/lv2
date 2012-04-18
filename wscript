@@ -7,6 +7,7 @@ import subprocess
 import sys
 
 from waflib.extras import autowaf as autowaf
+import waflib.Context as Context
 import waflib.Logs as Logs
 import waflib.Options as Options
 import waflib.Scripting as Scripting
@@ -353,6 +354,30 @@ def release(ctx):
 
             subprocess.call(['./waf', 'distclean'], cwd=dir)
 
+def lint(ctx):
+    for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']
+              + glob.glob('lv2/lv2plug.in/ns/ext/*/*.h')
+              + glob.glob('lv2/lv2plug.in/ns/extensions/*/*.h')
+              + glob.glob('plugins/*/*.c') + glob.glob('plugins/*.*.h')):
+        subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-build/header_guard,-readability/casting,-build/include,-runtime/sizeof ' + i, shell=True)
+
+class Dist(Scripting.Dist):
+    def execute(self):
+        "Execute but do not call archive() since dist() has already done so."
+        self.recurse([os.path.dirname(Context.g_module.root_path)])
+
+    def get_tar_path(self, node):
+        "Resolve symbolic links to avoid broken links in tarball."
+        return os.path.realpath(node.abspath())
+
+class DistCheck(Dist, Scripting.DistCheck):
+    def execute(self):
+        Dist.execute(self)
+        self.check()
+    
+    def archive(self):
+        Dist.archive(self)
+
 def news(ctx):
     path = ctx.path.abspath()
     autowaf.write_news('lv2',
@@ -374,10 +399,3 @@ def dist(ctx):
     ctx.recurse(['.'] + get_subdirs(False), name='pre_dist')
     ctx.archive()
     ctx.recurse(['.'] + get_subdirs(False), name='post_dist')
-
-def lint(ctx):
-    for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']
-              + glob.glob('lv2/lv2plug.in/ns/ext/*/*.h')
-              + glob.glob('lv2/lv2plug.in/ns/extensions/*/*.h')
-              + glob.glob('plugins/*/*.c') + glob.glob('plugins/*.*.h')):
-        subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-build/header_guard,-readability/casting,-build/include,-runtime/sizeof ' + i, shell=True)
