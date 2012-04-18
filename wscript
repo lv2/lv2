@@ -308,52 +308,6 @@ def build(bld):
                   source = ['lv2/lv2plug.in/ns/index.html.in'] + index_files,
                   target = 'ns/index.html')
 
-def release(ctx):
-    import rdflib
-    lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
-    rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-    doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
-
-    try:
-        shutil.rmtree('build/spec')
-    except:
-        pass
-
-    os.makedirs('build/spec')
-
-    manifests = glob.glob('lv2/lv2plug.in/ns/lv2core/manifest.ttl')
-    manifests += glob.glob('lv2/lv2plug.in/ns/*/*/manifest.ttl')
-    for manifest in manifests:
-        dir = os.path.dirname(manifest)
-        name = os.path.basename(dir).replace('.lv2', '')
-
-        m = rdflib.ConjunctiveGraph()
-        m.parse(manifest, format='n3')
-
-        uri = minor = micro = None
-        try:
-            spec  = m.value(None, rdf.type, lv2.Specification)
-            uri   = str(spec)
-            minor = int(m.value(spec, lv2.minorVersion, None))
-            micro = int(m.value(spec, lv2.microVersion, None))
-        except:
-            e = sys.exc_info()[1]
-            Logs.error('error: %s: %s' % (manifest, str(e)))
-            continue
-
-        if minor != 0 and micro % 2 == 0:
-            autowaf.display_header('\nBuilding %s Release\n' % dir)
-            try:
-                subprocess.call(
-                    ['./waf', 'distclean', 'configure', 'build', 'distcheck'],
-                    cwd=dir)
-                for i in glob.glob(dir + '/*.tar.bz2'):
-                    shutil.move(i, 'build/spec')
-            except:
-                Logs.error('Error building %s release' % (name, e))
-
-            subprocess.call(['./waf', 'distclean'], cwd=dir)
-
 def lint(ctx):
     for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']
               + glob.glob('lv2/lv2plug.in/ns/ext/*/*.h')
