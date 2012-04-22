@@ -13,6 +13,15 @@
 	doap:name "LV2 URID" ;
 	doap:shortdesc "Features for mapping URIs to and from integers." ;
 	doap:release [
+		doap:revision "1.3" ;
+		doap:created "2012-04-22" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix typo in urid:unmap documentation."
+			]
+		]
+	] , [
 		doap:revision "1.2" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
@@ -66,6 +75,6 @@ urid:unmap
 	lv2:documentation """
 <p>A feature which is used to unmap URIs previously mapped to integers by
 urid:map.  To support this feature, the host must pass an LV2_Feature to
-LV2_Descriptor::instantiate() with URI LV2_URID__unmapl and data pointed to
+LV2_Descriptor::instantiate() with URI LV2_URID__unmap and data pointed to
 an instance of LV2_URID_Unmap.</p>
 """ .
