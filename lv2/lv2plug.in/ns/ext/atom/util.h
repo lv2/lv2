@@ -204,10 +204,11 @@ lv2_atom_object_is_end(const LV2_Atom_Object_Body* body,
 static inline LV2_Atom_Property_Body*
 lv2_atom_object_next(const LV2_Atom_Property_Body* i)
 {
-	const LV2_Atom* const value = (LV2_Atom*)((uint8_t*)i + sizeof(i));
-	return (LV2_Atom_Property_Body*)((uint8_t*)i
-	                              + sizeof(LV2_Atom_Property_Body)
-	                              + lv2_atom_pad_size(value->size));
+	const LV2_Atom* const value = (LV2_Atom*)(
+		(uint8_t*)i + 2 * sizeof(uint32_t));
+	return (LV2_Atom_Property_Body*)(
+		(uint8_t*)i + lv2_atom_pad_size(sizeof(LV2_Atom_Property_Body)
+		                                + value->size));
 }
 
 /**
