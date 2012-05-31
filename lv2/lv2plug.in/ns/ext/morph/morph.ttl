@@ -1,0 +1,82 @@
+@prefix dcs:   <http://ontologi.es/doap-changeset#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix morph: <http://lv2plug.in/ns/ext/morph#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+<http://lv2plug.in/ns/ext/morph>
+	a lv2:Specification ,
+		lv2:Feature ;
+	rdfs:seeAlso <morph.h> ,
+		<../../meta/meta.ttl> ;
+	doap:name "LV2 Morph Port Extension" ;
+	doap:shortdesc "Ports that can dynamically change type." ;
+	doap:created "2012-05-22" ;
+	doap:developer <http://drobilla.net/drobilla#me> ;
+	lv2:documentation """
+<p>This extension defines two port types: morph:MorphPort, which has a
+host-configurable type, and morph:AutoMorphPort, which may change type based on
+the type of other ports.  These ports always have a default type and work
+normally work in hosts that are unaware of this extension.  Thus, this
+extension provides a backwards compatibility mechanism which allows plugins to
+use new port types but gracefully fall back to a default type in hosts that do
+not support them.</p>
+""" .
+
+morph:MorphPort
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf lv2:Port ;
+	rdfs:label "Morph Port" ;
+	lv2:documentation """
+<p>Ports of this type MUST have another type which defines the default buffer
+format (e.g. lv2:ControlPort) but can be dynamically changed to a different
+type in hosts that support morph:interface.</p>
+
+<p>The host may change the type of a MorphPort by calling
+LV2_Morph_Port_Interface::morph_port().  If the plugin has any
+morph:AutoMorphPort ports, the host MUST check their types after changing any
+port type since they may have changed.</p>
+""" .
+
+morph:AutoMorphPort
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf lv2:Port ;
+	rdfs:label "Auto Morph Port" ;
+	lv2:documentation """
+<p>Ports of this type MUST have another type which defines the default buffer
+format (e.g. lv2:ControlPort) but may dynamically change types based on the
+configured types of any morph:MorphPort ports on the same plugin instance.</p>
+
+<p>The type of a port may only change in response to a call to
+LV2_Morph_Port_Interface::morph_port(), i.e. ports can only change type as a
+result of an explicit host request.  Whenever any port type on the instance
+changes, the host MUST check the type of all morph:AutoMorphPort ports on the
+instance before calling run() again, since they may have changed.</p>
+
+<p>This is mainly useful for outputs whose type depends on the type of
+corresponding inputs.</p>
+""" .
+
+morph:interface
+	a lv2:ExtensionData ;
+	lv2:documentation """
+<p>The interface provided by the plugin to support morph ports.  To support
+this extension, the plugin must return a LV2_Morph_Port_Interface from
+LV2_Descriptor::extension_data() when it is called with this URI
+(LV2_STATE__interface).</p> """ .
+
+morph:supportsType
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain morph:MorphPort ;
+	rdfs:label "supports type" ;
+	lv2:documentation """
+<p>Indicates that a port supports being switched to a certain type via
+morph:interface.</p>
+""" .

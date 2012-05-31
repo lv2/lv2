@@ -575,6 +575,7 @@ INPUT =  \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/event/event.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/log/log.h \
+	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/morph/morph.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/patch/patch.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
 	@LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
