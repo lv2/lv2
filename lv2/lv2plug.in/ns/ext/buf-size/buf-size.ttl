@@ -1,0 +1,92 @@
+@prefix bufsz: <http://lv2plug.in/ns/ext/buf-size#> .
+@prefix dcs:   <http://ontologi.es/doap-changeset#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+<http://lv2plug.in/ns/ext/buf-size>
+	a lv2:Specification ,
+		lv2:Feature ;
+	rdfs:seeAlso <buf-size.h> ,
+		<../../meta/meta.ttl> ;
+	doap:name "LV2 Buf Size Extension" ;
+	doap:shortdesc "Access to, and restrictions on, buffer sizes." ;
+	doap:created "2012-05-25" ;
+	doap:developer <http://drobilla.net/drobilla#me> ;
+	doap:release [
+		doap:revision "1.0" ;
+		doap:created "2012-04-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
+	] ;
+	lv2:documentation """
+<p>This extension defines a facility for plugins to get information about the
+block length (the sample_count parameter of LV2_Descriptor::run) and
+port buffer sizes, as well as several features which can be used to restrict
+the block length.</p>
+
+<p>Access to the relevant information is provided by the bufsz:access feature,
+which may be used alone.  To express restrictions on the block length,
+additional data-only features are defined: bufsz:boundedBlockLength,
+bufsz:powerOf2BlockLength, and bufsz:fixedBlockLength.  There is currently no
+facility for requiring specific values for the block length, this may be added
+in the future if need arises.</p>
+""" .
+
+bufsz:access
+	a lv2:Feature ;
+	lv2:documentation """
+<p>The feature that provides access to buffer size information.  This feature
+is the only one in this extension which carries data: to implement it the host
+passes a feature with URI LV2_BUF_SIZE__access and an LV2_Buf_Size_Feature
+for data, which provides functions the plugin can call to investigate the
+buffer size.</p>
+""" .
+
+bufsz:boundedBlockLength
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature that indicates the host will provide a minimum and maximum block
+length via LV2_Buf_Size_Feature::get_sample_count().  Plugins that copy data
+from audio inputs can require this feature to ensure they know how much space
+is required for auxilliary buffers.  Note the minimum may be zero, this feature
+is mainly useful to ensure a maximum is available.</p>
+
+<p>All hosts SHOULD support this feature, since it is simple to support and
+necessary for several relatively straightforward use cases.</p>
+""" .
+
+bufsz:fixedBlockLength
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature that indicates the host will always call LV2_Descriptor::run()
+with the same value for sample_count.  If available,
+LV2_Buf_Size_Feature::get_sample_count() must report this value for both min
+and max.</p>
+
+<p>Note that requiring this feature may severely limit the number of hosts
+capable of running the plugin.</p>
+""" .
+
+bufsz:powerOf2BlockLength
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature that indicates the host will always call LV2_Descriptor::run()
+with a power of two sample_count.  If available,
+LV2_Buf_Size_Feature::get_sample_count() must report this value for both min
+and max.  Note this feature does not guarantee the value is the same each call,
+to ensure that the plugin must require both this feature and
+bufsz:fixedBlockLength.</p>
+
+<p>Note that requiring this feature may severely limit the number of hosts
+capable of running the plugin.</p>
+""" .
