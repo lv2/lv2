@@ -1,7 +1,6 @@
 /*
-  LV2 Amp Example Plugin
-  Copyright 2006-2011 Steve Harris <steve@plugin.org.uk>,
-                      David Robillard <d@drobilla.net>
+  Copyright 2006-2011 David Robillard <d@drobilla.net>
+  Copyright 2006 Steve Harris <steve@plugin.org.uk>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +15,14 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+/**
+   @file amp.c Implementation of the LV2 Amp example plugin.
+
+   This is a basic working LV2 plugin, about as small as one can get.  It is
+   useful as a skeleton to copy to build more advanced plugins.  See lv2.h for
+   more detailed descriptions of the rules for the various functions.
+*/
+
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,18 +31,21 @@
 
 #define AMP_URI "http://lv2plug.in/plugins/eg-amp"
 
+/** Port indices. */
 typedef enum {
 	AMP_GAIN   = 0,
 	AMP_INPUT  = 1,
 	AMP_OUTPUT = 2
 } PortIndex;
 
+/** Plugin instance. */
 typedef struct {
 	float* gain;
 	float* input;
 	float* output;
 } Amp;
 
+/** Called to create a new plugin instance. */
 static LV2_Handle
 instantiate(const LV2_Descriptor*     descriptor,
             double                    rate,
@@ -47,6 +57,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	return (LV2_Handle)amp;
 }
 
+/** Called to connect a port to a buffer (audio thread, must be RT safe). */
 static void
 connect_port(LV2_Handle instance,
              uint32_t   port,
@@ -67,13 +78,16 @@ connect_port(LV2_Handle instance,
 	}
 }
 
+/** Called to initialise and prepare the instance for running. */
 static void
 activate(LV2_Handle instance)
 {
+	/* Nothing to do here in this trivial mostly stateless plugin. */
 }
 
 #define DB_CO(g) ((g) > -90.0f ? powf(10.0f, (g) * 0.05f) : 0.0f)
 
+/** Called to process a block of audio (audio thread, must be RT safe). */
 static void
 run(LV2_Handle instance, uint32_t n_samples)
 {
@@ -90,23 +104,28 @@ run(LV2_Handle instance, uint32_t n_samples)
 	}
 }
 
+/** Called when running is finished (counterpart to activate()). */
 static void
 deactivate(LV2_Handle instance)
 {
+	/* Nothing to do here in this trivial mostly stateless plugin. */
 }
 
+/** Called to destroy a plugin instance (counterpart to instantiate()). */
 static void
 cleanup(LV2_Handle instance)
 {
 	free(instance);
 }
 
+/** Called to access extension data provided by the plugin. */
 const void*
 extension_data(const char* uri)
 {
-	return NULL;
+	return NULL;  /* This plugin has no extension data. */
 }
 
+/** The LV2_Descriptor for this plugin. */
 static const LV2_Descriptor descriptor = {
 	AMP_URI,
 	instantiate,
@@ -118,6 +137,7 @@ static const LV2_Descriptor descriptor = {
 	extension_data
 };
 
+/** Entry point, the host will call this function to access descriptors. */
 LV2_SYMBOL_EXPORT
 const LV2_Descriptor*
 lv2_descriptor(uint32_t index)
