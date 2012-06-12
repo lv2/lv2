@@ -15,6 +15,11 @@
 # triples.  Turtle is a simple, terse, abbreviated syntax for RDF.
 
 # Namespace Prefixes
+#
+# Turtle files often contain many URIs.  To make this more readable, prefixes
+# can be defined.  For example, with the lv2 prefix below, instead of
+# <http://lv2plug.in/ns/lv2core#Plugin> the shorter form lv2:Plugin can be
+# used.  This is just a shorthand for URIs, the prefixes are not significant.
 
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
