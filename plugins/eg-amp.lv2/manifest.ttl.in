@@ -45,7 +45,7 @@
 # but more verbose syntax for the same data is:
 #
 # <http://lv2plug.in/plugins/eg-amp> a lv2:Plugin .
-# <http://lv2plug.in/plugins/eg-amp> lv2:binary <amp.so> ;
+# <http://lv2plug.in/plugins/eg-amp> lv2:binary <amp.so> .
 # <http://lv2plug.in/plugins/eg-amp> rdfs:seeAlso <amp.ttl> .
 #
 # Note that the documentation for a URI can often be found by visiting that URI
@@ -80,7 +80,7 @@
 #
 #    This says "there is more information about this plugin located in the file
 #    "amp.ttl".  The host will look at all such files when it needs to actually
-# use or investigate the plugin.
+#    use or investigate the plugin.
 
 # Footnotes
 #
