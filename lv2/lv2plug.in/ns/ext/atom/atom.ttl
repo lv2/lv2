@@ -29,6 +29,8 @@
 				rdfs:label "Fix implicit conversions in forge.h that are invalid in C++11."
 			] , [
 				rdfs:label "Fix lv2_atom_object_next() on 32-bit platforms."
+			] , [
+				rdfs:label "Add lv2_atom_object_body_get()."
 			]
 		]
 	] , [
