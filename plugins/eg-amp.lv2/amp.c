@@ -40,12 +40,13 @@ typedef enum {
 
 /** Plugin instance. */
 typedef struct {
+	// Port buffers
 	float* gain;
 	float* input;
 	float* output;
 } Amp;
 
-/** Called to create a new plugin instance. */
+/** Create a new plugin instance. */
 static LV2_Handle
 instantiate(const LV2_Descriptor*     descriptor,
             double                    rate,
@@ -57,7 +58,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	return (LV2_Handle)amp;
 }
 
-/** Called to connect a port to a buffer (audio thread, must be RT safe). */
+/** Connect a port to a buffer (audio thread, must be RT safe). */
 static void
 connect_port(LV2_Handle instance,
              uint32_t   port,
@@ -78,7 +79,7 @@ connect_port(LV2_Handle instance,
 	}
 }
 
-/** Called to initialise and prepare the instance for running. */
+/** Initialise and prepare the plugin instance for running. */
 static void
 activate(LV2_Handle instance)
 {
@@ -87,7 +88,7 @@ activate(LV2_Handle instance)
 
 #define DB_CO(g) ((g) > -90.0f ? powf(10.0f, (g) * 0.05f) : 0.0f)
 
-/** Called to process a block of audio (audio thread, must be RT safe). */
+/** Process a block of audio (audio thread, must be RT safe). */
 static void
 run(LV2_Handle instance, uint32_t n_samples)
 {
@@ -104,21 +105,21 @@ run(LV2_Handle instance, uint32_t n_samples)
 	}
 }
 
-/** Called when running is finished (counterpart to activate()). */
+/** Finish running (counterpart to activate()). */
 static void
 deactivate(LV2_Handle instance)
 {
 	/* Nothing to do here in this trivial mostly stateless plugin. */
 }
 
-/** Called to destroy a plugin instance (counterpart to instantiate()). */
+/** Destroy a plugin instance (counterpart to instantiate()). */
 static void
 cleanup(LV2_Handle instance)
 {
 	free(instance);
 }
 
-/** Called to access extension data provided by the plugin. */
+/** Return extension data provided by the plugin. */
 const void*
 extension_data(const char* uri)
 {

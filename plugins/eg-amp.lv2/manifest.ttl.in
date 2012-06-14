@@ -33,8 +33,13 @@
 
 # Explanation
 #
+# The token @LIB_EXT@ above is replaced by the build system (waf) by the
+# appropriate extension for the current platform (e.g. .so, .dylib, .dll),
+# which is why this file is called manifest.ttl.in and not manifest.ttl.  This
+# documentation assumes .so for simplicity.
+#
 # In short, this declares that the resource with URI
-# "http://lv2plug.in/plugins/eg-amp") is an LV2 plugin, with executable code in
+# "http://lv2plug.in/plugins/eg-amp" is an LV2 plugin, with executable code in
 # the file "amp.so" and a full description in "amp.ttl".  These paths are
 # relative to the bundle directory.
 #
@@ -46,23 +51,33 @@
 # 2 | <http://lv2plug.in/plugins/eg-amp>  | lv2:binary   | <amp.so>
 # 3 | <http://lv2plug.in/plugins/eg-amp>  | rdfs:seeAlso | <amp.ttl>
 #
-# The semicolon is used to continue the previous subject, an equivalent
+# The semicolon is used to continue the previous subject; an equivalent
 # but more verbose syntax for the same data is:
-#
-# <http://lv2plug.in/plugins/eg-amp> a lv2:Plugin .
-# <http://lv2plug.in/plugins/eg-amp> lv2:binary <amp.so> .
-# <http://lv2plug.in/plugins/eg-amp> rdfs:seeAlso <amp.ttl> .
+
+<http://lv2plug.in/plugins/eg-amp> a lv2:Plugin .
+<http://lv2plug.in/plugins/eg-amp> lv2:binary <amp.so> .
+<http://lv2plug.in/plugins/eg-amp> rdfs:seeAlso <amp.ttl> .
+
+# (Since this data is equivalent, it is safe, if pointless, to list it twice)
 #
 # Note that the documentation for a URI can often be found by visiting that URI
 # in a web browser, e.g. the documentation for lv2:binary can be found at
-# <http://lv2plug.in/ns/lv2core#binary>.  If you encounter a predicate in some
-# data which you do not understand, try this first.
+# <http://lv2plug.in/ns/lv2core#binary>.  If you encounter a URI in some data
+# which you do not understand, try this first.
 #
 # Note the URI of a plugin does NOT need to be an actual web address, it's just
 # a global identifier.  It is, however, a good idea to use an actual web
 # address if possible, since it can be used to easily access documentation,
 # downloads, etc.  Note there are compatibility rules for when the URI of a
 # plugin must be changed, see the LV2 specification[4] for details.
+#
+# AUTHORS MUST NOT CREATE URIS AT DOMAINS THEY DO NOT CONTROL WITHOUT
+# PERMISSION, AND *ESPECIALLY* MUST NOT CREATE SYNTACTICALLY INVALID URIS,
+# E.G. WHERE THE PORTION FOLLOWING "http://" IS NOT AN ACTUAL DOMAIN NAME.  If
+# you need an example URI, the domain http://example.org/ is reserved for this
+# purpose.  It is best to use web URIs, e.g. at the domain where plugins are
+# hosted for download, even if there is currently no documents hosted there.
+# If this is truly impossible, use a URN, e.g. urn:myplugs:superamp.
 #
 # A detailed explanation of each statement follows.
 #
