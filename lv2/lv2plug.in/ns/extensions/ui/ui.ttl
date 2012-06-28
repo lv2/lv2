@@ -107,7 +107,26 @@ ui:X11UI
 	rdfs:comment """
 A UI where the LV2_Widget is an X11 window ID.  Note this is actually an
 integer, i.e. the LV2_Widget is not a pointer to an X11 window ID, but should
-be itself taken as an integer value.""" .
+be itself taken as an integer value.  This is the native UI type on most POSIX
+systems.""" .
+
+ui:WindowsUI
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf ui:UI ;
+	rdfs:comment """
+A UI where the LV2_Widget is a Windows HWND window ID.  Note this is actually
+an unsigned 32-bit integer, i.e. the LV2_Widget is not a pointer to a HWND but
+should be interpreted as an HWND itself.  This is the native UI type on
+Microsoft Windows.""" .
+
+ui:CocoaUI
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf ui:UI ;
+	rdfs:comment """
+A UI where the LV2_Widget is a pointer to a NSView, the basic view type for the
+Cocoa API (formerly OpenStep).  This is the native UI type on Mac OS X.""" .
 
 ui:ui
 	a rdf:Property ;
