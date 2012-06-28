@@ -18,7 +18,7 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add ui:WindowsUI and ui:CarbonUI."
+				rdfs:label "Add ui:WindowsUI and ui:CocoaUI."
 			]
 		]
 	] , [
