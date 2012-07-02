@@ -17,6 +17,15 @@
 		<event-helpers.h> ,
 		<../../meta/meta.ttl> ;
 	doap:release [
+		doap:revision "1.7" ;
+		doap:created "2012-07-02" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Make event iterator gracefully handle optional ports."
+			]
+		]
+	] , [
 		doap:revision "1.6" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
