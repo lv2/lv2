@@ -31,6 +31,8 @@
 				rdfs:label "Fix lv2_atom_object_next() on 32-bit platforms."
 			] , [
 				rdfs:label "Add lv2_atom_object_body_get()."
+			] , [
+				rdfs:label "Fix outdated documentation in forge.h."
 			]
 		]
 	] , [
