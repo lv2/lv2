@@ -135,7 +135,7 @@ read_set_file(const SamplerURIs*     uris,
 	const LV2_Atom* file_path = NULL;
 	lv2_atom_object_get(body, uris->eg_file, &file_path, 0);
 	if (!file_path) {
-		fprintf(stderr, "Ignored set message with no file PATH.\n");
+		fprintf(stderr, "Ignored set message with no file path.\n");
 		return NULL;
 	}
 
