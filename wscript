@@ -160,8 +160,8 @@ def specgen(task):
         revision = model.value(r[2], doap.revision, None)
         this_date = model.value(r[2], doap.created, None)
         if this_date > date:
-            print("warning: revision %d.%d (%s) is not the latest release" % (
-                minor, micro, date))
+            print("warning: %s revision %d.%d (%s) is not the latest release" % (
+                ext_node, minor, micro, date))
             break
     
     # Get short description
