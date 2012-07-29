@@ -18,11 +18,13 @@
 		<../../meta/meta.ttl> ;
 	doap:release [
 		doap:revision "1.7" ;
-		doap:created "2012-07-02" ;
+		doap:created "2012-07-28" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Make event iterator gracefully handle optional ports."
+			] , [
+				rdfs:label "Use more precise domain and range for EventPort properties."
 			]
 		]
 	] , [
@@ -153,7 +155,7 @@ event types whether or not this property is present.
 
 ev:supportsEvent
 	a rdf:Property ;
-	rdfs:domain lv2:Port ;
+	rdfs:domain ev:EventPort ;
 	rdfs:range rdfs:Class ;
 	rdfs:label "Supports event type" ;
 	rdfs:comment """
@@ -174,7 +176,8 @@ ev:generic property for that port is also set.
 
 ev:inheritsEvent
 	a rdf:Property ;
-	rdfs:domain lv2:Port ;
+	rdfs:domain ev:EventPort ,
+		lv2:OutputPort ;
 	rdfs:range lv2:Port ;
 	rdfs:label "Inherits event type" ;
 	rdfs:comment """
@@ -186,7 +189,8 @@ connecting an input, but this property should be set whenever it applies.
 
 ev:supportsTimeStamp
 	a rdf:Property ;
-	rdfs:domain lv2:Port ;
+	rdfs:domain ev:EventPort ,
+		lv2:InputPort ;
 	rdfs:range rdfs:Class ;
 	rdfs:label "Supports time stamp type" ;
 	rdfs:comment """
@@ -197,7 +201,8 @@ event buffer with a time stamp type that isn't supported by the port.
 
 ev:generatesTimeStamp
 	a rdf:Property ;
-	rdfs:domain lv2:Port ;
+	rdfs:domain ev:EventPort ,
+		lv2:OutputPort ;
 	rdfs:range rdfs:Class ;
 	rdfs:label "Outputs time stamp type" ;
 	rdfs:comment """
@@ -214,7 +219,8 @@ struct, if it is non-NULL.
 
 ev:inheritsTimeStamp
 	a rdf:Property ;
-	rdfs:domain lv2:Port ;
+	rdfs:domain ev:EventPort ,
+		lv2:OutputPort ;
 	rdfs:range lv2:Port ;
 	rdfs:label "Inherits time stamp type" ;
 	rdfs:comment """
