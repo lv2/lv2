@@ -15,6 +15,15 @@
 	doap:name "LV2 Time" ;
 	doap:shortdesc "Properties for describing time." ;
 	doap:release [
+		doap:revision "1.1" ;
+		doap:created "2012-07-29" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Use consistent label style."
+			]
+		]
+	] , [
 		doap:revision "1.0" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
@@ -45,11 +54,12 @@ The meter describes how many beats are in one bar.</p>
 time:Time
 	a rdfs:Class ;
 	rdfs:subClassOf time:Position ;
-	rdfs:label "A point in time" ;
+	rdfs:label "Time" ;
 	rdfs:comment "A point in time in some unit/dimension." .
 
 time:Position
 	a rdfs:Class ;
+	rdfs:label "Position" ;
 	lv2:documentation """
 <p>A point in time and/or the speed at which time is passing.  A position is
 both a point and a speed, which precisely defines a time within a timeline.</p>
@@ -68,7 +78,7 @@ time:position
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
 	rdfs:range time:Position ;
-	rdfs:label "Position in time" .
+	rdfs:label "position" .
 
 time:barBeat
 	a rdf:Property ,
@@ -76,7 +86,7 @@ time:barBeat
 		owl:FunctionalProperty ;
 	rdfs:domain time:Time ;
 	rdfs:range xsd:float ;
-	rdfs:label "Beat within this bar" ;
+	rdfs:label "beat within bar" ;
 	rdfs:comment "The beat number within the bar, from 0 to beatsPerBar." .
 
 time:bar
@@ -85,7 +95,7 @@ time:bar
 		owl:FunctionalProperty ;
 	rdfs:domain time:Time ;
 	rdfs:range xsd:long ;
-	rdfs:label "Global position in bars" .
+	rdfs:label "bar" .
 
 time:beat
 	a rdf:Property ,
@@ -93,7 +103,7 @@ time:beat
 		owl:FunctionalProperty ;
 	rdfs:domain time:Time ;
 	rdfs:range xsd:double ;
-	rdfs:label "Global position in beats" .
+	rdfs:label "beat" .
 
 time:beatUnit
 	a rdf:Property ,
@@ -112,7 +122,7 @@ time:beatsPerBar
 		owl:FunctionalProperty ;
 	rdfs:domain time:Rate ;
 	rdfs:range xsd:float ;
-	rdfs:label "Beats per bar" .
+	rdfs:label "beats per bar" .
 
 time:beatsPerMinute
 	a rdf:Property ,
@@ -120,7 +130,7 @@ time:beatsPerMinute
 		owl:FunctionalProperty ;
 	rdfs:domain time:Rate ;
 	rdfs:range xsd:float ;
-	rdfs:label "Beats per minute" ;
+	rdfs:label "beats per minute" ;
 	rdfs:comment "Tempo in beats per minute." .
 
 time:frame
@@ -129,7 +139,7 @@ time:frame
 		owl:FunctionalProperty ;
 	rdfs:domain time:Time ;
 	rdfs:range xsd:long ;
-	rdfs:label "Global position in frames" .
+	rdfs:label "frame" .
 
 time:framesPerSecond
 	a rdf:Property ,
@@ -137,7 +147,7 @@ time:framesPerSecond
 		owl:FunctionalProperty ;
 	rdfs:domain time:Rate ;
 	rdfs:range xsd:float ;
-	rdfs:label "Frames per second" ;
+	rdfs:label "frames per second" ;
 	rdfs:comment "Frame rate in frames per second." .
 
 time:speed
@@ -146,7 +156,7 @@ time:speed
 		owl:FunctionalProperty ;
 	rdfs:domain time:Rate ;
 	rdfs:range xsd:float ;
-	rdfs:label "Speed" ;
+	rdfs:label "speed" ;
 	lv2:documentation """
 <p>The rate of the progress of time as a fraction of normal speed.  For
 example, a rate of 0.0 is stopped, 1.0 is rolling at normal speed, 0.5 is

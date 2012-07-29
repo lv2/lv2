@@ -17,6 +17,15 @@
 	doap:created "2009-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.7" ;
+		doap:created "2012-07-29" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Use consistent label style."
+			]
+		]
+	] , [
 		doap:revision "2.6" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
@@ -111,7 +120,7 @@ Preset MUST have at least a lv2:symbol property and a pset:value property.</p>
 pset:value
 	a rdf:Property ;
 	rdfs:domain lv2:Port ;
-	rdfs:label "Has value" ;
+	rdfs:label "value" ;
 	rdfs:comment """
 Specifies the value of a Port on some Preset.  This property is used
 in a similar way to e.g. lv2:default.
@@ -121,7 +130,7 @@ pset:preset
 	a rdf:Property ;
 	rdfs:domain lv2:PluginBase ;
 	rdfs:range pset:Preset ;
-	rdfs:label "Preset" ;
+	rdfs:label "preset" ;
 	lv2:documentation """
 <p>Specifies the preset currently applied to a plugin instance.  This property
 may be useful for saving state, or notifying a plugin instance at run-time

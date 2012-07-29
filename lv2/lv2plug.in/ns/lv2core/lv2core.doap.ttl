@@ -16,6 +16,15 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "8.1" ;
+		doap:created "2012-07-29" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Use consistent label style."
+			]
+		]
+	] , [
 		doap:revision "8.0" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;

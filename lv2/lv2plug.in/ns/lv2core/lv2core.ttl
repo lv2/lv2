@@ -223,7 +223,7 @@ lv2:InputPort
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf lv2:Port ;
-	rdfs:label "Input port" ;
+	rdfs:label "Input Port" ;
 	rdfs:comment """
 Ports of this type will be connected to a pointer to some value, which will
 be read by the plugin during their run method.
@@ -233,7 +233,7 @@ lv2:OutputPort
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf lv2:Port ;
-	rdfs:label "Output port" ;
+	rdfs:label "Output Port" ;
 	rdfs:comment """
 Ports of this type will be connected to a pointer to some value, which will
 be written to by the plugin during their run method.
@@ -243,7 +243,7 @@ lv2:ControlPort
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf lv2:Port ;
-	rdfs:label "Control port" ;
+	rdfs:label "Control Port" ;
 	lv2:documentation """
 <p>Ports of this type will be connected to a pointer to a single value of C
 type <code>float</code>.</p>
@@ -254,7 +254,7 @@ lv2:AudioPort
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf lv2:Port ;
-	rdfs:label "Audio port" ;
+	rdfs:label "Audio Port" ;
 	lv2:documentation """
 <p>Ports of this type will be connected to an array of length sample_count
 with elements of C type <code>float</code>.</p>
@@ -418,7 +418,7 @@ lv2:appliesTo
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:range lv2:Plugin ;
-	rdfs:label "Applies to" ;
+	rdfs:label "applies to" ;
 	lv2:documentation """
 <p>Specifies that a resource is related to a plugin. This is primarily intended
 for discovery purposes: bundles that describe resources that work with
@@ -527,7 +527,7 @@ lv2:designation
 	a rdf:Property ,
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
-	rdfs:label "assignment" ;
+	rdfs:label "designation" ;
 	lv2:documentation """
 <p>Indicates a channel or parameter designation.</p>
 
@@ -565,7 +565,7 @@ frames).</p>
 lv2:Point
 	a rdfs:Class ,
 		owl:Class ;
-	rdfs:label "Port value point" ;
+	rdfs:label "Point" ;
 	lv2:documentation """
 <p>A Point describes an interesting value in a Port's range (much like a labeled
 <q>notch</q> on a physical knob).</p>
@@ -580,6 +580,7 @@ lv2:ScalePoint
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf lv2:Point ;
+	rdfs:label "Scale Point" ;
 	rdfs:comment "A single float Point (for control inputs)." .
 
 lv2:scalePoint
@@ -587,7 +588,7 @@ lv2:scalePoint
 		owl:ObjectProperty ;
 	rdfs:domain lv2:Port ;
 	rdfs:range lv2:ScalePoint ;
-	rdfs:label "Scale point" ;
+	rdfs:label "scale point" ;
 	rdfs:comment "Relates a Port to its ScalePoints." .
 
 lv2:default
@@ -595,7 +596,7 @@ lv2:default
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
 	rdfs:domain lv2:Port ;
-	rdfs:label "Default value" ;
+	rdfs:label "default" ;
 	rdfs:comment """
 The default value that the host SHOULD set this port to when there is no
 other information available.
@@ -606,7 +607,7 @@ lv2:minimum
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
 	rdfs:domain lv2:Port ;
-	rdfs:label "Minimum value" ;
+	rdfs:label "minimum" ;
 	lv2:documentation """
 <p>A hint to the host for the minimum useful value that the port will use. This
 is a <q>soft</q> limit; the plugin is required to gracefully accept all values
@@ -618,7 +619,7 @@ lv2:maximum
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
 	rdfs:domain lv2:Port ;
-	rdfs:label "Maximum value" ;
+	rdfs:label "maximum" ;
 	lv2:documentation """
 <p>A hint to the host for the maximum useful value that the port will use.
 This is a <q>soft</q> limit; the plugin is required to gracefully accept all
@@ -637,7 +638,7 @@ lv2:optionalFeature
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:range lv2:Feature ;
-	rdfs:label "Optional feature" ;
+	rdfs:label "optional feature" ;
 	lv2:documentation """
 <p>Signifies that a plugin or other resource supports a certain feature. If
 the host supports this feature, it MUST pass its URI and any additional data to
@@ -649,7 +650,7 @@ lv2:requiredFeature
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:range lv2:Feature ;
-	rdfs:label "Required feature" ;
+	rdfs:label "required feature" ;
 	lv2:documentation """
 <p>Signifies that a plugin or other resource requires a certain feature. If
 the host supports this feature, it MUST pass its URI and any additional data to
@@ -673,7 +674,7 @@ lv2:extensionData
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:range lv2:ExtensionData ;
-	rdfs:label "Available extension data" ;
+	rdfs:label "extension data" ;
 	lv2:documentation """
 <p>Signifies that a plugin provides additional data or functions (as defined by
 some extension) via LV2:Descriptor::instantiate().</p>
@@ -681,7 +682,7 @@ some extension) via LV2:Descriptor::instantiate().</p>
 
 lv2:isLive
 	a lv2:Feature ;
-	rdfs:label "Has a live (realtime) dependency" ;
+	rdfs:label "is live" ;
 	lv2:documentation """
 <p>Indicates that the plugin has a real-time dependency (e.g. queues data from
 a socket) and so its output must not be cached or subject to significant
@@ -692,7 +693,7 @@ lv2:hardRTCapable).</p>
 
 lv2:inPlaceBroken
 	a lv2:Feature ;
-	rdfs:label "In-place broken" ;
+	rdfs:label "in-place broken" ;
 	lv2:documentation """
 <p>Indicates that the plugin may cease to work correctly if the host elects to
 use the same data location for both input and output. Plugins that will fail
@@ -703,7 +704,7 @@ it impossible for hosts to use the plugin to process data <q>in-place</q>.</p>
 
 lv2:hardRTCapable
 	a lv2:Feature ;
-	rdfs:label "Hard realtime capable" ;
+	rdfs:label "hard real-time capable" ;
 	lv2:documentation """
 <p>Indicates that the plugin is capable of running not only in a conventional
 host but also in a <q>hard real-time</q> environment. To qualify for this the
@@ -732,7 +733,7 @@ plugin MUST satisfy all of the following:</p>
 lv2:PortProperty
 	a rdfs:Class ,
 		owl:Class ;
-	rdfs:label "Port property" ;
+	rdfs:label "Port Property" ;
 	rdfs:comment """
 A port property - a useful piece of information that allows a host to make more
 sensible decisions (e.g. to provide a better interface).
@@ -743,7 +744,7 @@ lv2:portProperty
 		owl:ObjectProperty ;
 	rdfs:domain lv2:Port ;
 	rdfs:range lv2:PortProperty ;
-	rdfs:label "Port property" ;
+	rdfs:label "port property" ;
 	rdfs:comment """
 Relates Ports to PortProperties. The PortProperty may be ignored without
 catastrophic effects, though it may be useful e.g. for providing a sensible
@@ -752,7 +753,7 @@ interface for the port.
 
 lv2:connectionOptional
 	a lv2:PortProperty ;
-	rdfs:label "Optionally connected port" ;
+	rdfs:label "connection optional" ;
 	rdfs:comment """
 Indicates that this port does not have to be connected to valid data by the
 host. If it is to be disconnected then the port MUST set to NULL with a call
@@ -761,7 +762,7 @@ to the connectPort method.
 
 lv2:reportsLatency
 	a lv2:PortProperty ;
-	rdfs:label "Latency reporting port" ;
+	rdfs:label "reports latency" ;
 	lv2:documentation """
 <p>Indicates that the port is used to express the processing latency incurred
 by the plugin, expressed in samples. The latency may be affected by the current
@@ -777,7 +778,7 @@ is an intentional effect).</p>
 
 lv2:toggled
 	a lv2:PortProperty ;
-	rdfs:label "Toggled" ;
+	rdfs:label "toggled" ;
 	lv2:documentation """
 <p>Indicates that the data item should be considered a Boolean toggle. Data
 less than or equal to zero should be considered <q>off</q> or <q>false</q>, and
@@ -786,7 +787,7 @@ data above zero should be considered <q>on</q> or <q>true</q>.</p>
 
 lv2:sampleRate
 	a lv2:PortProperty ;
-	rdfs:label "Sample rate" ;
+	rdfs:label "sample rate" ;
 	rdfs:comment """
 Indicates that any bounds specified should be interpreted as multiples of the
 sample rate. For instance, a frequency range from 0Hz to the Nyquist frequency
@@ -797,7 +798,7 @@ Hosts that support bounds at all MUST support this property.
 
 lv2:integer
 	a lv2:PortProperty ;
-	rdfs:label "Integer" ;
+	rdfs:label "integer" ;
 	rdfs:comment """
 Indicates that a port's reasonable values are integers (eg. a user interface
 would likely wish to provide a stepped control allowing only integer input).
@@ -806,7 +807,7 @@ A plugin MUST operate reasonably even if such a port has a non-integer input.
 
 lv2:enumeration
 	a lv2:PortProperty ;
-	rdfs:label "Enumeration" ;
+	rdfs:label "enumeration" ;
 	rdfs:comment """
 Indicates that a port's only reasonable values are the scale points defined for
 that port. A host SHOULD NOT allow a user to set the value of such a port to

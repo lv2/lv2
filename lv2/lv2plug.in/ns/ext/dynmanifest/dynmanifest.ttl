@@ -72,7 +72,7 @@ class.</p>
 
 dman:DynManifest
 	a rdfs:Class ;
-	rdfs:label "Dynamic manifest generator" ;
+	rdfs:label "Dynamic Manifest" ;
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:onProperty lv2:binary ;

@@ -23,6 +23,7 @@
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "1.1" ;
+		doap:created "2012-07-29" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
@@ -33,6 +34,8 @@
 				rdfs:label "Add lv2_atom_object_body_get()."
 			] , [
 				rdfs:label "Fix outdated documentation in forge.h."
+			] , [
+				rdfs:label "Use consistent label style."
 			]
 		]
 	] , [
@@ -103,7 +106,7 @@ atom:stringType
 	a rdf:Property ,
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
-	rdfs:label "String type" ;
+	rdfs:label "string type" ;
 	rdfs:domain rdfs:Class ;
 	rdfs:range rdfs:Datatype ;
 	lv2:documentation """
@@ -542,7 +545,7 @@ atom:bufferType
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:domain atom:AtomPort ;
-	rdfs:label "Buffer type" ;
+	rdfs:label "buffer type" ;
 	lv2:documentation """
 <p>Indicates that an AtomPort may be connected to a certain Atom type.  A port
 MAY support several buffer types.  The host MUST NOT connect a port to an Atom
@@ -566,12 +569,12 @@ that, use atom:supports.</p>
 atom:childType
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:label "Child type" ;
+	rdfs:label "child type" ;
 	rdfs:comment "The type of a container's children." .
 
 atom:supports
 	a rdf:Property ;
-	rdfs:label "Supports" ;
+	rdfs:label "supports" ;
 	lv2:documentation """
 <p>Indicates that a particular Atom type is supported.</p>
 
@@ -595,6 +598,7 @@ like so:</p>
 
 atom:eventTransfer
 	a ui:PortProtocol ;
+	rdfs:label "event transfer" ;
 	lv2:documentation """
 <p>Transfer of individual events in a port buffer.  Useful as the
 <code>format</code> for a LV2UI_Write_Function.</p>
@@ -607,6 +611,7 @@ header.</p>
 
 atom:atomTransfer
 	a ui:PortProtocol ;
+	rdfs:label "atom transfer" ;
 	lv2:documentation """
 <p>Transfer of the complete atom in a port buffer.  Useful as the
 <code>format</code> for a LV2UI_Write_Function.</p>

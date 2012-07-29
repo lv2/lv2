@@ -25,6 +25,8 @@
 				rdfs:label "Make event iterator gracefully handle optional ports."
 			] , [
 				rdfs:label "Use more precise domain and range for EventPort properties."
+			] , [
+				rdfs:label "Use consistent label style."
 			]
 		]
 	] , [
@@ -98,7 +100,7 @@ a port is defined in the data file for a plugin, for example:</p>
 
 ev:EventPort
 	a rdfs:Class ;
-	rdfs:label "Event port" ;
+	rdfs:label "Event Port" ;
 	rdfs:subClassOf lv2:Port ;
 	rdfs:comment """
 Ports of this type will be connected to a struct of type LV2_Event_Buffer,
@@ -109,7 +111,7 @@ which are defined by some URI in another LV2 extension.
 
 ev:Event
 	a rdfs:Class ;
-	rdfs:label "LV2 event" ;
+	rdfs:label "Event" ;
 	rdfs:comment """
 A single generic time-stamped event.
 
@@ -123,7 +125,7 @@ be rdfs:subClassOf this class.
 
 ev:TimeStamp
 	a rdfs:Class ;
-	rdfs:label "LV2 event time stamp" ;
+	rdfs:label "Event Time Stamp" ;
 	rdfs:comment """
 The time stamp of an Event.
 
@@ -134,7 +136,7 @@ LV2_Event (both unsigned 32-bit integers).
 ev:FrameStamp
 	a rdfs:Class ;
 	rdfs:subClassOf ev:TimeStamp ;
-	rdfs:label "Audio frame time stamp" ;
+	rdfs:label "Audio Frame Time Stamp" ;
 	rdfs:comment """
 The default time stamp unit for an LV2 event: the frames field represents
 audio frames (in the sample rate passed to intantiate), and the subframes
@@ -143,7 +145,7 @@ field is 1/UINT32_MAX of a frame.
 
 ev:generic
 	a lv2:PortProperty ;
-	rdfs:label "Generic event port" ;
+	rdfs:label "generic event port" ;
 	rdfs:comment """
 Indicates that this port does something meaningful for any event type
 (e.g. event mixers, delays, serialisers, etc).  If this property is set, hosts
@@ -157,7 +159,7 @@ ev:supportsEvent
 	a rdf:Property ;
 	rdfs:domain ev:EventPort ;
 	rdfs:range rdfs:Class ;
-	rdfs:label "Supports event type" ;
+	rdfs:label "supports event type" ;
 	rdfs:comment """
 Indicates that this port supports or "understands" a certain event type.
 For input ports, this means the plugin understands and does something useful
@@ -179,7 +181,7 @@ ev:inheritsEvent
 	rdfs:domain ev:EventPort ,
 		lv2:OutputPort ;
 	rdfs:range lv2:Port ;
-	rdfs:label "Inherits event type" ;
+	rdfs:label "inherits event type" ;
 	rdfs:comment """
 Indicates that this output port might pass through events that arrived at some
 other input port (or generate an event of the same type as events arriving at
@@ -192,7 +194,7 @@ ev:supportsTimeStamp
 	rdfs:domain ev:EventPort ,
 		lv2:InputPort ;
 	rdfs:range rdfs:Class ;
-	rdfs:label "Supports time stamp type" ;
+	rdfs:label "supports time stamp type" ;
 	rdfs:comment """
 Indicates that this port supports or "understands" a certain time stamp type.
 Meaningful only for input ports, the host must never connect a port to an
@@ -204,7 +206,7 @@ ev:generatesTimeStamp
 	rdfs:domain ev:EventPort ,
 		lv2:OutputPort ;
 	rdfs:range rdfs:Class ;
-	rdfs:label "Outputs time stamp type" ;
+	rdfs:label "generates time stamp type" ;
 	rdfs:comment """
 Indicates that this port may output a certain time stamp type, regardless of
 the time stamp type of any input ports.  If the port outputs stamps based on
@@ -222,7 +224,7 @@ ev:inheritsTimeStamp
 	rdfs:domain ev:EventPort ,
 		lv2:OutputPort ;
 	rdfs:range lv2:Port ;
-	rdfs:label "Inherits time stamp type" ;
+	rdfs:label "inherits time stamp type" ;
 	rdfs:comment """
 Indicates that this port follows the time stamp type of an input port.
 This property is not necessary, but it should be set for outputs that

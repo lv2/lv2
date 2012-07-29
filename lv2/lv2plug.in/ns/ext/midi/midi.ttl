@@ -22,6 +22,15 @@
 	doap:developer <http://lv2plug.in/ns/meta#larsl> ,
 		<http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "1.7" ;
+		doap:created "2012-07-29" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Use consistent label style."
+			]
+		]
+	] , [
 		doap:revision "1.6" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
@@ -91,13 +100,13 @@ properties.</p>
 midi:ActiveSense
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Active sense message. " ;
+	rdfs:label "Active Sense Message" ;
 	midi:status "FE"^^xsd:hexBinary .
 
 midi:Aftertouch
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Aftertouch (note pressure) message." ;
+	rdfs:label "Aftertouch Message" ;
 	midi:statusMask "A0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -110,7 +119,7 @@ midi:Aftertouch
 midi:Bender
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Bender (pitch wheel) message." ;
+	rdfs:label "Bender Message" ;
 	midi:statusMask "E0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ,
@@ -121,7 +130,7 @@ midi:Bender
 midi:ChannelPressure
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Channel pressure message." ;
+	rdfs:label "Channel Pressure Message" ;
 	midi:statusMask "D0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -135,19 +144,19 @@ midi:Chunk
 midi:Clock
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Clock message. " ;
+	rdfs:label "Clock Message" ;
 	midi:status "F8"^^xsd:hexBinary .
 
 midi:Continue
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Continue message. " ;
+	rdfs:label "Continue Message" ;
 	midi:status "FB"^^xsd:hexBinary .
 
 midi:Controller
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Controller change message." ;
+	rdfs:label "Controller Change Message" ;
 	midi:statusMask "B0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -159,7 +168,7 @@ midi:Controller
 
 midi:MidiEvent
 	a rdfs:Class ;
-	rdfs:label "MIDI message." ;
+	rdfs:label "MIDI Message" ;
 	rdfs:subClassOf ev:Event ,
 		atom:Atom ;
 	atom:stringType xsd:hexBinary ;
@@ -197,7 +206,7 @@ xsd:hexBinary, e.g. (in Turtle notation):</p>
 midi:NoteOff
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Note off message." ;
+	rdfs:label "Note Off Message" ;
 	midi:statusMask "80"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -210,7 +219,7 @@ midi:NoteOff
 midi:NoteOn
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Note on message." ;
+	rdfs:label "Note On Message" ;
 	midi:statusMask "90"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -223,7 +232,7 @@ midi:NoteOn
 midi:ProgramChange
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Program change message." ;
+	rdfs:label "Program Change Message" ;
 	midi:statusMask "C0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -233,19 +242,19 @@ midi:ProgramChange
 midi:QuarterFrame
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemCommon ;
-	rdfs:label "MTC quarter frame message." ;
+	rdfs:label "Quarter Frame Message" ;
 	midi:status "F1"^^xsd:hexBinary .
 
 midi:Reset
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Reset message. " ;
+	rdfs:label "Reset Message" ;
 	midi:status "FF"^^xsd:hexBinary .
 
 midi:SongPosition
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemCommon ;
-	rdfs:label "Song position pointer message." ;
+	rdfs:label "Song Position Pointer Message" ;
 	midi:status "F2"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ,
@@ -256,59 +265,59 @@ midi:SongPosition
 midi:SongSelect
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemCommon ;
-	rdfs:label "Song select message." ;
+	rdfs:label "Song Select Message" ;
 	midi:status "F3"^^xsd:hexBinary .
 
 midi:Start
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Start message. " ;
+	rdfs:label "Start Message" ;
 	midi:status "FA"^^xsd:hexBinary .
 
 midi:Stop
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Stop message. " ;
+	rdfs:label "Stop Message" ;
 	midi:status "FC"^^xsd:hexBinary .
 
 midi:SystemCommon
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemMessage ;
-	rdfs:label "System common message." .
+	rdfs:label "System Common Message" .
 
 midi:SystemExclusive
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemMessage ;
-	rdfs:label "System exclusive message." ;
+	rdfs:label "System Exclusive Message" ;
 	midi:statusMask "F0"^^xsd:hexBinary .
 
 midi:SystemMessage
 	a rdfs:Class ;
 	rdfs:subClassOf midi:MidiEvent ;
-	rdfs:label "System message." ;
+	rdfs:label "System Message" ;
 	midi:statusMask "F0"^^xsd:hexBinary .
 
 midi:SystemRealtime
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemMessage ;
-	rdfs:label "System realtime message." .
+	rdfs:label "System Realtime Message" .
 
 midi:Tick
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Tick message. " ;
+	rdfs:label "Tick Message" ;
 	midi:status "F9"^^xsd:hexBinary .
 
 midi:TuneRequest
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemCommon ;
-	rdfs:label "Tune request message." ;
+	rdfs:label "Tune Request Message" ;
 	midi:status "F6"^^xsd:hexBinary .
 
 midi:VoiceMessage
 	a rdfs:Class ;
 	rdfs:subClassOf midi:MidiEvent ;
-	rdfs:label "Voice message." ;
+	rdfs:label "Voice Message;" ;
 	midi:statusMask "F0"^^xsd:hexBinary .
 
 midi:benderValue

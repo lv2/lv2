@@ -14,6 +14,15 @@
 	doap:shortdesc "An interface for LV2 plugins to save and restore state." ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:release [
+		doap:revision "1.1" ;
+		doap:created "2012-07-29" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Use consistent label style."
+			]
+		]
+	] , [
 		doap:revision "1.0" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
@@ -254,7 +263,7 @@ LV2_STATE__interface.</p>
 
 state:State
 	a rdfs:Class ;
-	rdfs:label "Plugin Instance State" ;
+	rdfs:label "State" ;
 	lv2:documentation """
 <p>A state dictionary.  This type should be used wherever instance state is
 described.  The properties of a resource with this type correspond directly to
@@ -264,7 +273,7 @@ this type).</p>
 
 state:state
 	a rdf:Property ;
-	rdfs:label "State" ;
+	rdfs:label "state" ;
 	rdfs:range state:State ;
 	lv2:documentation """
 <p>The state of this instance.  This property may be used anywhere a state
@@ -284,7 +293,7 @@ needs to be described, for example:</p>
 
 state:mapPath
 	a lv2:Feature ;
-	rdfs:label "Support for storing paths in state" ;
+	rdfs:label "map file paths" ;
 	lv2:documentation """
 <p>This feature maps absolute paths to/from <q>abstract paths</q> which are
 stored in state.  To support this feature a host must pass an LV2_Feature with
@@ -321,7 +330,7 @@ char* read_path(LV2_State_Map_Path* map_path, FILE* myfile)
 
 state:makePath
 	a lv2:Feature ;
-	rdfs:label "Support for creating new files and directories" ;
+	rdfs:label "create new file paths" ;
 	lv2:documentation """
 <p>This feature allows plugins to create new files and/or directories.  To
 support this feature the host passes an LV2_Feature with URI

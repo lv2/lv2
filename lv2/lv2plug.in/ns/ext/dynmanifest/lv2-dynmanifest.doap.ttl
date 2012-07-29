@@ -14,6 +14,15 @@
 	doap:programming-language "C" ;
 	doap:developer <http://lv2plug.in/ns/meta#daste> ;
 	doap:release [
+		doap:revision "1.5" ;
+		doap:created "2012-07-29" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Use consistent label style."
+			]
+		]
+	] , [
 		doap:revision "1.4" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;

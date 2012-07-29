@@ -12,6 +12,15 @@
 	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Port Properties" ;
 	doap:release [
+		doap:revision "1.1" ;
+		doap:created "2012-07-29" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Use consistent label style."
+			]
+		]
+	] , [
 		doap:revision "1.0" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
@@ -35,7 +44,7 @@ functionality.</p>
 
 pprops:trigger
 	a lv2:PortProperty ;
-	rdfs:label "Trigger" ;
+	rdfs:label "trigger" ;
 	rdfs:comment """
 Indicates that the data item corresponds to a momentary event that has been
 detected (control output ports) or is to be triggered (control input ports).
@@ -49,7 +58,7 @@ is also lv2:integer.
 
 pprops:supportsStrictBounds
 	a lv2:Feature ;
-	rdfs:label "Supports strict bounds" ;
+	rdfs:label "supports strict bounds" ;
 	rdfs:comment """
 Indicates use of host support for pprops:hasStrictBounds port property.  A
 plugin that specifies it as optional feature can omit value clamping for
@@ -60,7 +69,7 @@ input ports that have a pprops:hasStrictBounds property.
 
 pprops:hasStrictBounds
 	a lv2:PortProperty ;
-	rdfs:label "Has strict bounds" ;
+	rdfs:label "has strict bounds" ;
 	rdfs:comment """
 For hosts that support pprops:supportsStrictBounds, this indicates that the
 value of the port should never exceed the port's minimum and maximum control
@@ -73,7 +82,7 @@ implementation.
 
 pprops:expensive
 	a lv2:PortProperty ;
-	rdfs:label "Changes trigger expensive calculation" ;
+	rdfs:label "changes are expensive" ;
 	rdfs:comment """
 Input ports only.  Indicates that any changes to the port value may trigger
 expensive background calculation (e.g. regenerate some lookup tables in a
@@ -86,7 +95,7 @@ connection targets or for automation by default.
 
 pprops:causesArtifacts
 	a lv2:PortProperty ;
-	rdfs:label "May cause audio artifacts when changed" ;
+	rdfs:label "changes cause artifacts" ;
 	rdfs:comment """
 Input ports only.  Indicates that any changes to the port value may produce
 slight artifacts to produced audio signals (zipper noise and other results of
@@ -97,7 +106,7 @@ ports may be marked as artifact-producing.
 
 pprops:continuousCV
 	a lv2:PortProperty ;
-	rdfs:label "Carries a smooth modulation signal" ;
+	rdfs:label "smooth modulation signal" ;
 	rdfs:comment """
 Indicates that the port carries a "smooth" modulation signal.  Control input
 ports of this type are well-suited for being connected to sources of smooth
@@ -111,7 +120,7 @@ considered points along a curve).
 
 pprops:discreteCV
 	a lv2:PortProperty ;
-	rdfs:label "Carries a discrete modulation signal" ;
+	rdfs:label "discrete modulation signal" ;
 	rdfs:comment """
 Indicates that the port carries a "discrete" modulation signal.  Input ports of
 this type are well-suited for being connected to sources of discrete signals
@@ -123,7 +132,7 @@ points along a curve).
 
 pprops:logarithmic
 	a lv2:PortProperty ;
-	rdfs:label "Port value uses a logarithmic scale" ;
+	rdfs:label "logarithmic scale" ;
 	rdfs:comment """
 Indicates that port value behaviour within specified range (bounds) is a value
 using logarithmic scale.  The lower and upper bounds must be specified, and
@@ -132,7 +141,7 @@ must be of the same sign.
 
 pprops:notAutomatic
 	a lv2:PortProperty ;
-	rdfs:label "Port is not intended as a CV input" ;
+	rdfs:label "not intended as a CV input" ;
 	rdfs:comment """
 Indicates that the port is not primarily intended to be fed with modulation
 signals from external sources (other plugins, etc.).  It is merely a UI hint
@@ -141,7 +150,7 @@ and hosts may allow the user to override it.
 
 pprops:notOnGUI
 	a lv2:PortProperty ;
-	rdfs:label "Port is not to be displayed on a GUI or equivalent" ;
+	rdfs:label "not on GUI" ;
 	rdfs:comment """
 Indicates that the port is not primarily intended to be represented by a
 separate control in the user interface window (or any similar mechanism used
@@ -153,7 +162,7 @@ pprops:displayPriority
 	a rdf:Property ;
 	rdfs:domain lv2:Port ;
 	rdfs:range xsd:nonNegativeInteger ;
-	rdfs:label "Display priority" ;
+	rdfs:label "display priority" ;
 	rdfs:comment """
 Indicates how important a port is to controlling the plugin.  If a host can
 only display some ports of a plugin, it should prefer ports with a higher
@@ -165,7 +174,7 @@ pprops:rangeSteps
 	a rdf:Property ;
 	rdfs:domain lv2:Port ;
 	rdfs:range xsd:nonNegativeInteger ;
-	rdfs:label "Number of value quantization steps" ;
+	rdfs:label "number of value steps" ;
 	lv2:documentation """
 <p>This value indicates into how many evenly-divided points the (control) port
 range should be divided for step-wise control. This may be used for changing

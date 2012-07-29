@@ -79,7 +79,7 @@ it all occcurs via ports.</p>
 ui:UI
 	a rdfs:Class ,
 		owl:Class ;
-	rdfs:label "LV2 UI" ;
+	rdfs:label "User Interface" ;
 	rdfs:comment "A UI for an LV2 plugin" .
 
 ui:GtkUI
@@ -318,7 +318,7 @@ ui:protocol
 ui:PortProtocol
 	a rdfs:Class ;
 	rdfs:subClassOf lv2:Feature ;
-	rdfs:label "Port protocol" ;
+	rdfs:label "Port Protocol" ;
 	lv2:documentation """
 <p>A PortProtocol defines a method to communicate port data between a UI and
 plugin.</p>
@@ -359,7 +359,7 @@ lv2:requiredFeature to specify which PortProtocols they want to use.
 
 ui:floatProtocol
 	a ui:PortProtocol ;
-	rdfs:label "Floating point value" ;
+	rdfs:label "floating point value" ;
 	lv2:documentation """
 
 <p>A protocol for transferring single floating point values.  The rules for
@@ -386,7 +386,7 @@ this protocol are:</p>
 
 ui:peakProtocol
 	a ui:PortProtocol ;
-	rdfs:label "Peak measurement for a period of audio" ;
+	rdfs:label "peak measurement for a period of audio" ;
 	lv2:documentation """
 <p>This port protocol defines a way for the host to send continuous peak
 measurements of the audio signal at a certain port to the UI.  The

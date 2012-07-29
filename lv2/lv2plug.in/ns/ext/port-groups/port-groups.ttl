@@ -13,6 +13,15 @@
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Port Groups" ;
 	doap:release [
+		doap:revision "1.1" ;
+		doap:created "2012-07-29" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Use consistent label style."
+			]
+		]
+	] , [
 		doap:revision "1.0" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
@@ -31,7 +40,7 @@
 
 pg:Group
 	a rdfs:Class ;
-	rdfs:label "A group of channels or parameters." ;
+	rdfs:label "Port Group" ;
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:onProperty lv2:symbol ;
@@ -92,7 +101,7 @@ designation with a possible index).
 pg:sideChainOf
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:label "Side-chain of" ;
+	rdfs:label "side-chain of" ;
 	rdfs:comment """
 Indicates that this port or group should be considered a "side chain" of
 some other port or group.  The precise definition of "side chain" depends
@@ -106,7 +115,7 @@ pg:subGroupOf
 		owl:FunctionalProperty ;
 	rdfs:domain pg:Group ;
 	rdfs:range pg:Group ;
-	rdfs:label "Sub-group of" ;
+	rdfs:label "sub-group of" ;
 	rdfs:comment """
 Indicates that this group is a child of another group.  This property has no
 meaning with respect to plugin execution, but the host may find this
@@ -120,7 +129,7 @@ pg:source
 		owl:ObjectProperty ;
 	rdfs:domain pg:OutputGroup ;
 	rdfs:range pg:InputGroup ;
-	rdfs:label "Source" ;
+	rdfs:label "source" ;
 	rdfs:comment """
 Indicates that this port or group should be considered the "result" of
 some other port or group.  This property only makes sense on groups with
@@ -135,7 +144,7 @@ pg:mainInput
 		owl:FunctionalProperty ;
 	rdfs:domain lv2:Plugin ;
 	rdfs:range pg:InputGroup ;
-	rdfs:label "Main input" ;
+	rdfs:label "main input" ;
 	rdfs:comment """
 Indicates that this group should be considered the "main" input, i.e. the
 primary task is processing the signal in this group.  A plugin MUST NOT have
@@ -148,7 +157,7 @@ pg:mainOutput
 		owl:FunctionalProperty ;
 	rdfs:domain lv2:Plugin ;
 	rdfs:range pg:OutputGroup ;
-	rdfs:label "Main output" ;
+	rdfs:label "main output" ;
 	rdfs:comment """
 Indicates that this group should be considered the "main" output.  The main
 output group SHOULD have the main input group as a pg:source.
@@ -160,7 +169,7 @@ pg:group
 		owl:FunctionalProperty ;
 	rdfs:domain lv2:Port ;
 	rdfs:range pg:Group ;
-	rdfs:label "In port group" ;
+	rdfs:label "group" ;
 	rdfs:comment """
 Indicates that this port is a part of a group of ports on the plugin.  The port
 should also have an lv2:designation property to define its designation within
@@ -178,51 +187,51 @@ in one of these groups depends on a particular speaker configuration.
 
 pg:left
 	a lv2:Channel ;
-	rdfs:label "Left" .
+	rdfs:label "left" .
 
 pg:right
 	a lv2:Channel ;
-	rdfs:label "Right" .
+	rdfs:label "right" .
 
 pg:center
 	a lv2:Channel ;
-	rdfs:label "Center" .
+	rdfs:label "center" .
 
 pg:side
 	a lv2:Channel ;
-	rdfs:label "Side" .
+	rdfs:label "side" .
 
 pg:centerLeft
 	a lv2:Channel ;
-	rdfs:label "Center Left" .
+	rdfs:label "center left" .
 
 pg:centerRight
 	a lv2:Channel ;
-	rdfs:label "Center Right" .
+	rdfs:label "center right" .
 
 pg:sideLeft
 	a lv2:Channel ;
-	rdfs:label "Side Left" .
+	rdfs:label "side left" .
 
 pg:sideRight
 	a lv2:Channel ;
-	rdfs:label "Side Right" .
+	rdfs:label "side right" .
 
 pg:rearLeft
 	a lv2:Channel ;
-	rdfs:label "Rear Left" .
+	rdfs:label "rear left" .
 
 pg:rearRight
 	a lv2:Channel ;
-	rdfs:label "Rear Right" .
+	rdfs:label "rear right" .
 
 pg:rearCenter
 	a lv2:Channel ;
-	rdfs:label "Rear Center" .
+	rdfs:label "rear center" .
 
 pg:lowFrequencyEffects
 	a lv2:Channel ;
-	rdfs:label "Low-Frequency Effects (LFE)" .
+	rdfs:label "low-frequency effects" .
 
 pg:MonoGroup
 	a rdfs:Class ;
