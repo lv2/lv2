@@ -31,6 +31,7 @@
 #define LV2_UI_URI    "http://lv2plug.in/ns/extensions/ui"
 #define LV2_UI_PREFIX LV2_UI_URI "#"
 
+#define LV2_UI__Gtk3UI           LV2_UI_PREFIX "Gtk3UI"
 #define LV2_UI__GtkUI            LV2_UI_PREFIX "GtkUI"
 #define LV2_UI__PortNotification LV2_UI_PREFIX "PortNotification"
 #define LV2_UI__Qt4UI            LV2_UI_PREFIX "Qt4UI"

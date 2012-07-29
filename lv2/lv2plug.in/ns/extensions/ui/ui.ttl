@@ -91,6 +91,15 @@ A UI where the LV2_Widget is a pointer to a Gtk+ 2.0 compatible GtkWidget,
 and the host guarantees that the Gtk+ library has been initialised and the
 Glib main loop is running before a UI of this type is instantiated.""" .
 
+ui:Gtk3UI
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf ui:UI ;
+	rdfs:comment """
+A UI where the LV2_Widget is a pointer to a Gtk+ 3.0 compatible GtkWidget,
+and the host guarantees that the Gtk+ library has been initialised and the
+Glib main loop is running before a UI of this type is instantiated.""" .
+
 ui:Qt4UI
 	a rdfs:Class ,
 		owl:Class ;
