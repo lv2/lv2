@@ -4,6 +4,6 @@
 <http://lv2plug.in/ns/extensions/units>
 	a lv2:Specification ;
 	lv2:minorVersion 5 ;
-	lv2:microVersion 6 ;
+	lv2:microVersion 7 ;
 	rdfs:seeAlso <units.ttl> , <lv2-units.doap.ttl> .
 
