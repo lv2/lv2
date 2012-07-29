@@ -37,7 +37,7 @@ eg:plugin lv2:port [
     lv2:name     "frob level" ;
     units:unit [
         a            units:Unit ;
-        units:name   "frobnication" ;
+        rdfs:label   "frobnication" ;
         units:symbol "fr" ;
         units:render "%f f"
     ]
@@ -53,6 +53,7 @@ definitions where it makes sense to do so.</p>
 units:Unit
 	a rdfs:Class ,
 		owl:Class ;
+	rdfs:label "Unit" ;
 	rdfs:comment "A unit for LV2 port data" .
 
 units:unit
@@ -60,14 +61,8 @@ units:unit
 		owl:ObjectProperty ;
 	rdfs:domain lv2:Port ;
 	rdfs:range units:Unit ;
+	rdfs:label "unit" ;
 	rdfs:comment "Relates a port to the unit of its data" .
-
-units:name
-	a rdf:Property ,
-		owl:DatatypeProperty ;
-	rdfs:domain units:Unit ;
-	rdfs:range xsd:string ;
-	rdfs:comment "A display name for the unit (e.g. decibels)." .
 
 units:render
 	a rdf:Property ,
@@ -92,6 +87,7 @@ units:Conversion
 		owl:cardinality 1 ;
 		rdfs:comment "A conversion MUST have exactly 1 units:to property."
 	] ;
+	rdfs:label "Conversion" ;
 	rdfs:comment "A conversion from one unit to another." .
 
 units:conversion
@@ -99,6 +95,7 @@ units:conversion
 		owl:ObjectProperty ;
 	rdfs:domain units:Unit ;
 	rdfs:range units:Conversion ;
+	rdfs:label "conversion" ;
 	rdfs:comment "A conversion from this unit to another." .
 
 units:prefixConversion
@@ -107,6 +104,7 @@ units:prefixConversion
 	rdfs:subPropertyOf units:conversion ;
 	rdfs:domain units:Unit ;
 	rdfs:range units:Conversion ;
+	rdfs:label "prefix conversion" ;
 	rdfs:comment """
 A conversion from this unit to the same unit but with a different SI prefix
 (e.g. Hz to kHz).
@@ -117,12 +115,14 @@ units:to
 		owl:ObjectProperty ;
 	rdfs:domain units:Conversion ;
 	rdfs:range units:Unit ;
+	rdfs:label "conversion target" ;
 	rdfs:comment "The target unit this conversion converts to." .
 
 units:factor
 	a rdf:Property ,
 		owl:DatatypeProperty ;
 	rdfs:domain units:Conversion ;
+	rdfs:label "conversion factor" ;
 	rdfs:comment """
 The factor to multiple the source value by in order to convert
 to the target unit.
@@ -134,7 +134,7 @@ units:s
 		units:factor 0.0166666666 ;
 		units:to units:min
 	] ;
-	units:name "second" ;
+	rdfs:label "seconds" ;
 	units:prefixConversion [
 		units:factor 1000 ;
 		units:to units:ms
@@ -144,7 +144,7 @@ units:s
 
 units:ms
 	a units:Unit ;
-	units:name "millisecond" ;
+	rdfs:label "milliseconds" ;
 	units:prefixConversion [
 		units:factor 0.001 ;
 		units:to units:s
@@ -158,25 +158,25 @@ units:min
 		units:factor 60.0 ;
 		units:to units:s
 	] ;
-	units:name "minute" ;
+	rdfs:label "minutes" ;
 	units:render "%f mins" ;
 	units:symbol "min" .
 
 units:bar
 	a units:Unit ;
-	units:name "bar" ;
+	rdfs:label "bars" ;
 	units:render "%f bars" ;
 	units:symbol "bars" .
 
 units:beat
 	a units:Unit ;
-	units:name "beat" ;
+	rdfs:label "beats" ;
 	units:render "%f beats" ;
 	units:symbol "beats" .
 
 units:frame
 	a units:Unit ;
-	units:name "audio frame" ;
+	rdfs:label "audio frames" ;
 	units:render "%f frames" ;
 	units:symbol "frames" .
 
@@ -186,7 +186,7 @@ units:m
 		units:factor 39.37 ;
 		units:to units:inch
 	] ;
-	units:name "metre" ;
+	rdfs:label "metres" ;
 	units:prefixConversion [
 		units:factor 100 ;
 		units:to units:cm
@@ -206,7 +206,7 @@ units:cm
 		units:factor 0.3937 ;
 		units:to units:inch
 	] ;
-	units:name "centimetre" ;
+	rdfs:label "centimetres" ;
 	units:prefixConversion [
 		units:factor 0.01 ;
 		units:to units:m
@@ -226,7 +226,7 @@ units:mm
 		units:factor 0.03937 ;
 		units:to units:inch
 	] ;
-	units:name "millimetre" ;
+	rdfs:label "millimetres" ;
 	units:prefixConversion [
 		units:factor 0.001 ;
 		units:to units:m
@@ -246,7 +246,7 @@ units:km
 		units:factor 0.62138818 ;
 		units:to units:mile
 	] ;
-	units:name "kilometre" ;
+	rdfs:label "kilometres" ;
 	units:prefixConversion [
 		units:factor 1000 ;
 		units:to units:m
@@ -266,8 +266,8 @@ units:inch
 		units:factor 2.54 ;
 		units:to units:cm
 	] ;
-	units:name "inch" ;
-	units:render "%f\"" ;
+	rdfs:label "inches" ;
+	units:render """%f\"""" ;
 	units:symbol "in" .
 
 units:mile
@@ -276,13 +276,13 @@ units:mile
 		units:factor 1.6093 ;
 		units:to units:km
 	] ;
-	units:name "mile" ;
+	rdfs:label "miles" ;
 	units:render "%f mi" ;
 	units:symbol "mi" .
 
 units:db
 	a units:Unit ;
-	units:name "decibel" ;
+	rdfs:label "decibels" ;
 	units:render "%f dB" ;
 	units:symbol "dB" .
 
@@ -292,7 +292,7 @@ units:pc
 		units:factor 0.01 ;
 		units:to units:coef
 	] ;
-	units:name "percent" ;
+	rdfs:label "percent" ;
 	units:render "%f%%" ;
 	units:symbol "%" .
 
@@ -302,13 +302,13 @@ units:coef
 		units:factor 100 ;
 		units:to units:pc
 	] ;
-	units:name "coefficient" ;
+	rdfs:label "coefficient" ;
 	units:render "* %f" ;
 	units:symbol "" .
 
 units:hz
 	a units:Unit ;
-	units:name "hertz" ;
+	rdfs:label "hertz" ;
 	units:prefixConversion [
 		units:factor 0.001 ;
 		units:to units:khz
@@ -321,7 +321,7 @@ units:hz
 
 units:khz
 	a units:Unit ;
-	units:name "kilohertz" ;
+	rdfs:label "kilohertz" ;
 	units:prefixConversion [
 		units:factor 1000 ;
 		units:to units:hz
@@ -334,7 +334,7 @@ units:khz
 
 units:mhz
 	a units:Unit ;
-	units:name "megahertz" ;
+	rdfs:label "megahertz" ;
 	units:prefixConversion [
 		units:factor 1000000 ;
 		units:to units:hz
@@ -347,7 +347,7 @@ units:mhz
 
 units:bpm
 	a units:Unit ;
-	units:name "beats per minute" ;
+	rdfs:label "beats per minute" ;
 	units:prefixConversion [
 		units:factor 0.0166666666 ;
 		units:to units:hz
@@ -361,7 +361,7 @@ units:oct
 		units:factor 12.0 ;
 		units:to units:semitone12TET
 	] ;
-	units:name "octaves" ;
+	rdfs:label "octaves" ;
 	units:render "%f octaves" ;
 	units:symbol "oct" .
 
@@ -371,7 +371,7 @@ units:cent
 		units:factor 0.01 ;
 		units:to units:semitone12TET
 	] ;
-	units:name "cent" ;
+	rdfs:label "cents" ;
 	units:render "%f ct" ;
 	units:symbol "ct" .
 
@@ -381,18 +381,18 @@ units:semitone12TET
 		units:factor 0.083333333 ;
 		units:to units:oct
 	] ;
-	units:name "semitone" ;
+	rdfs:label "semitones" ;
 	units:render "%f semi" ;
 	units:symbol "semi" .
 
 units:degree
 	a units:Unit ;
-	units:name "degree" ;
+	rdfs:label "degrees" ;
 	units:render "%f deg" ;
 	units:symbol "deg" .
 
 units:midiNote
 	a units:Unit ;
-	units:name "MIDI note" ;
+	rdfs:label "MIDI note" ;
 	units:render "MIDI note %d" ;
 	units:symbol "note" .
