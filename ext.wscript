@@ -39,11 +39,11 @@ def build(bld):
 
     # Copy headers to URI-style include paths in build directory
     for i in bld.path.ant_glob('*.h'):
-        obj = bld(rule   = link,
-                  name   = 'link',
-                  cwd    = 'build/lv2/%s' % path,
-                  source = '%s' % i,
-                  target = 'lv2/%s/%s' % (path, i))
+        bld(rule   = link,
+            name   = 'link',
+            cwd    = 'build/lv2/%s' % path,
+            source = '%s' % i,
+            target = 'lv2/%s/%s' % (path, i))
 
     if bld.env['BUILD_TESTS'] and bld.path.find_node('%s-test.c' % name):
         test_lib    = []
@@ -53,12 +53,12 @@ def build(bld):
             test_cflags += ['-fprofile-arcs', '-ftest-coverage']
 
         # Unit test program
-        obj = bld(features     = 'c cprogram',
-                  source       = '%s-test.c' % name,
-                  lib          = test_lib,
-                  target       = '%s-test' % name,
-                  install_path = '',
-                  cflags       = test_cflags)
+        bld(features     = 'c cprogram',
+            source       = '%s-test.c' % name,
+            lib          = test_lib,
+            target       = '%s-test' % name,
+            install_path = '',
+            cflags       = test_cflags)
             
     # Install bundle
     bld.install_files(bundle_dir,

@@ -3,8 +3,6 @@ import os
 
 from waflib.extras import autowaf as autowaf
 import waflib.Options as Options
-import waflib.Context as Context
-import waflib.Scripting as Scripting
 import glob
 
 # Version of this package (even if built as a child)
@@ -41,9 +39,9 @@ def configure(conf):
 
 def build(bld):
     # Header "library"
-    obj = bld(export_includes = ['.'],
-              name            = 'liblv2core',
-              target          = 'lv2core')
+    bld(export_includes = ['.'],
+        name            = 'liblv2core',
+        target          = 'lv2core')
 
     # Bundle (data)
     bld.install_files('${LV2DIR}/lv2core.lv2', bld.path.ant_glob('*.ttl'))

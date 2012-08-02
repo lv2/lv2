@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from waflib.extras import autowaf as autowaf
+import re
 
 # Variables for 'waf dist'
 APPNAME = 'eg-amp.lv2'
@@ -26,51 +27,43 @@ def configure(conf):
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2core', uselib_store='LV2CORE')
 
-    # Set env['pluginlib_PATTERN']
-    pat = conf.env['cshlib_PATTERN']
-    if pat.startswith('lib'):
-        pat = pat[3:]
-    conf.env['pluginlib_PATTERN'] = pat
-    conf.env['pluginlib_EXT'] = pat[pat.rfind('.'):]
-
     autowaf.display_msg(conf, "LV2 bundle directory", conf.env['LV2DIR'])
     print('')
 
 def build(bld):
     bundle = 'eg-amp.lv2'
 
+    # Make a pattern for shared objects without the 'lib' prefix
+    module_pat = re.sub('^lib', '', bld.env['cshlib_PATTERN'])
+    module_ext = module_pat[module_pat.rfind('.'):]
+
     # Build manifest.ttl by substitution (for portable lib extension)
     bld(features     = 'subst',
         source       = 'manifest.ttl.in',
         target       = '%s/%s' % (bundle, 'manifest.ttl'),
         install_path = '${LV2DIR}/%s' % bundle,
-        LIB_EXT      = bld.env['pluginlib_EXT'])
+        LIB_EXT      = module_ext)
 
     # Copy other data files to build bundle (build/eg-amp.lv2)
-    for i in [ 'amp.ttl' ]:
+    for i in ['amp.ttl']:
         bld(features     = 'subst',
             source       = i,
             target       = '%s/%s' % (bundle, i),
             install_path = '${LV2DIR}/%s' % bundle,
-            LIB_EXT      = bld.env['pluginlib_EXT'])
+            LIB_EXT      = module_ext)
 
-    # Create a build environment that builds module-style library names
-    # e.g. eg-amp.so instead of libeg-amp.so
-    # Note for C++ you must set cxxshlib_PATTERN instead
-    penv                   = bld.env.derive()
-    penv['cshlib_PATTERN'] = bld.env['pluginlib_PATTERN']
-
+    # Use LV2 headers from parent directory if building as a sub-project
     includes = None
     if autowaf.is_child:
         includes = '../..'
 
     # Build plugin library
     obj = bld(features     = 'c cshlib',
-              env          = penv,
               source       = 'amp.c',
               name         = 'amp',
               target       = '%s/amp' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
               uselib       = 'LV2CORE',
               includes     = includes)
+    obj.env['cshlib_PATTERN'] = module_pat
 

@@ -110,14 +110,13 @@ def specgen(task):
 
     spec   = task.inputs[0]
     path   = os.path.dirname(spec.srcpath())
-    indir  = os.path.dirname(spec.abspath())
     outdir = os.path.abspath(os.path.join(out, chop_lv2_prefix(path)))
 
     bundle = str(outdir)
     b = os.path.basename(outdir)
 
     if not os.access(spec.abspath(), os.R_OK):
-        print('warning: extension %s has no %s.ttl file' % (root, root))
+        print('warning: extension %s has no %s.ttl file' % (b, b))
         return
 
     try:
@@ -242,23 +241,23 @@ def build(bld):
         bld.recurse(i)
 
     # LV2 pkgconfig file
-    obj = bld(features     = 'subst',
-              source       = 'lv2.pc.in',
-              target       = 'lv2.pc',
-              install_path = '${LIBDIR}/pkgconfig',
-              PREFIX       = bld.env['PREFIX'],
-              INCLUDEDIR   = bld.env['INCLUDEDIR'],
-              VERSION      = VERSION)
+    bld(features     = 'subst',
+        source       = 'lv2.pc.in',
+        target       = 'lv2.pc',
+        install_path = '${LIBDIR}/pkgconfig',
+        PREFIX       = bld.env['PREFIX'],
+        INCLUDEDIR   = bld.env['INCLUDEDIR'],
+        VERSION      = VERSION)
 
     if bld.env['DOCS']:
         # Build Doxygen documentation (and tags file)
         autowaf.build_dox(bld, 'LV2', VERSION, top, out)
 
         # Copy stylesheet to build directory
-        obj = bld(rule     = copy,
-                  name     = 'copy',
-                  source   = 'doc/style.css',
-                  target   = 'aux/style.css')
+        bld(rule     = copy,
+            name     = 'copy',
+            source   = 'doc/style.css',
+            target   = 'aux/style.css')
 
         index_files = []
 
@@ -267,21 +266,21 @@ def build(bld):
             if i.startswith('lv2/lv2plug.in'):
                 # Copy spec files to build dir
                 for f in bld.path.ant_glob(i + '*.*'):
-                    obj = bld(rule   = copy,
-                              name   = 'copy',
-                              source = f,
-                              target = chop_lv2_prefix(f.srcpath()))
+                    bld(rule   = copy,
+                        name   = 'copy',
+                        source = f,
+                        target = chop_lv2_prefix(f.srcpath()))
 
                 base = i[len('lv2/lv2plug.in'):]
                 name = os.path.basename(i[:len(i)-1])
 
                 # Generate .htaccess file
-                obj = bld(features     = 'subst',
-                          source       = 'doc/htaccess.in',
-                          target       = os.path.join(base, '.htaccess'),
-                          install_path = None,
-                          NAME         = name,
-                          BASE         = base)
+                bld(features     = 'subst',
+                    source       = 'doc/htaccess.in',
+                    target       = os.path.join(base, '.htaccess'),
+                    install_path = None,
+                    NAME         = name,
+                    BASE         = base)
 
         # Call lv2specgen for each spec
         for i in bld.env['LV2_SUBDIRS']:
@@ -293,20 +292,20 @@ def build(bld):
                 bld.add_group()  # Barrier (don't call lv2specgen in parallel)
 
                 # Call lv2specgen to generate spec docs
-                obj  = bld(rule   = specgen,
-                           name   = 'specgen',
-                           source = os.path.join(i, name + '.ttl'),
-                           target = ['%s%s.html' % (chop_lv2_prefix(i), name),
-                                     index_file])
+                bld(rule   = specgen,
+                    name   = 'specgen',
+                    source = os.path.join(i, name + '.ttl'),
+                    target = ['%s%s.html' % (chop_lv2_prefix(i), name),
+                              index_file])
 
         index_files.sort()
         bld.add_group()  # Barrier (wait for lv2specgen to build index)
 
         # Build extension index
-        obj = bld(rule   = build_index,
-                  name   = 'index',
-                  source = ['lv2/lv2plug.in/ns/index.html.in'] + index_files,
-                  target = 'ns/index.html')
+        bld(rule   = build_index,
+            name   = 'index',
+            source = ['lv2/lv2plug.in/ns/index.html.in'] + index_files,
+            target = 'ns/index.html')
 
 def lint(ctx):
     for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']
