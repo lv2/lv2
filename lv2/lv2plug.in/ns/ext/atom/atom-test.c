@@ -176,7 +176,7 @@ main()
 	LV2_Atom_String* string = (LV2_Atom_String*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_string(
 			&forge, "hello", strlen("hello")));
-	char* sbody = LV2_ATOM_BODY(string);
+	char* sbody = (char*)LV2_ATOM_BODY(string);
 	if (strcmp(sbody, "hello")) {
 		return test_fail("%s != \"hello\"\n", sbody);
 	}
@@ -187,7 +187,7 @@ main()
 		&forge, lv2_atom_forge_literal(
 			&forge, "bonjour", strlen("bonjour"),
 			0, urid_map(NULL, "http://lexvo.org/id/term/fr")));
-	char* lbody = LV2_ATOM_CONTENTS(LV2_Atom_Literal, literal);
+	char* lbody = (char*)LV2_ATOM_CONTENTS(LV2_Atom_Literal, literal);
 	if (strcmp(lbody, "bonjour")) {
 		return test_fail("%s != \"bonjour\"\n", lbody);
 	}
