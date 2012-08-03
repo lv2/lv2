@@ -22,12 +22,18 @@
 #ifndef LV2_EVENT_HELPERS_H
 #define LV2_EVENT_HELPERS_H
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
-#include <stdlib.h>
 #include <assert.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "lv2/lv2plug.in/ns/ext/event/event.h"
+
+#ifdef __cplusplus
+extern "C" {
+#else
+#    include <stdbool.h>
+#endif
 
 /** @file
  * Helper functions for the LV2 Event extension
@@ -245,6 +251,10 @@ lv2_event_write_event(LV2_Event_Iterator* iter,
 
 	return true;
 }
+
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
 
 #endif /* LV2_EVENT_HELPERS_H */
 

@@ -307,6 +307,25 @@ def build(bld):
             source = ['lv2/lv2plug.in/ns/index.html.in'] + index_files,
             target = 'ns/index.html')
 
+    if bld.env['BUILD_TESTS']:
+        # Generate a compile test .c file that includes all headers
+        def gen_build_test(task):
+            out = open(task.outputs[0].abspath(), 'w')
+            for i in task.inputs:
+                out.write('#include "%s"\n' % i.bldpath())
+            out.write('int main() { return 0; }\n')
+            out.close()
+
+        bld(rule         = gen_build_test,
+            source       = bld.path.ant_glob('lv2/**/*.h'),
+            target       = 'build_test.c',
+            install_path = None)
+
+        bld(features     = 'c',
+            source       = bld.path.get_bld().make_node('build_test.c'),
+            target       = 'build_test',
+            install_path = None)
+
 def lint(ctx):
     for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']
               + glob.glob('lv2/lv2plug.in/ns/ext/*/*.h')
