@@ -422,6 +422,8 @@ ul, ol {
 .specterm h3 {
 	padding: 0.5ex;
 	margin: 0;
+	border-bottom: 1px solid #DDD;
+	background-color: #F3F3F3;
 }
 .spectermbody {
 	padding: 0 1em 1ex 1em;
