@@ -64,7 +64,7 @@ def configure(conf):
     if conf.env['BUILD_PLUGINS']:
         for i in conf.path.ant_glob('plugins/*', dir=True):
             try:
-                conf.recurse(i)
+                conf.recurse(i.srcpath())
             except:
                 Logs.warn('Configuration failed, %s will not be built\n' % i)
 
