@@ -5,5 +5,4 @@
 	a lv2:Specification ;
 	lv2:minorVersion 1 ;
 	lv2:microVersion 5 ;
-	rdfs:seeAlso <dynmanifest.ttl> ,
-		<lv2-dynmanifest.doap.ttl> .
+	rdfs:seeAlso <dynmanifest.ttl> .

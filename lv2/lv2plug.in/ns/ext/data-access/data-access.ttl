@@ -1,72 +1,21 @@
-@prefix da:    <http://lv2plug.in/ns/ext/data-access#> .
-@prefix dcs:   <http://ontologi.es/doap-changeset#> .
-@prefix doap:  <http://usefulinc.com/ns/doap#> .
-@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix lv2ev: <http://lv2plug.in/ns/ext/event#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix da:   <http://lv2plug.in/ns/ext/data-access#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/ext/data-access>
-	a lv2:Specification ,
-		lv2:Feature ,
-		doap:Project ;
+	a lv2:Feature ;
 	rdfs:seeAlso <data-access.h> ,
-		<../../meta/meta.ttl> ;
-	doap:license <http://opensource.org/licenses/isc> ;
-	doap:name "LV2 Data Access" ;
-	doap:shortdesc "Provides access to LV2_Descriptor::extension_data()." ;
-	doap:created "2008-00-00" ;
-	doap:developer <http://drobilla.net/drobilla#me> ;
-	doap:release [
-		doap:revision "1.6" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Merge with unified LV2 package."
-			]
-		]
-	] , [
-		doap:revision "1.4" ;
-		doap:created "2011-11-21" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-data-access-1.4.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Update packaging."
-			] , [
-				rdfs:label "Improve documentation."
-			]
-		]
-	] , [
-		doap:revision "1.2" ;
-		doap:created "2011-05-26" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-data-access-1.2.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Add build system for installation."
-			] , [
-				rdfs:label "Switch to ISC license."
-			]
-		]
-	] , [
-		doap:revision "1.0" ;
-		doap:created "2010-10-04" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-data-access-1.0.tar.gz> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
-	] ;
+		<lv2-data-access.doap.ttl> ;
 	lv2:documentation """
 <p>This extension defines a feature, LV2_Extension_Data_Feature, which provides
 access to LV2_Descriptor::extension_data() for plugin UIs or other potentially
 remote users of a plugin.</p>
+
+<p>Note that the use of this extension by UIs violates the important principle
+of UI/plugin separation, and is potentially a source of many problems.
+Accordingly, <strong>use of this extension is highly discouraged</strong>, and
+plugins should not expect hosts to support it, since it is often impossible to
+do so.</p>
 
 <p>To support this feature the host must pass an LV2_Feature struct to the
 instantiate method with URI LV2_DATA_ACCESS_URI and data pointed to an instance

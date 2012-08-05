@@ -1,40 +1,13 @@
-@prefix dcs:    <http://ontologi.es/doap-changeset#> .
-@prefix doap:   <http://usefulinc.com/ns/doap#> .
-@prefix foaf:   <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
 @prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
 @prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/port-props>
-	a lv2:Specification ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
-	doap:name "LV2 Port Properties" ;
-	doap:release [
-		doap:revision "1.1" ;
-		doap:created "2012-07-29" ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Use consistent label style."
-			]
-		]
-	] , [
-		doap:revision "1.0" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
-	] ;
-	doap:created "2009-01-01" ;
-	doap:shortdesc "Various port properties." ;
-	doap:maintainer <http://drobilla.net/drobilla#me> ;
-	doap:developer <http://lv2plug.in/ns/meta#kfoltman> ;
+	a owl:Ontology ;
+	rdfs:seeAlso <lv2-port-props.doap.ttl> ;
 	lv2:documentation """
 <p>This vocabulary defines various properties for plugin ports, which can be
 used to better describe how a plugin can be controlled.  Using this metadata,

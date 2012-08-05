@@ -48,6 +48,15 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
+		doap:revision "1.0.5" ;
+		doap:created "2012-08-05" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Move all project metadata for extensions (e.g. change log) to separate files to spare hosts from loading them during discovery."
+			]
+		]
+	] , [
 		doap:revision "1.0.0" ;
 		doap:created "2012-04-16" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-ui-2.4.tar.bz2> ;

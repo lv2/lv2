@@ -1,32 +1,14 @@
-@prefix dcs:  <http://ontologi.es/doap-changeset#> .
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix work: <http://lv2plug.in/ns/ext/worker#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/worker>
-	a lv2:Specification ,
-		lv2:Feature ;
+	a owl:Ontology ;
 	rdfs:seeAlso <worker.h> ,
-		<../../meta/meta.ttl> ;
-	doap:name "LV2 Worker" ;
-	doap:shortdesc "Support for a non-realtime plugin worker method." ;
-	doap:created "2012-03-22" ;
-	doap:developer <http://drobilla.net/drobilla#me> ;
-	doap:release [
-		doap:revision "1.0" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
-	] ;
+		<lv2-worker.doap.ttl> ;
 	lv2:documentation """
 <p>This extension allows plugins to have a non-realtime worker method, with
 thread sychronisation and communication issues handled by the host.  This

@@ -1,0 +1,21 @@
+@prefix dcs: <http://ontologi.es/doap-changeset#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://lv2plug.in/ns/ext/buf-size>
+	a doap:Project ;
+	rdfs:seeAlso <../../meta/meta.ttl> ;
+	doap:name "LV2 Buf Size Extension" ;
+	doap:shortdesc "Access to, and restrictions on, buffer sizes." ;
+	doap:created "2012-05-25" ;
+	doap:developer <http://drobilla.net/drobilla#me> ;
+	doap:release [
+		doap:revision "0.0" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Initial release."
+			]
+		]
+	] .

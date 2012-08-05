@@ -1,6 +1,3 @@
-@prefix dcs:  <http://ontologi.es/doap-changeset#> .
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -9,33 +6,9 @@
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/time>
-	a lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:seeAlso <time.h> ,
-		<../../meta/meta.ttl> ;
-	doap:name "LV2 Time" ;
-	doap:shortdesc "Properties for describing time." ;
-	doap:release [
-		doap:revision "1.1" ;
-		doap:created "2012-07-29" ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Use consistent label style."
-			]
-		]
-	] , [
-		doap:revision "1.0" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
-	] ;
-	doap:created "2011-10-05" ;
-	doap:developer <http://drobilla.net/drobilla#me> ;
+		<lv2-time.doap.ttl> ;
 	lv2:documentation """
 <p>This is a vocabulary for precisely describing a position in time and the
 passage of time itself, in both real and musical terms.</p>

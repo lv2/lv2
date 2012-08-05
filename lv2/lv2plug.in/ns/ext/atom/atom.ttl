@@ -1,7 +1,4 @@
 @prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
-@prefix dcs:   <http://ontologi.es/doap-changeset#> .
-@prefix doap:  <http://usefulinc.com/ns/doap#> .
-@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -11,44 +8,9 @@
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/atom>
-	a lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:seeAlso <atom.h> ,
-		<util.h> ,
-		<forge.h> ,
-		<../../meta/meta.ttl> ;
-	doap:name "LV2 Atom" ;
-	doap:shortdesc "A generic value container and several data types." ;
-	doap:license <http://opensource.org/licenses/isc> ;
-	doap:created "2007-00-00" ;
-	doap:developer <http://drobilla.net/drobilla#me> ;
-	doap:release [
-		doap:revision "1.1" ;
-		doap:created "2012-07-29" ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Fix implicit conversions in forge.h that are invalid in C++11."
-			] , [
-				rdfs:label "Fix lv2_atom_object_next() on 32-bit platforms."
-			] , [
-				rdfs:label "Add lv2_atom_object_body_get()."
-			] , [
-				rdfs:label "Fix outdated documentation in forge.h."
-			] , [
-				rdfs:label "Use consistent label style."
-			]
-		]
-	] , [
-		doap:revision "1.0" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
-	] ;
+		<lv2-atom.doap.ttl> ;
 	lv2:documentation """
 <p>This specification defines a generic container for data, called an
 <q>Atom</q>, and several basic Atom types which can be used to express

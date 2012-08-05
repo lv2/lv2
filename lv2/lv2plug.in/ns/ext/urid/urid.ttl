@@ -1,6 +1,3 @@
-@prefix dcs:  <http://ontologi.es/doap-changeset#> .
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix urid: <http://lv2plug.in/ns/ext/urid#> .
@@ -8,45 +5,7 @@
 <http://lv2plug.in/ns/ext/urid>
 	a lv2:Specification ;
 	rdfs:seeAlso <urid.h> ,
-		<../../meta/meta.ttl> ;
-	doap:license <http://opensource.org/licenses/isc> ;
-	doap:name "LV2 URID" ;
-	doap:shortdesc "Features for mapping URIs to and from integers." ;
-	doap:release [
-		doap:revision "1.3" ;
-		doap:created "2012-04-22" ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Fix typo in urid:unmap documentation."
-			]
-		]
-	] , [
-		doap:revision "1.2" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Add feature struct names."
-			] , [
-				rdfs:label "Merge with unified LV2 package."
-			]
-		]
-	] , [
-		doap:revision "1.0" ;
-		doap:created "2011-11-21" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-urid-1.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
-	] ;
-	doap:created "2011-07-22" ;
-	doap:developer <http://lv2plug.in/ns/meta#gabrbedd> ;
-	doap:maintainer <http://drobilla.net/drobilla#me> ;
+		<lv2-urid.doap.ttl> ;
 	lv2:documentation """
 <p>This extension defines a simple mechanism for plugins to map URIs to and
 from integers, usually for performance reasons (e.g. processing events typed by
