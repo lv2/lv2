@@ -1,7 +1,7 @@
 /*
   Copyright 2012 Harry van Haaren <harryhaaren@gmail.com>
   Copyright 2012 David Robillard <d@drobilla.net>
-  
+
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
   copyright notice and this permission notice appear in all copies.
@@ -40,7 +40,7 @@ typedef enum {
 typedef struct {
 	// Sample rate, necessary to generate sin wave in run()
 	double sample_rate;
-  
+
 	// Current wave phase
 	float phase;
 
@@ -58,10 +58,10 @@ instantiate(const LV2_Descriptor*     descriptor,
             const LV2_Feature* const* features)
 {
 	Synth* self = (Synth*)malloc(sizeof(Synth));
-  
+
 	// Store the sample rate so it is available in run()
 	self->sample_rate = rate;
-  
+
 	return (LV2_Handle)self;
 }
 
@@ -98,26 +98,26 @@ static void
 run(LV2_Handle instance, uint32_t n_samples)
 {
 	Synth* self = (Synth*)instance;
-  
+
 	const float  PI     = 3.1415;
 	const float  volume = 0.3;
 	const float  freq   = *(self->freq);
 	float* const output = self->output;
-  
+
 	float samples_per_cycle = self->sample_rate / freq;
-  
+
 	/* Calculate the phase offset per sample.  Phase ranges from 0..1, so
 	   phase_increment is a floating point number such that we get "freq"
 	   number of cycles in "sample_rate" amount of samples. */
 	float phase_increment = (1.f / samples_per_cycle);
-  
+
 	for (uint32_t pos = 0; pos < n_samples; pos++) {
-    
+
 		/* Calculate the next sample.  Phase ranges from 0..1, but sin()
 		   expects its input in radians, so we multiply by 2 PI to convert it.
 		   We also multiply by volume so it's not extremely loud. */
 		output[pos] = sin(self->phase * 2 * PI) * volume;
-    
+
 		/* Increment the phase so we generate the next sample */
 		self->phase += phase_increment;
 		if (self->phase > 1.0f) {
