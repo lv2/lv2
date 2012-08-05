@@ -557,7 +557,7 @@ SHOW_USED_FILES        = YES
 # This will remove the Files entry from the Quick Index and from the
 # Folder Tree View (if specified). The default is YES.
 
-SHOW_FILES             = YES
+SHOW_FILES             = NO
 
 # Set the SHOW_NAMESPACES tag to NO to disable the generation of the
 # Namespaces page.
@@ -656,27 +656,27 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = @LV2_SRCDIR@/doc/mainpage.dox \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/atom.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/forge.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/util.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/buf-size/buf-size.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/data-access/data-access.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/event/event-helpers.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/event/event.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/log/log.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/morph/morph.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/patch/patch.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/state/state.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/time/time.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/uri-map/uri-map.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/urid/urid.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/worker/worker.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/extensions/ui/ui.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/lv2core/lv2.h
+                         lv2/lv2plug.in/ns/ext/atom/atom.h \
+                         lv2/lv2plug.in/ns/ext/atom/forge.h \
+                         lv2/lv2plug.in/ns/ext/atom/util.h \
+                         lv2/lv2plug.in/ns/ext/buf-size/buf-size.h \
+                         lv2/lv2plug.in/ns/ext/data-access/data-access.h \
+                         lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h \
+                         lv2/lv2plug.in/ns/ext/event/event-helpers.h \
+                         lv2/lv2plug.in/ns/ext/event/event.h \
+                         lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
+                         lv2/lv2plug.in/ns/ext/log/log.h \
+                         lv2/lv2plug.in/ns/ext/morph/morph.h \
+                         lv2/lv2plug.in/ns/ext/patch/patch.h \
+                         lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
+                         lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
+                         lv2/lv2plug.in/ns/ext/state/state.h \
+                         lv2/lv2plug.in/ns/ext/time/time.h \
+                         lv2/lv2plug.in/ns/ext/uri-map/uri-map.h \
+                         lv2/lv2plug.in/ns/ext/urid/urid.h \
+                         lv2/lv2plug.in/ns/ext/worker/worker.h \
+                         lv2/lv2plug.in/ns/extensions/ui/ui.h \
+                         lv2/lv2plug.in/ns/lv2core/lv2.h
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is
@@ -848,7 +848,7 @@ USE_HTAGS              = NO
 # will generate a verbatim copy of the header file for each class for
 # which an include is specified. Set to NO to disable this.
 
-VERBATIM_HEADERS       = YES
+VERBATIM_HEADERS       = NO
 
 #---------------------------------------------------------------------------
 # configuration options related to the alphabetical class index

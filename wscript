@@ -31,18 +31,8 @@ def options(opt):
     opt.add_option('--copy-headers', action='store_true', default=False,
                    dest='copy_headers',
                    help='Copy headers instead of linking to bundle')
-    for i in ['lv2/lv2plug.in/ns/lv2core']:
-        opt.recurse(i)
+    opt.recurse('lv2/lv2plug.in/ns/lv2core')
 
-def get_subdirs(with_plugins=True):
-    subdirs = ['lv2/lv2plug.in/ns/lv2core/',
-               'lv2/lv2plug.in/ns/meta/']
-    subdirs += glob.glob('lv2/lv2plug.in/ns/ext/*/')
-    subdirs += glob.glob('lv2/lv2plug.in/ns/extensions/*/')
-    if with_plugins:
-        subdirs += glob.glob('plugins/*/')
-    return subdirs
-    
 def configure(conf):
     try:
         conf.load('compiler_c')
@@ -52,7 +42,7 @@ def configure(conf):
         Options.options.no_plugins = True
 
     autowaf.configure(conf)
-    autowaf.set_recursive()
+    conf.recurse('lv2/lv2plug.in/ns/lv2core')
 
     if conf.env['MSVC_COMPILER']:
         conf.env.append_unique('CFLAGS', ['-TP', '-MD'])
@@ -71,25 +61,17 @@ def configure(conf):
     if conf.env['BUILD_TESTS'] and not conf.is_defined('HAVE_GCOV'):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
-    subdirs = get_subdirs(conf.env['BUILD_PLUGINS'])
-
-    for i in subdirs:
-        try:
-            conf.recurse(i)
-        except:
-            Logs.warn('Configuration failed, %s will not be built\n' % i)
-            subdirs.remove(i)
-
-    conf.env['LV2_SUBDIRS'] = subdirs
+    if conf.env['BUILD_PLUGINS']:
+        for i in conf.path.ant_glob('plugins/*', dir=True):
+            try:
+                conf.recurse(i)
+            except:
+                Logs.warn('Configuration failed, %s will not be built\n' % i)
 
     autowaf.configure(conf)
     autowaf.display_header('LV2 Configuration')
     autowaf.display_msg(conf, 'Bundle directory', conf.env['LV2DIR'])
     autowaf.display_msg(conf, 'Version', VERSION)
-
-# Rule for copying a file to the build directory
-def copy(task):
-    shutil.copy(task.inputs[0].abspath(), task.outputs[0].abspath())
 
 def chop_lv2_prefix(s):
     if s.startswith('lv2/lv2plug.in/'):
@@ -235,9 +217,74 @@ def build_index(task):
                { '@ROWS@': ''.join(rows),
                  '@TIME@': datetime.datetime.utcnow().strftime('%F %H:%M UTC') })
 
+# Task for making a link in the build directory to a source file
+def link(task):
+    if hasattr(os, 'symlink'):
+        func = os.symlink
+    else:
+        func = shutil.copy  # Symlinks unavailable, make a copy
+
+    try:
+        os.remove(task.outputs[0].abspath())  # Remove old target
+    except:
+        pass  # No old target, whatever
+
+    func(task.inputs[0].abspath(), task.outputs[0].abspath())
+
+def build_ext(bld, path):
+    name        = os.path.basename(path)
+    bundle_dir  = os.path.join(bld.env['LV2DIR'], name + '.lv2')
+    include_dir = os.path.join(bld.env['INCLUDEDIR'], path)
+
+    # Copy headers to URI-style include paths in build directory
+    for i in bld.path.ant_glob(path + '/*.h'):
+        bld(rule   = link,
+            source = i,
+            target = bld.path.get_bld().make_node('%s/%s' % (path, i)))
+
+    # Build test program if applicable
+    if bld.env['BUILD_TESTS'] and bld.path.find_node(path + '/%s-test.c' % name):
+        test_lib    = []
+        test_cflags = ['']
+        if bld.is_defined('HAVE_GCOV'):
+            test_lib    += ['gcov']
+            test_cflags += ['-fprofile-arcs', '-ftest-coverage']
+
+        # Unit test program
+        bld(features     = 'c cprogram',
+            source       = path + '/%s-test.c' % name,
+            lib          = test_lib,
+            target       = path + '/%s-test' % name,
+            install_path = None,
+            cflags       = test_cflags)
+
+    # Install bundle
+    bld.install_files(bundle_dir,
+                      bld.path.ant_glob(path + '/?*.*', excl='*.in'))
+
+    # Install URI-like includes
+    headers = bld.path.ant_glob(path + '/*.h')
+    if headers:
+        if bld.env['COPY_HEADERS']:
+            bld.install_files(include_dir, headers)
+        else:
+            bld.symlink_as(include_dir,
+                           os.path.relpath(bundle_dir,
+                                           os.path.dirname(include_dir)))
+
 def build(bld):
-    for i in bld.env['LV2_SUBDIRS']:
-        bld.recurse(i)
+    exts = (bld.path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
+            bld.path.ant_glob('lv2/lv2plug.in/ns/extensions/*', dir=True))
+
+    # Copy lv2.h to URI-style include path in build directory
+    lv2_h_path = 'lv2/lv2plug.in/ns/lv2core/lv2.h'
+    bld(rule   = link,
+        source = bld.path.find_node(lv2_h_path),
+        target = bld.path.get_bld().make_node(lv2_h_path))
+
+    # Build extensions
+    for i in exts:
+        build_ext(bld, i.srcpath())
 
     # LV2 pkgconfig file
     bld(features     = 'subst',
@@ -253,7 +300,8 @@ def build(bld):
         autowaf.build_dox(bld, 'LV2', VERSION, top, out)
 
         # Copy stylesheet to build directory
-        bld(rule     = copy,
+        bld(features = 'subst',
+            is_copy  = True,
             name     = 'copy',
             source   = 'doc/style.css',
             target   = 'aux/style.css')
@@ -261,41 +309,41 @@ def build(bld):
         index_files = []
 
         # Prepare spec output directories
-        for i in bld.env['LV2_SUBDIRS']:
-            if i.startswith('lv2/lv2plug.in'):
-                # Copy spec files to build dir
-                for f in bld.path.ant_glob(i + '*.*'):
-                    bld(rule   = copy,
-                        name   = 'copy',
-                        source = f,
-                        target = chop_lv2_prefix(f.srcpath()))
+        specs = exts + [bld.path.find_node('lv2/lv2plug.in/ns/lv2core')]
+        for i in specs:
+            # Copy spec files to build dir
+            for f in bld.path.ant_glob(i.srcpath() + '/*.*'):
+                bld(features = 'subst',
+                    is_copy  = True,
+                    name     = 'copy',
+                    source   = f,
+                    target   = chop_lv2_prefix(f.srcpath()))
 
-                base = i[len('lv2/lv2plug.in'):]
-                name = os.path.basename(i[:len(i)-1])
-
-                # Generate .htaccess file
-                bld(features     = 'subst',
-                    source       = 'doc/htaccess.in',
-                    target       = os.path.join(base, '.htaccess'),
-                    install_path = None,
-                    NAME         = name,
-                    BASE         = base)
+            base = i.srcpath()[len('lv2/lv2plug.in'):]
+            name = os.path.basename(i.srcpath())
+            
+            # Generate .htaccess file
+            bld(features     = 'subst',
+                source       = 'doc/htaccess.in',
+                target       = os.path.join(base, '.htaccess'),
+                install_path = None,
+                NAME         = name,
+                BASE         = base)
 
         # Call lv2specgen for each spec
-        for i in bld.env['LV2_SUBDIRS']:
-            if i.startswith('lv2/lv2plug.in'):
-                name = os.path.basename(i[:len(i)-1])
-                index_file = os.path.join('index_rows', name)
-                index_files += [index_file]
+        for i in specs:
+            name = os.path.basename(i.srcpath())
+            index_file = os.path.join('index_rows', name)
+            index_files += [index_file]
 
-                bld.add_group()  # Barrier (don't call lv2specgen in parallel)
+            bld.add_group()  # Barrier (don't call lv2specgen in parallel)
 
-                # Call lv2specgen to generate spec docs
-                bld(rule   = specgen,
-                    name   = 'specgen',
-                    source = os.path.join(i, name + '.ttl'),
-                    target = ['%s%s.html' % (chop_lv2_prefix(i), name),
-                              index_file])
+            # Call lv2specgen to generate spec docs
+            bld(rule   = specgen,
+                name   = 'specgen',
+                source = os.path.join(i.srcpath(), name + '.ttl'),
+                target = ['%s/%s.html' % (chop_lv2_prefix(i.srcpath()), name),
+                          index_file])
 
         index_files.sort()
         bld.add_group()  # Barrier (wait for lv2specgen to build index)
@@ -317,20 +365,26 @@ def build(bld):
 
         bld(rule         = gen_build_test,
             source       = bld.path.ant_glob('lv2/**/*.h'),
-            target       = 'build_test.c',
+            target       = 'build-test.c',
             install_path = None)
 
-        bld(features     = 'c',
-            source       = bld.path.get_bld().make_node('build_test.c'),
-            target       = 'build_test',
+        bld(features     = 'c cprogram',
+            source       = bld.path.get_bld().make_node('build-test.c'),
+            target       = 'build-test',
             install_path = None)
 
 def lint(ctx):
-    for i in (['lv2/lv2plug.in/ns/lv2core/lv2.h']
-              + glob.glob('lv2/lv2plug.in/ns/ext/*/*.h')
-              + glob.glob('lv2/lv2plug.in/ns/extensions/*/*.h')
-              + glob.glob('plugins/*/*.c') + glob.glob('plugins/*.*.h')):
-        subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-build/header_guard,-readability/casting,-build/include,-runtime/sizeof ' + i, shell=True)
+    for i in ctx.path.ant_glob('lv2/**/*.h'):
+        subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-build/header_guard,-readability/casting,-build/include,-runtime/sizeof ' + i.abspath(), shell=True)
+
+def test(ctx):
+    autowaf.pre_test(ctx, APPNAME, dirs=['.'])
+    for i in ctx.path.ant_glob('**/*-test'):
+        name = os.path.basename(i.abspath())
+        os.environ['PATH'] = '.' + os.pathsep + os.getenv('PATH')
+        autowaf.run_tests(
+            ctx, name, [i.path_from(ctx.path.find_node('build'))], dirs=['.'])
+    autowaf.post_test(ctx, APPNAME, dirs=['.'])
 
 class Dist(Scripting.Dist):
     def execute(self):
@@ -349,24 +403,30 @@ class DistCheck(Dist, Scripting.DistCheck):
     def archive(self):
         Dist.archive(self)
 
-def news(ctx):
-    path = ctx.path.abspath()
-    autowaf.write_news('lv2',
-                       [os.path.join(path, 'lv2/lv2plug.in/ns/meta/meta.ttl')],
-                       'NEWS')
-
-def pre_dist(ctx):
-    # Write NEWS file in source directory
-    news(ctx)
-
-def post_dist(ctx):
-    # Delete generated NEWS file from source directory
-    try:
-        os.remove(os.path.join(ctx.path.abspath(), 'NEWS'))
-    except:
-        pass
-
 def dist(ctx):
-    ctx.recurse(['.'] + get_subdirs(False), name='pre_dist')
+    subdirs = ([ctx.path.find_node('lv2/lv2plug.in/ns/lv2core')] +
+               ctx.path.ant_glob('plugins/*', dir=True) +
+               ctx.path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
+               ctx.path.ant_glob('lv2/lv2plug.in/ns/extension/*', dir=True))
+
+    # Write NEWS files in source directory
+    for i in subdirs:
+        print "* " + i.path_from(ctx.path)
+        print ctx.path.ant_glob(i.path_from(ctx.path) + '/*.ttl')
+        def abspath(node):
+            return node.abspath()
+        in_files = map(abspath,
+                       ctx.path.ant_glob(i.path_from(ctx.path) + '/*.ttl'))
+        autowaf.write_news(os.path.basename(i.abspath()),
+                           in_files,
+                           i.abspath() + '/NEWS')
+
+    # Build archive
     ctx.archive()
-    ctx.recurse(['.'] + get_subdirs(False), name='post_dist')
+
+    # Delete generated NEWS files from source directory
+    for i in subdirs:
+        try:
+            os.remove(os.path.join(i.abspath(), 'NEWS'))
+        except:
+            pass
