@@ -47,10 +47,10 @@ def build(bld):
     # Copy other data files to build bundle (build/eg-amp.lv2)
     for i in ['synth.ttl']:
         bld(features     = 'subst',
+            is_copy      = True,
             source       = i,
             target       = '%s/%s' % (bundle, i),
-            install_path = '${LV2DIR}/%s' % bundle,
-            LIB_EXT      = bld.env['pluginlib_EXT'])
+            install_path = '${LV2DIR}/%s' % bundle)
 
     # Use LV2 headers from parent directory if building as a sub-project
     includes = None

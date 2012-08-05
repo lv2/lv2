@@ -51,7 +51,8 @@ def build(bld):
     
     # Copy other data files to build bundle (build/eg-sampler.lv2)
     for i in ['sampler.ttl', 'click.wav']:
-        bld(rule         = 'cp ${SRC} ${TGT}',
+        bld(features     = 'subst',
+            is_copy      = True,
             source       = i,
             target       = '%s/%s' % (bundle, i),
             install_path = '${LV2DIR}/%s' % bundle)
