@@ -282,10 +282,6 @@ def build(bld):
         source = bld.path.find_node(lv2_h_path),
         target = bld.path.get_bld().make_node(lv2_h_path))
 
-    # Build extensions
-    for i in exts:
-        build_ext(bld, i.srcpath())
-
     # LV2 pkgconfig file
     bld(features     = 'subst',
         source       = 'lv2.pc.in',
@@ -294,6 +290,15 @@ def build(bld):
         PREFIX       = bld.env['PREFIX'],
         INCLUDEDIR   = bld.env['INCLUDEDIR'],
         VERSION      = VERSION)
+
+    # Build extensions
+    for i in exts:
+        build_ext(bld, i.srcpath())
+
+    # Build plugins
+    if bld.env['BUILD_PLUGINS']:
+        for i in bld.path.ant_glob('plugins/*', dir=True):
+            bld.recurse(i.srcpath())
 
     if bld.env['DOCS']:
         # Build Doxygen documentation (and tags file)
