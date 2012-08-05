@@ -112,7 +112,6 @@ run(LV2_Handle instance, uint32_t n_samples)
 	float phase_increment = (1.f / samples_per_cycle);
 
 	for (uint32_t pos = 0; pos < n_samples; pos++) {
-
 		/* Calculate the next sample.  Phase ranges from 0..1, but sin()
 		   expects its input in radians, so we multiply by 2 PI to convert it.
 		   We also multiply by volume so it's not extremely loud. */
