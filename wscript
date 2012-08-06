@@ -28,9 +28,7 @@ def options(opt):
                    dest='build_tests', help="Build unit tests")
     opt.add_option('--no-plugins', action='store_true', default=False,
                    dest='no_plugins', help="Do not build example plugins")
-    opt.add_option('--copy-headers', action='store_true',
-                   default=(Options.platform != 'win32' and
-                            hasattr(os.path, 'relpath')),
+    opt.add_option('--copy-headers', action='store_true', default=False,
                    dest='copy_headers',
                    help='Copy headers instead of linking to bundle')
     opt.recurse('lv2/lv2plug.in/ns/lv2core')
@@ -48,6 +46,10 @@ def configure(conf):
         conf.env.append_unique('CFLAGS', ['-TP', '-MD'])
     else:
         conf.env.append_unique('CFLAGS', '-std=c99')
+
+    if Options.platform == 'win32' or not hasattr(os.path, 'relpath'):
+        Logs.warn('System does not support linking headers, copying')
+        Options.options.copy_headers = True
 
     conf.env['BUILD_TESTS']   = Options.options.build_tests
     conf.env['BUILD_PLUGINS'] = not Options.options.no_plugins
