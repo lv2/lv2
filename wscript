@@ -271,11 +271,11 @@ def build_ext(bld, path):
     headers = bld.path.ant_glob(path + '/*.h')
     if headers:
         if bld.env['COPY_HEADERS']:
+            bld.install_files(include_dir, headers)
+        else:
             bld.symlink_as(include_dir,
                            os.path.relpath(bundle_dir,
                                            os.path.dirname(include_dir)))
-        else:
-            bld.install_files(include_dir, headers)
 
 def build(bld):
     exts = (bld.path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
