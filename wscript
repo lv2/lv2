@@ -42,8 +42,6 @@ def configure(conf):
         Options.options.no_plugins = True
 
     autowaf.configure(conf)
-    conf.recurse('lv2/lv2plug.in/ns/lv2core')
-
     if conf.env['MSVC_COMPILER']:
         conf.env.append_unique('CFLAGS', ['-TP', '-MD'])
     else:
@@ -60,6 +58,10 @@ def configure(conf):
     # Check for gcov library (for test coverage)
     if conf.env['BUILD_TESTS'] and not conf.is_defined('HAVE_GCOV'):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
+
+    autowaf.set_recursive()
+
+    conf.recurse('lv2/lv2plug.in/ns/lv2core')
 
     if conf.env['BUILD_PLUGINS']:
         for i in conf.path.ant_glob('plugins/*', dir=True):

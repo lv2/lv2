@@ -25,7 +25,7 @@ def configure(conf):
         conf.env.append_unique('CFLAGS', '-std=c99')
 
     if not autowaf.is_child():
-        autowaf.check_pkg(conf, 'lv2core', uselib_store='LV2CORE')
+        autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
 
     autowaf.display_msg(conf, "LV2 bundle directory", conf.env['LV2DIR'])
     print('')
@@ -63,6 +63,6 @@ def build(bld):
               name         = 'synth',
               target       = '%s/synth' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              uselib       = 'LV2CORE',
+              uselib       = 'LV2',
               includes     = includes)
     obj.env['cshlib_PATTERN'] = module_pat
