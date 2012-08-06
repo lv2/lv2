@@ -63,10 +63,12 @@ def configure(conf):
 
     conf.recurse('lv2/lv2plug.in/ns/lv2core')
 
+    conf.env['LV2_BUILD'] = ['lv2/lv2plug.in/ns/lv2core']
     if conf.env['BUILD_PLUGINS']:
         for i in conf.path.ant_glob('plugins/*', dir=True):
             try:
                 conf.recurse(i.srcpath())
+                conf.env['LV2_BUILD'] += [i.srcpath()]
             except:
                 Logs.warn('Configuration failed, %s will not be built\n' % i)
 
@@ -298,9 +300,8 @@ def build(bld):
         build_ext(bld, i.srcpath())
 
     # Build plugins
-    if bld.env['BUILD_PLUGINS']:
-        for i in bld.path.ant_glob('plugins/*', dir=True):
-            bld.recurse(i.srcpath())
+    for i in bld.env['LV2_BUILD']:
+        bld.recurse(i)
 
     if bld.env['DOCS']:
         # Build Doxygen documentation (and tags file)
