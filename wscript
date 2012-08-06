@@ -28,7 +28,9 @@ def options(opt):
                    dest='build_tests', help="Build unit tests")
     opt.add_option('--no-plugins', action='store_true', default=False,
                    dest='no_plugins', help="Do not build example plugins")
-    opt.add_option('--copy-headers', action='store_true', default=False,
+    opt.add_option('--copy-headers', action='store_true',
+                   default=(Options.platform != 'win32' and
+                            hasattr(os.path, 'relpath')),
                    dest='copy_headers',
                    help='Copy headers instead of linking to bundle')
     opt.recurse('lv2/lv2plug.in/ns/lv2core')
@@ -51,10 +53,6 @@ def configure(conf):
     conf.env['BUILD_PLUGINS'] = not Options.options.no_plugins
     conf.env['COPY_HEADERS']  = Options.options.copy_headers
 
-    if not hasattr(os.path, 'relpath') and not Options.options.copy_headers:
-        conf.fatal(
-            'os.path.relpath missing, get Python 2.6 or use --copy-headers')
-
     # Check for gcov library (for test coverage)
     if conf.env['BUILD_TESTS'] and not conf.is_defined('HAVE_GCOV'):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
@@ -75,6 +73,7 @@ def configure(conf):
     autowaf.configure(conf)
     autowaf.display_header('LV2 Configuration')
     autowaf.display_msg(conf, 'Bundle directory', conf.env['LV2DIR'])
+    autowaf.display_msg(conf, 'Copy (not link) headers', conf.env['COPY_HEADERS'])
     autowaf.display_msg(conf, 'Version', VERSION)
 
 def chop_lv2_prefix(s):
@@ -270,11 +269,11 @@ def build_ext(bld, path):
     headers = bld.path.ant_glob(path + '/*.h')
     if headers:
         if bld.env['COPY_HEADERS']:
-            bld.install_files(include_dir, headers)
-        else:
             bld.symlink_as(include_dir,
                            os.path.relpath(bundle_dir,
                                            os.path.dirname(include_dir)))
+        else:
+            bld.install_files(include_dir, headers)
 
 def build(bld):
     exts = (bld.path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
