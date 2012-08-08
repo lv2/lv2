@@ -17,7 +17,6 @@
 #ifndef LV2_BUF_SIZE_H
 #define LV2_BUF_SIZE_H
 
-#include <stddef.h>
 #include <stdint.h>
 
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
@@ -56,7 +55,7 @@ typedef struct {
 
 	   The host MUST set this to sizeof(LV2_Buf_Size_Feature).
 	*/
-	size_t size;
+	uint32_t size;
 
 	/**
 	   Get properties of the sample_count parameter of LV2_Descriptor::run().
@@ -80,17 +79,23 @@ typedef struct {
 	/**
 	   Get the size for buffers of a given type.
 
+	   This function is useful for plugins that need to allocate auxiliary
+	   buffers for data types other than audio.  A typical use case is to first
+	   get the maximum block length with get_sample_count(), then determine the
+	   space required for a Sequence by calling this function with type @ref
+	   LV2_ATOM__Sequence.
+
 	   @param handle The handle field of this struct.
-	   @param type The type of buffer.  This is deliberately loosely defined
-	   and may be a port type or some other type (e.g. an Atom type).
-	   @param subtype Additional type parameter.  This may be needed for some
-	   types, otherwise it may be set to zero.
-	   @return The buffer size for the given type, in bytes.
+	   @param buf_size Set to the requested buffer size, or 0 if unknown.
+	   @param type The type of buffer.
+	   @param sample_count The duration of time the buffer must represent.
+	   @return The space required for the buffer, or 0 if unknown.
 	*/
-	size_t
+	LV2_Buf_Size_Status
 	(*get_buf_size)(LV2_Buf_Size_Access_Handle handle,
+	                uint32_t*                  buf_size,
 	                LV2_URID                   type,
-	                LV2_URID                   subtype);
+	                uint32_t                   sample_count);
 } LV2_Buf_Size_Access;
 
 #ifdef __cplusplus
