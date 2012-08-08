@@ -24,12 +24,11 @@ def options(opt):
     opt.load('compiler_cc')
     opt.load('compiler_cxx')
     autowaf.set_options(opt)
-    opt.add_option('--test', action='store_true', default=False,
-                   dest='build_tests', help="Build unit tests")
-    opt.add_option('--no-plugins', action='store_true', default=False,
-                   dest='no_plugins', help="Do not build example plugins")
-    opt.add_option('--copy-headers', action='store_true', default=False,
-                   dest='copy_headers',
+    opt.add_option('--test', action='store_true', dest='build_tests',
+                   help='Build unit tests')
+    opt.add_option('--no-plugins', action='store_true', dest='no_plugins',
+                   help='Do not build example plugins')
+    opt.add_option('--copy-headers', action='store_true', dest='copy_headers',
                    help='Copy headers instead of linking to bundle')
     opt.recurse('lv2/lv2plug.in/ns/lv2core')
 
@@ -42,7 +41,7 @@ def configure(conf):
         Options.options.no_plugins = True
 
     autowaf.configure(conf)
-    if conf.env['MSVC_COMPILER']:
+    if conf.env.MSVC_COMPILER:
         conf.env.append_unique('CFLAGS', ['-TP', '-MD'])
     else:
         conf.env.append_unique('CFLAGS', '-std=c99')
@@ -51,31 +50,31 @@ def configure(conf):
         Logs.warn('System does not support linking headers, copying')
         Options.options.copy_headers = True
 
-    conf.env['BUILD_TESTS']   = Options.options.build_tests
-    conf.env['BUILD_PLUGINS'] = not Options.options.no_plugins
-    conf.env['COPY_HEADERS']  = Options.options.copy_headers
+    conf.env.BUILD_TESTS   = Options.options.build_tests
+    conf.env.BUILD_PLUGINS = not Options.options.no_plugins
+    conf.env.COPY_HEADERS  = Options.options.copy_headers
 
     # Check for gcov library (for test coverage)
-    if conf.env['BUILD_TESTS'] and not conf.is_defined('HAVE_GCOV'):
+    if conf.env.BUILD_TESTS and not conf.is_defined('HAVE_GCOV'):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
     autowaf.set_recursive()
 
     conf.recurse('lv2/lv2plug.in/ns/lv2core')
 
-    conf.env['LV2_BUILD'] = ['lv2/lv2plug.in/ns/lv2core']
-    if conf.env['BUILD_PLUGINS']:
+    conf.env.LV2_BUILD = ['lv2/lv2plug.in/ns/lv2core']
+    if conf.env.BUILD_PLUGINS:
         for i in conf.path.ant_glob('plugins/*', dir=True):
             try:
                 conf.recurse(i.srcpath())
-                conf.env['LV2_BUILD'] += [i.srcpath()]
+                conf.env.LV2_BUILD += [i.srcpath()]
             except:
                 Logs.warn('Configuration failed, %s will not be built\n' % i)
 
     autowaf.configure(conf)
     autowaf.display_header('LV2 Configuration')
-    autowaf.display_msg(conf, 'Bundle directory', conf.env['LV2DIR'])
-    autowaf.display_msg(conf, 'Copy (not link) headers', conf.env['COPY_HEADERS'])
+    autowaf.display_msg(conf, 'Bundle directory', conf.env.LV2DIR)
+    autowaf.display_msg(conf, 'Copy (not link) headers', conf.env.COPY_HEADERS)
     autowaf.display_msg(conf, 'Version', VERSION)
 
 def chop_lv2_prefix(s):
@@ -91,7 +90,7 @@ def specgen(task):
     owl  = rdflib.Namespace('http://www.w3.org/2002/07/owl#')
     rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
-    sys.path.append("./lv2specgen")
+    sys.path.append('./lv2specgen')
     import lv2specgen
 
     spec   = task.inputs[0]
@@ -130,13 +129,13 @@ def specgen(task):
         micro = int(model.value(ext_node, lv2.microVersion, None))
     except:
         e = sys.exc_info()[1]
-        print("warning: %s: failed to find version for %s" % (bundle, ext))
+        print('warning: %s: failed to find version for %s' % (bundle, ext))
 
     # Get date
     date = None
     for r in model.triples([ext_node, doap.release, None]):
         revision = model.value(r[2], doap.revision, None)
-        if revision == ("%d.%d" % (minor, micro)):
+        if revision == ('%d.%d' % (minor, micro)):
             date = model.value(r[2], doap.created, None)
             break
 
@@ -145,7 +144,7 @@ def specgen(task):
         revision = model.value(r[2], doap.revision, None)
         this_date = model.value(r[2], doap.created, None)
         if this_date > date:
-            print("warning: %s revision %d.%d (%s) is not the latest release" % (
+            print('warning: %s revision %d.%d (%s) is not the latest release' % (
                 ext_node, minor, micro, date))
             break
     
@@ -238,8 +237,8 @@ def link(task):
 
 def build_ext(bld, path):
     name        = os.path.basename(path)
-    bundle_dir  = os.path.join(bld.env['LV2DIR'], name + '.lv2')
-    include_dir = os.path.join(bld.env['INCLUDEDIR'], path)
+    bundle_dir  = os.path.join(bld.env.LV2DIR, name + '.lv2')
+    include_dir = os.path.join(bld.env.INCLUDEDIR, path)
 
     # Copy headers to URI-style include paths in build directory
     for i in bld.path.ant_glob(path + '/*.h'):
@@ -248,7 +247,7 @@ def build_ext(bld, path):
             target = bld.path.get_bld().make_node('%s/%s' % (path, i)))
 
     # Build test program if applicable
-    if bld.env['BUILD_TESTS'] and bld.path.find_node(path + '/%s-test.c' % name):
+    if bld.env.BUILD_TESTS and bld.path.find_node(path + '/%s-test.c' % name):
         test_lib    = []
         test_cflags = ['']
         if bld.is_defined('HAVE_GCOV'):
@@ -270,7 +269,7 @@ def build_ext(bld, path):
     # Install URI-like includes
     headers = bld.path.ant_glob(path + '/*.h')
     if headers:
-        if bld.env['COPY_HEADERS']:
+        if bld.env.COPY_HEADERS:
             bld.install_files(include_dir, headers)
         else:
             bld.symlink_as(include_dir,
@@ -292,8 +291,8 @@ def build(bld):
         source       = 'lv2.pc.in',
         target       = 'lv2.pc',
         install_path = '${LIBDIR}/pkgconfig',
-        PREFIX       = bld.env['PREFIX'],
-        INCLUDEDIR   = bld.env['INCLUDEDIR'],
+        PREFIX       = bld.env.PREFIX,
+        INCLUDEDIR   = bld.env.INCLUDEDIR,
         VERSION      = VERSION)
 
     # Build extensions
@@ -301,10 +300,10 @@ def build(bld):
         build_ext(bld, i.srcpath())
 
     # Build plugins
-    for i in bld.env['LV2_BUILD']:
+    for i in bld.env.LV2_BUILD:
         bld.recurse(i)
 
-    if bld.env['DOCS']:
+    if bld.env.DOCS:
         # Build Doxygen documentation (and tags file)
         autowaf.build_dox(bld, 'LV2', VERSION, top, out)
 
@@ -363,7 +362,7 @@ def build(bld):
             source = ['lv2/lv2plug.in/ns/index.html.in'] + index_files,
             target = 'ns/index.html')
 
-    if bld.env['BUILD_TESTS']:
+    if bld.env.BUILD_TESTS:
         # Generate a compile test .c file that includes all headers
         def gen_build_test(task):
             out = open(task.outputs[0].abspath(), 'w')
@@ -397,11 +396,11 @@ def test(ctx):
 
 class Dist(Scripting.Dist):
     def execute(self):
-        "Execute but do not call archive() since dist() has already done so."
+        'Execute but do not call archive() since dist() has already done so.'
         self.recurse([os.path.dirname(Context.g_module.root_path)])
 
     def get_tar_path(self, node):
-        "Resolve symbolic links to avoid broken links in tarball."
+        'Resolve symbolic links to avoid broken links in tarball.'
         return os.path.realpath(node.abspath())
 
 class DistCheck(Dist, Scripting.DistCheck):
@@ -420,7 +419,7 @@ def dist(ctx):
 
     # Write NEWS files in source directory
     for i in subdirs:
-        print "* " + i.path_from(ctx.path)
+        print '* ' + i.path_from(ctx.path)
         print ctx.path.ant_glob(i.path_from(ctx.path) + '/*.ttl')
         def abspath(node):
             return node.abspath()

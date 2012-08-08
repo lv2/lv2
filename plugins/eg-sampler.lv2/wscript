@@ -19,7 +19,7 @@ def configure(conf):
     autowaf.configure(conf)
     autowaf.display_header('Sampler Configuration')
 
-    if conf.env['MSVC_COMPILER']:
+    if conf.env.MSVC_COMPILER:
         conf.env.append_unique('CFLAGS', ['-TP', '-MD'])
     else:
         conf.env.append_unique('CFLAGS', '-std=c99')
@@ -32,14 +32,14 @@ def configure(conf):
     autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
                       atleast_version='2.18.0', mandatory=False)
 
-    autowaf.display_msg(conf, "LV2 bundle directory", conf.env['LV2DIR'])
+    autowaf.display_msg(conf, 'LV2 bundle directory', conf.env.LV2DIR)
     print('')
 
 def build(bld):
     bundle = 'eg-sampler.lv2'
 
     # Make a pattern for shared objects without the 'lib' prefix
-    module_pat = re.sub('^lib', '', bld.env['cshlib_PATTERN'])
+    module_pat = re.sub('^lib', '', bld.env.cshlib_PATTERN)
     module_ext = module_pat[module_pat.rfind('.'):]
 
     # Build manifest.ttl by substitution (for portable lib extension)
@@ -70,7 +70,7 @@ def build(bld):
               install_path = '${LV2DIR}/%s' % bundle,
               use          = 'SNDFILE LV2',
               includes     = includes)
-    obj.env['cshlib_PATTERN'] = module_pat
+    obj.env.cshlib_PATTERN = module_pat
 
     # Build UI library
     if bld.is_defined('HAVE_GTK2'):
@@ -81,4 +81,4 @@ def build(bld):
                   install_path = '${LV2DIR}/%s' % bundle,
                   use          = 'GTK2 LV2',
                   includes     = includes)
-    obj.env['cshlib_PATTERN'] = module_pat
+    obj.env.cshlib_PATTERN = module_pat
