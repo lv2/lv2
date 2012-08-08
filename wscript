@@ -41,10 +41,7 @@ def configure(conf):
         Options.options.no_plugins = True
 
     autowaf.configure(conf)
-    if conf.env.MSVC_COMPILER:
-        conf.env.append_unique('CFLAGS', ['-TP', '-MD'])
-    else:
-        conf.env.append_unique('CFLAGS', '-std=c99')
+    autowaf.set_c99_mode(conf)
 
     if Options.platform == 'win32' or not hasattr(os.path, 'relpath'):
         Logs.warn('System does not support linking headers, copying')

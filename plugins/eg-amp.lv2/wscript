@@ -17,12 +17,8 @@ def options(opt):
 def configure(conf):
     conf.load('compiler_c')
     autowaf.configure(conf)
+    autowaf.set_c99_mode(conf)
     autowaf.display_header('Amp Configuration')
-
-    if conf.env.MSVC_COMPILER:
-        conf.env.append_unique('CFLAGS', ['-TP', '-MD'])
-    else:
-        conf.env.append_unique('CFLAGS', '-std=c99')
 
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
