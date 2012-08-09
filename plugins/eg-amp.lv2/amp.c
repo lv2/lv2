@@ -120,7 +120,7 @@ cleanup(LV2_Handle instance)
 }
 
 /** Return extension data provided by the plugin. */
-const void*
+static const void*
 extension_data(const char* uri)
 {
 	return NULL;  /* This plugin has no extension data. */
