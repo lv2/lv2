@@ -365,7 +365,7 @@ def build(bld):
             out = open(task.outputs[0].abspath(), 'w')
             for i in task.inputs:
                 out.write('#include "%s"\n' % i.bldpath())
-            out.write('int main() { return 0; }\n')
+            out.write('int main(void) { return 0; }\n')
             out.close()
 
         bld(rule         = gen_build_test,

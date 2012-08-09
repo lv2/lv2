@@ -24,7 +24,7 @@
 char** uris   = NULL;
 size_t n_uris = 0;
 
-char*
+static char*
 copy_string(const char* str)
 {
 	const size_t len = strlen(str);
@@ -33,7 +33,7 @@ copy_string(const char* str)
 	return dup;
 }
 
-LV2_URID
+static LV2_URID
 urid_map(LV2_URID_Map_Handle handle, const char* uri)
 {
 	for (size_t i = 0; i < n_uris; ++i) {
@@ -47,7 +47,7 @@ urid_map(LV2_URID_Map_Handle handle, const char* uri)
 	return n_uris;
 }
 
-int
+static int
 test_fail(const char* fmt, ...)
 {
 	va_list args;
@@ -59,7 +59,7 @@ test_fail(const char* fmt, ...)
 }
 
 int
-main()
+main(void)
 {
 	LV2_URID_Map   map = { NULL, urid_map };
 	LV2_Atom_Forge forge;
@@ -241,8 +241,8 @@ main()
 	LV2_Atom_Vector* vector2 = (LV2_Atom_Vector*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_vector_head(
 			&forge, &vec_frame, sizeof(int32_t), forge.Int));
-	for (unsigned i = 0; i < sizeof(elems) / sizeof(int32_t); ++i) {
-		lv2_atom_forge_int(&forge, elems[i]);
+	for (unsigned e = 0; e < sizeof(elems) / sizeof(int32_t); ++e) {
+		lv2_atom_forge_int(&forge, elems[e]);
 	}
 	lv2_atom_forge_pop(&forge, &vec_frame);
 	if (!lv2_atom_equals(&vector->atom, &vector2->atom)) {
@@ -339,7 +339,7 @@ main()
 	};
 
 	unsigned n_matches = lv2_atom_object_query((LV2_Atom_Object*)obj, q);
-	for (int i = 0; i < 2; ++i) {
+	for (int n = 0; n < 2; ++n) {
 		if (n_matches != n_props) {
 			return test_fail("Query failed, %u matches != %u\n",
 			                 n_matches, n_props);

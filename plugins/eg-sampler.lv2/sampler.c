@@ -197,15 +197,15 @@ work(LV2_Handle                  instance,
      uint32_t                    size,
      const void*                 data)
 {
-	Sampler*  self = (Sampler*)instance;
-	LV2_Atom* atom = (LV2_Atom*)data;
+	Sampler*        self = (Sampler*)instance;
+	const LV2_Atom* atom = (const LV2_Atom*)data;
 	if (atom->type == self->uris.eg_freeSample) {
 		/* Free old sample */
 		SampleMessage* msg = (SampleMessage*)data;
 		free_sample(self, msg->sample);
 	} else {
 		/* Handle set message (load sample). */
-		LV2_Atom_Object* obj = (LV2_Atom_Object*)data;
+		const LV2_Atom_Object* obj = (const LV2_Atom_Object*)data;
 
 		/* Get file path from message */
 		const LV2_Atom* file_path = read_set_file(&self->uris, obj);
