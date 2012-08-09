@@ -259,12 +259,37 @@ midi:benderValue
 	rdfs:range xsd:short ;
 	rdfs:comment "The value of a pitch bender (-8192 to 8192)." .
 
+midi:binding
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:range midi:MidiEvent ;
+	lv2:documentation """
+<p>The MIDI event to bind a parameter to.  This describes which MIDI events
+should be used to control a port, parameter, or other object.  The binding
+should be a midi:MidiEvent but the property that represents the control value may
+be ommitted.  For example, to bind to the value of controller 17:</p>
+
+<pre class="turtle-code">
+port midi:binding [
+    a midi:Controller ;
+    midi:controllerNumber 17
+] .
+</pre>
+""" .
+
 midi:byteNumber
 	a rdf:Property ,
 		owl:DatatypeProperty ;
 	rdfs:domain midi:Chunk ;
 	rdfs:range xsd:unsignedByte ;
 	rdfs:comment "The 0-based index of a byte which is part of this chunk." .
+
+midi:channel
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
+	rdfs:range xsd:unsignedByte ;
+	rdfs:comment "The channel number of a MIDI message." .
 
 midi:chunk
 	a rdf:Property ;
@@ -277,7 +302,7 @@ midi:controllerNumber
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
 	rdfs:range xsd:byte ;
-	rdfs:comment "The numberic ID of a controller (0 to 127)." .
+	rdfs:comment "The numeric ID of a controller (0 to 127)." .
 
 midi:controllerValue
 	a rdf:Property ,

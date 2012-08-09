@@ -15,11 +15,13 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "1.7" ;
-		doap:created "2012-07-29" ;
+		doap:created "2012-08-09" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Use consistent label style."
+			] , [
+				rdfs:label "Add midi:binding and midi:channel."
 			]
 		]
 	] , [
