@@ -329,7 +329,7 @@ def getComment(m, urinode, classlist, proplist, instalist):
     c = findOne(m, urinode, rdfs.comment, None)
     if c:
         text = getLiteralString(getObject(c))
-        return xml.sax.saxutils.escape(text)
+        return '<p>%s</p>' % xml.sax.saxutils.escape(text)
 
     return ''
 
