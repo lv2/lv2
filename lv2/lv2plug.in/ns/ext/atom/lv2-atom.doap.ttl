@@ -26,6 +26,8 @@
 				rdfs:label "Fix outdated documentation in forge.h."
 			] , [
 				rdfs:label "Use consistent label style."
+			] , [
+				rdfs:label "Add LV2_ATOM_CONTENTS_CONST and LV2_ATOM_BODY_CONST."
 			]
 		]
 	] , [
