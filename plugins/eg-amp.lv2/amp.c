@@ -41,9 +41,9 @@ typedef enum {
 /** Plugin instance. */
 typedef struct {
 	// Port buffers
-	float* gain;
-	float* input;
-	float* output;
+	const float* gain;
+	const float* input;
+	float*       output;
 } Amp;
 
 /** Create a new plugin instance. */
@@ -68,10 +68,10 @@ connect_port(LV2_Handle instance,
 
 	switch ((PortIndex)port) {
 	case AMP_GAIN:
-		amp->gain = (float*)data;
+		amp->gain = (const float*)data;
 		break;
 	case AMP_INPUT:
-		amp->input = (float*)data;
+		amp->input = (const float*)data;
 		break;
 	case AMP_OUTPUT:
 		amp->output = (float*)data;
@@ -92,7 +92,7 @@ activate(LV2_Handle instance)
 static void
 run(LV2_Handle instance, uint32_t n_samples)
 {
-	Amp* amp = (Amp*)instance;
+	const Amp* amp = (const Amp*)instance;
 
 	const float        gain   = *(amp->gain);
 	const float* const input  = amp->input;

@@ -45,9 +45,8 @@ typedef struct {
 	float phase;
 
 	// Port buffers
-	float* freq;
-	float* input;
-	float* output;
+	const float* freq;
+	float*       output;
 } Synth;
 
 /** Create a new plugin instance. */
@@ -58,10 +57,10 @@ instantiate(const LV2_Descriptor*     descriptor,
             const LV2_Feature* const* features)
 {
 	Synth* self = (Synth*)malloc(sizeof(Synth));
-
-	// Store the sample rate so it is available in run()
-	self->sample_rate = rate;
-
+	if (self) {
+		// Store the sample rate so it is available in run()
+		self->sample_rate = rate;
+	}
 	return (LV2_Handle)self;
 }
 
@@ -75,7 +74,7 @@ connect_port(LV2_Handle instance,
 
 	switch ((PortIndex)port) {
 	case SYNTH_FREQ:
-		self->freq = (float*)data;
+		self->freq = (const float*)data;
 		break;
 	case SYNTH_OUTPUT:
 		self->output = (float*)data;

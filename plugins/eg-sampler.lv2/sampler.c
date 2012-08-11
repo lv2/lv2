@@ -51,9 +51,9 @@
 #include "./uris.h"
 
 enum {
-	SAMPLER_CONTROL  = 0,
-	SAMPLER_RESPONSE = 1,
-	SAMPLER_OUT      = 2
+	SAMPLER_CONTROL = 0,
+	SAMPLER_NOTIFY  = 1,
+	SAMPLER_OUT     = 2
 };
 
 static const char* default_sample_file = "click.wav";
@@ -78,9 +78,9 @@ typedef struct {
 	Sample* sample;
 
 	/* Ports */
-	float*               output_port;
-	LV2_Atom_Sequence*   control_port;
-	LV2_Atom_Sequence*   notify_port;
+	const LV2_Atom_Sequence* control_port;
+	LV2_Atom_Sequence*       notify_port;
+	float*                   output_port;
 
 	/* Forge frame for notify port (for writing worker replies). */
 	LV2_Atom_Forge_Frame notify_frame;
@@ -201,7 +201,7 @@ work(LV2_Handle                  instance,
 	const LV2_Atom* atom = (const LV2_Atom*)data;
 	if (atom->type == self->uris.eg_freeSample) {
 		/* Free old sample */
-		SampleMessage* msg = (SampleMessage*)data;
+		const SampleMessage* msg = (const SampleMessage*)data;
 		free_sample(self, msg->sample);
 	} else {
 		/* Handle set message (load sample). */
@@ -214,7 +214,7 @@ work(LV2_Handle                  instance,
 		}
 
 		/* Load sample. */
-		Sample* sample = load_sample(self, LV2_ATOM_BODY(file_path));
+		Sample* sample = load_sample(self, LV2_ATOM_BODY_CONST(file_path));
 		if (sample) {
 			/* Loaded sample, send it to run() to be applied. */
 			respond(handle, sizeof(sample), &sample);
@@ -245,7 +245,7 @@ work_response(LV2_Handle  instance,
 	self->schedule->schedule_work(self->schedule->handle, sizeof(msg), &msg);
 
 	/* Install the new sample */
-	self->sample = *(Sample**)data;
+	self->sample = *(Sample*const*)data;
 
 	/* Send a notification that we're using a new sample. */
 	lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
@@ -264,9 +264,9 @@ connect_port(LV2_Handle instance,
 	Sampler* self = (Sampler*)instance;
 	switch (port) {
 	case SAMPLER_CONTROL:
-		self->control_port = (LV2_Atom_Sequence*)data;
+		self->control_port = (const LV2_Atom_Sequence*)data;
 		break;
-	case SAMPLER_RESPONSE:
+	case SAMPLER_NOTIFY:
 		self->notify_port = (LV2_Atom_Sequence*)data;
 		break;
 	case SAMPLER_OUT:
