@@ -21,8 +21,13 @@
 			dcs:item [
 				rdfs:label "Use consistent label style."
 			] , [
-				rdfs:label "Add midi:binding and midi:channel."
-			]
+				rdfs:label "Add midi:binding and midi:channel predicates."
+			] , [
+				rdfs:label "Remove non-standard midi:Tick message type."
+			] , [
+				rdfs:label "Add C definitions for message types and standard controllers."
+			] , [
+            	rdfs:label "Fix definition of SystemExclusive status byte."
 		]
 	] , [
 		doap:revision "1.6" ;

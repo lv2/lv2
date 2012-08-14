@@ -221,7 +221,7 @@ midi:SystemExclusive
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemMessage ;
 	rdfs:label "System Exclusive Message" ;
-	midi:statusMask "F0"^^xsd:hexBinary .
+	midi:status "F0"^^xsd:hexBinary .
 
 midi:SystemMessage
 	a rdfs:Class ;
@@ -233,12 +233,6 @@ midi:SystemRealtime
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemMessage ;
 	rdfs:label "System Realtime Message" .
-
-midi:Tick
-	a rdfs:Class ;
-	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Tick Message" ;
-	midi:status "F9"^^xsd:hexBinary .
 
 midi:TuneRequest
 	a rdfs:Class ;

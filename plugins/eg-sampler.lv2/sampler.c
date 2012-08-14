@@ -46,6 +46,7 @@
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/ext/worker/worker.h"
+#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
 #include "./uris.h"
@@ -359,11 +360,15 @@ run(LV2_Handle instance,
 	LV2_ATOM_SEQUENCE_FOREACH(self->control_port, ev) {
 		self->frame_offset = ev->time.frames;
 		if (ev->body.type == uris->midi_Event) {
-			uint8_t* const data = (uint8_t* const)(ev + 1);
-			if ((data[0] & 0xF0) == 0x90) {
+			const uint8_t* const msg = (const uint8_t*)(ev + 1);
+			switch (lv2_midi_message_type(msg)) {
+			case LV2_MIDI_MSG_NOTE_ON:
 				start_frame = ev->time.frames;
 				self->frame = 0;
 				self->play  = true;
+				break;
+			default:
+				break;
 			}
 		} else if (is_object_type(uris, ev->body.type)) {
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
