@@ -27,7 +27,8 @@
 			] , [
 				rdfs:label "Add C definitions for message types and standard controllers."
 			] , [
-            	rdfs:label "Fix definition of SystemExclusive status byte."
+				rdfs:label "Fix definition of SystemExclusive status byte."
+			]
 		]
 	] , [
 		doap:revision "1.6" ;
