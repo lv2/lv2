@@ -106,3 +106,8 @@ meta:paniq
 	a foaf:Person ;
 	foaf:name "Leonard Ritter" ;
 	foaf:mbox <mailto:paniq@paniq.org> .
+
+meta:harry
+	a foaf:Person ;
+	foaf:name "Harry van Haaren" ;
+	foaf:mbox <harryhaaren@gmail.com> .

@@ -22,13 +22,9 @@
 <http://lv2plug.in/plugins/eg-synth>
 	a lv2:Plugin ,
 		lv2:InstrumentPlugin ;
-	doap:maintainer [
-		a foaf:Person ;
-		foaf:name "Harry van Haaren" ;
-		foaf:mbox <harryhaaren@gmail.com>
-	] ;
 	doap:name "Example Synthesizer" ;
 	doap:license <http://opensource.org/licenses/isc> ;
+	lv2:project <http://lv2plug.in/ns/lv2> ;
 	lv2:optionalFeature lv2:hardRTCapable ;
 	lv2:port [
 		a lv2:InputPort ,
