@@ -21,6 +21,8 @@
 				rdfs:label "Add types for WindowsUI, CocoaUI, and Gtk3UI."
 			] , [
 				rdfs:label "Use consistent label style."
+			] , [
+				rdfs:label "Add missing LV2_SYMBOL_EXPORT declaration for lv2ui_descriptor prototype."
 			]
 		]
 	] , [

@@ -373,6 +373,7 @@ typedef struct _LV2UI_Peak_Data {
    the host should just iterate from 0 and upwards until the function returns
    NULL or a descriptor with an URI matching the one the host is looking for.
 */
+LV2_SYMBOL_EXPORT
 const LV2UI_Descriptor* lv2ui_descriptor(uint32_t index);
 
 /**
