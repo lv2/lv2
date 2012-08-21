@@ -22,6 +22,8 @@ def configure(conf):
 
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
+        
+    conf.check(features='c cprogram', lib='m', uselib_store='M', mandatory=False) 
 
     autowaf.display_msg(conf, 'LV2 bundle directory', conf.env.LV2DIR)
     print('')
@@ -59,7 +61,7 @@ def build(bld):
               name         = 'amp',
               target       = '%s/amp' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              uselib       = 'LV2',
+              uselib       = 'M LV2',
               includes     = includes)
     obj.env.cshlib_PATTERN = module_pat
 
