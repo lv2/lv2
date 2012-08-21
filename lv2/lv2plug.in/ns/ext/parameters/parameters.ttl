@@ -125,6 +125,11 @@ param:bypass
 	rdfs:label "bypass" ;
 	rdfs:comment "A boolean parameter that disabled processing if true." .
 
+param:sampleRate
+	a lv2:Parameter ;
+	rdfs:label "sample rate" ;
+	rdfs:comment "A sample rate in Hz." .
+
 param:EnvelopeControls
 	a rdfs:Class ;
 	rdfs:subClassOf param:ControlGroup ;
