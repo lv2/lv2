@@ -21,8 +21,7 @@ top = '.'
 out = 'build'
 
 def options(opt):
-    opt.load('compiler_cc')
-    opt.load('compiler_cxx')
+    opt.load('compiler_c')
     autowaf.set_options(opt)
     opt.add_option('--test', action='store_true', dest='build_tests',
                    help='Build unit tests')
@@ -35,7 +34,6 @@ def options(opt):
 def configure(conf):
     try:
         conf.load('compiler_c')
-        conf.load('compiler_cxx')
     except:
         Options.options.build_tests = False
         Options.options.no_plugins = True
