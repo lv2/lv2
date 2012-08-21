@@ -1,0 +1,73 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix opts: <http://lv2plug.in/ns/ext/options#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://lv2plug.in/ns/ext/options>
+	a owl:Ontology ;
+	rdfs:seeAlso <options.h> ,
+		<../../meta/meta.ttl> ,
+		<lv2-options.doap.ttl> ;
+	lv2:documentation """
+<p>This extension defines a facility for <q>options</q>, which are parameters
+passed to a plugin, UI, or other instance at instantiation time.  Like the
+command-line <em>options</em> of a program, options do not change over the
+lifetime of an instance.</p>
+
+<p>Because they are available at instantiation time, options are useful for
+adding parameters which are not suitable for dynamic control, such as those
+that require expensive pre-computation.  They are also useful for providing
+information which would not otherwise be available.</p>
+
+<p>Options are provided to instances by the host via the opts:options
+feature.</p>
+
+<p>Instances may indicate they <q>require</q> an option with the
+opts:requiredOption property, or that they optionally <q>support</q> an option
+with the opts:supportedOption property.</p>
+""" .
+
+opts:options
+	a lv2:Feature ;
+	rdfs:label "options" ;
+	lv2:documentation """
+<p>The feature used to provide options to an instance.</p>
+
+<p>To implement this feature, hosts MUST pass an LV2_Feature to the appropriate
+instantiate method with this URI and data pointed to an array of
+LV2_Options_Option terminated by an element with both key and value set to
+zero.  The instance should cast this data pointer to <code>const
+LV2_Options_Option*</code> and scan the array for any options of interest.  The
+instance MUST NOT modify the options array in any way.</p>
+
+<p>Note that requiring this feature may reduce the number of compatible hosts.
+Unless some options are strictly required by the instance, this feature SHOULD
+be listed as a lv2:optionalFeature.</p>
+""" .
+
+opts:requiredOption
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:label "required option" ;
+	lv2:documentation """
+<p>An option required by the instance to function at all.  The host MUST pass a
+value for the specified option via opts:options in order to create an
+instance.</p>
+
+<p>Note that use of this property may reduce the number of compatible hosts.
+Wherever possible, it is better to list options with opts:supportedOption and
+fall back to a reasonable default value if it is not provided.</p>
+""" .
+
+opts:supportedOption
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:label "supported option" ;
+	lv2:documentation """
+<p>An option supported or <q>understood</q> by the instance.  The host SHOULD
+provide a value for the specified option if one is known, or provide the user
+an opportunity to specify one if one is Indicates that the instance host MUST
+pass a value for the specified option in order to instantiate the instance.</p>
+""" .

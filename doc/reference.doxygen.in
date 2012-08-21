@@ -667,6 +667,7 @@ INPUT                  = @LV2_SRCDIR@/doc/mainpage.dox \
                          lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
                          lv2/lv2plug.in/ns/ext/log/log.h \
                          lv2/lv2plug.in/ns/ext/morph/morph.h \
+                         lv2/lv2plug.in/ns/ext/options/options.h \
                          lv2/lv2plug.in/ns/ext/patch/patch.h \
                          lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
                          lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
