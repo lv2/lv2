@@ -19,7 +19,6 @@
 
 #include <stdint.h>
 
-#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 
 #define LV2_OPTIONS_URI    "http://lv2plug.in/ns/ext/options"
@@ -41,8 +40,10 @@ extern "C" {
    LV2_OPTIONS__options .
 */
 typedef struct {
-	LV2_URID        key;    /**< Key (a property URID). */
-	const LV2_Atom* value;  /**< Value (an atom of appropriate type). */
+	LV2_URID    key;    /**< Key (a property URID). */
+	uint32_t    size;   /**< Size of value in bytes. */
+	LV2_URID    type;   /**< Type of value (a datatype URID). */
+	const void* value;  /**< Pointer to value. */
 } LV2_Options_Option;
 
 #ifdef __cplusplus
