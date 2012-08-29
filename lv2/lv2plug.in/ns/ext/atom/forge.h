@@ -559,7 +559,7 @@ lv2_atom_forge_blank(LV2_Atom_Forge*       forge,
 
 /**
    Write the header for a property body (likely in an Object).
-   See lv2_atom_forge_object() documentation for an example.
+   See lv2_atom_forge_resource() documentation for an example.
 */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_property_head(LV2_Atom_Forge* forge,
