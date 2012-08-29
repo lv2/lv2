@@ -97,3 +97,15 @@ bufsz:minBlockLength
 once, that is, the minimum <code>sample_count</code> parameter that will ever
 be passed to LV2_Descriptor::run().</p>
 """ .
+
+bufsz:sequenceSize
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		opts:Option ;
+	rdfs:label "sequnce size" ;
+	rdfs:range xsd:nonNegativeInteger ;
+	lv2:documentation """
+<p>The maximum size of a sequence, in bytes.  This should be provided as an
+option by hosts that support event ports (including but not limited to MIDI),
+so plugins have the ability to allocate auxiliary buffers large enough to copy
+the input.</p> """ .
