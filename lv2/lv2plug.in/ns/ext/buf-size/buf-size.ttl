@@ -1,5 +1,6 @@
 @prefix bufsz: <http://lv2plug.in/ns/ext/buf-size#> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix opts:  <http://lv2plug.in/ns/ext/options#> .
 @prefix owl:   <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
@@ -71,4 +72,28 @@ bufsz:fixedBlockLength.</p>
 
 <p>Note that requiring this feature may severely limit the number of hosts
 capable of running the plugin.</p>
+""" .
+
+bufsz:maxBlockLength
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		opts:Option ;
+	rdfs:label "maximum block length" ;
+	rdfs:range xsd:nonNegativeInteger ;
+	lv2:documentation """
+<p>The maximum block length the host will ever request the plugin to process at
+once, that is, the maximum <code>sample_count</code> parameter that will ever
+be passed to LV2_Descriptor::run().</p>
+""" .
+
+bufsz:minBlockLength
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		opts:Option ;
+	rdfs:label "minimum block length" ;
+	rdfs:range xsd:nonNegativeInteger ;
+	lv2:documentation """
+<p>The minimum block length the host will ever request the plugin to process at
+once, that is, the minimum <code>sample_count</code> parameter that will ever
+be passed to LV2_Descriptor::run().</p>
 """ .
