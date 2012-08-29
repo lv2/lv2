@@ -25,6 +25,7 @@
 #define LV2_OPTIONS_URI    "http://lv2plug.in/ns/ext/options"
 #define LV2_OPTIONS_PREFIX LV2_OPTIONS_URI "#"
 
+#define LV2_OPTIONS__Option          LV2_OPTIONS_PREFIX "Option"
 #define LV2_OPTIONS__options         LV2_OPTIONS_PREFIX "options"
 #define LV2_OPTIONS__requiredOption  LV2_OPTIONS_PREFIX "requiredOption"
 #define LV2_OPTIONS__supportedOption LV2_OPTIONS_PREFIX "supportedOption"

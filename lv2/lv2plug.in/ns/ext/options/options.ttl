@@ -29,6 +29,20 @@ opts:requiredOption property, or that they optionally <q>support</q> an option
 with the opts:supportedOption property.</p>
 """ .
 
+opts:Option
+	a rdfs:Class ;
+	rdfs:label "Option" ;
+	rdfs:subClassOf rdf:Property ;
+	lv2:documentation """
+<p>A property intended to be used as a static option for an instance.</p>
+
+<p>It is not required for a property to explicitly be an Option in order to be
+used as such.  However, properties which are primarily intended for use as
+options, or are at least particularly useful as options, should be explicitly
+given this type for documentation purposes, and to assist hosts in discovering
+option definitions.</p>
+""" .
+
 opts:options
 	a lv2:Feature ;
 	rdfs:label "options" ;
