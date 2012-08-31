@@ -421,6 +421,11 @@ save(LV2_Handle                instance,
      uint32_t                  flags,
      const LV2_Feature* const* features)
 {
+	Sampler* self = (Sampler*)instance;
+	if (!self->sample) {
+		return LV2_STATE_SUCCESS;
+	}
+
 	LV2_State_Map_Path* map_path = NULL;
 	for (int i = 0; features[i]; ++i) {
 		if (!strcmp(features[i]->URI, LV2_STATE__mapPath)) {
@@ -428,9 +433,7 @@ save(LV2_Handle                instance,
 		}
 	}
 
-	Sampler* self  = (Sampler*)instance;
-	char*    apath = map_path->abstract_path(map_path->handle,
-	                                         self->sample->path);
+	char* apath = map_path->abstract_path(map_path->handle, self->sample->path);
 
 	store(handle,
 	      self->uris.eg_file,
