@@ -103,7 +103,7 @@ my_save(LV2_Handle                 instance,
           plugin->uris.atom_String,
           LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 
-    return LV2_STATUS_SUCCESS;
+    return LV2_STATE_SUCCESS;
 }
 
 LV2_State_Status
@@ -128,7 +128,7 @@ my_restore(LV2_Handle                  instance,
         plugin->state->greeting = strdup(DEFAULT_GREETING);
     }
 
-    return LV2_STATUS_SUCCESS;
+    return LV2_STATE_SUCCESS;
 }
 
 const void*
