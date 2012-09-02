@@ -234,7 +234,7 @@ def linkify(string):
 
     rgx = re.compile('([^a-zA-Z0-9_:])(' + \
                      '|'.join(map(re.escape, linkmap)) + \
-                     ')([^a-aA-Z0-9_:])')
+                     ')([^a-zA-Z0-9_:])')
 
     def translateCodeLink(match):
         return match.group(1) + linkmap[match.group(2)] + match.group(3)
