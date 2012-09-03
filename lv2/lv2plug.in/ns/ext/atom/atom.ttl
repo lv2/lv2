@@ -28,7 +28,7 @@ meaningfully process atoms of a type unknown to them.</p>
 <p>Atoms can and should be used anywhere values of various types must be stored
 or transmitted.  The port type atom:AtomPort can be used to transmit atoms via
 ports.  The atom:Sequence type in an atom:AtomPort replaces the <a
-href="http://lv2plug.in/ns/ext/event">LV2 event</a> extension.</p>
+href="../event/event.html">LV2 event</a> extension.</p>
 
 <p>The types defined in this extension should be powerful enough to express
 almost any structure.  Implementations SHOULD build structures out of the types
@@ -38,8 +38,7 @@ implementation burden which harms interoperabilty, and should only be defined
 where absolutely necessary.</p>
 
 <p>Implementing this extension requires a facility for mapping URIs to
-integers, such as the <a href="http://lv2plug.in/ns/ext/urid">LV2 URID</a>
-extension.</p>
+integers, such as the <a href="../urid/urid.html">LV2 URID</a> extension.</p>
 
 <h3>Serialisation</h3>
 

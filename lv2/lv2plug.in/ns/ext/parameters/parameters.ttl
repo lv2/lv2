@@ -11,10 +11,9 @@
 	lv2:documentation """
 <p>This vocabulary describes parameters common in audio processing software.  A
 <q>parameter</q> is purely a metadata concept, unrelated to any particular code
-mechanism.  Parameters are used to assign meaning to controls (e.g. using <a
-href="http://lv2plug.in/ns/lv2core#designation">lv2:designation</a>) so they
-can be used more intelligently or presented to the user more efficiently.</p>
-""" .
+mechanism.  Parameters are used to assign meaning to controls (e.g. using
+lv2:designation for ports) so they can be used more intelligently or presented
+to the user more efficiently.</p> """ .
 
 param:ControlGroup
 	a rdfs:Class ;

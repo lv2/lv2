@@ -45,10 +45,10 @@ single property.  The host is free to implement property storage and retrieval
 in any way.</p>
 
 <p>Since value types are defined by URI, any type is possible.  However, a set
-of standard types is defined by the <a href="http://lv2plug.in/ns/ext/atom">LV2
-Atom</a> extension.  Use of these types is recommended.  Hosts MUST implement
-at least <a href="http://lv2plug.in/ns/ext/atom#String">atom:String</a>, which
-is simply a C string.</p>
+of standard types is defined by the <a href="../atom/atom.html">LV2 Atom</a>
+extension.  Use of these types is recommended.  Hosts MUST implement at least
+<a href="../atom/atom.html#String">atom:String</a>, which is simply a C
+string.</p>
 
 <h3>Referring to Files</h3>
 
@@ -56,8 +56,7 @@ is simply a C string.</p>
 state.  This is done by storing the file's path as a property just like any
 other value.  However, there are some rules which MUST be followed when storing
 paths, see state:mapPath for details.  Plugins MUST use the type <a
-href="http://lv2plug.in/ns/ext/atom#Path">atom:Path</a> for all paths in their
-state.</p>
+href="../atom/atom.html#Path">atom:Path</a> for all paths in their state.</p>
 
 <p>Plugins are strongly encouraged to avoid creating files, instead storing all
 state as properties.  However, occasionally the ability to create files is
@@ -206,11 +205,10 @@ plugins.</p>
 <q>Don't stop; set playing to false</q>.</p>
 
 <p>This extension does not define a dynamic mechanism for state access and
-manipulation.  The <a href="http://lv2plug.in/ns/ext/patch">LV2 Patch</a>
-extension defines a generic set of messages which can be used to access or
-manipulate properties, and the <a href="http://lv2plug.in/ns/ext/atom">LV2
-Atom</a> extension defines a port type and data container capable of
-transmitting those messages.</p>
+manipulation.  The <a href="../patch/patch.html">LV2 Patch</a> extension
+defines a generic set of messages which can be used to access or manipulate
+properties, and the <a href="../atom/atom.html">LV2 Atom</a> extension defines
+a port type and data container capable of transmitting those messages.</p>
 """ .
 
 state:interface

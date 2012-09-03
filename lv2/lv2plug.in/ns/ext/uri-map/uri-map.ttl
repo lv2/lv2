@@ -11,7 +11,7 @@
 		<lv2-uri-map.doap.ttl> ;
 	lv2:documentation """
 <p><span class="warning">This extension is deprecated.</span> New
-implementations should use <a href="http://lv2plug.in/ns/ext/urid">LV2 URID</a>
+implementations should use <a href="../urid/urid.html">LV2 URID</a>
 instead.</p>
 
 <p>This extension defines a simple mechanism for plugins to map URIs to

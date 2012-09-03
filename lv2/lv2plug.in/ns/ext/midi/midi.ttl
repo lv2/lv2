@@ -20,8 +20,8 @@ controlling digital music devices.</p>
 <p>For plugins that process MIDI (or other situations where MIDI is sent via a
 generic transport) the main type defined here, midi:MidiEvent, can be mapped to
 an integer and used as the type of an LV2 <a
-href="http://lv2plug.in/ns/ext/atom#Atom">Atom</a> or <a
-href="http://lv2plug.in/ns/ext/event#Event">Event</a>.</p>
+href="../atom/atom.html#Atom">Atom</a> or <a
+href="../event/event.html#Event">Event</a>.</p>
 
 <p>This specification also defines a complete human and machine readable
 description of the MIDI standard (except for standard controller numbers).

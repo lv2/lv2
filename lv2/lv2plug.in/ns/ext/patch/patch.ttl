@@ -17,9 +17,9 @@ plugins, but is useful in many contexts.</p>
 
 <p>The main feature of this design is that the messages themselves are
 described in the same format as the data they work with.  In particular,
-messages can be serialised as an <a
-href="http://lv2plug.in/ns/ext/atom#Object">LV2 Object</a> or in Turtle (or any
-other RDF serialisation).</p>
+messages can be serialised as a binary <a
+href="../atom/atom.html#Object">Object</a> or in Turtle (or any other RDF
+serialisation).</p>
 
 <p>The idea behind using a property-based interface for control is to prevent
 an an explosion of message types.  Instead of a custom message for each action,
@@ -37,9 +37,9 @@ One benefit of this approach is that a persistent state model is available
 
 <p>This specification is strictly metadata and does not define any binary
 mechanism, though it can be completely expressed by standard types in the <a
-href="http://lv2plug.in/ns/ext/atom">LV2 Atom</a> extension.  Thus, hosts can
-be expected to be capable of transmitting it between plugins, or between a
-plugin and its UI, making it a good choice for advanced plugin control.</p>
+href="../atom/atom.html">LV2 Atom</a> extension.  Thus, hosts can be expected
+to be capable of transmitting it between plugins, or between a plugin and its
+UI, making it a good choice for advanced plugin control.</p>
 """ .
 
 patch:Ack

@@ -277,28 +277,26 @@ def getComment(m, urinode, classlist, proplist, instalist):
         # Add links to code documentation for identifiers
         markup = linkify(markup)
 
-        # Replace ext:ClassName with link to appropriate fragment
-        rgx = re.compile(spec_pre + ':([A-Z][a-zA-Z0-9_-]*)')
-        def translateClassLink(match):
+        # Transform prefixed names like eg:something into links if possible
+        rgx = re.compile('([a-zA-Z0-9_-]+):([a-zA-Z0-9_-]+)')
+        namespaces = getNamespaces(m)
+        def translateLink(match):
+            text   = match.group(0)
+            prefix = match.group(1)
+            name   = match.group(2)
             curie = match.group(0)
-            name  = curie[curie.find(':') + 1:]
-            uri   = spec_ns + name
-            if rdflib.URIRef(uri) not in classlist:
-                print("warning: Link to undefined class %s\n" % curie)
-            return '<a href="#%s">%s</a>' % (name, curie)
-        markup = rgx.sub(translateClassLink, markup)
-
-        # Replace ext:instanceName with link to appropriate fragment
-        rgx = re.compile(spec_pre + ':([a-z][a-zA-Z0-9_-]*)')
-        def translateInstanceLink(match):
-            curie = match.group(0)
-            name  = curie[curie.find(':') + 1:]
-            uri   = spec_ns + name
-            if (rdflib.URIRef(uri) not in instalist and
-                rdflib.URIRef(uri) not in proplist):
-                print("warning: Link to undefined instance/property %s\n" % curie)
-            return '<a href="#%s">%s</a>' % (name, curie)
-        markup = rgx.sub(translateInstanceLink, markup)
+            uri   = rdflib.URIRef(spec_ns + name)
+            if prefix == spec_pre:
+                if not (uri in classlist or uri in instalist or uri in proplist):
+                    print("warning: Link to undefined resource <%s>\n" % text)
+                return '<a href="#%s">%s</a>' % (name, curie)
+            elif prefix in namespaces:
+                return '<a href="%s">%s</a>' % (
+                    namespaces[match.group(1)] + match.group(2),
+                    match.group(0))
+            else:
+                return text
+        markup = rgx.sub(translateLink, markup)
 
         if have_lxml:
             try:
