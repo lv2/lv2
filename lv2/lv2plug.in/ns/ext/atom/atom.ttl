@@ -10,6 +10,8 @@
 <http://lv2plug.in/ns/ext/atom>
 	a owl:Ontology ;
 	rdfs:seeAlso <atom.h> ,
+		<util.h> ,
+		<forge.h> ,
 		<lv2-atom.doap.ttl> ;
 	lv2:documentation """
 <p>This specification defines a generic container for data, called an
