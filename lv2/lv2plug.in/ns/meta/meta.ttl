@@ -59,7 +59,7 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 	] , [
 		doap:revision "1.0.0" ;
 		doap:created "2012-04-16" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-ui-2.4.tar.bz2> ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
