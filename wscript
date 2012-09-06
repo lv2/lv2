@@ -2,6 +2,7 @@
 import datetime
 import glob
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -429,29 +430,45 @@ class DistCheck(Dist, Scripting.DistCheck):
         Dist.archive(self)
 
 def dist(ctx):
-    subdirs = ([ctx.path.find_node('lv2/lv2plug.in/ns/lv2core')] +
+    subdirs = ([ctx.path.find_node('lv2/lv2plug.in/ns/meta')] +
+               [ctx.path.find_node('lv2/lv2plug.in/ns/lv2core')] +
                ctx.path.ant_glob('plugins/*', dir=True) +
                ctx.path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
                ctx.path.ant_glob('lv2/lv2plug.in/ns/extension/*', dir=True))
 
     # Write NEWS files in source directory
+    top_entries = {}
     for i in subdirs:
-        print '* ' + i.path_from(ctx.path)
-        print ctx.path.ant_glob(i.path_from(ctx.path) + '/*.ttl')
         def abspath(node):
             return node.abspath()
         in_files = map(abspath,
                        ctx.path.ant_glob(i.path_from(ctx.path) + '/*.ttl'))
         autowaf.write_news(os.path.basename(i.abspath()),
                            in_files,
-                           i.abspath() + '/NEWS')
+                           i.abspath() + '/NEWS',
+                           top_entries)
+
+    # Write top level NEWS file
+    news = open('NEWS', 'w')
+    for e in sorted(top_entries.keys(), reverse=True):
+        relbase = os.path.basename(e)
+        ver     = re.match('lv2-([0-9]\.[0-9]\.[0-9])\.tar\.bz2', relbase)
+        if ver:
+            entry = 'lv2 (%s) stable;\n' % (ver.group(1))
+            for i in top_entries[e]:
+                if i.startswith('meta: '):
+                    i = i[len('meta: '):]
+                entry += '\n  * ' + i
+            news.write(entry)
+    news.close()
 
     # Build archive
     ctx.archive()
 
     # Delete generated NEWS files from source directory
-    for i in subdirs:
+    for i in subdirs + [ctx.path]:
         try:
             os.remove(os.path.join(i.abspath(), 'NEWS'))
         except:
             pass
+
