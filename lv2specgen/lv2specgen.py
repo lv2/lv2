@@ -1037,7 +1037,7 @@ def load_tags(path, docdir):
 
     return linkmap
 
-def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec"):
+def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=False):
     """The meat and potatoes: Everything starts here."""
 
     global spec_url
@@ -1159,9 +1159,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
 
     template = template.replace('@REVISION@', version_string)
 
-    
-    header_files = ''
-    other_files  = ''
+    file_list = ''
     see_also_files = specProperties(m, spec, rdfs.seeAlso)
     see_also_files.sort()
     for f in see_also_files:
@@ -1173,21 +1171,22 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, mode="spec
             else:
                 continue  # Skip seeAlso file outside bundle
 
-        
-        entry = '<a href="%s">%s</a>' % (uri, uri)
+
+        if offline:
+            entry = uri
+        else:
+            entry = '<a href="%s">%s</a>' % (uri, uri)
         if uri.endswith('.h') or uri.endswith('.hpp'):
             name = os.path.basename(uri)
-            entry += ' (<a href="%s">Documentation</a>) ' % (
+            entry += ' - <a href="%s">Documentation</a> ' % (
                 docdir + '/' + name.replace('.', '_8') + '.html')
-            header_files += '<li>%s</li>' % entry
+            file_list += '<li>%s</li>' % entry
         else:
-            other_files += '<li>%s</li>' % entry
+            file_list += '<li>%s</li>' % entry
 
     files = ''
-    if header_files:
-        files += '<li>API<ul>%s</ul></li>' % header_files
-    if other_files:
-        files += '<li>Data<ul>%s</ul></li>' % other_files
+    if file_list:
+        files += '<li>Files<ul>%s</ul></li>' % file_list
 
     template = template.replace('@FILES@', files)
 

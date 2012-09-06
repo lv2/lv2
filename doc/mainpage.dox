@@ -1,7 +1,7 @@
 /** @mainpage
  *
  * This is the documentation for the LV2 specification and its
- * extensions hosted at http://lv2plug.in.
+ * official extensions.
  *
  * An LV2 extension generally has two parts: the specification in
  * <a href="http://www.w3.org/TeamSubmission/turtle/">Turtle</a>
@@ -12,7 +12,7 @@
  * documentation generated from Turtle with
  * <a href="http://drobilla.net/software/lv2specgen">lv2specgen</a>.
  * 
- * \li <a href="../../">LV2 Specifications</a>
+ * \li <a href="../../ns/index.html">LV2 Specifications</a>
  * \li <a href="annotated.html">Data Structures</a>
  * \li <a href="files.html">Headers</a>
  */

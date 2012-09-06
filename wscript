@@ -25,6 +25,8 @@ def options(opt):
     autowaf.set_options(opt)
     opt.add_option('--test', action='store_true', dest='build_tests',
                    help='Build unit tests')
+    opt.add_option('--online-docs', action='store_true', dest='online_docs',
+                   help='Build documentation for web hosting')
     opt.add_option('--no-plugins', action='store_true', dest='no_plugins',
                    help='Do not build example plugins')
     opt.add_option('--copy-headers', action='store_true', dest='copy_headers',
@@ -41,6 +43,9 @@ def configure(conf):
     autowaf.configure(conf)
     autowaf.set_c99_mode(conf)
 
+    if Options.options.online_docs and Options.options.docs:
+        conf.fatal('At most one of --online-docs and --docs may be given')
+
     if Options.platform == 'win32' or not hasattr(os.path, 'relpath'):
         Logs.warn('System does not support linking headers, copying')
         Options.options.copy_headers = True
@@ -48,6 +53,7 @@ def configure(conf):
     conf.env.BUILD_TESTS   = Options.options.build_tests
     conf.env.BUILD_PLUGINS = not Options.options.no_plugins
     conf.env.COPY_HEADERS  = Options.options.copy_headers
+    conf.env.ONLINE_DOCS   = Options.options.online_docs
 
     # Check for gcov library (for test coverage)
     if conf.env.BUILD_TESTS and not conf.is_defined('HAVE_GCOV'):
@@ -156,13 +162,17 @@ def specgen(task):
         os.path.relpath(STYLEPATH, bundle),
         os.path.relpath('build/doc/html', bundle),
         TAGFILE,
-        instances=True)
+        instances=True,
+        offline=(not task.env.ONLINE_DOCS))
 
     lv2specgen.save(task.outputs[0].abspath(), specdoc)
 
     # Name (comment is to act as a sort key)
+    target = path[len('lv2/lv2plug.in/ns/'):]
+    if not task.env.ONLINE_DOCS:
+        target += '/%s.html' % b
     row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
-        b, path[len('lv2/lv2plug.in/ns/'):], b)
+        b, target, b)
 
     # Description
     if shortdesc:
@@ -300,7 +310,7 @@ def build(bld):
 
     if bld.env.DOCS:
         # Build Doxygen documentation (and tags file)
-        autowaf.build_dox(bld, 'LV2', VERSION, top, out)
+        autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc')
 
         # Copy stylesheet to build directory
         bld(features = 'subst',
@@ -326,12 +336,13 @@ def build(bld):
             name = os.path.basename(i.srcpath())
             
             # Generate .htaccess file
-            bld(features     = 'subst',
-                source       = 'doc/htaccess.in',
-                target       = os.path.join(base, '.htaccess'),
-                install_path = None,
-                NAME         = name,
-                BASE         = base)
+            if bld.env.ONLINE_DOCS:
+                bld(features     = 'subst',
+                    source       = 'doc/htaccess.in',
+                    target       = os.path.join(base, '.htaccess'),
+                    install_path = None,
+                    NAME         = name,
+                    BASE         = base)
 
         # Call lv2specgen for each spec
         for i in specs:
@@ -348,6 +359,12 @@ def build(bld):
                 target = ['%s/%s.html' % (chop_lv2_prefix(i.srcpath()), name),
                           index_file])
 
+            # Install documentation
+            if not bld.env.ONLINE_DOCS:
+                base = chop_lv2_prefix(i.srcpath())
+                bld.install_files('${DOCDIR}/' + i.srcpath(),
+                                  bld.path.get_bld().ant_glob(base + '/*.html'))
+
         index_files.sort()
         bld.add_group()  # Barrier (wait for lv2specgen to build index)
 
@@ -356,6 +373,11 @@ def build(bld):
             name   = 'index',
             source = ['lv2/lv2plug.in/ns/index.html.in'] + index_files,
             target = 'ns/index.html')
+
+        # Install main documentation files
+        if not bld.env.ONLINE_DOCS:
+            bld.install_files('${DOCDIR}/lv2/lv2plug.in/aux/', 'aux/style.css')
+            bld.install_files('${DOCDIR}/lv2/lv2plug.in/ns/', 'ns/index.html')
 
     if bld.env.BUILD_TESTS:
         # Generate a compile test .c file that includes all headers
