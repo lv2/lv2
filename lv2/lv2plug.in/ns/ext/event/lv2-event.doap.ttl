@@ -20,6 +20,8 @@
 			dcs:item [
 				rdfs:label "Make event iterator gracefully handle optional ports."
 			] , [
+				rdfs:label "Remove asserts from event-helper.h."
+			] , [
 				rdfs:label "Use more precise domain and range for EventPort properties."
 			] , [
 				rdfs:label "Use consistent label style."
