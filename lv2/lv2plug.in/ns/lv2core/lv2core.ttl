@@ -142,7 +142,7 @@ lv2:Plugin
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:onProperty doap:name ;
-		owl:someValuesFrom xsd:string ;
+		owl:someValuesFrom rdf:PlainLiteral ;
 		rdfs:comment """
 A Plugin MUST have at least one doap:name that is a string
 with no language tag.
@@ -170,18 +170,18 @@ lv2:Port
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:onProperty lv2:index ;
-		owl:allValuesFrom xsd:nonNegativeInteger ;
+		owl:allValuesFrom xsd:unsignedInt ;
 		owl:cardinality 1 ;
 		rdfs:comment """
-A port MUST have a single lv2:index which is of type xsd:nonNegativeInteger
-(e.g. a non-negative integer literal in Turtle). The actual RDF datatype
-of the index MAY be xsd:integer (which is what a generic Turtle parser
-will do), but the value itself MUST be non-negative.
+A port MUST have a single lv2:index which is of type xsd:unsignedInt.  The
+explicit RDF datatype of the index MAY be something else (typically xsd:integer
+for pretty Turtle numeric literals), but the value itself MUST be a valid
+xsd:unsignedInt (i.e. a non-negative 32-bit integer).
 """
 	] , [
 		a owl:Restriction ;
 		owl:onProperty lv2:symbol ;
-		owl:allValuesFrom xsd:string ;
+		owl:allValuesFrom rdf:PlainLiteral ;
 		owl:cardinality 1 ;
 		rdfs:comment """
 A port MUST have a single lv2:symbol which is of type xsd:string with no
@@ -286,7 +286,8 @@ lv2:port
 	rdfs:comment "Relates a Plugin to the Ports it contains" .
 
 lv2:project
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:range doap:Project ;
 	rdfs:label "project" ;
 	lv2:documentation """
@@ -442,14 +443,18 @@ lv2:index
 	a rdf:Property ,
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
-	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:range xsd:unsignedInt ;
 	rdfs:label "index" ;
-	rdfs:comment "A non-negative zero-based index." .
+	rdfs:comment "A non-negative zero-based 32-bit index." .
 
 lv2:Symbol
 	a rdfs:Datatype ;
-	rdfs:subClassOf xsd:string ;
-	xsd:pattern "[_a-zA-Z][_a-zA-Z0-9]*$" ;
+	owl:onDatatype xsd:string ;
+	owl:withRestrictions (
+		[
+			xsd:pattern "[_a-zA-Z][_a-zA-Z0-9]*"
+		]
+	) ;
 	rdfs:comment """
 A short restricted name used as a machine and human readable identifier.
 

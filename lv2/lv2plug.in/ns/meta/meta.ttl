@@ -54,6 +54,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Move all project metadata for extensions (e.g. change log) to separate files to spare hosts from loading them during discovery."
+			] , [
+				rdfs:label "Use stricter datatype definitions conformant with the XSD and OWL specifications for better validation."
 			]
 		]
 	] , [
