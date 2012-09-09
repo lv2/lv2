@@ -98,6 +98,16 @@ midi:Controller
 		midi:property midi:controllerValue
 	] .
 
+midi:HexByte
+	a rdfs:Datatype ;
+	owl:onDatatype xsd:hexBinary ;
+	owl:withRestrictions (
+		[
+			xsd:maxInclusive "FF"
+		]
+	) ;
+	rdfs:comment "A hexadecimal byte, which is a xsd:hexBinary value <= FF" .
+
 midi:MidiEvent
 	a rdfs:Class ;
 	rdfs:label "MIDI Message" ;
@@ -352,16 +362,14 @@ midi:status
 	a rdf:Property ,
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
-	rdfs:range xsd:byte ,
-		xsd:hexBinary ;
+	rdfs:range midi:HexByte ;
 	rdfs:comment "The exact status byte for a message of this type." .
 
 midi:statusMask
 	a rdf:Property ,
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
-	rdfs:range xsd:byte ,
-		xsd:hexBinary ;
+	rdfs:range midi:HexByte ;
 	rdfs:comment """
 The status byte for a message of this type on channel 1, i.e. a status byte
 with the lower nibble set to zero.""" .
@@ -370,5 +378,5 @@ midi:velocity
 	a rdf:Property ,
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
-	rdfs:range xsd:byte ;
+	rdfs:range midi:HexByte ;
 	rdfs:comment "The velocity of a note message (0 to 127)." .
