@@ -7,7 +7,7 @@
 	a doap:Project ;
 	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Options" ;
-	doap:shortdesc "Instantiation time options" ;
+	doap:shortdesc "Instantiation time options." ;
 	doap:created "2012-08-20" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
