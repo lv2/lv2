@@ -8,14 +8,9 @@
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/morph>
-	a lv2:Specification ,
-		lv2:Feature ;
+	a owl:Ontology ;
 	rdfs:seeAlso <morph.h> ,
 		<../../meta/meta.ttl> ;
-	doap:name "LV2 Morph Port Extension" ;
-	doap:shortdesc "Ports that can dynamically change type." ;
-	doap:created "2012-05-22" ;
-	doap:developer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """
 <p>This extension defines two port types: morph:MorphPort, which has a
 host-configurable type, and morph:AutoMorphPort, which may change type based on
