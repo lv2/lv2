@@ -52,7 +52,7 @@ h6 {
 	font-weight: 450;
 }
 #header {
-	background-color: #ECF3F1;
+	background-color: #F3F3F3;
 	border: 0;
 	border-bottom: 1px solid #DDD;
 	margin: 0 0 1em 0;
@@ -320,7 +320,7 @@ blockquote {
 	margin: 2em 0 0;
 	padding: 0 1em 1em 1em;
 	vertical-align: top;
-	background-color: #ECF3F1;
+	background-color: #F3F3F3;
 	border-top: 1px solid #DDD;
 }
 #footer div {
