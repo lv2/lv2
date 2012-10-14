@@ -11,7 +11,7 @@
   </head>
   <body>
     <div id="header">
-      <h1 id="title">LV2 Specifications</h1>
+      <h1 id="title">LV2 @LV2_VERSION@ Specifications</h1>
     </div>
     <div class="content">
       <table summary="An index of LV2 specifications">
@@ -23,9 +23,6 @@
         </tr>
 @ROWS@
       </table>
-    </div>
-    <div id="footer">
-      <div>Generated at @TIME@</div>
     </div>
   </body>
 </html>
