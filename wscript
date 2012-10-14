@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-import datetime
 import glob
 import os
 import re
@@ -15,7 +14,7 @@ import waflib.Scripting as Scripting
 
 # Variables for 'waf dist'
 APPNAME = 'lv2'
-VERSION = '1.0.15'
+VERSION = '1.2.0'
 
 # Mandatory variables
 top = '.'
@@ -225,7 +224,7 @@ def build_index(task):
 
     subst_file(task.inputs[0].abspath(), task.outputs[0].abspath(),
                { '@ROWS@': ''.join(rows),
-                 '@TIME@': datetime.datetime.utcnow().strftime('%F %H:%M UTC') })
+                 '@LV2_VERSION@': VERSION})
 
 # Task for making a link in the build directory to a source file
 def link(task):
@@ -430,8 +429,7 @@ class DistCheck(Dist, Scripting.DistCheck):
         Dist.archive(self)
 
 def dist(ctx):
-    subdirs = ([ctx.path.find_node('lv2/lv2plug.in/ns/meta')] +
-               [ctx.path.find_node('lv2/lv2plug.in/ns/lv2core')] +
+    subdirs = ([ctx.path.find_node('lv2/lv2plug.in/ns/lv2core')] +
                ctx.path.ant_glob('plugins/*', dir=True) +
                ctx.path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
                ctx.path.ant_glob('lv2/lv2plug.in/ns/extension/*', dir=True))
@@ -448,19 +446,12 @@ def dist(ctx):
                            i.abspath() + '/NEWS',
                            top_entries)
 
-    # Write top level NEWS file
-    news = open('NEWS', 'w')
-    for e in sorted(top_entries.keys(), reverse=True):
-        relbase = os.path.basename(e)
-        ver     = re.match('lv2-([0-9]\.[0-9]\.[0-9])\.tar\.bz2', relbase)
-        if ver:
-            entry = 'lv2 (%s) stable;\n' % (ver.group(1))
-            for i in top_entries[e]:
-                if i.startswith('meta: '):
-                    i = i[len('meta: '):]
-                entry += '\n  * ' + i
-            news.write(entry)
-    news.close()
+    # Write top level amalgamated NEWS file
+    autowaf.write_news('lv2',
+                       ['lv2/lv2plug.in/ns/meta/meta.ttl'],
+                       'NEWS',
+                       None,
+                       top_entries)
 
     # Build archive
     ctx.archive()

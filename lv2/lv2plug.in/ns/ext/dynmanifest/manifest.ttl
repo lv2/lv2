@@ -4,5 +4,5 @@
 <http://lv2plug.in/ns/ext/dynmanifest>
 	a lv2:Specification ;
 	lv2:minorVersion 1 ;
-	lv2:microVersion 5 ;
+	lv2:microVersion 6 ;
 	rdfs:seeAlso <dynmanifest.ttl> .
