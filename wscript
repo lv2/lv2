@@ -14,7 +14,7 @@ import waflib.Scripting as Scripting
 
 # Variables for 'waf dist'
 APPNAME = 'lv2'
-VERSION = '1.2.0'
+VERSION = '1.2.1'
 
 # Mandatory variables
 top = '.'
@@ -40,11 +40,11 @@ def configure(conf):
         Options.options.build_tests = False
         Options.options.no_plugins = True
 
+    if Options.options.online_docs:
+        Options.options.docs = True
+
     autowaf.configure(conf)
     autowaf.set_c99_mode(conf)
-
-    if Options.options.online_docs and Options.options.docs:
-        conf.fatal('At most one of --online-docs and --docs may be given')
 
     if Options.platform == 'win32' or not hasattr(os.path, 'relpath'):
         Logs.warn('System does not support linking headers, copying')
@@ -308,7 +308,7 @@ def build(bld):
     for i in bld.env.LV2_BUILD:
         bld.recurse(i)
 
-    if bld.env.DOCS:
+    if bld.env.DOCS or bld.env.ONLINE_DOCS:
         # Build Doxygen documentation (and tags file)
         autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc')
 
