@@ -48,6 +48,13 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
+		doap:revision "1.2.1" ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add metronome example plugin to demonstrate precise tempo sync."
+			]
+		]
+	] , [
 		doap:revision "1.2.0" ;
 		doap:created "2012-10-14" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
