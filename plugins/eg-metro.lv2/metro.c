@@ -43,6 +43,7 @@ typedef struct {
 	LV2_URID atom_Float;
 	LV2_URID atom_Path;
 	LV2_URID atom_Resource;
+	LV2_URID atom_Sequence;
 	LV2_URID time_Position;
 	LV2_URID time_barBeat;
 	LV2_URID time_beatsPerMinute;
@@ -153,6 +154,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	uris->atom_Float          = map->map(map->handle, LV2_ATOM__Float);
 	uris->atom_Path           = map->map(map->handle, LV2_ATOM__Path);
 	uris->atom_Resource       = map->map(map->handle, LV2_ATOM__Resource);
+	uris->atom_Sequence       = map->map(map->handle, LV2_ATOM__Sequence);
 	uris->time_Position       = map->map(map->handle, LV2_TIME__Position);
 	uris->time_barBeat        = map->map(map->handle, LV2_TIME__barBeat);
 	uris->time_beatsPerMinute = map->map(map->handle, LV2_TIME__beatsPerMinute);
@@ -273,6 +275,12 @@ run(LV2_Handle instance, uint32_t sample_count)
 {
 	Metro*           self = (Metro*)instance;
 	const MetroURIs* uris = &self->uris;
+
+	/* Empty notify output for now */
+	LV2_Atom_Sequence* notify = self->ports.notify;
+	notify->atom.type = self->uris.atom_Sequence;
+	notify->atom.size = sizeof(LV2_Atom_Sequence_Body);
+	notify->body.unit = notify->body.pad = 0;
 
 	/* Work forwards in time frame by frame, handling events as we go */
 	const LV2_Atom_Sequence* in     = self->ports.control;
