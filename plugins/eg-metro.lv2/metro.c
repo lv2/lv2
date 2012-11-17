@@ -276,26 +276,25 @@ run(LV2_Handle instance, uint32_t sample_count)
 
 	/* Work forwards in time frame by frame, handling events as we go */
 	const LV2_Atom_Sequence* in     = self->ports.control;
-	LV2_Atom_Event*          ev     = lv2_atom_sequence_begin(&in->body);
 	uint32_t                 last_t = 0;
-	for (uint32_t t = 0; t < sample_count; ++t) {
-		while (!lv2_atom_sequence_is_end(&in->body, in->atom.size, ev) &&
-		       ev->time.frames == t) {
-			/* Play the click for the time slice from last_t until now */
-			play(self, last_t, t);
+	for (LV2_Atom_Event* ev = lv2_atom_sequence_begin(&in->body);
+	     !lv2_atom_sequence_is_end(&in->body, in->atom.size, ev);
+	     ev = lv2_atom_sequence_next(ev)) {
 
-			if (ev->body.type == uris->atom_Blank) {
-				const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
-				if (obj->body.otype == uris->time_Position) {
-					/* Received position information, update */
-					update_position(self, obj);
-				}
+		/* Play the click for the time slice from last_t until now */
+		play(self, last_t, ev->time.frames);
+
+		if (ev->body.type == uris->atom_Blank) {
+			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
+			if (obj->body.otype == uris->time_Position) {
+				/* Received position information, update */
+				update_position(self, obj);
 			}
-
-			/* Update time for next iteration and move to next event*/
-			last_t = t;
-			ev = lv2_atom_sequence_next(ev);
 		}
+
+		/* Update time for next iteration and move to next event*/
+		last_t = ev->time.frames;
+		ev = lv2_atom_sequence_next(ev);
 	}
 
 	/* Play for remainder of cycle */
