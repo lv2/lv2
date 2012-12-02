@@ -13,6 +13,14 @@
 	doap:developer <http://lv2plug.in/ns/meta#larsl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.11" ;
+		doap:created "2012-12-01" ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix incorrect linker flag in ui:makeSONameResident documentation."
+			]
+		]
+	] , [
 		doap:revision "2.10" ;
 		doap:created "2012-10-14" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;

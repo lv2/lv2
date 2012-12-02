@@ -161,7 +161,7 @@ ui:makeSONameResident
 <p>This feature was intended to support UIs that link against toolkit
 libraries which may not be unloaded during the lifetime of the host.
 This is better achieved by using the appropriate flags when linking the
-UI, e.g. <code>gcc -Wl,nodelete</code>.</p>
+UI, e.g. <code>gcc -Wl,-z,nodelete</code>.</p>
 """ .
 
 ui:noUserResize
