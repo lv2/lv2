@@ -1018,6 +1018,12 @@ lv2:AmplifierPlugin
 	rdfs:subClassOf lv2:DynamicsPlugin ;
 	rdfs:label "Amplifier" .
 
+lv2:EnvelopePlugin
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf lv2:DynamicsPlugin ;
+	rdfs:label "Envelope" .
+
 lv2:DistortionPlugin
 	a rdfs:Class ,
 		owl:Class ;
