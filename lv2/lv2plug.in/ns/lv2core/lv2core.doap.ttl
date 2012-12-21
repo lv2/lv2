@@ -24,7 +24,6 @@
 			]
 		]
 	] , [
-	doap:release [
 		doap:revision "8.2" ;
 		doap:created "2012-10-14" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
