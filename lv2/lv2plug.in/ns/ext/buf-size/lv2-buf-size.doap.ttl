@@ -11,6 +11,14 @@
 	doap:created "2012-08-07" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "1.1" ;
+		doap:created "2012-12-21" ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix typo in bufsz:sequenceSize label."
+			]
+		]
+	] , [
 		doap:revision "1.0" ;
 		doap:created "2012-10-14" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;

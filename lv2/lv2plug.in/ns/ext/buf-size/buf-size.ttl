@@ -90,7 +90,7 @@ bufsz:sequenceSize
 	a rdf:Property ,
 		owl:DatatypeProperty ,
 		opts:Option ;
-	rdfs:label "sequnce size" ;
+	rdfs:label "sequence size" ;
 	rdfs:range xsd:nonNegativeInteger ;
 	lv2:documentation """
 <p>The maximum size of a sequence, in bytes.  This should be provided as an
