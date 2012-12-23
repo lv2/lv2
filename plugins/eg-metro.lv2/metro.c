@@ -20,11 +20,12 @@
 */
 
 #include <math.h>
-#include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include <stdio.h>
+#ifndef __cplusplus
+#    include <stdbool.h>
+#endif
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"

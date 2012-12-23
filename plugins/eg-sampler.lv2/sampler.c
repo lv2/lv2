@@ -33,9 +33,11 @@
 */
 
 #include <math.h>
-#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef __cplusplus
+#    include <stdbool.h>
+#endif
 
 #include <sndfile.h>
 
