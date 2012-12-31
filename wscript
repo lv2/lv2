@@ -55,6 +55,13 @@ def configure(conf):
     conf.env.COPY_HEADERS  = Options.options.copy_headers
     conf.env.ONLINE_DOCS   = Options.options.online_docs
 
+    if conf.env.DOCS or conf.env.ONLINE_DOCS:
+        try:
+            conf.find_program('asciidoc')
+            conf.env.BUILD_BOOK = True
+        except:
+            Logs.warn('Asciidoc not found, book will not be built')
+
     # Check for gcov library (for test coverage)
     if conf.env.BUILD_TESTS and not conf.is_defined('HAVE_GCOV'):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
@@ -65,7 +72,7 @@ def configure(conf):
 
     conf.env.LV2_BUILD = ['lv2/lv2plug.in/ns/lv2core']
     if conf.env.BUILD_PLUGINS:
-        for i in conf.path.ant_glob('plugins/*', dir=True):
+        for i in conf.path.ant_glob('plugins/*', src=False, dir=True):
             try:
                 conf.recurse(i.srcpath())
                 conf.env.LV2_BUILD += [i.srcpath()]
@@ -307,6 +314,9 @@ def build(bld):
     # Build plugins
     for i in bld.env.LV2_BUILD:
         bld.recurse(i)
+
+    if bld.env.BUILD_BOOK:
+        bld.recurse('plugins')
 
     if bld.env.DOCS or bld.env.ONLINE_DOCS:
         # Build Doxygen documentation (and tags file)
