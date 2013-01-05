@@ -299,7 +299,6 @@ run(LV2_Handle instance, uint32_t sample_count)
 
 		/** Update time for next iteration and move to next event*/
 		last_t = ev->time.frames;
-		ev = lv2_atom_sequence_next(ev);
 	}
 
 	/** Play for remainder of cycle */
