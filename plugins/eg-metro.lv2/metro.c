@@ -15,10 +15,6 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/**
-   @file metro.c Metronome Plugin
-*/
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -135,7 +131,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 		return NULL;
 	}
 
-	/* Scan host features for URID map */
+	/** Scan host features for URID map */
 	LV2_URID_Map* map = NULL;
 	for (int i = 0; features[i]; ++i) {
 		if (!strcmp(features[i]->URI, LV2_URID_URI "#map")) {
@@ -148,7 +144,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 		return NULL;
 	}
 
-	/* Map URIS */
+	/** Map URIS */
 	MetroURIs* const uris = &self->uris;
 	self->map = map;
 	uris->atom_Blank          = map->map(map->handle, LV2_ATOM__Blank);
@@ -161,14 +157,14 @@ instantiate(const LV2_Descriptor*     descriptor,
 	uris->time_beatsPerMinute = map->map(map->handle, LV2_TIME__beatsPerMinute);
 	uris->time_speed          = map->map(map->handle, LV2_TIME__speed);
 
-	/* Initialise fields */
+	/** Initialise fields */
 	self->rate       = rate;
 	self->bpm        = 120.0f;
 	self->attack_len = attack_s * rate;
 	self->decay_len  = decay_s * rate;
 	self->state      = STATE_OFF;
 
-	/* Generate one cycle of a sine wave at the desired frequency. */
+	/** Generate one cycle of a sine wave at the desired frequency. */
 	const double freq = 440.0 * 2.0;
 	const double amp  = 0.5;
 	self->wave_len = rate / freq;
@@ -200,7 +196,7 @@ play(Metro* self, uint32_t begin, uint32_t end)
 	for (uint32_t i = begin; i < end; ++i) {
 		switch (self->state) {
 		case STATE_ATTACK:
-			/* Amplitude increases from 0..1 until attack_len */
+			/** Amplitude increases from 0..1 until attack_len */
 			output[i] = self->wave[self->wave_offset] *
 				self->elapsed_len / (float)self->attack_len;
 			if (self->elapsed_len >= self->attack_len) {
@@ -208,7 +204,7 @@ play(Metro* self, uint32_t begin, uint32_t end)
 			}
 			break;
 		case STATE_DECAY:
-			/* Amplitude decreases from 1..0 until attack_len + decay_len */
+			/** Amplitude decreases from 1..0 until attack_len + decay_len */
 			output[i] = 0.0f;
 			output[i] = self->wave[self->wave_offset] *
 				(1 - ((self->elapsed_len - self->attack_len) /
@@ -221,10 +217,10 @@ play(Metro* self, uint32_t begin, uint32_t end)
 			output[i] = 0.0f;
 		}
 
-		/* We continuously play the sine wave regardless of envelope */
+		/** We continuously play the sine wave regardless of envelope */
 		self->wave_offset = (self->wave_offset + 1) % self->wave_len;
 
-		/* Update elapsed time and start attack if necessary */
+		/** Update elapsed time and start attack if necessary */
 		if (++self->elapsed_len == frames_per_beat) {
 			self->state       = STATE_ATTACK;
 			self->elapsed_len = 0;
@@ -237,7 +233,7 @@ update_position(Metro* self, const LV2_Atom_Object* obj)
 {
 	const MetroURIs* uris = &self->uris;
 
-	/* Received new transport position/speed */
+	/** Received new transport position/speed */
 	LV2_Atom *beat = NULL, *bpm = NULL, *speed = NULL;
 	lv2_atom_object_get(obj,
 	                    uris->time_barBeat, &beat,
@@ -245,17 +241,17 @@ update_position(Metro* self, const LV2_Atom_Object* obj)
 	                    uris->time_speed, &speed,
 	                    NULL);
 	if (bpm && bpm->type == uris->atom_Float) {
-		/* Tempo changed, update BPM */
+		/** Tempo changed, update BPM */
 		self->bpm = ((LV2_Atom_Float*)bpm)->body;
 	}
 	if (speed && speed->type == uris->atom_Float) {
-		/* Speed changed, e.g. 0 (stop) to 1 (play) */
+		/** Speed changed, e.g. 0 (stop) to 1 (play) */
 		self->speed = ((LV2_Atom_Float*)speed)->body;
 	}
 	if (beat && beat->type == uris->atom_Float) {
-		/* Received a beat position, synchronize.
-		   This is a simple hard sync that may cause clicks.
-		   A real plugin would do something more graceful.
+		/** Received a beat position, synchronise.
+		    This is a simple hard sync that may cause clicks.
+		    A real plugin would do something more graceful.
 		*/
 		const float frames_per_beat = 60.0f / self->bpm * self->rate;
 		const float bar_beats       = ((LV2_Atom_Float*)beat)->body;
@@ -277,36 +273,36 @@ run(LV2_Handle instance, uint32_t sample_count)
 	Metro*           self = (Metro*)instance;
 	const MetroURIs* uris = &self->uris;
 
-	/* Empty notify output for now */
+	/** Empty notify output for now */
 	LV2_Atom_Sequence* notify = self->ports.notify;
 	notify->atom.type = self->uris.atom_Sequence;
 	notify->atom.size = sizeof(LV2_Atom_Sequence_Body);
 	notify->body.unit = notify->body.pad = 0;
 
-	/* Work forwards in time frame by frame, handling events as we go */
+	/** Work forwards in time frame by frame, handling events as we go */
 	const LV2_Atom_Sequence* in     = self->ports.control;
 	uint32_t                 last_t = 0;
 	for (LV2_Atom_Event* ev = lv2_atom_sequence_begin(&in->body);
 	     !lv2_atom_sequence_is_end(&in->body, in->atom.size, ev);
 	     ev = lv2_atom_sequence_next(ev)) {
 
-		/* Play the click for the time slice from last_t until now */
+		/** Play the click for the time slice from last_t until now */
 		play(self, last_t, ev->time.frames);
 
 		if (ev->body.type == uris->atom_Blank) {
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
 			if (obj->body.otype == uris->time_Position) {
-				/* Received position information, update */
+				/** Received position information, update */
 				update_position(self, obj);
 			}
 		}
 
-		/* Update time for next iteration and move to next event*/
+		/** Update time for next iteration and move to next event*/
 		last_t = ev->time.frames;
 		ev = lv2_atom_sequence_next(ev);
 	}
 
-	/* Play for remainder of cycle */
+	/** Play for remainder of cycle */
 	play(self, last_t, sample_count);
 }
 
