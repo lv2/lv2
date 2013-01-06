@@ -15,17 +15,14 @@ def bld_book_src(task):
         filenames += [i.abspath()]
 
     literasc.gen(open(task.outputs[0].abspath(), 'w'), filenames)
-
     
 def build(bld):
     files = [bld.path.find_node('README.txt')]
     for i in bld.path.ant_glob('*', src=False, dir=True):
-        for j in bld.path.ant_glob('%s/*.*' % i):
-            name = j.abspath()
-            if (name.endswith('.c') or
-                name.endswith('.txt') or
-                name.endswith('.ttl.in')):
-                files += [j]
+        files += bld.path.ant_glob('%s/*.txt' % i)
+        files += bld.path.ant_glob('%s/manifest.ttl*' % i)
+        files += bld.path.ant_glob('%s/*.ttl' % i)
+        files += bld.path.ant_glob('%s/*.c' % i)
 
     bld(rule   = bld_book_src,
         source = files,
