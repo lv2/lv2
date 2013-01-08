@@ -21,7 +21,7 @@ def configure(conf):
     autowaf.display_header('Sampler Configuration')
 
     if not autowaf.is_child():
-        autowaf.check_pkg(conf, 'lv2', atleast_version='0.2.0', uselib_store='LV2')
+        autowaf.check_pkg(conf, 'lv2', atleast_version='1.2.3', uselib_store='LV2')
 
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)

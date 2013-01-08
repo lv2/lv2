@@ -44,11 +44,12 @@
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
 #include "lv2/lv2plug.in/ns/ext/log/log.h"
+#include "lv2/lv2plug.in/ns/ext/log/logger.h"
+#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
 #include "lv2/lv2plug.in/ns/ext/patch/patch.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/ext/worker/worker.h"
-#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
 #include "./uris.h"
@@ -77,6 +78,9 @@ typedef struct {
 	/* Forge for creating atoms */
 	LV2_Atom_Forge forge;
 
+	/* Logger convenience API */
+	LV2_Log_Logger logger;
+
 	/* Sample */
 	Sample* sample;
 
@@ -98,23 +102,6 @@ typedef struct {
 	sf_count_t frame;
 	bool       play;
 } Sampler;
-
-/**
-   Print an error message to the host log if available, or stderr otherwise.
-*/
-LV2_LOG_FUNC(3, 4)
-static void
-print(Sampler* self, LV2_URID type, const char* fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
-	if (self->log) {
-		self->log->vprintf(self->log->handle, type, fmt, args);
-	} else {
-		vfprintf(stderr, fmt, args);
-	}
-	va_end(args);
-}
 
 /**
    An atom-like message used internally to apply/free samples.
@@ -141,16 +128,14 @@ load_sample(Sampler* self, const char* path)
 {
 	const size_t path_len  = strlen(path);
 
-	print(self, self->uris.log_Trace,
-	      "Loading sample %s\n", path);
+	lv2_log_trace(&self->logger, "Loading sample %s\n", path);
 
 	Sample* const  sample  = (Sample*)malloc(sizeof(Sample));
 	SF_INFO* const info    = &sample->info;
 	SNDFILE* const sndfile = sf_open(path, SFM_READ, info);
 
 	if (!sndfile || !info->frames || (info->channels != 1)) {
-		print(self, self->uris.log_Error,
-		      "Failed to open sample '%s'.\n", path);
+		lv2_log_error(&self->logger, "Failed to open sample '%s'\n", path);
 		free(sample);
 		return NULL;
 	}
@@ -158,8 +143,7 @@ load_sample(Sampler* self, const char* path)
 	/* Read data */
 	float* const data = malloc(sizeof(float) * info->frames);
 	if (!data) {
-		print(self, self->uris.log_Error,
-		      "Failed to allocate memory for sample.\n");
+		lv2_log_error(&self->logger, "Failed to allocate memory for sample\n");
 		return NULL;
 	}
 	sf_seek(sndfile, 0ul, SEEK_SET);
@@ -179,7 +163,7 @@ static void
 free_sample(Sampler* self, Sample* sample)
 {
 	if (sample) {
-		print(self, self->uris.log_Trace, "Freeing %s\n", sample->path);
+		lv2_log_trace(&self->logger, "Freeing %s\n", sample->path);
 		free(sample->path);
 		free(sample->data);
 		free(sample);
@@ -304,16 +288,17 @@ instantiate(const LV2_Descriptor*     descriptor,
 		}
 	}
 	if (!self->map) {
-		print(self, self->uris.log_Error, "Missing feature urid:map.\n");
+		lv2_log_error(&self->logger, "Missing feature urid:map\n");
 		goto fail;
 	} else if (!self->schedule) {
-		print(self, self->uris.log_Error, "Missing feature work:schedule.\n");
+		lv2_log_error(&self->logger, "Missing feature work:schedule\n");
 		goto fail;
 	}
 
-	/* Map URIs and initialise forge */
+	/* Map URIs and initialise forge/logger */
 	map_sampler_uris(self->map, &self->uris);
 	lv2_atom_forge_init(&self->forge, self->map);
+	lv2_log_logger_init(&self->logger, self->map, self->log);
 
 	/* Load the default sample file */
 	const size_t path_len    = strlen(path);
@@ -376,17 +361,17 @@ run(LV2_Handle instance,
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
 			if (obj->body.otype == uris->patch_Set) {
 				/* Received a set message, send it to the worker. */
-				print(self, self->uris.log_Trace, "Queueing set message\n");
+				lv2_log_trace(&self->logger, "Queueing set message\n");
 				self->schedule->schedule_work(self->schedule->handle,
 				                              lv2_atom_total_size(&ev->body),
 				                              &ev->body);
 			} else {
-				print(self, self->uris.log_Trace,
-				      "Unknown object type %d\n", obj->body.otype);
+				lv2_log_trace(&self->logger,
+				              "Unknown object type %d\n", obj->body.otype);
 			}
 		} else {
-			print(self, self->uris.log_Trace,
-			      "Unknown event type %d\n", ev->body.type);
+			lv2_log_trace(&self->logger,
+			              "Unknown event type %d\n", ev->body.type);
 		}
 	}
 
@@ -469,7 +454,7 @@ restore(LV2_Handle                  instance,
 
 	if (value) {
 		const char* path = (const char*)value;
-		print(self, self->uris.log_Trace, "Restoring file %s\n", path);
+		lv2_log_trace(&self->logger, "Restoring file %s\n", path);
 		free_sample(self, self->sample);
 		self->sample = load_sample(self, path);
 	}
