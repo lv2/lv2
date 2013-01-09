@@ -1092,7 +1092,9 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=Fa
         if uri.startswith('file:'):
             continue;
         ns_list[str(uri)] = i
-        if str(uri) == spec_url + '#':
+        if (str(uri) == spec_url + '#' or
+            str(uri) == spec_url + '/' or
+            str(uri) == spec_url):
             spec_pre = i
         prefixes_html += '<a href="%s">%s</a> ' % (uri, i)
     prefixes_html += "</span>"
@@ -1137,7 +1139,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=Fa
     template = template.replace('@BASE@', spec_ns_str)
     template = template.replace('@AUTHORS@', specAuthors(m, spec))
     template = template.replace('@INDEX@', azlist)
-    template = template.replace('@REFERENCE@', termlist.encode("utf-8"))
+    template = template.replace('@REFERENCE@', termlist)
     template = template.replace('@FILENAME@', filename)
     template = template.replace('@HEADER@', basename + '.h')
     template = template.replace('@MAIL@', 'devel@lists.lv2plug.in')
@@ -1204,7 +1206,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=Fa
 def save(path, text):
     try:
         f = open(path, "w")
-        f.write(text)
+        f.write(text.encode("utf-8"))
         f.flush()
         f.close()
     except Exception:
@@ -1286,7 +1288,7 @@ if __name__ == "__main__":
                 i += 1
 
     try:
-        save(output, specgen(specloc, indir, style, docdir, tags, instances=instances))
+        save(output, specgen(ontology, indir, style, docdir, tags, instances=instances))
     except:
         e = sys.exc_info()[1]
         print('error: ' + str(e))
