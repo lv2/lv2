@@ -509,13 +509,15 @@ lv2:Channel
 	rdfs:subClassOf lv2:Designation ;
 	rdfs:label "Channel" ;
 	lv2:documentation """
-<p>A specific channel of audio, e.g. <q>left</q> or <q>right</q>.</p>
+<p>A specific channel, e.g. <q>left</q> or <q>right</q>.  A channel may be
+audio, or another type such as a MIDI control stream.</p>
 """ .
 
 lv2:Parameter
 	a rdfs:Class ,
 		owl:Class ;
-	rdfs:subClassOf lv2:Designation ;
+	rdfs:subClassOf lv2:Designation ,
+		rdf:Property ;
 	rdfs:label "Parameter" ;
 	lv2:documentation """
 <p>A parameter, i.e. a recognized property.  A parameter is a designation for a
@@ -532,6 +534,7 @@ lv2:designation
 	a rdf:Property ,
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
+	rdfs:range lv2:Designation ;
 	rdfs:label "designation" ;
 	lv2:documentation """
 <p>Indicates a channel or parameter designation.</p>
@@ -565,6 +568,15 @@ that all processing is happening as quickly as possible, not in real-time.
 When free-wheeling there is no relationship between the passage of real
 wall-clock time and the passage of time in the data being processed (e.g. audio
 frames).</p>
+""" .
+
+lv2:control
+	a lv2:Channel ;
+	rdfs:label "control" ;
+	lv2:documentation """
+<p>The primary control channel.  This should be used as the lv2:designation of
+ports that are used to send commands and receive responses.  Typically this
+will be an event port that supports some protocol, e.g. MIDI or LV2 Atoms.</p>
 """ .
 
 lv2:Point

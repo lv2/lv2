@@ -16,11 +16,17 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "8.3" ;
-		doap:created "2012-12-19" ;
+		doap:revision "9.1" ;
+		doap:created "2013-01-10" ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add lv2:EnvelopePlugin class."
+			] , [
+				rdfs:label "Add lv2:control for designating primary event-based control ports."
+			] , [
+				rdfs:label "Set range of lv2:designation to lv2:Designation."
+			] , [
+				rdfs:label "Make lv2:Parameter rdfs:subClassOf rdf:Property."
 			]
 		]
 	] , [
