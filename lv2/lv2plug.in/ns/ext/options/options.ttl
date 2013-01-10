@@ -80,6 +80,7 @@ be listed as a lv2:optionalFeature.</p>
 opts:requiredOption
 	a rdf:Property ,
 		owl:ObjectProperty ;
+	rdfs:range opts:Option ;
 	rdfs:label "required option" ;
 	lv2:documentation """
 <p>An option required by the instance to function at all.  The host MUST pass a
@@ -94,6 +95,7 @@ fall back to a reasonable default value if it is not provided.</p>
 opts:supportedOption
 	a rdf:Property ,
 		owl:ObjectProperty ;
+	rdfs:range opts:Option ;
 	rdfs:label "supported option" ;
 	lv2:documentation """
 <p>An option supported or <q>understood</q> by the instance.  The host SHOULD
