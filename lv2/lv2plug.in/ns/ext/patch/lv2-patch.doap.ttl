@@ -13,7 +13,7 @@
 	doap:shortdesc "Messages for accessing and manipulating properties." ;
 	doap:release [
 		doap:revision "1.1" ;
-		doap:created "2012-01-10" ;
+		doap:created "2013-01-10" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
