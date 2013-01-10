@@ -423,7 +423,7 @@ save(LV2_Handle                instance,
 	char* apath = map_path->abstract_path(map_path->handle, self->sample->path);
 
 	store(handle,
-	      self->uris.eg_file,
+	      self->uris.eg_sample,
 	      apath,
 	      strlen(self->sample->path) + 1,
 	      self->uris.atom_Path,
@@ -449,7 +449,7 @@ restore(LV2_Handle                  instance,
 
 	const void* value = retrieve(
 		handle,
-		self->uris.eg_file,
+		self->uris.eg_sample,
 		&size, &type, &valflags);
 
 	if (value) {

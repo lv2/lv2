@@ -19,10 +19,17 @@
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix patch: <http://lv2plug.in/ns/ext/patch#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix state: <http://lv2plug.in/ns/ext/state#> .
 @prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
 @prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
 @prefix work:  <http://lv2plug.in/ns/ext/worker#> .
+
+<http://lv2plug.in/plugins/eg-sampler#sample>
+	a lv2:Parameter ;
+	rdfs:label "sample" ;
+	rdfs:range atom:Path .
 
 <http://lv2plug.in/plugins/eg-sampler>
 	a lv2:Plugin ;
@@ -35,12 +42,14 @@
 	lv2:extensionData state:interface ,
 		work:interface ;
 	ui:ui <http://lv2plug.in/plugins/eg-sampler#ui> ;
+	patch:writable <http://lv2plug.in/plugins/eg-sampler#sample> ;
 	lv2:port [
 		a lv2:InputPort ,
 			atom:AtomPort ;
 		atom:bufferType atom:Sequence ;
 		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ,
-			<http://lv2plug.in/ns/ext/patch#Message> ;
+			patch:Message ;
+		lv2:designation lv2:control ;
 		lv2:index 0 ;
 		lv2:symbol "control" ;
 		lv2:name "Control"
@@ -48,7 +57,8 @@
 		a lv2:OutputPort ,
 			atom:AtomPort ;
 		atom:bufferType atom:Sequence ;
-		atom:supports <http://lv2plug.in/ns/ext/patch#Message> ;
+		atom:supports patch:Message ;
+		lv2:designation lv2:control ;
 		lv2:index 1 ;
 		lv2:symbol "notify" ;
 		lv2:name "Notify"
