@@ -48,6 +48,7 @@
 #define LV2_CORE__DistortionPlugin   LV2_CORE_PREFIX "DistortionPlugin"
 #define LV2_CORE__DynamicsPlugin     LV2_CORE_PREFIX "DynamicsPlugin"
 #define LV2_CORE__EQPlugin           LV2_CORE_PREFIX "EQPlugin"
+#define LV2_CORE__EnvelopePlugin     LV2_CORE_PREFIX "EnvelopePlugin"
 #define LV2_CORE__ExpanderPlugin     LV2_CORE_PREFIX "ExpanderPlugin"
 #define LV2_CORE__ExtensionData      LV2_CORE_PREFIX "ExtensionData"
 #define LV2_CORE__Feature            LV2_CORE_PREFIX "Feature"
