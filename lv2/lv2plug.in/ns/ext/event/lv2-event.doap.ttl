@@ -13,6 +13,15 @@
 	doap:developer <http://drobilla.net/drobilla#me> ,
 		<http://lv2plug.in/ns/meta#larsl> ;
 	doap:release [
+		doap:revision "1.9" ;
+		doap:created "2013-01-13" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix incorrect return type in lv2_event_get()."
+			]
+		]
+	] , [
 		doap:revision "1.8" ;
 		doap:created "2012-10-14" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
