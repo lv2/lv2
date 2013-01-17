@@ -12,6 +12,14 @@
 	doap:created "2007-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "1.3" ;
+		doap:created "2013-01-16" ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix lv2_atom_sequence_end()."
+			]
+		]
+	] , [
 		doap:revision "1.2" ;
 		doap:created "2012-10-14" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
