@@ -240,6 +240,19 @@ the properties of the state dictionary (except the property that states it has
 this type).</p>
 """ .
 
+state:loadDefaultState
+	a lv2:Feature ;
+	lv2:documentation """
+<p>This feature indicates that the plugin has default state listed with the
+state:state property which should be loaded by the host before running the
+plugin.  Requiring this feature allows plugins to implement a single state
+loading mechanism which works for initialisation as well as restoration,
+without having to hard-code default state.</p>
+
+<p>To support this feature, the host MUST <q>restore</q> the default state
+after instantiating the plugin but before calling run().</p>
+""" .
+
 state:state
 	a rdf:Property ;
 	rdfs:label "state" ;

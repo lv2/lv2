@@ -38,7 +38,8 @@
 	lv2:project <http://lv2plug.in/ns/lv2> ;
 	lv2:requiredFeature urid:map ,
 		work:schedule ;
-	lv2:optionalFeature lv2:hardRTCapable ;
+	lv2:optionalFeature lv2:hardRTCapable ,
+		state:loadDefaultState ;
 	lv2:extensionData state:interface ,
 		work:interface ;
 	ui:ui <http://lv2plug.in/plugins/eg-sampler#ui> ;
@@ -68,6 +69,9 @@
 		lv2:index 2 ;
 		lv2:symbol "out" ;
 		lv2:name "Out"
+	] ;
+	state:state [
+		<http://lv2plug.in/plugins/eg-sampler#sample> <click.wav>
 	] .
 
 <http://lv2plug.in/plugins/eg-sampler#ui>

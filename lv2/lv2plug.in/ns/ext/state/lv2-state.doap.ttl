@@ -14,6 +14,14 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "1.3" ;
+		doap:created "2013-01-16" ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add state:loadDefaultState feature so plugins can have their default state loaded without hard-coding default state as a special case."
+			]
+		]
+	] , [
 		doap:revision "1.2" ;
 		doap:created "2012-10-14" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
