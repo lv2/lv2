@@ -19,6 +19,8 @@
 				rdfs:label "Fix lv2_atom_sequence_end()."
 			] , [
 				rdfs:label "Remove atom:stringType in favour of owl:onDatatype so generic tools can understand and validate atom literals."
+			] , [
+				rdfs:label "Improve atom documentation."
 			]
 		]
 	] , [

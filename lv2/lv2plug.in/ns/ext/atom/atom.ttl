@@ -14,43 +14,53 @@
 		<forge.h> ,
 		<lv2-atom.doap.ttl> ;
 	lv2:documentation """
-<p>This specification defines a generic container for data, called an
-<q>Atom</q>, and several basic Atom types which can be used to express
-structured data.  An atom:Atom is (with one exception) Plain Old Data (POD),
-which means it can be copied generically (e.g. using a simple
-<code>memcpy</code>), and is suitable for use in real-time code.</p>
+<p>This specification defines a simple generic data container, called an
+<q>Atom</q>.  An atom:Atom can contain simple primitive types like integers,
+floating point numbers, and strings; as well as structured data like lists and
+dictionary-like <q>Objects</q>.  An Atom is, with one exception, Plain Old Data
+(POD), meaning it can be easily copied (e.g. using <code>memcpy</code>) and is
+suitable for use in real-time code.</p>
 
-<p>The purpose of Atoms is to allow implementations that process and/or
-transmit data to be independent of that data's type.  For example, plugins that
-mutually understand a type can be used together in a host that does not
-understand that type, because the host's required facilities are generic.
-Similarly, plugins (such as routers, delays, or data structures) can
-meaningfully process atoms of a type unknown to them.</p>
+<p>Atoms are not limited to the types defined here, but allow implementations
+to work with any type of POD data at all.  This is possible because Atom types
+are URIs, but mapped to integers using the <a href="../urid/urid.html">LV2
+URID</a> extension for performance reasons.</p>
+
+<p>Since atoms are simple to copy,
+communication of any atom is simple to implement without requiring special code
+for every type of data.  For example, plugins that mutually understand a type
+can be used together in a host that does not understand that type, because the
+host is only required to copy atoms, not interpret their contents.  Similarly,
+plugins (such as routers, delays, or data structures) can meaningfully process
+atoms of a type unknown to them.</p>
 
 <p>Atoms can and should be used anywhere values of various types must be stored
 or transmitted.  The port type atom:AtomPort can be used to transmit atoms via
-ports.  The atom:Sequence type in an atom:AtomPort replaces the <a
+ports.  An atom:AtomPort that contains an atom:Sequence can be used for sample
+accurate event communication, such as MIDI, and replaces the earlier <a
 href="../event/event.html">LV2 event</a> extension.</p>
-
-<p>The types defined in this extension should be powerful enough to express
-almost any structure.  Implementations SHOULD build structures out of the types
-provided here, rather than define new binary formats (e.g. use atom:Object
-rather than a new C <code>struct</code> type).  New binary formats are an
-implementation burden which harms interoperabilty, and should only be defined
-where absolutely necessary.</p>
-
-<p>Implementing this extension requires a facility for mapping URIs to
-integers, such as the <a href="../urid/urid.html">LV2 URID</a> extension.</p>
 
 <h3>Serialisation</h3>
 
-<p>An Atom type primarily defines a binary format (i.e. a C data type) for use
-at runtime.  However, each Atom type also has a standard serialisation format
-which SHOULD be used wherever an atom needs to be expressed as a string or in
-Turtle.  Thus, this specification not only defines binary data types for
-plugins to use, but a complete data model with a portable RDF-compatible
-serialisation.  This is useful for inter-process communication as well as
-saving state.</p>
+<p>Each Atom type defines a binary format for use at runtime, but also a
+serialisation that is natural to express in Turtle format.  Thus, this
+specification defines a powerful real-time appropriate data model, as well as a
+portable way to serialise any data in that model.  This is particularly useful
+for inter-process communication, saving/restoring state, and describing values
+in plugin data files.</p>
+
+<h3>Custom Atom Types</h3>
+
+<p>While it is possible to define new Atom types for any binary format, the
+standard types defined here are powerful enough to describe almost anything.
+Implementations SHOULD build structures out of the types provided here, rather
+than define new binary formats (e.g. use atom:Tuple or atom:Object rather than
+a new C <code>struct</code> type).  Current implementations have support for
+serialising all standard types, so new binary formats are an implementation
+burden which harms interoperabilty.  In particular, plugins SHOULD NOT expect
+UI communication or state saving with custom Atom types to work.  In general,
+new Atom types should only be defined where absolutely necessary due to
+performance reasons and serialisation is not a concern.</p>
 """ .
 
 atom:cType
@@ -239,11 +249,11 @@ atom:Path
 <p>A local file path.</p>
 
 <p>A Path is a URI reference with only a path component: no scheme, authority,
-query, or fragment.  Thus, paths to files in the same bundle may be cleanly
-written in Turtle files as a relative URI.  However, implementations may assume
-any binary Path (e.g. in an event payload) is a valid file path which can
-passed to system functions like fopen() directly, without any character
-encoding or escape expansion required.</p>
+query, or fragment.  In particular, paths to files in the same bundle may be
+cleanly written in Turtle files as a relative URI.  However, implementations
+may assume any binary Path (e.g. in an event payload) is a valid file path
+which can passed to system functions like fopen() directly, without any
+character encoding or escape expansion required.</p>
 
 <p>Any implemenation that creates a Path atom to transmit to another is
 responsible for ensuring it is valid.  A Path SHOULD always be absolute, unless
