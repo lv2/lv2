@@ -65,19 +65,6 @@ The identifier for a C type describing the binary representation of an Atom of
 this type.
 """ .
 
-atom:stringType
-	a rdf:Property ,
-		owl:ObjectProperty ,
-		owl:FunctionalProperty ;
-	rdfs:label "string type" ;
-	rdfs:domain rdfs:Class ;
-	rdfs:range rdfs:Datatype ;
-	lv2:documentation """
-<p>The type to be used when representing an Atom of this type as a string
-(e.g. in XML or RDF).  Typically an <a
-href="http://www.w3.org/TR/xmlschema-2/">XML Schema Datatype</a> URI.</p>
-""" .
-
 atom:Atom
 	a rdfs:Class ;
 	rdfs:label "Atom" ;
@@ -109,10 +96,11 @@ explicitly known to support references (e.g. by supporting a feature).</p>
 """ .
 
 atom:Chunk
-	a rdfs:Class ;
+	a rdfs:Class ,
+		rdfs:Datatype ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Chunk of memory" ;
-	atom:stringType xsd:base64Binary ;
+	owl:onDatatype xsd:base64Binary ;
 	lv2:documentation """
 <p>A chunk of memory with undefined contents.  This type is used to indicate a
 certain amount of space is available.  For example, output ports with a
@@ -134,47 +122,53 @@ atom:Number
 	rdfs:label "Number" .
 
 atom:Int
-	a rdfs:Class ;
+	a rdfs:Class ,
+		rdfs:Datatype ;
 	rdfs:subClassOf atom:Number ;
 	rdfs:label "Signed 32-bit integer" ;
 	atom:cType "LV2_Atom_Int" ;
-	atom:stringType xsd:int .
+	owl:onDatatype xsd:int .
 
 atom:Long
-	a rdfs:Class ;
+	a rdfs:Class ,
+		rdfs:Datatype ;
 	rdfs:subClassOf atom:Number ;
 	rdfs:label "Signed 64-bit integer" ;
 	atom:cType "LV2_Atom_Long" ;
-	atom:stringType xsd:long .
+	owl:onDatatype xsd:long .
 
 atom:Float
-	a rdfs:Class ;
+	a rdfs:Class ,
+		rdfs:Datatype ;
 	rdfs:subClassOf atom:Number ;
 	rdfs:label "32-bit IEEE-754 floating point number" ;
 	atom:cType "LV2_Atom_Float" ;
-	atom:stringType xsd:float .
+	owl:onDatatype xsd:float .
 
 atom:Double
-	a rdfs:Class ;
+	a rdfs:Class ,
+		rdfs:Datatype ;
 	rdfs:subClassOf atom:Number ;
 	rdfs:label "64-bit IEEE-754 floating point number" ;
 	atom:cType "LV2_Atom_Double" ;
-	atom:stringType xsd:double .
+	owl:onDatatype xsd:double .
 
 atom:Bool
-	a rdfs:Class ;
+	a rdfs:Class ,
+		rdfs:Datatype ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "Boolean" ;
 	atom:cType "LV2_Atom_Bool" ;
-	atom:stringType xsd:boolean ;
+	owl:onDatatype xsd:boolean ;
 	rdfs:comment "An Int where 0 is false and any other value is true." .
 
 atom:String
-	a rdfs:Class ;
+	a rdfs:Class ,
+		rdfs:Datatype ;
 	rdfs:subClassOf atom:Atom ;
 	rdfs:label "String" ;
 	atom:cType "LV2_Atom_String" ;
-	atom:stringType xsd:string ;
+	owl:onDatatype xsd:string ;
 	lv2:documentation """
 <p>A UTF-8 encoded string.</p>
 
@@ -236,26 +230,39 @@ void set_to_turtle_string(LV2_Atom_Literal* lit, const char* ttl) {
 """ .
 
 atom:Path
-	a rdfs:Class ;
-	rdfs:subClassOf atom:String ;
+	a rdfs:Class ,
+		rdfs:Datatype ;
+	rdfs:subClassOf atom:URI ;
+	owl:onDatatype atom:URI ;
 	rdfs:label "File path string" ;
 	lv2:documentation """
-<p>A local file path string.  This is identical in format to atom:String,
-except the string is a path.  Since the ability to distinguish paths from plain
-strings is often necessary, paths MUST NOT be transmitted as atom:String.</p>
+<p>A local file path.</p>
+
+<p>A Path is a URI reference with only a path component: no scheme, authority,
+query, or fragment.  Thus, paths to files in the same bundle may be cleanly
+written in Turtle files as a relative URI.  However, implementations may assume
+any binary Path (e.g. in an event payload) is a valid file path which can
+passed to system functions like fopen() directly, without any character
+encoding or escape expansion required.</p>
+
+<p>Any implemenation that creates a Path atom to transmit to another is
+responsible for ensuring it is valid.  A Path SHOULD always be absolute, unless
+there is some mechanism in place that defines a base path.  Since this is not
+the case for plugin instances, effectively any Path sent to or received from a
+plugin instance MUST be absolute.</p>
 """ .
 
 atom:URI
-	a rdfs:Class ;
+	a rdfs:Class ,
+		rdfs:Datatype ;
 	rdfs:subClassOf atom:String ;
+	owl:onDatatype xsd:anyURI ;
 	rdfs:label "URI string" ;
-	atom:stringType xsd:anyURI ;
 	lv2:documentation """
-<p>A URI string.  This is identical in format to atom:String, except the string
-is a URI.  This is useful when a URI is needed but mapping is inappropriate,
-for example with temporary or relative URIs.  Since the ability to distinguish
-URIs from plain strings is often necessary, URIs MUST NOT be transmitted as
-atom:String.</p>
+<p>A URI string.  This is useful when a URI is needed but mapping is
+inappropriate, for example with temporary or relative URIs.  Since the ability
+to distinguish URIs from plain strings is often necessary, URIs MUST NOT be
+transmitted as atom:String.</p>
 
 <p>This is not strictly a URI, since UTF-8 is allowed.  Escaping and related
 issues are the host's responsibility.</p>

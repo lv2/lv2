@@ -109,11 +109,12 @@ midi:HexByte
 	rdfs:comment "A hexadecimal byte, which is a xsd:hexBinary value <= FF" .
 
 midi:MidiEvent
-	a rdfs:Class ;
+	a rdfs:Class ,
+		rdfs:Datatype ;
 	rdfs:label "MIDI Message" ;
 	rdfs:subClassOf ev:Event ,
 		atom:Atom ;
-	atom:stringType xsd:hexBinary ;
+	owl:onDatatype xsd:hexBinary ;
 	lv2:documentation """
 <p>A single raw MIDI message (i.e. a sequence of bytes).</p>
 

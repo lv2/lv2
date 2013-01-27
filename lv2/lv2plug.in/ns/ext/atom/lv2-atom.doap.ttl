@@ -13,10 +13,12 @@
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "1.3" ;
-		doap:created "2013-01-16" ;
+		doap:created "2013-01-27" ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Fix lv2_atom_sequence_end()."
+			] , [
+				rdfs:label "Remove atom:stringType in favour of owl:onDatatype so generic tools can understand and validate atom literals."
 			]
 		]
 	] , [
