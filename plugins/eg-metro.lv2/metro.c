@@ -76,16 +76,35 @@ typedef struct {
 		float*             output;
 	} ports;
 
+	/** The rate, bpm, and speed are the basic information sent by the host. */
 	double   rate;
 	float    bpm;
 	float    speed;
-	uint32_t elapsed_len;  /**< Frames since last click start */
-	uint32_t wave_offset;  /**< Current play offset in wave */
-	float*   wave;         /**< One cycle of a sine wave */
-	uint32_t wave_len;     /**< Length of wave in frames */
-	uint32_t attack_len;   /**< Attack duration in frames */
-	uint32_t decay_len;    /**< Decay duration in frames */
-	State    state;        /**< Play state */
+
+	/** To keep track of when to play the next click, we need to keep track of
+	    a few pieces of information: */
+
+	/** - The frames since the start of the last click is stored */
+	uint32_t elapsed_len;
+
+	/** - The current play offset in the wave */
+	uint32_t wave_offset;
+
+	/** - The current play state (attack, decay, or off) */
+	State state;
+
+	/** The wave to play is a simple sine wave generated at instantiation time
+	    based on the sample rate.  The length in frames is stored in order to
+	    continuously play the wave in a cycle to avoid discontinuity clicks. */
+	float*   wave;
+	uint32_t wave_len;
+
+	/** The continuously playing sine wave is enveloped to provide an actual
+	    metronome tick.  This plugin uses a simple AD envelope with fixed
+	    parameters.  A more sophisticated implementation might use a more
+	    advanced envelope and allow the user to modify these parameters. */
+	uint32_t attack_len;
+	uint32_t decay_len;
 } Metro;
 
 static void
