@@ -312,12 +312,11 @@ lv2:minorVersion
 	rdfs:range xsd:nonNegativeInteger ;
 	rdfs:label "minor version" ;
 	lv2:documentation """
-<p>The minor version of an LV2 Resource. This property is used (along with
-lv2:microVersion) by hosts to distinguish different versions of a compatible
-resource, e.g. to load only the bundle with the most recent version.</p>
 
-<p>The version of an LV2 resource is composed of two fields: minor version,
-and micro version. These have the usual semantics:</p>
+<p>The minor version of an LV2 Resource.  This, along with lv2:microVersion, is
+used to distinguish between different versions of the <q>same</q> resource,
+e.g. to load only the bundle with the most recent version of a plugin.  An LV2
+version has a minor and micro number with the usual semantics:</p>
 
 <ul>
 <li>The minor version MUST be incremented when backwards (but not
@@ -328,24 +327,19 @@ plugin.</li>
 compatibility at all, e.g. bug fixes or documentation updates.</li>
 </ul>
 
-<p>Note there is deliberately no concept of a major version: all versions of an
-LV2 resource with a given URI are by definition backwards compatible. More
-precisely: replacing a resource with a newer version of that resource MUST NOT
-break anything. If a change is made which breaks this rule, the URI
-of the resource MUST be changed. In contexts where a full (e.g. <a
-href="http://semver.org">SemVer</a> conformant) version number is required, the
-major version of all released LV2 resources is 1.</p>
+<p>Note there is deliberately no major version; all versions with the same URI
+are compatible by definition.  Replacing a resource with a newer version of
+that resource MUST NOT break anything.  If a change violates this rule, then
+the URI of the resource (which serves as the major version) MUST be
+changed.</p>
 
-<p>Plugins and extensions MUST adhere to the following rules:</p>
+<p>Plugins and extensions MUST adhere to at least the following rules:</p>
 <ul>
 <li>All versions of a plugin with a given URI MUST have the <q>same</q> set of
 mandatory (i.e. not lv2:connectionOptional) ports with respect to lv2:symbol
-and rdf:type. In other words, every port on a specific version of a plugin has
-a lv2:symbol and a set of rdf:types; all future versions of that plugin are
-guaranteed to have a port with the same lv2:symbol and at least those
-rdf:types. New types may be added only if doing so does not break
-compatibility, i.e. if old hosts will continue to work correctly with the new
-plugin.</li>
+and rdf:type.  In other words, every port on a particular version is guaranteed
+to exist on a future version with same lv2:symbol and at least those
+rdf:types.</li>
 
 <li>New ports MAY be added without changing the plugin URI if and only if they
 are lv2:connectionOptional and the minor version is incremented.</li>
@@ -353,31 +347,27 @@ are lv2:connectionOptional and the minor version is incremented.</li>
 <li>The minor version MUST be incremented if the index of any port (identified
 by its symbol) is changed.</li>
 
-<li>All versions of an extension MUST be compatible in the sense that an
+<li>All versions of a specification MUST be compatible in the sense that an
 implementation of the new version can interoperate with an implementation of
 any previous version.</li>
 </ul>
 
-<p>(Note these rules are not necessarily exhaustive)</p>
-
 <p>Anything that depends on a specific version of a plugin (e.g. a
 serialisation that references ports by index) MUST refer to the plugin by both
-URI and version. However, implementations should be tolerant and extensions
+URI and version.  However, implementations should be tolerant and extensions
 should be designed such that there is no need to do this (e.g. indices should
 only be meaningful for a particular plugin <em>instance</em> at run-time).</p>
 
 <p>When hosts discover several installed versions of a resource, they SHOULD
 warn the user and load only the most recent version.</p>
 
-<p>An odd minor <em>or</em> micro version indicates that the resource is a
-possibly unstable development version. Hosts and tools SHOULD clearly indicate
-this wherever appropriate. Several versions of a resource with an odd version
-may exist; i.e. it is acceptable to work on a development version of a resource
-(e.g. in source control) without worrying about version numbers as long as
-either the minor or micro version is odd.</p>
-
-<p>This property describes half of a resource version.  See lv2:minorVersion
-for the description of the other half.</p>
+<p>An odd minor <em>or</em> micro version, or minor version zero, indicates
+that the resource is a development version.  Hosts and tools SHOULD clearly
+indicate this wherever appropriate.  Minor version zero is a special case for
+pre-release development of plugins, or experimental plugins that are not
+intended for stable use at all.  Hosts SHOULD NOT expect such a plugin to
+remain compatible with any future version.  If possible, hosts SHOULD hide such
+plugins from users unless an <q>experimental</q> option is enabled.</p>
 """ .
 
 lv2:microVersion

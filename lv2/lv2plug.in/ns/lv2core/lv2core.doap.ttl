@@ -27,6 +27,8 @@
 				rdfs:label "Set range of lv2:designation to lv2:Designation."
 			] , [
 				rdfs:label "Make lv2:Parameter rdfs:subClassOf rdf:Property."
+			] , [
+				rdfs:label "Reserve minor version 0 for unstable development plugins."
 			]
 		]
 	] , [
