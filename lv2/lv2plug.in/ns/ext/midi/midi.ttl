@@ -272,7 +272,7 @@ midi:binding
 <p>The MIDI event to bind a parameter to.  This describes which MIDI events
 should be used to control a port, parameter, or other object.  The binding
 should be a midi:MidiEvent but the property that represents the control value may
-be ommitted.  For example, to bind to the value of controller 17:</p>
+be omitted.  For example, to bind to the value of controller 17:</p>
 
 <pre class="turtle-code">
 port midi:binding [
