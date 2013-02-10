@@ -16,11 +16,13 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "9.1" ;
-		doap:created "2013-01-10" ;
+		doap:revision "9.2" ;
+		doap:created "2013-02-09" ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add lv2:EnvelopePlugin class."
+			] , [
+				rdfs:label "Add lv2:Bank, lv2:Program, and lv2:program for describing programs, including but not limited to MIDI programs."
 			] , [
 				rdfs:label "Add lv2:control for designating primary event-based control ports."
 			] , [
