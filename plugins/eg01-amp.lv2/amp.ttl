@@ -1,8 +1,17 @@
+# The full description of the plugin is in this file, which is linked to from
+# `manifest.ttl`.  This is done so the host only needs to scan the relatively
+# small `manifest.ttl` files to quickly discover all plugins.
+
 @prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
+# First the type of the plugin is described.  All plugins must explicitly list
+# `lv2:Plugin` as a type.  A more specific type should also be given, where
+# applicable, so hosts can present a nicer UI for loading plugins.  Note that
+# this URI is the identifier of the plugin, so if it does not match the one in
+# `manifest.ttl`, the host will not discover the plugin data at all.
 <http://lv2plug.in/plugins/eg-amp>
 	a lv2:Plugin ,
 		lv2:AmplifierPlugin ;

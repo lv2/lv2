@@ -12,7 +12,7 @@
 #
 # ==== Namespace Prefixes ====
 #
-# Turtle files often contain many URIs.  To make this more readable, prefixes
+# Turtle files contain many URIs.  To make this more readable, prefixes
 # can be defined.  For example, with the `lv2:` prefix below, instead of
 # <http://lv2plug.in/ns/lv2core#Plugin> the shorter form `lv2:Plugin` can be
 # used.  This is just a shorthand for URIs within a file, the prefixes are not
@@ -33,7 +33,7 @@
 # This file is called called `manifest.ttl.in` rather than `manifest.ttl`
 # to indicate that it is not the final file to be installed.
 # This is not necessary, but is a good idea for portable plugins.
-# For reability, the text will assume `.so` is the extension used.
+# For reability, the following text will assume `.so` is the extension used.
 #
 # In short, this declares that the resource with URI
 # "http://lv2plug.in/plugins/eg-amp" is an LV2 plugin, with executable code in
@@ -74,14 +74,14 @@
 # E.G. WHERE THE PORTION FOLLOWING "http://" IS NOT AN ACTUAL DOMAIN NAME.  If
 # you need an example URI, the domain http://example.org/ is reserved for this
 # purpose.  It is best to use web URIs, e.g. at the domain where plugins are
-# hosted for download, even if there is currently no documents hosted there.
+# hosted for download, even if no actual documents are currently hosted there.
 # If this is truly impossible, use a URN, e.g. urn:myplugs:superamp.
 #
 # A detailed explanation of each statement follows.
 
 <http://lv2plug.in/plugins/eg-amp> a lv2:Plugin .
 
-# The `a` is a Turtle shortcut for rdf:type and more or less means ``is a''.
+# The `a`, as in ``is a'', is a Turtle shortcut for `rdf:type`.
 # `lv2:Plugin` expands to <http://lv2plug.in/ns/lv2core#Plugin> (using the
 # `lv2:` prefix above) which is the type of all LV2 plugins.
 # This statement means ``<http://lv2plug.in/plugins/eg-amp> is an LV2 plugin''.

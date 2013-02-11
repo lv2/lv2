@@ -56,20 +56,18 @@ enum {
 	METRO_OUT     = 2
 };
 
+/** During execution this plugin can be in one of 3 states: */
 typedef enum {
-	STATE_ATTACK,
-	STATE_DECAY,
-	STATE_OFF
+	STATE_ATTACK,  // Envelope rising
+	STATE_DECAY,   // Envelope lowering
+	STATE_OFF      // Silent
 } State;
 
+/** The plugin instance structure: */
 typedef struct {
-	/* Features */
-	LV2_URID_Map* map;
+	LV2_URID_Map* map;   // URID map feature
+	MetroURIs     uris;  // Cache of mapped URIDs
 
-	/* URIs */
-	MetroURIs uris;
-
-	/* Ports */
 	struct {
 		LV2_Atom_Sequence* control;
 		LV2_Atom_Sequence* notify;
