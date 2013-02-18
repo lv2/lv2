@@ -17,21 +17,6 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/**
-   @file sampler.c Sampler Plugin
-
-   A simple example of an LV2 sampler that dynamically loads a single sample
-   (based on incoming events) and triggers their playback (based on incoming
-   MIDI note events).
-
-   This plugin illustrates:
-   - UI <=> Plugin communication via events
-   - Use of the worker extension for non-realtime tasks (sample loading)
-   - Use of the log extension to print log messages via the host
-   - Saving plugin state via the state extension
-   - Dynamic plugin control via the same properties saved to state
-*/
-
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -63,42 +48,42 @@ enum {
 static const char* default_sample_file = "click.wav";
 
 typedef struct {
-	SF_INFO info;      /**< Info about sample from sndfile */
-	float*  data;      /**< Sample data in float */
-	char*   path;      /**< Path of file */
-	size_t  path_len;  /**< Length of path */
+	SF_INFO info;      // Info about sample from sndfile
+	float*  data;      // Sample data in float
+	char*   path;      // Path of file
+	size_t  path_len;  // Length of path
 } Sample;
 
 typedef struct {
-	/* Features */
+	// Features
 	LV2_URID_Map*        map;
 	LV2_Worker_Schedule* schedule;
 	LV2_Log_Log*         log;
 
-	/* Forge for creating atoms */
+	// Forge for creating atoms
 	LV2_Atom_Forge forge;
 
-	/* Logger convenience API */
+	// Logger convenience API
 	LV2_Log_Logger logger;
 
-	/* Sample */
+	// Sample
 	Sample* sample;
 
-	/* Ports */
+	// Ports
 	const LV2_Atom_Sequence* control_port;
 	LV2_Atom_Sequence*       notify_port;
 	float*                   output_port;
 
-	/* Forge frame for notify port (for writing worker replies). */
+	// Forge frame for notify port (for writing worker replies)
 	LV2_Atom_Forge_Frame notify_frame;
 
-	/* URIs */
+	// URIs
 	SamplerURIs uris;
 
-	/* Current position in run() */
+	// Current position in run()
 	uint32_t frame_offset;
 
-	/* Playback state */
+	// Playback state
 	sf_count_t frame;
 	bool       play;
 } Sampler;
@@ -140,7 +125,7 @@ load_sample(Sampler* self, const char* path)
 		return NULL;
 	}
 
-	/* Read data */
+	// Read data
 	float* const data = malloc(sizeof(float) * info->frames);
 	if (!data) {
 		lv2_log_error(&self->logger, "Failed to allocate memory for sample\n");
@@ -150,7 +135,7 @@ load_sample(Sampler* self, const char* path)
 	sf_read_float(sndfile, data, info->frames);
 	sf_close(sndfile);
 
-	/* Fill sample struct and return it. */
+	// Fill sample struct and return it
 	sample->data     = data;
 	sample->path     = (char*)malloc(path_len + 1);
 	sample->path_len = path_len;
@@ -187,23 +172,23 @@ work(LV2_Handle                  instance,
 	Sampler*        self = (Sampler*)instance;
 	const LV2_Atom* atom = (const LV2_Atom*)data;
 	if (atom->type == self->uris.eg_freeSample) {
-		/* Free old sample */
+		// Free old sample
 		const SampleMessage* msg = (const SampleMessage*)data;
 		free_sample(self, msg->sample);
 	} else {
-		/* Handle set message (load sample). */
+		// Handle set message (load sample).
 		const LV2_Atom_Object* obj = (const LV2_Atom_Object*)data;
 
-		/* Get file path from message */
+		// Get file path from message
 		const LV2_Atom* file_path = read_set_file(&self->uris, obj);
 		if (!file_path) {
 			return LV2_WORKER_ERR_UNKNOWN;
 		}
 
-		/* Load sample. */
+		// Load sample.
 		Sample* sample = load_sample(self, LV2_ATOM_BODY_CONST(file_path));
 		if (sample) {
-			/* Loaded sample, send it to run() to be applied. */
+			// Loaded sample, send it to run() to be applied.
 			respond(handle, sizeof(sample), &sample);
 		}
 	}
@@ -228,13 +213,13 @@ work_response(LV2_Handle  instance,
 	SampleMessage msg = { { sizeof(Sample*), self->uris.eg_freeSample },
 	                      self->sample };
 
-	/* Send a message to the worker to free the current sample */
+	// Send a message to the worker to free the current sample
 	self->schedule->schedule_work(self->schedule->handle, sizeof(msg), &msg);
 
-	/* Install the new sample */
+	// Install the new sample
 	self->sample = *(Sample*const*)data;
 
-	/* Send a notification that we're using a new sample. */
+	// Send a notification that we're using a new sample.
 	lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
 	write_set_file(&self->forge, &self->uris,
 	               self->sample->path,
@@ -270,14 +255,14 @@ instantiate(const LV2_Descriptor*     descriptor,
             const char*               path,
             const LV2_Feature* const* features)
 {
-	/* Allocate and initialise instance structure. */
+	// Allocate and initialise instance structure.
 	Sampler* self = (Sampler*)malloc(sizeof(Sampler));
 	if (!self) {
 		return NULL;
 	}
 	memset(self, 0, sizeof(Sampler));
 
-	/* Get host features */
+	// Get host features
 	for (int i = 0; features[i]; ++i) {
 		if (!strcmp(features[i]->URI, LV2_URID__map)) {
 			self->map = (LV2_URID_Map*)features[i]->data;
@@ -295,12 +280,12 @@ instantiate(const LV2_Descriptor*     descriptor,
 		goto fail;
 	}
 
-	/* Map URIs and initialise forge/logger */
+	// Map URIs and initialise forge/logger
 	map_sampler_uris(self->map, &self->uris);
 	lv2_atom_forge_init(&self->forge, self->map);
 	lv2_log_logger_init(&self->logger, self->map, self->log);
 
-	/* Load the default sample file */
+	// Load the default sample file
 	const size_t path_len    = strlen(path);
 	const size_t file_len    = strlen(default_sample_file);
 	const size_t len         = path_len + file_len;
@@ -334,16 +319,16 @@ run(LV2_Handle instance,
 	sf_count_t   pos         = 0;
 	float*       output      = self->output_port;
 
-	/* Set up forge to write directly to notify output port. */
+	// Set up forge to write directly to notify output port.
 	const uint32_t notify_capacity = self->notify_port->atom.size;
 	lv2_atom_forge_set_buffer(&self->forge,
 	                          (uint8_t*)self->notify_port,
 	                          notify_capacity);
 
-	/* Start a sequence in the notify output port. */
+	// Start a sequence in the notify output port.
 	lv2_atom_forge_sequence_head(&self->forge, &self->notify_frame, 0);
 
-	/* Read incoming events */
+	// Read incoming events
 	LV2_ATOM_SEQUENCE_FOREACH(self->control_port, ev) {
 		self->frame_offset = ev->time.frames;
 		if (ev->body.type == uris->midi_Event) {
@@ -360,7 +345,7 @@ run(LV2_Handle instance,
 		} else if (is_object_type(uris, ev->body.type)) {
 			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
 			if (obj->body.otype == uris->patch_Set) {
-				/* Received a set message, send it to the worker. */
+				// Received a set message, send it to the worker.
 				lv2_log_trace(&self->logger, "Queueing set message\n");
 				self->schedule->schedule_work(self->schedule->handle,
 				                              lv2_atom_total_size(&ev->body),
@@ -375,7 +360,7 @@ run(LV2_Handle instance,
 		}
 	}
 
-	/* Render the sample (possibly already in progress) */
+	// Render the sample (possibly already in progress)
 	if (self->play) {
 		uint32_t       f  = self->frame;
 		const uint32_t lf = self->sample->info.frames;
@@ -395,7 +380,7 @@ run(LV2_Handle instance,
 		}
 	}
 
-	/* Add zeros to end if sample not long enough (or not playing) */
+	// Add zeros to end if sample not long enough (or not playing)
 	for (; pos < sample_count; ++pos) {
 		output[pos] = 0.0f;
 	}

@@ -119,6 +119,10 @@ connect_port(LV2_Handle instance,
 	}
 }
 
+/**
+   The activate() method resets the state completely, so the wave offset is
+   zero and the envelope is off.
+*/
 static void
 activate(LV2_Handle instance)
 {
@@ -129,6 +133,12 @@ activate(LV2_Handle instance)
 	self->state       = STATE_OFF;
 }
 
+/**
+   This plugin does a bit more work in instantiate() than the previous
+   examples.  The tempo updates from the host contain several URIs, so those
+   are mapped, and the sine wave to be played needs to be generated based on
+   the current sample rate.
+*/
 static LV2_Handle
 instantiate(const LV2_Descriptor*     descriptor,
             double                    rate,
@@ -191,6 +201,10 @@ cleanup(LV2_Handle instance)
 	free(instance);
 }
 
+/**
+   Play back audio for the range [begin..end) relative to this cycle.  This is
+   called by run() in-between events to output audio up until the current time.
+*/
 static void
 play(Metro* self, uint32_t begin, uint32_t end)
 {
@@ -237,6 +251,10 @@ play(Metro* self, uint32_t begin, uint32_t end)
 	}
 }
 
+/**
+   Update the current position based on a host message.  This is called by
+   run() when a time:Position is received.
+*/
 static void
 update_position(Metro* self, const LV2_Atom_Object* obj)
 {
