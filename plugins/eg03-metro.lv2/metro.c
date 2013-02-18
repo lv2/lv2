@@ -52,8 +52,7 @@ static const double decay_s  = 0.075;
 
 enum {
 	METRO_CONTROL = 0,
-	METRO_NOTIFY  = 1,
-	METRO_OUT     = 2
+	METRO_OUT     = 1
 };
 
 /** During execution this plugin can be in one of 3 states: */
@@ -80,7 +79,6 @@ typedef struct {
 
 	struct {
 		LV2_Atom_Sequence* control;
-		LV2_Atom_Sequence* notify;
 		float*             output;
 	} ports;
 
@@ -112,9 +110,6 @@ connect_port(LV2_Handle instance,
 	switch (port) {
 	case METRO_CONTROL:
 		self->ports.control = (LV2_Atom_Sequence*)data;
-		break;
-	case METRO_NOTIFY:
-		self->ports.notify = (LV2_Atom_Sequence*)data;
 		break;
 	case METRO_OUT:
 		self->ports.output = (float*)data;
@@ -284,12 +279,6 @@ run(LV2_Handle instance, uint32_t sample_count)
 {
 	Metro*           self = (Metro*)instance;
 	const MetroURIs* uris = &self->uris;
-
-	// Empty notify output for now
-	LV2_Atom_Sequence* notify = self->ports.notify;
-	notify->atom.type = self->uris.atom_Sequence;
-	notify->atom.size = sizeof(LV2_Atom_Sequence_Body);
-	notify->body.unit = notify->body.pad = 0;
 
 	// Work forwards in time frame by frame, handling events as we go
 	const LV2_Atom_Sequence* in     = self->ports.control;

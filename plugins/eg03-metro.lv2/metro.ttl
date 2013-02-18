@@ -22,15 +22,6 @@
 		lv2:symbol "control" ;
 		lv2:name "Control" ;
 	] , [
-		a lv2:OutputPort ,
-			atom:AtomPort ;
-		atom:bufferType atom:Sequence ;
-		atom:supports <http://lv2plug.in/ns/ext/patch#Patch> ;
-		lv2:portProperty lv2:connectionOptional ;
-		lv2:index 1 ;
-		lv2:symbol "notify" ;
-		lv2:name "Notify" ;
-	] , [
 		a lv2:AudioPort ,
 			lv2:OutputPort ;
 		lv2:index 2 ;
