@@ -13,8 +13,9 @@
 	doap:developer <http://drobilla.net/drobilla#me> ,
 		<http://lv2plug.in/ns/meta#larsl> ;
 	doap:release [
-		doap:revision "1.9" ;
+		doap:revision "1.10" ;
 		doap:created "2013-01-13" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.4.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [

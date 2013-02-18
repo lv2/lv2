@@ -48,10 +48,15 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
-		doap:revision "1.2.1" ;
+		doap:revision "1.4.0" ;
+		doap:created "2013-02-17" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.4.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add metronome example plugin to demonstrate precise tempo sync."
+				rdfs:label "Add metronome example plugin to demonstrate sample accurate tempo sync."
+			] , [
+				rdfs:label "Generate book-style HTML documentation from example plugins."
 			]
 		]
 	] , [

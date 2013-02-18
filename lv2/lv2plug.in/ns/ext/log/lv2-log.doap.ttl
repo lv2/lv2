@@ -11,8 +11,10 @@
 	doap:created "2012-01-12" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "1.1" ;
+		doap:revision "2.0" ;
 		doap:created "2013-01-08" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.4.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add logger convenience API."

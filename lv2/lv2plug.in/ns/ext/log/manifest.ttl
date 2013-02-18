@@ -3,7 +3,7 @@
 
 <http://lv2plug.in/ns/ext/log>
 	a lv2:Specification ;
-	lv2:minorVersion 1 ;
-	lv2:microVersion 1 ;
+	lv2:minorVersion 2 ;
+	lv2:microVersion 0 ;
 	rdfs:seeAlso <log.ttl> .
 
