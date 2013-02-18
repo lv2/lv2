@@ -320,7 +320,7 @@ def build(bld):
 
     if bld.env.DOCS or bld.env.ONLINE_DOCS:
         # Build Doxygen documentation (and tags file)
-        autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc')
+        autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc', False)
 
         # Copy stylesheet to build directory
         bld(features = 'subst',
