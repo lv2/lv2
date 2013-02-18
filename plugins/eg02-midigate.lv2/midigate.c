@@ -47,7 +47,7 @@ typedef struct {
 	} uris;
 
 	unsigned n_active_notes;
-	unsigned program;
+	unsigned program;  // 0 = normal, 1 = inverted
 } Midigate;
 
 static LV2_Handle
@@ -135,6 +135,10 @@ write_output(Midigate* self, uint32_t offset, uint32_t len)
    updated, then the output is written up until the current event time.  Then
    +offset+ is updated and the next event is processed.  After the loop the
    final chunk from the last event to the end of the cycle is emitted.
+
+   There is currently no standard way to describe MIDI programs in LV2, so the
+   host has no way of knowing that these programs exist and should be presented
+   to the user.  A future version of LV2 will address this shortcoming.
 
    This pattern of iterating over input events and writing output along the way
    is a common idiom for writing sample accurate output based on event input.

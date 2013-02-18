@@ -15,30 +15,6 @@
 	lv2:project <http://lv2plug.in/ns/lv2> ;
 	lv2:requiredFeature urid:map ;
 	lv2:optionalFeature lv2:hardRTCapable ;
-# Describe program banks so the host can automate and/or present a user
-# interface.  Describing supported programs (or any other MIDI event) is not
-# required, but is a good idea since it allows hosts to make better use of
-# plugins.  This plugin has a single bank of two programs, which have a
-# (mandatory) label, and an (optional) comment to describe their meaning in
-# more detail.
-#
-# Both programs and the bank have an index, which corresponds to the MIDI bank
-# and program numbers that will activate them.  Since there are other ways to
-# change programs (not used here), an index is not strictly required, but must
-# be present to support program changes from MIDI.
-	lv2:bank [
-		rdfs:label "Default" ;
-		lv2:index 0 ;
-		lv2:program [
-			lv2:index 0 ;
-			rdfs:label "Normal" ;
-			rdfs:comment "Input is passed through if notes are active."
-		] , [
-			lv2:index 1 ;
-			rdfs:label "Inverted" ;
-			rdfs:comment "Input is passed through if no notes are active."
-		]
-	] ;
 # This plugin has three ports.  There is an audio input and output as before,
 # as well as a new AtomPort.  An AtomPort buffer contains an Atom, which is a
 # generic container for any type of data.  In this case, we want to receive

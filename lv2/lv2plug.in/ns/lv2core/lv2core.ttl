@@ -122,19 +122,6 @@ which of these classes the functions belong, define new classes for them, or
 otherwise precisely describe their threading rules.</p>
 """ .
 
-lv2:Bank
-	a rdfs:Class ,
-		owl:Class ;
-	rdfs:label "Bank" ;
-	lv2:documentation """
-<p>A bank of programs.  See lv2:Program for details.</p>
-
-<p>A Bank MUST have an rdfs:label giving a short label suitable for
-presentation in a user interface, and SHOULD have an rdfs:comment if a more
-detailed description is available.  For MIDI compatibility, a bank SHOULD have
-an lv2:index within [0,127].</p>
-""" .
-
 lv2:PluginBase
 	a rdfs:Class ,
 		owl:Class ;
@@ -232,31 +219,6 @@ necessarily refer to the same port on all plugins with a given URI (i.e. the
 index for a port may differ between plugin binaries).</p>
 """ .
 
-lv2:Program
-	a rdfs:Class ,
-		owl:Class ;
-	rdfs:label "Program" ;
-	lv2:documentation """
-<p>A plugin configuration or mode.  This can describe MIDI programs, but is
-more general.  Implementations MAY support changing programs by any
-mechanism.</p>
-
-<p>A program MUST have an rdfs:label giving a short label suitable for
-presentation in a user interface, and SHOULD have an rdfs:comment if a more
-detailed description is available.  For MIDI compatibility, a program SHOULD
-have an lv2:index within [0,127].</p>
-
-<p>Note that a program is an internal plugin mode, not necessarily a complete
-snapshot of plugin state (which is a <q>preset</q>).  The currently active
-program is a parameter, lv2:program.  Programs allow plugins to implement
-internal configurations opaque to the host; in particular, a program does not
-define control input values.  The distinction is analogous to hardware that
-supports program changes but also has physical controls that can not be changed
-by software.  However, a program MAY be associated with a preset, or one
-resource may be both a program and a preset, to support completely changing a
-plugin instance's state via a program change.</p>
-""" .
-
 lv2:InputPort
 	a rdfs:Class ,
 		owl:Class ;
@@ -314,23 +276,6 @@ user as a control.</p>
 versa.  Hosts SHOULD take care to prevent data from a CVPort port from being
 used as audio.</p>
 """ .
-
-lv2:bank
-	a rdf:Property ,
-		owl:ObjectProperty ,
-		lv2:Parameter ;
-	rdfs:domain lv2:PluginBase ;
-	rdfs:range lv2:Bank ;
-	rdfs:label "bank" ;
-	rdfs:comment "A supported bank of programs, or the currently active bank." .
-
-lv2:program
-	a rdf:Property ,
-		owl:ObjectProperty ,
-		lv2:Parameter ;
-	rdfs:range lv2:Program ;
-	rdfs:label "program" ;
-	rdfs:comment "A program in a bank, or the currently active program." .
 
 lv2:port
 	a rdf:Property ,
