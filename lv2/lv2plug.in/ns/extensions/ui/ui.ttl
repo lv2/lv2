@@ -316,6 +316,20 @@ plugin UI.  This feature corresponds to the LV2UI_Touch struct, which
 should be passed with the URI LV2_UI__touch.</p>
 """ .
 
+ui:idleInterace
+	a lv2:Feature ,
+		lv2:ExtensionData ;
+	lv2:documentation """
+<p>A feature that provides a callback for the host to call rapidly to drive the
+UI.  To support this feature, the UI should list it as a lv2:optionalFeature or
+lv2:requiredFeature in its data, and also as lv2:extensionData.  When the UI's
+extension_data() is called with this URI (LV2_UI__idleInterface), it should
+return a pointer to an LV2_UI_Idle_Interface.</p>
+
+<p>To indicate support, the host should pass a feature to instantiate() with
+this URI, with NULL for data.</p>
+""" .
+
 ui:protocol
 	a rdf:Property ;
 	rdfs:domain ui:PortNotification ;
