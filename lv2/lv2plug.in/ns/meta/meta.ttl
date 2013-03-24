@@ -48,6 +48,15 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
+		doap:revision "1.4.1" ;
+		doap:created "2013-03-24" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix port indices of metronome example."
+			]
+		]
+	] , [
 		doap:revision "1.4.0" ;
 		doap:created "2013-02-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.4.0.tar.bz2> ;
