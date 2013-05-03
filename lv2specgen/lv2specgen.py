@@ -227,6 +227,9 @@ if have_pygments:
         }
 
 def linkify(string):
+    if linkmap == {}:
+        return string
+
     "Add links to code documentation for identifiers"
     if string in linkmap.keys():
         # Exact match for complete string
@@ -287,7 +290,9 @@ def getComment(m, urinode, classlist, proplist, instalist):
             curie = match.group(0)
             uri   = rdflib.URIRef(spec_ns + name)
             if prefix == spec_pre:
-                if not (uri in classlist or uri in instalist or uri in proplist):
+                if not ((classlist and uri in classlist) or
+                        (instalist and uri in instalist) or
+                        (proplist and uri in proplist)):
                     print("warning: Link to undefined resource <%s>\n" % text)
                 return '<a href="#%s">%s</a>' % (name, curie)
             elif prefix in namespaces:
@@ -998,6 +1003,9 @@ def getInstances(model, classes, properties):
 def load_tags(path, docdir):
     "Build a (symbol => URI) map from a Doxygen tag file."
 
+    if not path or not docdir:
+        return {}
+
     def getChildText(elt, tagname):
         "Return the content of the first child node with a certain tag name."
         for e in elt.childNodes:
@@ -1061,7 +1069,8 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=Fa
 
     m = rdflib.ConjunctiveGraph()
     manifest_path = os.path.join(os.path.dirname(specloc), 'manifest.ttl')
-    m.parse(manifest_path, format='n3')
+    if os.path.exists(manifest_path):
+        m.parse(manifest_path, format='n3')
     m.parse(specloc, format='n3')
 
     bundle_path = os.path.split(specloc[specloc.find(':') + 1:])[0]
@@ -1241,7 +1250,7 @@ def getOntologyNS(m):
 
 def usage():
     script = os.path.basename(sys.argv[0])
-    print("""Usage: %s ONTOLOGY INDIR STYLE OUTPUT DOCDIR TAGS [FLAGS]
+    print("""Usage: %s ONTOLOGY INDIR STYLE OUTPUT [DOCDIR TAGS] [FLAGS]
 
         ONTOLOGY  : Path to ontology file
         INDIR     : Input directory containing template.html and style.css
@@ -1271,13 +1280,16 @@ if __name__ == "__main__":
         indir    = args[1]
         style    = args[2]
         output   = args[3]
-        docdir   = args[4]
-        tags     = args[5]
+        docdir   = None
+        tags     = None
+        if len(args) > 5:
+            docdir = args[4]
+            tags   = args[5]
 
         # Flags
         instances = False
-        if len(args) > 7:
-            flags = args[7:]
+        if len(args) > 6:
+            flags = args[6:]
             i = 0
             while i < len(flags):
                 if flags[i] == '-i':
@@ -1287,11 +1299,4 @@ if __name__ == "__main__":
                     i += 1
                 i += 1
 
-    try:
-        save(output, specgen(ontology, indir, style, docdir, tags, instances=instances))
-    except:
-        e = sys.exc_info()[1]
-        print('error: ' + str(e))
-        sys.exit(1)
-
-    sys.exit(0)
+    save(output, specgen(ontology, indir, style, docdir, tags, instances=instances))
