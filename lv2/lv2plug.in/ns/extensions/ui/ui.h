@@ -53,6 +53,7 @@
 #define LV2_UI__resize           LV2_UI_PREFIX "resize"
 #define LV2_UI__touch            LV2_UI_PREFIX "touch"
 #define LV2_UI__ui               LV2_UI_PREFIX "ui"
+#define LV2_UI__updateRate       LV2_UI_PREFIX "updateRate"
 
 /**
    The index returned by LV2_UI_Port_Port::port_index() for unknown ports.

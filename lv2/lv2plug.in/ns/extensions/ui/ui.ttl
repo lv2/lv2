@@ -330,6 +330,11 @@ return a pointer to an LV2_UI_Idle_Interface.</p>
 this URI, with NULL for data.</p>
 """ .
 
+ui:updateRate
+	a rdf:Property ;
+	rdfs:range xsd:float ;
+	rdfs:comment "The target rate, in Hz, to send updates to the UI." .
+
 ui:protocol
 	a rdf:Property ;
 	rdfs:domain ui:PortNotification ;
