@@ -316,7 +316,7 @@ plugin UI.  This feature corresponds to the LV2UI_Touch struct, which
 should be passed with the URI LV2_UI__touch.</p>
 """ .
 
-ui:idleInterace
+ui:idleInterface
 	a lv2:Feature ,
 		lv2:ExtensionData ;
 	lv2:documentation """
