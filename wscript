@@ -14,7 +14,7 @@ import waflib.Scripting as Scripting
 
 # Variables for 'waf dist'
 APPNAME = 'lv2'
-VERSION = '1.4.5'
+VERSION = '1.6.0'
 
 # Mandatory variables
 top = '.'
@@ -442,7 +442,7 @@ def dist(ctx):
     subdirs = ([ctx.path.find_node('lv2/lv2plug.in/ns/lv2core')] +
                ctx.path.ant_glob('plugins/*', dir=True) +
                ctx.path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
-               ctx.path.ant_glob('lv2/lv2plug.in/ns/extension/*', dir=True))
+               ctx.path.ant_glob('lv2/lv2plug.in/ns/extensions/*', dir=True))
 
     # Write NEWS files in source directory
     top_entries = {}

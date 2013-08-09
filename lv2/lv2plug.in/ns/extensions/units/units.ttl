@@ -8,6 +8,8 @@
 <http://lv2plug.in/ns/extensions/units>
 	a owl:Ontology ;
 	owl:imports <http://lv2plug.in/ns/lv2core> ;
+	rdfs:seeAlso <units.h> ,
+		<lv2-units.doap.ttl> ;
 	lv2:documentation """
 <p>This vocabulary defines a number of units for use in audio processing.</p>
 

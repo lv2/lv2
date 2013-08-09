@@ -48,12 +48,17 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
-		doap:revision "1.4.1" ;
-		doap:created "2013-03-24" ;
+		doap:revision "1.6.0" ;
+		doap:created "2013-08-09" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.6.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Fix port indices of metronome example."
+			] , [
+				rdfs:label "Fix lv2specgen usage from command line."
+			] , [
+				rdfs:label "Upgrade to waf 1.7.11."
 			]
 		]
 	] , [
