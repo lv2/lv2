@@ -13,6 +13,15 @@
 	doap:developer <http://lv2plug.in/ns/meta#larsl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.15" ;
+		doap:created "2013-10-08" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix LV2_UI_INVALID_PORT_INDEX identifier in documentation."
+			]
+		]
+	] , [
 		doap:revision "2.14" ;
 		doap:created "2013-03-18" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.6.0.tar.bz2> ;

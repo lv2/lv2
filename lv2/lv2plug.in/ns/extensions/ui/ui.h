@@ -261,7 +261,7 @@ typedef struct _LV2UI_Port_Map {
 	/**
 	   Get the index for the port with the given @p symbol.
 
-	   @return The index of the port, or LV2_UI_INVALID_PORT_INDEX if no such
+	   @return The index of the port, or LV2UI_INVALID_PORT_INDEX if no such
 	   port is found.
 	*/
 	uint32_t (*port_index)(LV2UI_Feature_Handle handle, const char* symbol);
