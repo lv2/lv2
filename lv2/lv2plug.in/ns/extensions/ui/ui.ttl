@@ -134,6 +134,16 @@ ui:CocoaUI
 	rdfs:label "Cocoa UI" ;
 	rdfs:comment """A UI where the LV2_Widget is a pointer to a NSView, the basic view type for the Cocoa API (formerly OpenStep).  This is the native UI type on Mac OS X.""" .
 
+ui:external
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf ui:UI .
+
+<http://kxstudio.sf.net/ns/lv2ext/external-ui#Widget>
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf ui:UI .
+
 ui:ui
 	a rdf:Property ;
 	rdfs:domain lv2:Plugin ;
@@ -339,6 +349,14 @@ ui:windowTitle
 	rdfs:range xsd:string ;
 	rdfs:label "window title" ;
 	rdfs:comment "The title for the window shown by LV2UI_Show_Interface." .
+
+<http://kxstudio.sf.net/ns/lv2ext/external-ui#Widget>
+	a lv2:Feature ,
+		lv2:ExtensionData .
+
+ui:external
+	a lv2:Feature ,
+		lv2:ExtensionData .
 
 ui:updateRate
 	a rdf:Property ;
