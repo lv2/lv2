@@ -51,7 +51,8 @@ typedef enum {
    Every plugin defines a private structure for the plugin instance.  All data
    associated with a plugin instance is stored here, and is available to
    every instance method.  In this simple plugin, only port buffers need to be
-   stored, since there is no additional instance data.  */
+   stored, since there is no additional instance data.
+*/
 typedef struct {
 	// Port buffers
 	const float* gain;
