@@ -12,6 +12,15 @@
 	doap:created "2007-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "1.7" ;
+		doap:created "2013-12-16" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Make lv2_atom_*_is_end() arguments const."
+			]
+		]
+	] , [
 		doap:revision "1.6" ;
 		doap:created "2013-05-26" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.6.0.tar.bz2> ;

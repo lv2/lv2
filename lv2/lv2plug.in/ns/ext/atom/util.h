@@ -83,16 +83,16 @@ lv2_atom_sequence_begin(const LV2_Atom_Sequence_Body* body)
 static inline LV2_Atom_Event*
 lv2_atom_sequence_end(const LV2_Atom_Sequence_Body* body, uint32_t size)
 {
-	return (LV2_Atom_Event*)((uint8_t*)body + lv2_atom_pad_size(size));
+	return (LV2_Atom_Event*)((const uint8_t*)body + lv2_atom_pad_size(size));
 }
 
 /** Return true iff @p i has reached the end of @p body. */
 static inline bool
 lv2_atom_sequence_is_end(const LV2_Atom_Sequence_Body* body,
                          uint32_t                      size,
-                         LV2_Atom_Event*               i)
+                         const LV2_Atom_Event*         i)
 {
-	return (uint8_t*)i >= ((const uint8_t*)body + size);
+	return (const uint8_t*)i >= ((const uint8_t*)body + size);
 }
 
 /** Return an iterator to the element following @p i. */
@@ -142,9 +142,9 @@ lv2_atom_tuple_begin(const LV2_Atom_Tuple* tup)
 
 /** Return true iff @p i has reached the end of @p body. */
 static inline bool
-lv2_atom_tuple_is_end(const void* body, uint32_t size, LV2_Atom* i)
+lv2_atom_tuple_is_end(const void* body, uint32_t size, const LV2_Atom* i)
 {
-	return (uint8_t*)i >= ((const uint8_t*)body + size);
+	return (const uint8_t*)i >= ((const uint8_t*)body + size);
 }
 
 /** Return an iterator to the element following @p i. */
@@ -152,7 +152,7 @@ static inline LV2_Atom*
 lv2_atom_tuple_next(const LV2_Atom* i)
 {
 	return (LV2_Atom*)(
-		(uint8_t*)i + sizeof(LV2_Atom) + lv2_atom_pad_size(i->size));
+		(const uint8_t*)i + sizeof(LV2_Atom) + lv2_atom_pad_size(i->size));
 }
 
 /**
@@ -193,19 +193,19 @@ lv2_atom_object_begin(const LV2_Atom_Object_Body* body)
 
 /** Return true iff @p i has reached the end of @p obj. */
 static inline bool
-lv2_atom_object_is_end(const LV2_Atom_Object_Body* body,
-                       uint32_t                    size,
-                       LV2_Atom_Property_Body*     i)
+lv2_atom_object_is_end(const LV2_Atom_Object_Body*   body,
+                       uint32_t                      size,
+                       const LV2_Atom_Property_Body* i)
 {
-	return (uint8_t*)i >= ((const uint8_t*)body + size);
+	return (const uint8_t*)i >= ((const uint8_t*)body + size);
 }
 
 /** Return an iterator to the property following @p i. */
 static inline LV2_Atom_Property_Body*
 lv2_atom_object_next(const LV2_Atom_Property_Body* i)
 {
-	const LV2_Atom* const value = (LV2_Atom*)(
-		(uint8_t*)i + 2 * sizeof(uint32_t));
+	const LV2_Atom* const value = (const LV2_Atom*)(
+		(const uint8_t*)i + 2 * sizeof(uint32_t));
 	return (LV2_Atom_Property_Body*)(
 		(const uint8_t*)i + lv2_atom_pad_size(sizeof(LV2_Atom_Property_Body)
 		                                + value->size));
