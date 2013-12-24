@@ -553,7 +553,7 @@ recv_raw_audio(EgScopeUI* ui, const LV2_Atom_Object* obj)
 	}
 
 	// Number of elements = (total size - header size) / element size
-	const size_t n_elem = ((data_val->size - sizeof(LV2_Atom_Vector))
+	const size_t n_elem = ((data_val->size - sizeof(LV2_Atom_Vector_Body))
 	                       / sizeof(float));
 
 	// Float elements immediately follow the vector body header
