@@ -120,7 +120,7 @@ read_set_file(const SamplerURIs*     uris,
 	} else if (property->type != uris->atom_URID) {
 		fprintf(stderr, "Malformed set message has non-URID property.\n");
 		return NULL;
-	} else if (((LV2_Atom_URID*)property)->body != uris->eg_sample) {
+	} else if (((const LV2_Atom_URID*)property)->body != uris->eg_sample) {
 		fprintf(stderr, "Set message for unknown property.\n");
 		return NULL;
 	}

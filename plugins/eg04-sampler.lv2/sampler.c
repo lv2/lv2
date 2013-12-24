@@ -343,7 +343,7 @@ run(LV2_Handle instance,
 				break;
 			}
 		} else if (is_object_type(uris, ev->body.type)) {
-			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
+			const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
 			if (obj->body.otype == uris->patch_Set) {
 				// Received a set message, send it to the worker.
 				lv2_log_trace(&self->logger, "Queueing set message\n");

@@ -155,16 +155,16 @@ port_event(LV2UI_Handle handle,
 {
 	SamplerUI* ui = (SamplerUI*)handle;
 	if (format == ui->uris.atom_eventTransfer) {
-		LV2_Atom* atom = (LV2_Atom*)buffer;
+		const LV2_Atom* atom = (const LV2_Atom*)buffer;
 		if (atom->type == ui->uris.atom_Blank) {
-			LV2_Atom_Object* obj      = (LV2_Atom_Object*)atom;
-			const LV2_Atom*  file_uri = read_set_file(&ui->uris, obj);
+			const LV2_Atom_Object* obj      = (const LV2_Atom_Object*)atom;
+			const LV2_Atom*        file_uri = read_set_file(&ui->uris, obj);
 			if (!file_uri) {
 				fprintf(stderr, "Unknown message sent to UI.\n");
 				return;
 			}
 
-			const char* uri = (const char*)LV2_ATOM_BODY(file_uri);
+			const char* uri = (const char*)LV2_ATOM_BODY_CONST(file_uri);
 			gtk_label_set_text(GTK_LABEL(ui->label), uri);
 		} else {
 			fprintf(stderr, "Unknown message type.\n");

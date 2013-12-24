@@ -242,13 +242,14 @@ run(LV2_Handle handle, uint32_t n_samples)
 
 	// Process incoming events from GUI
 	if (self->control) {
-		LV2_Atom_Event* ev = lv2_atom_sequence_begin(&(self->control)->body);
+		const LV2_Atom_Event* ev = lv2_atom_sequence_begin(
+			&(self->control)->body);
 		// For each incoming message...
 		while (!lv2_atom_sequence_is_end(
 			       &self->control->body, self->control->atom.size, ev)) {
 			// If the event is an atom:Blank object
 			if (ev->body.type == self->uris.atom_Blank) {
-				const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
+				const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
 				if (obj->body.otype == self->uris.ui_On) {
 					// If the object is a ui-on, the UI was activated
 					self->ui_active           = true;
@@ -264,10 +265,10 @@ run(LV2_Handle handle, uint32_t n_samples)
 					                    self->uris.ui_amp, &amp,
 					                    0);
 					if (spp) {
-						self->ui_spp = ((LV2_Atom_Int*)spp)->body;
+						self->ui_spp = ((const LV2_Atom_Int*)spp)->body;
 					}
 					if (amp) {
-						self->ui_amp = ((LV2_Atom_Float*)amp)->body;
+						self->ui_amp = ((const LV2_Atom_Float*)amp)->body;
 					}
 				}
 			}
@@ -343,14 +344,14 @@ state_restore(LV2_Handle                  instance,
 	const void* spp = retrieve(
 		handle, self->uris.ui_spp, &size, &type, &valflags);
 	if (spp && size == sizeof(uint32_t) && type == self->uris.atom_Int) {
-		self->ui_spp              = *((uint32_t*)spp);
+		self->ui_spp              = *((const uint32_t*)spp);
 		self->send_settings_to_ui = true;
 	}
 
 	const void* amp = retrieve(
 		handle, self->uris.ui_amp, &size, &type, &valflags);
 	if (amp && size == sizeof(float) && type == self->uris.atom_Float) {
-		self->ui_amp              = *((float*)amp);
+		self->ui_amp              = *((const float*)amp);
 		self->send_settings_to_ui = true;
 	}
 

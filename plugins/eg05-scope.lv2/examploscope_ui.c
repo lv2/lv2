@@ -527,10 +527,10 @@ cleanup(LV2UI_Handle handle)
 }
 
 static int
-recv_raw_audio(EgScopeUI* ui, LV2_Atom_Object* obj)
+recv_raw_audio(EgScopeUI* ui, const LV2_Atom_Object* obj)
 {
-	LV2_Atom* chan_val = NULL;
-	LV2_Atom* data_val = NULL;
+	const LV2_Atom* chan_val = NULL;
+	const LV2_Atom* data_val = NULL;
 	const int n_props  = lv2_atom_object_get(
 		obj,
 		ui->uris.channelID, &chan_val,
@@ -546,8 +546,8 @@ recv_raw_audio(EgScopeUI* ui, LV2_Atom_Object* obj)
 	}
 
 	// Get the values we need from the body of the property value atoms
-	const int32_t    chn = ((LV2_Atom_Int*)chan_val)->body;
-	LV2_Atom_Vector* vec = (LV2_Atom_Vector*)data_val;
+	const int32_t          chn = ((const LV2_Atom_Int*)chan_val)->body;
+	const LV2_Atom_Vector* vec = (const LV2_Atom_Vector*)data_val;
 	if (vec->body.child_type != ui->uris.atom_Float) {
 		return 1;  // Vector has incorrect element type
 	}
@@ -557,7 +557,7 @@ recv_raw_audio(EgScopeUI* ui, LV2_Atom_Object* obj)
 	                       / sizeof(float));
 
 	// Float elements immediately follow the vector body header
-	const float* data = (float*)(&vec->body + 1);
+	const float* data = (const float*)(&vec->body + 1);
 
 	// Update display
 	update_scope(ui, chn, n_elem, data);
@@ -565,11 +565,11 @@ recv_raw_audio(EgScopeUI* ui, LV2_Atom_Object* obj)
 }
 
 static int
-recv_ui_state(EgScopeUI* ui, LV2_Atom_Object* obj)
+recv_ui_state(EgScopeUI* ui, const LV2_Atom_Object* obj)
 {
-	LV2_Atom* spp_val  = NULL;
-	LV2_Atom* amp_val  = NULL;
-	LV2_Atom* rate_val = NULL;
+	const LV2_Atom* spp_val  = NULL;
+	const LV2_Atom* amp_val  = NULL;
+	const LV2_Atom* rate_val = NULL;
 	const int n_props  = lv2_atom_object_get(
 		obj,
 		ui->uris.ui_spp, &spp_val,
@@ -587,9 +587,9 @@ recv_ui_state(EgScopeUI* ui, LV2_Atom_Object* obj)
 	}
 	
 	// Get the values we need from the body of the property value atoms
-	const int32_t spp  = ((LV2_Atom_Int*)spp_val)->body;
-	const float   amp  = ((LV2_Atom_Float*)amp_val)->body;
-	const float   rate = ((LV2_Atom_Float*)rate_val)->body;
+	const int32_t spp  = ((const LV2_Atom_Int*)spp_val)->body;
+	const float   amp  = ((const LV2_Atom_Float*)amp_val)->body;
+	const float   rate = ((const LV2_Atom_Float*)rate_val)->body;
 
 	// Update UI
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(ui->spb_speed), spp);
@@ -614,8 +614,8 @@ port_event(LV2UI_Handle handle,
            uint32_t     format,
            const void*  buffer)
 {
-	EgScopeUI* ui   = (EgScopeUI*)handle;
-	LV2_Atom*  atom = (LV2_Atom*)buffer;
+	EgScopeUI*      ui   = (EgScopeUI*)handle;
+	const LV2_Atom* atom = (const LV2_Atom*)buffer;
 
 	/* Check type of data received
 	 *  - format == 0: Control port event (float)
@@ -623,7 +623,7 @@ port_event(LV2UI_Handle handle,
 	 */
 	if (format == ui->uris.atom_eventTransfer &&
 	    atom->type == ui->uris.atom_Blank) {
-		LV2_Atom_Object* obj = (LV2_Atom_Object*)atom;
+		const LV2_Atom_Object* obj = (const LV2_Atom_Object*)atom;
 		if (obj->body.otype == ui->uris.RawAudio) {
 			recv_raw_audio(ui, obj);
 		} else if (obj->body.otype == ui->uris.ui_State) {

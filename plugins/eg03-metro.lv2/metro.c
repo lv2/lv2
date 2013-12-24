@@ -301,7 +301,7 @@ run(LV2_Handle instance, uint32_t sample_count)
 	// Work forwards in time frame by frame, handling events as we go
 	const LV2_Atom_Sequence* in     = self->ports.control;
 	uint32_t                 last_t = 0;
-	for (LV2_Atom_Event* ev = lv2_atom_sequence_begin(&in->body);
+	for (const LV2_Atom_Event* ev = lv2_atom_sequence_begin(&in->body);
 	     !lv2_atom_sequence_is_end(&in->body, in->atom.size, ev);
 	     ev = lv2_atom_sequence_next(ev)) {
 
@@ -309,7 +309,7 @@ run(LV2_Handle instance, uint32_t sample_count)
 		play(self, last_t, ev->time.frames);
 
 		if (ev->body.type == uris->atom_Blank) {
-			const LV2_Atom_Object* obj = (LV2_Atom_Object*)&ev->body;
+			const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
 			if (obj->body.otype == uris->time_Position) {
 				// Received position information, update
 				update_position(self, obj);
