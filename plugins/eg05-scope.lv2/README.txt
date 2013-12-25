@@ -1,17 +1,19 @@
 == Simple Oscilloscope ==
 
-This plugin displays the wave-form of an incoming audio-signal using a simple
+This plugin displays the waveform of an incoming audio signal using a simple
 GTK+Cairo GUI.
 
 This plugin illustrates:
 
-- UI <==> Plugin communication via LV2 atom events
-- LV2 Atom vector usage and resize-port extension
+- UI <==> Plugin communication via http://lv2plug.in/ns/ext/atom/[LV2 Atom] events
+- Atom vector usage and resize-port extension
 - Save/Restore UI state by communicating state to backend
+- Saving simple key/value state via the http://lv2plug.in/ns/ext/state/[LV2 State] extension
 - Cairo drawing and partial exposure
 
 This plugin intends to outline the basics for building visualization plugins
-that rely on Atom communication.  The UI looks likean oscilloscope, but is not a real oscilloscope implementation:
+that rely on atom communication.  The UI looks like an oscilloscope, but is not
+a real oscilloscope implementation:
 
 - There is no display synchronisation, results will depend on LV2 host.
 - It displays raw audio samples, which a proper scope must not do.

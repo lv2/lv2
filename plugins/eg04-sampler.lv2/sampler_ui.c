@@ -15,10 +15,6 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/**
-   @file ui.c Sampler Plugin UI
-*/
-
 #include <stdlib.h>
 
 #include <gtk/gtk.h>

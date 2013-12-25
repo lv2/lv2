@@ -36,16 +36,30 @@ def format_c_source(filename, file):
     for line in file:
         code += line
 
+    # Skip initial license comment
+    if code[0:2] == '/*':
+        code = code[code.find('*/') + 2:]
+
     for c in code:
         if prev_c == '/' and c == '*':
-            output += format_code('c', chunk[0:len(chunk)-1])
-            in_comment = True
             in_comment_start = True
             n_stars = 1
-            chunk = ''
+        elif in_comment_start:
+            if c == '*':
+                n_stars += 1
+            else:
+                if n_stars > 1:
+                    output += format_code('c', chunk[0:len(chunk)-1])
+                    chunk = ''
+                    in_comment = True
+                else:
+                    chunk += '*' + c
+                in_comment_start = False
         elif in_comment and prev_c == '*' and c == '/':
-            if n_stars > 2:
+            if n_stars > 1:
                 output += format_text(chunk[0:len(chunk)-1])
+            else:
+                output += format_code('c', '/* ' + chunk[0:len(chunk)-1] + '*/')
             in_comment = False
             in_comment_start = False
             chunk = ''

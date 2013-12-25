@@ -25,7 +25,14 @@
 
 #include "./uris.h"
 
-/** Private plugin instance structure. */
+/**
+   ==== Private Plugin Instance Structure ====
+
+   In addition to the usual port buffers and features, this plugin stores the
+   state of the UI here, so it can be opened and closed without losing the
+   current settings.  The UI state is communicated between the plugin and the
+   UI using atom messages via a sequence port, similarly to MIDI I/O.
+*/
 typedef struct {
 	// Port buffers
 	float*                   input[2];
@@ -47,27 +54,24 @@ typedef struct {
 	uint32_t n_channels;
 	double   rate;
 
-	/* The state of the UI is stored here, so that the GUI can be displayed and
-	   closed without losing the current settings.  It is communicated to the
-	   UI using atom messages.
-	*/
+	// UI state
 	bool     ui_active;
 	bool     send_settings_to_ui;
 	float    ui_amp;
 	uint32_t ui_spp;
 } EgScope;
 
-/** Port indices. */
+/** ==== Port Indices ==== */
 typedef enum {
-	SCO_CONTROL = 0,
-	SCO_NOTIFY  = 1,
-	SCO_INPUT0  = 2,
-	SCO_OUTPUT0 = 3,
-	SCO_INPUT1  = 4,
-	SCO_OUTPUT1 = 5,
+	SCO_CONTROL = 0,  // Event input
+	SCO_NOTIFY  = 1,  // Event output
+	SCO_INPUT0  = 2,  // Audio input 0
+	SCO_OUTPUT0 = 3,  // Audio output 0
+	SCO_INPUT1  = 4,  // Audio input 1 (stereo variant)
+	SCO_OUTPUT1 = 5,  // Audio input 2 (stereo variant)
 } PortIndex;
 
-/** Create plugin instance. */
+/** ==== Instantiate Method ==== */
 static LV2_Handle
 instantiate(const LV2_Descriptor*     descriptor,
             double                    rate,
@@ -125,7 +129,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	return (LV2_Handle)self;
 }
 
-/** Connect a port to a buffer. */
+/** ==== Connect Port Method ==== */
 static void
 connect_port(LV2_Handle handle,
              uint32_t   port,
@@ -156,41 +160,49 @@ connect_port(LV2_Handle handle,
 }
 
 /**
-   Forge vector of raw data.
+   ==== Utility Function: `tx_rawaudio` ====
 
-   @param forge Forge to use.
-   @param uris Mapped URI identifiers.
-   @param channel Channel ID to transmit.
-   @param n_samples Number of audio samples to transmit.
-   @param data Actual audio data.
+   This function forges a message for sending a vector of raw data.  The object
+   is a http://lv2plug.in/ns/ext/atom#Blank[Blank] with a few properties, like:
+   [source,txt]
+   --------
+   []
+   	a sco:RawAudio ;
+   	sco:channelID 0 ;
+   	sco:audioData [ 0.0, 0.0, ... ] .
+   --------
+
+   where the value of the `sco:audioData` property, `[ 0.0, 0.0, ... ]`, is a
+   http://lv2plug.in/ns/ext/atom#Vector[Vector] of
+   http://lv2plug.in/ns/ext/atom#Float[Float].
 */
 static void
 tx_rawaudio(LV2_Atom_Forge* forge,
             ScoLV2URIs*     uris,
             const int32_t   channel,
             const size_t    n_samples,
-            void*           data)
+            const float*    data)
 {
 	LV2_Atom_Forge_Frame frame;
 
-	// Forge container object of type 'rawaudio'
+	// Forge container object of type 'RawAudio'
 	lv2_atom_forge_frame_time(forge, 0);
 	lv2_atom_forge_blank(forge, &frame, 1, uris->RawAudio);
 
-	// Add integer attribute 'channelid'
+	// Add integer 'channelID' property
 	lv2_atom_forge_property_head(forge, uris->channelID, 0);
 	lv2_atom_forge_int(forge, channel);
 
-	// Add vector of floats raw 'audiodata'
+	// Add vector of floats 'audioData' property
 	lv2_atom_forge_property_head(forge, uris->audioData, 0);
 	lv2_atom_forge_vector(
 		forge, sizeof(float), uris->atom_Float, n_samples, data);
 
-	// Close off atom-object
+	// Close off object
 	lv2_atom_forge_pop(forge, &frame);
 }
 
-/** Process a block of audio */
+/** ==== Run Method ==== */
 static void
 run(LV2_Handle handle, uint32_t n_samples)
 {
@@ -298,6 +310,16 @@ cleanup(LV2_Handle handle)
 	free(handle);
 }
 
+
+/**
+   ==== State Methods ====
+
+   This plugin's state consists of two basic properties: one `int` and one
+   `float`.  No files are used.  Note these values are POD, but not portable,
+   since different machines may have a different integer endianness or floating
+   point format.  However, since standard Atom types are used, a good host will
+   be able to save them portably as text anyway.
+*/
 static LV2_State_Status
 state_save(LV2_Handle                instance,
            LV2_State_Store_Function  store,
@@ -309,11 +331,6 @@ state_save(LV2_Handle                instance,
 	if (!self) {
 		return LV2_STATE_SUCCESS;
 	}
-
-	/* Store state values.  Note these values are POD, but not portable, since
-	   different machines may have a different integer endianness or floating
-	   point format.  However, since standard Atom types are used, a good host
-	   will be able to save them portably as text anyway. */
 
 	store(handle, self->uris.ui_spp,
 	      (void*)&self->ui_spp, sizeof(uint32_t),
@@ -368,6 +385,7 @@ extension_data(const char* uri)
 	return NULL;
 }
 
+/** ==== Plugin Descriptors ==== */
 static const LV2_Descriptor descriptor_mono = {
 	SCO_URI "#Mono",
 	instantiate,
