@@ -306,6 +306,24 @@ nice quasi-global identifiers for plugins, e.g. <q>myproj.superamp</q> which
 can be useful for display or fast user entry.</p>
 """ .
 
+lv2:prototype
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:label "prototype" ;
+	lv2:documentation """
+<p>The prototype to inherit properties from.</p>
+
+<p>This property can be used to <q>include</q> common properties in several
+descriptions.  If a plugin has a prototype, then the host must load all the
+properties for the prototype as if they were properties of the plugin.  That
+is, if <code>:plug lv2:prototype :prot</code>, then for each triple <code>:prot
+p o</code>, the triple <code>:plug p o</code> should be loaded.</p>
+
+<p>This facility is useful for distributing text-only plugins that rely on a
+common binary, by referring to a prototype which is installed by the
+corresponding software, along with the plugin binary.</p>
+""" .
+
 lv2:minorVersion
 	a rdf:Property ,
 		owl:DatatypeProperty ;

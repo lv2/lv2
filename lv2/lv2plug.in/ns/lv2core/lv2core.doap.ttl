@@ -16,6 +16,15 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "11.0" ;
+		doap:created "2013-12-27" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add lv2:prototype for property inheritance."
+			]
+		]
+	] , [
 		doap:revision "10.0" ;
 		doap:created "2013-02-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.4.0.tar.bz2> ;
