@@ -56,6 +56,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 				rdfs:label "Add scope example plugin from Robin Gareus."
 			] , [
 				rdfs:label "lv2specgen: Fix links to externally defined terms."
+			] , [
+				rdfs:label "Install lv2specgen for use by other projects."
 			]
 		]
 	] , [

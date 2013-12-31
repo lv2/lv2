@@ -41,6 +41,7 @@ __license__ = "MIT License <http://www.opensource.org/licenses/mit>"
 __contact__ = "devel@lists.lv2plug.in"
 
 import datetime
+import optparse
 import os
 import re
 import sys
@@ -1045,7 +1046,7 @@ def load_tags(path, docdir):
 
     return linkmap
 
-def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=False):
+def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, offline=False):
     """The meat and potatoes: Everything starts here."""
 
     global spec_url
@@ -1151,8 +1152,16 @@ def specgen(specloc, indir, style_uri, docdir, tags, instances=False, offline=Fa
     template = template.replace('@REFERENCE@', termlist)
     template = template.replace('@FILENAME@', filename)
     template = template.replace('@HEADER@', basename + '.h')
-    template = template.replace('@MAIL@', 'devel@lists.lv2plug.in')
     template = template.replace('@HISTORY@', specHistory(m, spec))
+
+    mail_row = ''
+    if 'list_email' in opts:
+        mail_row = '<tr><th>Discuss</th><td><a href="mailto:%s">%s</a>' % (
+            opts['list_email'], opts['list_email'])
+        if 'list_page' in opts:
+            mail_row += ' <a href="%s">(subscribe)</a>' % opts['list_page']
+        mail_row += '</td></tr>'
+    template = template.replace('@MAIL@', mail_row)
 
     version = specVersion(m, spec)  # (minor, micro, date)
     date_string = version[2]
@@ -1250,7 +1259,7 @@ def getOntologyNS(m):
 
 def usage():
     script = os.path.basename(sys.argv[0])
-    print("""Usage: %s ONTOLOGY INDIR STYLE OUTPUT [DOCDIR TAGS] [FLAGS]
+    return """Usage: %s ONTOLOGY INDIR STYLE OUTPUT [DOCDIR TAGS] [FLAGS]
 
         ONTOLOGY  : Path to ontology file
         INDIR     : Input directory containing template.html and style.css
@@ -1265,38 +1274,34 @@ def usage():
 
 Example:
     %s lv2_foos.ttl template.html style.css lv2_foos.html ../doc -i -p foos
-""" % (script, script))
-    sys.exit(-1)
-
+""" % (script, script)
 
 if __name__ == "__main__":
     """Ontology specification generator tool"""
 
-    args = sys.argv[1:]
+    opt = optparse.OptionParser(usage=usage(),
+                                description='Write HTML documentation for an RDF ontology.')
+    opt.add_option('--list-email', type='string', dest='list_email')
+    opt.add_option('--list-page', type='string', dest='list_page')
+    opt.add_option('-i', action='store_true', dest='instances')
+    opt.add_option('-p', type='string', dest='prefix')
+
+    (options, args) = opt.parse_args()
+    opts = vars(options)
+
     if (len(args) < 3):
-        usage()
-    else:
-        ontology = "file:" + str(args[0])
-        indir    = args[1]
-        style    = args[2]
-        output   = args[3]
-        docdir   = None
-        tags     = None
-        if len(args) > 5:
-            docdir = args[4]
-            tags   = args[5]
+        print(usage())
+        sys.exit(-1)
+        
+    spec_pre = options.prefix
+    ontology = "file:" + str(args[0])
+    indir    = args[1]
+    style    = args[2]
+    output   = args[3]
+    docdir   = None
+    tags     = None
+    if len(args) > 5:
+        docdir = args[4]
+        tags   = args[5]
 
-        # Flags
-        instances = False
-        if len(args) > 6:
-            flags = args[6:]
-            i = 0
-            while i < len(flags):
-                if flags[i] == '-i':
-                    instances = True
-                elif flags[i] == '-p':
-                    spec_pre = flags[i + 1]
-                    i += 1
-                i += 1
-
-    save(output, specgen(ontology, indir, style, docdir, tags, instances=instances))
+    save(output, specgen(ontology, indir, style, docdir, tags, opts, instances=options.instances))

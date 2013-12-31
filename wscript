@@ -11,6 +11,7 @@ import waflib.Context as Context
 import waflib.Logs as Logs
 import waflib.Options as Options
 import waflib.Scripting as Scripting
+import waflib.Utils as Utils
 
 # Variables for 'waf dist'
 APPNAME = 'lv2'
@@ -169,6 +170,8 @@ def specgen(task):
         os.path.relpath(STYLEPATH, bundle),
         os.path.relpath('build/doc/html', bundle),
         TAGFILE,
+        { 'list_email': 'devel@lists.lv2plug.in',
+          'list_page': 'http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in' },
         instances=True,
         offline=(not task.env.ONLINE_DOCS))
 
@@ -317,6 +320,14 @@ def build(bld):
 
     if bld.env.BUILD_BOOK:
         bld.recurse('plugins')
+
+    # Install lv2specgen
+    bld.install_files('${DATADIR}/lv2specgen/',
+                      ['lv2specgen/style.css',
+                       'lv2specgen/template.html'])
+    bld.install_files('${DATADIR}/lv2specgen/DTD/',
+                      bld.path.ant_glob('lv2specgen/DTD/*'))
+    bld.install_files('${BINDIR}', 'lv2specgen/lv2specgen.py', chmod=Utils.O755)
 
     if bld.env.DOCS or bld.env.ONLINE_DOCS:
         # Build Doxygen documentation (and tags file)
