@@ -726,6 +726,13 @@ def buildIndex(m, classlist, proplist, instalist=None):
 
     azlist = '<dl class="index">'
 
+    def termLink(m, t):
+        if str(t).startswith(spec_ns_str):
+            name = termName(m, t)
+            return '<a href="#%s">%s</a>' % (name, name)
+        else:
+            return '<a href="%s">%s</a>' % (str(t), str(t))
+        
     if (len(classlist) > 0):
         azlist += "<dt>Classes</dt><dd><ul>"
         classlist.sort()
@@ -744,10 +751,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 continue
 
             shown[c] = True
-            name = termName(m, c)
-            if name.startswith(spec_ns_str):
-                name = name.split(spec_ns_str[-1])[1]
-            azlist += '<li><a href="#%s">%s</a>' % (name, name)
+            azlist += '<li>' + termLink(m, c)
             def class_tree(c):
                 tree = ''
                 shown[c] = True
@@ -758,8 +762,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 subclasses.sort()
 
                 for s in subclasses:
-                    s_name = termName(m, s)
-                    tree += '<li><a href="#%s">%s</a>\n' % (s_name, s_name)
+                    tree += '<li>' + termLink(m, s)
                     tree += class_tree(s)
                     tree += '</li>'
                 if tree != '':
@@ -774,10 +777,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
         proplist.sort()
         props = []
         for p in proplist:
-            name = termName(m, p)
-            if name.startswith(spec_ns_str):
-                name = name.split(spec_ns_str[-1])[1]
-            props += ['<a href="#%s">%s</a>' % (name, name)]
+            props += [termLink(m, p)]
         azlist += ', '.join(props) + '</dd>\n'
 
     if (instalist != None and len(instalist) > 0):
