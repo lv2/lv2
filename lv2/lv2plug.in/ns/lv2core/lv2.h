@@ -21,7 +21,7 @@
 /**
    @file lv2.h
    API for the LV2 specification <http://lv2plug.in/ns/lv2core>.
-   Revision: 11.0
+   Revision: 12.0
 */
 
 #ifndef LV2_H_INCLUDED

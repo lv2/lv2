@@ -1,6 +1,6 @@
 /*
   LV2 UI Extension
-  Copyright 2009-2012 David Robillard <d@drobilla.net>
+  Copyright 2009-2013 David Robillard <d@drobilla.net>
   Copyright 2006-2011 Lars Luthman <lars.luthman@gmail.com>
 
   Permission to use, copy, modify, and/or distribute this software for any
