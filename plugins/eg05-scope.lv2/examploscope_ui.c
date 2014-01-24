@@ -85,18 +85,20 @@ send_ui_state(LV2UI_Handle handle)
 	uint8_t obj_buf[1024];
 	lv2_atom_forge_set_buffer(&ui->forge, obj_buf, sizeof(obj_buf));
 
-	// Event body is a ui_state object
+	// Start a ui:State object
 	LV2_Atom_Forge_Frame frame;
 	LV2_Atom*            msg = (LV2_Atom*)lv2_atom_forge_object(
 		&ui->forge, &frame, 0, ui->uris.ui_State);
 
 	// msg[samples-per-pixel] = integer
-	lv2_atom_forge_property_head(&ui->forge, ui->uris.ui_spp, 0);
+	lv2_atom_forge_key(&ui->forge, ui->uris.ui_spp);
 	lv2_atom_forge_int(&ui->forge, ui->stride);
+
 	// msg[amplitude] = float
-	lv2_atom_forge_property_head(&ui->forge, ui->uris.ui_amp, 0);
+	lv2_atom_forge_key(&ui->forge, ui->uris.ui_amp);
 	lv2_atom_forge_float(&ui->forge, gain);
-	// Close off forged data
+
+	// Finish ui:State object
 	lv2_atom_forge_pop(&ui->forge, &frame);
 
 	// Send message to plugin port '0'

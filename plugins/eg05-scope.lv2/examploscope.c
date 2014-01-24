@@ -190,11 +190,11 @@ tx_rawaudio(LV2_Atom_Forge* forge,
 	lv2_atom_forge_object(forge, &frame, 0, uris->RawAudio);
 
 	// Add integer 'channelID' property
-	lv2_atom_forge_property_head(forge, uris->channelID, 0);
+	lv2_atom_forge_key(forge, uris->channelID);
 	lv2_atom_forge_int(forge, channel);
 
 	// Add vector of floats 'audioData' property
-	lv2_atom_forge_property_head(forge, uris->audioData, 0);
+	lv2_atom_forge_key(forge, uris->audioData);
 	lv2_atom_forge_vector(
 		forge, sizeof(float), uris->atom_Float, n_samples, data);
 
@@ -243,11 +243,11 @@ run(LV2_Handle handle, uint32_t n_samples)
 		lv2_atom_forge_object(&self->forge, &frame, 0, self->uris.ui_State);
 
 		// Add UI state as properties
-		lv2_atom_forge_property_head(&self->forge, self->uris.ui_spp, 0);
+		lv2_atom_forge_key(&self->forge, self->uris.ui_spp);
 		lv2_atom_forge_int(&self->forge, self->ui_spp);
-		lv2_atom_forge_property_head(&self->forge, self->uris.ui_amp, 0);
+		lv2_atom_forge_key(&self->forge, self->uris.ui_amp);
 		lv2_atom_forge_float(&self->forge, self->ui_amp);
-		lv2_atom_forge_property_head(&self->forge, self->uris.param_sampleRate, 0);
+		lv2_atom_forge_key(&self->forge, self->uris.param_sampleRate);
 		lv2_atom_forge_float(&self->forge, self->rate);
 		lv2_atom_forge_pop(&self->forge, &frame);
 	}

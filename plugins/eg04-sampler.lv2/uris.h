@@ -78,9 +78,9 @@ write_set_file(LV2_Atom_Forge*    forge,
 	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_object(
 		forge, &frame, 0, uris->patch_Set);
 
-	lv2_atom_forge_property_head(forge, uris->patch_property, 0);
+	lv2_atom_forge_key(forge, uris->patch_property);
 	lv2_atom_forge_urid(forge, uris->eg_sample);
-	lv2_atom_forge_property_head(forge, uris->patch_value, 0);
+	lv2_atom_forge_key(forge, uris->patch_value);
 	lv2_atom_forge_path(forge, filename, filename_len);
 
 	lv2_atom_forge_pop(forge, &frame);
