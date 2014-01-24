@@ -634,6 +634,9 @@ def owlInfo(term, m):
 
     return res
 
+def isDeprecated(m, subject):
+    deprecated = findOne(m, subject, owl.deprecated, None)
+    return deprecated and (str(deprecated[2]).find("true") >= 0)
 
 def docTerms(category, list, m, classlist, proplist, instalist):
     """
@@ -665,18 +668,22 @@ def docTerms(category, list, m, classlist, proplist, instalist):
 
         label = getLabel(m, term)
         comment = getComment(m, term, classlist, proplist, instalist)
+        is_deprecated = isDeprecated(m, term)
 
         doc += '<div class="spectermbody">'
-        if label != '' or comment != '':
+        if label != '' or comment != '' or is_deprecated:
             doc += '<div class="description">'
 
         if label != '':
             doc += "<div property=\"rdfs:label\" class=\"label\">%s</div>" % label
 
+        if is_deprecated:
+            doc += '<div class="warning">DEPRECATED</div>'
+
         if comment != '':
             doc += "<div property=\"rdfs:comment\">%s</div>" % comment
 
-        if label != '' or comment != '':
+        if label != '' or comment != '' or is_deprecated:
             doc += "</div>"
 
         terminfo = ""
@@ -1173,8 +1180,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, offl
     if experimental:
         version_string += ' <span class="warning">EXPERIMENTAL</span>'
 
-    deprecated = findOne(m, rdflib.URIRef(spec_url), owl.deprecated, None)
-    if deprecated and str(deprecated[2]).find("true") > 0:
+    if isDeprecated(m, rdflib.URIRef(spec_url)):
         version_string += ' <span class="warning">DEPRECATED</span>'
 
     template = template.replace('@REVISION@', version_string)

@@ -90,7 +90,7 @@ main(void)
 
 	LV2_Atom_Forge_Frame obj_frame;
 	LV2_Atom* obj = lv2_atom_forge_deref(
-		&forge, lv2_atom_forge_resource(&forge, &obj_frame, 0, eg_Object));
+		&forge, lv2_atom_forge_object(&forge, &obj_frame, 0, eg_Object));
 
 	// eg_one = (Int)1
 	lv2_atom_forge_property_head(&forge, eg_one, 0);

@@ -48,6 +48,14 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
+		doap:revision "1.8.1" ;
+		doap:created "2014-01-23" ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "lv2specgen: Display deprecated warning on classes marked owl:deprecated."
+			]
+		]
+	] , [
 		doap:revision "1.8.0" ;
 		doap:created "2014-01-04" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.8.0.tar.bz2> ;

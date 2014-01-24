@@ -187,7 +187,7 @@ tx_rawaudio(LV2_Atom_Forge* forge,
 
 	// Forge container object of type 'RawAudio'
 	lv2_atom_forge_frame_time(forge, 0);
-	lv2_atom_forge_blank(forge, &frame, 1, uris->RawAudio);
+	lv2_atom_forge_object(forge, &frame, 0, uris->RawAudio);
 
 	// Add integer 'channelID' property
 	lv2_atom_forge_property_head(forge, uris->channelID, 0);
@@ -240,7 +240,7 @@ run(LV2_Handle handle, uint32_t n_samples)
 		// Forge container object of type 'ui_state'
 		LV2_Atom_Forge_Frame frame;
 		lv2_atom_forge_frame_time(&self->forge, 0);
-		lv2_atom_forge_blank(&self->forge, &frame, 1, self->uris.ui_State);
+		lv2_atom_forge_object(&self->forge, &frame, 0, self->uris.ui_State);
 
 		// Add UI state as properties
 		lv2_atom_forge_property_head(&self->forge, self->uris.ui_spp, 0);

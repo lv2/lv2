@@ -61,13 +61,6 @@ map_sampler_uris(LV2_URID_Map* map, SamplerURIs* uris)
 	uris->patch_value        = map->map(map->handle, LV2_PATCH__value);
 }
 
-static inline bool
-is_object_type(const SamplerURIs* uris, LV2_URID type)
-{
-	return type == uris->atom_Resource
-		|| type == uris->atom_Blank;
-}
-
 /**
  * Write a message like the following to @p forge:
  * []
@@ -82,8 +75,8 @@ write_set_file(LV2_Atom_Forge*    forge,
                const size_t       filename_len)
 {
 	LV2_Atom_Forge_Frame frame;
-	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_blank(
-		forge, &frame, 1, uris->patch_Set);
+	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_object(
+		forge, &frame, 0, uris->patch_Set);
 
 	lv2_atom_forge_property_head(forge, uris->patch_property, 0);
 	lv2_atom_forge_urid(forge, uris->eg_sample);
