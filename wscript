@@ -47,6 +47,9 @@ def configure(conf):
     autowaf.configure(conf)
     autowaf.set_c99_mode(conf)
 
+    if Options.options.ultra_strict:
+        conf.env.append_value('CFLAGS', ['-Wconversion'])
+
     if Options.platform == 'win32' or not hasattr(os.path, 'relpath'):
         Logs.warn('System does not support linking headers, copying')
         Options.options.copy_headers = True

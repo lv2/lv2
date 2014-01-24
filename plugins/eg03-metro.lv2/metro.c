@@ -179,17 +179,17 @@ instantiate(const LV2_Descriptor*     descriptor,
 	// Initialise instance fields
 	self->rate       = rate;
 	self->bpm        = 120.0f;
-	self->attack_len = attack_s * rate;
-	self->decay_len  = decay_s * rate;
+	self->attack_len = (uint32_t)(attack_s * rate);
+	self->decay_len  = (uint32_t)(decay_s * rate);
 	self->state      = STATE_OFF;
 
 	// Generate one cycle of a sine wave at the desired frequency
 	const double freq = 440.0 * 2.0;
 	const double amp  = 0.5;
-	self->wave_len = rate / freq;
+	self->wave_len = (uint32_t)(rate / freq);
 	self->wave     = (float*)malloc(self->wave_len * sizeof(float));
 	for (uint32_t i = 0; i < self->wave_len; ++i) {
-		self->wave[i] = sin(i * 2 * M_PI * freq / rate) * amp;
+		self->wave[i] = (float)(sin(i * 2 * M_PI * freq / rate) * amp);
 	}
 
 	return (LV2_Handle)self;

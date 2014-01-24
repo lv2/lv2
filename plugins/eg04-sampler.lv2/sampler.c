@@ -48,10 +48,10 @@ enum {
 static const char* default_sample_file = "click.wav";
 
 typedef struct {
-	SF_INFO info;      // Info about sample from sndfile
-	float*  data;      // Sample data in float
-	char*   path;      // Path of file
-	size_t  path_len;  // Length of path
+	SF_INFO  info;      // Info about sample from sndfile
+	float*   data;      // Sample data in float
+	char*    path;      // Path of file
+	uint32_t path_len;  // Length of path
 } Sample;
 
 typedef struct {
@@ -111,7 +111,7 @@ typedef struct {
 static Sample*
 load_sample(Sampler* self, const char* path)
 {
-	const size_t path_len  = strlen(path);
+	const size_t path_len = strlen(path);
 
 	lv2_log_trace(&self->logger, "Loading sample %s\n", path);
 
@@ -138,7 +138,7 @@ load_sample(Sampler* self, const char* path)
 	// Fill sample struct and return it
 	sample->data     = data;
 	sample->path     = (char*)malloc(path_len + 1);
-	sample->path_len = path_len;
+	sample->path_len = (uint32_t)path_len;
 	memcpy(sample->path, path, path_len + 1);
 
 	return sample;

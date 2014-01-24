@@ -248,7 +248,7 @@ static inline void
 lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size)
 {
 	forge->buf    = buf;
-	forge->size   = size;
+	forge->size   = (uint32_t)size;
 	forge->offset = 0;
 	forge->deref  = NULL;
 	forge->sink   = NULL;
@@ -370,7 +370,8 @@ lv2_atom_forge_primitive(LV2_Atom_Forge* forge, const LV2_Atom* a)
 	if (lv2_atom_forge_top_is(forge, forge->Vector)) {
 		return lv2_atom_forge_raw(forge, LV2_ATOM_BODY_CONST(a), a->size);
 	} else {
-		return lv2_atom_forge_write(forge, a, sizeof(LV2_Atom) + a->size);
+		return lv2_atom_forge_write(
+			forge, a, (uint32_t)sizeof(LV2_Atom) + a->size);
 	}
 }
 

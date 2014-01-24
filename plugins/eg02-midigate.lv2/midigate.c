@@ -173,7 +173,7 @@ run(LV2_Handle instance, uint32_t sample_count)
 		}
 
 		write_output(self, offset, ev->time.frames - offset);
-		offset = ev->time.frames;
+		offset = (uint32_t)ev->time.frames;
 	}
 
 	write_output(self, offset, sample_count - offset);

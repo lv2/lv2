@@ -53,6 +53,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "lv2specgen: Display deprecated warning on classes marked owl:deprecated."
+			] , [
+				rdfs:label "Fix -Wconversion warnings in headers."
 			]
 		]
 	] , [

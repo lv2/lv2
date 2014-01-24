@@ -72,7 +72,7 @@ static inline LV2_Atom*
 write_set_file(LV2_Atom_Forge*    forge,
                const SamplerURIs* uris,
                const char*        filename,
-               const size_t       filename_len)
+               const uint32_t     filename_len)
 {
 	LV2_Atom_Forge_Frame frame;
 	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_object(
