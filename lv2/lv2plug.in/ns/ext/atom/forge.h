@@ -591,7 +591,7 @@ lv2_atom_forge_object(LV2_Atom_Forge*       forge,
 }
 
 /**
-   The same as lv2_atom_forge_resource(), but for object:Resource.
+   The same as lv2_atom_forge_object(), but for object:Resource.
 
    This function is deprecated and should not be used in new code.
    Use lv2_atom_forge_resource() directly instead.
@@ -619,7 +619,7 @@ lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
 }
 
 /**
-   The same as lv2_atom_forge_resource(), but for object:Blank.
+   The same as lv2_atom_forge_object(), but for object:Blank.
 
    This function is deprecated and should not be used in new code.
    Use lv2_atom_forge_resource() directly instead.
