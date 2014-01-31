@@ -230,8 +230,7 @@ lv2_atom_forge_is_blank(const LV2_Atom_Forge*       forge,
 #    pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 	return (type == forge->Blank ||
-	        (type == forge->Object &&
-	         ((LV2_Atom_Object_Body*)body)->id == 0));
+	        (type == forge->Object && body->id == 0));
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #    pragma GCC diagnostic pop
 #endif
@@ -583,7 +582,7 @@ lv2_atom_forge_object(LV2_Atom_Forge*       forge,
                       LV2_URID              otype)
 {
 	const LV2_Atom_Object a = {
-		{ sizeof(LV2_Atom_Object) - sizeof(LV2_Atom), forge->Object },
+		{ (uint32_t)sizeof(LV2_Atom_Object_Body), forge->Object },
 		{ id, otype }
 	};
 	return lv2_atom_forge_push(
@@ -608,7 +607,7 @@ lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
 #    pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 	const LV2_Atom_Object a = {
-		{ sizeof(LV2_Atom_Object) - sizeof(LV2_Atom), forge->Resource },
+		{ (uint32_t)sizeof(LV2_Atom_Object_Body), forge->Resource },
 		{ id, otype }
 	};
 	return lv2_atom_forge_push(
@@ -636,7 +635,7 @@ lv2_atom_forge_blank(LV2_Atom_Forge*       forge,
 #    pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 	const LV2_Atom_Object a = {
-		{ sizeof(LV2_Atom_Object) - sizeof(LV2_Atom), forge->Blank },
+		{ (uint32_t)sizeof(LV2_Atom_Object_Body), forge->Blank },
 		{ id, otype }
 	};
 	return lv2_atom_forge_push(
@@ -656,7 +655,7 @@ lv2_atom_forge_key(LV2_Atom_Forge* forge,
                    LV2_URID        key)
 {
 	const LV2_Atom_Property_Body a = { key, 0, { 0, 0 } };
-	return lv2_atom_forge_write(forge, &a, 2 * sizeof(uint32_t));
+	return lv2_atom_forge_write(forge, &a, 2 * (uint32_t)sizeof(uint32_t));
 }
 
 /**
@@ -671,7 +670,7 @@ lv2_atom_forge_property_head(LV2_Atom_Forge* forge,
                              LV2_URID        context)
 {
 	const LV2_Atom_Property_Body a = { key, context, { 0, 0 } };
-	return lv2_atom_forge_write(forge, &a, 2 * sizeof(uint32_t));
+	return lv2_atom_forge_write(forge, &a, 2 * (uint32_t)sizeof(uint32_t));
 }
 
 /**
@@ -683,7 +682,7 @@ lv2_atom_forge_sequence_head(LV2_Atom_Forge*       forge,
                              uint32_t              unit)
 {
 	const LV2_Atom_Sequence a = {
-		{ sizeof(LV2_Atom_Sequence) - sizeof(LV2_Atom), forge->Sequence },
+		{ (uint32_t)sizeof(LV2_Atom_Sequence_Body), forge->Sequence },
 		{ unit, 0 }
 	};
 	return lv2_atom_forge_push(
