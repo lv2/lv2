@@ -593,7 +593,7 @@ lv2_atom_forge_object(LV2_Atom_Forge*       forge,
    The same as lv2_atom_forge_object(), but for object:Resource.
 
    This function is deprecated and should not be used in new code.
-   Use lv2_atom_forge_resource() directly instead.
+   Use lv2_atom_forge_object() directly instead.
 */
 LV2_ATOM_FORGE_DEPRECATED
 static inline LV2_Atom_Forge_Ref
@@ -621,7 +621,7 @@ lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
    The same as lv2_atom_forge_object(), but for object:Blank.
 
    This function is deprecated and should not be used in new code.
-   Use lv2_atom_forge_resource() directly instead.
+   Use lv2_atom_forge_object() directly instead.
 */
 LV2_ATOM_FORGE_DEPRECATED
 static inline LV2_Atom_Forge_Ref
