@@ -38,6 +38,7 @@
 typedef struct {
 	LV2_URID atom_Blank;
 	LV2_URID atom_Float;
+	LV2_URID atom_Object;
 	LV2_URID atom_Path;
 	LV2_URID atom_Resource;
 	LV2_URID atom_Sequence;
@@ -168,6 +169,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	self->map = map;
 	uris->atom_Blank          = map->map(map->handle, LV2_ATOM__Blank);
 	uris->atom_Float          = map->map(map->handle, LV2_ATOM__Float);
+	uris->atom_Object         = map->map(map->handle, LV2_ATOM__Object);
 	uris->atom_Path           = map->map(map->handle, LV2_ATOM__Path);
 	uris->atom_Resource       = map->map(map->handle, LV2_ATOM__Resource);
 	uris->atom_Sequence       = map->map(map->handle, LV2_ATOM__Sequence);
@@ -308,7 +310,10 @@ run(LV2_Handle instance, uint32_t sample_count)
 		// Play the click for the time slice from last_t until now
 		play(self, last_t, ev->time.frames);
 
-		if (ev->body.type == uris->atom_Blank) {
+		// Check if this event is an Object
+		// (or deprecated Blank to tolerate old hosts)
+		if (ev->body.type == uris->atom_Object ||
+		    ev->body.type == uris->atom_Blank) {
 			const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
 			if (obj->body.otype == uris->time_Position) {
 				// Received position information, update
