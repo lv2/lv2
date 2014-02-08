@@ -139,10 +139,15 @@ run(LV2_Handle instance,
 					self->out_port, out_capacity, ev);
 
 				const uint8_t note = msg[1];
-				if (note < 127 - 7) {
+				if (note <= 127 - 7) {
 					// Make a note one 5th (7 semitones) higher than input
 					MIDINoteEvent fifth;
-					fifth.event  = *ev;
+					
+					// Could simply do fifth.event = *ev here instead...
+					fifth.event.time.frames = ev->time.frames;  // Same time
+					fifth.event.body.type   = ev->body.type;    // Same type
+					fifth.event.body.size   = ev->body.size;    // Same size
+					
 					fifth.msg[0] = msg[0];      // Same status
 					fifth.msg[1] = msg[1] + 7;  // Pitch up 7 semitones
 					fifth.msg[2] = msg[2];      // Same velocity
