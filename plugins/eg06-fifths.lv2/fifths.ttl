@@ -1,0 +1,36 @@
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix patch: <http://lv2plug.in/ns/ext/patch#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix state: <http://lv2plug.in/ns/ext/state#> .
+@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
+@prefix work:  <http://lv2plug.in/ns/ext/worker#> .
+@prefix midi:  <http://lv2plug.in/ns/ext/midi#> .
+
+<http://lv2plug.in/plugins/eg-fifths>
+	a lv2:Plugin ;
+	doap:name "Example Fifths" ;
+	doap:license <http://opensource.org/licenses/isc> ;
+	lv2:project <http://lv2plug.in/ns/lv2> ;
+	lv2:requiredFeature urid:map ;
+	lv2:optionalFeature lv2:hardRTCapable ;
+	lv2:extensionData work:interface ;
+	lv2:port [
+		a lv2:InputPort ,
+			atom:AtomPort ;
+		atom:bufferType atom:Sequence ;
+		atom:supports midi:MidiEvent ;
+		lv2:index 0 ;
+		lv2:symbol "in" ;
+		lv2:name "In"
+	] , [
+		a lv2:OutputPort ,
+			atom:AtomPort ;
+		atom:bufferType atom:Sequence ;
+		atom:supports midi:MidiEvent ;
+		lv2:index 1 ;
+		lv2:symbol "out" ;
+		lv2:name "Out"
+	] .
