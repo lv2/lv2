@@ -13,6 +13,17 @@
 	doap:developer <http://lv2plug.in/ns/meta#larsl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.17" ;
+		doap:created "2014-02-09" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add show interface so UIs can gracefully degrade to separate windows if hosts can not use their widget directly."
+			] , [
+				rdfs:label "Fix identifier typos in documentation."
+			]
+		]
+	] , [
 		doap:revision "2.16" ;
 		doap:created "2014-01-04" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.8.0.tar.bz2> ;
