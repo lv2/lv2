@@ -42,6 +42,7 @@ typedef struct {
 	GtkWidget* box;
 	GtkWidget* button;
 	GtkWidget* label;
+	GtkWidget* window;  /* For optional show interface. */
 } SamplerUI;
 
 static void
@@ -101,6 +102,7 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	ui->box        = NULL;
 	ui->button     = NULL;
 	ui->label      = NULL;
+	ui->window     = NULL;
 
 	*widget = NULL;
 
@@ -170,9 +172,51 @@ port_event(LV2UI_Handle handle,
 	}
 }
 
+/* Optional non-embedded UI show interface. */
+static int
+ui_show(LV2UI_Handle handle)
+{
+	SamplerUI* ui = (SamplerUI*)handle;
+
+	int argc = 0;
+	gtk_init(&argc, NULL);
+
+	ui->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_container_add(GTK_CONTAINER(ui->window), ui->box);
+	gtk_widget_show_all(ui->window);
+	gtk_window_present(GTK_WINDOW(ui->window));
+
+	return 0;
+}
+
+/* Optional non-embedded UI hide interface. */
+static int
+ui_hide(LV2UI_Handle handle)
+{
+	return 0;
+}
+
+/* Idle interface for optional non-embedded UI. */
+static int
+ui_idle(LV2UI_Handle handle)
+{
+	SamplerUI* ui = (SamplerUI*)handle;
+	if (ui->window) {
+		gtk_main_iteration();
+	}
+	return 0;
+}
+
 static const void*
 extension_data(const char* uri)
 {
+	static const LV2UI_Show_Interface show = { ui_show, ui_hide };
+	static const LV2UI_Idle_Interface idle = { ui_idle };
+	if (!strcmp(uri, LV2_UI__showInterface)) {
+		return &show;
+	} else if (!strcmp(uri, LV2_UI__idleInterface)) {
+		return &idle;
+	}
 	return NULL;
 }
 
