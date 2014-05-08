@@ -18,26 +18,27 @@
 
   <!-- HEADER -->
   <div id="header">
-    <h1 id="title">@NAME@</h1>
-    <span id="subtitle">@SUBTITLE@</span>
+    <div id="titlebox">
+      <h1 id="title">@NAME@</h1>
+      <div id="subtitle"><a href="@URI@">@URI@</a> @VERSION@</div>
+      <div id="shortdesc">@SHORT_DESC@</div>
+    </div>
     <table id="meta">
-      <tr><th>URI</th><td><a href="@URI@">@URI@</a></td></tr>
-      <tr><th>Version</th><td>@REVISION@</td></tr>
-      <tr><th>Prefixes</th><td>@PREFIXES@</td></tr>
+      <!--<tr><th>URI</th><td><a href="@URI@">@URI@</a></td></tr>
+      <tr><th>Version</th><td>@REVISION@</td></tr>-->
+      <!--<tr><th>Prefixes</th><td>@PREFIXES@</td></tr>-->
+      <tr><th>Date</th><td>@DATE@</td></tr>
       @MAIL@
       @AUTHORS@
     </table>
   </div>
-
-  <h2 class="sec">Contents</h2>
-  <div class="content">
-    <ul>
-      <li><a href="#sec-description">Description</a></li>
-      <li><a href="#sec-index">Index</a></li>
-      <li><a href="#sec-documentation">Documentation</a></li>
-      <li><a href="#sec-releases">Releases</a></li>
-      @FILES@
-    </ul>
+  <ul id="contents">
+    <li><a href="#sec-description">Description</a></li>
+    <li><a href="#sec-index">Index</a></li>
+    <li><a href="#sec-reference">Reference</a></li>
+    <li><a href="#sec-history">History</a></li>
+    @FILES@
+  </ul>
   </div>
 
   <!-- DESCRIPTION -->
@@ -51,13 +52,13 @@
   </div>
 
   <!-- DOCUMENTATION -->
-  <h2 class="sec" id="sec-documentation">Documentation</h2>
+  <h2 class="sec" id="sec-reference">Reference</h2>
   <div class="content">
   @REFERENCE@
   </div>
 
-  <!-- RELEASES -->
-  <h2 class="sec" id="sec-releases">Releases</h2>
+  <!-- HISTORY -->
+  <h2 class="sec" id="sec-history">History</h2>
   <div class="content">
   @HISTORY@
   </div>

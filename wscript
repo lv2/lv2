@@ -175,8 +175,7 @@ def specgen(task):
         TAGFILE,
         { 'list_email': 'devel@lists.lv2plug.in',
           'list_page': 'http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in' },
-        instances=True,
-        offline=(not task.env.ONLINE_DOCS))
+        instances=True)
 
     lv2specgen.save(task.outputs[0].abspath(), specdoc)
 

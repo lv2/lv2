@@ -11,10 +11,15 @@
 	rdfs:seeAlso <ui.h> ,
 		<lv2-ui.doap.ttl> ;
 	lv2:documentation """
-<p>This extension defines an interface that can be used in LV2 plugins and
-hosts to create UIs for plugins. The UIs are similar to plugins and reside in
-shared object files in an LV2 bundle.  UIs are associated with a plugin in RDF
-using the triples:</p>
+    
+<p>This extension is used to create User Interfaces (UIs) for LV2 plugins.</p>
+
+<p>UIs are implemented as an LV2UI_Descriptor loaded via lv2ui_descriptor() in
+a shared library, and are distributed in bundles just like plugins.  See the <a
+href="../../../doc/html/ui_8h.html">API reference</a> for details on the C
+API.</p>
+
+<p>UIs are associated with plugins in data:</p>
 
 <pre class="turtle-code">
 @prefix ui: &lt;http://lv2plug.in/ns/extensions/ui#&gt; .

@@ -866,15 +866,23 @@ def specProperties(m, subject, predicate):
 
 def specAuthors(m, subject):
     "Return an HTML description of the authors of the spec."
+
+    subjects = [subject];
+    p = findOne(m, subject, lv2.project, None)
+    if p:
+        subjects += [getObject(p)]
+
     dev = set()
-    for i in findStatements(m, subject, doap.developer, None):
-        for j in findStatements(m, getObject(i), foaf.name, None):
-            dev.add(getLiteralString(getObject(j)))
+    for s in subjects:
+        for i in findStatements(m, s, doap.developer, None):
+            for j in findStatements(m, getObject(i), foaf.name, None):
+                dev.add(getLiteralString(getObject(j)))
 
     maint = set()
-    for i in findStatements(m, subject, doap.maintainer, None):
-        for j in findStatements(m, getObject(i), foaf.name, None):
-            maint.add(getLiteralString(getObject(j)))
+    for s in subjects:
+        for i in findStatements(m, s, doap.maintainer, None):
+            for j in findStatements(m, getObject(i), foaf.name, None):
+                maint.add(getLiteralString(getObject(j)))
 
     doc = ''
 
@@ -1053,7 +1061,7 @@ def load_tags(path, docdir):
 
     return linkmap
 
-def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, offline=False):
+def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
     """The meat and potatoes: Everything starts here."""
 
     global spec_url
@@ -1086,14 +1094,21 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, offl
     spec_url = getOntologyNS(m)
     spec = rdflib.URIRef(spec_url)
 
-    # Parse all seeAlso files in the bundle
-    for uri in specProperties(m, spec, rdfs.seeAlso):
-        if uri[:7] == 'file://':
-            path = uri[7:]
-            if (path != os.path.abspath(specloc)
-                and path.endswith('.ttl')):
+    # Load all seeAlso files recursively
+    seeAlso = set()
+    done = False
+    while not done:
+        done = True
+        for uri in specProperties(m, spec, rdfs.seeAlso):
+            if uri[:7] == 'file://':
+                path = uri[7:]
+                if (path != os.path.abspath(specloc) and
+                    path.endswith('ttl') and
+                    path not in seeAlso):
+                    seeAlso.add(path)
                     m.parse(path, format='n3')
-
+                    done = False
+    
     spec_ns_str = spec_url
     if (spec_ns_str[-1] != "/" and spec_ns_str[-1] != "#"):
         spec_ns_str += "#"
@@ -1140,7 +1155,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, offl
         termlist += docTerms('Instance', instalist, m, classlist, proplist, instalist)
 
     template = template.replace('@NAME@', specProperty(m, spec, doap.name))
-    template = template.replace('@SUBTITLE@', specProperty(m, spec, doap.shortdesc))
+    template = template.replace('@SHORT_DESC@', specProperty(m, spec, doap.shortdesc))
     template = template.replace('@URI@', spec)
     template = template.replace('@PREFIX@', spec_pre)
     if spec_pre == 'lv2':
@@ -1175,7 +1190,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, offl
     if date_string == "":
         date_string = "Undated"
 
-    version_string = "%s.%s (%s)" % (version[0], version[1], date_string)
+    version_string = "%s.%s" % (version[0], version[1])
     experimental = (version[0] == 0 or version[1] % 2 == 1)
     if experimental:
         version_string += ' <span class="warning">EXPERIMENTAL</span>'
@@ -1183,7 +1198,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, offl
     if isDeprecated(m, rdflib.URIRef(spec_url)):
         version_string += ' <span class="warning">DEPRECATED</span>'
 
-    template = template.replace('@REVISION@', version_string)
+    template = template.replace('@VERSION@', version_string)
 
     file_list = ''
     see_also_files = specProperties(m, spec, rdfs.seeAlso)
@@ -1197,24 +1212,16 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, offl
             else:
                 continue  # Skip seeAlso file outside bundle
 
-
-        if offline:
-            entry = uri
-        else:
-            entry = '<a href="%s">%s</a>' % (uri, uri)
+        entry = '<a href="%s">%s</a>' % (uri, uri)
         if uri.endswith('.h') or uri.endswith('.hpp'):
             name = os.path.basename(uri)
-            entry += ' - <a href="%s">Documentation</a> ' % (
+            entry += ' <a href="%s">(docs)</a> ' % (
                 docdir + '/' + name.replace('.', '_8') + '.html')
             file_list += '<li>%s</li>' % entry
-        else:
+        elif not uri.endswith('.doap.ttl'):
             file_list += '<li>%s</li>' % entry
 
-    files = ''
-    if file_list:
-        files += '<li>Files<ul>%s</ul></li>' % file_list
-
-    template = template.replace('@FILES@', files)
+    template = template.replace('@FILES@', file_list)
 
     comment = getComment(m, rdflib.URIRef(spec_url), classlist, proplist, instalist)
     if comment != '':
@@ -1222,6 +1229,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, offl
     else:
         template = template.replace('@COMMENT@', '')
 
+    template = template.replace('@DATE@', datetime.datetime.utcnow().strftime('%F'))
     template = template.replace('@TIME@', datetime.datetime.utcnow().strftime('%F %H:%M UTC'))
 
     return template
