@@ -346,6 +346,11 @@ URI (LV2_UI__showInterface), it should return a pointer to an
 LV2UI_Show_Interface.</p>
 """ .
 
+ui:windowTitle
+	a rdf:Property ;
+	rdfs:range xsd:string ;
+	rdfs:comment "The title for the window shown by LV2UI_Show_Interface." .
+
 ui:updateRate
 	a rdf:Property ;
 	rdfs:range xsd:float ;

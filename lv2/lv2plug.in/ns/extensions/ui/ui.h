@@ -17,7 +17,7 @@
 */
 
 /**
-   @file ui.h User Interface API
+   @file ui.h User Interface API.
 
    For high-level documentation, see <http://lv2plug.in/ns/extensions/ui>.
 */
@@ -55,7 +55,7 @@
 #define LV2_UI__showInterface    LV2_UI_PREFIX "showInterface"
 #define LV2_UI__touch            LV2_UI_PREFIX "touch"
 #define LV2_UI__ui               LV2_UI_PREFIX "ui"
-#define LV2_UI__updateRate       LV2_UI_PREFIX "updateRate"
+#define LV2_UI__windowTitle      LV2_UI_PREFIX "windowTitle"
 
 /**
    The index returned by LV2_UI_Port_Port::port_index() for unknown ports.
@@ -368,6 +368,10 @@ typedef struct _LV2UI_Idle_Interface {
 typedef struct _LV2UI_Show_Interface {
 	/**
 	   Show a window for this UI.
+
+	   The window title MAY have been passed by the host to
+	   LV2UI_Descriptor::instantiate() as an LV2_Options_Option with key
+	   LV2_UI__windowTitle.
 
 	   @return 0 on success, or anything else to stop being called.
 	*/
