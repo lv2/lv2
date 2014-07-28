@@ -182,7 +182,7 @@ if have_pygments:
         aliases = ['n3', 'turtle']
         filenames = ['*.n3', '*.ttl', '*.nt']
         mimetypes = ['text/rdf+n3','application/x-turtle','application/n3']
-    
+
         tokens = {
             'comments': [
                 (r'(\s*#.*)', Comment)
@@ -203,7 +203,7 @@ if have_pygments:
                 (r'\s*[a-zA-Z_:][a-zA-Z0-9\-_:]*\b\s*', Name.Tag, 'object'),
                 (r'\s*(<[^>]*\>)', Name.Tag, 'object'),
                 (r'\s*\]\s*', Text, '#pop'),
-                (r'(?=\s*\.\s*)', Keyword, '#pop'), 
+                (r'(?=\s*\.\s*)', Keyword, '#pop'),
             ],
             'objList': [
                 include('comments'),
@@ -222,8 +222,8 @@ if have_pygments:
                 (r'\s*\(', Text, 'objList'),
                 (r'\s*;\s*\n?', Punctuation, '#pop'),
                 (r'\s*,\s*\n?', Punctuation),  # Added by drobilla so "," is not an error
-                (r'(?=\s*\])', Text, '#pop'),            
-                (r'(?=\s*\.)', Text, '#pop'),           
+                (r'(?=\s*\])', Text, '#pop'),
+                (r'(?=\s*\.)', Text, '#pop'),
             ],
         }
 
@@ -242,7 +242,7 @@ def linkify(string):
 
     def translateCodeLink(match):
         return match.group(1) + linkmap[match.group(2)] + match.group(3)
-    
+
     return rgx.sub(translateCodeLink, string)
 
 def getComment(m, urinode, classlist, proplist, instalist):
@@ -420,7 +420,7 @@ def parseCollection(model, node):
         rest  = findOne(model, node, rdf.rest, None)
         if not first or not rest:
             break;
-        
+
         uris.append(getObject(first))
         node = getObject(rest)
 
@@ -455,7 +455,7 @@ def rdfsClassInfo(term, m):
         else:
             meta_type = findOne(m, getObject(st), rdf.type, None)
             restrictions.append(getSubject(meta_type))
-            
+
     if len(superclasses) > 0:
         doc += "\n<tr><th>Sub-class of</th>"
         first = True
@@ -740,7 +740,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
             return '<a href="#%s">%s</a>' % (name, name)
         else:
             return '<a href="%s">%s</a>' % (str(t), str(t))
-        
+
     if (len(classlist) > 0):
         azlist += "<dt>Classes</dt><dd><ul>"
         classlist.sort()
@@ -913,13 +913,34 @@ def specAuthors(m, subject):
     return doc
 
 
-def specHistory(m, subject):
-    entries = {}
+def releaseChangeset(m, release, prefix=''):
+    changeset = findOne(m, release, dcs.changeset, None)
+    if changeset is None:
+        return ''
+
+    entry = '<dd><ul>'
+    for i in findStatements(m, getObject(changeset), dcs.item, None):
+        item  = getObject(i)
+        label = findOne(m, item, rdfs.label, None)
+        if not label:
+            print("error: dcs:item has no rdfs:label")
+            continue
+
+        text = getLiteralString(getObject(label))
+        if prefix:
+            text = prefix + ': ' + text
+
+        entry += '<li>%s</li>' % text
+
+    entry += '</ul></dd>\n'
+    return entry
+
+def specHistoryEntries(m, subject, entries={}):
     for r in findStatements(m, subject, doap.release, None):
         release = getObject(r)
         revNode = findOne(m, release, doap.revision, None)
         if not revNode:
-            print "error: doap:release has no doap:revision"
+            print("error: doap:release has no doap:revision")
             continue
 
         rev = getLiteralString(getObject(revNode))
@@ -931,29 +952,22 @@ def specHistory(m, subject):
             entry = '<dt><a href="%s">Version %s</a>' % (getObject(dist), rev)
         else:
             entry = '<dt>Version %s' % rev
-            #print "warning: doap:release has no doap:file-release"
+            #print("warning: doap:release has no doap:file-release")
 
         if created:
             entry += ' (%s)</dt>' % getLiteralString(getObject(created))
         else:
             entry += ' (<span class="warning">EXPERIMENTAL</span>)</dt>'
 
-        changeset = findOne(m, release, dcs.changeset, None)
-        if changeset:
-            entry += '<dd><ul>'
-            for i in findStatements(m, getObject(changeset), dcs.item, None):
-                item = getObject(i)
-                label = findOne(m, item, rdfs.label, None)
-                if not label:
-                    print "error: dcs:item has no rdfs:label"
-                    continue
+        entry += releaseChangeset(m, release)
 
-                entry += '<li>%s</li>' % getLiteralString(getObject(label))
+        if dist is not None:
+            entries[getObject(dist)] = entry
 
-            entry += '</ul></dd>\n'
+    return entries
 
-        entries[rev] = entry
 
+def specHistoryMarkup(entries):
     if len(entries) > 0:
         history = '<dl>'
         for e in sorted(entries.keys(), reverse=True):
@@ -962,6 +976,10 @@ def specHistory(m, subject):
         return history
     else:
         return ''
+
+
+def specHistory(m, subject):
+    return specHistoryMarkup(specHistoryEntries(m, subject))
 
 
 def specVersion(m, subject):
@@ -1108,7 +1126,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
                     seeAlso.add(path)
                     m.parse(path, format='n3')
                     done = False
-    
+
     spec_ns_str = spec_url
     if (spec_ns_str[-1] != "/" and spec_ns_str[-1] != "#"):
         spec_ns_str += "#"
@@ -1306,7 +1324,7 @@ if __name__ == "__main__":
     if (len(args) < 3):
         print(usage())
         sys.exit(-1)
-        
+
     spec_pre = options.prefix
     ontology = "file:" + str(args[0])
     indir    = args[1]

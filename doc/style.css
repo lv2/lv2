@@ -33,28 +33,28 @@ h1 {
 }
 h2 {
 	font-size: 140%;
-	font-weight: 650;
+	font-weight: 700;
 }
 h3 {
 	font-size: 130%;
-	font-weight: 600;
+	font-weight: 700;
 }
 h4 {
 	font-size: 120%;
-	font-weight: 550;
+	font-weight: 700;
 }
 h5 {
 	font-size: 110%;
-	font-weight: 500;
+	font-weight: 700;
 }
 h6 {
 	font-size: 100%;
-	font-weight: 450;
+	font-weight: 700;
 }
 #header {
 	background-color: #F0F0F0;
 	border: 0;
-	border-bottom: 1px solid #E8E8E8;
+	border-bottom: 1px solid #D8D8D8;
 	margin: 0;
 	padding: 1ex;
 	vertical-align: top;
@@ -91,16 +91,16 @@ h6 {
 #title {
 	font-size: 200%;
 	font-weight: 700;
-	margin: 0 0 .25ex 0;
-	padding: 0;
+	margin: 0 0 0.25ex 0;
+	padding: 0 0 0 0;
 }
 #subtitle {
-	font-size: x-small;
-	margin-bottom: 1em;
+	font-size: small;
 }
 #shortdesc {
 	font-size: small;
 	font-style: italic;
+	margin-top: 1em;
 }
 #logo {
 	height: 63px;
@@ -405,9 +405,9 @@ ul, ol {
 #contents {
 	background-color: #F3F3F3;
 	border: 0;
-	border-bottom: 1px solid #EAEAEA;
-	padding: 0.25ex 0 0 0.5ex;
-	vertical-align: top;
+	border-bottom: 1px solid #D8D8D8;
+	padding: 0.25ex 0 0.25ex 1ex;
+	vertical-align: middle;
 	font-size: small;
 }
 #contents li {

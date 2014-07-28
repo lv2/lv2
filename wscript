@@ -117,9 +117,7 @@ def specgen(task):
         return
 
     try:
-        model = rdflib.ConjunctiveGraph()
-        for i in glob.glob('%s/*.ttl' % bundle):
-            model.parse(i, format='n3')
+        model = load_ttl(glob.glob('%s/*.ttl' % bundle))
     except:
         e = sys.exc_info()[1]
         print('error parsing %s: %s' % (bundle, str(e)))
@@ -130,7 +128,7 @@ def specgen(task):
     if not ext_node:
         print('no extension found in %s' % bundle)
         return
-    
+
     ext = str(ext_node)
 
     # Get version
@@ -147,19 +145,18 @@ def specgen(task):
     date = None
     for r in model.triples([ext_node, doap.release, None]):
         revision = model.value(r[2], doap.revision, None)
-        if revision == ('%d.%d' % (minor, micro)):
+        if str(revision) == ('%d.%d' % (minor, micro)):
             date = model.value(r[2], doap.created, None)
             break
 
     # Verify that this date is the latest
     for r in model.triples([ext_node, doap.release, None]):
-        revision = model.value(r[2], doap.revision, None)
         this_date = model.value(r[2], doap.created, None)
         if this_date > date:
             print('warning: %s revision %d.%d (%s) is not the latest release' % (
                 ext_node, minor, micro, date))
             break
-    
+
     # Get short description
     shortdesc = model.value(ext_node, doap.shortdesc, None)
 
@@ -224,8 +221,72 @@ def subst_file(template, output, dict):
     i.close()
     o.close()
 
+def specdirs(path):
+    return ([path.find_node('lv2/lv2plug.in/ns/lv2core')] +
+            path.ant_glob('plugins/*', dir=True) +
+            path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
+            path.ant_glob('lv2/lv2plug.in/ns/extensions/*', dir=True))
+
+def ttl_files(path, specdir):
+    def abspath(node):
+        return node.abspath()
+
+    return map(abspath,
+               path.ant_glob(specdir.path_from(path) + '/*.ttl'))
+
+def load_ttl(files):
+    import rdflib
+    model = rdflib.ConjunctiveGraph()
+    for f in files:
+        model.parse(f, format='n3')
+    return model
+    
 # Task to build extension index
 def build_index(task):
+    sys.path.append('./lv2specgen')
+    import rdflib
+    import lv2specgen
+
+    doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
+    lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
+    rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+
+    model = load_ttl(['lv2/lv2plug.in/ns/meta/meta.ttl'])
+
+    # Get date for this version, and list of all LV2 distributions
+    proj  = rdflib.URIRef('http://lv2plug.in/ns/lv2')
+    date  = None
+    dists = []
+    for r in model.triples([proj, doap.release, None]):
+        revision = model.value(r[2], doap.revision, None)
+        if str(revision) == VERSION:
+            date = model.value(r[2], doap.created, None)
+
+        dist = model.value(r[2], doap['file-release'], None)
+        if dist:
+            dists += [dist]
+    dists.sort()
+
+    # Get history for this LV2 release
+    entries = lv2specgen.specHistoryEntries(model, proj)
+
+    # Add entries for every spec that has the same distribution
+    ctx     = task.generator.bld
+    subdirs = specdirs(ctx.path)
+    for specdir in subdirs:
+        m    = load_ttl(ttl_files(ctx.path, specdir))
+        name = os.path.basename(specdir.abspath())
+        spec = m.value(None, rdf.type, lv2.Specification)
+        if spec:
+            for dist in dists:
+                release = m.value(None, doap['file-release'], dist)
+                if release:
+                    entries[dist] += lv2specgen.releaseChangeset(m, release, str(name))
+
+    # Filter entries for post-unification LV2 distributions only
+    unified_entries = { dist: entries[dist] for dist in dists }
+    history         = lv2specgen.specHistoryMarkup(unified_entries)
+
     global index_lines
     rows = []
     for f in task.inputs:
@@ -236,7 +297,9 @@ def build_index(task):
 
     subst_file(task.inputs[0].abspath(), task.outputs[0].abspath(),
                { '@ROWS@': ''.join(rows),
-                 '@LV2_VERSION@': VERSION})
+                 '@LV2_VERSION@': VERSION,
+                 '@DATE@' : date,
+                 '@HISTORY@' : history})
 
 # Task for making a link in the build directory to a source file
 def link(task):
@@ -357,7 +420,7 @@ def build(bld):
 
             base = i.srcpath()[len('lv2/lv2plug.in'):]
             name = os.path.basename(i.srcpath())
-            
+
             # Generate .htaccess file
             if bld.env.ONLINE_DOCS:
                 bld(features     = 'subst',
@@ -447,26 +510,19 @@ class DistCheck(Dist, Scripting.DistCheck):
     def execute(self):
         Dist.execute(self)
         self.check()
-    
+
     def archive(self):
         Dist.archive(self)
 
 def dist(ctx):
-    subdirs = ([ctx.path.find_node('lv2/lv2plug.in/ns/lv2core')] +
-               ctx.path.ant_glob('plugins/*', dir=True) +
-               ctx.path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
-               ctx.path.ant_glob('lv2/lv2plug.in/ns/extensions/*', dir=True))
+    subdirs = specdirs(ctx.path)
 
     # Write NEWS files in source directory
     top_entries = {}
-    for i in subdirs:
-        def abspath(node):
-            return node.abspath()
-        in_files = map(abspath,
-                       ctx.path.ant_glob(i.path_from(ctx.path) + '/*.ttl'))
-        autowaf.write_news(os.path.basename(i.abspath()),
-                           in_files,
-                           i.abspath() + '/NEWS',
+    for specdir in subdirs:
+        autowaf.write_news(os.path.basename(specdir.abspath()),
+                           ttl_files(ctx.path, specdir),
+                           specdir.abspath() + '/NEWS',
                            top_entries)
 
     # Write top level amalgamated NEWS file
@@ -485,4 +541,3 @@ def dist(ctx):
             os.remove(os.path.join(i.abspath(), 'NEWS'))
         except:
             pass
-

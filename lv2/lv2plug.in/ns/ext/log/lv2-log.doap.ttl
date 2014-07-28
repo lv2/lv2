@@ -17,7 +17,7 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add missing include <string.h> to logger.h for memset."
+				rdfs:label "Add missing include string.h to logger.h for memset."
 			]
 		]
 	] , [
