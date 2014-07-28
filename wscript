@@ -328,11 +328,13 @@ def build_ext(bld, path):
 
     # Build test program if applicable
     if bld.env.BUILD_TESTS and bld.path.find_node(path + '/%s-test.c' % name):
-        test_lib    = []
-        test_cflags = ['']
+        test_lib       = []
+        test_cflags    = ['']
+        test_linkflags = ['']
         if bld.is_defined('HAVE_GCOV'):
-            test_lib    += ['gcov']
-            test_cflags += ['-fprofile-arcs', '-ftest-coverage']
+            test_lib       += ['gcov', 'rt']
+            test_cflags    += ['--coverage']
+            test_linkflags += ['--coverage']
 
         # Unit test program
         bld(features     = 'c cprogram',
@@ -340,7 +342,8 @@ def build_ext(bld, path):
             lib          = test_lib,
             target       = path + '/%s-test' % name,
             install_path = None,
-            cflags       = test_cflags)
+            cflags       = test_cflags,
+            linkflags    = test_linkflags)
 
     # Install bundle
     bld.install_files(bundle_dir,
