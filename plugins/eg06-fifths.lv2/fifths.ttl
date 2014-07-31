@@ -1,12 +1,7 @@
 @prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix patch: <http://lv2plug.in/ns/ext/patch#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix state: <http://lv2plug.in/ns/ext/state#> .
-@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
 @prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
-@prefix work:  <http://lv2plug.in/ns/ext/worker#> .
 @prefix midi:  <http://lv2plug.in/ns/ext/midi#> .
 
 <http://lv2plug.in/plugins/eg-fifths>
@@ -16,7 +11,6 @@
 	lv2:project <http://lv2plug.in/ns/lv2> ;
 	lv2:requiredFeature urid:map ;
 	lv2:optionalFeature lv2:hardRTCapable ;
-	lv2:extensionData work:interface ;
 	lv2:port [
 		a lv2:InputPort ,
 			atom:AtomPort ;
