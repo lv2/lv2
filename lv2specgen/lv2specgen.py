@@ -918,7 +918,8 @@ def releaseChangeset(m, release, prefix=''):
     if changeset is None:
         return ''
 
-    entry = '<dd><ul>'
+    entry = ''
+    #entry = '<dd><ul>\n'
     for i in findStatements(m, getObject(changeset), dcs.item, None):
         item  = getObject(i)
         label = findOne(m, item, rdfs.label, None)
@@ -930,10 +931,11 @@ def releaseChangeset(m, release, prefix=''):
         if prefix:
             text = prefix + ': ' + text
 
-        entry += '<li>%s</li>' % text
+        entry += '<li>%s</li>\n' % text
 
-    entry += '</ul></dd>\n'
+    #entry += '</ul></dd>\n'
     return entry
+
 
 def specHistoryEntries(m, subject, entries={}):
     for r in findStatements(m, subject, doap.release, None):
@@ -955,11 +957,11 @@ def specHistoryEntries(m, subject, entries={}):
             #print("warning: doap:release has no doap:file-release")
 
         if created:
-            entry += ' (%s)</dt>' % getLiteralString(getObject(created))
+            entry += ' (%s)</dt>\n' % getLiteralString(getObject(created))
         else:
             entry += ' (<span class="warning">EXPERIMENTAL</span>)</dt>'
 
-        entry += releaseChangeset(m, release)
+        entry += '<dd><ul>\n%s' % releaseChangeset(m, release)
 
         if dist is not None:
             entries[getObject(dist)] = entry
@@ -969,10 +971,10 @@ def specHistoryEntries(m, subject, entries={}):
 
 def specHistoryMarkup(entries):
     if len(entries) > 0:
-        history = '<dl>'
+        history = '<dl>\n'
         for e in sorted(entries.keys(), reverse=True):
-            history += entries[e]
-        history += '</dl>'
+            history += entries[e] + '</ul></dd>'
+        history += '</dl>\n'
         return history
     else:
         return ''
