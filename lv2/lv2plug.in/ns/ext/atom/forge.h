@@ -128,9 +128,9 @@ static inline void
 lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size);
 
 /**
-   Initialise @p forge.
+   Initialise `forge`.
 
-   URIs will be mapped using @p map and stored, a reference to @p map itself is
+   URIs will be mapped using `map` and stored, a reference to `map` itself is
    not held.
 */
 static inline void
@@ -205,7 +205,7 @@ lv2_atom_forge_top_is(LV2_Atom_Forge* forge, uint32_t type)
 		(lv2_atom_forge_deref(forge, forge->stack->ref)->type == type);
 }
 
-/** Return true iff @p type is an atom:Object. */
+/** Return true iff `type` is an atom:Object. */
 static inline bool
 lv2_atom_forge_is_object_type(const LV2_Atom_Forge* forge, uint32_t type)
 {
@@ -214,7 +214,7 @@ lv2_atom_forge_is_object_type(const LV2_Atom_Forge* forge, uint32_t type)
 	        type == forge->Resource);
 }
 
-/** Return true iff @p type is an atom:Object with a blank ID. */
+/** Return true iff `type` is an atom:Object with a blank ID. */
 static inline bool
 lv2_atom_forge_is_blank(const LV2_Atom_Forge*       forge,
                         uint32_t                    type,
@@ -230,7 +230,7 @@ lv2_atom_forge_is_blank(const LV2_Atom_Forge*       forge,
    @{
 */
 
-/** Set the output buffer where @p forge will write atoms. */
+/** Set the output buffer where `forge` will write atoms. */
 static inline void
 lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size)
 {
@@ -244,7 +244,7 @@ lv2_atom_forge_set_buffer(LV2_Atom_Forge* forge, uint8_t* buf, size_t size)
 }
 
 /**
-   Set the sink function where @p forge will write output.
+   Set the sink function where `forge` will write output.
 
    The return value of forge functions is an LV2_Atom_Forge_Ref which is an
    integer type safe to use as a pointer but is otherwise opaque.  The sink
@@ -429,7 +429,7 @@ lv2_atom_forge_typed_string(LV2_Atom_Forge* forge,
 	return out;
 }
 
-/** Write an atom:String.  Note that @p str need not be NULL terminated. */
+/** Write an atom:String.  Note that `str` need not be NULL terminated. */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_string(LV2_Atom_Forge* forge, const char* str, uint32_t len)
 {
@@ -437,7 +437,7 @@ lv2_atom_forge_string(LV2_Atom_Forge* forge, const char* str, uint32_t len)
 }
 
 /**
-   Write an atom:URI.  Note that @p uri need not be NULL terminated.
+   Write an atom:URI.  Note that `uri` need not be NULL terminated.
    This does not map the URI, but writes the complete URI string.  To write
    a mapped URI, use lv2_atom_forge_urid().
 */
@@ -447,7 +447,7 @@ lv2_atom_forge_uri(LV2_Atom_Forge* forge, const char* uri, uint32_t len)
 	return lv2_atom_forge_typed_string(forge, forge->URI, uri, len);
 }
 
-/** Write an atom:Path.  Note that @p path need not be NULL terminated. */
+/** Write an atom:Path.  Note that `path` need not be NULL terminated. */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_path(LV2_Atom_Forge* forge, const char* path, uint32_t len)
 {
