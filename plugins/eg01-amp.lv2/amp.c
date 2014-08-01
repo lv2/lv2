@@ -61,7 +61,7 @@ typedef struct {
 } Amp;
 
 /**
-   The instantiate() function is called by the host to create a new plugin
+   The `instantiate()` function is called by the host to create a new plugin
    instance.  The host passes the plugin descriptor, sample rate, and bundle
    path for plugins that need to load additional resources (e.g. waveforms).
    The features parameter contains host-provided features defined in LV2
@@ -82,9 +82,9 @@ instantiate(const LV2_Descriptor*     descriptor,
 }
 
 /**
-   The connect_port() method is called by the host to connect a particular port
-   to a buffer.  The plugin must store the data location, but data may not be
-   accessed except in run().
+   The `connect_port()` method is called by the host to connect a particular
+   port to a buffer.  The plugin must store the data location, but data may not
+   be accessed except in run().
 
    This method is in the ``audio'' threading class, and is called in the same
    context as run().
@@ -110,9 +110,9 @@ connect_port(LV2_Handle instance,
 }
 
 /**
-   The activate() method is called by the host to initialise and prepare the
+   The `activate()` method is called by the host to initialise and prepare the
    plugin instance for running.  The plugin must reset all internal state
-   except for buffer locations set by connect_port().  Since this plugin has
+   except for buffer locations set by `connect_port()`.  Since this plugin has
    no other internal state, this method does nothing.
 
    This method is in the ``instantiation'' threading class, so no other
@@ -123,10 +123,15 @@ activate(LV2_Handle instance)
 {
 }
 
-/** Define a macro for converting a gain in dB to a coefficient */
+/** Define a macro for converting a gain in dB to a coefficient. */
 #define DB_CO(g) ((g) > -90.0f ? powf(10.0f, (g) * 0.05f) : 0.0f)
 
-/** Process a block of audio (audio thread, must be RT safe). */
+/**
+   The `run()` method is the main process function of the plugin.  It processes
+   a block of audio in the audio context.  Since this plugin is
+   `lv2:hardRTCapable`, `run()` must be real-time safe, so blocking (e.g. with
+   a mutex) or memory allocation are not allowed.
+*/
 static void
 run(LV2_Handle instance, uint32_t n_samples)
 {
@@ -144,11 +149,11 @@ run(LV2_Handle instance, uint32_t n_samples)
 }
 
 /**
-   The deactivate() method is the counterpart to activate() called by the host
-   after running the plugin.  It indicates that the host will not call run()
-   again until another call to activate() and is mainly useful for more
+   The `deactivate()` method is the counterpart to `activate()`, and is called by
+   the host after running the plugin.  It indicates that the host will not call
+   `run()` again until another call to `activate()` and is mainly useful for more
    advanced plugins with ``live'' characteristics such as those with auxiliary
-   processing threads.  As with activate(), this plugin has no use for this
+   processing threads.  As with `activate()`, this plugin has no use for this
    information so this method does nothing.
 
    This method is in the ``instantiation'' threading class, so no other
@@ -160,7 +165,7 @@ deactivate(LV2_Handle instance)
 }
 
 /**
-   Destroy a plugin instance (counterpart to instantiate()).
+   Destroy a plugin instance (counterpart to `instantiate()`).
 
    This method is in the ``instantiation'' threading class, so no other
    methods on this instance will be called concurrently with it.
@@ -172,7 +177,7 @@ cleanup(LV2_Handle instance)
 }
 
 /**
-   The extension_data function returns any extension data supported by the
+   The `extension_data()` function returns any extension data supported by the
    plugin.  Note that this is not an instance method, but a function on the
    plugin descriptor.  It is usually used by plugins to implement additional
    interfaces.  This plugin does not have any extension data, so this function
@@ -188,9 +193,9 @@ extension_data(const char* uri)
 }
 
 /**
-   Define the LV2_Descriptor for this plugin.  It is best to define descriptors
-   statically to avoid leaking memory and non-portable shared library
-   constructors and destructors to clean up properly.
+   Every plugin must define an `LV2_Descriptor`.  It is best to define
+   descriptors statically to avoid leaking memory and non-portable shared
+   library constructors and destructors to clean up properly.
 */
 static const LV2_Descriptor descriptor = {
 	AMP_URI,
@@ -204,7 +209,7 @@ static const LV2_Descriptor descriptor = {
 };
 
 /**
-   The lv2_descriptor() function is the entry point to the plugin library.  The
+   The `lv2_descriptor()` function is the entry point to the plugin library.  The
    host will load the library and call this function repeatedly with increasing
    indices to find all the plugins defined in the library.  The index is not an
    indentifier, the URI of the returned descriptor is used to determine the
@@ -218,9 +223,7 @@ const LV2_Descriptor*
 lv2_descriptor(uint32_t index)
 {
 	switch (index) {
-	case 0:
-		return &descriptor;
-	default:
-		return NULL;
+	case 0:  return &descriptor;
+	default: return NULL;
 	}
 }

@@ -88,14 +88,12 @@
 
 <http://lv2plug.in/plugins/eg-amp> lv2:binary <amp@LIB_EXT@> .
 
-# This says "this plugin has executable code ("binary") in the file
-# named "amp.so", which is located in this bundle.  The LV2 specification
-# defines that all relative URIs in manifest files are relative to the bundle
-# directory, so this refers to the file amp.so in the same directory as this
-# manifest.ttl file.
+# This says "`eg-amp` has executable code in the file `amp.so`".
+# Relative URIs in manifest files are relative to the bundle directory, so this
+# refers to the file amp.so in the same directory as this manifest.ttl file.
 
 <http://lv2plug.in/plugins/eg-amp> rdfs:seeAlso <amp.ttl> .
 
-# This says ``there is more information about this plugin located in the file
-# `amp.ttl`''.  The host will look at all such files when it needs to actually
-# use or investigate the plugin.
+# This says ``there is more information about `eg-amp` in the file `amp.ttl`''.
+# The host will look at all such files when it needs to actually use or
+# investigate the plugin.
