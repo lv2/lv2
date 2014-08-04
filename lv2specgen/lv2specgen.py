@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # lv2specgen, a documentation generator for LV2 specifications.
-# Copyright (c) 2009-2012 David Robillard <d@drobilla.net>
+# Copyright (c) 2009-2014 David Robillard <d@drobilla.net>
 #
 # Based on SpecGen:
 # <http://forge.morfeo-project.org/wiki_en/index.php/SpecGen>

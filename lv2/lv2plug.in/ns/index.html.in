@@ -15,12 +15,13 @@
     <div id="header">
       <div id="titlebox">
         <h1 id="title">LV2 Specifications</h1>
-        <div id="subtitle">Version @LV2_VERSION@</div>
+        <div id="subtitle">Extension Index and Version History</div>
       </div>
       <table id="meta">
         <!--<tr><th>URI</th><td><a href="@URI@">@URI@</a></td></tr>
             <tr><th>Version</th><td>@REVISION@</td></tr>-->
         <!--<tr><th>Prefixes</th><td>@PREFIXES@</td></tr>-->
+        <tr><th>Version</th><td>@LV2_VERSION@</td></tr>
         <tr><th>Date</th><td>@DATE@</td></tr>
         <tr><th>Discuss</th>
           <td>
