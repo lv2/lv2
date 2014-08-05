@@ -41,6 +41,7 @@
 # relative to the bundle directory.
 #
 # There are 3 statements in this description:
+# [options="header"]
 # |================================================================
 # | Subject                             | Predicate    | Object
 # | <http://lv2plug.in/plugins/eg-amp>  | a            | lv2:Plugin
@@ -57,25 +58,26 @@
 
 # (Since this data is equivalent, it is safe, if pointless, to list it twice)
 #
-# Note that the documentation for a URI can often be found by visiting that URI
-# in a web browser, e.g. the documentation for lv2:binary can be found at
-# <http://lv2plug.in/ns/lv2core#binary>.  If you encounter a URI in some data
+# The documentation for a URI can often be found by visiting that URI in a web
+# browser, e.g. the documentation for lv2:binary can be found at
+# <http://lv2plug.in/ns/lv2core#binary>.  All standard LV2 classes and
+# properties are documented in this way, so if you encounter a URI in some data
 # which you do not understand, try this first.
 #
-# Note the URI of a plugin does NOT need to be an actual web address, it's just
-# a global identifier.  It is, however, a good idea to use an actual web
-# address if possible, since it can be used to easily access documentation,
-# downloads, etc.  Note there are compatibility rules for when the URI of a
-# plugin must be changed, see the http://lv2plug.in/ns/lv2core[LV2 specification]
-# for details.
+# The URI of a plugin does not need to be a resolvable web address, it just
+# serves as a global identifier.  However, it is a good idea to use an actual
+# web address if possible for easy access documentation, downloads, and so on,
+# even if no documents are currently hosted there.  There are compatibility
+# rules about when the URI of a plugin must be changed, see the
+# http://lv2plug.in/ns/lv2core[LV2 specification] for details.  Note that this
+# does not require authors to control a top-level domain; for example, URIs in
+# project directories at shared hosting sites are fine.  It is not required to
+# use HTTP URIs, but use of other schemes is strongly discouraged.
 #
 # AUTHORS MUST NOT CREATE URIS AT DOMAINS THEY DO NOT CONTROL WITHOUT
-# PERMISSION, AND *ESPECIALLY* MUST NOT CREATE SYNTACTICALLY INVALID URIS,
-# E.G. WHERE THE PORTION FOLLOWING "http://" IS NOT AN ACTUAL DOMAIN NAME.  If
-# you need an example URI, the domain http://example.org/ is reserved for this
-# purpose.  It is best to use web URIs, e.g. at the domain where plugins are
-# hosted for download, even if no actual documents are currently hosted there.
-# If this is truly impossible, use a URN, e.g. urn:myplugs:superamp.
+# PERMISSION, AND *ESPECIALLY* MUST NOT CREATE INVALID URIS, E.G. WHERE THE
+# PORTION FOLLOWING ``http://'' IS NOT A DOMAIN NAME.  If you need an example
+# URI, the domain http://example.org/ is reserved for this purpose.
 #
 # A detailed explanation of each statement follows.
 
@@ -88,7 +90,7 @@
 
 <http://lv2plug.in/plugins/eg-amp> lv2:binary <amp@LIB_EXT@> .
 
-# This says "`eg-amp` has executable code in the file `amp.so`".
+# This says ```eg-amp` has executable code in the file `amp.so`''.
 # Relative URIs in manifest files are relative to the bundle directory, so this
 # refers to the file amp.so in the same directory as this manifest.ttl file.
 
