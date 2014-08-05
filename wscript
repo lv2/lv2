@@ -401,12 +401,13 @@ def build(bld):
         # Build Doxygen documentation (and tags file)
         autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc', False)
 
-        # Copy stylesheet to build directory
-        bld(features = 'subst',
-            is_copy  = True,
-            name     = 'copy',
-            source   = 'doc/style.css',
-            target   = 'aux/style.css')
+        # Copy stylesheets to build directory
+        for i in ['style.css', 'pygments.css']:
+            bld(features = 'subst',
+                is_copy  = True,
+                name     = 'copy',
+                source   = 'doc/%s' % i,
+                target   = 'aux/%s' % i)
 
         index_files = []
 
