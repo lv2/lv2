@@ -419,7 +419,7 @@ div.tableblock {
   margin-bottom: 1.5em;
 }
 div.tableblock > table {
-  border: 3px solid #527bbd;
+  border: 1px dashed #ccc;
 }
 thead, p.table.header {
   font-weight: bold;
@@ -427,6 +427,13 @@ thead, p.table.header {
 }
 p.table {
   margin-top: 0;
+}
+th.tableblock {
+    font-weight: bold;
+	border: 1px dashed #ccc;
+}
+td.tableblock, th.tableblock {
+	border: 1px dashed #ccc;
 }
 /* Because the table frame attribute is overriden by CSS in most browsers. */
 div.tableblock > table[frame="void"] {
@@ -453,23 +460,22 @@ table.tableblock {
 }
 thead, p.tableblock.header {
   font-weight: bold;
-  color: #527bbd;
+  color: black;
 }
 p.tableblock {
   margin-top: 0;
 }
 table.tableblock {
-  border-width: 3px;
+  border: 0;
   border-spacing: 0px;
-  border-style: solid;
-  border-color: #527bbd;
+  border-style: hidden;
+  border-color: #ccc;
   border-collapse: collapse;
 }
 th.tableblock, td.tableblock {
   border-width: 1px;
   padding: 4px;
-  border-style: solid;
-  border-color: #527bbd;
+  border: 1px dashed #ccc;
 }
 
 table.tableblock.frame-topbot {
