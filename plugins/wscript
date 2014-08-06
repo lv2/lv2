@@ -18,7 +18,12 @@ def bld_book_src(task):
     
 def build(bld):
     files = [bld.path.find_node('README.txt')]
-    for i in bld.path.ant_glob('*', src=False, dir=True):
+    for i in ['eg-amp.lv2',
+              'eg-midigate.lv2',
+              'eg-fifths.lv2',
+              'eg-metro.lv2',
+              'eg-sampler.lv2',
+              'eg-scope.lv2']:
         files += bld.path.ant_glob('%s/*.txt' % i)
         files += bld.path.ant_glob('%s/manifest.ttl*' % i)
         files += bld.path.ant_glob('%s/*.ttl' % i)
