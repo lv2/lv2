@@ -964,7 +964,7 @@ def specHistoryEntries(m, subject, entries={}):
         entry += '<dd><ul>\n%s' % releaseChangeset(m, release)
 
         if dist is not None:
-            entries[getObject(dist)] = entry
+            entries[(getObject(created), getObject(dist))] = entry
 
     return entries
 

@@ -259,13 +259,15 @@ def build_index(task):
     dists = []
     for r in model.triples([proj, doap.release, None]):
         revision = model.value(r[2], doap.revision, None)
+        created  = model.value(r[2], doap.created, None)
         if str(revision) == VERSION:
-            date = model.value(r[2], doap.created, None)
+            date = created
 
         dist = model.value(r[2], doap['file-release'], None)
-        if dist:
-            dists += [dist]
-    dists.sort()
+        if dist and created:
+            dists += [(created, dist)]
+        else:
+            print('warning: %s has no file release\n' % proj)
 
     # Get history for this LV2 release
     entries = lv2specgen.specHistoryEntries(model, proj)
@@ -279,13 +281,12 @@ def build_index(task):
         spec = m.value(None, rdf.type, lv2.Specification)
         if spec:
             for dist in dists:
-                release = m.value(None, doap['file-release'], dist)
+                release = m.value(None, doap['file-release'], dist[1])
                 if release:
                     entries[dist] += lv2specgen.releaseChangeset(m, release, str(name))
 
-    # Filter entries for post-unification LV2 distributions only
-    unified_entries = { dist: entries[dist] for dist in dists }
-    history         = lv2specgen.specHistoryMarkup(unified_entries)
+    # Generate history for all post-unification LV2 distributions
+    history = lv2specgen.specHistoryMarkup(entries)
 
     global index_lines
     rows = []
