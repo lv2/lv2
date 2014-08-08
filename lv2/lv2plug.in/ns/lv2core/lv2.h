@@ -21,7 +21,7 @@
 /**
    @file lv2.h
    API for the LV2 specification <http://lv2plug.in/ns/lv2core>.
-   Revision: 12.0
+   Revision: 12.2
 */
 
 #ifndef LV2_H_INCLUDED
@@ -135,7 +135,7 @@ typedef void * LV2_Handle;
 
    Features allow hosts to make additional functionality available to plugins
    without requiring modification to the LV2 API.  Extensions may define new
-   features and specify the @ref URI and @ref data to be used if necessary.
+   features and specify the `URI` and `data` to be used if necessary.
    Some features, such as lv2:isLive, do not require the host to pass data.
 */
 typedef struct _LV2_Feature {
@@ -150,7 +150,7 @@ typedef struct _LV2_Feature {
 	   Pointer to arbitrary data.
 
 	   The format of this data is defined by the extension which describes the
-	   feature with the given @ref URI.
+	   feature with the given `URI`.
 	*/
 	void * data;
 } LV2_Feature;
@@ -418,7 +418,7 @@ typedef struct {
 
 	   Plugins are accessed by index using values from 0 upwards.  Out of range
 	   indices MUST result in this function returning NULL, so the host can
-	   enumerate plugins by increasing @a index until NULL is returned.
+	   enumerate plugins by increasing `index` until NULL is returned.
 	*/
 	const LV2_Descriptor * (*get_plugin)(LV2_Lib_Handle handle,
 	                                     uint32_t       index);

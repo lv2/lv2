@@ -255,7 +255,7 @@ typedef struct {
 	   @param context The calling context. Like event types, this is a mapped
 	   URI, see lv2_context.h. Simple plugin with just a run() method should
 	   pass 0 here (the ID of the 'standard' LV2 run context). The host
-	   guarantees that this function is realtime safe iff @a context is
+	   guarantees that this function is realtime safe iff the context is
 	   realtime safe.
 
 	   PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS.
@@ -278,7 +278,7 @@ typedef struct {
 	   @param context The calling context. Like event types, this is a mapped
 	   URI, see lv2_context.h. Simple plugin with just a run() method should
 	   pass 0 here (the ID of the 'standard' LV2 run context). The host
-	   guarantees that this function is realtime safe iff @a context is
+	   guarantees that this function is realtime safe iff the context is
 	   realtime safe.
 
 	   PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS.

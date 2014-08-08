@@ -262,7 +262,7 @@ typedef struct _LV2_State_Interface {
 } LV2_State_Interface;
 
 /**
-   Feature data for state:mapPath (LV2_STATE__mapPath).
+   Feature data for state:mapPath (@ref LV2_STATE__mapPath).
 */
 typedef struct {
 	/**
@@ -278,12 +278,12 @@ typedef struct {
 
 	   The plugin MUST use this function to map any paths that will be stored
 	   in plugin state.  The returned value is an abstract path which MAY not
-	   be an actual file system path; @ref absolute_path() MUST be used to map
+	   be an actual file system path; absolute_path() MUST be used to map
 	   it to an actual path in order to use the file.
 
 	   Plugins MUST NOT make any assumptions about abstract paths except that
 	   they can be mapped back to the absolute path of the "same" file (though
-	   not necessarily the same original path) using @ref absolute_path().
+	   not necessarily the same original path) using absolute_path().
 
 	   This function may only be called within the context of
 	   LV2_State_Interface methods.  The caller is responsible for freeing the
