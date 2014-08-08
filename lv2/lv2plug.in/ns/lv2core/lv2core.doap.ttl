@@ -16,8 +16,9 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "12.1" ;
-		doap:created "2014-04-26" ;
+		doap:revision "12.2" ;
+		doap:created "2014-08-08" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.10.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [

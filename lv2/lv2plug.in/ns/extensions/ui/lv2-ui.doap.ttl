@@ -13,8 +13,9 @@
 	doap:developer <http://lv2plug.in/ns/meta#larsl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "2.17" ;
-		doap:created "2014-02-09" ;
+		doap:revision "2.18" ;
+		doap:created "2014-08-08" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.10.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
