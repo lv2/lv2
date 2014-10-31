@@ -104,8 +104,7 @@ a patch:body that is a description of that subject.  For example:</p>
 
 <p>Note the use of blank nodes is not required; the value of patch:body may be
 the actual resource node.  Depending on the transport and syntax used this may
-be preferable.  However, the patch:subject property is required regardless.  For
-example, the same response could be written:</p>
+be preferable.  For example, the same response could be written:</p>
 
 <pre class="turtle-code">
 &lt;something&gt;
@@ -118,6 +117,9 @@ example, the same response could be written:</p>
     patch:subject &lt;something&gt; ;
     patch:body &lt;something&gt; .
 </pre>
+
+<p>If the patch:subject property is absent, then the Get implicitly applies to
+the receiver.</p>
 """ .
 
 patch:Insert
