@@ -28,7 +28,6 @@
 #define EG_SAMPLER__freeSample  EG_SAMPLER_URI "#freeSample"
 
 typedef struct {
-	LV2_URID atom_Blank;
 	LV2_URID atom_Path;
 	LV2_URID atom_Resource;
 	LV2_URID atom_Sequence;
@@ -38,6 +37,7 @@ typedef struct {
 	LV2_URID eg_sample;
 	LV2_URID eg_freeSample;
 	LV2_URID midi_Event;
+	LV2_URID patch_Get;
 	LV2_URID patch_Set;
 	LV2_URID patch_property;
 	LV2_URID patch_value;
@@ -46,7 +46,6 @@ typedef struct {
 static inline void
 map_sampler_uris(LV2_URID_Map* map, SamplerURIs* uris)
 {
-	uris->atom_Blank         = map->map(map->handle, LV2_ATOM__Blank);
 	uris->atom_Path          = map->map(map->handle, LV2_ATOM__Path);
 	uris->atom_Resource      = map->map(map->handle, LV2_ATOM__Resource);
 	uris->atom_Sequence      = map->map(map->handle, LV2_ATOM__Sequence);
@@ -56,6 +55,7 @@ map_sampler_uris(LV2_URID_Map* map, SamplerURIs* uris)
 	uris->eg_freeSample      = map->map(map->handle, EG_SAMPLER__freeSample);
 	uris->eg_sample          = map->map(map->handle, EG_SAMPLER__sample);
 	uris->midi_Event         = map->map(map->handle, LV2_MIDI__MidiEvent);
+	uris->patch_Get          = map->map(map->handle, LV2_PATCH__Get);
 	uris->patch_Set          = map->map(map->handle, LV2_PATCH__Set);
 	uris->patch_property     = map->map(map->handle, LV2_PATCH__property);
 	uris->patch_value        = map->map(map->handle, LV2_PATCH__value);

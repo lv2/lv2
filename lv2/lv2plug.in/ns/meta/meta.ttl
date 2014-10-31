@@ -48,6 +48,15 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
+		doap:revision "1.11.0" ;
+		doap:created "2014-10-31" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "eg-sampler: Support patch:Get, and request initial state from UI."
+			]
+		]
+	] , [
 		doap:revision "1.10.0" ;
 		doap:created "2014-08-08" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.10.0.tar.bz2> ;

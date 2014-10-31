@@ -350,6 +350,13 @@ run(LV2_Handle instance,
 				self->schedule->schedule_work(self->schedule->handle,
 				                              lv2_atom_total_size(&ev->body),
 				                              &ev->body);
+			} else if (obj->body.otype == uris->patch_Get) {
+				// Received a get message, emit our state (probably to UI)
+				lv2_log_trace(&self->logger, "Responding to get request\n");
+				lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
+				write_set_file(&self->forge, &self->uris,
+				               self->sample->path,
+				               self->sample->path_len);
 			} else {
 				lv2_log_trace(&self->logger,
 				              "Unknown object type %d\n", obj->body.otype);

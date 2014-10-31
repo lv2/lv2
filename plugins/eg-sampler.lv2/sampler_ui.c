@@ -131,6 +131,19 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	                 G_CALLBACK(on_load_clicked),
 	                 ui);
 
+	// Request state (filename) from plugin
+	uint8_t get_buf[512];
+	lv2_atom_forge_set_buffer(&ui->forge, get_buf, sizeof(get_buf));
+	
+	LV2_Atom_Forge_Frame frame;
+	LV2_Atom*            msg = (LV2_Atom*)lv2_atom_forge_object(
+		&ui->forge, &frame, 0, ui->uris.patch_Get);
+	lv2_atom_forge_pop(&ui->forge, &frame);
+
+	ui->write(ui->controller, 0, lv2_atom_total_size(msg),
+	          ui->uris.atom_eventTransfer,
+	          msg);
+
 	*widget = ui->box;
 
 	return ui;
@@ -154,7 +167,7 @@ port_event(LV2UI_Handle handle,
 	SamplerUI* ui = (SamplerUI*)handle;
 	if (format == ui->uris.atom_eventTransfer) {
 		const LV2_Atom* atom = (const LV2_Atom*)buffer;
-		if (atom->type == ui->uris.atom_Blank) {
+		if (lv2_atom_forge_is_object_type(&ui->forge, atom->type)) {
 			const LV2_Atom_Object* obj      = (const LV2_Atom_Object*)atom;
 			const LV2_Atom*        file_uri = read_set_file(&ui->uris, obj);
 			if (!file_uri) {
