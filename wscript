@@ -270,7 +270,7 @@ def build_index(task):
             print('warning: %s has no file release\n' % proj)
 
     # Get history for this LV2 release
-    entries = lv2specgen.specHistoryEntries(model, proj)
+    entries = lv2specgen.specHistoryEntries(model, proj, {})
 
     # Add entries for every spec that has the same distribution
     ctx     = task.generator.bld
@@ -288,7 +288,6 @@ def build_index(task):
     # Generate history for all post-unification LV2 distributions
     history = lv2specgen.specHistoryMarkup(entries)
 
-    global index_lines
     rows = []
     for f in task.inputs:
         if not f.abspath().endswith('index.html.in'):

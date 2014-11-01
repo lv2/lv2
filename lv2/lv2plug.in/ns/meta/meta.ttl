@@ -54,6 +54,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "eg-sampler: Support patch:Get, and request initial state from UI."
+			] , [
+				rdfs:label "Fix merging of version histories in specification documentation."
 			]
 		]
 	] , [

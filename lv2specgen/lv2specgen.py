@@ -937,7 +937,7 @@ def releaseChangeset(m, release, prefix=''):
     return entry
 
 
-def specHistoryEntries(m, subject, entries={}):
+def specHistoryEntries(m, subject, entries):
     for r in findStatements(m, subject, doap.release, None):
         release = getObject(r)
         revNode = findOne(m, release, doap.revision, None)
@@ -981,7 +981,7 @@ def specHistoryMarkup(entries):
 
 
 def specHistory(m, subject):
-    return specHistoryMarkup(specHistoryEntries(m, subject))
+    return specHistoryMarkup(specHistoryEntries(m, subject, {}))
 
 
 def specVersion(m, subject):
@@ -1099,6 +1099,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
     template = None
     f = open(temploc, "r")
     template = f.read()
+    f.close()
 
     # Load code documentation link map from tags file
     linkmap = load_tags(tags, docdir)
