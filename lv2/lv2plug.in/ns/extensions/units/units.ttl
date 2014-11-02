@@ -19,7 +19,7 @@
 @prefix eg:    &lt;http://example.org/&gt; .
 
 eg:plugin lv2:port [
-    a            lv2:ControlRateInputPort ;
+    a            lv2:ControlPort , lv2:InputPort ;
     lv2:datatype lv2:Float ;
     lv2:index    0 ;
     lv2:symbol   "gain" ;
@@ -32,7 +32,7 @@ eg:plugin lv2:port [
 better display hints to hosts:</p>
 <pre class="turtle-code">
 eg:plugin lv2:port [
-    a            lv2:ControlRateInputPort ;
+    a            lv2:ControlPort , lv2:InputPort ;
     lv2:datatype lv2:Float ;
     lv2:index    0 ;
     lv2:symbol   "frob" ;
@@ -61,7 +61,8 @@ units:Unit
 units:unit
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain lv2:Port ;
+	rdfs:domain lv2:Port ,
+		lv2:Parameter ;
 	rdfs:range units:Unit ;
 	rdfs:label "unit" ;
 	rdfs:comment "Relates a port to the unit of its data" .

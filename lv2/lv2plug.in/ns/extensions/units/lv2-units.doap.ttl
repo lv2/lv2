@@ -12,6 +12,17 @@
 	doap:homepage <http://lv2plug.in/ns/extensions/units> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:release [
+		doap:revision "5.9" ;
+		doap:created "2014-11-01" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix non-existent port type in examples."
+			] , [
+				rdfs:label "Add lv2:Parameter to domain of units:unit."
+			]
+		]
+	] , [
 		doap:revision "5.8" ;
 		doap:created "2012-10-14" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
