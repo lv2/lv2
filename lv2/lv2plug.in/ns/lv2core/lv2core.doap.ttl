@@ -16,6 +16,15 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "12.3" ;
+		doap:created "2014-11-01" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Relax domain of lv2:minimum lv2:maximum and lv2:default so they can be used to describe properties/parameters as well."
+			]
+		]
+	] , [
 		doap:revision "12.2" ;
 		doap:created "2014-08-08" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.10.0.tar.bz2> ;

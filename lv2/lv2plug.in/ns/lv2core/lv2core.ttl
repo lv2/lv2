@@ -621,7 +621,6 @@ lv2:default
 	a rdf:Property ,
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
-	rdfs:domain lv2:Port ;
 	rdfs:label "default" ;
 	rdfs:comment """
 The default value that the host SHOULD set this port to when there is no
@@ -632,7 +631,6 @@ lv2:minimum
 	a rdf:Property ,
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
-	rdfs:domain lv2:Port ;
 	rdfs:label "minimum" ;
 	lv2:documentation """
 <p>A hint to the host for the minimum useful value that the port will use. This
@@ -644,7 +642,6 @@ lv2:maximum
 	a rdf:Property ,
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
-	rdfs:domain lv2:Port ;
 	rdfs:label "maximum" ;
 	lv2:documentation """
 <p>A hint to the host for the maximum useful value that the port will use.
