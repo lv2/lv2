@@ -2,10 +2,11 @@
 # `manifest.ttl`.  This is done so the host only needs to scan the relatively
 # small `manifest.ttl` files to quickly discover all plugins.
 
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix doap:  <http://usefulinc.com/ns/doap#> .
+@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
 
 # First the type of the plugin is described.  All plugins must explicitly list
 # `lv2:Plugin` as a type.  A more specific type should also be given, where
@@ -58,6 +59,9 @@
 		lv2:default 0.0 ;
 		lv2:minimum -90.0 ;
 		lv2:maximum 24.0 ;
+# Ports can describe units and control detents to allow better UI generation
+# and host automation.
+		units:unit units:db ;
 		lv2:scalePoint [
 			rdfs:label "+5" ;
 			rdf:value 5.0
