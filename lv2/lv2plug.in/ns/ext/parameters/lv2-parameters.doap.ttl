@@ -8,6 +8,15 @@
 	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Parameters" ;
 	doap:release [
+		doap:revision "1.3" ;
+		doap:created "2014-11-01" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add range to parameters so hosts know how to control them."
+			]
+		]
+	] , [
 		doap:revision "1.2" ;
 		doap:created "2012-10-14" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
