@@ -84,6 +84,7 @@ typedef struct {
 	uint32_t frame_offset;
 
 	// Playback state
+	float      gain;
 	sf_count_t frame;
 	bool       play;
 } Sampler;
@@ -309,6 +310,9 @@ cleanup(LV2_Handle instance)
 	free(self);
 }
 
+/** Define a macro for converting a gain in dB to a coefficient. */
+#define DB_CO(g) ((g) > -90.0f ? powf(10.0f, (g) * 0.05f) : 0.0f)
+
 static void
 run(LV2_Handle instance,
     uint32_t   sample_count)
@@ -345,11 +349,36 @@ run(LV2_Handle instance,
 		} else if (lv2_atom_forge_is_object_type(&self->forge, ev->body.type)) {
 			const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
 			if (obj->body.otype == uris->patch_Set) {
-				// Received a set message, send it to the worker.
-				lv2_log_trace(&self->logger, "Queueing set message\n");
-				self->schedule->schedule_work(self->schedule->handle,
-				                              lv2_atom_total_size(&ev->body),
-				                              &ev->body);
+				// Get the property and value of the set message
+				const LV2_Atom* property = NULL;
+				const LV2_Atom* value    = NULL;
+				lv2_atom_object_get(obj,
+				                    uris->patch_property, &property,
+				                    uris->patch_value,    &value,
+				                    0);
+				if (!property) {
+					lv2_log_error(&self->logger,
+					              "patch:Set message with no property\n");
+					continue;
+				} else if (property->type != uris->atom_URID) {
+					lv2_log_error(&self->logger,
+					              "patch:Set property is not a URID\n");
+					continue;
+				}
+
+				const uint32_t key = ((const LV2_Atom_URID*)property)->body;
+				if (key == uris->eg_sample) {
+					// Sample change, send it to the worker.
+					lv2_log_trace(&self->logger, "Queueing set message\n");
+					self->schedule->schedule_work(self->schedule->handle,
+					                              lv2_atom_total_size(&ev->body),
+					                              &ev->body);
+				} else if (key == uris->param_gain) {
+					// Gain change
+					if (value->type == uris->atom_Float) {
+						self->gain = DB_CO(((LV2_Atom_Float*)value)->body);
+					}
+				}
 			} else if (obj->body.otype == uris->patch_Get) {
 				// Received a get message, emit our state (probably to UI)
 				lv2_log_trace(&self->logger, "Responding to get request\n");
@@ -377,7 +406,7 @@ run(LV2_Handle instance,
 		}
 
 		for (; pos < sample_count && f < lf; ++pos, ++f) {
-			output[pos] = self->sample->data[f];
+			output[pos] = self->sample->data[f] * self->gain;
 		}
 
 		self->frame = f;

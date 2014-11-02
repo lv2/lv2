@@ -49,11 +49,13 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:paniq ;
 	doap:release [
 		doap:revision "1.11.0" ;
-		doap:created "2014-10-31" ;
+		doap:created "2014-11-01" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "eg-sampler: Support patch:Get, and request initial state from UI."
+			] , [
+				rdfs:label "eg-sampler: Add gain parameter."
 			] , [
 				rdfs:label "Fix merging of version histories in specification documentation."
 			]
