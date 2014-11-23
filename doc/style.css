@@ -116,14 +116,6 @@ h6 {
 	font-size: 100%;
 	font-weight: 700;
 }
-#header {
-	background-color: #F0F0F0;
-	border: 0;
-	border-bottom: 1px solid #D8D8D8;
-	margin: 0;
-	padding: 1ex;
-	vertical-align: top;
-}
 #titlebox, #meta {
 	display: inline-block;
 }
@@ -164,8 +156,7 @@ h6 {
 }
 #shortdesc {
 	font-size: small;
-	font-style: italic;
-	margin-top: 1em;
+	margin-top: 0.25em;
 }
 #logo {
 	height: 63px;
@@ -420,8 +411,13 @@ blockquote {
 	margin: 2em 0 0;
 	padding: 0 1em 1em 1em;
 	vertical-align: top;
-	background-color: #F3F3F3;
-	border-top: 1px solid #DDD;
+	background-color: #222;
+	color: #FFF;
+	background: linear-gradient(to bottom, #444 0%, #000 100%);
+	border-top: solid 2px #444;
+	border-left: solid 2px #444;
+	border-right: solid 2px #444;
+	border-radius: 6px 6px 0 0;
 }
 #footer div {
 	padding-top: 1em;
@@ -457,9 +453,8 @@ a:active {
 	color: #C00;
 }
 .sec {
-	border-bottom: 1px dashed #CCC;
 	color: #000;
-	margin: 1em 1em 0.5em 1em;
+	margin: 0.5em 1em 0.5em 1em;
 	padding: 1ex 0 0.5ex 0;
 }
 ul, ol {
@@ -468,12 +463,26 @@ ul, ol {
 	margin: 0 0 0.5ex 0;
 }
 #contents {
-	background-color: #F3F3F3;
-	border: 0;
-	border-bottom: 1px solid #D8D8D8;
-	padding: 0.25ex 0 0.25ex 1ex;
+	margin-top: 0.25em;
+	padding: 0.25ex 0 0 0;
 	vertical-align: middle;
 	font-size: small;
+}
+#topbar {
+    background-color: #222;
+    background: linear-gradient(to bottom, #444 0%, #000 100%);
+    border-bottom: solid 2px #444;
+    border-left: solid 2px #444;
+    border-right: solid 2px #444;
+    border-radius: 0 0 6px 6px;
+    color: #EEE;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.25em 0.5em 0em 0.5em;
+}
+#topbar a, #topbar a:visited {
+	color: #70957E;
 }
 #contents li {
 	display: inline;
@@ -523,16 +532,21 @@ ul, ol {
 .specterm {
 	background-color: #FBFBFB;
 	border: 0;
-	border: 1px solid #CCC;
+	border: 1px solid #444;
 	margin: 0;
 	padding: 0;
 	margin-bottom: 1em;
+	border-radius: 6px 6px 6px 6px;
 }
 .specterm h3 {
-	padding: 0.5ex;
+	padding: 0.25ex;
 	margin: 0;
-	border-bottom: 1px solid #DDD;
 	background-color: #F3F3F3;
+	color: #FFF;
+	background-color: #222;
+	background: linear-gradient(to bottom, #444 0%, #000 100%);
+	border: solid 2px #444;
+	border-radius: 6px 6px 0 0;
 }
 .spectermbody {
 	padding: 0 1em 1ex 1em;
