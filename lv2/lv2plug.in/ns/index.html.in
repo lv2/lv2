@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN"
-          "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>LV2 Specifications</title>
@@ -12,33 +11,34 @@
   <body>
 
     <!-- HEADER -->
-    <div id="header">
-      <div id="titlebox">
-        <h1 id="title">LV2 Specifications</h1>
-        <div id="subtitle">Extension Index and Version History</div>
+    <div id="topbar">
+      <div id="header">
+        <div id="titlebox">
+          <h1 id="title">LV2 Specifications</h1>
+        </div>
+        <table id="meta">
+          <!--<tr><th>URI</th><td><a href="@URI@">@URI@</a></td></tr>
+              <tr><th>Version</th><td>@REVISION@</td></tr>-->
+          <!--<tr><th>Prefixes</th><td>@PREFIXES@</td></tr>-->
+          <tr><th>Version</th><td>@LV2_VERSION@</td></tr>
+          <tr><th>Date</th><td>@DATE@</td></tr>
+          <tr><th>Discuss</th>
+            <td>
+              <a href="mailto:devel@lists.lv2plug.in">devel@lists.lv2plug.in</a>
+              <a href="http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in">(subscribe)</a>
+            </td>
+          </tr>
+        </table>
       </div>
-      <table id="meta">
-        <!--<tr><th>URI</th><td><a href="@URI@">@URI@</a></td></tr>
-            <tr><th>Version</th><td>@REVISION@</td></tr>-->
-        <!--<tr><th>Prefixes</th><td>@PREFIXES@</td></tr>-->
-        <tr><th>Version</th><td>@LV2_VERSION@</td></tr>
-        <tr><th>Date</th><td>@DATE@</td></tr>
-        <tr><th>Discuss</th>
-          <td>
-            <a href="mailto:devel@lists.lv2plug.in">devel@lists.lv2plug.in</a>
-            <a href="http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in">(subscribe)</a>
-          </td>
-        </tr>
-      </table>
+      <ul id="contents">
+        <!-- <li><a href="#sec-description">Description</a></li> -->
+        <li><a href="#sec-index">Index</a></li>
+        <li><a href="#sec-history">History</a></li>
+      </ul>
     </div>
-    <ul id="contents">
-      <li><a href="#sec-description">Description</a></li>
-      <li><a href="#sec-index">Index</a></li>
-      <li><a href="#sec-history">History</a></li>
-    </ul>
 
     <!-- DESCRIPTION -->
-    <h2 class="sec" id="sec-description">Description</h2>
+    <!-- <h2 class="sec" id="sec-description">Description</h2> -->
     <div class="content">
       <p>This is an index of all official LV2 specifications.  These pages are
         high-level descriptions of each specification, and vocabulary
