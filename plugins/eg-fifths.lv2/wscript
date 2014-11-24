@@ -59,6 +59,6 @@ def build(bld):
               name         = 'fifths',
               target       = '%s/fifths' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              use          = 'SNDFILE LV2',
+              use          = 'LV2',
               includes     = includes)
     obj.env.cshlib_PATTERN = module_pat
