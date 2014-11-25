@@ -15,13 +15,14 @@
 */
 
 /**
-   @file logger.h Convenience API for easy logging in plugin code.
+   @defgroup logger Logger
+   @ingroup log
 
-   This file provides simple wrappers for the most common log operations for
-   use in plugin implementations.  If host support for logging is not
-   available, then these functions will print to stderr instead.
+   Convenience API for easy logging in plugin code.  This API provides simple
+   wrappers for logging from a plugin, which automatically fall back to
+   printing to stderr if host support is unavailabe.
 
-   This header is non-normative, it is provided for convenience.
+   @{
 */
 
 #ifndef LV2_ATOM_LOGGER_H
@@ -135,12 +136,12 @@ lv2_log_warning(LV2_Log_Logger* logger, const char* fmt, ...)
 	return ret;
 }
 
-/**
-   @}
-*/
-
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
 
 #endif  /* LV2_LOG_LOGGER_H */
+
+/**
+   @}
+*/

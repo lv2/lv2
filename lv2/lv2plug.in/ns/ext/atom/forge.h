@@ -39,6 +39,12 @@
    This header is non-normative, it is provided for convenience.
 */
 
+/**
+   @defgroup forge Forge
+   @ingroup atom
+   @{
+*/
+
 #ifndef LV2_ATOM_FORGE_H
 #define LV2_ATOM_FORGE_H
 
@@ -686,6 +692,7 @@ lv2_atom_forge_beat_time(LV2_Atom_Forge* forge, double beats)
 }
 
 /**
+   @}
    @}
 */
 

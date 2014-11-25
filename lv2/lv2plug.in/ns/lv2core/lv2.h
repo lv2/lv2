@@ -19,9 +19,11 @@
 */
 
 /**
-   @file lv2.h
-   API for the LV2 specification <http://lv2plug.in/ns/lv2core>.
-   Revision: 12.2
+   @defgroup lv2core LV2 Core
+
+   Core LV2 specification, see <http://lv2plug.in/ns/lv2core> for details.
+
+   @{
 */
 
 #ifndef LV2_H_INCLUDED
@@ -456,3 +458,7 @@ typedef const LV2_Lib_Descriptor *
 #endif
 
 #endif /* LV2_H_INCLUDED */
+
+/**
+   @}
+*/

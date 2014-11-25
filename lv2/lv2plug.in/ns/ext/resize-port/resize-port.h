@@ -14,6 +14,14 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+/**
+   @defgroup resize-port Resize Port
+
+   Dynamically sized LV2 port buffers.
+
+   @{
+*/
+
 #ifndef LV2_RESIZE_PORT_H
 #define LV2_RESIZE_PORT_H
 
@@ -42,6 +50,7 @@ typedef enum {
 
 typedef void* LV2_Resize_Port_Feature_Data;
 
+/** Host feature to allow plugins to resize their port buffers. */
 typedef struct {
 	LV2_Resize_Port_Feature_Data data;
 
@@ -70,3 +79,6 @@ typedef struct {
 
 #endif  /* LV2_RESIZE_PORT_H */
 
+/**
+   @}
+*/

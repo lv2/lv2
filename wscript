@@ -157,8 +157,13 @@ def specgen(task):
                 ext_node, minor, micro, date))
             break
 
-    # Get short description
+    # Get name and short description
+    name      = model.value(ext_node, doap.name, None)
     shortdesc = model.value(ext_node, doap.shortdesc, None)
+
+    # Chop 'LV2' prefix from name for cleaner index
+    if name.startswith('LV2 '):
+        name = name[4:]
 
     SPECGENDIR = 'lv2specgen'
     STYLEPATH  = 'build/aux/style.css'
@@ -176,12 +181,16 @@ def specgen(task):
 
     lv2specgen.save(task.outputs[0].abspath(), specdoc)
 
-    # Name (comment is to act as a sort key)
+    # Specification (comment is to act as a sort key)
     target = path[len('lv2/lv2plug.in/ns/'):]
     if not task.env.ONLINE_DOCS:
         target += '/%s.html' % b
     row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
-        b, target, b)
+        b, target, name)
+
+    # API
+    row += '<td><a rel="rdfs:seeAlso" href="../doc/html/group__%s.html">%s</a></td>' % (
+        b, b)
 
     # Description
     if shortdesc:
@@ -398,6 +407,14 @@ def build(bld):
     bld.install_files('${BINDIR}', 'lv2specgen/lv2specgen.py', chmod=Utils.O755)
 
     if bld.env.DOCS or bld.env.ONLINE_DOCS:
+        # Copy Doxygen layout file to build directory
+        bld(features     = 'subst',
+            is_copy      = True,
+            install_path = None,
+            name         = 'copy',
+            source       = 'doc/DoxygenLayout.xml',
+            target       = 'DoxygenLayout.xml')
+
         # Build Doxygen documentation (and tags file)
         autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc', False)
 
@@ -408,6 +425,12 @@ def build(bld):
                 name     = 'copy',
                 source   = 'doc/%s' % i,
                 target   = 'aux/%s' % i)
+
+        bld(features = 'subst',
+            is_copy  = True,
+            name     = 'copy',
+            source   = 'doc/doxy-style.css',
+            target   = 'doc/html/doxy-style.css')
 
         index_files = []
 

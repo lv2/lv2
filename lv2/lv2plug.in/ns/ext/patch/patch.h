@@ -15,11 +15,15 @@
 */
 
 /**
-   @file patch.h C header for the LV2 Patch extension
-   <http://lv2plug.in/ns/ext/patch>.
+   @defgroup patch Patch
 
-   The patch extension is purely data, this header merely defines URIs
-   for convenience.
+   Messages for accessing and manipulating properties, see
+   <http://lv2plug.in/ns/ext/patch> for details.
+
+   Note the patch extension is purely data, this header merely defines URIs for
+   convenience.
+
+   @{
 */
 
 #ifndef LV2_PATCH_H
@@ -54,3 +58,7 @@
 #define LV2_PATCH__writable       LV2_PATCH_PREFIX "writable"
 
 #endif  /* LV2_PATCH_H */
+
+/**
+   @}
+*/

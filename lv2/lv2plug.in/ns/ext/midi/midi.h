@@ -15,8 +15,10 @@
 */
 
 /**
-   @file midi.h
-   C definitions for the LV2 MIDI extension <http://lv2plug.in/ns/ext/midi>.
+   @defgroup midi MIDI
+
+   Definitions of standard MIDI messages, see <http://lv2plug.in/ns/ext/midi>
+   for details.
 */
 
 #ifndef LV2_MIDI_H
@@ -224,3 +226,7 @@ lv2_midi_message_type(const uint8_t* msg) {
 #endif
 
 #endif  /* LV2_MIDI_H */
+
+/**
+   @}
+*/

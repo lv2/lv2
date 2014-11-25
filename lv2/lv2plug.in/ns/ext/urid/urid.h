@@ -16,8 +16,12 @@
 */
 
 /**
-   @file urid.h
-   C header for the LV2 URID extension <http://lv2plug.in/ns/ext/urid>
+   @defgroup urid URID
+
+   Features for mapping URIs to and from integers, see
+   <http://lv2plug.in/ns/ext/urid> for details.
+
+   @{
 */
 
 #ifndef LV2_URID_H
@@ -127,3 +131,7 @@ typedef struct _LV2_URID_Unmap {
 #endif
 
 #endif /* LV2_URID_H */
+
+/**
+   @}
+*/

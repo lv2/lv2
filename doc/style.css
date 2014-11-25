@@ -130,14 +130,15 @@ h6 {
 	position: absolute;
 	right: 0;
 	top: 0;
-	padding: 1ex;
-	margin: 0.5ex 0.25ex 0 0.5ex;
+	padding: 0.5em;
 	font-size: x-small;
 	border-style: hidden;
 }
 #meta tr, #meta th, #meta td {
 	border: 0;
 	font-weight: normal;
+    padding: 0.125em 0.25em 0.125em 0.25em;
+    background-color: transparent;
 }
 #meta th {
 	text-align: right;
@@ -148,8 +149,8 @@ h6 {
 #title {
 	font-size: 200%;
 	font-weight: 700;
-	margin: 0 0 0.25ex 0;
-	padding: 0 0 0 0;
+	margin: 0;
+	padding: 0;
 }
 #subtitle {
 	font-size: small;
@@ -472,8 +473,6 @@ ul, ol {
     background-color: #222;
     background: linear-gradient(to bottom, #444 0%, #000 100%);
     border-bottom: solid 2px #444;
-    border-left: solid 2px #444;
-    border-right: solid 2px #444;
     border-radius: 0 0 6px 6px;
     color: #EEE;
     margin: 0;
@@ -499,6 +498,42 @@ ul, ol {
 }
 .index {
 	margin-left: 1em;
+	border-collapse: initial;
+	border-spacing: 0;
+	border-radius: 6px;
+}
+.index th {
+	color: #FFF;
+	background-color: #222;
+	background: linear-gradient(to bottom, #444 0%, #000 100%);
+	border: 0;
+	border-right: solid 1px #333;
+	border-bottom: solid 1px #333;
+}
+.index td {
+	vertical-align: top;
+	border: 0;
+	border-right: solid 1px #DDD;
+	border-bottom: solid 1px #DDD;
+}
+.index td:first-child {
+	border-left: solid 1px #DDD;
+}
+.index ul {
+	padding-left: 1em;
+	border-collapse: initial;
+}
+.index thead tr th:first-child {
+	border-radius: 6px 0 0 0;
+}
+.index thead tr th:last-child {
+	border-radius: 0 6px 0 0;
+}
+.index tbody tr:last-child td:first-child {
+	border-radius:0 0 0 6px;
+}
+.index tbody tr:last-child td:last-child {
+	border-radius:0 0 6px 0;
 }
 .prop {
 	margin: 0;
@@ -527,12 +562,19 @@ ul, ol {
 	vertical-align: text-top;
 }
 .terminfo th {
-	padding: 0 1ex 0 0;
+	padding: 0.25em 0.75em 0.125em 0;
+	border: 0;
+	border-bottom: 1px solid #ddd;
+}
+.terminfo td {
+	padding: 0;
+	border: 0;
+	border-bottom: 1px solid #ddd;
 }
 .specterm {
 	background-color: #FBFBFB;
 	border: 0;
-	border: 1px solid #444;
+	border: 1px solid #333;
 	margin: 0;
 	padding: 0;
 	margin-bottom: 1em;
@@ -545,7 +587,7 @@ ul, ol {
 	color: #FFF;
 	background-color: #222;
 	background: linear-gradient(to bottom, #444 0%, #000 100%);
-	border: solid 2px #444;
+	border: solid 1px #333;
 	border-radius: 6px 6px 0 0;
 }
 .spectermbody {
@@ -581,15 +623,20 @@ div.head table {
 table {
 	border-collapse: collapse;
 	border-style: hidden;
+	border-spacing: 0;
 	margin: 0;
 	border: 0;
 }
 th {
-	vertical-align: text-top;
+	background-color: #F8F8F8;
 }
 td, th {
-	border: 1px dashed #ccc;
-	padding: 0.3ex 0.5em 0.3ex 0.5em;
+	border: 1px solid #ddd;
+	padding: 0.25em 0.5em 0.25em 0.5em;
+}
+th {
+	font-weight: bold;
+	text-align: left;
 }
 pre {
 	margin: 1em 1em 1em 4em;

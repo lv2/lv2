@@ -15,8 +15,12 @@
 */
 
 /**
-   @file log.h C header for the LV2 Log extension
-   <http://lv2plug.in/ns/ext/log>.
+   @defgroup log Log
+
+   Interface for plugins to log via the host; see
+   <http://lv2plug.in/ns/ext/log> for details.
+
+   @{
 */
 
 #ifndef LV2_LOG_H
@@ -97,3 +101,7 @@ typedef struct _LV2_Log {
 #endif
 
 #endif  /* LV2_LOG_H */
+
+/**
+   @}
+*/

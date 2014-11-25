@@ -22,6 +22,12 @@
    This header is non-normative, it is provided for convenience.
 */
 
+/**
+   @defgroup util Utilities
+   @ingroup atom
+   @{
+*/
+
 #ifndef LV2_ATOM_UTIL_H
 #define LV2_ATOM_UTIL_H
 
@@ -436,6 +442,7 @@ lv2_atom_object_get(const LV2_Atom_Object* object, ...)
 }
 
 /**
+   @}
    @}
 */
 

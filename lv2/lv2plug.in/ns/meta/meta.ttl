@@ -58,6 +58,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 				rdfs:label "eg-sampler: Add gain parameter."
 			] , [
 				rdfs:label "Fix merging of version histories in specification documentation."
+			] , [
+				rdfs:label "Improve API documentation."
 			]
 		]
 	] , [

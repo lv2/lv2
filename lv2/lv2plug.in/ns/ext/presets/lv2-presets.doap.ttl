@@ -8,7 +8,7 @@
 	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Presets" ;
-	doap:shortdesc "Presets for LV2 plugins. " ;
+	doap:shortdesc "Presets for LV2 plugins." ;
 	doap:created "2009-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [

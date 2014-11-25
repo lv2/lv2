@@ -304,6 +304,22 @@ def getComment(m, urinode, classlist, proplist, instalist):
                 return text
         markup = rgx.sub(translateLink, markup)
 
+        # Transform names like #foo into links into this spec if possible
+        rgx = re.compile('([ \t\n\r\f\v^]+)\#([a-zA-Z0-9_-]+)')
+        def translateLocalLink(match):
+            text  = match.group(0)
+            space = match.group(1)
+            name  = match.group(2)
+            uri   = rdflib.URIRef(spec_ns + name)
+            if ((classlist and uri in classlist) or
+                (instalist and uri in instalist) or
+                (proplist and uri in proplist)):
+                return '%s<a href="#%s">%s</a>' % (space, name, name)
+            else:
+                print("warning: Link to undefined resource <%s>\n" % name)
+                return text
+        markup = rgx.sub(translateLocalLink, markup)
+
         if have_lxml:
             try:
                 # Parse and validate documentation as XHTML Basic 1.1
@@ -327,6 +343,10 @@ def getComment(m, urinode, classlist, proplist, instalist):
                 os.chdir(oldcwd)
             except Exception as e:
                 print("Invalid lv2:documentation for %s\n%s" % (urinode, e))
+                line_num = 1
+                for line in doc.split('\n'):
+                    print('%3d: %s' % (line_num, line))
+                    line_num += 1
 
         return markup
 
@@ -722,17 +742,12 @@ def getAnchor(uri):
         return getShortName(uri)
 
 
-def buildIndex(m, classlist, proplist, instalist=None):
-    """
-    Builds the A-Z list of terms. Args are a list of classes (strings) and
-    a list of props (strings)
-    """
-
-    if len(classlist) == 0 and len(proplist) == 0 and (
-        not instalist or len(instalist) == 0):
+def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
+    if not (classlist or proplist or instalist or filelist):
         return ''
 
-    azlist = '<dl class="index">'
+    head  = '<tr>'
+    body  = '<tr>'
 
     def termLink(m, t):
         if str(t).startswith(spec_ns_str):
@@ -742,7 +757,8 @@ def buildIndex(m, classlist, proplist, instalist=None):
             return '<a href="%s">%s</a>' % (str(t), str(t))
 
     if (len(classlist) > 0):
-        azlist += "<dt>Classes</dt><dd><ul>"
+        head += '<th>Classes</th>'
+        body += '<td><ul>'
         classlist.sort()
         shown = {}
         for c in classlist:
@@ -759,7 +775,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 continue
 
             shown[c] = True
-            azlist += '<li>' + termLink(m, c)
+            body += '<li>' + termLink(m, c)
             def class_tree(c):
                 tree = ''
                 shown[c] = True
@@ -776,29 +792,41 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 if tree != '':
                     tree = '<ul>' + tree + '</ul>'
                 return tree
-            azlist += class_tree(c)
-            azlist += '</li>'
-        azlist += '</ul></dd>\n'
+            body += class_tree(c)
+            body += '</li>'
+        body += '</ul></td>\n'
 
     if (len(proplist) > 0):
-        azlist += "<dt>Properties</dt><dd>"
+        head += '<th>Properties</th>'
+        body += '<td><ul>'
         proplist.sort()
-        props = []
         for p in proplist:
-            props += [termLink(m, p)]
-        azlist += ', '.join(props) + '</dd>\n'
+            body += '<li>%s</li>' % termLink(m, p)
+        body += '</ul></td>\n'
 
     if (instalist != None and len(instalist) > 0):
-        azlist += "<dt>Instances</dt><dd>"
-        instas = []
+        head += '<th>Instances</th>'
+        body += '<td><ul>'
+        instalist.sort()
         for i in instalist:
             p = getShortName(i)
             anchor = getAnchor(i)
-            instas += ['<a href="#%s">%s</a>' % (anchor, p)]
-        azlist += ', '.join(instas) + '</dd>\n'
+            body += '<li><a href="#%s">%s</a></li>' % (anchor, p)
+        body += '</ul></td>\n'
 
-    azlist += '\n</dl>'
-    return azlist
+    if (filelist != None and len(filelist) > 0):
+        head += '<th>Files</th>'
+        body += '<td><ul>'
+        filelist.sort()
+        for i in filelist:
+            p = getShortName(i)
+            anchor = getAnchor(i)
+            body += '<li><a href="%s">%s</a></li>' % (i, os.path.basename(i))
+        body += '</ul></td>\n'
+
+    head += '</tr>'
+    body += '</tr>'
+    return '<table class="index"><thead>%s</thead>\n<tbody>%s</tbody></table>' % (head, body)
 
 
 def add(where, key, value):
@@ -1049,8 +1077,11 @@ def load_tags(path, docdir):
                 return e.firstChild.nodeValue
         return ''
 
-    def linkTo(sym, url):
-        return '<span><a href="%s/%s">%s</a></span>' % (docdir, url, sym)
+    def linkTo(filename, anchor, sym):
+        if anchor:
+            return '<span><a href="%s/%s#%s">%s</a></span>' % (docdir, filename, anchor, sym)
+        else:
+            return '<span><a href="%s/%s">%s</a></span>' % (docdir, filename, sym)
 
     tagdoc  = xml.dom.minidom.parse(path)
     root    = tagdoc.documentElement
@@ -1062,13 +1093,15 @@ def load_tags(path, docdir):
 
             name     = getChildText(cn, 'name')
             filename = getChildText(cn, 'filename')
+            anchor   = getChildText(cn, 'anchor')
             if not filename.endswith('.html'):
                 filename += '.html'
 
-            linkmap[name] = linkTo(name, filename)
+            if cn.getAttribute('kind') != 'group':
+                linkmap[name] = linkTo(filename, anchor, name)
 
             prefix = ''
-            if cn.getAttribute('kind') != 'file':
+            if cn.getAttribute('kind') == 'struct':
                 prefix = name + '::'
 
             members = cn.getElementsByTagName('member')
@@ -1076,8 +1109,7 @@ def load_tags(path, docdir):
                 mname   = prefix + getChildText(m, 'name')
                 mafile  = getChildText(m, 'anchorfile')
                 manchor = getChildText(m, 'anchor')
-                linkmap[mname] = linkTo(
-                    mname, '%s#%s' % (mafile, manchor))
+                linkmap[mname] = linkTo(mafile, manchor, mname)
 
     return linkmap
 
@@ -1167,7 +1199,21 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
         instalist = getInstances(m, classlist, proplist)
         instalist.sort(lambda x, y: cmp(getShortName(x).lower(), getShortName(y).lower()))
 
-    azlist = buildIndex(m, classlist, proplist, instalist)
+    filelist = []
+    see_also_files = specProperties(m, spec, rdfs.seeAlso)
+    see_also_files.sort()
+    for f in see_also_files:
+        uri = str(f)
+        if uri[:7] == 'file://':
+            uri = uri[7:]
+            if uri[:len(abs_bundle_path)] == abs_bundle_path:
+                uri = uri[len(abs_bundle_path) + 1:]
+            else:
+                continue  # Skip seeAlso file outside bundle
+
+        filelist += [uri]
+
+    azlist = buildIndex(m, classlist, proplist, instalist, filelist)
 
     # Generate Term HTML
     termlist = docTerms('Property', proplist, m, classlist, proplist, instalist)
@@ -1221,28 +1267,8 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
 
     template = template.replace('@VERSION@', version_string)
 
-    file_list = ''
-    see_also_files = specProperties(m, spec, rdfs.seeAlso)
-    see_also_files.sort()
-    for f in see_also_files:
-        uri = str(f)
-        if uri[:7] == 'file://':
-            uri = uri[7:]
-            if uri[:len(abs_bundle_path)] == abs_bundle_path:
-                uri = uri[len(abs_bundle_path) + 1:]
-            else:
-                continue  # Skip seeAlso file outside bundle
-
-        entry = '<a href="%s">%s</a>' % (uri, uri)
-        if uri.endswith('.h') or uri.endswith('.hpp'):
-            name = os.path.basename(uri)
-            entry += ' <a href="%s">(docs)</a> ' % (
-                docdir + '/' + name.replace('.', '_8') + '.html')
-            file_list += '<li>%s</li>' % entry
-        elif not uri.endswith('.doap.ttl'):
-            file_list += '<li>%s</li>' % entry
-
-    template = template.replace('@FILES@', file_list)
+    content_links = '<li><a href="%s">API</a></li>' % os.path.join(docdir, 'group__%s.html' % basename)
+    template = template.replace('@CONTENT_LINKS@', content_links)
 
     comment = getComment(m, rdflib.URIRef(spec_url), classlist, proplist, instalist)
     if comment != '':

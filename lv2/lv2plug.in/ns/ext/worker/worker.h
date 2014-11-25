@@ -15,8 +15,12 @@
 */
 
 /**
-   @file worker.h C header for the LV2 Worker extension
-   <http://lv2plug.in/ns/ext/worker>.
+   @defgroup worker Worker
+
+   Support for non-realtime plugin operations, see
+   <http://lv2plug.in/ns/ext/worker> for details.
+
+   @{
 */
 
 #ifndef LV2_WORKER_H
@@ -37,7 +41,7 @@ extern "C" {
 #endif
 
 /**
-   A status code for worker functions.
+   Status code for worker functions.
 */
 typedef enum {
 	LV2_WORKER_SUCCESS       = 0,  /**< Completed successfully. */
@@ -45,6 +49,7 @@ typedef enum {
 	LV2_WORKER_ERR_NO_SPACE  = 2   /**< Failed due to lack of space. */
 } LV2_Worker_Status;
 
+/** Opaque handle for LV2_Worker_Interface::work(). */
 typedef void* LV2_Worker_Respond_Handle;
 
 /**
@@ -60,7 +65,7 @@ typedef LV2_Worker_Status (*LV2_Worker_Respond_Function)(
 	const void*               data);
 
 /**
-   LV2 Plugin Worker Interface.
+   Plugin Worker Interface.
 
    This is the interface provided by the plugin to implement a worker method.
    The plugin's extension_data() method should return an LV2_Worker_Interface
@@ -112,8 +117,15 @@ typedef struct _LV2_Worker_Interface {
 	LV2_Worker_Status (*end_run)(LV2_Handle instance);
 } LV2_Worker_Interface;
 
+/** Opaque handle for LV2_Worker_Schedule. */
 typedef void* LV2_Worker_Schedule_Handle;
 
+/**
+   Schedule Worker Host Feature.
+
+   The host passes this feature to provide a schedule_work() function, which
+   the plugin can use to schedule a worker call from run().
+*/
 typedef struct _LV2_Worker_Schedule {
 	/**
 	   Opaque host data.
@@ -156,3 +168,7 @@ typedef struct _LV2_Worker_Schedule {
 #endif
 
 #endif  /* LV2_WORKER_H */
+
+/**
+   @}
+*/

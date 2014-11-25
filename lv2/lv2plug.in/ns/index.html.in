@@ -40,24 +40,26 @@
     <!-- DESCRIPTION -->
     <!-- <h2 class="sec" id="sec-description">Description</h2> -->
     <div class="content">
-      <p>This is an index of all official LV2 specifications.  These pages are
-        high-level descriptions of each specification, and vocabulary
-        references with API links where appropriate.  A
-        global <a href="../doc/html/index.html">API reference</a> is also
-        available.</p>
+      <p>All official LV2 specifications.</p>
     </div>
 
     <!-- INDEX -->
-    <h2 class="sec" id="sec-index">Index</h2>
+    <!-- <h2 class="sec" id="sec-index">Index</h2> -->
     <div class="content">
-      <table summary="An index of LV2 specifications">
-        <tr>
-          <th>Name</th>
-          <th>Description</th>
-          <th>Version</th>
-          <th>Status</th>
-        </tr>
+      <a id="sec-index" />
+      <table class="index" summary="An index of LV2 specifications">
+        <thead>
+          <tr>
+            <th>Specification</th>
+            <th>API</th>
+            <th>Description</th>
+            <th>Version</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
 @ROWS@
+        </tbody>
       </table>
     </div>
 

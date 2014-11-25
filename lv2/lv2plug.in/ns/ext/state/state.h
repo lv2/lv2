@@ -16,8 +16,12 @@
 */
 
 /**
-   @file state.h
-   C API for the LV2 State extension <http://lv2plug.in/ns/ext/state>.
+   @defgroup state State
+
+   An interface for LV2 plugins to save and restore state, see
+   <http://lv2plug.in/ns/ext/state> for details.
+
+   @{
 */
 
 #ifndef LV2_STATE_H
@@ -350,3 +354,7 @@ typedef struct {
 #endif
 
 #endif /* LV2_STATE_H */
+
+/**
+   @}
+*/

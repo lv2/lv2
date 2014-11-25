@@ -16,18 +16,12 @@
 */
 
 /**
-   @file event.h
-   C API for the LV2 Event extension <http://lv2plug.in/ns/ext/event>.
+   @defgroup event Event
 
-   This extension is a generic transport mechanism for time stamped events
-   of any type (e.g. MIDI, OSC, ramps, etc). Each port can transport mixed
-   events of any type; the type of events and timestamps are defined by a URI
-   which is mapped to an integer by the host for performance reasons.
+   Generic time-stamped events, see <http://lv2plug.in/ns/ext/event> for
+   details.
 
-   This extension requires the host to support the LV2 URI Map extension.
-   Any host which supports this extension MUST guarantee that any call to
-   the LV2 URI Map uri_to_id function with the URI of this extension as the
-   'map' argument returns a value within the range of uint16_t.
+   @{
 */
 
 #ifndef LV2_EVENT_H
@@ -292,3 +286,7 @@ typedef struct {
 #endif
 
 #endif /* LV2_EVENT_H */
+
+/**
+   @}
+*/

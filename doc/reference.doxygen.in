@@ -98,7 +98,7 @@ OUTPUT_LANGUAGE        = English
 # documentation (similar to Javadoc). Set to NO to disable this.
 # The default value is: YES.
 
-BRIEF_MEMBER_DESC      = YES
+BRIEF_MEMBER_DESC      = NO
 
 # If the REPEAT_BRIEF tag is set to YES doxygen will prepend the brief
 # description of a member or function before the detailed description
@@ -361,7 +361,7 @@ SUBGROUPING            = YES
 # SEPARATE_MEMBER_PAGES.
 # The default value is: NO.
 
-INLINE_GROUPED_CLASSES = NO
+INLINE_GROUPED_CLASSES = YES
 
 # When the INLINE_SIMPLE_STRUCTS tag is set to YES, structs, classes, and unions
 # with only public data fields or simple typedef fields will be shown inline in
@@ -672,7 +672,7 @@ FILE_VERSION_FILTER    =
 # DoxygenLayout.xml, doxygen will parse it automatically even if the LAYOUT_FILE
 # tag is left empty.
 
-LAYOUT_FILE            =
+LAYOUT_FILE            = DoxygenLayout.xml
 
 # The CITE_BIB_FILES tag can be used to specify one or more bib files containing
 # the reference definitions. This must be a list of .bib files. The .bib
@@ -765,11 +765,15 @@ INPUT                  = @LV2_SRCDIR@/doc/mainpage.dox \
                          lv2/lv2plug.in/ns/ext/event/event.h \
                          lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
                          lv2/lv2plug.in/ns/ext/log/log.h \
+                         lv2/lv2plug.in/ns/ext/log/logger.h \
                          lv2/lv2plug.in/ns/ext/midi/midi.h \
                          lv2/lv2plug.in/ns/ext/morph/morph.h \
                          lv2/lv2plug.in/ns/ext/options/options.h \
+                         lv2/lv2plug.in/ns/ext/parameters/parameters.h \
                          lv2/lv2plug.in/ns/ext/patch/patch.h \
                          lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
+                         lv2/lv2plug.in/ns/ext/port-props/port-props.h \
+                         lv2/lv2plug.in/ns/ext/presets/presets.h \
                          lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
                          lv2/lv2plug.in/ns/ext/state/state.h \
                          lv2/lv2plug.in/ns/ext/time/time.h \
@@ -777,6 +781,7 @@ INPUT                  = @LV2_SRCDIR@/doc/mainpage.dox \
                          lv2/lv2plug.in/ns/ext/urid/urid.h \
                          lv2/lv2plug.in/ns/ext/worker/worker.h \
                          lv2/lv2plug.in/ns/extensions/ui/ui.h \
+                         lv2/lv2plug.in/ns/extensions/units/units.h \
                          lv2/lv2plug.in/ns/lv2core/lv2.h
 
 # This tag can be used to specify the character encoding of the source files

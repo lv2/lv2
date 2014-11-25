@@ -17,9 +17,12 @@
 */
 
 /**
-   @file ui.h User Interface API.
+   @defgroup ui User Interfaces
 
-   For high-level documentation, see <http://lv2plug.in/ns/extensions/ui>.
+   User interfaces of any type for plugins,
+   <http://lv2plug.in/ns/extensions/ui> for details.
+
+   @{
 */
 
 #ifndef LV2_UI_H
@@ -431,3 +434,7 @@ typedef const LV2UI_Descriptor* (*LV2UI_DescriptorFunction)(uint32_t index);
 #endif
 
 #endif /* LV2_UI_H */
+
+/**
+   @}
+*/
