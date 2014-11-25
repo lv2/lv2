@@ -27,6 +27,7 @@ def configure(conf):
                       atleast_version='1.0.0', mandatory=True)
     autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
                       atleast_version='2.18.0', mandatory=False)
+    conf.check(features='c cshlib', lib='m', uselib_store='M', mandatory=False)
 
     autowaf.display_msg(conf, 'LV2 bundle directory', conf.env.LV2DIR)
     print('')
@@ -64,7 +65,7 @@ def build(bld):
               name         = 'sampler',
               target       = '%s/sampler' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              use          = 'SNDFILE LV2',
+              use          = ['M', 'SNDFILE', 'LV2'],
               includes     = includes)
     obj.env.cshlib_PATTERN = module_pat
 
@@ -75,6 +76,6 @@ def build(bld):
                   name         = 'sampler_ui',
                   target       = '%s/sampler_ui' % bundle,
                   install_path = '${LV2DIR}/%s' % bundle,
-                  use          = 'GTK2 LV2',
+                  use          = ['GTK2', 'LV2'],
                   includes     = includes)
     obj.env.cshlib_PATTERN = module_pat

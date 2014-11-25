@@ -23,7 +23,7 @@ def configure(conf):
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
         
-    conf.check(features='c cprogram', lib='m', uselib_store='M', mandatory=False) 
+    conf.check(features='c cshlib', lib='m', uselib_store='M', mandatory=False)
 
     autowaf.display_msg(conf, 'LV2 bundle directory', conf.env.LV2DIR)
     print('')
