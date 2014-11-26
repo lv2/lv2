@@ -1,38 +1,45 @@
 body {
-	font-size: medium;
 	font-family: sans-serif;
+	max-width: 60em;
+	margin: 0;
+	margin-left: auto;
+	margin-right: auto;
+	background: #FFF;
+	color: #000;
 }
 
 #titlearea {
 	display: none;
 }
 
-h1 h2 h3 h4 h5 h6 {
-	font-weight: bold;
-}
-
 h1 {
-	font-size: 164%;
+	font-size: 180%;
+	font-weight: 900;
 }
 
 h2 {
-	font-size: 132%;
+	font-size: 140%;
+	font-weight: 700;
 }
 
 h3 {
-	font-size: 124%;
+	font-size: 120%;
+	font-weight: 700;
 }
 
 h4 {
-	font-size: 116%;
+	font-size: 110%;
+	font-weight: 700;
 }
 
 h5 {
-	font-size: 108%;
+	font-size: 100%;
+	font-weight: 700;
 }
 
 h6 {
 	font-size: 100%;
+	font-weight: 600;
 }
 
 p {
@@ -94,7 +101,7 @@ div.navtab {
 
 /* @group Link Styling */
 a {
-	color: #3D8C57;
+	color: #70957E;
 	text-decoration: none;
 }
 
@@ -164,12 +171,6 @@ a + h2.groupheader {
 div.groupText {
 	margin-left: 16px;
 	font-style: italic;
-}
-
-body {
-	background: #FFF;
-	color: #000;
-	margin: 0;
 }
 
 div.contents {
@@ -612,6 +613,7 @@ span.lineno a:hover {
 	border-bottom: solid 2px #000;
 	padding: 0;
 	padding-top: 2px;
+	font-size: small;
 }
 
 #navrow1 {
@@ -627,19 +629,6 @@ th {
 }
 
 /* tabs*/
-
-.tabs, .tabs2, .tabs3 {
-	width: 100%;
-	z-index: 101;
-	font-size: large;
-}
-
-.tabs2 {
-	font-size: 10px;
-}
-.tabs3 {
-	font-size: 9px;
-}
 
 .tablist {
 	margin: 0;
