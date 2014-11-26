@@ -165,6 +165,13 @@ def specgen(task):
     if name.startswith('LV2 '):
         name = name[4:]
 
+    # Root link
+    ctx = task.generator.bld
+    root_path = path[0:path.find('ns/') + 3]
+    root_link = os.path.relpath(root_path, path)
+    if not task.generator.bld.env.ONLINE_DOCS:
+        root_link = os.path.join(root_link, 'index.html')
+
     SPECGENDIR = 'lv2specgen'
     STYLEPATH  = 'build/aux/style.css'
     TAGFILE    = 'build/doc/tags'
@@ -177,7 +184,8 @@ def specgen(task):
         TAGFILE,
         { 'list_email': 'devel@lists.lv2plug.in',
           'list_page': 'http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in' },
-        instances=True)
+        instances=True,
+        root_link=root_link)
 
     lv2specgen.save(task.outputs[0].abspath(), specdoc)
 

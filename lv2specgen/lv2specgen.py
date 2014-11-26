@@ -1113,7 +1113,7 @@ def load_tags(path, docdir):
 
     return linkmap
 
-def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
+def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root_link=None):
     """The meat and potatoes: Everything starts here."""
 
     global spec_url
@@ -1221,7 +1221,11 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False):
     if instances:
         termlist += docTerms('Instance', instalist, m, classlist, proplist, instalist)
 
-    template = template.replace('@NAME@', specProperty(m, spec, doap.name))
+    name = specProperty(m, spec, doap.name)
+    if root_link:
+        name = '<a href="%s">%s</a>' % (root_link, name)
+
+    template = template.replace('@NAME@', name)
     template = template.replace('@SHORT_DESC@', specProperty(m, spec, doap.shortdesc))
     template = template.replace('@URI@', spec)
     template = template.replace('@PREFIX@', spec_pre)
