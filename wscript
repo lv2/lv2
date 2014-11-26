@@ -167,7 +167,7 @@ def specgen(task):
 
     SPECGENDIR = 'lv2specgen'
     STYLEPATH  = 'build/aux/style.css'
-    TAGFILE    = 'build/tags'
+    TAGFILE    = 'build/doc/tags'
 
     specdoc = lv2specgen.specgen(
         spec.abspath(),
@@ -407,33 +407,6 @@ def build(bld):
     bld.install_files('${BINDIR}', 'lv2specgen/lv2specgen.py', chmod=Utils.O755)
 
     if bld.env.DOCS or bld.env.ONLINE_DOCS:
-        # Copy Doxygen layout file to build directory
-        bld(features     = 'subst',
-            is_copy      = True,
-            install_path = None,
-            name         = 'copy',
-            source       = 'doc/DoxygenLayout.xml',
-            target       = 'DoxygenLayout.xml')
-
-        # Build Doxygen documentation (and tags file)
-        autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc', False)
-
-        # Copy stylesheets to build directory
-        for i in ['style.css', 'pygments.css']:
-            bld(features = 'subst',
-                is_copy  = True,
-                name     = 'copy',
-                source   = 'doc/%s' % i,
-                target   = 'aux/%s' % i)
-
-        bld(features = 'subst',
-            is_copy  = True,
-            name     = 'copy',
-            source   = 'doc/doxy-style.css',
-            target   = 'doc/html/doxy-style.css')
-
-        index_files = []
-
         # Prepare spec output directories
         specs = exts + [bld.path.find_node('lv2/lv2plug.in/ns/lv2core')]
         for i in specs:
@@ -457,6 +430,26 @@ def build(bld):
                     NAME         = name,
                     BASE         = base)
 
+
+        # Copy stylesheets to build directory
+        for i in ['style.css', 'pygments.css']:
+            bld(features = 'subst',
+                is_copy  = True,
+                name     = 'copy',
+                source   = 'doc/%s' % i,
+                target   = 'aux/%s' % i)
+
+        bld(features = 'subst',
+            is_copy  = True,
+            name     = 'copy',
+            source   = 'doc/doxy-style.css',
+            target   = 'doc/html/doxy-style.css')
+
+        # Build Doxygen documentation (and tags file)
+        autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc', False)
+
+        index_files = []
+
         # Call lv2specgen for each spec
         for i in specs:
             name = os.path.basename(i.srcpath())
@@ -479,7 +472,6 @@ def build(bld):
                                   bld.path.get_bld().ant_glob(base + '/*.html'))
 
         index_files.sort()
-        bld.add_group()  # Barrier (wait for lv2specgen to build index)
 
         # Build extension index
         bld(rule   = build_index,
