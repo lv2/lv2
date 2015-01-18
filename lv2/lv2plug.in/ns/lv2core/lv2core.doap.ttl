@@ -22,6 +22,8 @@
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Relax domain of lv2:minimum lv2:maximum and lv2:default so they can be used to describe properties/parameters as well."
+			] , [
+				rdfs:label "Add extern C and visibility attribute to LV2_SYMBOL_EXPORT."
 			]
 		]
 	] , [

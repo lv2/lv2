@@ -343,13 +343,22 @@ typedef struct _LV2_Descriptor {
 } LV2_Descriptor;
 
 /**
+   Helper macro needed for LV2_SYMBOL_EXPORT when using C++.
+*/
+#ifdef __cplusplus
+#    define LV2_SYMBOL_EXTERN extern "C"
+#else
+#    define LV2_SYMBOL_EXTERN
+#endif
+
+/**
    Put this (LV2_SYMBOL_EXPORT) before any functions that are to be loaded
    by the host as a symbol from the dynamic library.
 */
 #ifdef _WIN32
-#    define LV2_SYMBOL_EXPORT __declspec(dllexport)
+#    define LV2_SYMBOL_EXPORT LV2_SYMBOL_EXTERN __declspec(dllexport)
 #else
-#    define LV2_SYMBOL_EXPORT
+#    define LV2_SYMBOL_EXPORT LV2_SYMBOL_EXTERN __attribute__((visibility("default")))
 #endif
 
 /**
