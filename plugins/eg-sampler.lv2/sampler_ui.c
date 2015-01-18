@@ -134,7 +134,7 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	// Request state (filename) from plugin
 	uint8_t get_buf[512];
 	lv2_atom_forge_set_buffer(&ui->forge, get_buf, sizeof(get_buf));
-	
+
 	LV2_Atom_Forge_Frame frame;
 	LV2_Atom*            msg = (LV2_Atom*)lv2_atom_forge_object(
 		&ui->forge, &frame, 0, ui->uris.patch_Get);
