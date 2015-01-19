@@ -54,4 +54,16 @@ work:schedule
 worker method.  To support this feature, the host must pass an LV2_Feature to
 LV2_Descriptor::instantiate() with URI LV2_WORKER__schedule and data pointed to
 an instance of LV2_Worker_Schedule.</p>
+
+<p>The plugin data file should describe this like so:</p>
+<pre class="turtle-code">
+@prefix work: &lt;http://lv2plug.in/ns/ext/worker#&gt; .
+
+&lt;plugin&gt;
+    a lv2:Plugin ;
+    lv2:requiredFeature work:schedule .
+</pre>
+
+<p>As usual, lv2:optionalFeature may be used instead, if the plugin is capable
+of running in a host that does not provide this feature.</p>
 """ .
