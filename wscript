@@ -23,6 +23,7 @@ out = 'build'
 
 def options(opt):
     opt.load('compiler_c')
+    opt.load('lv2')
     autowaf.set_options(opt)
     opt.add_option('--test', action='store_true', dest='build_tests',
                    help='Build unit tests')
@@ -35,6 +36,7 @@ def options(opt):
     opt.recurse('lv2/lv2plug.in/ns/lv2core')
 
 def configure(conf):
+    conf.load('lv2')
     try:
         conf.load('compiler_c')
     except:
