@@ -13,11 +13,13 @@
 	doap:shortdesc "Messages for accessing and manipulating properties." ;
 	doap:release [
 		doap:revision "2.3" ;
-		doap:created "2014-10-31" ;
+		doap:created "2015-02-06" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Define patch:Get with no subject to implicitly apply to reciever.  This can be used by UIs to get an initial description of a plugin."
+			] , [
+				rdfs:label "Add patch:Copy method."
 			]
 		]
 	] , [

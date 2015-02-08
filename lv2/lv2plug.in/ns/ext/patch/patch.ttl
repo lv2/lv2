@@ -52,6 +52,29 @@ returned as a reply when a specific reply type is not necessary or
 appropriate.</p>
 """ .
 
+patch:Copy
+	a rdfs:Class ;
+	rdfs:subClassOf patch:Request ;
+	rdfs:label "Copy" ;
+	rdfs:subClassOf [
+		a owl:Restriction ;
+		owl:minCardinality 1 ;
+		owl:onProperty patch:subject
+	] , [
+		a owl:Restriction ;
+		owl:cardinality 1 ;
+		owl:onProperty patch:destination
+	] ;
+	lv2:documentation """
+<p>Copy the patch:subject to patch:destination.  After this, patch:destination
+has the description patch:subject had prior to this request's execution, and
+patch:subject is unchanged.  It is an error if the subject does not exist or
+the destination already exists.</p>
+
+<p>Multiple patch:subject properties may be given if the patch:destination is
+a container, the semantics of this use case are application defined.</p>
+""" .
+
 patch:Delete
 	a rdfs:Class ;
 	rdfs:subClassOf patch:Request ;
@@ -156,10 +179,10 @@ patch:Move
 		owl:onProperty patch:destination
 	] ;
 	lv2:documentation """
-<p>Move the patch:subject to patch:destination.  After this, patch:destination has
-the description patch:subject had prior to this request's execution, and
-patch:subject does not exist any more.It is an error if the subject does not
-exist or the destination already exists.</p>
+<p>Move the patch:subject to patch:destination.  After this, patch:destination
+has the description patch:subject had prior to this request's execution, and
+patch:subject no longer exists.  It is an error if the subject does not exist
+or the destination already exists.</p>
 """ .
 
 patch:Patch

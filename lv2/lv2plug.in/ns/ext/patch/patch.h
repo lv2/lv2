@@ -34,6 +34,7 @@
 
 #define LV2_PATCH__Ack            LV2_PATCH_PREFIX "Ack"
 #define LV2_PATCH__Delete         LV2_PATCH_PREFIX "Delete"
+#define LV2_PATCH__Copy           LV2_PATCH_PREFIX "Copy"
 #define LV2_PATCH__Error          LV2_PATCH_PREFIX "Error"
 #define LV2_PATCH__Get            LV2_PATCH_PREFIX "Get"
 #define LV2_PATCH__Message        LV2_PATCH_PREFIX "Message"
