@@ -146,7 +146,7 @@ atom:Float
 	a rdfs:Class ,
 		rdfs:Datatype ;
 	rdfs:subClassOf atom:Number ;
-	rdfs:label "32-bit IEEE-754 floating point number" ;
+	rdfs:label "32-bit floating point number" ;
 	atom:cType "LV2_Atom_Float" ;
 	owl:onDatatype xsd:float .
 
@@ -154,7 +154,7 @@ atom:Double
 	a rdfs:Class ,
 		rdfs:Datatype ;
 	rdfs:subClassOf atom:Number ;
-	rdfs:label "64-bit IEEE-754 floating point number" ;
+	rdfs:label "64-bit floating point number" ;
 	atom:cType "LV2_Atom_Double" ;
 	owl:onDatatype xsd:double .
 
