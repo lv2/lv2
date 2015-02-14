@@ -254,7 +254,7 @@ midi:TuneRequest
 midi:VoiceMessage
 	a rdfs:Class ;
 	rdfs:subClassOf midi:MidiEvent ;
-	rdfs:label "Voice Message;" ;
+	rdfs:label "Voice Message" ;
 	midi:statusMask "F0"^^xsd:hexBinary .
 
 midi:benderValue
