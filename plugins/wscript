@@ -15,7 +15,7 @@ def bld_book_src(task):
         filenames += [i.abspath()]
 
     literasc.gen(open(task.outputs[0].abspath(), 'w'), filenames)
-    
+
 def build(bld):
     files = [bld.path.find_node('README.txt')]
     for i in ['eg-amp.lv2',
@@ -29,6 +29,14 @@ def build(bld):
         files += bld.path.ant_glob('%s/*.ttl' % i)
         files += bld.path.ant_glob('%s/*.c' % i)
 
+    if bld.env.BUILD_CXX:
+        for i in ['eg-amppp.lv2']:
+            print i
+            files += bld.path.ant_glob('%s/*.txt' % i)
+            files += bld.path.ant_glob('%s/manifest.ttl*' % i)
+            files += bld.path.ant_glob('%s/*.ttl' % i)
+            files += bld.path.ant_glob('%s/*.cpp' % i)
+
     # Compile book sources into book.txt asciidoc source
     bld(rule   = bld_book_src,
         source = files,
@@ -41,4 +49,3 @@ def build(bld):
         stylesdir, pygments_style),
         source = 'book.txt',
         target = 'book.html')
-    
