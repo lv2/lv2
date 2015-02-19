@@ -22,12 +22,20 @@
 namespace lv2 {
 
 /**
-   C++ wrapper for an LV2 plugin.
+   C++ interface for writing an LV2 plugin.
 
    This interface is a convenience for plugin authors only, and is not an ABI
-   used by hosts.  Plugin authors should inherit from this interface, and use
-   the resulting class as the template parameter to lv2::set_descriptor() to
-   initialise a descriptor for the plugin.
+   used by hosts.  To implement a plugin, inherit from this interface with the
+   derived class passed as the template parameter.  The C LV2_Descriptor for the
+   plugin can be fetched with descriptor().
+
+   @code
+   class MyPlug : public lv2::Plugin<MyPlug> {
+       // ...
+   };
+
+   static const LV2_Descriptor p = MyPlug::descriptor("http://example.org/plug");
+   @endcode
 
    This class is a stateless interface and imposes no restrictions or overhead
    compared to a plugin implemented using the underlying C interface.  Note

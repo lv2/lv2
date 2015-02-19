@@ -415,7 +415,7 @@ EXTRACT_ALL            = YES
 # be included in the documentation.
 # The default value is: NO.
 
-EXTRACT_PRIVATE        = YES
+EXTRACT_PRIVATE        = NO
 
 # If the EXTRACT_PACKAGE tag is set to YES all members with package or internal
 # scope will be included in the documentation.
@@ -782,7 +782,9 @@ INPUT                  = @LV2_SRCDIR@/doc/mainpage.dox \
                          @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/worker/worker.h \
                          @LV2_SRCDIR@/lv2/lv2plug.in/ns/extensions/ui/ui.h \
                          @LV2_SRCDIR@/lv2/lv2plug.in/ns/extensions/units/units.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/lv2core/lv2.h
+                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/lv2core/lv2.h \
+                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/lv2core/Plugin.hpp \
+                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/lv2core/Lib.hpp
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
