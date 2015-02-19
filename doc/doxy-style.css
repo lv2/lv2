@@ -135,16 +135,9 @@ dl.el {
 
 .fragment {
 	font-family: monospace, fixed;
-	font-size: 105%;
-}
-
-pre.fragment {
-	border: 1px solid #C4C4C4;
-	background-color: #F9F9F9;
-	padding: 4px 6px;
-	margin: 4px 8px 4px 2px;
-	overflow: auto;
-	font-size: 9pt;
+	border-left: 1px solid #C4C4C4;
+	padding-left: 1em;
+	margin: 1em 2em;
 	line-height: 125%;
 }
 
@@ -354,8 +347,9 @@ td.mlabels-right {
 /* Styles for detailed member documentation */
 .memtemplate {
 	font-size: 80%;
-	color: #4665A2;
+	color: #AA6;
 	font-weight: bold;
+	padding-left: 6px;
 }
 
 .memnav {
