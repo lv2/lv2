@@ -17,9 +17,11 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include "lv2/lv2plug.in/ns/lv2core/Lib.hpp"
 #include "lv2/lv2plug.in/ns/lv2core/Plugin.hpp"
 
-class Amppp : public lv2::Plugin {
+/** Amplifier plugin. */
+class Amppp : public lv2::Plugin<Amppp> {
 public:
 	Amppp(double                    rate,
 	      const char*               bundle_path,
@@ -66,13 +68,29 @@ private:
 	Ports m_ports;
 };
 
-static const LV2_Descriptor descriptor = lv2::descriptor<Amppp>("http://lv2plug.in/plugins/eg-amppp");
-
-LV2_SYMBOL_EXPORT const LV2_Descriptor*
-lv2_descriptor(uint32_t index)
+/** Plugin library. */
+class AmpppLib : public lv2::Lib<AmpppLib>
 {
-	switch (index) {
-	case 0:  return &descriptor;
-	default: return NULL;
+public:
+	AmpppLib(const char*              bundle_path,
+	         const LV2_Feature*const* features)
+		: lv2::Lib<AmpppLib>(bundle_path, features)
+		, m_amp(Amppp::descriptor("http://lv2plug.in/plugins/eg-amppp"))
+	{}
+
+	const LV2_Descriptor* get_plugin(uint32_t index) {
+		return index == 0 ? &m_amp : NULL;
 	}
+
+private:
+	LV2_Descriptor m_amp;
+};
+
+/** Library entry point. */
+LV2_SYMBOL_EXPORT const LV2_Lib_Descriptor*
+lv2_lib_descriptor(const char*                bundle_path,
+                   const LV2_Feature *const * features)
+
+{
+	return new AmpppLib(bundle_path, features);
 }

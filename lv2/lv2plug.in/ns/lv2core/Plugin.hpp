@@ -34,7 +34,10 @@ namespace lv2 {
    that this is not a virtual class, so calling methods from a Plugin* base
    pointer will not work.  Instead, anything that must dispatch on Plugin
    methods takes a template parameter for static dispatch.
+
+   The destructor will be called when the host cleans up the plugin.
 */
+template<class Derived>
 class Plugin
 {
 public:
@@ -183,74 +186,62 @@ public:
 	   The host is never responsible for freeing the returned value.
 	*/
 	static const void* extension_data(const char* uri) { return NULL; }
-};
 
-template<typename Plugin>
-static LV2_Handle s_instantiate(const LV2_Descriptor*     descriptor,
-                                double                    sample_rate,
-                                const char*               bundle_path,
-                                const LV2_Feature* const* features) {
-	Plugin* t = new Plugin(sample_rate, bundle_path, features);
-	if (!t) {
-		delete t;
-		return nullptr;
+	/**
+	   Get an LV2_Descriptor for a plugin class.
+
+	   @code
+	   static const LV2_Descriptor a = lv2::descriptor<Amp>("http://example.org/amp");
+	   @endcode
+	*/
+	static LV2_Descriptor descriptor(const char* uri) {
+		const LV2_Descriptor desc = { uri,
+		                              &s_instantiate,
+		                              &s_connect_port,
+		                              &s_activate,
+		                              &s_run,
+		                              &s_deactivate,
+		                              &s_cleanup,
+		                              &Plugin::extension_data };
+		return desc;
 	}
 
-	return reinterpret_cast<LV2_Handle>(t);
-}
+private:
+	static LV2_Handle s_instantiate(const LV2_Descriptor*     descriptor,
+	                                double                    sample_rate,
+	                                const char*               bundle_path,
+	                                const LV2_Feature* const* features) {
+		Derived* t = new Derived(sample_rate, bundle_path, features);
+		if (!t) {
+			delete t;
+			return nullptr;
+		}
 
-template<typename Plugin>
-static void s_connect_port(LV2_Handle instance, uint32_t port, void* buf)
-{
-	reinterpret_cast<Plugin*>(instance)->connect_port(port, buf);
-}
+		return reinterpret_cast<LV2_Handle>(t);
+	}
 
-template<typename Plugin>
-static void s_activate(LV2_Handle instance)
-{
-	reinterpret_cast<Plugin*>(instance)->activate();
-}
+	static void s_connect_port(LV2_Handle instance, uint32_t port, void* buf) {
+		reinterpret_cast<Derived*>(instance)->connect_port(port, buf);
+	}
 
-template<typename Plugin>
-static void s_run(LV2_Handle instance, uint32_t sample_count)
-{
-	reinterpret_cast<Plugin*>(instance)->run(sample_count);
-}
+	static void s_activate(LV2_Handle instance) {
+		reinterpret_cast<Derived*>(instance)->activate();
+	}
 
-template<typename Plugin>
-static void s_deactivate(LV2_Handle instance)
-{
-	reinterpret_cast<Plugin*>(instance)->deactivate();
-}
+	static void s_run(LV2_Handle instance, uint32_t sample_count) {
+		reinterpret_cast<Derived*>(instance)->run(sample_count);
+	}
 
-template<typename Plugin>
-static void s_cleanup(LV2_Handle instance)
-{
-	delete reinterpret_cast<Plugin*>(instance);
-}
+	static void s_deactivate(LV2_Handle instance) {
+		reinterpret_cast<Derived*>(instance)->deactivate();
+	}
 
-/**
-   Get an LV2_Descriptor for a plugin class.
-
-   @code
-   static const LV2_Descriptor a = lv2::descriptor<Amp>("http://example.org/amp");
-   @endcode
-*/
-template<typename Plugin>
-static LV2_Descriptor
-descriptor(const char* uri)
-{
-	const LV2_Descriptor desc = { uri,
-	                              &s_instantiate<Plugin>,
-	                              &s_connect_port<Plugin>,
-	                              &s_activate<Plugin>,
-	                              &s_run<Plugin>,
-	                              &s_deactivate<Plugin>,
-	                              &s_cleanup<Plugin>,
-	                              &Plugin::extension_data };
-	return desc;
-}
+	static void s_cleanup(LV2_Handle instance) {
+		delete reinterpret_cast<Derived*>(instance);
+	}
+};
 
 } /* namespace lv2 */
 
 #endif /* LV2_PLUGIN_HPP */
+
