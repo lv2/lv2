@@ -70,7 +70,7 @@ def build(bld):
     obj.env.cshlib_PATTERN = module_pat
 
     # Build UI library
-    if bld.is_defined('HAVE_GTK2'):
+    if bld.env.HAVE_GTK2:
         obj = bld(features     = 'c cshlib',
                   source       = 'sampler_ui.c',
                   name         = 'sampler_ui',
