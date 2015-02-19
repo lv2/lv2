@@ -207,7 +207,7 @@ typedef struct _LV2UI_Descriptor {
 
 	   This member may be set to NULL if the UI is not interested in supporting
 	   any extensions. This is similar to LV2_Descriptor::extension_data().
-	   
+
 	*/
 	const void* (*extension_data)(const char* uri);
 } LV2UI_Descriptor;

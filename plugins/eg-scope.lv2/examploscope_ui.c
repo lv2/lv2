@@ -296,17 +296,17 @@ on_expose_event(GtkWidget* widget, GdkEventExpose* ev, gpointer data)
 
 /**
    Parse raw audio data and prepare for later drawing.
- 
+
    Note this is a toy example, which is really a waveform display, not an
    oscilloscope.  A serious scope would not display samples as is.
- 
+
    Signals above ~ 1/10 of the sampling-rate will not yield a useful visual
    display and result in a rather unintuitive representation of the actual
    waveform.
- 
+
    Ideally the audio-data would be buffered and upsampled here and after that
    written in a display buffer for later use.
- 
+
    For more information, see
    https://wiki.xiph.org/Videos/Digital_Show_and_Tell
    http://lac.linuxaudio.org/2013/papers/36.pdf
@@ -587,7 +587,7 @@ recv_ui_state(EgScopeUI* ui, const LV2_Atom_Object* obj)
 		fprintf(stderr, "eg-scope.lv2 UI error: Corrupt state message\n");
 		return 1;
 	}
-	
+
 	// Get the values we need from the body of the property value atoms
 	const int32_t spp  = ((const LV2_Atom_Int*)spp_val)->body;
 	const float   amp  = ((const LV2_Atom_Float*)amp_val)->body;
@@ -603,7 +603,7 @@ recv_ui_state(EgScopeUI* ui, const LV2_Atom_Object* obj)
 
 /**
    Receive data from the DSP-backend.
- 
+
    This is called by the host, typically at a rate of around 25 FPS.
 
    Ideally this happens regularly and with relatively low latency, but there

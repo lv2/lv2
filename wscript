@@ -259,7 +259,7 @@ def load_ttl(files):
     for f in files:
         model.parse(f, format='n3')
     return model
-    
+
 # Task to build extension index
 def build_index(task):
     sys.path.append('./lv2specgen')
