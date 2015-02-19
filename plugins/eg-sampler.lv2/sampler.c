@@ -68,6 +68,7 @@ typedef struct {
 
 	// Sample
 	Sample* sample;
+	bool    sample_changed;
 
 	// Ports
 	const LV2_Atom_Sequence* control_port;
@@ -332,6 +333,15 @@ run(LV2_Handle instance,
 	// Start a sequence in the notify output port.
 	lv2_atom_forge_sequence_head(&self->forge, &self->notify_frame, 0);
 
+	// Send update to UI if sample has changed due to state restore
+	if (self->sample_changed) {
+		lv2_atom_forge_frame_time(&self->forge, 0);
+		write_set_file(&self->forge, &self->uris,
+		               self->sample->path,
+		               self->sample->path_len);
+		self->sample_changed = false;
+	}
+
 	// Read incoming events
 	LV2_ATOM_SEQUENCE_FOREACH(self->control_port, ev) {
 		self->frame_offset = ev->time.frames;
@@ -478,6 +488,7 @@ restore(LV2_Handle                  instance,
 		lv2_log_trace(&self->logger, "Restoring file %s\n", path);
 		free_sample(self, self->sample);
 		self->sample = load_sample(self, path);
+		self->sample_changed = true;
 	}
 
 	return LV2_STATE_SUCCESS;
