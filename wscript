@@ -23,6 +23,7 @@ out = 'build'
 
 def options(opt):
     opt.load('compiler_c')
+    opt.load('compiler_cxx')
     opt.load('lv2')
     autowaf.set_options(opt)
     opt.add_option('--test', action='store_true', dest='build_tests',
@@ -41,6 +42,7 @@ def configure(conf):
     conf.load('lv2')
     try:
         conf.load('compiler_c')
+        conf.load('compiler_cxx')
     except:
         Options.options.build_tests = False
         Options.options.no_plugins = True
@@ -50,6 +52,11 @@ def configure(conf):
 
     autowaf.configure(conf)
     autowaf.set_c99_mode(conf)
+    conf.check_cxx(cxxflags=["-std=c++0x"])
+    conf.env.append_unique('CXXFLAGS', ['-std=c++0x'])
+
+    conf.check_cxx(cxxflags=["-std=c++0x"])
+    conf.env.append_unique('CXXFLAGS', ['-std=c++0x'])
 
     if Options.options.ultra_strict:
         conf.env.append_value('CFLAGS', ['-Wconversion'])

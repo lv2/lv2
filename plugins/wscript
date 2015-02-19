@@ -30,6 +30,14 @@ def build(bld):
         files += bld.path.ant_glob('%s/*.ttl' % i)
         files += bld.path.ant_glob('%s/*.c' % i)
 
+    if bld.env.BUILD_CXX:
+        for i in ['eg-midiamp.lv2']:
+            print i
+            files += bld.path.ant_glob('%s/*.txt' % i)
+            files += bld.path.ant_glob('%s/manifest.ttl*' % i)
+            files += bld.path.ant_glob('%s/*.ttl' % i)
+            files += bld.path.ant_glob('%s/*.cpp' % i)
+
     # Compile book sources into book.txt asciidoc source
     bld(rule   = bld_book_src,
         source = files,
