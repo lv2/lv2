@@ -64,12 +64,17 @@ public:
 	   that supports no features MUST pass a single element array containing
 	   NULL.
 
+	   @param valid A pointer to a boolean that must be set to true if the
+	   plugin instantiates correctly.  The C++ wrappers will free the instance
+	   and return NULL to the host automatically on failure.
+
 	   @return A handle for the new plugin instance, or NULL if instantiation
 	   has failed.
 	*/
 	Plugin(double                   sample_rate,
 	       const char*              bundle_path,
-	       const LV2_Feature*const* features)
+	       const LV2_Feature*const* features,
+	       bool*                    valid)
 	{}
 
 	/**
@@ -208,16 +213,16 @@ public:
 
 private:
 	static LV2_Handle s_instantiate(const LV2_Descriptor*     descriptor,
-	                                double                    sample_rate,
-	                                const char*               bundle_path,
+	                                double                    rate,
+	                                const char*               bundle,
 	                                const LV2_Feature* const* features) {
-		Derived* t = new Derived(sample_rate, bundle_path, features);
-		if (!t) {
-			delete t;
+		bool     valid    = true;
+		Derived* instance = new Derived(rate, bundle, features, &valid);
+		if (!valid) {
+			delete instance;
 			return nullptr;
 		}
-
-		return reinterpret_cast<LV2_Handle>(t);
+		return reinterpret_cast<LV2_Handle>(instance);
 	}
 
 	static void s_connect_port(LV2_Handle instance, uint32_t port, void* buf) {

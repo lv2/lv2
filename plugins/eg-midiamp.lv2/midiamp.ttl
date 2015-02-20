@@ -2,38 +2,24 @@
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix units: <http://lv2plug.in/ns/extensions/units#> .
+@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
 
-<http://lv2plug.in/plugins/eg-amppp>
+<http://lv2plug.in/plugins/eg-midiamp>
 	a lv2:Plugin ,
 		lv2:AmplifierPlugin ;
 	lv2:project <http://lv2plug.in/ns/lv2> ;
-	doap:name "Simple C++ Amplifier" ;
+	doap:name "MIDI Controlled Amplifier" ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	lv2:optionalFeature lv2:hardRTCapable ;
 	lv2:port [
 		a lv2:InputPort ,
-			lv2:ControlPort ;
+			atom:AtomPort ;
+		atom:bufferType atom:Sequence ;
+		atom:supports <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
+		lv2:designation lv2:control ;
 		lv2:index 0 ;
-		lv2:symbol "gain" ;
-		lv2:name "Gain" ;
-		lv2:default 0.0 ;
-		lv2:minimum -90.0 ;
-		lv2:maximum 24.0 ;
-		units:unit units:db ;
-		lv2:scalePoint [
-			rdfs:label "+5" ;
-			rdf:value 5.0
-		] , [
-			rdfs:label "0" ;
-			rdf:value 0.0
-		] , [
-			rdfs:label "-5" ;
-			rdf:value -5.0
-		] , [
-			rdfs:label "-10" ;
-			rdf:value -10.0
-		]
+		lv2:symbol "control" ;
+		lv2:name "Control"
 	] , [
 		a lv2:AudioPort ,
 			lv2:InputPort ;

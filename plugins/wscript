@@ -30,7 +30,7 @@ def build(bld):
         files += bld.path.ant_glob('%s/*.c' % i)
 
     if bld.env.BUILD_CXX:
-        for i in ['eg-amppp.lv2']:
+        for i in ['eg-midiamp.lv2']:
             print i
             files += bld.path.ant_glob('%s/*.txt' % i)
             files += bld.path.ant_glob('%s/manifest.ttl*' % i)

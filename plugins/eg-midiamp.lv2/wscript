@@ -3,7 +3,7 @@ from waflib.extras import autowaf as autowaf
 import re
 
 # Variables for 'waf dist'
-APPNAME = 'eg-amppp.lv2'
+APPNAME = 'eg-midiamp.lv2'
 VERSION = '1.0.0'
 
 # Mandatory variables
@@ -18,7 +18,7 @@ def configure(conf):
     conf.load('compiler_cxx')
     autowaf.configure(conf)
     autowaf.set_c99_mode(conf)
-    autowaf.display_header('Amppp Configuration')
+    autowaf.display_header('Midiamp Configuration')
 
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
@@ -29,7 +29,7 @@ def configure(conf):
     print('')
 
 def build(bld):
-    bundle = 'eg-amppp.lv2'
+    bundle = 'eg-midiamp.lv2'
 
     # Make a pattern for shared objects without the 'lib' prefix
     module_pat = re.sub('^lib', '', bld.env.cshlib_PATTERN)
@@ -42,8 +42,8 @@ def build(bld):
         install_path = '${LV2DIR}/%s' % bundle,
         LIB_EXT      = module_ext)
 
-    # Copy other data files to build bundle (build/eg-amppp.lv2)
-    for i in ['amppp.ttl']:
+    # Copy other data files to build bundle (build/eg-midiamp.lv2)
+    for i in ['midiamp.ttl']:
         bld(features     = 'subst',
             is_copy      = True,
             source       = i,
@@ -57,9 +57,9 @@ def build(bld):
 
     # Build plugin library
     obj = bld(features     = 'cxx cxxshlib',
-              source       = 'amppp.cpp',
-              name         = 'amppp',
-              target       = '%s/amppp' % bundle,
+              source       = 'midiamp.cpp',
+              name         = 'midiamp',
+              target       = '%s/midiamp' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
               uselib       = 'M LV2',
               includes     = includes)
