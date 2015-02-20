@@ -451,6 +451,7 @@ typedef struct {
    be destroyed (using LV2_Lib_Descriptor::cleanup()) until all plugins loaded
    from that library have been destroyed.
 */
+LV2_SYMBOL_EXPORT
 const LV2_Lib_Descriptor *
 lv2_lib_descriptor(const char *               bundle_path,
                    const LV2_Feature *const * features);
