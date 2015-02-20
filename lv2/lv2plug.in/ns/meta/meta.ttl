@@ -49,7 +49,7 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:paniq ;
 	doap:release [
 		doap:revision "1.11.0" ;
-		doap:created "2014-11-01" ;
+		doap:created "2015-02-19" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
@@ -60,6 +60,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 				rdfs:label "Fix merging of version histories in specification documentation."
 			] , [
 				rdfs:label "Improve API documentation."
+			] , [
+				rdfs:label "Simplify property restrictions by removing redundancy."
 			]
 		]
 	] , [

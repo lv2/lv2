@@ -211,11 +211,8 @@ ui:PortNotification
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:onProperty ui:plugin ;
-		owl:someValuesFrom lv2:Plugin ;
 		owl:cardinality 1 ;
-		rdfs:comment """
-A PortNotification MUST have exactly one ui:plugin which is a lv2:Plugin.
-"""
+		rdfs:comment "A PortNotification MUST have exactly one ui:plugin." ;
 	] ;
 	lv2:documentation """
 <p>A port notification.  This describes which ports the host must send

@@ -144,10 +144,7 @@ lv2:Plugin
 		a owl:Restriction ;
 		owl:onProperty doap:name ;
 		owl:someValuesFrom rdf:PlainLiteral ;
-		rdfs:comment """
-A Plugin MUST have at least one doap:name that is a string
-with no language tag.
-"""
+		rdfs:comment "A plugin MUST have at least one untranslated doap:name." ;
 	] ;
 	lv2:documentation """
 <p>The class which represents an LV2 plugin.</p>
@@ -171,30 +168,18 @@ lv2:Port
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:onProperty lv2:index ;
-		owl:allValuesFrom xsd:unsignedInt ;
 		owl:cardinality 1 ;
-		rdfs:comment """
-A port MUST have a single lv2:index which is of type xsd:unsignedInt.  The
-explicit RDF datatype of the index MAY be something else (typically xsd:integer
-for pretty Turtle numeric literals), but the value itself MUST be a valid
-xsd:unsignedInt (i.e. a non-negative 32-bit integer).
-"""
+		rdfs:comment "A port MUST have exactly one lv2:index." ;
 	] , [
 		a owl:Restriction ;
 		owl:onProperty lv2:symbol ;
-		owl:allValuesFrom rdf:PlainLiteral ;
 		owl:cardinality 1 ;
-		rdfs:comment """
-A port MUST have a single lv2:symbol which is of type xsd:string with no
-language tag.
-"""
+		rdfs:comment "A port MUST have exactly one lv2:symbol." ;
 	] , [
 		a owl:Restriction ;
 		owl:onProperty lv2:name ;
-		owl:someValuesFrom xsd:string ;
-		rdfs:comment """
-A port MUST have at least one lv2:name which is of type xsd:string.
-"""
+		owl:minCardinality 1 ;
+		rdfs:comment "A port MUST have at least one lv2:name." ;
 	] ;
 	lv2:documentation """
 <p>The class which represents an LV2 port.</p>
@@ -477,7 +462,8 @@ lv2:symbol
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
 	rdfs:label "symbol" ;
-	rdfs:range lv2:Symbol ;
+	rdfs:range lv2:Symbol ,
+		rdf:PlainLiteral ;
 	lv2:documentation """
 <p>The value of this property MUST conform to the rules for lv2:Symbol, and
 MUST NOT have a language tag.</p>
@@ -491,6 +477,7 @@ lv2:name
 	a rdf:Property ,
 		owl:DatatypeProperty ;
 	rdfs:label "name" ;
+	rdfs:range xsd:string ;
 	rdfs:comment """
 A display name for labeling in a user interface.  Unlike lv2:symbol this is
 unrestricted and may be translated.  The lv2:name MUST NOT be used as an
