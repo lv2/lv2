@@ -113,6 +113,15 @@ A UI where the LV2_Widget is a pointer to a Qt4 compatible QWidget,
 and the host guarantees that the Qt4 library has been initialised and the
 Qt4 main loop is running before a UI of this type is instantiated.""" .
 
+ui:Qt5UI
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf ui:UI ;
+	rdfs:comment """
+A UI where the LV2_Widget is a pointer to a Qt5 compatible QWidget,
+and the host guarantees that the Qt5 library has been initialised and the
+Qt5 main loop is running before a UI of this type is instantiated.""" .
+
 ui:X11UI
 	a rdfs:Class ,
 		owl:Class ;
