@@ -214,14 +214,14 @@ lv2_atom_tuple_next(const LV2_Atom* i)
 
    This macro is used similarly to a for loop (which it expands to), e.g.:
    @code
-   LV2_ATOMO_TUPLE_FOREACH(tuple, elem) {
+   LV2_ATOM_TUPLE_FOREACH(tuple, elem) {
        // Do something with elem (an LV2_Atom*) here...
    }
    @endcode
 */
 #define LV2_ATOM_TUPLE_FOREACH(tuple, iter) \
 	for (LV2_Atom* (iter) = lv2_atom_tuple_begin(tuple); \
-	     !lv2_atom_tuple_is_end(LV2_ATOM_BODY(tuple), (tuple)->size, (iter)); \
+	     !lv2_atom_tuple_is_end(LV2_ATOM_BODY(tuple), (tuple)->atom.size, (iter)); \
 	     (iter) = lv2_atom_tuple_next(iter))
 
 /** Like LV2_ATOM_TUPLE_FOREACH but for a headerless tuple body. */
