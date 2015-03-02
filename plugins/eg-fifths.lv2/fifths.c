@@ -22,8 +22,6 @@
 #    include <stdbool.h>
 #endif
 
-#include <sndfile.h>
-
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
 #include "lv2/lv2plug.in/ns/ext/midi/midi.h"
 #include "lv2/lv2plug.in/ns/ext/patch/patch.h"
