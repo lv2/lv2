@@ -28,7 +28,9 @@
 #define LV2_PRESETS_URI    "http://lv2plug.in/ns/ext/presets"
 #define LV2_PRESETS_PREFIX LV2_PRESETS_URI "#"
 
+#define LV2_PRESETS__Bank   LV2_PRESETS_PREFIX "Bank"
 #define LV2_PRESETS__Preset LV2_PRESETS_PREFIX "Preset"
+#define LV2_PRESETS__bank   LV2_PRESETS_PREFIX "bank"
 #define LV2_PRESETS__preset LV2_PRESETS_PREFIX "preset"
 #define LV2_PRESETS__value  LV2_PRESETS_PREFIX "value"
 

@@ -19,6 +19,8 @@
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Use consistent label style."
+			] , [
+				rdfs:label "Add preset banks."
 			]
 		]
 	] , [
