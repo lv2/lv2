@@ -314,6 +314,10 @@ def build_index(task):
             rows += rowfile.readlines()
             rowfile.close()
 
+    if date is None:
+        import datetime
+        date = datetime.datetime.now().isoformat()
+
     subst_file(task.inputs[0].abspath(), task.outputs[0].abspath(),
                { '@ROWS@': ''.join(rows),
                  '@LV2_VERSION@': VERSION,
