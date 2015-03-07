@@ -72,6 +72,12 @@ eg:mypreset
 
 <p>A Preset SHOULD have at least one lv2:appliesTo property.  Each Port on a
 Preset MUST have at least a lv2:symbol property and a pset:value property.</p>
+
+<p>Hosts SHOULD save user presets to a bundle in the user-local LV2 directory
+(e.g. ~/.lv2) with a name like
+<code>&lt;Plugin_Name&gt;_&lt;Preset_Name&gt;.preset.lv2</code>
+(e.g. <code>LV2_Amp_At_Eleven.preset.lv2</code>), where names are transformed
+to be valid LV2 symbols for maximum compatibility.</p>
 """ .
 
 pset:bank
