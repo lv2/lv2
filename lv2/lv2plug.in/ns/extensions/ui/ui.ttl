@@ -11,7 +11,6 @@
 	rdfs:seeAlso <ui.h> ,
 		<lv2-ui.doap.ttl> ;
 	lv2:documentation """
-    
 <p>This extension is used to create User Interfaces (UIs) for LV2 plugins.</p>
 
 <p>UIs are implemented as an LV2UI_Descriptor loaded via lv2ui_descriptor() in
@@ -90,6 +89,7 @@ ui:GtkUI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
+	rdfs:label "GTK2 UI" ;
 	rdfs:comment """
 A UI where the LV2_Widget is a pointer to a Gtk+ 2.0 compatible GtkWidget,
 and the host guarantees that the Gtk+ library has been initialised and the
@@ -99,6 +99,7 @@ ui:Gtk3UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
+	rdfs:label "GTK3 UI" ;
 	rdfs:comment """
 A UI where the LV2_Widget is a pointer to a Gtk+ 3.0 compatible GtkWidget,
 and the host guarantees that the Gtk+ library has been initialised and the
@@ -108,6 +109,7 @@ ui:Qt4UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
+	rdfs:label "Qt4 UI" ;
 	rdfs:comment """
 A UI where the LV2_Widget is a pointer to a Qt4 compatible QWidget,
 and the host guarantees that the Qt4 library has been initialised and the
@@ -117,6 +119,7 @@ ui:Qt5UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
+	rdfs:label "Qt5 UI" ;
 	rdfs:comment """
 A UI where the LV2_Widget is a pointer to a Qt5 compatible QWidget,
 and the host guarantees that the Qt5 library has been initialised and the
@@ -126,6 +129,7 @@ ui:X11UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
+	rdfs:label "X11 UI" ;
 	rdfs:comment """
 A UI where the LV2_Widget is an X11 window ID.  Note this is actually an
 integer, i.e. the LV2_Widget is not a pointer to an X11 window ID, but should
@@ -136,6 +140,7 @@ ui:WindowsUI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
+	rdfs:label "Windows UI" ;
 	rdfs:comment """
 A UI where the LV2_Widget is a Windows HWND window ID.  Note this is actually
 an unsigned 32-bit integer, i.e. the LV2_Widget is not a pointer to a HWND but
@@ -146,6 +151,7 @@ ui:CocoaUI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
+	rdfs:label "Cocoa UI" ;
 	rdfs:comment """
 A UI where the LV2_Widget is a pointer to a NSView, the basic view type for the
 Cocoa API (formerly OpenStep).  This is the native UI type on Mac OS X.""" .
@@ -154,6 +160,7 @@ ui:ui
 	a rdf:Property ;
 	rdfs:domain lv2:Plugin ;
 	rdfs:range ui:UI ;
+	rdfs:label "user interface" ;
 	rdfs:comment """
 Relates a plugin to a UI that applies to it.
 """ .

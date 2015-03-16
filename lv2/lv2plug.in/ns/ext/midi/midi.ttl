@@ -71,6 +71,7 @@ midi:ChannelPressure
 
 midi:Chunk
 	a rdfs:Class ;
+	rdfs:label "MIDI Chunk" ;
 	rdfs:comment "A series of contiguous bytes (usually one) in a message." .
 
 midi:Clock

@@ -276,7 +276,7 @@ issues are the host's responsibility.</p>
 atom:URID
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Integer ID mapped from a URI" ;
+	rdfs:label "Integer URID" ;
 	atom:cType "LV2_Atom_URID" ;
 	lv2:documentation """
 <p>An unsigned 32-bit integer mapped from a URI (e.g. with LV2_URID_Map).</p>

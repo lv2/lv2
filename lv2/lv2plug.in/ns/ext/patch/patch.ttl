@@ -193,6 +193,7 @@ patch:Patch
 		owl:minCardinality 1 ;
 		owl:onProperty patch:subject
 	] ;
+	rdfs:label "Patch" ;
 	lv2:documentation """
 <p>A method for modifying the properties of an object.</p>
 
@@ -252,6 +253,7 @@ patch:Response
 
 patch:Set
 	a rdfs:Class ;
+	rdfs:label "Set" ;
 	rdfs:subClassOf patch:Request ,
 	[
 		a owl:Restriction ;
