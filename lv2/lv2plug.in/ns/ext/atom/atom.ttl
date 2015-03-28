@@ -527,6 +527,7 @@ atom:bufferType
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:domain atom:AtomPort ;
+	rdfs:range rdfs:Class ;
 	rdfs:label "buffer type" ;
 	lv2:documentation """
 <p>Indicates that an AtomPort may be connected to a certain Atom type.  A port
@@ -557,6 +558,7 @@ atom:childType
 atom:supports
 	a rdf:Property ;
 	rdfs:label "supports" ;
+	rdfs:range rdfs:Class ;
 	lv2:documentation """
 <p>Indicates that a particular Atom type is supported.</p>
 
