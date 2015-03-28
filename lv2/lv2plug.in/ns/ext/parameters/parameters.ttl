@@ -20,9 +20,7 @@ to the user more efficiently.</p> """ .
 param:ControlGroup
 	a rdfs:Class ;
 	rdfs:subClassOf pg:Group ;
-	rdfs:comment """
-A group representing a set of associated controls.
-""" .
+	rdfs:comment "A group representing a set of associated controls." .
 
 param:amplitude
 	a lv2:Parameter ;
@@ -73,7 +71,7 @@ param:ratio
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "ratio" ;
-	rdfs:comment "Compression ration." .
+	rdfs:comment "Compression ratio." .
 
 param:release
 	a lv2:Parameter ;

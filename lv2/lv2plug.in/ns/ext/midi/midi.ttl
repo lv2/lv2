@@ -387,9 +387,7 @@ midi:statusMask
 		owl:FunctionalProperty ;
 	rdfs:label "status mask" ;
 	rdfs:range midi:HexByte ;
-	rdfs:comment """
-The status byte for a message of this type on channel 1, i.e. a status byte
-with the lower nibble set to zero.""" .
+	rdfs:comment """The status byte for a message of this type on channel 1, i.e. a status byte with the lower nibble set to zero.""" .
 
 midi:velocity
 	a rdf:Property ,

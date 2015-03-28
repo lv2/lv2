@@ -65,10 +65,7 @@ atom:cType
 	rdfs:label "C type" ;
 	rdfs:domain rdfs:Class ;
 	rdfs:range lv2:Symbol ;
-	rdfs:comment """
-The identifier for a C type describing the binary representation of an Atom of
-this type.
-""" .
+	rdfs:comment """The identifier for a C type describing the binary representation of an Atom of this type.""" .
 
 atom:Atom
 	a rdfs:Class ;

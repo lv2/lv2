@@ -14,9 +14,7 @@
 	doap:shortdesc "LV2 project metadata" ;
 	doap:created "2012-03-25" ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
-	rdfs:comment """
-This document describes metadata relevant to the LV2 project.
-""" .
+	rdfs:comment "This document describes metadata relevant to the LV2 project." .
 
 <http://opensource.org/licenses/isc>
 	rdf:value """

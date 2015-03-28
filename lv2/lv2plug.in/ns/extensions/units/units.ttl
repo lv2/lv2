@@ -65,7 +65,7 @@ units:unit
 		lv2:Parameter ;
 	rdfs:range units:Unit ;
 	rdfs:label "unit" ;
-	rdfs:comment "Relates a port to the unit of its data" .
+	rdfs:comment "The unit used by the value of a port or parameter." .
 
 units:render
 	a rdf:Property ,
@@ -110,10 +110,7 @@ units:prefixConversion
 	rdfs:domain units:Unit ;
 	rdfs:range units:Conversion ;
 	rdfs:label "prefix conversion" ;
-	rdfs:comment """
-A conversion from this unit to the same unit but with a different SI prefix
-(e.g. Hz to kHz).
-""" .
+	rdfs:comment """A conversion from this unit to the same unit but with a different SI prefix (e.g. Hz to kHz).""" .
 
 units:to
 	a rdf:Property ,
@@ -128,10 +125,7 @@ units:factor
 		owl:DatatypeProperty ;
 	rdfs:domain units:Conversion ;
 	rdfs:label "conversion factor" ;
-	rdfs:comment """
-The factor to multiply the source value by in order to convert
-to the target unit.
-""" .
+	rdfs:comment """The factor to multiply the source value by in order to convert to the target unit.""" .
 
 units:s
 	a units:Unit ;
