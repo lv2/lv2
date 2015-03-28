@@ -127,7 +127,7 @@ units:factor
 	rdfs:domain units:Conversion ;
 	rdfs:label "conversion factor" ;
 	rdfs:comment """
-The factor to multiple the source value by in order to convert
+The factor to multiply the source value by in order to convert
 to the target unit.
 """ .
 
