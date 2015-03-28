@@ -492,6 +492,7 @@ property without changing the Plugin URI.
 lv2:Designation
 	a rdfs:Class ,
 		owl:Class ;
+	rdfs:subClassOf rdf:Property ;
 	rdfs:label "Designation" ;
 	lv2:documentation """
 <p>The designation (or <q>assignment</q>) of an input or output.  A designation
@@ -531,7 +532,8 @@ lv2:designation
 	a rdf:Property ,
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
-	rdfs:range lv2:Designation ;
+	rdfs:range lv2:Designation ,
+		rdf:Property ;
 	rdfs:label "designation" ;
 	lv2:documentation """
 <p>Indicates a channel or parameter designation.</p>
