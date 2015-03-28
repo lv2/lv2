@@ -70,6 +70,7 @@ units:unit
 units:render
 	a rdf:Property ,
 		owl:DatatypeProperty ;
+	rdfs:label "unit format string" ;
 	rdfs:domain units:Unit ;
 	rdfs:range xsd:string ;
 	rdfs:comment """A printf format string for rendering a value (eg. "%f dB").""" .
@@ -77,6 +78,7 @@ units:render
 units:symbol
 	a rdf:Property ,
 		owl:DatatypeProperty ;
+	rdfs:label "unit symbol" ;
 	rdfs:domain units:Unit ;
 	rdfs:range xsd:string ;
 	rdfs:comment "The abbreviated symbol for the unit (e.g. dB)." .
