@@ -420,6 +420,10 @@ def build(bld):
                       bld.path.ant_glob('lv2specgen/DTD/*'))
     bld.install_files('${BINDIR}', 'lv2specgen/lv2specgen.py', chmod=Utils.O755)
 
+    # Install schema bundle
+    bld.install_files('${LV2DIR}/schemas.lv2/',
+                      bld.path.ant_glob('schemas.lv2/*.ttl'))
+
     if bld.env.DOCS or bld.env.ONLINE_DOCS:
         # Prepare spec output directories
         specs = exts + [bld.path.find_node('lv2/lv2plug.in/ns/lv2core')]
