@@ -1,10 +1,10 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
 
 <http://www.w3.org/2000/01/rdf-schema#>
-    dc:title "The RDF Schema vocabulary (RDFS)" ;
+    dct:title "The RDF Schema vocabulary (RDFS)" ;
     a owl:Ontology ;
     rdfs:seeAlso <http://www.w3.org/2000/01/rdf-schema-more> .
 
@@ -24,10 +24,9 @@ rdfs:Container
 
 rdfs:ContainerMembershipProperty
     a rdfs:Class ;
-    rdfs:comment """The class of container membership properties, rdf:_1, rdf:_2, ...,
-                    all of which are sub-properties of 'member'.""" ;
+    rdfs:comment "The class of container membership properties, rdf:_1, rdf:_2, ..., all of which are sub-properties of 'member'." ;
     rdfs:isDefinedBy <http://www.w3.org/2000/01/rdf-schema#> ;
-    rdfs:label "ContainerMembershipProperty" ;
+    rdfs:label "Container Membership Property" ;
     rdfs:subClassOf rdf:Property .
 
 rdfs:Datatype
@@ -71,7 +70,7 @@ rdfs:isDefinedBy
     rdfs:comment "The defininition of the subject resource." ;
     rdfs:domain rdfs:Resource ;
     rdfs:isDefinedBy <http://www.w3.org/2000/01/rdf-schema#> ;
-    rdfs:label "isDefinedBy" ;
+    rdfs:label "is defined by" ;
     rdfs:range rdfs:Resource ;
     rdfs:subPropertyOf rdfs:seeAlso .
 
@@ -104,7 +103,7 @@ rdfs:seeAlso
     rdfs:comment "Further information about the subject resource." ;
     rdfs:domain rdfs:Resource ;
     rdfs:isDefinedBy <http://www.w3.org/2000/01/rdf-schema#> ;
-    rdfs:label "seeAlso" ;
+    rdfs:label "see also" ;
     rdfs:range rdfs:Resource .
 
 rdfs:subClassOf
@@ -112,7 +111,7 @@ rdfs:subClassOf
     rdfs:comment "The subject is a subclass of a class." ;
     rdfs:domain rdfs:Class ;
     rdfs:isDefinedBy <http://www.w3.org/2000/01/rdf-schema#> ;
-    rdfs:label "subClassOf" ;
+    rdfs:label "sub-class of" ;
     rdfs:range rdfs:Class .
 
 rdfs:subPropertyOf
@@ -120,6 +119,6 @@ rdfs:subPropertyOf
     rdfs:comment "The subject is a subproperty of a property." ;
     rdfs:domain rdf:Property ;
     rdfs:isDefinedBy <http://www.w3.org/2000/01/rdf-schema#> ;
-    rdfs:label "subPropertyOf" ;
+    rdfs:label "sub-property of" ;
     rdfs:range rdf:Property .
 

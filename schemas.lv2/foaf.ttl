@@ -2,39 +2,13 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix wot: <http://xmlns.com/wot/0.1/> .
-@prefix dc: <http://purl.org/dc/elements/1.1/> .
-
-dc:date
-    a owl:AnnotationProperty .
-
-dc:description
-    a owl:AnnotationProperty .
-
-dc:title
-    a owl:AnnotationProperty .
-
-rdfs:Class
-    a owl:Class .
-
-<http://www.w3.org/2000/10/swap/pim/contact#Person>
-    a owl:Class ;
-    rdfs:label "Person" .
-
-owl:Thing
-    rdfs:label "Thing" .
-
-<http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing>
-    a owl:Class ;
-    rdfs:label "Spatial Thing" .
-
-<http://www.w3.org/2004/02/skos/core#Concept>
-    rdfs:label "Concept" .
+@prefix dct: <http://purl.org/dc/terms/> .
 
 <http://xmlns.com/foaf/0.1/>
-    dc:description "The Friend of a Friend (FOAF) RDF vocabulary, described using W3C RDF Schema and the Web Ontology Language." ;
-    dc:title "Friend of a Friend (FOAF) vocabulary" ;
-    a owl:Ontology .
+    a owl:Ontology ;
+    dct:description "The Friend of a Friend (FOAF) RDF vocabulary, described using W3C RDF Schema and the Web Ontology Language." ;
+    dct:title "Friend of a Friend (FOAF) vocabulary" ;
+	rdfs:comment "This version of the FOAF vocabulary has been slightly trimmed for LV2." .
 
 foaf:Agent
     a rdfs:Class, owl:Class ;
@@ -109,7 +83,7 @@ foaf:Person
     rdfs:comment "A person." ;
     rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
     rdfs:label "Person" ;
-    rdfs:subClassOf <http://www.w3.org/2000/10/swap/pim/contact#Person>, <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing>, foaf:Agent ;
+    rdfs:subClassOf foaf:Agent ;
     owl:disjointWith foaf:Organization, foaf:Project .
 
 foaf:PersonalProfileDocument
@@ -166,14 +140,6 @@ foaf:aimChatID
     rdfs:range rdfs:Literal ;
     rdfs:subPropertyOf foaf:nick .
 
-foaf:based_near
-    a rdf:Property, owl:ObjectProperty ;
-    rdfs:comment "A location that something is based near, for some broadly human notion of near." ;
-    rdfs:domain <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
-    rdfs:label "based near" ;
-    rdfs:range <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> .
-
 foaf:birthday
     a rdf:Property, owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:comment "The birthday of this Agent, represented in mm-dd string form, eg. '12-31'." ;
@@ -223,14 +189,6 @@ foaf:familyName
     rdfs:label "familyName" ;
     rdfs:range rdfs:Literal .
 
-foaf:family_name
-    a rdf:Property, owl:DatatypeProperty ;
-    rdfs:comment "The family name of some person." ;
-    rdfs:domain foaf:Person ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
-    rdfs:label "family_name" ;
-    rdfs:range rdfs:Literal .
-
 foaf:firstName
     a rdf:Property, owl:DatatypeProperty ;
     rdfs:comment "The first name of a person." ;
@@ -238,14 +196,6 @@ foaf:firstName
     rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
     rdfs:label "firstName" ;
     rdfs:range rdfs:Literal .
-
-foaf:focus
-    a rdf:Property, owl:ObjectProperty ;
-    rdfs:comment "The underlying or 'focal' entity associated with some SKOS-described concept." ;
-    rdfs:domain <http://www.w3.org/2004/02/skos/core#Concept> ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
-    rdfs:label "focus" ;
-    rdfs:range owl:Thing .
 
 foaf:fundedBy
     a rdf:Property, owl:ObjectProperty ;
@@ -627,10 +577,3 @@ foaf:yahooChatID
     rdfs:label "Yahoo chat ID" ;
     rdfs:range rdfs:Literal ;
     rdfs:subPropertyOf foaf:nick .
-
-wot:assurance
-    a owl:AnnotationProperty .
-
-wot:src_assurance
-    a owl:AnnotationProperty .
-
