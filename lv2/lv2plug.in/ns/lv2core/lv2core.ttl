@@ -780,6 +780,11 @@ lv2:enumeration
 	rdfs:label "enumeration" ;
 	rdfs:comment """Indicates that a port's only reasonable values are the scale points defined for that port. A host SHOULD NOT allow a user to set the value of such a port to anything other than a scale point. However, a plugin MUST operate reasonably even if such a port has an input that is not a scale point, preferably by simply choosing the largest enumeration value less than or equal to the actual input value (i.e. round the input value down).""" .
 
+lv2:isSideChain
+	a lv2:PortProperty ;
+	rdfs:label "is side-chain" ;
+	rdfs:comment """Indicates that a port is a "sidechain", which affects the output somehow but should not be considered a main input.  Sidechain ports should be connectionOptional, and may be ignored by hosts.""" .
+
 lv2:GeneratorPlugin
 	a rdfs:Class ,
 		owl:Class ;

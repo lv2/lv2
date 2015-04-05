@@ -17,13 +17,15 @@
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "12.3" ;
-		doap:created "2014-11-01" ;
+		doap:created "2015-04-05" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Relax domain of lv2:minimum lv2:maximum and lv2:default so they can be used to describe properties/parameters as well."
 			] , [
 				rdfs:label "Add extern C and visibility attribute to LV2_SYMBOL_EXPORT."
+			] , [
+				rdfs:label "Add lv2:isSideChain port property."
 			]
 		]
 	] , [
