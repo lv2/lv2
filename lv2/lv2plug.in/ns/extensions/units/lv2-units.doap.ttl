@@ -12,8 +12,9 @@
 	doap:homepage <http://lv2plug.in/ns/extensions/units> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:release [
-		doap:revision "5.9" ;
-		doap:created "2014-11-01" ;
+		doap:revision "5.10" ;
+		doap:created "2015-04-07" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.12.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
