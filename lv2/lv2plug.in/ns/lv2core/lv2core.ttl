@@ -473,6 +473,15 @@ lv2:name
 
 This property is required for Ports, but MUST NOT be used by the host for port identification. The plugin author may change the values of this property without changing the Plugin URI.""" .
 
+lv2:shortName
+   a rdf:Property ,
+       owl:DatatypeProperty ;
+   rdfs:label "short name" ;
+   rdfs:range xsd:string ;
+   rdfs:comment """A short display name for labeling in a user interface.
+
+The same rules for port names apply here, with the exception that short names should not be longer than 16 characters.""" .
+
 lv2:Designation
 	a rdfs:Class ,
 		owl:Class ;
