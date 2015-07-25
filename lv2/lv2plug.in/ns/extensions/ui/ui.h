@@ -237,7 +237,8 @@ typedef struct _LV2UI_Resize {
 	   host about the size of the UI.
 
 	   When provided by the UI, the host may call this function to notify the
-	   UI that it should change its size accordingly.
+	   UI that it should change its size accordingly.  In this case, the host
+	   must pass the LV2UI_Handle to provide access to the UI instance.
 
 	   @return 0 on success.
 	*/
