@@ -80,4 +80,3 @@ def post_dist(ctx):
         os.remove(os.path.join(ctx.path.abspath(), 'NEWS'))
     except:
         pass
-

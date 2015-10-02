@@ -12,8 +12,9 @@
 	doap:name "LV2 Patch" ;
 	doap:shortdesc "Messages for accessing and manipulating properties." ;
 	doap:release [
-		doap:revision "2.3" ;
-		doap:created "2015-02-06" ;
+		doap:revision "2.4" ;
+		doap:created "2015-04-07" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.12.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [

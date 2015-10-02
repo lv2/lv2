@@ -1,11 +1,11 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
 
 <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    dc:description "This is the RDF Schema for the RDF vocabulary defined in the RDF namespace." ;
-    dc:title "The RDF Vocabulary (RDF)" ;
+    dct:description "This is the RDF Schema for the RDF vocabulary defined in the RDF namespace." ;
+    dct:title "The RDF Vocabulary (RDF)" ;
     a owl:Ontology ;
     rdfs:seeAlso <http://www.w3.org/2000/01/rdf-schema-more> .
 
@@ -34,7 +34,7 @@ rdf:PlainLiteral
     a rdfs:Datatype ;
     rdfs:comment "The class of plain (i.e. untyped) literal values." ;
     rdfs:isDefinedBy <http://www.w3.org/TR/rdf-plain-literal/> ;
-    rdfs:label "PlainLiteral" ;
+    rdfs:label "Plain Literal" ;
     rdfs:subClassOf rdfs:Literal .
 
 rdf:Property
@@ -62,7 +62,7 @@ rdf:XMLLiteral
     a rdfs:Datatype ;
     rdfs:comment "The class of XML literal values." ;
     rdfs:isDefinedBy <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ;
-    rdfs:label "XMLLiteral" ;
+    rdfs:label "XML Literal" ;
     rdfs:subClassOf rdfs:Literal .
 
 rdf:first

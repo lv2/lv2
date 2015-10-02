@@ -214,7 +214,7 @@ static const LV2_Descriptor descriptor = {
    indices to find all the plugins defined in the library.  The index is not an
    indentifier, the URI of the returned descriptor is used to determine the
    identify of the plugin.
-   
+
    This method is in the ``discovery'' threading class, so no other functions
    or methods in this plugin library will be called concurrently with it.
 */

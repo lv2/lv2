@@ -3,7 +3,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<>
+<http://www.w3.org/2001/XMLSchema#>
 	a owl:Ontology ;
 	rdfs:comment "XML Schema Datatypes" .
 
@@ -35,49 +35,57 @@ xsd:totalDigits
 	a rdf:Property ,
 		owl:DatatypeProperty ;
 	rdfs:range xsd:positiveInteger ;
+	rdfs:label "total digits" ;
 	rdfs:comment "The maximum number of decimal digits required to represent a value." .
 
 xsd:fractionDigits
 	a rdf:Property ,
 		owl:DatatypeProperty ;
 	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:label "fraction digits" ;
 	rdfs:comment "The total number of digits to the right of the decimal point required to represent a value." .
 
 xsd:pattern
 	a rdf:Property ,
 		owl:DatatypeProperty ;
+	rdfs:label "pattern" ;
 	rdfs:comment "A regular expression that matches complete valid literals." .
 
 xsd:maxInclusive
 	a rdf:Property ,
 		owl:DatatypeProperty ;
+	rdfs:label "max inclusive" ;
 	rdfs:comment "The inclusive upper bound of an ordered datatype." .
 
 xsd:maxExclusive
 	a rdf:Property ,
 		owl:DatatypeProperty ;
+	rdfs:label "max exclusive" ;
 	rdfs:comment "The exclusive upper bound of an ordered datatype." .
 
 xsd:minInclusive
 	a rdf:Property ,
 		owl:DatatypeProperty ;
+	rdfs:label "min inclusive" ;
 	rdfs:comment "The inclusive lower bound of an ordered datatype." .
 
 xsd:minExclusive
 	a rdf:Property ,
 		owl:DatatypeProperty ;
+	rdfs:label "min exclusive" ;
 	rdfs:comment "The exclusive lower bound of an ordered datatype." .
 
 xsd:QName
 	a rdfs:Datatype ;
-	rdfs:comment "XML qualified names." .
+	rdfs:label "XML qualified name" .
 
 xsd:anyURI
 	a rdfs:Datatype ;
-	rdfs:comment "URI reference." .
+	rdfs:label "URI reference" .
 
 xsd:base64Binary
 	a rdfs:Datatype ;
+	rdfs:label "base64 binary" ;
 	rdfs:comment "Base64-encoded arbitrary binary data." ;
 	owl:withRestrictions (
 		[
@@ -87,6 +95,7 @@ xsd:base64Binary
 
 xsd:boolean
 	a rdfs:Datatype ;
+	rdfs:label "boolean" ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "(true|false)"
@@ -95,6 +104,7 @@ xsd:boolean
 
 xsd:byte
 	a rdfs:Datatype ;
+	rdfs:label "byte" ;
 	owl:onDatatype xsd:short ;
 	owl:withRestrictions (
 		[
@@ -108,17 +118,20 @@ xsd:byte
 
 xsd:date
 	a rdfs:Datatype ;
+	rdfs:label "date" ;
 	owl:withRestrictions (
 		[
-			xsd:pattern "-?[0-9][0-9][0-9][0-9]([0-9]*)?-(0[1-9]|1[0-1])-([0-3][1-9])([+-][0-1][0-9]:[0-6][0-9])?"
+			xsd:pattern "-?[0-9][0-9][0-9][0-9]([0-9]*)?-(0[1-9]|1[0-2])-([0-3][0-9])([+-]([0-1][0-9]|2[0-3]):[0-5][0-9])?"
 		]
 	) .
 
 xsd:dateTime
-	a rdfs:Datatype .
+	a rdfs:Datatype ;
+	rdfs:label "date time" .
 
 xsd:decimal
 	a rdfs:Datatype ;
+	rdfs:label "decimal" ;
 	rdfs:comment "A subset of the real numbers, which can be represented by decimal numerals." ;
 	owl:withRestrictions (
 		[
@@ -128,6 +141,7 @@ xsd:decimal
 
 xsd:double
 	a rdfs:Datatype ;
+	rdfs:label "double" ;
 	rdfs:comment "IEEE double-precision 64-bit floating point." ;
 	owl:withRestrictions (
 		[
@@ -136,10 +150,12 @@ xsd:double
 	) .
 
 xsd:duration
-	a rdfs:Datatype .
+	a rdfs:Datatype ;
+	rdfs:label "duration" .
 
 xsd:float
 	a rdfs:Datatype ;
+	rdfs:label "float" ;
 	rdfs:comment "IEEE single-precision 32-bit floating point." ;
 	owl:onDatatype xsd:double .
 
@@ -160,6 +176,7 @@ xsd:gYearMonth
 
 xsd:hexBinary
 	a rdfs:Datatype ;
+	rdfs:label "hex binary" ;
 	rdfs:comment "Hex-encoded arbitrary binary data." ;
 	owl:withRestrictions (
 		[
@@ -169,6 +186,7 @@ xsd:hexBinary
 
 xsd:int
 	a rdfs:Datatype ;
+	rdfs:label "int" ;
 	owl:onDatatype xsd:long ;
 	owl:withRestrictions (
 		[
@@ -180,6 +198,7 @@ xsd:int
 
 xsd:integer
 	a rdfs:Datatype ;
+	rdfs:label "integer" ;
 	owl:onDatatype xsd:decimal ;
 	owl:withRestrictions (
 		[
@@ -191,6 +210,7 @@ xsd:integer
 
 xsd:language
 	a rdfs:Datatype ;
+	rdfs:label "language" ;
 	owl:onDatatype xsd:token ;
 	owl:withRestrictions (
 		[
@@ -200,6 +220,7 @@ xsd:language
 
 xsd:long
 	a rdfs:Datatype ;
+	rdfs:label "long" ;
 	owl:onDatatype xsd:integer ;
 	owl:withRestrictions (
 		[
@@ -211,6 +232,7 @@ xsd:long
 
 xsd:negativeInteger
 	a rdfs:Datatype ;
+	rdfs:label "negative integer" ;
 	owl:onDatatype xsd:nonPositiveInteger ;
 	owl:withRestrictions (
 		[
@@ -220,6 +242,7 @@ xsd:negativeInteger
 
 xsd:nonNegativeInteger
 	a rdfs:Datatype ;
+	rdfs:label "non-negative integer" ;
 	owl:onDatatype xsd:integer ;
 	owl:withRestrictions (
 		[
@@ -231,6 +254,7 @@ xsd:nonNegativeInteger
 
 xsd:nonPositiveInteger
 	a rdfs:Datatype ;
+	rdfs:label "non-positive integer" ;
 	owl:onDatatype xsd:integer ;
 	owl:withRestrictions (
 		[
@@ -242,11 +266,13 @@ xsd:nonPositiveInteger
 
 xsd:normalizedString
 	a rdfs:Datatype ;
+	rdfs:label "normalized string" ;
 	owl:onDatatype xsd:string ;
 	rdfs:comment "The set of strings that do not contain the carriage return (#xD), line feed (#xA) nor tab (#x9) characters." .
 
 xsd:positiveInteger
 	a rdfs:Datatype ;
+	rdfs:label "positive integer" ;
 	owl:onDatatype xsd:nonNegativeInteger ;
 	owl:withRestrictions (
 		[
@@ -258,6 +284,7 @@ xsd:positiveInteger
 
 xsd:short
 	a rdfs:Datatype ;
+	rdfs:label "short" ;
 	owl:onDatatype xsd:int ;
 	owl:withRestrictions (
 		[
@@ -269,10 +296,12 @@ xsd:short
 
 xsd:string
 	a rdfs:Datatype ;
+	rdfs:label "string" ;
 	rdfs:comment "A character string." .
 
 xsd:time
 	a rdfs:Datatype ;
+	rdfs:label "time" ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "[1-2][0-9]:[0-5][0-9]:[0-5][0-9].[0-9][0-9][0-9]"
@@ -281,11 +310,13 @@ xsd:time
 
 xsd:token
 	a rdfs:Datatype ;
+	rdfs:label "token" ;
 	owl:onDatatype xsd:normalizedString ;
 	rdfs:comment "The set of strings that do not contain the carriage return (#xD), line feed (#xA) nor tab (#x9) characters, that have no leading or trailing spaces (#x20) and that have no internal sequences of two or more spaces." .
 
 xsd:unsignedByte
 	a rdfs:Datatype ;
+	rdfs:label "unsigned byte" ;
 	owl:onDatatype xsd:unsignedShort ;
 	owl:withRestrictions (
 		[
@@ -295,6 +326,7 @@ xsd:unsignedByte
 
 xsd:unsignedInt
 	a rdfs:Datatype ;
+	rdfs:label "unsigned int" ;
 	owl:onDatatype xsd:unsignedLong ;
 	owl:withRestrictions (
 		[
@@ -304,6 +336,7 @@ xsd:unsignedInt
 
 xsd:unsignedLong
 	a rdfs:Datatype ;
+	rdfs:label "unsigned long" ;
 	owl:onDatatype xsd:nonNegativeInteger ;
 	owl:withRestrictions (
 		[
@@ -313,6 +346,7 @@ xsd:unsignedLong
 
 xsd:unsignedShort
 	a rdfs:Datatype ;
+	rdfs:label "unsigned short" ;
 	owl:onDatatype xsd:unsignedInt ;
 	owl:withRestrictions (
 		[

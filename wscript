@@ -15,7 +15,7 @@ import waflib.Utils as Utils
 
 # Variables for 'waf dist'
 APPNAME = 'lv2'
-VERSION = '1.11.0'
+VERSION = '1.12.1'
 
 # Mandatory variables
 top = '.'
@@ -23,7 +23,6 @@ out = 'build'
 
 def options(opt):
     opt.load('compiler_c')
-    opt.load('compiler_cxx')
     opt.load('lv2')
     autowaf.set_options(opt)
     opt.add_option('--test', action='store_true', dest='build_tests',
@@ -32,8 +31,6 @@ def options(opt):
                    help='Build documentation for web hosting')
     opt.add_option('--no-plugins', action='store_true', dest='no_plugins',
                    help='Do not build example plugins')
-    opt.add_option('--no-cxx', action='store_true', dest='no_cxx',
-                   help='Do not build C++ plugins')
     opt.add_option('--copy-headers', action='store_true', dest='copy_headers',
                    help='Copy headers instead of linking to bundle')
     opt.recurse('lv2/lv2plug.in/ns/lv2core')
@@ -46,17 +43,11 @@ def configure(conf):
         Options.options.build_tests = False
         Options.options.no_plugins = True
 
-    if not Options.options.no_plugins and not Options.options.no_cxx:
-        conf.load('compiler_cxx')
-        conf.env.BUILD_CXX = True
-
     if Options.options.online_docs:
         Options.options.docs = True
 
     autowaf.configure(conf)
     autowaf.set_c99_mode(conf)
-    if conf.env.BUILD_CXX:
-        conf.env.append_value('CXXFLAGS', ['-std=c++0x'])
 
     if Options.options.ultra_strict:
         conf.env.append_value('CFLAGS', ['-Wconversion'])
@@ -268,7 +259,7 @@ def load_ttl(files):
     for f in files:
         model.parse(f, format='n3')
     return model
-    
+
 # Task to build extension index
 def build_index(task):
     sys.path.append('./lv2specgen')
@@ -322,6 +313,10 @@ def build_index(task):
             rowfile = open(f.abspath(), 'r')
             rows += rowfile.readlines()
             rowfile.close()
+
+    if date is None:
+        import datetime
+        date = datetime.datetime.now().isoformat()
 
     subst_file(task.inputs[0].abspath(), task.outputs[0].abspath(),
                { '@ROWS@': ''.join(rows),
@@ -424,6 +419,10 @@ def build(bld):
     bld.install_files('${DATADIR}/lv2specgen/DTD/',
                       bld.path.ant_glob('lv2specgen/DTD/*'))
     bld.install_files('${BINDIR}', 'lv2specgen/lv2specgen.py', chmod=Utils.O755)
+
+    # Install schema bundle
+    bld.install_files('${LV2DIR}/schemas.lv2/',
+                      bld.path.ant_glob('schemas.lv2/*.ttl'))
 
     if bld.env.DOCS or bld.env.ONLINE_DOCS:
         # Prepare spec output directories

@@ -56,15 +56,15 @@ typedef struct {
 
 	/**
 	   Resize a port buffer to at least `size` bytes.
-	 
+
 	   This function MAY return an error, in which case the port buffer was not
 	   resized and the port is still connected to the same location.  Plugins
 	   MUST gracefully handle this situation.
-	 
+
 	   This function is in the audio threading class.
-	 
+
 	   The host MUST preserve the contents of the port buffer when resizing.
-	 
+
 	   Plugins MAY resize a port many times in a single run callback.  Hosts
 	   SHOULD make this as inexpensive as possible.
 	*/

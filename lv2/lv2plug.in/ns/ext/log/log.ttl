@@ -22,27 +22,32 @@ levels to suit their needs.</p>
 
 log:Entry
 	a rdfs:Class ;
+	rdfs:label "Log Entry" ;
 	lv2:documentation """
 <p>A log entry.  Subclasses of this class can be passed to LV2_Log_Log methods
 to describe the nature of the log message.</p>""" .
 
 log:Error
 	a rdfs:Class ;
+	rdfs:label "Error" ;
 	rdfs:subClassOf log:Entry ;
-	rdfs:comment "An error" .
+	rdfs:comment "An error message." .
 
 log:Note
 	a rdfs:Class ;
+	rdfs:label "Note" ;
 	rdfs:subClassOf log:Entry ;
-	rdfs:comment "An informative message" .
+	rdfs:comment "An informative message." .
 
 log:Warning
 	a rdfs:Class ;
+	rdfs:label "Warning" ;
 	rdfs:subClassOf log:Entry ;
-	rdfs:comment "A warning" .
+	rdfs:comment "A warning message." .
 
 log:Trace
 	a rdfs:Class ;
+	rdfs:label "Trace" ;
 	rdfs:subClassOf log:Entry ;
 	lv2:documentation """
 <p>A debugging trace.  These entries should not be displayed during normal

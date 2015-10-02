@@ -65,10 +65,7 @@ atom:cType
 	rdfs:label "C type" ;
 	rdfs:domain rdfs:Class ;
 	rdfs:range lv2:Symbol ;
-	rdfs:comment """
-The identifier for a C type describing the binary representation of an Atom of
-this type.
-""" .
+	rdfs:comment """The identifier for a C type describing the binary representation of an Atom of this type.""" .
 
 atom:Atom
 	a rdfs:Class ;
@@ -276,7 +273,7 @@ issues are the host's responsibility.</p>
 atom:URID
 	a rdfs:Class ;
 	rdfs:subClassOf atom:Atom ;
-	rdfs:label "Integer ID mapped from a URI" ;
+	rdfs:label "Integer URID" ;
 	atom:cType "LV2_Atom_URID" ;
 	lv2:documentation """
 <p>An unsigned 32-bit integer mapped from a URI (e.g. with LV2_URID_Map).</p>
@@ -451,7 +448,7 @@ atom:frameTime
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
 	rdfs:range xsd:decimal ;
-	rdfs:label "Frame time" ;
+	rdfs:label "frame time" ;
 	lv2:documentation """
 <p>Time stamp in audio frames.  Typically used for events.</p>
 """ .
@@ -461,7 +458,7 @@ atom:beatTime
 		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
 	rdfs:range xsd:decimal ;
-	rdfs:label "Beat time" ;
+	rdfs:label "beat time" ;
 	lv2:documentation """
 <p>Time stamp in beats.  Typically used for events.</p>
 """ .
@@ -527,6 +524,7 @@ atom:bufferType
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:domain atom:AtomPort ;
+	rdfs:range rdfs:Class ;
 	rdfs:label "buffer type" ;
 	lv2:documentation """
 <p>Indicates that an AtomPort may be connected to a certain Atom type.  A port
@@ -557,6 +555,7 @@ atom:childType
 atom:supports
 	a rdf:Property ;
 	rdfs:label "supports" ;
+	rdfs:range rdfs:Class ;
 	lv2:documentation """
 <p>Indicates that a particular Atom type is supported.</p>
 

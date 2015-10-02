@@ -16,13 +16,12 @@
 */
 
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #ifndef __cplusplus
 #    include <stdbool.h>
 #endif
-
-#include <sndfile.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
 #include "lv2/lv2plug.in/ns/ext/midi/midi.h"
@@ -95,7 +94,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 
 	// Map URIs and initialise forge/logger
 	map_fifths_uris(self->map, &self->uris);
- 
+
 	return (LV2_Handle)self;
 }
 
@@ -142,12 +141,12 @@ run(LV2_Handle instance,
 				if (note <= 127 - 7) {
 					// Make a note one 5th (7 semitones) higher than input
 					MIDINoteEvent fifth;
-					
+
 					// Could simply do fifth.event = *ev here instead...
 					fifth.event.time.frames = ev->time.frames;  // Same time
 					fifth.event.body.type   = ev->body.type;    // Same type
 					fifth.event.body.size   = ev->body.size;    // Same size
-					
+
 					fifth.msg[0] = msg[0];      // Same status
 					fifth.msg[1] = msg[1] + 7;  // Pitch up 7 semitones
 					fifth.msg[2] = msg[2];      // Same velocity

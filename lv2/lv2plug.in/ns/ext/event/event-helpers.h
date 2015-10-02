@@ -263,4 +263,3 @@ lv2_event_write_event(LV2_Event_Iterator* iter,
 #endif
 
 #endif /* LV2_EVENT_HELPERS_H */
-

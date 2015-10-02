@@ -7,31 +7,32 @@
 @prefix dbug:     <http://ontologi.es/doap-bugs#> .
 
 # Stock imports.
-@prefix cc:       <http://creativecommons.org/ns#> .
-@prefix dc:       <http://purl.org/dc/terms/> .
-@prefix dcmitype: <http://purl.org/dc/dcmitype/> .
+@prefix dct:      <http://purl.org/dc/terms/> .
 @prefix foaf:     <http://xmlns.com/foaf/0.1/> .
-@prefix link:     <http://www.w3.org/2006/link#> .
 @prefix owl:      <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:      <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix skos:     <http://www.w3.org/2004/02/skos/core#> .
-@prefix xhv:      <http://www.w3.org/1999/xhtml/vocab#> .
 @prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
 
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
 
 <http://tobyinkster.co.uk/#i> a foaf:Person .
 
 dcs:
 	a owl:Ontology ;
 	rdfs:label "DOAP Change Sets"@en ;
-	dc:created "2010-01-08"^^xsd:date ;
-	dc:issued "2010-01-08"^^xsd:date ;
-	dc:modified "2010-01-08"^^xsd:date ,
+	dct:description "An ontology that extends DOAP to describe changesets."@en ;
+	dct:created "2010-01-08"^^xsd:date ;
+	dct:issued "2010-01-08"^^xsd:date ;
+	dct:modified "2010-01-08"^^xsd:date ,
 		"2010-01-27"^^xsd:date ,
-		"2011-02-15"^^xsd:date ; # dcs:Documentation, dcs:Packaging, dcs:SecurityFix, dcs:SecurityRegression.
-	dc:creator <http://tobyinkster.co.uk/#i> .
+		"2011-02-15"^^xsd:date , # dcs:Documentation, dcs:Packaging, dcs:SecurityFix, dcs:SecurityRegression
+		"2012-04-25"^^xsd:date , # dcs:thanks
+		"2012-06-20"^^xsd:date , # dcs:released-by
+		"2013-09-03"^^xsd:date , # dcs:Tests, dcs:BackCompat
+		"2015-01-15"^^xsd:date , # Syntax errors, add description
+		"2015-04-05"^^xsd:date ; # use dcterms, trim imports (drobilla, for LV2)
+	dct:creator <http://tobyinkster.co.uk/#i> .
 
 <>
 	a foaf:Document ;
@@ -77,7 +78,7 @@ dcs:Removal
 	rdfs:label "Addition"@en ;
 	rdfs:comment "A change that removed a feature."@en ;
 	rdfs:subClassOf dcs:Change .
-	
+
 dcs:Bugfix
 	a owl:Class ;
 	rdfs:isDefinedBy dcs: ;
@@ -124,6 +125,20 @@ dcs:SecurityRegression
 	rdfs:label "Security Regression"@en ;
 	rdfs:comment "A change that created or worsened a security problem."@en ;
 	rdfs:subClassOf dcs:Change , dcs:Regression .
+
+dcs:Tests
+	a owl:Class ;
+	rdfs:isDefinedBy dcs: ;
+	rdfs:label "Tests"@en ;
+	rdfs:comment "A change to the test suite."@en ;
+	rdfs:subClassOf dcs:Change.
+
+dcs:BackCompat
+	a owl:Class ;
+	rdfs:isDefinedBy dcs: ;
+	rdfs:label "Backwards Compatibility"@en ;
+	rdfs:comment "A change that breaks backwards compatibility, changing documented or tested behaviour."@en ;
+	rdfs:subClassOf dcs:Change.
 
 _:FutureChangeSet
 	a owl:Class ;
@@ -193,7 +208,14 @@ dcs:restores
 dcs:blame
 	a owl:ObjectProperty ;
 	rdfs:isDefinedBy dcs: ;
-	rdfs:label "blame"@en ;
+	rdfs:subPropertyOf dcs:thanks ;
+	rdfs:label "blame"@en .
+
+dcs:thanks
+	a owl:ObjectProperty ;
+	rdfs:isDefinedBy dcs: ;
+	rdfs:label "thanks"@en ;
+	rdfs:comment "More general than dcs:blame - could be used e.g. to indicate who financially sponsored a new feature."@en ;
 	rdfs:domain dcs:Change ;
 	rdfs:range foaf:Agent .
 
@@ -241,3 +263,10 @@ dcs:timescale
 	rdfs:comment "Human-readable description of the approximate time a change/feature should be complete by."@en ;
 	rdfs:domain dcs:Change ;
 	rdfs:range xsd:string .
+
+dcs:released-by
+	a owl:ObjectProperty ;
+	rdfs:isDefinedBy dcs: ;
+	rdfs:label "released by"@en ;
+	rdfs:domain doap:Version ;
+	rdfs:range foaf:Person .

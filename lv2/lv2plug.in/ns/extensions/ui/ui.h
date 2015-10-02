@@ -39,7 +39,9 @@
 #define LV2_UI__Gtk3UI           LV2_UI_PREFIX "Gtk3UI"
 #define LV2_UI__GtkUI            LV2_UI_PREFIX "GtkUI"
 #define LV2_UI__PortNotification LV2_UI_PREFIX "PortNotification"
+#define LV2_UI__PortProtocol     LV2_UI_PREFIX "PortProtocol"
 #define LV2_UI__Qt4UI            LV2_UI_PREFIX "Qt4UI"
+#define LV2_UI__Qt5UI            LV2_UI_PREFIX "Qt5UI"
 #define LV2_UI__UI               LV2_UI_PREFIX "UI"
 #define LV2_UI__WindowsUI        LV2_UI_PREFIX "WindowsUI"
 #define LV2_UI__X11UI            LV2_UI_PREFIX "X11UI"
@@ -54,6 +56,9 @@
 #define LV2_UI__portMap          LV2_UI_PREFIX "portMap"
 #define LV2_UI__portNotification LV2_UI_PREFIX "portNotification"
 #define LV2_UI__portSubscribe    LV2_UI_PREFIX "portSubscribe"
+#define LV2_UI__protocol         LV2_UI_PREFIX "protocol"
+#define LV2_UI__floatProtocol    LV2_UI_PREFIX "floatProtocol"
+#define LV2_UI__peakProtocol     LV2_UI_PREFIX "peakProtocol"
 #define LV2_UI__resize           LV2_UI_PREFIX "resize"
 #define LV2_UI__showInterface    LV2_UI_PREFIX "showInterface"
 #define LV2_UI__touch            LV2_UI_PREFIX "touch"
@@ -207,7 +212,7 @@ typedef struct _LV2UI_Descriptor {
 
 	   This member may be set to NULL if the UI is not interested in supporting
 	   any extensions. This is similar to LV2_Descriptor::extension_data().
-	   
+
 	*/
 	const void* (*extension_data)(const char* uri);
 } LV2UI_Descriptor;
@@ -232,7 +237,8 @@ typedef struct _LV2UI_Resize {
 	   host about the size of the UI.
 
 	   When provided by the UI, the host may call this function to notify the
-	   UI that it should change its size accordingly.
+	   UI that it should change its size accordingly.  In this case, the host
+	   must pass the LV2UI_Handle to provide access to the UI instance.
 
 	   @return 0 on success.
 	*/
