@@ -27,6 +27,8 @@ def options(opt):
     autowaf.set_options(opt)
     opt.add_option('--test', action='store_true', dest='build_tests',
                    help='Build unit tests')
+    opt.add_option('--no-coverage', action='store_true', dest='no_coverage',
+                   help='Do not use gcov for code coverage')
     opt.add_option('--online-docs', action='store_true', dest='online_docs',
                    help='Build documentation for web hosting')
     opt.add_option('--no-plugins', action='store_true', dest='no_plugins',
@@ -69,7 +71,9 @@ def configure(conf):
             Logs.warn('Asciidoc not found, book will not be built')
 
     # Check for gcov library (for test coverage)
-    if conf.env.BUILD_TESTS and not conf.is_defined('HAVE_GCOV'):
+    if (conf.env.BUILD_TESTS
+        and not Options.options.no_coverage
+        and not conf.is_defined('HAVE_GCOV')):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
     autowaf.set_recursive()
