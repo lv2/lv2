@@ -534,8 +534,8 @@ def test(ctx):
     for i in ctx.path.ant_glob('**/*-test'):
         name = os.path.basename(i.abspath())
         os.environ['PATH'] = '.' + os.pathsep + os.getenv('PATH')
-        autowaf.run_tests(
-            ctx, name, [i.path_from(ctx.path.find_node('build'))], dirs=['.'])
+        autowaf.run_test(
+            ctx, name, i.path_from(ctx.path.find_node('build')), dirs=['.'], name=i)
     autowaf.post_test(ctx, APPNAME, dirs=['.'])
 
 class Dist(Scripting.Dist):
