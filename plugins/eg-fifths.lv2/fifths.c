@@ -137,8 +137,7 @@ run(LV2_Handle instance,
 				lv2_atom_sequence_append_event(
 					self->out_port, out_capacity, ev);
 
-				const uint8_t note = msg[1];
-				if (note <= 127 - 7) {
+				if (msg[1] <= 127 - 7) {
 					// Make a note one 5th (7 semitones) higher than input
 					MIDINoteEvent fifth;
 
