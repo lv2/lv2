@@ -330,7 +330,7 @@ def build_index(task):
 
 # Task for making a link in the build directory to a source file
 def link(task):
-    if hasattr(os, 'symlink'):
+    if not task.env.COPY_HEADERS and hasattr(os, 'symlink'):
         func = os.symlink
     else:
         func = shutil.copy  # Symlinks unavailable, make a copy
