@@ -26,7 +26,6 @@
 
 typedef struct {
 	// URIs defined in LV2 specifications
-	LV2_URID atom_Blank;
 	LV2_URID atom_Vector;
 	LV2_URID atom_Float;
 	LV2_URID atom_Int;
@@ -50,7 +49,6 @@ typedef struct {
 static inline void
 map_sco_uris(LV2_URID_Map* map, ScoLV2URIs* uris)
 {
-	uris->atom_Blank         = map->map(map->handle, LV2_ATOM__Blank);
 	uris->atom_Vector        = map->map(map->handle, LV2_ATOM__Vector);
 	uris->atom_Float         = map->map(map->handle, LV2_ATOM__Float);
 	uris->atom_Int           = map->map(map->handle, LV2_ATOM__Int);

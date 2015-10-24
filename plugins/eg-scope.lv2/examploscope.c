@@ -260,7 +260,7 @@ run(LV2_Handle handle, uint32_t n_samples)
 		while (!lv2_atom_sequence_is_end(
 			       &self->control->body, self->control->atom.size, ev)) {
 			// If the event is an atom:Blank object
-			if (ev->body.type == self->uris.atom_Blank) {
+			if (lv2_atom_forge_is_object_type(&self->forge, ev->body.type)) {
 				const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
 				if (obj->body.otype == self->uris.ui_On) {
 					// If the object is a ui-on, the UI was activated

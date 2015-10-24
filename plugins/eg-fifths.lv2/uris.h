@@ -25,7 +25,6 @@
 #define EG_FIFTHS_URI "http://lv2plug.in/plugins/eg-fifths"
 
 typedef struct {
-	LV2_URID atom_Blank;
 	LV2_URID atom_Path;
 	LV2_URID atom_Resource;
 	LV2_URID atom_Sequence;
@@ -40,7 +39,6 @@ typedef struct {
 static inline void
 map_fifths_uris(LV2_URID_Map* map, FifthsURIs* uris)
 {
-	uris->atom_Blank         = map->map(map->handle, LV2_ATOM__Blank);
 	uris->atom_Path          = map->map(map->handle, LV2_ATOM__Path);
 	uris->atom_Resource      = map->map(map->handle, LV2_ATOM__Resource);
 	uris->atom_Sequence      = map->map(map->handle, LV2_ATOM__Sequence);

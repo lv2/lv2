@@ -631,7 +631,7 @@ port_event(LV2UI_Handle handle,
 	 *  - format > 0:  Message (atom)
 	 */
 	if (format == ui->uris.atom_eventTransfer &&
-	    atom->type == ui->uris.atom_Blank) {
+	    lv2_atom_forge_is_object_type(&ui->forge, atom->type)) {
 		const LV2_Atom_Object* obj = (const LV2_Atom_Object*)atom;
 		if (obj->body.otype == ui->uris.RawAudio) {
 			recv_raw_audio(ui, obj);
