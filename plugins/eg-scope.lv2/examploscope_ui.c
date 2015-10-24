@@ -71,6 +71,7 @@ typedef struct {
 	uint32_t n_channels;
 	bool     paused;
 	float    rate;
+	bool     updating;
 } EgScopeUI;
 
 
@@ -158,7 +159,11 @@ send_ui_enable(LV2UI_Handle handle)
 static gboolean
 on_cfg_changed(GtkWidget* widget, gpointer data)
 {
-	send_ui_state(data);
+	EgScopeUI* ui = (EgScopeUI*)data;
+	if (!ui->updating) {
+		// Only send UI state if the change is from user interaction
+		send_ui_state(data);
+	}
 	return TRUE;
 }
 
@@ -414,7 +419,7 @@ instantiate(const LV2UI_Descriptor*   descriptor,
             LV2UI_Widget*             widget,
             const LV2_Feature* const* features)
 {
-	EgScopeUI* ui = (EgScopeUI*)malloc(sizeof(EgScopeUI));
+	EgScopeUI* ui = (EgScopeUI*)calloc(1, sizeof(EgScopeUI));
 
 	if (!ui) {
 		fprintf(stderr, "EgScope.lv2 UI: out of memory\n");
@@ -593,9 +598,11 @@ recv_ui_state(EgScopeUI* ui, const LV2_Atom_Object* obj)
 	const float   amp  = ((const LV2_Atom_Float*)amp_val)->body;
 	const float   rate = ((const LV2_Atom_Float*)rate_val)->body;
 
-	// Update UI
+	// Disable transmission and update UI
+	ui->updating = true;
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(ui->spb_speed), spp);
 	gtk_spin_button_set_value(GTK_SPIN_BUTTON(ui->spb_amp),   amp);
+	ui->updating = false;
 	ui->rate = rate;
 
 	return 0;
