@@ -516,8 +516,7 @@ lv2:designation
 	a rdf:Property ,
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
-	rdfs:range lv2:Designation ,
-		rdf:Property ;
+	rdfs:range rdf:Property ;
 	rdfs:label "designation" ;
 	lv2:documentation """
 <p>Indicates a channel or parameter designation.</p>
