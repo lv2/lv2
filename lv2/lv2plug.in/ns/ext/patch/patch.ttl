@@ -205,7 +205,18 @@ patch:Put
 		owl:cardinality 1 ;
 		owl:onProperty patch:subject
 	] ;
-	rdfs:comment """Put the patch:body as the patch:subject.  If the subject does not already exist, it is created.  If the subject does already exist, the patch:body is considered an updated version of it, and the previous version is replaced.""" .
+	lv2:documentation """<p>Put the patch:body as the patch:subject.  If the subject does not already exist, it is created.  If the subject does already exist, the patch:body is considered an updated version of it, and the previous version is replaced.</p>
+
+<pre class="turtle-code">
+[]
+    a patch:Put ;
+    patch:subject &lt;something&gt; ;
+    patch:body [
+        eg:name "New name" ;
+        eg:age 42 ;
+    ] .
+</pre>
+""" .
 
 patch:Request
 	a rdfs:Class ;
