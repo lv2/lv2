@@ -432,6 +432,18 @@ run(LV2_Handle instance,
 	}
 }
 
+static LV2_State_Map_Path*
+get_map_path(LV2_Log_Logger* logger, const LV2_Feature* const* features)
+{
+	for (int i = 0; features[i]; ++i) {
+		if (!strcmp(features[i]->URI, LV2_STATE__mapPath)) {
+			return (LV2_State_Map_Path*)features[i]->data;
+		}
+	}
+	lv2_log_error(logger, "Missing map:path feature\n");
+	return NULL;
+}
+
 static LV2_State_Status
 save(LV2_Handle                instance,
      LV2_State_Store_Function  store,
@@ -444,24 +456,23 @@ save(LV2_Handle                instance,
 		return LV2_STATE_SUCCESS;
 	}
 
-	LV2_State_Map_Path* map_path = NULL;
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_STATE__mapPath)) {
-			map_path = (LV2_State_Map_Path*)features[i]->data;
-		}
+	LV2_State_Map_Path* map_path = get_map_path(&self->logger, features);
+	if (!map_path) {
+		return LV2_STATE_ERR_NO_FEATURE;
 	}
 
+	// Map absolute sample path to an abstract state path
 	char* apath = map_path->abstract_path(map_path->handle, self->sample->path);
 
+	// Store eg:sample = abstract path
 	store(handle,
 	      self->uris.eg_sample,
 	      apath,
-	      strlen(self->sample->path) + 1,
+	      strlen(apath) + 1,
 	      self->uris.atom_Path,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 
 	free(apath);
-
 	return LV2_STATE_SUCCESS;
 }
 
@@ -474,22 +485,34 @@ restore(LV2_Handle                  instance,
 {
 	Sampler* self = (Sampler*)instance;
 
-	size_t   size;
-	uint32_t type;
-	uint32_t valflags;
-
-	const void* value = retrieve(
-		handle,
-		self->uris.eg_sample,
-		&size, &type, &valflags);
-
-	if (value) {
-		const char* path = (const char*)value;
-		lv2_log_trace(&self->logger, "Restoring file %s\n", path);
-		free_sample(self, self->sample);
-		self->sample = load_sample(self, path);
-		self->sample_changed = true;
+	// Get eg:sample from state
+	size_t      size;
+	uint32_t    type;
+	uint32_t    valflags;
+	const void* value = retrieve(handle, self->uris.eg_sample,
+	                             &size, &type, &valflags);
+	if (!value) {
+		lv2_log_error(&self->logger, "Missing eg:sample\n");
+		return LV2_STATE_ERR_NO_PROPERTY;
+	} else if (type != self->uris.atom_Path) {
+		lv2_log_error(&self->logger, "Non-path eg:sample\n");
+		return LV2_STATE_ERR_BAD_TYPE;
 	}
+
+	LV2_State_Map_Path* map_path = get_map_path(&self->logger, features);
+	if (!map_path) {
+		return LV2_STATE_ERR_NO_FEATURE;
+	}
+
+	// Map abstract state path to absolute path
+	const char* apath = (const char*)value;
+	char*       path  = map_path->absolute_path(map_path->handle, apath);
+
+	// Replace current sample with the new one
+	lv2_log_trace(&self->logger, "Restoring file %s\n", path);
+	free_sample(self, self->sample);
+	self->sample = load_sample(self, path);
+	self->sample_changed = true;
 
 	return LV2_STATE_SUCCESS;
 }
