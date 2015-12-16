@@ -346,6 +346,7 @@ ui:protocol
 	a rdf:Property ;
 	rdfs:domain ui:PortNotification ;
 	rdfs:range ui:PortProtocol ;
+	rdfs:label "protocol" ;
 	rdfs:comment "The protocol to be used for this notification." .
 
 ui:PortProtocol
