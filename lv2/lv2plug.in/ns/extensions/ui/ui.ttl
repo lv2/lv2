@@ -266,7 +266,8 @@ certain small number of events are actually of interest to the UI.</p>
 """ .
 
 ui:resize
-	a lv2:Feature ;
+	a lv2:Feature ,
+		lv2:ExtensionData ;
 	lv2:documentation """
 <p>A feature that allows the UI to notify the host about its current size, or
 request a size change.  This feature corresponds to the LV2UI_Resize struct,
