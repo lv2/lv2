@@ -574,12 +574,12 @@ lv2:Point
 		owl:Class ;
 	rdfs:label "Point" ;
 	lv2:documentation """
-<p>A Point describes an interesting value in a Port's range (much like a labeled
-<q>notch</q> on a physical knob).</p>
+<p>A Point describes an interesting value in a Port's or Parameter's range
+(much like a labeled <q>notch</q> on a physical knob).</p>
 <ul>
   <li>A Point MUST have at least one rdfs:label which is a string.</li>
   <li>A Point MUST have exactly one rdf:value with a type that is compatible
-  with the type of the corresponding Port.</li>
+  with the type of the corresponding Port or Parameter.</li>
 </ul>
 """ .
 
@@ -588,15 +588,15 @@ lv2:ScalePoint
 		owl:Class ;
 	rdfs:subClassOf lv2:Point ;
 	rdfs:label "Scale Point" ;
-	rdfs:comment "A single float Point (for control inputs)." .
+	rdfs:comment "A single Point (for control ports or parameters)." .
 
 lv2:scalePoint
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:domain lv2:Port ;
-	rdfs:range lv2:ScalePoint ;
+	rdfs:range lv2:ScalePoint , lv2:Parameter ;
 	rdfs:label "scale point" ;
-	rdfs:comment "A scale point of this port." .
+	rdfs:comment "A scale point of this port or parameter." .
 
 lv2:default
 	a rdf:Property ,
