@@ -19,6 +19,8 @@
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Improve documentation."
+			] , [
+				rdfs:label "Add missing property labels."
 			]
 		]
 	] , [

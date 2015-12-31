@@ -251,6 +251,7 @@ ui:portIndex
 		owl:DatatypeProperty ;
 	rdfs:domain ui:PortNotification ;
 	rdfs:range xsd:decimal ;
+	rdfs:label "port index" ;
 	rdfs:comment "The index of the port a portNotification applies to." .
 
 ui:notifyType
@@ -336,11 +337,13 @@ LV2UI_Show_Interface.</p>
 ui:windowTitle
 	a rdf:Property ;
 	rdfs:range xsd:string ;
+	rdfs:label "window title" ;
 	rdfs:comment "The title for the window shown by LV2UI_Show_Interface." .
 
 ui:updateRate
 	a rdf:Property ;
 	rdfs:range xsd:float ;
+	rdfs:label "update rate" ;
 	rdfs:comment "The target rate, in Hz, to send updates to the UI." .
 
 ui:protocol
