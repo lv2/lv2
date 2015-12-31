@@ -593,10 +593,9 @@ lv2:ScalePoint
 lv2:scalePoint
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain lv2:Port ;
 	rdfs:range lv2:ScalePoint ;
 	rdfs:label "scale point" ;
-	rdfs:comment "A scale point of this port." .
+	rdfs:comment "A scale point of a port or parameter." .
 
 lv2:default
 	a rdf:Property ,
