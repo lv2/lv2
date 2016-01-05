@@ -40,6 +40,7 @@
 #define EG_PARAMS__float EG_PARAMS_URI "#float"
 
 typedef struct {
+	LV2_URID plugin;
 	LV2_URID atom_Path;
 	LV2_URID atom_Sequence;
 	LV2_URID atom_URID;
@@ -58,6 +59,7 @@ typedef struct {
 	LV2_URID patch_Set;
 	LV2_URID patch_Put;
 	LV2_URID patch_body;
+	LV2_URID patch_subject;
 	LV2_URID patch_property;
 	LV2_URID patch_value;
 } URIs;
@@ -79,6 +81,8 @@ typedef struct {
 static inline void
 map_uris(LV2_URID_Map* map, URIs* uris)
 {
+	uris->plugin             = map->map(map->handle, EG_PARAMS_URI);
+
 	uris->atom_Path          = map->map(map->handle, LV2_ATOM__Path);
 	uris->atom_Sequence      = map->map(map->handle, LV2_ATOM__Sequence);
 	uris->atom_URID          = map->map(map->handle, LV2_ATOM__URID);
@@ -97,6 +101,7 @@ map_uris(LV2_URID_Map* map, URIs* uris)
 	uris->patch_Set          = map->map(map->handle, LV2_PATCH__Set);
 	uris->patch_Put          = map->map(map->handle, LV2_PATCH__Put);
 	uris->patch_body         = map->map(map->handle, LV2_PATCH__body);
+	uris->patch_subject      = map->map(map->handle, LV2_PATCH__subject);
 	uris->patch_property     = map->map(map->handle, LV2_PATCH__property);
 	uris->patch_value        = map->map(map->handle, LV2_PATCH__value);
 }
@@ -327,6 +332,48 @@ set_parameter(Params*     self,
 	return st;
 }
 
+static const LV2_Atom *
+get_parameter(Params* self, LV2_URID key)
+{
+	const URIs* uris = &self->uris;
+
+	if (key == uris->eg_int) {
+		lv2_log_trace(&self->logger, "Get int %d\n", self->state.aint.body);
+		return &self->state.aint.atom;
+	} else if (key == uris->eg_long) {
+		lv2_log_trace(&self->logger, "Get long %ld\n", self->state.along.body);
+		return &self->state.along.atom;
+	} else if (key == uris->eg_float) {
+		lv2_log_trace(&self->logger, "Get float %f\n", self->state.afloat.body);
+		return &self->state.afloat.atom;
+	} else if (key == uris->eg_double) {
+		lv2_log_trace(&self->logger, "Get double %f\n", self->state.adouble.body);
+		return &self->state.adouble.atom;
+	} else if (key == uris->eg_bool) {
+		lv2_log_trace(&self->logger, "Get bool %d\n", self->state.abool.body);
+		return &self->state.abool.atom;
+	} else if (key == uris->eg_string) {
+		lv2_log_trace(&self->logger, "Get string %s\n", self->state.string);
+		return &self->state.astring;
+	} else if (key == uris->eg_path) {
+		lv2_log_trace(&self->logger, "Get path %s\n", self->state.path);
+		return &self->state.apath;
+	} else if (key == uris->eg_spring) {
+		lv2_log_trace(&self->logger, "Get spring %f\n", self->state.spring.body);
+		return &self->state.spring.atom;
+	} else if (key == uris->eg_lfo) {
+		lv2_log_trace(&self->logger, "Get LFO %f\n", self->state.lfo.body);
+		return &self->state.lfo.atom;
+	} else if (self->unmap) {
+		lv2_log_trace(&self->logger, "Unknown parameter <%s>\n",
+		              self->unmap->unmap(self->unmap->handle, key));
+	} else {
+		lv2_log_trace(&self->logger, "Unknown parameter %d\n", key);
+	}
+
+	return NULL;
+}
+
 static LV2_State_Status
 write_param_to_forge(LV2_State_Handle handle,
                      uint32_t         key,
@@ -464,6 +511,13 @@ restore(LV2_Handle                  instance,
 	return st;
 }
 
+static inline bool
+subject_is_plugin(Params* self, const LV2_Atom_URID* subject)
+{
+	return (subject && subject->atom.type == self->uris.atom_URID &&
+	        subject->body != self->uris.plugin);
+}
+
 static void
 run(LV2_Handle instance, uint32_t sample_count)
 {
@@ -486,35 +540,71 @@ run(LV2_Handle instance, uint32_t sample_count)
 		const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
 		if (obj->body.otype == uris->patch_Set) {
 			// Get the property and value of the set message
-			const LV2_Atom* property = NULL;
-			const LV2_Atom* value    = NULL;
+			const LV2_Atom_URID* subject  = NULL;
+			const LV2_Atom_URID* property = NULL;
+			const LV2_Atom*      value    = NULL;
 			lv2_atom_object_get(obj,
-			                    uris->patch_property, &property,
+			                    uris->patch_subject,  (const LV2_Atom**)&subject,
+			                    uris->patch_property, (const LV2_Atom**)&property,
 			                    uris->patch_value,    &value,
 			                    0);
-			if (!property) {
+			if (!subject_is_plugin(self, subject)) {
+				lv2_log_error(&self->logger,
+				              "patch:Set message with unknown subject\n");
+			} else if (!property) {
 				lv2_log_error(&self->logger,
 				              "patch:Set message with no property\n");
-			} else if (property->type != uris->atom_URID) {
+			} else if (property->atom.type != uris->atom_URID) {
 				lv2_log_error(&self->logger,
 				              "patch:Set property is not a URID\n");
 			} else {
-				const LV2_URID key = ((const LV2_Atom_URID*)property)->body;
+				const LV2_URID key = property->body;
 				set_parameter(self, key, value->size, value->type, value + 1, false);
 			}
 		} else if (obj->body.otype == uris->patch_Get) {
-			// Received a get message, emit our state (probably to UI)
-			lv2_atom_forge_frame_time(&self->forge, ev->time.frames);
-			LV2_Atom_Forge_Frame pframe;
-			lv2_atom_forge_object(&self->forge, &pframe, 0, uris->patch_Put);
-			lv2_atom_forge_key(&self->forge, uris->patch_body);
+			// Get the property and value of the get message
+			const LV2_Atom_URID* subject  = NULL;
+			const LV2_Atom_URID* property = NULL;
+			lv2_atom_object_get(obj,
+			                    uris->patch_subject,  (const LV2_Atom**)&subject,
+			                    uris->patch_property, (const LV2_Atom**)&property,
+			                    0);
+			if (!subject_is_plugin(self, subject)) {
+				lv2_log_error(&self->logger,
+				              "patch:Get message with unknown subject\n");
+			} else if (!property) {
+				// Received a get message, emit our full state (probably to UI)
+				lv2_atom_forge_frame_time(&self->forge, ev->time.frames);
+				LV2_Atom_Forge_Frame pframe;
+				lv2_atom_forge_object(&self->forge, &pframe, 0, uris->patch_Put);
+				lv2_atom_forge_key(&self->forge, uris->patch_body);
 
-			LV2_Atom_Forge_Frame bframe;
-			lv2_atom_forge_object(&self->forge, &bframe, 0, 0);
-			store_state(self, write_param_to_forge, &self->forge, 0, NULL);
+				LV2_Atom_Forge_Frame bframe;
+				lv2_atom_forge_object(&self->forge, &bframe, 0, 0);
+				store_state(self, write_param_to_forge, &self->forge, 0, NULL);
 
-			lv2_atom_forge_pop(&self->forge, &bframe);
-			lv2_atom_forge_pop(&self->forge, &pframe);
+				lv2_atom_forge_pop(&self->forge, &bframe);
+				lv2_atom_forge_pop(&self->forge, &pframe);
+			} else if (property->atom.type != uris->atom_URID) {
+				lv2_log_error(&self->logger,
+				              "patch:Get property is not a URID\n");
+			} else {
+				// Received a get message, emit single property state (probably to UI)
+				const LV2_URID key = property->body;
+				const LV2_Atom *atom = get_parameter(self, key);
+				if(atom)
+				{
+					lv2_atom_forge_frame_time(&self->forge, ev->time.frames);
+					LV2_State_Status st = LV2_STATE_SUCCESS;
+					LV2_Atom_Forge_Frame frame;
+					lv2_atom_forge_object(&self->forge, &frame, 0, uris->patch_Set);
+					lv2_atom_forge_key(&self->forge, uris->patch_property);
+					lv2_atom_forge_urid(&self->forge, property->body);
+					store_param(self, &st, write_param_to_forge, &self->forge,
+					            uris->patch_value, atom);
+					lv2_atom_forge_pop(&self->forge, &frame);
+				}
+			}
 		} else {
 			if (self->unmap) {
 				lv2_log_trace(&self->logger,
