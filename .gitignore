@@ -1,0 +1,10 @@
+# generated files and folders
+.waf-*
+.lock-waf*
+/build
+NEWS
+
+# misc editor/tools
+*.swp
+cscope.*
+tags
