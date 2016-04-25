@@ -57,6 +57,7 @@ typedef struct {
 	LV2_URID patch_Get;
 	LV2_URID patch_Set;
 	LV2_URID patch_Put;
+	LV2_URID patch_body;
 	LV2_URID patch_property;
 	LV2_URID patch_value;
 } URIs;
@@ -95,6 +96,7 @@ map_uris(LV2_URID_Map* map, URIs* uris)
 	uris->patch_Get          = map->map(map->handle, LV2_PATCH__Get);
 	uris->patch_Set          = map->map(map->handle, LV2_PATCH__Set);
 	uris->patch_Put          = map->map(map->handle, LV2_PATCH__Put);
+	uris->patch_body         = map->map(map->handle, LV2_PATCH__body);
 	uris->patch_property     = map->map(map->handle, LV2_PATCH__property);
 	uris->patch_value        = map->map(map->handle, LV2_PATCH__value);
 }
@@ -503,10 +505,16 @@ run(LV2_Handle instance, uint32_t sample_count)
 		} else if (obj->body.otype == uris->patch_Get) {
 			// Received a get message, emit our state (probably to UI)
 			lv2_atom_forge_frame_time(&self->forge, ev->time.frames);
-			LV2_Atom_Forge_Frame frame;
-			lv2_atom_forge_object(&self->forge, &frame, 0, uris->patch_Put);
+			LV2_Atom_Forge_Frame pframe;
+			lv2_atom_forge_object(&self->forge, &pframe, 0, uris->patch_Put);
+			lv2_atom_forge_key(&self->forge, uris->patch_body);
+
+			LV2_Atom_Forge_Frame bframe;
+			lv2_atom_forge_object(&self->forge, &bframe, 0, 0);
 			store_state(self, write_param_to_forge, &self->forge, 0, NULL);
-			lv2_atom_forge_pop(&self->forge, &frame);
+
+			lv2_atom_forge_pop(&self->forge, &bframe);
+			lv2_atom_forge_pop(&self->forge, &pframe);
 		} else {
 			if (self->unmap) {
 				lv2_log_trace(&self->logger,
