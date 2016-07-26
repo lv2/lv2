@@ -618,8 +618,8 @@ run(LV2_Handle instance, uint32_t sample_count)
 		}
 	}
 
-	if (self->spring > 0.01f) {
-		self->spring -= 0.001;
+	if (self->spring > 0.0f) {
+		self->spring = (self->spring >= 0.001) ? self->spring - 0.001 : 0.0;
 		lv2_atom_forge_frame_time(&self->forge, 0);
 		LV2_Atom_Forge_Frame frame;
 		lv2_atom_forge_object(&self->forge, &frame, 0, uris->patch_Set);
