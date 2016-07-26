@@ -1,6 +1,6 @@
 /*
   LV2 Parameter Example Plugin
-  Copyright 2014-2015 David Robillard <d@drobilla.net>
+  Copyright 2014-2016 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -514,8 +514,9 @@ restore(LV2_Handle                  instance,
 static inline bool
 subject_is_plugin(Params* self, const LV2_Atom_URID* subject)
 {
-	return (subject && subject->atom.type == self->uris.atom_URID &&
-	        subject->body != self->uris.plugin);
+	// This simple plugin only supports one subject: itself
+	return (!subject || (subject->atom.type == self->uris.atom_URID &&
+	                     subject->body      == self->uris.plugin));
 }
 
 static void
