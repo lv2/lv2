@@ -11,6 +11,15 @@
 	doap:created "2012-01-12" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.3" ;
+		doap:created "2016-07-30" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add lv2_log_logger_set_map() for changing the URI map of an existing logger."
+			]
+		]
+	] , [
 		doap:revision "2.2" ;
 		doap:created "2014-01-04" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.8.0.tar.bz2> ;
