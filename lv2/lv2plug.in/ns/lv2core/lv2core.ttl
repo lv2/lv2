@@ -38,6 +38,7 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
 <http://lv2plug.in/ns/lv2core>
 	a owl:Ontology ;
 	rdfs:seeAlso <lv2.h> ,
+		<lv2_util.h> ,
 		<lv2core.doap.ttl> ,
 		<../meta/meta.ttl> ;
 	lv2:documentation """
