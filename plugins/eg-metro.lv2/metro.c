@@ -25,9 +25,11 @@
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
+#include "lv2/lv2plug.in/ns/ext/log/logger.h"
 #include "lv2/lv2plug.in/ns/ext/time/time.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
 #ifndef M_PI
 #    define M_PI 3.14159265
@@ -73,10 +75,11 @@ typedef enum {
    This example uses a simple AD envelope with fixed parameters.  A more
    sophisticated implementation might use a more advanced envelope and allow
    the user to modify these parameters, the frequency of the wave, and so on.
-   */
+*/
 typedef struct {
-	LV2_URID_Map* map;   // URID map feature
-	MetroURIs     uris;  // Cache of mapped URIDs
+	LV2_URID_Map*  map;     // URID map feature
+	LV2_Log_Logger logger;  // Logger API
+	MetroURIs      uris;    // Cache of mapped URIDs
 
 	struct {
 		LV2_Atom_Sequence* control;
@@ -152,21 +155,21 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	// Scan host features for URID map
-	LV2_URID_Map* map = NULL;
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID_URI "#map")) {
-			map = (LV2_URID_Map*)features[i]->data;
-		}
-	}
-	if (!map) {
-		fprintf(stderr, "Host does not support urid:map.\n");
+	const char* missing = lv2_features_query(
+		features,
+		LV2_LOG__log,  &self->logger.log, false,
+		LV2_URID__map, &self->map, true,
+		NULL);
+	lv2_log_logger_set_map(&self->logger, self->map);
+	if (missing) {
+		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
 		free(self);
 		return NULL;
 	}
 
 	// Map URIS
-	MetroURIs* const uris = &self->uris;
-	self->map = map;
+	MetroURIs* const    uris  = &self->uris;
+	LV2_URID_Map* const map   = self->map;
 	uris->atom_Blank          = map->map(map->handle, LV2_ATOM__Blank);
 	uris->atom_Float          = map->map(map->handle, LV2_ATOM__Float);
 	uris->atom_Object         = map->map(map->handle, LV2_ATOM__Object);

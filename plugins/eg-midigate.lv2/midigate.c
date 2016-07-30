@@ -21,9 +21,11 @@
 
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
+#include "lv2/lv2plug.in/ns/ext/log/logger.h"
 #include "lv2/lv2plug.in/ns/ext/midi/midi.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
 #define MIDIGATE_URI "http://lv2plug.in/plugins/eg-midigate"
 
@@ -40,7 +42,8 @@ typedef struct {
 	float*                   out;
 
 	// Features
-	LV2_URID_Map* map;
+	LV2_URID_Map*  map;
+	LV2_Log_Logger logger;
 
 	struct {
 		LV2_URID midi_MidiEvent;
@@ -56,25 +59,26 @@ instantiate(const LV2_Descriptor*     descriptor,
             const char*               bundle_path,
             const LV2_Feature* const* features)
 {
-	/** Scan features array for the URID feature we need. */
-	LV2_URID_Map* map = NULL;
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID__map)) {
-			map = (LV2_URID_Map*)features[i]->data;
-			break;
-		}
-	}
-	if (!map) {
-		/**
-		   No URID feature given.  This is a host bug since we require this
-		   feature, but should be handled gracefully anyway.
-		*/
+	Midigate* self = (Midigate*)calloc(1, sizeof(Midigate));
+	if (!self) {
 		return NULL;
 	}
 
-	Midigate* self = (Midigate*)calloc(1, sizeof(Midigate));
-	self->map = map;
-	self->uris.midi_MidiEvent = map->map(map->handle, LV2_MIDI__MidiEvent);
+	// Scan host features for URID map
+	const char* missing = lv2_features_query(
+		features,
+		LV2_LOG__log,  &self->logger.log, false,
+		LV2_URID__map, &self->map,        true,
+		NULL);
+	lv2_log_logger_set_map(&self->logger, self->map);
+	if (missing) {
+		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
+		free(self);
+		return NULL;
+	}
+
+	self->uris.midi_MidiEvent = self->map->map(
+		self->map->handle, LV2_MIDI__MidiEvent);
 
 	return (LV2_Handle)self;
 }

@@ -24,11 +24,13 @@
 #endif
 
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
+#include "lv2/lv2plug.in/ns/ext/log/logger.h"
 #include "lv2/lv2plug.in/ns/ext/midi/midi.h"
 #include "lv2/lv2plug.in/ns/ext/patch/patch.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
 #include "./uris.h"
 
@@ -39,7 +41,8 @@ enum {
 
 typedef struct {
 	// Features
-	LV2_URID_Map* map;
+	LV2_URID_Map*  map;
+	LV2_Log_Logger logger;
 
 	// Ports
 	const LV2_Atom_Sequence* in_port;
@@ -79,19 +82,19 @@ instantiate(const LV2_Descriptor*     descriptor,
 		return NULL;
 	}
 
-	// Get host features
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID__map)) {
-			self->map = (LV2_URID_Map*)features[i]->data;
-		}
-	}
-	if (!self->map) {
-		fprintf(stderr, "Missing feature urid:map\n");
+	// Scan host features for URID map
+	const char*  missing = lv2_features_query(
+		features,
+		LV2_LOG__log,  &self->logger.log, false,
+		LV2_URID__map, &self->map,        true,
+		NULL);
+	lv2_log_logger_set_map(&self->logger, self->map);
+	if (missing) {
+		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
 		free(self);
 		return NULL;
 	}
 
-	// Map URIs and initialise forge/logger
 	map_fifths_uris(self->map, &self->uris);
 
 	return (LV2_Handle)self;

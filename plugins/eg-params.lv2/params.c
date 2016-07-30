@@ -31,6 +31,7 @@
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
 #define MAX_STRING 1024
 
@@ -113,13 +114,10 @@ typedef struct {
 	// Features
 	LV2_URID_Map*   map;
 	LV2_URID_Unmap* unmap;
-	LV2_Log_Log*    log;
+	LV2_Log_Logger  logger;
 
 	// Forge for creating atoms
 	LV2_Atom_Forge forge;
-
-	// Logger convenience API
-	LV2_Log_Logger logger;
 
 	// Ports
 	const LV2_Atom_Sequence* in_port;
@@ -153,36 +151,6 @@ connect_port(LV2_Handle instance,
 	}
 }
 
-static inline int
-get_features(const LV2_Feature* const* features, ...)
-{
-	va_list args;
-	va_start(args, features);
-
-	const char* uri = NULL;
-	while ((uri = va_arg(args, const char*))) {
-		void** data     = va_arg(args, void**);
-		bool   required = va_arg(args, int);
-		bool   found    = false;
-
-		for (int i = 0; features[i]; ++i) {
-			if (!strcmp(features[i]->URI, uri)) {
-				*data = features[i]->data;
-				found = true;
-				break;
-			}
-		}
-
-		if (required && !found) {
-			fprintf(stderr, "Missing required feature <%s>\n", uri);
-			return 1;
-		}
-	}
-
-	return 0;
-}
-
-
 #define INIT_PARAM(atype, param) { \
 	(param)->atom.type = (atype); \
 	(param)->atom.size = sizeof((param)->body); \
@@ -201,19 +169,22 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	// Get host features
-	if (get_features(features,
-	                 LV2_URID__map,   &self->map,   true,
-	                 LV2_URID__unmap, &self->unmap, false,
-	                 LV2_LOG__log,    &self->log,   false,
-	                 NULL)) {
+	const char* missing = lv2_features_query(
+		features,
+		LV2_LOG__log,    &self->logger.log, false,
+		LV2_URID__map,   &self->map,        true,
+		LV2_URID__unmap, &self->unmap,      false,
+		NULL);
+	lv2_log_logger_set_map(&self->logger, self->map);
+	if (missing) {
+		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
 		free(self);
 		return NULL;
 	}
 
-	// Map URIs and initialise forge/logger
+	// Map URIs and initialise forge
 	map_uris(self->map, &self->uris);
 	lv2_atom_forge_init(&self->forge, self->map);
-	lv2_log_logger_init(&self->logger, self->map, self->log);
 
 	// Initialize state
 	INIT_PARAM(self->forge.Int,    &self->state.aint);
@@ -457,8 +428,9 @@ save(LV2_Handle                instance,
      const LV2_Feature* const* features)
 {
 	Params*             self     = (Params*)instance;
-	LV2_State_Map_Path* map_path = NULL;
-	get_features(features, LV2_STATE__mapPath, &map_path, true, NULL);
+	LV2_State_Map_Path* map_path = (LV2_State_Map_Path*)lv2_features_data(
+		features, LV2_STATE__mapPath);
+
 	return store_state(self, store, handle, flags, map_path);
 }
 

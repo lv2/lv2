@@ -1,4 +1,5 @@
 /*
+  Copyright 2016 David Robillard <d@drobilla.net>
   Copyright 2013 Robin Gareus <robin@gareus.org>
 
   Permission to use, copy, modify, and/or distribute this software for any
@@ -22,6 +23,7 @@
 #include "lv2/lv2plug.in/ns/ext/log/logger.h"
 #include "lv2/lv2plug.in/ns/ext/state/state.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
 #include "./uris.h"
 
@@ -47,7 +49,6 @@ typedef struct {
 	LV2_Atom_Forge_Frame frame;
 
 	// Log feature and convenience API
-	LV2_Log_Log*   log;
 	LV2_Log_Logger logger;
 
 	// Instantiation settings
@@ -88,16 +89,14 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	// Get host features
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID__map)) {
-			self->map = (LV2_URID_Map*)features[i]->data;
-		} else if (!strcmp(features[i]->URI, LV2_LOG__log)) {
-			self->log = (LV2_Log_Log*)features[i]->data;
-		}
-	}
-
-	if (!self->map) {
-		fprintf(stderr, "EgScope.lv2 error: Host does not support urid:map\n");
+	const char* missing = lv2_features_query(
+		features,
+		LV2_LOG__log,  &self->logger.log, false,
+		LV2_URID__map, &self->map,        true,
+		NULL);
+	lv2_log_logger_set_map(&self->logger, self->map);
+	if (missing) {
+		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
 		free(self);
 		return NULL;
 	}
@@ -124,7 +123,6 @@ instantiate(const LV2_Descriptor*     descriptor,
 	// Map URIs and initialise forge/logger
 	map_sco_uris(self->map, &self->uris);
 	lv2_atom_forge_init(&self->forge, self->map);
-	lv2_log_logger_init(&self->logger, self->map, self->log);
 
 	return (LV2_Handle)self;
 }

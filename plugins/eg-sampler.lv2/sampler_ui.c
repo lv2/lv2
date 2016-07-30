@@ -1,6 +1,6 @@
 /*
   LV2 Sampler Example Plugin UI
-  Copyright 2011-2012 David Robillard <d@drobilla.net>
+  Copyright 2011-2016 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -22,9 +22,11 @@
 #include "lv2/lv2plug.in/ns/ext/atom/atom.h"
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
+#include "lv2/lv2plug.in/ns/ext/log/logger.h"
 #include "lv2/lv2plug.in/ns/ext/patch/patch.h"
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
+#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
 #include "./uris.h"
 
@@ -32,9 +34,9 @@
 
 typedef struct {
 	LV2_Atom_Forge forge;
-
-	LV2_URID_Map* map;
-	SamplerURIs   uris;
+	LV2_URID_Map*  map;
+	LV2_Log_Logger logger;
+	SamplerURIs    uris;
 
 	LV2UI_Write_Function write;
 	LV2UI_Controller     controller;
@@ -100,32 +102,28 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 		return NULL;
 	}
 
-	ui->map        = NULL;
 	ui->write      = write_function;
 	ui->controller = controller;
-	ui->box        = NULL;
-	ui->button     = NULL;
-	ui->label      = NULL;
-	ui->window     = NULL;
+	*widget        = NULL;
 
-	*widget = NULL;
-
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID_URI "#map")) {
-			ui->map = (LV2_URID_Map*)features[i]->data;
-		}
-	}
-
-	if (!ui->map) {
-		fprintf(stderr, "sampler_ui: Host does not support urid:Map\n");
+	// Get host features
+	const char* missing = lv2_features_query(
+		features,
+		LV2_LOG__log,  &ui->logger.log, false,
+		LV2_URID__map, &ui->map,        true,
+		NULL);
+	lv2_log_logger_set_map(&ui->logger, ui->map);
+	if (missing) {
+		lv2_log_error(&ui->logger, "Missing feature <%s>\n", missing);
 		free(ui);
 		return NULL;
 	}
 
+	// Map URIs and initialise forge
 	map_sampler_uris(ui->map, &ui->uris);
-
 	lv2_atom_forge_init(&ui->forge, ui->map);
 
+	// Construct Gtk UI
 	ui->box = gtk_vbox_new(FALSE, 4);
 	ui->label = gtk_label_new("?");
 	ui->button = gtk_button_new_with_label("Load Sample");

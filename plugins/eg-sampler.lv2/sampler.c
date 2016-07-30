@@ -36,6 +36,7 @@
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/ext/worker/worker.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
 #include "./uris.h"
 
@@ -58,13 +59,10 @@ typedef struct {
 	// Features
 	LV2_URID_Map*        map;
 	LV2_Worker_Schedule* schedule;
-	LV2_Log_Log*         log;
+	LV2_Log_Logger       logger;
 
 	// Forge for creating atoms
 	LV2_Atom_Forge forge;
-
-	// Logger convenience API
-	LV2_Log_Logger logger;
 
 	// Sample
 	Sample* sample;
@@ -264,27 +262,22 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	// Get host features
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_URID__map)) {
-			self->map = (LV2_URID_Map*)features[i]->data;
-		} else if (!strcmp(features[i]->URI, LV2_WORKER__schedule)) {
-			self->schedule = (LV2_Worker_Schedule*)features[i]->data;
-		} else if (!strcmp(features[i]->URI, LV2_LOG__log)) {
-			self->log = (LV2_Log_Log*)features[i]->data;
-		}
-	}
-	if (!self->map) {
-		lv2_log_error(&self->logger, "Missing feature urid:map\n");
-		goto fail;
-	} else if (!self->schedule) {
-		lv2_log_error(&self->logger, "Missing feature work:schedule\n");
-		goto fail;
+	const char* missing = lv2_features_query(
+		features,
+		LV2_LOG__log,         &self->logger.log, false,
+		LV2_URID__map,        &self->map,        true,
+		LV2_WORKER__schedule, &self->schedule,   true,
+		NULL);
+	lv2_log_logger_set_map(&self->logger, self->map);
+	if (missing) {
+		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
+		free(self);
+		return NULL;
 	}
 
-	// Map URIs and initialise forge/logger
+	// Map URIs and initialise forge
 	map_sampler_uris(self->map, &self->uris);
 	lv2_atom_forge_init(&self->forge, self->map);
-	lv2_log_logger_init(&self->logger, self->map, self->log);
 
 	// Load the default sample file
 	const size_t path_len    = strlen(path);
@@ -296,10 +289,6 @@ instantiate(const LV2_Descriptor*     descriptor,
 	free(sample_path);
 
 	return (LV2_Handle)self;
-
-fail:
-	free(self);
-	return 0;
 }
 
 static void
@@ -431,18 +420,6 @@ run(LV2_Handle instance,
 	}
 }
 
-static LV2_State_Map_Path*
-get_map_path(LV2_Log_Logger* logger, const LV2_Feature* const* features)
-{
-	for (int i = 0; features[i]; ++i) {
-		if (!strcmp(features[i]->URI, LV2_STATE__mapPath)) {
-			return (LV2_State_Map_Path*)features[i]->data;
-		}
-	}
-	lv2_log_error(logger, "Missing map:path feature\n");
-	return NULL;
-}
-
 static LV2_State_Status
 save(LV2_Handle                instance,
      LV2_State_Store_Function  store,
@@ -455,7 +432,8 @@ save(LV2_Handle                instance,
 		return LV2_STATE_SUCCESS;
 	}
 
-	LV2_State_Map_Path* map_path = get_map_path(&self->logger, features);
+	LV2_State_Map_Path* map_path = lv2_features_data(
+		features, LV2_STATE__mapPath);
 	if (!map_path) {
 		return LV2_STATE_ERR_NO_FEATURE;
 	}
@@ -498,7 +476,8 @@ restore(LV2_Handle                  instance,
 		return LV2_STATE_ERR_BAD_TYPE;
 	}
 
-	LV2_State_Map_Path* map_path = get_map_path(&self->logger, features);
+	LV2_State_Map_Path* map_path = (LV2_State_Map_Path*)lv2_features_data(
+		features, LV2_STATE__mapPath);
 	if (!map_path) {
 		return LV2_STATE_ERR_NO_FEATURE;
 	}
