@@ -1,5 +1,5 @@
 /*
-  Copyright 2006-2011 David Robillard <d@drobilla.net>
+  Copyright 2006-2016 David Robillard <d@drobilla.net>
   Copyright 2006 Steve Harris <steve@plugin.org.uk>
 
   Permission to use, copy, modify, and/or distribute this software for any
@@ -76,7 +76,7 @@ instantiate(const LV2_Descriptor*     descriptor,
             const char*               bundle_path,
             const LV2_Feature* const* features)
 {
-	Amp* amp = (Amp*)malloc(sizeof(Amp));
+	Amp* amp = (Amp*)calloc(1, sizeof(Amp));
 
 	return (LV2_Handle)amp;
 }

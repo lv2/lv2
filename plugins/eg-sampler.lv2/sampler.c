@@ -1,6 +1,6 @@
 /*
   LV2 Sampler Example Plugin
-  Copyright 2011-2012 David Robillard <d@drobilla.net>
+  Copyright 2011-2016 David Robillard <d@drobilla.net>
   Copyright 2011 Gabriel M. Beddingfield <gabriel@teuton.org>
   Copyright 2011 James Morris <jwm.art.net@gmail.com>
 
@@ -258,11 +258,10 @@ instantiate(const LV2_Descriptor*     descriptor,
             const LV2_Feature* const* features)
 {
 	// Allocate and initialise instance structure.
-	Sampler* self = (Sampler*)malloc(sizeof(Sampler));
+	Sampler* self = (Sampler*)calloc(1, sizeof(Sampler));
 	if (!self) {
 		return NULL;
 	}
-	memset(self, 0, sizeof(Sampler));
 
 	// Get host features
 	for (int i = 0; features[i]; ++i) {

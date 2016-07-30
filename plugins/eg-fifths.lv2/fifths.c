@@ -1,6 +1,6 @@
 /*
   LV2 Fifths Example Plugin
-  Copyright 2014 David Robillard <d@drobilla.net>
+  Copyright 2014-2016 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -74,11 +74,10 @@ instantiate(const LV2_Descriptor*     descriptor,
             const LV2_Feature* const* features)
 {
 	// Allocate and initialise instance structure.
-	Fifths* self = (Fifths*)malloc(sizeof(Fifths));
+	Fifths* self = (Fifths*)calloc(1, sizeof(Fifths));
 	if (!self) {
 		return NULL;
 	}
-	memset(self, 0, sizeof(Fifths));
 
 	// Get host features
 	for (int i = 0; features[i]; ++i) {

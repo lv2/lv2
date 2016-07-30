@@ -95,7 +95,11 @@ instantiate(const LV2UI_Descriptor*   descriptor,
             LV2UI_Widget*             widget,
             const LV2_Feature* const* features)
 {
-	SamplerUI* ui = (SamplerUI*)malloc(sizeof(SamplerUI));
+	SamplerUI* ui = (SamplerUI*)calloc(1, sizeof(SamplerUI));
+	if (!ui) {
+		return NULL;
+	}
+
 	ui->map        = NULL;
 	ui->write      = write_function;
 	ui->controller = controller;
