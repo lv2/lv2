@@ -11,6 +11,15 @@
 	doap:created "2012-03-22" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "1.1" ;
+		doap:created "2016-06-31" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Improve documentation."
+			]
+		]
+	] , [
 		doap:revision "1.0" ;
 		doap:created "2012-04-17" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;

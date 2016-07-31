@@ -10,34 +10,27 @@
 	rdfs:seeAlso <worker.h> ,
 		<lv2-worker.doap.ttl> ;
 	lv2:documentation """
-<p>This extension allows plugins to have a non-realtime worker method, with
-thread sychronisation and communication issues handled by the host.  This
-allows plugins to perform non-realtime actions (such as loading files) using a
-simple and portable API without having to worry about the complexities of
-multi-threading.</p>
+<p>This extension allows plugins to schedule work that must be performed in
+another thread.  Plugins can use this interface to safely perform work that is
+not real-time safe, and receive the result in the run context.  The details of
+threading are managed by the host, allowing plugins to be simple and portable
+while using resources more efficiently.</p>
 
-<p>Because the worker thread is implemented by the host, many plugins can share
-the same thread and communication buffers, which reduces bloat and fixed
-per-plugin buffer size limitations.  The host has the power to implement
-threads in a suitable way, while plugins are simpler and thus less
-error-prone.</p>
-
-<p>This interface is designed to gracefully handle single-threaded synchronous
-execution, in which case the host may simply run all work immediately.  This
-makes it possible for the same plugin code to work with sample accuracy for
-offline rendering, or in real-time with non-real-time work taking place in a
-separate thread.</p>
+<p>This interface is designed to gracefully support single-threaded synchronous
+execution, which allows the same code to work with sample accuracy for offline
+rendering.  For example, a sampler plugin may schedule a sample to be loaded
+from disk in another thread.  During live execution, the host will call the
+plugin's work method from another thread, and deliver the result to the audio
+thread when it is finished. However, during offline export, the
+<q>scheduled</q> load would be executed immediately in the same thread.  This
+enables reproducible offline rendering, where any changes affect the output
+immediately regardless of how long the work takes to execute.</p>
 """ .
 
 work:interface
 	a lv2:ExtensionData ;
 	lv2:documentation """
-<p>The interface provided by the plugin to implement a worker.  To implement
-this extension, the plugin must return a valid LV2_Worker_Interface from
-LV2_Descriptor::extension_data() when it is called with URI
-LV2_WORKER__interface.</p>
-
-<p>The plugin data file should describe this like so:</p>
+<p>The work interface provided by a plugin, LV2_Worker_Interface.</p>
 <pre class="turtle-code">
 @prefix work: &lt;http://lv2plug.in/ns/ext/worker#&gt; .
 
@@ -50,20 +43,11 @@ LV2_WORKER__interface.</p>
 work:schedule
 	a lv2:Feature ;
 	lv2:documentation """
-<p>A feature which provides functions for use by the plugin to implement a
-worker method.  To support this feature, the host must pass an LV2_Feature to
-LV2_Descriptor::instantiate() with URI LV2_WORKER__schedule and data pointed to
-an instance of LV2_Worker_Schedule.</p>
+<p>The work scheduling feature provided by a host, LV2_Worker_Schedule.</p>
 
-<p>The plugin data file should describe this like so:</p>
-<pre class="turtle-code">
-@prefix work: &lt;http://lv2plug.in/ns/ext/worker#&gt; .
-
-&lt;plugin&gt;
-    a lv2:Plugin ;
-    lv2:requiredFeature work:schedule .
-</pre>
-
-<p>As usual, lv2:optionalFeature may be used instead, if the plugin is capable
-of running in a host that does not provide this feature.</p>
-""" .
+<p>If the host passes this feature to LV2_Descriptor::instantiate, the plugin
+MAY use it to schedule work in the audio thread, and MUST NOT call it in any
+other context.  Hosts MAY pass this feature to other functions as well, in
+which case the plugin MAY use it to schedule work in the calling context.  The
+plugin MUST NOT assume any relationship between different schedule
+features.</p> """ .
