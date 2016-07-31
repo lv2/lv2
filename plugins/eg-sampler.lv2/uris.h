@@ -133,7 +133,7 @@ read_set_file(const SamplerURIs*     uris,
 		return NULL;
 	}
 
-	return LV2_ATOM_BODY_CONST(value);
+	return (const char*)LV2_ATOM_BODY_CONST(value);
 }
 
 #endif  /* SAMPLER_URIS_H */

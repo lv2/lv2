@@ -121,7 +121,7 @@ load_sample(LV2_Log_Logger* logger, const char* path)
 	}
 
 	// Read data
-	float* const data = malloc(sizeof(float) * info->frames);
+	float* const data = (float*)malloc(sizeof(float) * info->frames);
 	if (!data) {
 		lv2_log_error(logger, "Failed to allocate memory for sample\n");
 		return NULL;
@@ -431,7 +431,7 @@ save(LV2_Handle                instance,
 		return LV2_STATE_SUCCESS;
 	}
 
-	LV2_State_Map_Path* map_path = lv2_features_data(
+	LV2_State_Map_Path* map_path = (LV2_State_Map_Path*)lv2_features_data(
 		features, LV2_STATE__mapPath);
 	if (!map_path) {
 		return LV2_STATE_ERR_NO_FEATURE;

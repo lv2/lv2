@@ -351,7 +351,7 @@ write_param_to_forge(LV2_State_Handle handle,
                      uint32_t         type,
                      uint32_t         flags)
 {
-	LV2_Atom_Forge* forge = handle;
+	LV2_Atom_Forge* forge = (LV2_Atom_Forge*)handle;
 
 	if (!lv2_atom_forge_key(forge, key) ||
 	    !lv2_atom_forge_atom(forge, size, type) ||
