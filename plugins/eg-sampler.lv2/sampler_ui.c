@@ -78,8 +78,8 @@ on_load_clicked(GtkWidget* widget,
 	uint8_t obj_buf[OBJ_BUF_SIZE];
 	lv2_atom_forge_set_buffer(&ui->forge, obj_buf, OBJ_BUF_SIZE);
 
-	LV2_Atom* msg = write_set_file(&ui->forge, &ui->uris,
-	                               filename, strlen(filename));
+	LV2_Atom* msg = (LV2_Atom*)write_set_file(&ui->forge, &ui->uris,
+	                                          filename, strlen(filename));
 
 	ui->write(ui->controller, 0, lv2_atom_total_size(msg),
 	          ui->uris.atom_eventTransfer,
@@ -170,20 +170,18 @@ port_event(LV2UI_Handle handle,
 	if (format == ui->uris.atom_eventTransfer) {
 		const LV2_Atom* atom = (const LV2_Atom*)buffer;
 		if (lv2_atom_forge_is_object_type(&ui->forge, atom->type)) {
-			const LV2_Atom_Object* obj      = (const LV2_Atom_Object*)atom;
-			const LV2_Atom*        file_uri = read_set_file(&ui->uris, obj);
-			if (!file_uri) {
-				fprintf(stderr, "Unknown message sent to UI.\n");
-				return;
+			const LV2_Atom_Object* obj = (const LV2_Atom_Object*)atom;
+			const char*            uri = read_set_file(&ui->uris, obj);
+			if (uri) {
+				gtk_label_set_text(GTK_LABEL(ui->label), uri);
+			} else {
+				lv2_log_warning(&ui->logger, "Malformed message\n");
 			}
-
-			const char* uri = (const char*)LV2_ATOM_BODY_CONST(file_uri);
-			gtk_label_set_text(GTK_LABEL(ui->label), uri);
 		} else {
-			fprintf(stderr, "Unknown message type.\n");
+			lv2_log_error(&ui->logger, "Unknown message type\n");
 		}
 	} else {
-		fprintf(stderr, "Unknown format.\n");
+		lv2_log_warning(&ui->logger, "Unknown port event format\n");
 	}
 }
 

@@ -1,6 +1,6 @@
 /*
   LV2 Sampler Example Plugin
-  Copyright 2011-2012 David Robillard <d@drobilla.net>
+  Copyright 2011-2016 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -73,14 +73,14 @@ map_sampler_uris(LV2_URID_Map* map, SamplerURIs* uris)
  *     patch:property eg:sample ;
  *     patch:value </home/me/foo.wav> .
  */
-static inline LV2_Atom*
+static inline LV2_Atom_Forge_Ref
 write_set_file(LV2_Atom_Forge*    forge,
                const SamplerURIs* uris,
                const char*        filename,
                const uint32_t     filename_len)
 {
 	LV2_Atom_Forge_Frame frame;
-	LV2_Atom* set = (LV2_Atom*)lv2_atom_forge_object(
+	LV2_Atom_Forge_Ref   set = lv2_atom_forge_object(
 		forge, &frame, 0, uris->patch_Set);
 
 	lv2_atom_forge_key(forge, uris->patch_property);
@@ -89,7 +89,6 @@ write_set_file(LV2_Atom_Forge*    forge,
 	lv2_atom_forge_path(forge, filename, filename_len);
 
 	lv2_atom_forge_pop(forge, &frame);
-
 	return set;
 }
 
@@ -100,7 +99,7 @@ write_set_file(LV2_Atom_Forge*    forge,
  *     patch:property eg:sample ;
  *     patch:value </home/me/foo.wav> .
  */
-static inline const LV2_Atom*
+static inline const char*
 read_set_file(const SamplerURIs*     uris,
               const LV2_Atom_Object* obj)
 {
@@ -124,17 +123,17 @@ read_set_file(const SamplerURIs*     uris,
 	}
 
 	/* Get value. */
-	const LV2_Atom* file_path = NULL;
-	lv2_atom_object_get(obj, uris->patch_value, &file_path, 0);
-	if (!file_path) {
+	const LV2_Atom* value = NULL;
+	lv2_atom_object_get(obj, uris->patch_value, &value, 0);
+	if (!value) {
 		fprintf(stderr, "Malformed set message has no value.\n");
 		return NULL;
-	} else if (file_path->type != uris->atom_Path) {
+	} else if (value->type != uris->atom_Path) {
 		fprintf(stderr, "Set message value is not a Path.\n");
 		return NULL;
 	}
 
-	return file_path;
+	return LV2_ATOM_BODY_CONST(value);
 }
 
 #endif  /* SAMPLER_URIS_H */

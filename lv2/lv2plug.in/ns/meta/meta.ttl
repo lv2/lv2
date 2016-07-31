@@ -54,6 +54,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 				rdfs:label "eg-scope: Don't feed back UI state updates."
 			] , [
 				rdfs:label "eg-sampler: Fix handling of state file paths."
+			] , [
+				rdfs:label "eg-sampler: Support thread-safe state restoration."
 			]
 		]
 	] , [

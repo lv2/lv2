@@ -19,15 +19,16 @@
 	doap:name "Example Sampler" ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	lv2:project <http://lv2plug.in/ns/lv2> ;
-	lv2:requiredFeature urid:map ,
+	lv2:requiredFeature state:loadDefaultState ,
+		urid:map ,
 		work:schedule ;
 	lv2:optionalFeature lv2:hardRTCapable ,
-		state:loadDefaultState ;
+		state:threadSafeRestore ;
 	lv2:extensionData state:interface ,
 		work:interface ;
 	ui:ui <http://lv2plug.in/plugins/eg-sampler#ui> ;
-	patch:writable <http://lv2plug.in/plugins/eg-sampler#sample> ;
-	patch:writable param:gain ;
+	patch:writable <http://lv2plug.in/plugins/eg-sampler#sample> ,
+		param:gain ;
 	lv2:port [
 		a lv2:InputPort ,
 			atom:AtomPort ;
