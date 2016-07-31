@@ -347,3 +347,20 @@ char* save_myfile(LV2_State_Make_Path* make_path)
 }
 </pre>
 """ .
+
+state:threadSafeRestore
+	a lv2:Feature ;
+	rdfs:label "thread-safe restore" ;
+	lv2:documentation """
+<p>If a plugin supports this feature, its LV2_State_Interface::restore method
+is thread-safe and may be called concurrently with audio class functions.</p>
+
+<p>To support this feature, the host MUST pass a <a
+href="../worker/worker.html#schedule">work:schedule</a> feature to the restore
+method, which will be used to complete the state restoration.  The usual
+mechanics of the worker apply: the host will call the plugin's work method,
+which emits a response which is later applied in the audio thread.</p>
+
+<p>The host is not required to block run() while restore() and work() load the
+state, so this feature allows state to be restored without dropouts.</p>
+""" .

@@ -15,11 +15,13 @@
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "2.1" ;
-		doap:created "2015-12-04" ;
+		doap:created "2016-07-31" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add LV2_STATE_ERR_NO_SPACE status flag."
+			] , [
+				rdfs:label "Add state:threadSafeRestore feature for dropout-free state restoration."
 			]
 		]
 	] , [
