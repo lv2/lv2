@@ -77,8 +77,11 @@ typedef struct _LV2_Worker_Interface {
 	   as requested, possibly with an arbitrary message to handle.
 
 	   A response can be sent to run() using `respond`.  The plugin MUST NOT
-	   make any assumptions about which thread calls this method, other than
-	   the fact that there are no real-time requirements.
+	   make any assumptions about which thread calls this method, except that
+	   there are no real-time requirements and only one call may be executed at
+	   a time.  That is, the host MAY call this method from any non-real-time
+	   thread, but MUST NOT make concurrent calls to this method from several
+	   threads.
 
 	   @param instance The LV2 instance this is a method on.
 	   @param respond  A function for sending a response to run().
