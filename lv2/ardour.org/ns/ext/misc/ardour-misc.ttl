@@ -1,0 +1,36 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<http://ardour.org/lv2/ext#noSampleAccurateControls>
+	a lv2:Feature ;
+	rdfs:label "no sample accurate controls" ;
+	lv2:documentation """
+<p>signifies that a plugin favors regular block-sizes over sample-accurate
+control data.</p>
+<p>The host should preferably call the plugin with the same block-size
+continuously.</p>
+<p>Note that this does not guarantee a fixed block-size. The process cycle may
+be split for other reasons (e.g. looping), and the blocksize itself may change
+anytime.</p>
+""" .
+
+<http://ardour.org/lv2/processing#enable>
+	a rdf:Property ,
+		owl:DatatypeProperty ;
+	rdfs:label "bypass/enable" ;
+	rdfs:range xsd:boolean ;
+	lv2:documentation """
+<p>A port with the designation "processing#enable" must control a plugin's
+internal bypass mode.</p>
+<p>If the port value is larger than zero the plugin processes normally.</p>
+<p>If the port value is zero, the plugin is expected to bypass all signals
+unmodified.</p>
+<p>The plugin must providing a click-free transition between the enable
+and disable (bypassed) states.</p>
+<p>(values less than zero are reserved for future use e.g click-free
+insertion/removal of latent plugins. Generally values <= 0 are to be
+treated as bypassed.)</p>
+""" .

@@ -35,6 +35,8 @@ def options(opt):
                    help='Do not build example plugins')
     opt.add_option('--copy-headers', action='store_true', dest='copy_headers',
                    help='Copy headers instead of linking to bundle')
+    opt.add_option('--unofficial', action='store_true', dest='unofficial',
+                   help='Include unofficial and work-in-progress non-standard extensions')
     opt.recurse('lv2/lv2plug.in/ns/lv2core')
 
 def configure(conf):
@@ -62,6 +64,7 @@ def configure(conf):
     conf.env.BUILD_PLUGINS = not Options.options.no_plugins
     conf.env.COPY_HEADERS  = Options.options.copy_headers
     conf.env.ONLINE_DOCS   = Options.options.online_docs
+    conf.env.UNOFFICIAL    = Options.options.unofficial
 
     if conf.env.DOCS or conf.env.ONLINE_DOCS:
         try:
@@ -114,6 +117,7 @@ def specdirs(path):
     return ([path.find_node('lv2/lv2plug.in/ns/lv2core')] +
             path.ant_glob('plugins/*', dir=True) +
             path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
+            path.ant_glob('lv2/ardour.org/ns/ext/*', dir=True) +
             path.ant_glob('lv2/lv2plug.in/ns/extensions/*', dir=True))
 
 def ttl_files(path, specdir):
@@ -255,6 +259,9 @@ def build_ext(bld, path):
 def build(bld):
     exts = (bld.path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
             bld.path.ant_glob('lv2/lv2plug.in/ns/extensions/*', dir=True))
+
+    if bld.env.UNOFFICIAL:
+        exts += bld.path.ant_glob('lv2/ardour.org/ns/ext/*', dir=True)
 
     # Copy lv2.h to URI-style include path in build directory
     lv2_h_path = 'lv2/lv2plug.in/ns/lv2core/lv2.h'

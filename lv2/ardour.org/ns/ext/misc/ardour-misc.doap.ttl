@@ -1,0 +1,23 @@
+@prefix dcs: <http://ontologi.es/doap-changeset#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://gareus.org/rgareus#me>
+a foaf:Person ;
+foaf:name "Robin Gareus" ;
+foaf:mbox <mailto:robin@gareus.org> ;
+foaf:homepage <http://gareus.org/> .
+
+
+<http://ardour.org/lv2/>
+	a doap:Project ;
+	rdfs:seeAlso <../../meta/meta.ttl> ;
+	doap:name "ardour.org specifics" ;
+	doap:shortdesc "Various non-standard extensions supported by the Ardour DAW." ;
+	doap:created "2016-07-09" ;
+	doap:developer <http://gareus.org/rgareus#me> ;
+	doap:release [
+		doap:revision "1.0" ;
+		doap:created "2016-07-09" ;
+	] .

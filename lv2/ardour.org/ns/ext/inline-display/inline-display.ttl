@@ -1,0 +1,55 @@
+@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix inline-display: <http://harrisonconsoles.com/lv2/inlinedisplay#> .
+
+<http://harrisonconsoles.com/lv2/inlinedisplay>
+	a owl:Ontology ;
+	rdfs:seeAlso <inline-display.h> ,
+		<lv2-inline-display.doap.ttl> ;
+	lv2:documentation """
+<p>This extension allows plugins to povide a small miniaturized, non-interactive
+view in the host's mixer strip.</p>
+""" .
+
+inline-display:interface
+	a lv2:ExtensionData ;
+	lv2:documentation """
+<p>The interface provided by the plugin to render the view.
+The plugin must return a valid LV2_Inline_Display_Interface from
+LV2_Descriptor::extension_data() when it is called with URI
+LV2_INLINEDISPLAY__interface.</p>
+
+<p>The plugin data file should describe this like so:</p>
+<pre class="turtle-code">
+@prefix idpy: &lt;http://harrisonconsoles.com/lv2/inlinedisplay#&gt; .
+
+&lt;plugin&gt;
+    a lv2:Plugin ;
+    lv2:extensionData idpy:interface .
+</pre>
+""" .
+
+inline-display:queue_draw
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature which provides functions for use by the plugin to notify the host
+to update the view.
+To support this feature, the host must pass an LV2_Feature to
+LV2_Descriptor::instantiate() with LV2_INLINEDISPLAY__queue_draw and data data
+pointed to an instance of LV2_Inline_Display.</p>
+
+<p>The plugin data file should describe this like so:</p>
+<pre class="turtle-code">
+@prefix idpy: &lt;http://harrisonconsoles.com/lv2/inlinedisplay#&gt; .
+
+&lt;plugin&gt;
+    a lv2:Plugin ;
+    lv2:optionalFeature idpy:queue_draw .
+</pre>
+
+<p>lv2:requiredFeature should be used instead, if the plugin's only purpose is
+to provide an inline display view.</p>
+""" .
