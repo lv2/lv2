@@ -503,13 +503,14 @@ restore(LV2_Handle                  instance,
 		// Schedule sample to be loaded by the provided worker
 		lv2_log_trace(&self->logger, "Scheduling restore\n");
 		LV2_Atom_Forge forge;
-		LV2_Atom*      buf = calloc(1, sizeof(LV2_Atom) * 32 + strlen(path));
+		LV2_Atom*      buf = (LV2_Atom*)calloc(1, strlen(path) + 128);
 		lv2_atom_forge_init(&forge, self->map);
 		lv2_atom_forge_set_sink(&forge, atom_sink, atom_sink_deref, buf);
 		write_set_file(&forge, &self->uris, path, strlen(path));
 
 		const uint32_t msg_size = lv2_atom_pad_size(buf->size);
 		schedule->schedule_work(self->schedule->handle, msg_size, buf + 1);
+		free(buf);
 	}
 
 	return LV2_STATE_SUCCESS;
