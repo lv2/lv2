@@ -29,21 +29,22 @@
 #ifndef LV2_TIME_H
 #define LV2_TIME_H
 
-#define LV2_TIME_URI "http://lv2plug.in/ns/ext/time"
+#define LV2_TIME_URI    "http://lv2plug.in/ns/ext/time"
+#define LV2_TIME_PREFIX LV2_TIME_URI "#"
 
-#define LV2_TIME__Time            LV2_TIME_URI "#Time"
-#define LV2_TIME__Position        LV2_TIME_URI "#Position"
-#define LV2_TIME__Rate            LV2_TIME_URI "#Rate"
-#define LV2_TIME__position        LV2_TIME_URI "#position"
-#define LV2_TIME__barBeat         LV2_TIME_URI "#barBeat"
-#define LV2_TIME__bar             LV2_TIME_URI "#bar"
-#define LV2_TIME__beat            LV2_TIME_URI "#beat"
-#define LV2_TIME__beatUnit        LV2_TIME_URI "#beatUnit"
-#define LV2_TIME__beatsPerBar     LV2_TIME_URI "#beatsPerBar"
-#define LV2_TIME__beatsPerMinute  LV2_TIME_URI "#beatsPerMinute"
-#define LV2_TIME__frame           LV2_TIME_URI "#frame"
-#define LV2_TIME__framesPerSecond LV2_TIME_URI "#framesPerSecond"
-#define LV2_TIME__speed           LV2_TIME_URI "#speed"
+#define LV2_TIME__Time            LV2_TIME_PREFIX "Time"
+#define LV2_TIME__Position        LV2_TIME_PREFIX "Position"
+#define LV2_TIME__Rate            LV2_TIME_PREFIX "Rate"
+#define LV2_TIME__position        LV2_TIME_PREFIX "position"
+#define LV2_TIME__barBeat         LV2_TIME_PREFIX "barBeat"
+#define LV2_TIME__bar             LV2_TIME_PREFIX "bar"
+#define LV2_TIME__beat            LV2_TIME_PREFIX "beat"
+#define LV2_TIME__beatUnit        LV2_TIME_PREFIX "beatUnit"
+#define LV2_TIME__beatsPerBar     LV2_TIME_PREFIX "beatsPerBar"
+#define LV2_TIME__beatsPerMinute  LV2_TIME_PREFIX "beatsPerMinute"
+#define LV2_TIME__frame           LV2_TIME_PREFIX "frame"
+#define LV2_TIME__framesPerSecond LV2_TIME_PREFIX "framesPerSecond"
+#define LV2_TIME__speed           LV2_TIME_PREFIX "speed"
 
 /**
    @}
