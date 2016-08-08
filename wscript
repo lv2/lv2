@@ -558,20 +558,24 @@ class DistCheck(Dist, Scripting.DistCheck):
 def dist(ctx):
     subdirs = specdirs(ctx.path)
 
+    dev_dist = 'http://lv2plug.in/spec/lv2-%s.tar.bz2' % VERSION
+
     # Write NEWS files in source directory
     top_entries = {}
     for specdir in subdirs:
         autowaf.write_news(os.path.basename(specdir.abspath()),
                            ttl_files(ctx.path, specdir),
                            specdir.abspath() + '/NEWS',
-                           top_entries)
+                           top_entries,
+                           dev_dist = dev_dist)
 
     # Write top level amalgamated NEWS file
     autowaf.write_news('lv2',
                        ['lv2/lv2plug.in/ns/meta/meta.ttl'],
                        'NEWS',
                        None,
-                       top_entries)
+                       top_entries,
+                       dev_dist = dev_dist)
 
     # Build archive
     ctx.archive()
