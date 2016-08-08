@@ -12,7 +12,7 @@
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "1.1" ;
-		doap:created "2016-06-31" ;
+		doap:created "2016-07-31" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
