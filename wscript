@@ -530,6 +530,7 @@ def lint(ctx):
         subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-build/header_guard,-readability/casting,-build/include,-runtime/sizeof ' + i.abspath(), shell=True)
 
 def test(ctx):
+    "runs unit tests"
     autowaf.pre_test(ctx, APPNAME, dirs=['.'])
     for i in ctx.path.ant_glob('**/*-test'):
         name = os.path.basename(i.abspath())
@@ -555,27 +556,54 @@ class DistCheck(Dist, Scripting.DistCheck):
     def archive(self):
         Dist.archive(self)
 
-def dist(ctx):
+def posts(ctx):
+    "generates news posts in Pelican Markdown format"
     subdirs = specdirs(ctx.path)
+    dev_dist = 'http://lv2plug.in/spec/lv2-%s.tar.bz2' % VERSION
 
+    try:
+        os.mkdir(os.path.join(out, 'posts'))
+    except:
+        pass
+
+    # Get all entries (as in dist())
+    top_entries = {}
+    for specdir in subdirs:
+        entries = autowaf.get_rdf_news(os.path.basename(specdir.abspath()),
+                                       ttl_files(ctx.path, specdir),
+                                       top_entries,
+                                       dev_dist = dev_dist)
+
+    entries = autowaf.get_rdf_news('lv2',
+                                   ['lv2/lv2plug.in/ns/meta/meta.ttl'],
+                                   None,
+                                   top_entries,
+                                   dev_dist = dev_dist)
+
+    autowaf.write_posts(entries,
+                        { 'Author': 'drobilla' },
+                        os.path.join(out, 'posts'))
+
+def dist(ctx):
+    subdirs  = specdirs(ctx.path)
     dev_dist = 'http://lv2plug.in/spec/lv2-%s.tar.bz2' % VERSION
 
     # Write NEWS files in source directory
     top_entries = {}
     for specdir in subdirs:
-        autowaf.write_news(os.path.basename(specdir.abspath()),
-                           ttl_files(ctx.path, specdir),
-                           specdir.abspath() + '/NEWS',
-                           top_entries,
-                           dev_dist = dev_dist)
+        entries = autowaf.get_rdf_news(os.path.basename(specdir.abspath()),
+                                       ttl_files(ctx.path, specdir),
+                                       top_entries,
+                                       dev_dist = dev_dist)
+        autowaf.write_news(entries, specdir.abspath() + '/NEWS')
 
     # Write top level amalgamated NEWS file
-    autowaf.write_news('lv2',
-                       ['lv2/lv2plug.in/ns/meta/meta.ttl'],
-                       'NEWS',
-                       None,
-                       top_entries,
-                       dev_dist = dev_dist)
+    entries = autowaf.get_rdf_news('lv2',
+                                   ['lv2/lv2plug.in/ns/meta/meta.ttl'],
+                                   None,
+                                   top_entries,
+                                   dev_dist = dev_dist)
+    autowaf.write_news(entries, 'NEWS')
 
     # Build archive
     ctx.archive()
