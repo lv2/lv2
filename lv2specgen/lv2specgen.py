@@ -1222,9 +1222,11 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
         termlist += docTerms('Instance', instalist, m, classlist, proplist, instalist)
 
     name = specProperty(m, spec, doap.name)
+    title = name
     if root_link:
         name = '<a href="%s">%s</a>' % (root_link, name)
 
+    template = template.replace('@TITLE@', title)
     template = template.replace('@NAME@', name)
     template = template.replace('@SHORT_DESC@', specProperty(m, spec, doap.shortdesc))
     template = template.replace('@URI@', spec)
