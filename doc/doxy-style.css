@@ -1,6 +1,6 @@
 body {
 	font-family: sans-serif;
-	max-width: 60em;
+	max-width: 80em;
 	margin: 0;
 	margin-left: auto;
 	margin-right: auto;
@@ -46,15 +46,12 @@ p {
 	margin: 0 0 1ex 0;
 }
 
-br {
-	display: none;
-}
+/* br { */
+/* 	display: none; */
+/* } */
 
 dt {
 	font-weight: 700;
-}
-
-div.multicol {
 }
 
 p.startli,p.startdd,p.starttd {
@@ -117,6 +114,10 @@ a.qindexHL {
 	background-color: #9CAFD4;
 	color: #FFF;
 	border: 1px double #869DCA;
+}
+
+code {
+	color: #444;
 }
 
 a.code {
@@ -200,9 +201,6 @@ tr.memlist {
 
 p.formulaDsp {
 	text-align: center;
-}
-
-img.formulaDsp {
 }
 
 img.formulaInl {
@@ -303,6 +301,10 @@ table.memberdecls {
 	border-spacing: 0.125em;
 }
 
+h2.groupheader {
+	margin: 1em 0 0.5em 0;
+}
+
 .mdescLeft,.mdescRight,.memItemLeft,.memItemRight,.memTemplItemLeft,.memTemplItemRight,.memTemplParams {
 	margin: 0;
 	padding: 0;
@@ -314,11 +316,14 @@ table.memberdecls {
 
 .memItemLeft,.memItemRight,.memTemplParams {
 	border: 0;
+	font-family: monospace;
+	font-size: 90%;
 }
 
 .memItemLeft,.memTemplItemLeft {
 	white-space: nowrap;
 	padding-left: 2em;
+	padding-right: 1ex;
 }
 
 .memItemLeft a.el {
@@ -331,6 +336,16 @@ table.memberdecls {
 }
 
 td.memSeparator {
+	display: none;
+}
+
+td.mlabels-right {
+	vertical-align: top;
+	padding-top: 4px;
+	color: #AA6;
+}
+
+.memtitle {
 	display: none;
 }
 
@@ -362,6 +377,7 @@ td.memSeparator {
 .memname {
 	/*white-space: nowrap;*/
 	font-weight: bold;
+	font-family: monospace;
 }
 
 .memproto {
@@ -376,6 +392,7 @@ td.memSeparator {
 
 .memproto .paramname {
 	color: #CCC;
+	font-style: normal;
 }
 
 .memdoc {
@@ -395,12 +412,25 @@ td.memSeparator {
 }
 
 .paramname {
-	color: #602020;
+	color: #444;
 	white-space: nowrap;
+	font-weight: bold;
+	font-family: monospace;
 }
 
-.paramname em {
-	font-style: normal;
+td.paramname {
+	padding-right: 1ex;
+	vertical-align: top;
+}
+
+.fieldname {
+	color: #444;
+	font-family: monospace;
+}
+
+td.fieldname {
+	padding-right: 1ex;
+	vertical-align: top;
 }
 
 /* @end */
@@ -554,8 +584,7 @@ div.summary a {
 div.header {
 	background-color: #F3F3F3;
 	margin: 0;
-	border-bottom: 1px solid #DDD;
-	border-radius: 0 0 6px 6px;
+	border: 0;
 }
 
 div.headertitle {
@@ -565,9 +594,8 @@ div.headertitle {
 	padding: 0.125em 0.25em 0.125em 0.25em;
 	background-color: #333;
 	background: linear-gradient(to bottom, #444 0%, #000 100%);
-	border: 0;
-	border-top: solid 2px #444;
-	border-bottom: solid 2px #444;
+	border: solid 1px #444;
+	border-top: 0;
 	border-radius: 0 0 6px 6px;
 }
 
@@ -576,19 +604,18 @@ div.line {
 	font-size: 13px;
 	min-height: 13px;
 	line-height: 1.0;
-	text-wrap: unrestricted;
+	text-wrap: avoid;
 	white-space: pre-wrap;
 	text-indent: -53px;
 	padding-left: 53px;
-	padding-bottom: 0px;
-	margin: 0px;
+	padding-bottom: 0;
+	margin: 0;
 }
 
-div.line.glow {
+.glow {
 	background-color: cyan;
 	box-shadow: 0 0 10px cyan;
 }
-
 
 span.lineno {
 	padding-right: 4px;
@@ -637,13 +664,12 @@ th {
 }
 
 .tablist li {
-	float: left;
 	display: table-cell;
 	line-height: 2em;
 	list-style: none;
 	background-color: #333;
 	background: linear-gradient(to bottom, #555 0%, #111 100%);
-	border: solid 1px #000;
+	border: 1px solid #000;
 	border-radius: 6px 6px 0 0;
 	color: #fff;
 }
@@ -663,13 +689,13 @@ th {
 
 .tablist a:hover {
 	color: #fff;
-	text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 1.0);
 	text-decoration: none;
 }
 
 .tablist li.current a {
 	color: #fff;
-	text-shadow: 0px 1px 1px rgba(0, 0, 0, 1.0);
+	text-shadow: 0 1px 1px rgba(0, 0, 0, 1.0);
 }
 
 span.icon {
