@@ -1,5 +1,5 @@
 /*
-  Copyright 2015 David Robillard <d@drobilla.net>
+  Copyright 2015-2016 David Robillard <d@drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -23,14 +23,17 @@
 #include "lv2/lv2plug.in/ns/lv2core/Lib.hpp"
 #include "lv2/lv2plug.in/ns/lv2core/Plugin.hpp"
 
+class MidiAmp;
+typedef typename lv2::Plugin<MidiAmp> Base;
+
 /** MIDI-controlled amplifier. */
-class MidiAmp : public lv2::Plugin<MidiAmp> {
+class MidiAmp : public Base {
 public:
 	MidiAmp(double                    rate,
 	        const char*               bundle_path,
 	        const LV2_Feature* const* features,
 	        bool*                     valid)
-		: Plugin(rate, bundle_path, features, valid)
+		: Base(rate, bundle_path, features, valid)
 		, m_map(features, valid)
 		, m_vol(1.0f)
 	{

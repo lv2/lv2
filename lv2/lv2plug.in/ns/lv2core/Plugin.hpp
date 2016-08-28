@@ -1,5 +1,5 @@
 /*
-  Copyright 2015 David Robillard <http://drobilla.net>
+  Copyright 2015-2016 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -31,7 +31,7 @@ namespace lv2 {
 
    @code
    class MyPlug : public lv2::Plugin<MyPlug> {
-       // ...
+   // ...
    };
 
    static const LV2_Descriptor p = MyPlug::descriptor("http://example.org/plug");
@@ -46,7 +46,7 @@ namespace lv2 {
    The destructor will be called when the host cleans up the plugin.
 */
 template<class Derived>
-class Plugin
+class PluginBase
 {
 public:
 	/**
@@ -79,10 +79,10 @@ public:
 	   @return A handle for the new plugin instance, or NULL if instantiation
 	   has failed.
 	*/
-	Plugin(double                   sample_rate,
-	       const char*              bundle_path,
-	       const LV2_Feature*const* features,
-	       bool*                    valid)
+	PluginBase(double                   sampcle_rate,
+	           const char*              bundle_path,
+	           const LV2_Feature*const* features,
+	           bool*                    valid)
 	{}
 
 	/**
@@ -215,7 +215,7 @@ public:
 		                              &s_run,
 		                              &s_deactivate,
 		                              &s_cleanup,
-		                              &Plugin::extension_data };
+		                              &PluginBase::extension_data };
 		return desc;
 	}
 
@@ -252,6 +252,28 @@ private:
 	static void s_cleanup(LV2_Handle instance) {
 		delete reinterpret_cast<Derived*>(instance);
 	}
+};
+
+template<class Derived, template<class S> class First=PluginBase, template<class S> class... Rest>
+struct Plugin : public First< Plugin<Derived, Rest...> > {
+	Plugin(double                    rate,
+	       const char*               bundle_path,
+	       const LV2_Feature* const* features,
+	       bool*                     valid)
+		: First< Plugin<Derived, Rest...> >(rate, bundle_path, features, valid)
+	{}
+
+};
+
+template<class Derived, template<class S> class First>
+struct Plugin<Derived, First> : public First< PluginBase<Derived> > {
+	Plugin(double                    rate,
+	       const char*               bundle_path,
+	       const LV2_Feature* const* features,
+	       bool*                     valid)
+		: First< PluginBase<Derived> >(rate, bundle_path, features, valid)
+	{}
+
 };
 
 } /* namespace lv2 */
