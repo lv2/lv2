@@ -23,17 +23,24 @@
 #include "lv2/lv2plug.in/ns/lv2core/Lib.hpp"
 #include "lv2/lv2plug.in/ns/lv2core/Plugin.hpp"
 
-class MidiAmp;
-typedef typename lv2::Plugin<MidiAmp> Base;
+template<class Super>
+struct Mixin : public Super {
+	Mixin(double                    rate,
+	      const char*               bundle_path,
+	      const LV2_Feature* const* features,
+	      bool*                     valid)
+		: Super(rate, bundle_path, features, valid)
+	{}
+};
 
 /** MIDI-controlled amplifier. */
-class MidiAmp : public Base {
+class MidiAmp : public lv2::Plugin<> {
 public:
 	MidiAmp(double                    rate,
 	        const char*               bundle_path,
 	        const LV2_Feature* const* features,
 	        bool*                     valid)
-		: Base(rate, bundle_path, features, valid)
+		: lv2::Plugin<>(rate, bundle_path, features, valid)
 		, m_map(features, valid)
 		, m_vol(1.0f)
 	{
@@ -104,13 +111,12 @@ private:
 };
 
 /** Plugin library. */
-class MidiAmpLib : public lv2::Lib<MidiAmpLib>
+class MidiAmpLib : public lv2::Lib
 {
 public:
-	MidiAmpLib(const char*              bundle_path,
-	           const LV2_Feature*const* features)
-		: lv2::Lib<MidiAmpLib>(bundle_path, features)
-		, m_amp(MidiAmp::descriptor("http://lv2plug.in/plugins/eg-midiamp"))
+	MidiAmpLib(const char* bundle_path, const LV2_Feature*const* features)
+		: lv2::Lib(bundle_path, features)
+		, m_amp("http://lv2plug.in/plugins/eg-midiamp")
 	{}
 
 	const LV2_Descriptor* get_plugin(uint32_t index) {
@@ -118,13 +124,12 @@ public:
 	}
 
 private:
-	LV2_Descriptor m_amp;
+	lv2::Descriptor<MidiAmp> m_amp;
 };
 
 /** Library entry point. */
 LV2_SYMBOL_EXPORT const LV2_Lib_Descriptor*
-lv2_lib_descriptor(const char*                bundle_path,
-                   const LV2_Feature *const * features)
+lv2_lib_descriptor(const char* bundle_path, const LV2_Feature*const* features)
 
 {
 	return new MidiAmpLib(bundle_path, features);

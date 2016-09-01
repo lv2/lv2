@@ -22,32 +22,19 @@
 namespace lv2 {
 
 /**
-   C++ interface for writing an LV2 plugin.
+   Base interface for plugins.
 
    This interface is a convenience for plugin authors only, and is not an ABI
-   used by hosts.  To implement a plugin, inherit from this interface with the
-   derived class passed as the template parameter.  The C LV2_Descriptor for the
-   plugin can be fetched with descriptor().
-
+   used by hosts.  This is the top of a plugin's class hierarchy, which is
+   inherited by extension mixins.  To implement a plugin, inherit from the
+   lv2::Plugin template, passing any desired extension mixins as template
+   parameters:
    @code
    class MyPlug : public lv2::Plugin<MyPlug> {
-   // ...
+       // ...
    };
-
-   static const LV2_Descriptor p = MyPlug::descriptor("http://example.org/plug");
-   @endcode
-
-   This class is a stateless interface and imposes no restrictions or overhead
-   compared to a plugin implemented using the underlying C interface.  Note
-   that this is not a virtual class, so calling methods from a Plugin* base
-   pointer will not work.  Instead, anything that must dispatch on Plugin
-   methods takes a template parameter for static dispatch.
-
-   The destructor will be called when the host cleans up the plugin.
 */
-template<class Derived>
-class PluginBase
-{
+class PluginBase {
 public:
 	/**
 	   Instantiate the plugin.
@@ -79,11 +66,19 @@ public:
 	   @return A handle for the new plugin instance, or NULL if instantiation
 	   has failed.
 	*/
-	PluginBase(double                   sampcle_rate,
+	PluginBase(double                   sample_rate,
 	           const char*              bundle_path,
 	           const LV2_Feature*const* features,
 	           bool*                    valid)
 	{}
+
+	/**
+	   Clean up plugin instance.
+
+	   If activate() was called for a plugin instance then a corresponding call
+	   to deactivate() MUST be made before the plugin is destroyed.
+	*/
+	virtual ~PluginBase() {}
 
 	/**
 	   Connect a port on a plugin instance to a memory location.
@@ -117,7 +112,7 @@ public:
 	   used to read/write data when run() is called. Data present at the time
 	   of the connect_port() call MUST NOT be considered meaningful.
 	*/
-	void connect_port(uint32_t port, void* data_location) {}
+	virtual void connect_port(uint32_t port, void* data_location) {}
 
 	/**
 	   Initialise a plugin instance and activate it for use.
@@ -140,7 +135,7 @@ public:
 	   some point in the future. Note that connect_port() may be called before
 	   or after activate().
 	*/
-	void activate() {}
+	virtual void activate() {}
 
 	/**
 	   Run a plugin instance for a block.
@@ -163,7 +158,7 @@ public:
 	   @param sample_count The block size (in samples) for which the plugin
 	   instance must run.
 	*/
-	void run(uint32_t sample_count) {}
+	virtual void run(uint32_t sample_count) {}
 
 	/**
 	   Deactivate a plugin instance (counterpart to activate()).
@@ -183,7 +178,7 @@ public:
 	   called. Note that connect_port() may be called before or after
 	   deactivate().
 	*/
-	void deactivate() {}
+	virtual void deactivate() {}
 
 	/**
 	   Return additional plugin data defined by some extenion.
@@ -199,33 +194,54 @@ public:
 	   The host is never responsible for freeing the returned value.
 	*/
 	static const void* extension_data(const char* uri) { return NULL; }
+};
 
-	/**
-	   Get an LV2_Descriptor for a plugin class.
+/** Empty extension mixin used to terminate mixin list. */
+template<typename Super>
+class NoExtension : public Super {};
 
-	   @code
-	   static const LV2_Descriptor a = lv2::descriptor<Amp>("http://example.org/amp");
-	   @endcode
-	*/
-	static LV2_Descriptor descriptor(const char* uri) {
-		const LV2_Descriptor desc = { uri,
-		                              &s_instantiate,
-		                              &s_connect_port,
-		                              &s_activate,
-		                              &s_run,
-		                              &s_deactivate,
-		                              &s_cleanup,
-		                              &PluginBase::extension_data };
-		return desc;
+/** Plugin mixin list. */
+template<template<class Super> class    First=NoExtension,
+         template<class S>     class... Rest>
+struct Plugin : public First< Plugin<Rest...> > {
+	Plugin(double r, const char* b, const LV2_Feature* const* f, bool* v)
+		: First< Plugin<Rest...> >(r, b, f, v)
+	{}
+};
+
+template<>
+struct Plugin<NoExtension> : public PluginBase {
+	Plugin(double r, const char* b, const LV2_Feature* const* f, bool* v)
+		: PluginBase(r, b, f, v)
+	{}
+};
+
+/**
+   Plugin descriptor.
+
+   @code
+   static const Descriptor<Amp> amp("http://example.org/amp");
+   @endcode
+*/
+template<typename PluginType>
+struct Descriptor : public LV2_Descriptor {
+	Descriptor(const char* uri) {
+		URI            = uri;
+		instantiate    = s_instantiate;
+		connect_port   = s_connect_port;
+		activate       = s_activate;
+		run            = s_run;
+		deactivate     = s_deactivate;
+		cleanup        = s_cleanup;
+		extension_data = &PluginType::extension_data;
 	}
 
-private:
 	static LV2_Handle s_instantiate(const LV2_Descriptor*     descriptor,
 	                                double                    rate,
 	                                const char*               bundle,
 	                                const LV2_Feature* const* features) {
 		bool     valid    = true;
-		Derived* instance = new Derived(rate, bundle, features, &valid);
+		PluginType* instance = new PluginType(rate, bundle, features, &valid);
 		if (!valid) {
 			delete instance;
 			return nullptr;
@@ -234,46 +250,24 @@ private:
 	}
 
 	static void s_connect_port(LV2_Handle instance, uint32_t port, void* buf) {
-		reinterpret_cast<Derived*>(instance)->connect_port(port, buf);
+		reinterpret_cast<PluginType*>(instance)->connect_port(port, buf);
 	}
 
 	static void s_activate(LV2_Handle instance) {
-		reinterpret_cast<Derived*>(instance)->activate();
+		reinterpret_cast<PluginType*>(instance)->activate();
 	}
 
 	static void s_run(LV2_Handle instance, uint32_t sample_count) {
-		reinterpret_cast<Derived*>(instance)->run(sample_count);
+		reinterpret_cast<PluginType*>(instance)->run(sample_count);
 	}
 
 	static void s_deactivate(LV2_Handle instance) {
-		reinterpret_cast<Derived*>(instance)->deactivate();
+		reinterpret_cast<PluginType*>(instance)->deactivate();
 	}
 
 	static void s_cleanup(LV2_Handle instance) {
-		delete reinterpret_cast<Derived*>(instance);
+		delete reinterpret_cast<PluginType*>(instance);
 	}
-};
-
-template<class Derived, template<class S> class First=PluginBase, template<class S> class... Rest>
-struct Plugin : public First< Plugin<Derived, Rest...> > {
-	Plugin(double                    rate,
-	       const char*               bundle_path,
-	       const LV2_Feature* const* features,
-	       bool*                     valid)
-		: First< Plugin<Derived, Rest...> >(rate, bundle_path, features, valid)
-	{}
-
-};
-
-template<class Derived, template<class S> class First>
-struct Plugin<Derived, First> : public First< PluginBase<Derived> > {
-	Plugin(double                    rate,
-	       const char*               bundle_path,
-	       const LV2_Feature* const* features,
-	       bool*                     valid)
-		: First< PluginBase<Derived> >(rate, bundle_path, features, valid)
-	{}
-
 };
 
 } /* namespace lv2 */

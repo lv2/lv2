@@ -1,5 +1,5 @@
 /*
-  Copyright 2015 David Robillard <http://drobilla.net>
+  Copyright 2015-2016 David Robillard <http://drobilla.net>
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above
@@ -40,21 +40,18 @@ namespace lv2 {
    }
    @endcode
 */
-template<class Derived>
 class Lib : public LV2_Lib_Descriptor
 {
 public:
-	/**
-	   Library constructor.
-	*/
-	Lib(const char*              bundle_path,
-	    const LV2_Feature*const* features)
+	Lib(const char* bundle_path, const LV2_Feature*const* features)
 	{
 		LV2_Lib_Descriptor::handle     = this;
 		LV2_Lib_Descriptor::size       = sizeof(LV2_Lib_Descriptor);
 		LV2_Lib_Descriptor::cleanup    = s_cleanup;
 		LV2_Lib_Descriptor::get_plugin = s_get_plugin;
 	}
+
+	virtual ~Lib() {}
 
 	/**
 	   Plugin accessor, override to return your plugin descriptors.
@@ -63,16 +60,16 @@ public:
 	   indices MUST result in this function returning NULL, so the host can
 	   enumerate plugins by increasing `index` until NULL is returned.
 	*/
-	const LV2_Descriptor* get_plugin(uint32_t index) { return NULL; }
+	virtual const LV2_Descriptor* get_plugin(uint32_t index) { return NULL; }
 
 private:
 	static void s_cleanup(LV2_Lib_Handle handle) {
-		delete reinterpret_cast<Derived*>(handle);
+		delete reinterpret_cast<Lib*>(handle);
 	}
 
 	static const LV2_Descriptor* s_get_plugin(LV2_Lib_Handle handle,
 	                                          uint32_t       index) {
-		return reinterpret_cast<Derived*>(handle)->get_plugin(index);
+		return reinterpret_cast<Lib*>(handle)->get_plugin(index);
 	}
 };
 
