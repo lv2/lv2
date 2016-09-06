@@ -24,7 +24,7 @@ out = 'build'
 def options(opt):
     opt.load('compiler_c')
     opt.load('lv2')
-    autowaf.set_options(opt)
+    autowaf.set_options(opt, False, True)
     opt.add_option('--test', action='store_true', dest='build_tests',
                    help='Build unit tests')
     opt.add_option('--no-coverage', action='store_true', dest='no_coverage',
@@ -536,7 +536,7 @@ def test(ctx):
         name = os.path.basename(i.abspath())
         os.environ['PATH'] = '.' + os.pathsep + os.getenv('PATH')
         autowaf.run_test(
-            ctx, name, i.path_from(ctx.path.find_node('build')), dirs=['.'], name=i)
+            ctx, APPNAME, i.path_from(ctx.path.find_node('build')), dirs=['.'], name=i)
     autowaf.post_test(ctx, APPNAME, dirs=['.'])
 
 class Dist(Scripting.Dist):
