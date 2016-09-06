@@ -12,10 +12,12 @@ out = 'build'
 
 def options(opt):
     opt.load('compiler_c')
+    opt.load('lv2')
     autowaf.set_options(opt)
 
 def configure(conf):
     conf.load('compiler_c')
+    conf.load('lv2')
     autowaf.configure(conf)
     autowaf.set_c99_mode(conf)
     autowaf.display_header('Scope Configuration')

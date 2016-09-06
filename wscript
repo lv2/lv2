@@ -38,18 +38,18 @@ def options(opt):
     opt.recurse('lv2/lv2plug.in/ns/lv2core')
 
 def configure(conf):
-    conf.load('lv2')
     try:
         conf.load('compiler_c')
     except:
         Options.options.build_tests = False
         Options.options.no_plugins = True
 
-    if Options.options.online_docs:
-        Options.options.docs = True
-
+    conf.load('lv2')
     autowaf.configure(conf)
     autowaf.set_c99_mode(conf)
+
+    if Options.options.online_docs:
+        Options.options.docs = True
 
     if Options.options.ultra_strict:
         conf.env.append_value('CFLAGS', ['-Wconversion'])
