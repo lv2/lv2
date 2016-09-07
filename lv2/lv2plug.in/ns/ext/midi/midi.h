@@ -19,6 +19,8 @@
 
    Definitions of standard MIDI messages, see <http://lv2plug.in/ns/ext/midi>
    for details.
+
+   @{
 */
 
 #ifndef LV2_MIDI_H
