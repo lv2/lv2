@@ -33,7 +33,8 @@
 #ifndef LV2_URI_MAP_H
 #define LV2_URI_MAP_H
 
-#define LV2_URI_MAP_URI "http://lv2plug.in/ns/ext/uri-map"
+#define LV2_URI_MAP_URI    "http://lv2plug.in/ns/ext/uri-map"  ///< http://lv2plug.in/ns/ext/uri-map
+#define LV2_URI_MAP_PREFIX LV2_URI_MAP_URI "#"                 ///< http://lv2plug.in/ns/ext/uri-map#
 
 #include <stdint.h>
 

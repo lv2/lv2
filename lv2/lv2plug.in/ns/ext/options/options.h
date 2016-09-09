@@ -31,14 +31,14 @@
 #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
-#define LV2_OPTIONS_URI    "http://lv2plug.in/ns/ext/options"
-#define LV2_OPTIONS_PREFIX LV2_OPTIONS_URI "#"
+#define LV2_OPTIONS_URI    "http://lv2plug.in/ns/ext/options"  ///< http://lv2plug.in/ns/ext/options
+#define LV2_OPTIONS_PREFIX LV2_OPTIONS_URI "#"                 ///< http://lv2plug.in/ns/ext/options#
 
-#define LV2_OPTIONS__Option          LV2_OPTIONS_PREFIX "Option"
-#define LV2_OPTIONS__interface       LV2_OPTIONS_PREFIX "interface"
-#define LV2_OPTIONS__options         LV2_OPTIONS_PREFIX "options"
-#define LV2_OPTIONS__requiredOption  LV2_OPTIONS_PREFIX "requiredOption"
-#define LV2_OPTIONS__supportedOption LV2_OPTIONS_PREFIX "supportedOption"
+#define LV2_OPTIONS__Option          LV2_OPTIONS_PREFIX "Option"           ///< http://lv2plug.in/ns/ext/options#Option
+#define LV2_OPTIONS__interface       LV2_OPTIONS_PREFIX "interface"        ///< http://lv2plug.in/ns/ext/options#interface
+#define LV2_OPTIONS__options         LV2_OPTIONS_PREFIX "options"          ///< http://lv2plug.in/ns/ext/options#options
+#define LV2_OPTIONS__requiredOption  LV2_OPTIONS_PREFIX "requiredOption"   ///< http://lv2plug.in/ns/ext/options#requiredOption
+#define LV2_OPTIONS__supportedOption LV2_OPTIONS_PREFIX "supportedOption"  ///< http://lv2plug.in/ns/ext/options#supportedOption
 
 #ifdef __cplusplus
 extern "C" {

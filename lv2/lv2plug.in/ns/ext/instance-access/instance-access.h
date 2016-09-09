@@ -27,7 +27,7 @@
 #ifndef LV2_INSTANCE_ACCESS_H
 #define LV2_INSTANCE_ACCESS_H
 
-#define LV2_INSTANCE_ACCESS_URI "http://lv2plug.in/ns/ext/instance-access"
+#define LV2_INSTANCE_ACCESS_URI "http://lv2plug.in/ns/ext/instance-access"  ///< http://lv2plug.in/ns/ext/instance-access
 
 #endif  /* LV2_INSTANCE_ACCESS_H */
 

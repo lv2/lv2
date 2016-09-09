@@ -32,16 +32,16 @@
 
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
-#define LV2_STATE_URI    "http://lv2plug.in/ns/ext/state"
-#define LV2_STATE_PREFIX LV2_STATE_URI "#"
+#define LV2_STATE_URI    "http://lv2plug.in/ns/ext/state"  ///< http://lv2plug.in/ns/ext/state
+#define LV2_STATE_PREFIX LV2_STATE_URI "#"                 ///< http://lv2plug.in/ns/ext/state#
 
-#define LV2_STATE__State             LV2_STATE_PREFIX "State"
-#define LV2_STATE__interface         LV2_STATE_PREFIX "interface"
-#define LV2_STATE__loadDefaultState  LV2_STATE_PREFIX "loadDefaultState"
-#define LV2_STATE__makePath          LV2_STATE_PREFIX "makePath"
-#define LV2_STATE__mapPath           LV2_STATE_PREFIX "mapPath"
-#define LV2_STATE__state             LV2_STATE_PREFIX "state"
-#define LV2_STATE__threadSafeRestore LV2_STATE_PREFIX "threadSafeRestore"
+#define LV2_STATE__State             LV2_STATE_PREFIX "State"              ///< http://lv2plug.in/ns/ext/state#State
+#define LV2_STATE__interface         LV2_STATE_PREFIX "interface"          ///< http://lv2plug.in/ns/ext/state#interface
+#define LV2_STATE__loadDefaultState  LV2_STATE_PREFIX "loadDefaultState"   ///< http://lv2plug.in/ns/ext/state#loadDefaultState
+#define LV2_STATE__makePath          LV2_STATE_PREFIX "makePath"           ///< http://lv2plug.in/ns/ext/state#makePath
+#define LV2_STATE__mapPath           LV2_STATE_PREFIX "mapPath"            ///< http://lv2plug.in/ns/ext/state#mapPath
+#define LV2_STATE__state             LV2_STATE_PREFIX "state"              ///< http://lv2plug.in/ns/ext/state#state
+#define LV2_STATE__threadSafeRestore LV2_STATE_PREFIX "threadSafeRestore"  ///< http://lv2plug.in/ns/ext/state#threadSafeRestore
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,9 +49,9 @@ extern "C" {
 #    include <stdbool.h>
 #endif
 
-typedef void* LV2_State_Handle;
-typedef void* LV2_State_Map_Path_Handle;
-typedef void* LV2_State_Make_Path_Handle;
+typedef void* LV2_State_Handle;            ///< Opaque handle for state save/restore
+typedef void* LV2_State_Map_Path_Handle;   ///< Opaque handle for state:mapPath feature
+typedef void* LV2_State_Make_Path_Handle;  ///< Opaque handle for state:makePath feature
 
 /**
    Flags describing value characteristics.

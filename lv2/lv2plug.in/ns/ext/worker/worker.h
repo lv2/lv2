@@ -30,11 +30,11 @@
 
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 
-#define LV2_WORKER_URI    "http://lv2plug.in/ns/ext/worker"
-#define LV2_WORKER_PREFIX LV2_WORKER_URI "#"
+#define LV2_WORKER_URI    "http://lv2plug.in/ns/ext/worker"  ///< http://lv2plug.in/ns/ext/worker
+#define LV2_WORKER_PREFIX LV2_WORKER_URI "#"                 ///< http://lv2plug.in/ns/ext/worker#
 
-#define LV2_WORKER__interface LV2_WORKER_PREFIX "interface"
-#define LV2_WORKER__schedule  LV2_WORKER_PREFIX "schedule"
+#define LV2_WORKER__interface LV2_WORKER_PREFIX "interface"  ///< http://lv2plug.in/ns/ext/worker#interface
+#define LV2_WORKER__schedule  LV2_WORKER_PREFIX "schedule"   ///< http://lv2plug.in/ns/ext/worker#schedule
 
 #ifdef __cplusplus
 extern "C" {

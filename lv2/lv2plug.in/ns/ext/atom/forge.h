@@ -163,6 +163,7 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 	forge->Vector   = map->map(map->handle, LV2_ATOM__Vector);
 }
 
+/** Access the Atom pointed to by a reference. */
 static inline LV2_Atom*
 lv2_atom_forge_deref(LV2_Atom_Forge* forge, LV2_Atom_Forge_Ref ref)
 {
