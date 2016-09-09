@@ -1,5 +1,4 @@
 body {
-	font-family: sans-serif;
 	max-width: 80em;
 	margin: 0;
 	margin-left: auto;
@@ -45,10 +44,6 @@ h6 {
 p {
 	margin: 0 0 1ex 0;
 }
-
-/* br { */
-/* 	display: none; */
-/* } */
 
 dt {
 	font-weight: 700;
@@ -98,12 +93,12 @@ div.navtab {
 
 /* @group Link Styling */
 a {
-	color: #70957E;
+	color: #546E00;
 	text-decoration: none;
 }
 
 .contents a:visited {
-	color: #50755E;
+	color: #344E00;
 }
 
 a:hover {
@@ -370,24 +365,23 @@ td.mlabels-right {
 .memitem {
 	padding: 0;
 	margin: 1ex 0 2ex 0;
-	border: 1px solid #333;
-	border-radius: 6px;
+}
+
+td.memname {
+	border-bottom: 1px solid #DDD;
+	padding: 0;
 }
 
 .memname {
-	/*white-space: nowrap;*/
+	font-size: large;
 	font-weight: bold;
-	font-family: monospace;
 }
 
 .memproto {
-	border-bottom: 1px solid #DDD;
-	padding: 0.5ex;
+	padding: 0.125em;
+	font-size: large;
 	font-weight: bold;
-	background-color: #F3F3F3;
-	border-radius: 6px 6px 0 0;
-	background: linear-gradient(to bottom, #444 0%, #000 100%);
-	color: #FFF;
+	color: #000;
 }
 
 .memproto .paramname {
@@ -396,10 +390,7 @@ td.mlabels-right {
 }
 
 .memdoc {
-	padding: 1ex;
-	background-color: #FBFBFB;
-	border-top-width: 0;
-	border-radius: 0 0 6px 6px;
+	padding: 0.25em 0 0.5em 1em;
 }
 
 .paramkey {
@@ -424,13 +415,21 @@ td.paramname {
 }
 
 .fieldname {
-	color: #444;
-	font-family: monospace;
+	color: #000;
 }
 
 td.fieldname {
 	padding-right: 1ex;
 	vertical-align: top;
+}
+
+td.fieldtype {
+	vertical-align: top;
+	color: #444;
+}
+
+td.fielddoc p {
+	margin: 0;
 }
 
 /* @end */
@@ -593,7 +592,7 @@ div.headertitle {
 	color: #FFF;
 	padding: 0.125em 0.25em 0.125em 0.25em;
 	background-color: #333;
-	background: linear-gradient(to bottom, #444 0%, #000 100%);
+	background: linear-gradient(to bottom, #333 0%, #111 100%);
 	border: solid 1px #444;
 	border-top: 0;
 	border-radius: 0 0 6px 6px;
@@ -635,7 +634,7 @@ span.lineno a:hover {
 .tabs, .tabs2, .navpath {
 	background-image: none;
 	background-color: #333;
-	background: linear-gradient(to bottom, #444 0%, #000 100%);
+	background: linear-gradient(to bottom, #333 0%, #111 100%);
 	border: 0;
 	border-bottom: solid 2px #000;
 	padding: 0;
@@ -668,19 +667,24 @@ th {
 	line-height: 2em;
 	list-style: none;
 	background-color: #333;
-	background: linear-gradient(to bottom, #555 0%, #111 100%);
-	border: 1px solid #000;
+	background: linear-gradient(to bottom, #444 0%, #222 100%);
+	border: 1px solid #222;
+	border-bottom: 0;
 	border-radius: 6px 6px 0 0;
-	color: #fff;
+	color: #DDD;
 }
 
 .tablist a {
 	display: block;
 	padding: 0 20px;
 	font-weight: bold;
-	color: #fff;
+	color: #859900;
 	text-decoration: none;
 	outline: none;
+}
+
+.header a {
+	color: #859900;
 }
 
 .tabs3 .tablist a {

@@ -66,9 +66,7 @@
 /* Specgen style */
 
 html, body {
-	font-family: sans-serif;
-	font-size: 100%;
-	background-color: #fff;
+	background: #FFF;
 	color: #000;
 	margin: 0;
 	padding: 0;
@@ -80,10 +78,10 @@ a:link, a:visited {
 	text-decoration: none;
 }
 a:link {
-	color: #3D8C57;
+	color: #546E00;
 }
 a:visited {
-	color: #50755E;
+	color: #344E00;
 }
 a:hover {
 	text-decoration: underline;
@@ -357,7 +355,7 @@ input.formbutton {
 	font-weight: 400;
 	vertical-align: top;
 }
-div#content table {
+#content table {
 	clear: right;
 }
 #body-main h1.pageheading {
@@ -391,7 +389,6 @@ blockquote {
 #utility-menu dd {
 	display: inline;
 	font-weight: 400;
-	margin: 0;
 	padding: 0 0 0 8px;
 }
 #utility-menu dd a {
@@ -409,16 +406,7 @@ blockquote {
 	margin: 2em 0 0;
 	padding: 0 1em 1em 1em;
 	vertical-align: top;
-	background-color: #222;
-	color: #FFF;
-	background: linear-gradient(to bottom, #444 0%, #000 100%);
-	border-top: solid 2px #444;
-	border-left: solid 2px #444;
-	border-right: solid 2px #444;
-	border-radius: 6px 6px 0 0;
-}
-#footer div {
-	padding-top: 1em;
+	color: #888;
 }
 
 #searchbox a.reference, #searchbox span.reference {
@@ -460,29 +448,61 @@ ul, ol {
 	padding-top: 0;
 	margin: 0 0 0.5ex 0;
 }
-#contents {
-	margin-top: 0.25em;
-	padding: 0.25ex 0 0 0;
-	vertical-align: middle;
-	font-size: small;
+@media print {
+	#topbar {
+		color: #000;
+		margin: 0;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 0.25em 0.5em 0.5em 0.5em;
+		max-width: 60em;
+		position: relative;
+		border-bottom: solid 1px #DDD;
+	}
+	#title a, #title a:visited {
+		color: #000;
+	}
+	#topbar a, #topbar a:visited {
+		color: #000
+	}
+	#contents {
+		display: none;
+	}
 }
-#topbar {
-	background-color: #222;
-	background: linear-gradient(to bottom, #444 0%, #000 100%);
-	border-bottom: solid 2px #333;
-	border-left: solid 2px #333;
-	border-right: solid 2px #333;
-	border-radius: 0 0 6px 6px;
-	color: #EEE;
-	margin: 0;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 0.25em 0.5em 0em 0.5em;
-	max-width: 60em;
-	position: relative;
-}
-#topbar a, #topbar a:visited {
-	color: #70957E;
+@media screen {
+	#topbar {
+		background-color: #222;
+		background: linear-gradient(to bottom, #333 0%, #111 100%);
+		border-bottom: solid 2px #333;
+		border-left: solid 2px #333;
+		border-right: solid 2px #333;
+		border-radius: 0 0 6px 6px;
+		color: #EEE;
+		margin: 0;
+		margin-left: auto;
+		margin-right: auto;
+		padding: 0.25em 0.5em 0 0.5em;
+		max-width: 60em;
+		position: relative;
+	}
+	#title a, #title a:visited {
+		color: #FFF;
+	}
+	#topbar a, #topbar a:visited {
+		color: #859900;
+	}
+	#contents {
+		margin-top: 0.25em;
+		padding: 0.25ex 0 0 0;
+		vertical-align: middle;
+		font-size: small;
+	}
+	#contents li {
+		display: inline;
+		list-style-type: none;
+		margin-right: 1.25em;
+		padding: 0.25ex;
+	}
 }
 #title {
 	font-size: 200%;
@@ -490,17 +510,9 @@ ul, ol {
 	margin: 0;
 	padding: 0;
 }
-#title a, #title a:visited {
-	color: #FFF;
-}
-#contents li {
-	display: inline;
-	list-style-type: none;
-	margin-right: 1.25em;
-	padding: 0.25ex;
-}
 .content {
-	margin: 0 2em 0 2em;
+	padding: 0 0.5em 0 0.5em;
+	margin: 0;
 	max-width: 60em;
 	margin-left: auto;
 	margin-right: auto;
@@ -516,13 +528,12 @@ ul, ol {
 	border-radius: 6px;
 }
 .index th {
-	color: #FFF;
-	background-color: #222;
-	background: linear-gradient(to bottom, #444 0%, #000 100%);
 	border: 0;
-	border-right: solid 1px #333;
-	border-bottom: solid 1px #333;
+	border-right: solid 1px #DDD;
+	border-bottom: solid 1px #DDD;
+	border-top: solid 1px #DDD;
 }
+
 .index td {
 	vertical-align: top;
 	border: 0;
@@ -538,6 +549,7 @@ ul, ol {
 }
 .index thead tr th:first-child {
 	border-radius: 6px 0 0 0;
+	border-left: solid 1px #DDD;
 }
 .index thead tr th:last-child {
 	border-radius: 0 6px 0 0;
@@ -577,34 +589,26 @@ ul, ol {
 .terminfo th {
 	padding: 0.25em 0.75em 0.125em 0;
 	border: 0;
-	border-bottom: 1px solid #ddd;
 }
 .terminfo td {
 	padding: 0;
 	border: 0;
-	border-bottom: 1px solid #ddd;
 }
 .specterm {
-	background-color: #FBFBFB;
 	border: 0;
-	border: 1px solid #333;
 	margin: 0;
 	padding: 0;
 	margin-bottom: 1em;
-	border-radius: 6px 6px 6px 6px;
 }
 .specterm h3 {
-	padding: 0.25ex;
+	display: inline-block;
+	font-size: large;
+	font-weight: bold;
 	margin: 0;
-	background-color: #F3F3F3;
-	color: #FFF;
-	background-color: #222;
-	background: linear-gradient(to bottom, #444 0%, #000 100%);
-	border: solid 1px #333;
-	border-radius: 6px 6px 0 0;
+	border-bottom: solid 1px #DDD;
 }
 .spectermbody {
-	padding: 0 1em 1ex 1em;
+	padding: 0 1em 1em 1em;
 }
 dl {
 	margin: 0;
@@ -615,7 +619,7 @@ dt {
 	margin-top: .75ex;
 }
 hr {
-	background-color: silver;
+	background-color: #DDD;
 	border: 0;
 	color: gray;
 	height: 1px;
@@ -640,9 +644,6 @@ table {
 	margin: 0;
 	border: 0;
 }
-th {
-	background-color: #F8F8F8;
-}
 td, th {
 	border: 1px solid #ddd;
 	padding: 0.25em 0.5em 0.25em 0.5em;
@@ -660,7 +661,7 @@ code {
 	font-family: fixed,monospace;
 	font-weight: 500;
 }
-#menu li, #searchbox form, ul#iconbar li, #body-main .success p a {
+#menu li, #searchbox form, #iconbar li, #body-main .success p a {
 	display: inline;
 }
 #menu ul.level-one a:hover, #menu ul.level-two a:hover, #menu ul.level-three a:hover, #left-hand-navigation h4 a:hover {
