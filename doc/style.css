@@ -519,29 +519,26 @@ ul, ol {
 }
 .label {
 	font-style: italic;
-	margin: 1ex 0;
 }
 .index {
-	margin-left: 1em;
 	border-collapse: initial;
 	border-spacing: 0;
 	border-radius: 6px;
 }
 .index th {
 	border: 0;
-	border-right: solid 1px #DDD;
-	border-bottom: solid 1px #DDD;
-	border-top: solid 1px #DDD;
+	border-right: solid 1px #666;
+	border-bottom: solid 1px #666;
+	border-top: solid 1px #666;
 }
-
 .index td {
 	vertical-align: top;
 	border: 0;
-	border-right: solid 1px #DDD;
-	border-bottom: solid 1px #DDD;
+	border-right: solid 1px #666;
+	border-bottom: solid 1px #666;
 }
 .index td:first-child {
-	border-left: solid 1px #DDD;
+	border-left: solid 1px #666;
 }
 .index ul {
 	padding-left: 1em;
@@ -549,7 +546,7 @@ ul, ol {
 }
 .index thead tr th:first-child {
 	border-radius: 6px 0 0 0;
-	border-left: solid 1px #DDD;
+	border-left: solid 1px #666;
 }
 .index thead tr th:last-child {
 	border-radius: 0 6px 0 0;
@@ -601,14 +598,12 @@ ul, ol {
 	margin-bottom: 1em;
 }
 .specterm h3 {
-	display: inline-block;
 	font-size: large;
 	font-weight: bold;
 	margin: 0;
-	border-bottom: solid 1px #DDD;
 }
 .spectermbody {
-	padding: 0 1em 1em 1em;
+	padding: 0 1em 1em 2em;
 }
 dl {
 	margin: 0;

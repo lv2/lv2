@@ -42,7 +42,7 @@ h6 {
 }
 
 p {
-	margin: 0 0 1ex 0;
+	margin: 0 0 1em 0;
 }
 
 dt {
@@ -318,7 +318,7 @@ h2.groupheader {
 .memItemLeft,.memTemplItemLeft {
 	white-space: nowrap;
 	padding-left: 2em;
-	padding-right: 1ex;
+	padding-right: 1em;
 }
 
 .memItemLeft a.el {
@@ -364,33 +364,23 @@ td.mlabels-right {
 
 .memitem {
 	padding: 0;
-	margin: 1ex 0 2ex 0;
-}
-
-td.memname {
-	border-bottom: 1px solid #DDD;
-	padding: 0;
-}
-
-.memname {
-	font-size: large;
-	font-weight: bold;
+	margin: 1em 0 1em 0;
 }
 
 .memproto {
-	padding: 0.125em;
-	font-size: large;
+	padding: 0;
+	font-size: 110%;
 	font-weight: bold;
 	color: #000;
 }
 
 .memproto .paramname {
-	color: #CCC;
+	color: #444;
 	font-style: normal;
 }
 
 .memdoc {
-	padding: 0.25em 0 0.5em 1em;
+	padding: 0 0 0.5em 2em;
 }
 
 .paramkey {
@@ -406,11 +396,9 @@ td.memname {
 	color: #444;
 	white-space: nowrap;
 	font-weight: bold;
-	font-family: monospace;
 }
 
 td.paramname {
-	padding-right: 1ex;
 	vertical-align: top;
 }
 
@@ -419,7 +407,7 @@ td.paramname {
 }
 
 td.fieldname {
-	padding-right: 1ex;
+	padding-right: 1em;
 	vertical-align: top;
 }
 
@@ -512,7 +500,7 @@ address {
 
 table.doxtable {
 	border-collapse: collapse;
-	margin: 0.5ex;
+	margin: 0.5em;
 }
 
 table.doxtable td,table.doxtable th {
