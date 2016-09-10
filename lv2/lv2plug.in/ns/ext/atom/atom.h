@@ -70,9 +70,11 @@
 extern "C" {
 #endif
 
+/** @cond */
 /** This expression will fail to compile if double does not fit in 64 bits. */
 typedef char lv2_atom_assert_double_fits_in_64_bits[
 	((sizeof(double) <= sizeof(uint64_t)) * 2) - 1];
+/** @endcond */
 
 /**
    Return a pointer to the contents of an Atom.  The "contents" of an atom
