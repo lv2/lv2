@@ -558,7 +558,7 @@ def blankNodeDesc(node, m):
     properties = findStatements(m, node, None, None)
     doc = ''
     last_pred = ''
-    for p in properties:
+    for p in sorted(properties):
         if isSpecial(getPredicate(p)):
             continue
         doc += '<tr>'
@@ -582,15 +582,11 @@ def extraInfo(term, m):
     """Generate information about misc. properties of a term"""
     doc = ""
     properties = findStatements(m, term, None, None)
-    last_pred = None
     first = True
-    for p in properties:
+    for p in sorted(properties):
         if isSpecial(getPredicate(p)):
-            last_pred = None
             continue
-        if getPredicate(p) != last_pred:
-            doc += '<tr><th>%s</th>\n' % getTermLink(getPredicate(p))
-            first = True
+        doc += '<tr><th>%s</th>\n' % getTermLink(getPredicate(p))
         if isResource(getObject(p)):
             doc += getProperty(getTermLink(getObject(p), term, getPredicate(p)), first)
         elif isLiteral(getObject(p)):
@@ -599,8 +595,6 @@ def extraInfo(term, m):
             doc += getProperty(str(blankNodeDesc(getObject(p), m)), first)
         else:
             doc += getProperty('?', first)
-        first = False
-        last_pred = getPredicate(p)
 
     #doc += endProperties(first)
 

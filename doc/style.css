@@ -126,7 +126,7 @@ h6 {
 	left: 0;
 	top: 0;
 }
-#meta{
+#meta {
 	display: inline-block;
 	position: absolute;
 	right: 0;
@@ -520,42 +520,54 @@ ul, ol {
 .label {
 	font-style: italic;
 }
-.index {
+.index, table {
 	border-collapse: initial;
 	border-spacing: 0;
 	border-radius: 6px;
 }
-.index th {
+table th {
 	border: 0;
-	border-right: solid 1px #666;
-	border-bottom: solid 1px #666;
-	border-top: solid 1px #666;
+	border-right: 1px solid #666;
+	border-bottom: 1px solid #666;
 }
-.index td {
+table tr:first-child th {
+	border-top: 1px solid #666;
+}
+table td {
 	vertical-align: top;
 	border: 0;
-	border-right: solid 1px #666;
-	border-bottom: solid 1px #666;
+	border-right: 1px solid #666;
+	border-bottom: 1px solid #666;
 }
-.index td:first-child {
-	border-left: solid 1px #666;
+table td:first-child {
+	border-left: 1px solid #666;
 }
 .index ul {
 	padding-left: 1em;
 	border-collapse: initial;
 }
-.index thead tr th:first-child {
-	border-radius: 6px 0 0 0;
-	border-left: solid 1px #666;
+table thead tr                         th:first-child,
+table tbody:first-child tr:first-child th:first-child {
+	border-top-left-radius: 6px;
+	border-left: 1px solid #666;
 }
-.index thead tr th:last-child {
-	border-radius: 0 6px 0 0;
+table thead tr                         th:last-child,
+table tbody:first-child tr:first-child th:last-child,
+table tbody:first-child tr:first-child td:last-child {
+	border-top: 1px solid #666;
+	border-top-right-radius: 6px;
 }
-.index tbody tr:last-child td:first-child {
-	border-radius:0 0 0 6px;
+table tbody tr:last-child td:first-child,
+table tbody tr:last-child th:first-child {
+	border-bottom-left-radius: 6px;
+	border-left: 1px solid #666;
 }
-.index tbody tr:last-child td:last-child {
-	border-radius:0 0 6px 0;
+table tbody tr th:first-child {
+	border-left: 1px solid #666;
+}
+table tbody tr:last-child td:last-child,
+table       tr:last-child td:last-child {
+	border-bottom-right-radius: 6px;
 }
 .prop {
 	margin: 0;
@@ -565,11 +577,11 @@ ul, ol {
 	margin-bottom: 0.75em;
 }
 .blankdesc {
-	margin: 0;
-	padding: 0;
+	margin: 0 0 0.5em 0;
+	padding: 0 0 0.5em 0;
 }
-.blankterm {
-	padding-right: .5em;
+.blankdesc tbody tr td, .blankdef {
+	border: 0!important;
 }
 .terminfo, .restriction {
 	border-collapse: collapse;
@@ -584,11 +596,12 @@ ul, ol {
 	vertical-align: text-top;
 }
 .terminfo th {
-	padding: 0.25em 0.75em 0.125em 0;
+	padding: 0 0.75em 0.125em 0;
 	border: 0;
+	vertical-align: top;
 }
-.terminfo td {
-	padding: 0;
+.terminfo td, .terminfo td:first-child {
+	padding: 0 1em 0 0;
 	border: 0;
 }
 .specterm {
@@ -633,14 +646,13 @@ div.head table {
 	margin-top: 2em;
 }
 table {
-	border-collapse: collapse;
-	border-style: hidden;
+	border-collapse: initial;
 	border-spacing: 0;
 	margin: 0;
 	border: 0;
 }
 td, th {
-	border: 1px solid #ddd;
+	border: 1px solid #666;
 	padding: 0.25em 0.5em 0.25em 0.5em;
 }
 th {
