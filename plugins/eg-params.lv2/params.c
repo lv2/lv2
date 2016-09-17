@@ -301,7 +301,7 @@ set_parameter(Params*     self,
 	return st;
 }
 
-static const LV2_Atom *
+static const LV2_Atom*
 get_parameter(Params* self, LV2_URID key)
 {
 	const URIs* uris = &self->uris;
@@ -561,10 +561,9 @@ run(LV2_Handle instance, uint32_t sample_count)
 				              "patch:Get property is not a URID\n");
 			} else {
 				// Received a get message, emit single property state (probably to UI)
-				const LV2_URID key = property->body;
-				const LV2_Atom *atom = get_parameter(self, key);
-				if(atom)
-				{
+				const LV2_URID  key  = property->body;
+				const LV2_Atom* atom = get_parameter(self, key);
+				if (atom) {
 					lv2_atom_forge_frame_time(&self->forge, ev->time.frames);
 					LV2_State_Status st = LV2_STATE_SUCCESS;
 					LV2_Atom_Forge_Frame frame;
