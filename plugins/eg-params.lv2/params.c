@@ -114,7 +114,7 @@ typedef struct {
 	// Features
 	LV2_URID_Map*   map;
 	LV2_URID_Unmap* unmap;
-	LV2_Log_Logger  logger;
+	LV2_Log_Logger  log;
 
 	// Forge for creating atoms
 	LV2_Atom_Forge forge;
@@ -171,13 +171,13 @@ instantiate(const LV2_Descriptor*     descriptor,
 	// Get host features
 	const char* missing = lv2_features_query(
 		features,
-		LV2_LOG__log,    &self->logger.log, false,
-		LV2_URID__map,   &self->map,        true,
-		LV2_URID__unmap, &self->unmap,      false,
+		LV2_LOG__log,    &self->log.log, false,
+		LV2_URID__map,   &self->map,     true,
+		LV2_URID__unmap, &self->unmap,   false,
 		NULL);
-	lv2_log_logger_set_map(&self->logger, self->map);
+	lv2_log_logger_set_map(&self->log, self->map);
 	if (missing) {
-		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
+		lv2_log_error(&self->log, "Missing feature <%s>\n", missing);
 		free(self);
 		return NULL;
 	}
@@ -220,12 +220,12 @@ check_param(Params*  self,
 			return LV2_STATE_SUCCESS;
 		} else if (self->unmap) {
 			lv2_log_trace(
-				&self->logger, "Bad type <%s> for <%s> (needs <%s>)\n",
+				&self->log, "Bad type <%s> for <%s> (needs <%s>)\n",
 				self->unmap->unmap(self->unmap->handle, type),
 				self->unmap->unmap(self->unmap->handle, key),
 				self->unmap->unmap(self->unmap->handle, required_type));
 		} else {
-			lv2_log_trace(&self->logger, "Bad type for parameter %d\n", key);
+			lv2_log_trace(&self->log, "Bad type for parameter %d\n", key);
 		}
 		return LV2_STATE_ERR_BAD_TYPE;
 	}
@@ -247,55 +247,55 @@ set_parameter(Params*     self,
 
 	if (!(st = check_param(self, key, uris->eg_int, type, forge->Int))) {
 		self->state.aint.body = *(const int32_t*)body;
-		lv2_log_trace(&self->logger, "Set int %d\n", self->state.aint.body);
+		lv2_log_trace(&self->log, "Set int %d\n", self->state.aint.body);
 	} else if (!(st = check_param(self, key, uris->eg_long, type, forge->Long))) {
 		self->state.along.body = *(const int64_t*)body;
-		lv2_log_trace(&self->logger, "Set long %ld\n", self->state.along.body);
+		lv2_log_trace(&self->log, "Set long %ld\n", self->state.along.body);
 	} else if (!(st = check_param(self, key, uris->eg_float, type, forge->Float))) {
 		self->state.afloat.body = *(const float*)body;
-		lv2_log_trace(&self->logger, "Set float %f\n", self->state.afloat.body);
+		lv2_log_trace(&self->log, "Set float %f\n", self->state.afloat.body);
 	} else if (!(st = check_param(self, key, uris->eg_double, type, forge->Double))) {
 		self->state.adouble.body = *(const double*)body;
-		lv2_log_trace(&self->logger, "Set double %f\n", self->state.adouble.body);
+		lv2_log_trace(&self->log, "Set double %f\n", self->state.adouble.body);
 	} else if (!(st = check_param(self, key, uris->eg_bool, type, forge->Bool))) {
 		self->state.abool.body = *(const int32_t*)body;
-		lv2_log_trace(&self->logger, "Set bool %d\n", self->state.abool.body);
+		lv2_log_trace(&self->log, "Set bool %d\n", self->state.abool.body);
 	} else if (!(st = check_param(self, key, uris->eg_string, type, forge->String))) {
 		if (size <= MAX_STRING) {
 			memcpy(self->state.string, body, size);
 			self->state.astring.size = size;
-			lv2_log_trace(&self->logger, "Set string %s\n", self->state.string);
+			lv2_log_trace(&self->log, "Set string %s\n", self->state.string);
 		} else {
-			lv2_log_error(&self->logger, "Insufficient space for string\n");
+			lv2_log_error(&self->log, "Insufficient space for string\n");
 			return LV2_STATE_ERR_NO_SPACE;
 		}
 	} else if (!(st = check_param(self, key, uris->eg_path, type, forge->Path))) {
 		if (size <= MAX_STRING) {
 			memcpy(self->state.path, body, size);
 			self->state.apath.size = size;
-			lv2_log_trace(&self->logger, "Set path %s\n", self->state.path);
+			lv2_log_trace(&self->log, "Set path %s\n", self->state.path);
 		} else {
-			lv2_log_error(&self->logger, "Insufficient space for path\n");
+			lv2_log_error(&self->log, "Insufficient space for path\n");
 			return LV2_STATE_ERR_NO_SPACE;
 		}
 	} else if (!(st = check_param(self, key, uris->eg_spring, type, forge->Float))) {
 		self->spring = *(const float*)body;
-		lv2_log_trace(&self->logger, "Set spring %f\n", *(const float*)body);
+		lv2_log_trace(&self->log, "Set spring %f\n", *(const float*)body);
 	} else if (key == uris->eg_lfo) {
 		if (!from_state) {
 			st = LV2_STATE_ERR_UNKNOWN;
-			lv2_log_error(&self->logger, "Attempt to set non-writable LFO\n");
+			lv2_log_error(&self->log, "Attempt to set non-writable LFO\n");
 		} else {
 			self->state.lfo.body = *(const float*)body;
-			lv2_log_trace(&self->logger, "Set LFO %f\n", self->state.lfo.body);
+			lv2_log_trace(&self->log, "Set LFO %f\n", self->state.lfo.body);
 		}
 	} else if (self->unmap) {
 		st = LV2_STATE_ERR_NO_PROPERTY;
-		lv2_log_trace(&self->logger, "Unknown parameter <%s>\n",
+		lv2_log_trace(&self->log, "Unknown parameter <%s>\n",
 		              self->unmap->unmap(self->unmap->handle, key));
 	} else {
 		st = LV2_STATE_ERR_NO_PROPERTY;
-		lv2_log_trace(&self->logger, "Unknown parameter %d\n", key);
+		lv2_log_trace(&self->log, "Unknown parameter %d\n", key);
 	}
 
 	return st;
@@ -307,37 +307,37 @@ get_parameter(Params* self, LV2_URID key)
 	const URIs* uris = &self->uris;
 
 	if (key == uris->eg_int) {
-		lv2_log_trace(&self->logger, "Get int %d\n", self->state.aint.body);
+		lv2_log_trace(&self->log, "Get int %d\n", self->state.aint.body);
 		return &self->state.aint.atom;
 	} else if (key == uris->eg_long) {
-		lv2_log_trace(&self->logger, "Get long %ld\n", self->state.along.body);
+		lv2_log_trace(&self->log, "Get long %ld\n", self->state.along.body);
 		return &self->state.along.atom;
 	} else if (key == uris->eg_float) {
-		lv2_log_trace(&self->logger, "Get float %f\n", self->state.afloat.body);
+		lv2_log_trace(&self->log, "Get float %f\n", self->state.afloat.body);
 		return &self->state.afloat.atom;
 	} else if (key == uris->eg_double) {
-		lv2_log_trace(&self->logger, "Get double %f\n", self->state.adouble.body);
+		lv2_log_trace(&self->log, "Get double %f\n", self->state.adouble.body);
 		return &self->state.adouble.atom;
 	} else if (key == uris->eg_bool) {
-		lv2_log_trace(&self->logger, "Get bool %d\n", self->state.abool.body);
+		lv2_log_trace(&self->log, "Get bool %d\n", self->state.abool.body);
 		return &self->state.abool.atom;
 	} else if (key == uris->eg_string) {
-		lv2_log_trace(&self->logger, "Get string %s\n", self->state.string);
+		lv2_log_trace(&self->log, "Get string %s\n", self->state.string);
 		return &self->state.astring;
 	} else if (key == uris->eg_path) {
-		lv2_log_trace(&self->logger, "Get path %s\n", self->state.path);
+		lv2_log_trace(&self->log, "Get path %s\n", self->state.path);
 		return &self->state.apath;
 	} else if (key == uris->eg_spring) {
-		lv2_log_trace(&self->logger, "Get spring %f\n", self->state.spring.body);
+		lv2_log_trace(&self->log, "Get spring %f\n", self->state.spring.body);
 		return &self->state.spring.atom;
 	} else if (key == uris->eg_lfo) {
-		lv2_log_trace(&self->logger, "Get LFO %f\n", self->state.lfo.body);
+		lv2_log_trace(&self->log, "Get LFO %f\n", self->state.lfo.body);
 		return &self->state.lfo.atom;
 	} else if (self->unmap) {
-		lv2_log_trace(&self->logger, "Unknown parameter <%s>\n",
+		lv2_log_trace(&self->log, "Unknown parameter <%s>\n",
 		              self->unmap->unmap(self->unmap->handle, key));
 	} else {
-		lv2_log_trace(&self->logger, "Unknown parameter %d\n", key);
+		lv2_log_trace(&self->log, "Unknown parameter %d\n", key);
 	}
 
 	return NULL;
@@ -520,14 +520,11 @@ run(LV2_Handle instance, uint32_t sample_count)
 			                    uris->patch_value,    &value,
 			                    0);
 			if (!subject_is_plugin(self, subject)) {
-				lv2_log_error(&self->logger,
-				              "patch:Set message with unknown subject\n");
+				lv2_log_error(&self->log, "Set for unknown subject\n");
 			} else if (!property) {
-				lv2_log_error(&self->logger,
-				              "patch:Set message with no property\n");
+				lv2_log_error(&self->log, "Set with no property\n");
 			} else if (property->atom.type != uris->atom_URID) {
-				lv2_log_error(&self->logger,
-				              "patch:Set property is not a URID\n");
+				lv2_log_error(&self->log, "Set property is not a URID\n");
 			} else {
 				const LV2_URID key = property->body;
 				set_parameter(self, key, value->size, value->type, value + 1, false);
@@ -541,8 +538,7 @@ run(LV2_Handle instance, uint32_t sample_count)
 			                    uris->patch_property, (const LV2_Atom**)&property,
 			                    0);
 			if (!subject_is_plugin(self, subject)) {
-				lv2_log_error(&self->logger,
-				              "patch:Get message with unknown subject\n");
+				lv2_log_error(&self->log, "Get with unknown subject\n");
 			} else if (!property) {
 				// Received a get message, emit our full state (probably to UI)
 				lv2_atom_forge_frame_time(&self->forge, ev->time.frames);
@@ -557,8 +553,7 @@ run(LV2_Handle instance, uint32_t sample_count)
 				lv2_atom_forge_pop(&self->forge, &bframe);
 				lv2_atom_forge_pop(&self->forge, &pframe);
 			} else if (property->atom.type != uris->atom_URID) {
-				lv2_log_error(&self->logger,
-				              "patch:Get property is not a URID\n");
+				lv2_log_error(&self->log, "Get property is not a URID\n");
 			} else {
 				// Received a get message, emit single property state (probably to UI)
 				const LV2_URID  key  = property->body;
@@ -577,12 +572,11 @@ run(LV2_Handle instance, uint32_t sample_count)
 			}
 		} else {
 			if (self->unmap) {
-				lv2_log_trace(&self->logger,
-				              "Unknown object type <%s>\n",
+				lv2_log_trace(&self->log, "Unknown object type <%s>\n",
 				              self->unmap->unmap(self->unmap->handle, obj->body.otype));
 			} else {
-				lv2_log_trace(&self->logger,
-				              "Unknown object type %d\n", obj->body.otype);
+				lv2_log_trace(&self->log, "Unknown object type %d\n",
+				              obj->body.otype);
 			}
 		}
 	}
