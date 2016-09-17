@@ -81,6 +81,7 @@ plug:spring
 			atom:AtomPort ;
 		atom:bufferType atom:Sequence ;
 		atom:supports patch:Message ;
+		lv2:designation lv2:control ;
 		lv2:index 0 ;
 		lv2:symbol "in" ;
 		lv2:name "In"
@@ -89,6 +90,7 @@ plug:spring
 			atom:AtomPort ;
 		atom:bufferType atom:Sequence ;
 		atom:supports patch:Message ;
+		lv2:designation lv2:control ;
 		lv2:index 1 ;
 		lv2:symbol "out" ;
 		lv2:name "Out"
