@@ -561,6 +561,24 @@ wall-clock time and the passage of time in the data being processed (e.g. audio
 frames).</p>
 """ .
 
+lv2:enabled
+	a rdf:Property ,
+		owl:DatatypeProperty ;
+	rdfs:label "enabled" ;
+	rdfs:range xsd:int ;
+	lv2:documentation """
+<p>Whether or not processing is currently enabled, that is, not bypassed.</p>
+
+<p>If this value is greater than zero, the plugin processes normally.  If this
+value is zero, the plugin is expected to bypass all signals unmodified.  The
+plugin must provide a click-free transition between the enabled and disabled
+(bypassed) states.</p>
+
+<p>Values less than zero are reserved for future use (such as click-free
+insertion/removal of latent plugins), and should be treated like zero
+(bypassed) by current implementations.</p>
+""" .
+
 lv2:control
 	a lv2:Channel ;
 	rdfs:label "control" ;

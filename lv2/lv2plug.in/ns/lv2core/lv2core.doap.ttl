@@ -17,11 +17,13 @@
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "13.1" ;
-		doap:created "2016-07-30" ;
+		doap:created "2016-09-18" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add lv2_util.h with lv2_features_data() and lv2_features_query()."
+			] , [
+				rdfs:label "Add lv2:enabled designation."
 			]
 		]
 	] , [
