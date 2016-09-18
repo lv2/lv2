@@ -117,7 +117,7 @@ plug:spring
 		plug:int 0 ;
 		plug:long "0"^^xsd:long ;
 		plug:float 0.1234 ;
-		plug:double "0.0"^^xsd:double ;
+		plug:double "0e0"^^xsd:double ;
 		plug:bool false ;
 		plug:string "Hello, world" ;
 		plug:path <params.ttl> ;
