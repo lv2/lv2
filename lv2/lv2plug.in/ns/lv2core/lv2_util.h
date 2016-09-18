@@ -41,9 +41,11 @@ static inline void*
 lv2_features_data(const LV2_Feature*const* features,
                   const char* const        uri)
 {
-	for (const LV2_Feature*const* f = features; *f; ++f) {
-		if (!strcmp(uri, (*f)->URI)) {
-			return (*f)->data;
+	if (features) {
+		for (const LV2_Feature*const* f = features; *f; ++f) {
+			if (!strcmp(uri, (*f)->URI)) {
+				return (*f)->data;
+			}
 		}
 	}
 	return NULL;
