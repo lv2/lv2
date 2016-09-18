@@ -62,6 +62,20 @@ plugins must require both this feature and bufsz:fixedBlockLength.</p>
 capable of running the plugin.</p>
 """ .
 
+bufsz:coarseBlockLength
+	a lv2:Feature ;
+	rdfs:label "coarse block length" ;
+	lv2:documentation """
+<p>A feature that indicates the plugin prefers coarse, regular block lengths.
+For example, plugins that do not implement sample-accurate control use this
+feature to indicate that the host should not split the run cycle because
+controls have changed.</p>
+
+<p>Note that this feature is merely a hint, and does not guarantee a fixed
+block length.  The run cycle may be split for other reasons, and the blocksize
+itself may change anytime.</p>
+""" .
+
 bufsz:maxBlockLength
 	a rdf:Property ,
 		owl:DatatypeProperty ,

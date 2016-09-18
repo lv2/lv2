@@ -12,11 +12,13 @@
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "1.3" ;
-		doap:created "2015-09-09" ;
+		doap:created "2015-09-18" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Add bufsz:nominalBlockLength."
+				rdfs:label "Add bufsz:nominalBlockLength option."
+			] , [
+				rdfs:label "Add bufsz:coarseBlockLength feature."
 			]
 		]
 	] , [
