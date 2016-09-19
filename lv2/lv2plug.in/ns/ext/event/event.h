@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2011 David Robillard <http://drobilla.net>
+  Copyright 2008-2016 David Robillard <http://drobilla.net>
   Copyright 2006-2007 Lars Luthman <lars.luthman@gmail.com>
 
   Permission to use, copy, modify, and/or distribute this software for any
