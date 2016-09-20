@@ -36,6 +36,7 @@
 	] , [
 		doap:revision "1.2" ;
 		doap:created "2011-11-21" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-dynmanifest-1.2.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
@@ -45,6 +46,7 @@
 	] , [
 		doap:revision "1.0" ;
 		doap:created "2010-04-10" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-dyn-manifest-1.0.tar.gz> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
