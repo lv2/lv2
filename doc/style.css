@@ -459,11 +459,11 @@ ul, ol {
 		position: relative;
 		border-bottom: solid 1px #DDD;
 	}
-	#title a, #title a:visited {
-		color: #000;
-	}
 	#topbar a, #topbar a:visited {
 		color: #000
+	}
+	#title a, #title a:visited {
+		color: #000;
 	}
 	#contents {
 		display: none;
@@ -485,11 +485,11 @@ ul, ol {
 		max-width: 60em;
 		position: relative;
 	}
+	#topbar a, #topbar a:visited {
+		color: #94C200;
+	}
 	#title a, #title a:visited {
 		color: #FFF;
-	}
-	#topbar a, #topbar a:visited {
-		color: #859900;
 	}
 	#contents {
 		margin-top: 0.25em;
