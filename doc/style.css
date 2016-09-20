@@ -662,11 +662,12 @@ th {
 pre {
 	margin: 1em 1em 1em 4em;
 	padding: 0;
+	color: #444;
+	font-family: fixed,monospace;
 }
 code {
-	color: #373;
+	color: #444;
 	font-family: fixed,monospace;
-	font-weight: 500;
 }
 #menu li, #searchbox form, #iconbar li, #body-main .success p a {
 	display: inline;
