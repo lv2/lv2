@@ -68,9 +68,9 @@ state_map_cmp(const void* a, const void* b)
        NULL);
 */
 static void
-state_map_init(StateMapItem         dict[],
-               LV2_URID_Map*        map,
-               LV2_URID_Map_Handle* handle,
+state_map_init(StateMapItem        dict[],
+               LV2_URID_Map*       map,
+               LV2_URID_Map_Handle handle,
                /* const char* uri, const char* type, uint32_t size, LV2_Atom* value */ ...)
 {
 	// Set dict entries from parameters
