@@ -100,140 +100,6 @@ def chop_lv2_prefix(s):
         return s[len('lv2/lv2plug.in/'):]
     return s
 
-# Rule for calling lv2specgen on a spec bundle
-def specgen(task):
-    import rdflib
-    doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
-    lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
-    owl  = rdflib.Namespace('http://www.w3.org/2002/07/owl#')
-    rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-
-    sys.path.append('./lv2specgen')
-    import lv2specgen
-
-    spec   = task.inputs[0]
-    path   = os.path.dirname(spec.srcpath())
-    outdir = os.path.abspath(os.path.join(out, chop_lv2_prefix(path)))
-
-    bundle = str(outdir)
-    b = os.path.basename(outdir)
-
-    if not os.access(spec.abspath(), os.R_OK):
-        print('warning: extension %s has no %s.ttl file' % (b, b))
-        return
-
-    try:
-        model = load_ttl(glob.glob('%s/*.ttl' % bundle))
-    except:
-        e = sys.exc_info()[1]
-        print('error parsing %s: %s' % (bundle, str(e)))
-        return
-
-    # Get extension URI
-    ext_node = model.value(None, rdf.type, lv2.Specification)
-    if not ext_node:
-        print('no extension found in %s' % bundle)
-        return
-
-    ext = str(ext_node)
-
-    # Get version
-    minor = 0
-    micro = 0
-    try:
-        minor = int(model.value(ext_node, lv2.minorVersion, None))
-        micro = int(model.value(ext_node, lv2.microVersion, None))
-    except:
-        e = sys.exc_info()[1]
-        print('warning: %s: failed to find version for %s' % (bundle, ext))
-
-    # Get date
-    date = None
-    for r in model.triples([ext_node, doap.release, None]):
-        revision = model.value(r[2], doap.revision, None)
-        if str(revision) == ('%d.%d' % (minor, micro)):
-            date = model.value(r[2], doap.created, None)
-            break
-
-    # Verify that this date is the latest
-    for r in model.triples([ext_node, doap.release, None]):
-        this_date = model.value(r[2], doap.created, None)
-        if this_date > date:
-            print('warning: %s revision %d.%d (%s) is not the latest release' % (
-                ext_node, minor, micro, date))
-            break
-
-    # Get name and short description
-    name      = model.value(ext_node, doap.name, None)
-    shortdesc = model.value(ext_node, doap.shortdesc, None)
-
-    # Chop 'LV2' prefix from name for cleaner index
-    if name.startswith('LV2 '):
-        name = name[4:]
-
-    # Root link
-    ctx = task.generator.bld
-    root_path = path[0:path.find('ns/') + 3]
-    root_link = os.path.relpath(root_path, path)
-    if not task.generator.bld.env.ONLINE_DOCS:
-        root_link = os.path.join(root_link, 'index.html')
-
-    SPECGENDIR = 'lv2specgen'
-    STYLEPATH  = 'build/aux/style.css'
-    TAGFILE    = 'build/doc/tags'
-
-    specdoc = lv2specgen.specgen(
-        spec.abspath(),
-        SPECGENDIR,
-        os.path.relpath(STYLEPATH, bundle),
-        os.path.relpath('build/doc/html', bundle),
-        TAGFILE,
-        { 'list_email': 'devel@lists.lv2plug.in',
-          'list_page': 'http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in' },
-        instances=True,
-        root_link=root_link)
-
-    lv2specgen.save(task.outputs[0].abspath(), specdoc)
-
-    # Specification (comment is to act as a sort key)
-    target = path[len('lv2/lv2plug.in/ns/'):]
-    if not task.env.ONLINE_DOCS:
-        target += '/%s.html' % b
-    row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
-        b, target, name)
-
-    # API
-    row += '<td><a rel="rdfs:seeAlso" href="../doc/html/group__%s.html">%s</a></td>' % (
-        b, b)
-
-    # Description
-    if shortdesc:
-        row += '<td>' + str(shortdesc) + '</td>'
-    else:
-        row += '<td></td>'
-
-    # Version
-    version_str = '%s.%s' % (minor, micro)
-    if minor == 0 or (micro % 2 != 0):
-        row += '<td><span style="color: red">' + version_str + '</span></td>'
-    else:
-        row += '<td>' + version_str + '</td>'
-
-    # Status
-    deprecated = model.value(ext_node, owl.deprecated, None)
-    if minor == 0:
-        row += '<td><span class="error">Experimental</span></td>'
-    elif deprecated and str(deprecated[2]) != "false":
-        row += '<td><span class="warning">Deprecated</span></td>'
-    elif micro % 2 == 0:
-        row += '<td><span class="success">Stable</span></td>'
-
-    row += '</tr>'
-
-    index = open(os.path.join('build', 'index_rows', b), 'w')
-    index.write(row)
-    index.close()
-
 def subst_file(template, output, dict):
     i = open(template, 'r')
     o = open(output, 'w')
@@ -469,23 +335,26 @@ def build(bld):
 
         # Build Doxygen documentation (and tags file)
         autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc', False)
+        bld.add_group()
 
         index_files = []
-
-        # Call lv2specgen for each spec
         for i in specs:
-            name = os.path.basename(i.srcpath())
-            index_file = os.path.join('index_rows', name)
-            index_files += [index_file]
-
-            bld.add_group()  # Barrier (don't call lv2specgen in parallel)
-
             # Call lv2specgen to generate spec docs
-            bld(rule   = specgen,
-                name   = 'specgen',
+            name         = os.path.basename(i.srcpath())
+            index_file   = os.path.join('index_rows', name)
+            index_files += [index_file]
+            root_path    = os.path.relpath('lv2/lv2plug.in/ns', name)
+            html_path    = '%s/%s.html' % (chop_lv2_prefix(i.srcpath()), name)
+            out_bundle   = os.path.dirname(html_path)
+            bld(rule = '../lv2specgen/lv2specgen.py --root=' + root_path +
+                ' --list-email=devel@lists.lv2plug.in'
+                ' --list-page=http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in'
+                ' ${SRC} ../lv2specgen ' +
+                os.path.relpath('aux/style.css', out_bundle) +
+                ' ${TGT} %s doc/tags' %
+                os.path.relpath('doc/html', os.path.dirname(html_path)),
                 source = os.path.join(i.srcpath(), name + '.ttl'),
-                target = ['%s/%s.html' % (chop_lv2_prefix(i.srcpath()), name),
-                          index_file])
+                target = [html_path, index_file])
 
             # Install documentation
             if not bld.env.ONLINE_DOCS:
@@ -494,6 +363,7 @@ def build(bld):
                                   bld.path.get_bld().ant_glob(base + '/*.html'))
 
         index_files.sort()
+        bld.add_group()
 
         # Build extension index
         bld(rule   = build_index,

@@ -41,6 +41,7 @@ __license__ = "MIT License <http://www.opensource.org/licenses/mit>"
 __contact__ = "devel@lists.lv2plug.in"
 
 import datetime
+import glob
 import optparse
 import os
 import re
@@ -1107,7 +1108,92 @@ def load_tags(path, docdir):
 
     return linkmap
 
-def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root_link=None):
+
+def writeIndex(model, index_path):
+    # Get extension URI
+    ext_node = model.value(None, rdf.type, lv2.Specification)
+    if not ext_node:
+        print('no extension found in %s' % bundle)
+        sys.exit(1)
+
+    ext = str(ext_node)
+
+    # Get version
+    minor = 0
+    micro = 0
+    try:
+        minor = int(model.value(ext_node, lv2.minorVersion, None))
+        micro = int(model.value(ext_node, lv2.microVersion, None))
+    except:
+        e = sys.exc_info()[1]
+        print('warning: %s: failed to find version for %s' % (bundle, ext))
+
+    # Get date
+    date = None
+    for r in model.triples([ext_node, doap.release, None]):
+        revision = model.value(r[2], doap.revision, None)
+        if str(revision) == ('%d.%d' % (minor, micro)):
+            date = model.value(r[2], doap.created, None)
+            break
+
+    # Verify that this date is the latest
+    for r in model.triples([ext_node, doap.release, None]):
+        this_date = model.value(r[2], doap.created, None)
+        if this_date > date:
+            print('warning: %s revision %d.%d (%s) is not the latest release' % (
+                ext_node, minor, micro, date))
+            break
+
+    # Get name and short description
+    name      = model.value(ext_node, doap.name, None)
+    shortdesc = model.value(ext_node, doap.shortdesc, None)
+
+    # Chop 'LV2' prefix from name for cleaner index
+    if name.startswith('LV2 '):
+        name = name[4:]
+
+    # Specification (comment is to act as a sort key)
+    target = os.path.relpath(path, root_path)
+    if not options.online_docs:
+        target += '/%s.html' % b
+    row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
+        b, target, name)
+
+    # API
+    row += '<td><a rel="rdfs:seeAlso" href="../doc/html/group__%s.html">%s</a></td>' % (
+        b, b)
+
+    # Description
+    if shortdesc:
+        row += '<td>' + str(shortdesc) + '</td>'
+    else:
+        row += '<td></td>'
+
+    # Version
+    version_str = '%s.%s' % (minor, micro)
+    if minor == 0 or (micro % 2 != 0):
+        row += '<td><span style="color: red">' + version_str + '</span></td>'
+    else:
+        row += '<td>' + version_str + '</td>'
+
+    # Status
+    deprecated = model.value(ext_node, owl.deprecated, None)
+    if minor == 0:
+        row += '<td><span class="error">Experimental</span></td>'
+    elif deprecated and str(deprecated[2]) != "false":
+        row += '<td><span class="warning">Deprecated</span></td>'
+    elif micro % 2 == 0:
+        row += '<td><span class="success">Stable</span></td>'
+
+    row += '</tr>'
+
+    # index = open(os.path.join(out, 'index_rows', b), 'w')
+    index = open(index_path, 'w')
+    index.write(row)
+    index.close()
+
+
+def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root_link=None, index_path=None):
     """The meat and potatoes: Everything starts here."""
 
     global spec_url
@@ -1279,6 +1365,9 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     template = template.replace('@DATE@', datetime.datetime.utcnow().strftime('%F'))
     template = template.replace('@TIME@', datetime.datetime.utcnow().strftime('%F %H:%M UTC'))
 
+    if index_path is not None:
+        writeIndex(m, index_path)
+
     return template
 
 
@@ -1320,7 +1409,7 @@ def getOntologyNS(m):
 
 def usage():
     script = os.path.basename(sys.argv[0])
-    return """Usage: %s ONTOLOGY INDIR STYLE OUTPUT [DOCDIR TAGS] [FLAGS]
+    return """Usage: %s ONTOLOGY INDIR STYLE OUTPUT [INDEX_PATH DOCDIR TAGS] [FLAGS]
 
         ONTOLOGY  : Path to ontology file
         INDIR     : Input directory containing template.html and style.css
@@ -1328,10 +1417,6 @@ def usage():
         OUTPUT    : HTML output path
         DOCDIR    : Doxygen HTML directory
         TAGS      : Doxygen tags file
-
-        Optional flags:
-                -i        : Document class/property instances (disabled by default)
-                -p PREFIX : Set ontology namespace prefix from command line
 
 Example:
     %s lv2_foos.ttl template.html style.css lv2_foos.html ../doc -i -p foos
@@ -1342,10 +1427,17 @@ if __name__ == "__main__":
 
     opt = optparse.OptionParser(usage=usage(),
                                 description='Write HTML documentation for an RDF ontology.')
-    opt.add_option('--list-email', type='string', dest='list_email')
-    opt.add_option('--list-page', type='string', dest='list_page')
-    opt.add_option('-i', action='store_true', dest='instances')
-    opt.add_option('-p', type='string', dest='prefix')
+    opt.add_option('--list-email', type='string', dest='list_email',
+                   help='Mailing list email address')
+    opt.add_option('--list-page', type='string', dest='list_page',
+                   help='Mailing list info page address')
+    opt.add_option('-r', '--root', type='string', dest='root', default='', help='Root path')
+    opt.add_option('-p', '--prefix', type='string', dest='prefix',
+                   help='Specification Turtle prefix')
+    opt.add_option('-i', '--instances', action='store_true', dest='instances',
+                   help='Document instances')
+    opt.add_option('--online', action='store_true', dest='online_docs',
+                   help='Generate online documentation')
 
     (options, args) = opt.parse_args()
     opts = vars(options)
@@ -1354,15 +1446,48 @@ if __name__ == "__main__":
         print(usage())
         sys.exit(-1)
 
-    spec_pre = options.prefix
-    ontology = "file:" + str(args[0])
-    indir    = args[1]
-    style    = args[2]
-    output   = args[3]
-    docdir   = None
-    tags     = None
+    spec_pre   = options.prefix
+    ontology   = "file:" + str(args[0])
+    indir      = args[1]
+    style      = args[2]
+    output     = args[3]
+    index_path = None
+    docdir     = None
+    tags       = None
     if len(args) > 5:
-        docdir = args[4]
-        tags   = args[5]
+        index_path = args[4]
+        docdir     = args[5]
+        tags       = args[6]
 
-    save(output, specgen(ontology, indir, style, docdir, tags, opts, instances=options.instances))
+    out    = '.'
+    spec   = args[0]
+    path   = os.path.dirname(spec)
+    outdir = os.path.abspath(os.path.join(out, path))
+
+    bundle = str(outdir)
+    b = os.path.basename(outdir)
+
+    if not os.access(os.path.abspath(spec), os.R_OK):
+        print('warning: extension %s has no %s.ttl file' % (b, b))
+        sys.exit(1)
+
+    # Root link
+    root_path = opts['root']
+    root_link = os.path.relpath(root_path, path)
+    if not options.online_docs:
+        root_link = os.path.join(root_link, 'index.html')
+
+    # Generate spec documentation
+    specdoc = specgen(
+        os.path.abspath(spec),
+        indir,
+        style,
+        docdir,
+        tags,
+        opts,
+        instances=True,
+        root_link=root_link,
+        index_path=index_path)
+
+    # Save to HTML output file
+    save(output, specdoc)
