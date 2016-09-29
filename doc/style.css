@@ -81,7 +81,7 @@ a:link {
 	color: #546E00;
 }
 a:visited {
-	color: #344E00;
+	color: #354500;
 }
 a:hover {
 	text-decoration: underline;
@@ -486,7 +486,7 @@ ul, ol {
 		position: relative;
 	}
 	#topbar a, #topbar a:visited {
-		color: #94C200;
+		color: #9DB359;
 	}
 	#title a, #title a:visited {
 		color: #FFF;
@@ -574,6 +574,7 @@ table       tr:last-child td:last-child {
 	padding: 0;
 }
 .description {
+	margin-top: 0.25em;
 	margin-bottom: 0.75em;
 }
 .blankdesc {
@@ -680,14 +681,14 @@ h1, h2, h3, h4, h5, h6, th {
 	text-align: left;
 }
 .error {
-	color: red;
+	color: #DC322F;
 	font-weight: bold;
 }
 .warning {
-	color: orange;
+	color: #B58900;
 	font-weight: bold;
 }
 .success {
-	color: green;
+	color: #859900;
 	font-weight: bold;
 }
