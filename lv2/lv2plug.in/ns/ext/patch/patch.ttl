@@ -272,6 +272,13 @@ values for the property before setting the new value.  For example:</p>
 </pre>
 """ .
 
+patch:accept
+	a rdf:Property ;
+	rdfs:label "accept" ;
+	rdfs:domain patch:Request ;
+	rdfs:range rdfs:Class ;
+	rdfs:comment "An accepted type for a response." .
+
 patch:add
 	a rdf:Property ,
 		owl:ObjectProperty ,

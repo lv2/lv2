@@ -45,6 +45,7 @@
 #define LV2_PATCH__Request        LV2_PATCH_PREFIX "Request"         ///< http://lv2plug.in/ns/ext/patch#Request
 #define LV2_PATCH__Response       LV2_PATCH_PREFIX "Response"        ///< http://lv2plug.in/ns/ext/patch#Response
 #define LV2_PATCH__Set            LV2_PATCH_PREFIX "Set"             ///< http://lv2plug.in/ns/ext/patch#Set
+#define LV2_PATCH__accept         LV2_PATCH_PREFIX "accept"          ///< http://lv2plug.in/ns/ext/patch#accept
 #define LV2_PATCH__add            LV2_PATCH_PREFIX "add"             ///< http://lv2plug.in/ns/ext/patch#add
 #define LV2_PATCH__body           LV2_PATCH_PREFIX "body"            ///< http://lv2plug.in/ns/ext/patch#body
 #define LV2_PATCH__destination    LV2_PATCH_PREFIX "destination"     ///< http://lv2plug.in/ns/ext/patch#destination
