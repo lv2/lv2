@@ -12,6 +12,15 @@
 	doap:created "2007-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.1" ;
+		doap:created "2016-10-03" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add lv2_atom_object_get_typed() for easy type-safe access to object properties."
+			]
+		]
+	] , [
 		doap:revision "2.0" ;
 		doap:created "2014-08-08" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.10.0.tar.bz2> ;
