@@ -108,7 +108,7 @@ bufsz:nominalBlockLength
 	rdfs:range xsd:nonNegativeInteger ;
 	lv2:documentation """
 <p>The typical block length the host will request the plugin to process at
-once, once, that is, the typical <code>sample_count</code> parameter that will
+once, that is, the typical <code>sample_count</code> parameter that will
 be passed to LV2_Descriptor::run().  This will usually be equivalent, or close
 to, the maximum block length, but there are no strong guarantees about this
 value whatsoever.  Plugins may use this length for optimization purposes, but
