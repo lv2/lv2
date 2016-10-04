@@ -29,6 +29,7 @@ def build(bld):
         files += bld.path.ant_glob('%s/manifest.ttl*' % i)
         files += bld.path.ant_glob('%s/*.ttl' % i)
         files += bld.path.ant_glob('%s/*.c' % i)
+        files += bld.path.ant_glob('%s/*.h' % i)
 
     # Compile book sources into book.txt asciidoc source
     bld(rule   = bld_book_src,

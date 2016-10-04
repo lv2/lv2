@@ -105,7 +105,7 @@ def gen(out, filenames):
             sys.stderr.write('Failed to open file %s\n' % filename)
             continue
 
-        if filename.endswith('.c'):
+        if filename.endswith('.c') or filename.endswith('.h'):
             out.write(format_c_source(filename, file))
         elif filename.endswith('.ttl') or filename.endswith('.ttl.in'):
             out.write(format_ttl_source(filename, file))
