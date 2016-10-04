@@ -38,8 +38,9 @@
 #include "lv2/lv2plug.in/ns/lv2core/lv2.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
-#include "uris.h"
 #include "atom_sink.h"
+#include "peaks.h"
+#include "uris.h"
 
 enum {
 	SAMPLER_CONTROL = 0,
@@ -60,16 +61,15 @@ typedef struct {
 	LV2_Worker_Schedule* schedule;
 	LV2_Log_Logger       logger;
 
-	// Forge for creating atoms
-	LV2_Atom_Forge forge;
-
 	// Ports
 	const LV2_Atom_Sequence* control_port;
 	LV2_Atom_Sequence*       notify_port;
 	float*                   output_port;
 
-	// Forge frame for notify port (for writing worker replies)
-	LV2_Atom_Forge_Frame notify_frame;
+	// Communication utilities
+	LV2_Atom_Forge_Frame notify_frame;  ///< Cached for worker replies
+	LV2_Atom_Forge       forge;         ///< Forge for writing atoms in run thread
+	PeaksSender          psend;         ///< Audio peaks sender
 
 	// URIs
 	SamplerURIs uris;
@@ -113,19 +113,25 @@ load_sample(LV2_Log_Logger* logger, const char* path)
 	Sample* const  sample   = (Sample*)malloc(sizeof(Sample));
 	SF_INFO* const info     = &sample->info;
 	SNDFILE* const sndfile  = sf_open(path, SFM_READ, info);
-
-	if (!sndfile || !info->frames || (info->channels != 1)) {
-		lv2_log_error(logger, "Failed to open sample '%s'\n", path);
-		free(sample);
-		return NULL;
-	}
-
-	// Read data
-	float* const data = (float*)malloc(sizeof(float) * info->frames);
-	if (!data) {
+	float*         data     = NULL;
+	bool           error    = true;
+	if (!sndfile || !info->frames) {
+		lv2_log_error(logger, "Failed to open %s\n", path);
+	} else if (info->channels != 1) {
+		lv2_log_error(logger, "%s has %d channels\n", path, info->channels);
+	} else if (!(data = (float*)malloc(sizeof(float) * info->frames))) {
 		lv2_log_error(logger, "Failed to allocate memory for sample\n");
+	} else {
+		error = false;
+	}
+
+	if (error) {
+		free(sample);
+		free(data);
+		sf_close(sndfile);
 		return NULL;
 	}
+
 	sf_seek(sndfile, 0ul, SEEK_SET);
 	sf_read_float(sndfile, data, info->frames);
 	sf_close(sndfile);
@@ -155,7 +161,7 @@ free_sample(Sampler* self, Sample* sample)
 
    This is called for every piece of work scheduled in the audio thread using
    self->schedule->schedule_work().  A reply can be sent back to the audio
-   thread using the provided respond function.
+   thread using the provided `respond` function.
 */
 static LV2_Worker_Status
 work(LV2_Handle                  instance,
@@ -275,6 +281,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	// Map URIs and initialise forge
 	map_sampler_uris(self->map, &self->uris);
 	lv2_atom_forge_init(&self->forge, self->map);
+	peaks_sender_init(&self->psend, self->map);
 
 	return (LV2_Handle)self;
 }
@@ -308,6 +315,7 @@ run(LV2_Handle instance,
 {
 	Sampler*     self        = (Sampler*)instance;
 	SamplerURIs* uris        = &self->uris;
+	PeaksURIs*   peaks_uris  = &self->psend.uris;
 	sf_count_t   start_frame = 0;
 	sf_count_t   pos         = 0;
 	float*       output      = self->output_port;
@@ -378,11 +386,25 @@ run(LV2_Handle instance,
 					}
 				}
 			} else if (obj->body.otype == uris->patch_Get) {
-				// Received a get message, emit our state (probably to UI)
-				lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
-				write_set_file(&self->forge, &self->uris,
-				               self->sample->path,
-				               self->sample->path_len);
+				const LV2_Atom_URID* accept  = NULL;
+				const LV2_Atom_Int*  n_peaks = NULL;
+				lv2_atom_object_get_typed(
+					obj,
+					uris->patch_accept,      &accept,  uris->atom_URID,
+					peaks_uris->peaks_total, &n_peaks, peaks_uris->atom_Int, 0);
+				if (accept && accept->body == peaks_uris->peaks_PeakUpdate) {
+					// Received a request for peaks, prepare for transmission
+					peaks_sender_start(&self->psend,
+					                   self->sample->data,
+					                   self->sample->info.frames,
+					                   n_peaks->body);
+				} else {
+					// Received a get message, emit our state (probably to UI)
+					lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
+					write_set_file(&self->forge, &self->uris,
+					               self->sample->path,
+					               self->sample->path_len);
+				}
 			} else {
 				lv2_log_trace(&self->logger,
 				              "Unknown object type %d\n", obj->body.otype);
@@ -392,6 +414,8 @@ run(LV2_Handle instance,
 			              "Unknown event type %d\n", ev->body.type);
 		}
 	}
+
+	peaks_sender_send(&self->psend, &self->forge, sample_count, self->frame_offset);
 
 	// Render the sample (possibly already in progress)
 	if (self->play) {

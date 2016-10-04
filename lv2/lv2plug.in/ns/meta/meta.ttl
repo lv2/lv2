@@ -46,6 +46,15 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
+		doap:revision "1.14.1" ;
+		doap:created "2016-10-04" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "eg-sampler: Add waveform display to UI."
+			]
+		]
+	] , [
 		doap:revision "1.14.0" ;
 		doap:created "2016-09-19" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.14.0.tar.bz2> ;

@@ -28,56 +28,46 @@
 #include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
 #include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
 
-#include "./uris.h"
+#include "peaks.h"
+#include "uris.h"
 
 #define SAMPLER_UI_URI "http://lv2plug.in/plugins/eg-sampler#ui"
+
+#define MIN_CANVAS_W 128
+#define MIN_CANVAS_H 80
 
 typedef struct {
 	LV2_Atom_Forge forge;
 	LV2_URID_Map*  map;
 	LV2_Log_Logger logger;
 	SamplerURIs    uris;
+	PeaksReceiver  precv;
 
 	LV2UI_Write_Function write;
 	LV2UI_Controller     controller;
 
 	GtkWidget* box;
 	GtkWidget* button;
-	GtkWidget* label;
+	GtkWidget* canvas;
 	GtkWidget* window;  /* For optional show interface. */
+
+	uint32_t width;
+	uint32_t requested_n_peaks;
+	char*    filename;
+
+	uint8_t forge_buf[1024];
 } SamplerUI;
 
 static void
-on_load_clicked(GtkWidget* widget,
-                void*      handle)
+on_file_set(GtkFileChooserButton* widget, void* handle)
 {
 	SamplerUI* ui = (SamplerUI*)handle;
 
-	/* Create a dialog to select a sample file. */
-	GtkWidget* dialog = gtk_file_chooser_dialog_new(
-		"Load Sample",
-		NULL,
-		GTK_FILE_CHOOSER_ACTION_OPEN,
-		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-		GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-		NULL);
+	// Get the filename from the file chooser
+	char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget));
 
-	/* Run the dialog, and return if it is cancelled. */
-	if (gtk_dialog_run(GTK_DIALOG(dialog)) != GTK_RESPONSE_ACCEPT) {
-		gtk_widget_destroy(dialog);
-		return;
-	}
-
-	/* Get the file path from the dialog. */
-	char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
-
-	/* Got what we need, destroy the dialog. */
-	gtk_widget_destroy(dialog);
-
-#define OBJ_BUF_SIZE 1024
-	uint8_t obj_buf[OBJ_BUF_SIZE];
-	lv2_atom_forge_set_buffer(&ui->forge, obj_buf, OBJ_BUF_SIZE);
-
+	// Write a set message to the plugin to load new file
+	lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
 	LV2_Atom* msg = (LV2_Atom*)write_set_file(&ui->forge, &ui->uris,
 	                                          filename, strlen(filename));
 
@@ -86,6 +76,88 @@ on_load_clicked(GtkWidget* widget,
 	          msg);
 
 	g_free(filename);
+}
+
+static void
+request_peaks(SamplerUI* ui, uint32_t n_peaks)
+{
+	lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
+
+	LV2_Atom_Forge_Frame frame;
+	lv2_atom_forge_object(&ui->forge, &frame, 0, ui->uris.patch_Get);
+	lv2_atom_forge_key(&ui->forge, ui->uris.patch_accept);
+	lv2_atom_forge_urid(&ui->forge, ui->precv.uris.peaks_PeakUpdate);
+	lv2_atom_forge_key(&ui->forge, ui->precv.uris.peaks_total);
+	lv2_atom_forge_int(&ui->forge, n_peaks);
+	lv2_atom_forge_pop(&ui->forge, &frame);
+
+	LV2_Atom* msg = lv2_atom_forge_deref(&ui->forge, frame.ref);
+	ui->write(ui->controller, 0, lv2_atom_total_size(msg),
+	          ui->uris.atom_eventTransfer,
+	          msg);
+
+	ui->requested_n_peaks = n_peaks;
+}
+
+/** Set Cairo color to a GDK color (to follow Gtk theme). */
+static void
+cairo_set_source_gdk(cairo_t* cr, const GdkColor* color)
+{
+	cairo_set_source_rgb(
+		cr, color->red / 65535.0, color->green / 65535.0, color->blue / 65535.0);
+
+}
+
+static gboolean
+on_canvas_expose(GtkWidget* widget, GdkEventExpose* event, gpointer data)
+{
+	SamplerUI* ui = (SamplerUI*)data;
+
+	GtkAllocation size;
+	gtk_widget_get_allocation(widget, &size);
+
+	ui->width = size.width;
+	if ((uint32_t)ui->width > 2 * ui->requested_n_peaks) {
+		request_peaks(ui, 2 * ui->requested_n_peaks);
+	}
+
+	cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(widget));
+
+	const int mid_y = size.height / 2;
+
+	const float* const peaks   = ui->precv.peaks;
+	const int32_t      n_peaks = ui->precv.n_peaks;
+	if (peaks) {
+		// Draw waveform
+		const double scale = size.width / ((double)n_peaks - 1.0f);
+
+		// Start at left origin
+		cairo_move_to(cr, 0, mid_y);
+
+		// Draw line through top peaks
+		for (int i = 0; i < n_peaks; ++i) {
+			const float peak = peaks[i];
+			cairo_line_to(cr, i * scale, mid_y + (peak / 2.0f) * size.height);
+		}
+
+		// Continue through bottom peaks
+		for (int i = n_peaks - 1; i >= 0; --i) {
+			const float peak = peaks[i];
+			cairo_line_to(cr, i * scale, mid_y - (peak / 2.0f) * size.height);
+		}
+
+		// Close shape
+		cairo_line_to(cr, 0, mid_y);
+
+		cairo_set_source_gdk(cr, widget->style->mid);
+		cairo_fill_preserve(cr);
+
+		cairo_set_source_gdk(cr, widget->style->fg);
+		cairo_stroke(cr);
+	}
+
+	cairo_destroy(cr);
+	return TRUE;
 }
 
 static LV2UI_Handle
@@ -104,6 +176,7 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 
 	ui->write      = write_function;
 	ui->controller = controller;
+	ui->width      = MIN_CANVAS_W;
 	*widget        = NULL;
 
 	// Get host features
@@ -122,21 +195,25 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	// Map URIs and initialise forge
 	map_sampler_uris(ui->map, &ui->uris);
 	lv2_atom_forge_init(&ui->forge, ui->map);
+	peaks_receiver_init(&ui->precv, ui->map);
 
 	// Construct Gtk UI
 	ui->box = gtk_vbox_new(FALSE, 4);
-	ui->label = gtk_label_new("?");
-	ui->button = gtk_button_new_with_label("Load Sample");
-	gtk_box_pack_start(GTK_BOX(ui->box), ui->label, TRUE, TRUE, 4);
-	gtk_box_pack_start(GTK_BOX(ui->box), ui->button, FALSE, FALSE, 4);
-	g_signal_connect(ui->button, "clicked",
-	                 G_CALLBACK(on_load_clicked),
+	ui->button = gtk_file_chooser_button_new("Load Sample", GTK_FILE_CHOOSER_ACTION_OPEN);
+	ui->canvas = gtk_drawing_area_new();
+	gtk_widget_set_size_request(ui->canvas, MIN_CANVAS_W, MIN_CANVAS_H);
+	gtk_container_set_border_width(GTK_CONTAINER(ui->box), 4);
+	gtk_box_pack_start(GTK_BOX(ui->box), ui->canvas, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(ui->box), ui->button, FALSE, TRUE, 0);
+	g_signal_connect(ui->button, "file-set",
+	                 G_CALLBACK(on_file_set),
+	                 ui);
+	g_signal_connect(G_OBJECT(ui->canvas), "expose_event",
+	                 G_CALLBACK(on_canvas_expose),
 	                 ui);
 
 	// Request state (filename) from plugin
-	uint8_t get_buf[512];
-	lv2_atom_forge_set_buffer(&ui->forge, get_buf, sizeof(get_buf));
-
+	lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
 	LV2_Atom_Forge_Frame frame;
 	LV2_Atom*            msg = (LV2_Atom*)lv2_atom_forge_object(
 		&ui->forge, &frame, 0, ui->uris.patch_Get);
@@ -171,11 +248,21 @@ port_event(LV2UI_Handle handle,
 		const LV2_Atom* atom = (const LV2_Atom*)buffer;
 		if (lv2_atom_forge_is_object_type(&ui->forge, atom->type)) {
 			const LV2_Atom_Object* obj = (const LV2_Atom_Object*)atom;
-			const char*            uri = read_set_file(&ui->uris, obj);
-			if (uri) {
-				gtk_label_set_text(GTK_LABEL(ui->label), uri);
-			} else {
-				lv2_log_warning(&ui->logger, "Malformed message\n");
+			if (obj->body.otype == ui->uris.patch_Set) {
+				const char* path = read_set_file(&ui->uris, obj);
+				if (path && (!ui->filename || strcmp(path, ui->filename))) {
+					g_free(ui->filename);
+					ui->filename = g_strdup(path);
+					gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(ui->button), path);
+					peaks_receiver_clear(&ui->precv);
+					request_peaks(ui, ui->width / 2 * 2);
+				} else if (!path) {
+					lv2_log_warning(&ui->logger, "Set message has no path\n");
+				}
+			} else if (obj->body.otype == ui->precv.uris.peaks_PeakUpdate) {
+				if (!peaks_receiver_receive(&ui->precv, obj)) {
+					gtk_widget_queue_draw(ui->canvas);
+				}
 			}
 		} else {
 			lv2_log_error(&ui->logger, "Unknown message type\n");

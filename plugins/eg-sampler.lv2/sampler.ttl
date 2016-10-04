@@ -16,7 +16,7 @@
 
 <http://lv2plug.in/plugins/eg-sampler>
 	a lv2:Plugin ;
-	doap:name "Example Sampler" ;
+	doap:name "Exampler" ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	lv2:project <http://lv2plug.in/ns/lv2> ;
 	lv2:requiredFeature state:loadDefaultState ,
