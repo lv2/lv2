@@ -47,7 +47,9 @@ typedef struct {
 	LV2UI_Controller     controller;
 
 	GtkWidget* box;
-	GtkWidget* button;
+	GtkWidget* play_button;
+	GtkWidget* file_button;
+	GtkWidget* button_box;
 	GtkWidget* canvas;
 	GtkWidget* window;  /* For optional show interface. */
 
@@ -76,6 +78,25 @@ on_file_set(GtkFileChooserButton* widget, void* handle)
 	          msg);
 
 	g_free(filename);
+}
+
+static void
+on_play_clicked(GtkFileChooserButton* widget, void* handle)
+{
+	SamplerUI* ui = (SamplerUI*)handle;
+	struct {
+		LV2_Atom atom;
+		uint8_t  msg[3];
+	} note_on;
+
+	note_on.atom.type = ui->uris.midi_Event;
+	note_on.atom.size = 3;
+	note_on.msg[0]    = LV2_MIDI_MSG_NOTE_ON;
+	note_on.msg[1]    = 60;
+	note_on.msg[2]    = 60;
+	ui->write(ui->controller, 0, sizeof(note_on),
+	          ui->uris.atom_eventTransfer,
+	          &note_on);
 }
 
 static void
@@ -201,19 +222,27 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	peaks_receiver_init(&ui->precv, ui->map);
 
 	// Construct Gtk UI
-	ui->box = gtk_vbox_new(FALSE, 4);
-	ui->button = gtk_file_chooser_button_new("Load Sample", GTK_FILE_CHOOSER_ACTION_OPEN);
-	ui->canvas = gtk_drawing_area_new();
+	ui->box         = gtk_vbox_new(FALSE, 4);
+	ui->play_button = gtk_button_new_with_label("▶");
+	ui->canvas      = gtk_drawing_area_new();
+	ui->button_box  = gtk_hbox_new(FALSE, 4);
+	ui->file_button = gtk_file_chooser_button_new(
+		"Load Sample", GTK_FILE_CHOOSER_ACTION_OPEN);
 	gtk_widget_set_size_request(ui->canvas, MIN_CANVAS_W, MIN_CANVAS_H);
 	gtk_container_set_border_width(GTK_CONTAINER(ui->box), 4);
 	gtk_box_pack_start(GTK_BOX(ui->box), ui->canvas, TRUE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(ui->box), ui->button, FALSE, TRUE, 0);
-	g_signal_connect(ui->button, "file-set",
-	                 G_CALLBACK(on_file_set),
-	                 ui);
+	gtk_box_pack_start(GTK_BOX(ui->box), ui->button_box, FALSE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(ui->button_box), ui->play_button, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(ui->button_box), ui->file_button, TRUE, TRUE, 0);
+
+	g_signal_connect(ui->file_button, "file-set",
+	                 G_CALLBACK(on_file_set), ui);
+
+	g_signal_connect(ui->play_button, "clicked",
+	                 G_CALLBACK(on_play_clicked), ui);
+
 	g_signal_connect(G_OBJECT(ui->canvas), "expose_event",
-	                 G_CALLBACK(on_canvas_expose),
-	                 ui);
+	                 G_CALLBACK(on_canvas_expose), ui);
 
 	// Request state (filename) from plugin
 	lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
@@ -235,7 +264,11 @@ static void
 cleanup(LV2UI_Handle handle)
 {
 	SamplerUI* ui = (SamplerUI*)handle;
-	gtk_widget_destroy(ui->button);
+	gtk_widget_destroy(ui->box);
+	gtk_widget_destroy(ui->play_button);
+	gtk_widget_destroy(ui->canvas);
+	gtk_widget_destroy(ui->button_box);
+	gtk_widget_destroy(ui->file_button);
 	free(ui);
 }
 
@@ -256,7 +289,8 @@ port_event(LV2UI_Handle handle,
 				if (path && (!ui->filename || strcmp(path, ui->filename))) {
 					g_free(ui->filename);
 					ui->filename = g_strdup(path);
-					gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(ui->button), path);
+					gtk_file_chooser_set_filename(
+						GTK_FILE_CHOOSER(ui->file_button), path);
 					peaks_receiver_clear(&ui->precv);
 					request_peaks(ui, ui->width / 2 * 2);
 				} else if (!path) {
