@@ -26,9 +26,9 @@
 # Translations to various languages can be added by putting a language tag
 # after strings as shown.
 	doap:name "Simple Amplifier" ,
-		"简单放大器"@ch ,
+		"简单放大器"@zh ,
 		"Einfacher Verstärker"@de ,
-		"Simple Amp"@en-gb ,
+		"Simple Amplifier"@en-gb ,
 		"Amplificador Simple"@es ,
 		"Amplificateur de Base"@fr ,
 		"Amplificatore Semplice"@it ,
@@ -45,8 +45,8 @@
 		lv2:index 0 ;
 		lv2:symbol "gain" ;
 		lv2:name "Gain" ,
-			"收益"@ch ,
-			"Gewinn"@de ,
+			"收益"@zh ,
+			"Verstärkung"@de ,
 			"Gain"@en-gb ,
 			"Aumento"@es ,
 			"Gain"@fr ,
