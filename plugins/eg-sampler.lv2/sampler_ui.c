@@ -102,6 +102,10 @@ on_play_clicked(GtkFileChooserButton* widget, void* handle)
 static void
 request_peaks(SamplerUI* ui, uint32_t n_peaks)
 {
+	if (n_peaks == ui->requested_n_peaks) {
+		return;
+	}
+
 	lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
 
 	LV2_Atom_Forge_Frame frame;
@@ -292,6 +296,7 @@ port_event(LV2UI_Handle handle,
 					gtk_file_chooser_set_filename(
 						GTK_FILE_CHOOSER(ui->file_button), path);
 					peaks_receiver_clear(&ui->precv);
+					ui->requested_n_peaks = 0;
 					request_peaks(ui, ui->width / 2 * 2);
 				} else if (!path) {
 					lv2_log_warning(&ui->logger, "Set message has no path\n");
