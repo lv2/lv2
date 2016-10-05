@@ -56,7 +56,8 @@
 		lv2:name "Out"
 	] ;
 	state:state [
-		<http://lv2plug.in/plugins/eg-sampler#sample> <click.wav>
+		<http://lv2plug.in/plugins/eg-sampler#sample> <click.wav> ;
+		<http://lv2plug.in/plugins/eg-sampler#gain> 1.0
 	] .
 
 <http://lv2plug.in/plugins/eg-sampler#ui>

@@ -283,6 +283,8 @@ instantiate(const LV2_Descriptor*     descriptor,
 	lv2_atom_forge_init(&self->forge, self->map);
 	peaks_sender_init(&self->psend, self->map);
 
+	self->gain = 1.0;
+
 	return (LV2_Handle)self;
 }
 
@@ -309,16 +311,119 @@ deactivate(LV2_Handle instance)
 /** Define a macro for converting a gain in dB to a coefficient. */
 #define DB_CO(g) ((g) > -90.0f ? powf(10.0f, (g) * 0.05f) : 0.0f)
 
+/**
+   Handle an incoming event in the audio thread.
+
+   This performs any actions triggered by an event, such as the start of sample
+   playback, a sample change, or responding to requests from the UI.
+*/
 static void
-run(LV2_Handle instance,
-    uint32_t   sample_count)
+handle_event(Sampler* self, LV2_Atom_Event* ev)
 {
-	Sampler*     self        = (Sampler*)instance;
-	SamplerURIs* uris        = &self->uris;
-	PeaksURIs*   peaks_uris  = &self->psend.uris;
-	sf_count_t   start_frame = 0;
-	sf_count_t   pos         = 0;
-	float*       output      = self->output_port;
+	SamplerURIs* uris       = &self->uris;
+	PeaksURIs*   peaks_uris = &self->psend.uris;
+
+	if (ev->body.type == uris->midi_Event) {
+		const uint8_t* const msg = (const uint8_t*)(ev + 1);
+		switch (lv2_midi_message_type(msg)) {
+		case LV2_MIDI_MSG_NOTE_ON:
+			self->frame = 0;
+			self->play  = true;
+			break;
+		default:
+			break;
+		}
+	} else if (lv2_atom_forge_is_object_type(&self->forge, ev->body.type)) {
+		const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
+		if (obj->body.otype == uris->patch_Set) {
+			// Get the property and value of the set message
+			const LV2_Atom* property = NULL;
+			const LV2_Atom* value    = NULL;
+			lv2_atom_object_get(obj,
+			                    uris->patch_property, &property,
+			                    uris->patch_value,    &value,
+			                    0);
+			if (!property) {
+				lv2_log_error(&self->logger, "Set message with no property\n");
+				return;
+			} else if (property->type != uris->atom_URID) {
+				lv2_log_error(&self->logger, "Set property is not a URID\n");
+				return;
+			}
+
+			const uint32_t key = ((const LV2_Atom_URID*)property)->body;
+			if (key == uris->eg_sample) {
+				// Sample change, send it to the worker.
+				lv2_log_trace(&self->logger, "Scheduling sample change\n");
+				self->schedule->schedule_work(self->schedule->handle,
+				                              lv2_atom_total_size(&ev->body),
+				                              &ev->body);
+			} else if (key == uris->param_gain) {
+				// Gain change
+				if (value->type == uris->atom_Float) {
+					self->gain = DB_CO(((LV2_Atom_Float*)value)->body);
+				}
+			}
+		} else if (obj->body.otype == uris->patch_Get) {
+			const LV2_Atom_URID* accept  = NULL;
+			const LV2_Atom_Int*  n_peaks = NULL;
+			lv2_atom_object_get_typed(
+				obj,
+				uris->patch_accept,      &accept,  uris->atom_URID,
+				peaks_uris->peaks_total, &n_peaks, peaks_uris->atom_Int, 0);
+			if (accept && accept->body == peaks_uris->peaks_PeakUpdate) {
+				// Received a request for peaks, prepare for transmission
+				peaks_sender_start(&self->psend,
+				                   self->sample->data,
+				                   self->sample->info.frames,
+				                   n_peaks->body);
+			} else {
+				// Received a get message, emit our state (probably to UI)
+				lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
+				write_set_file(&self->forge, &self->uris,
+				               self->sample->path,
+				               self->sample->path_len);
+			}
+		} else {
+			lv2_log_trace(&self->logger,
+			              "Unknown object type %d\n", obj->body.otype);
+		}
+	} else {
+		lv2_log_trace(&self->logger,
+		              "Unknown event type %d\n", ev->body.type);
+	}
+
+}
+
+/**
+   Output audio for a slice of the current cycle.
+*/
+static void
+render(Sampler* self, uint32_t start, uint32_t end)
+{
+	float* output = self->output_port;
+
+	if (self->play) {
+		// Start/continue writing sample to output
+		for (; start < end; ++start) {
+			output[start] = self->sample->data[self->frame] * self->gain;
+			if (++self->frame == self->sample->info.frames) {
+				self->play = false;  // Reached end of sample
+				break;
+			}
+		}
+	}
+
+	// Write silence to remaining buffer
+	for (; start < end; ++start) {
+		output[start] = 0.0f;
+	}
+}
+
+static void
+run(LV2_Handle instance, uint32_t sample_count)
+{
+	Sampler* self = (Sampler*)instance;
 
 	// Set up forge to write directly to notify output port.
 	const uint32_t notify_capacity = self->notify_port->atom.size;
@@ -338,109 +443,28 @@ run(LV2_Handle instance,
 		self->sample_changed = false;
 	}
 
-	// Read incoming events
+	// Iterate over incoming events, emitting audio along the way
+	self->frame_offset = 0;
 	LV2_ATOM_SEQUENCE_FOREACH(self->control_port, ev) {
-		self->frame_offset = ev->time.frames;
-		if (ev->body.type == uris->midi_Event) {
-			const uint8_t* const msg = (const uint8_t*)(ev + 1);
-			switch (lv2_midi_message_type(msg)) {
-			case LV2_MIDI_MSG_NOTE_ON:
-				start_frame = ev->time.frames;
-				self->frame = 0;
-				self->play  = true;
-				break;
-			default:
-				break;
-			}
-		} else if (lv2_atom_forge_is_object_type(&self->forge, ev->body.type)) {
-			const LV2_Atom_Object* obj = (const LV2_Atom_Object*)&ev->body;
-			if (obj->body.otype == uris->patch_Set) {
-				// Get the property and value of the set message
-				const LV2_Atom* property = NULL;
-				const LV2_Atom* value    = NULL;
-				lv2_atom_object_get(obj,
-				                    uris->patch_property, &property,
-				                    uris->patch_value,    &value,
-				                    0);
-				if (!property) {
-					lv2_log_error(&self->logger,
-					              "patch:Set message with no property\n");
-					continue;
-				} else if (property->type != uris->atom_URID) {
-					lv2_log_error(&self->logger,
-					              "patch:Set property is not a URID\n");
-					continue;
-				}
+		// Render output up to the time of this event
+		render(self, self->frame_offset, ev->time.frames);
 
-				const uint32_t key = ((const LV2_Atom_URID*)property)->body;
-				if (key == uris->eg_sample) {
-					// Sample change, send it to the worker.
-					lv2_log_trace(&self->logger, "Scheduling sample change\n");
-					self->schedule->schedule_work(self->schedule->handle,
-					                              lv2_atom_total_size(&ev->body),
-					                              &ev->body);
-				} else if (key == uris->param_gain) {
-					// Gain change
-					if (value->type == uris->atom_Float) {
-						self->gain = DB_CO(((LV2_Atom_Float*)value)->body);
-					}
-				}
-			} else if (obj->body.otype == uris->patch_Get) {
-				const LV2_Atom_URID* accept  = NULL;
-				const LV2_Atom_Int*  n_peaks = NULL;
-				lv2_atom_object_get_typed(
-					obj,
-					uris->patch_accept,      &accept,  uris->atom_URID,
-					peaks_uris->peaks_total, &n_peaks, peaks_uris->atom_Int, 0);
-				if (accept && accept->body == peaks_uris->peaks_PeakUpdate) {
-					// Received a request for peaks, prepare for transmission
-					peaks_sender_start(&self->psend,
-					                   self->sample->data,
-					                   self->sample->info.frames,
-					                   n_peaks->body);
-				} else {
-					// Received a get message, emit our state (probably to UI)
-					lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
-					write_set_file(&self->forge, &self->uris,
-					               self->sample->path,
-					               self->sample->path_len);
-				}
-			} else {
-				lv2_log_trace(&self->logger,
-				              "Unknown object type %d\n", obj->body.otype);
-			}
-		} else {
-			lv2_log_trace(&self->logger,
-			              "Unknown event type %d\n", ev->body.type);
-		}
+		/* Update current frame offset to this event's time.  This is stored in
+		   the instance because it is used for sychronous worker event
+		   execution.  This allows a sample load event to be executed with
+		   sample accuracy when running in a non-realtime context (such as
+		   exporting a session). */
+		self->frame_offset = ev->time.frames;
+
+		// Process this event
+		handle_event(self, ev);
 	}
 
+	// Use available space after any emitted events to send peaks
 	peaks_sender_send(&self->psend, &self->forge, sample_count, self->frame_offset);
 
-	// Render the sample (possibly already in progress)
-	if (self->play) {
-		uint32_t       f  = self->frame;
-		const uint32_t lf = self->sample->info.frames;
-
-		for (pos = 0; pos < start_frame; ++pos) {
-			output[pos] = 0;
-		}
-
-		for (; pos < sample_count && f < lf; ++pos, ++f) {
-			output[pos] = self->sample->data[f] * self->gain;
-		}
-
-		self->frame = f;
-
-		if (f == lf) {
-			self->play = false;
-		}
-	}
-
-	// Add zeros to end if sample not long enough (or not playing)
-	for (; pos < sample_count; ++pos) {
-		output[pos] = 0.0f;
-	}
+	// Render output for the rest of the cycle past the last event
+	render(self, self->frame_offset, sample_count);
 }
 
 static LV2_State_Status
