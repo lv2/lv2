@@ -123,6 +123,9 @@ on_canvas_expose(GtkWidget* widget, GdkEventExpose* event, gpointer data)
 
 	cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(widget));
 
+	cairo_set_line_width(cr, 1.0);
+	cairo_translate(cr, 0.5, 0.5);
+
 	const int mid_y = size.height / 2;
 
 	const float* const peaks   = ui->precv.peaks;
