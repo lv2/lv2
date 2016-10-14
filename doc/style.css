@@ -434,10 +434,6 @@ body {
 	background: transparent;
 	color: #609;
 }
-a:active {
-	background: transparent;
-	color: #C00;
-}
 .sec {
 	color: #000;
 	margin: 0.5em 0 0.5em 0;
@@ -527,20 +523,22 @@ ul, ol {
 }
 table th {
 	border: 0;
-	border-right: 1px solid #666;
-	border-bottom: 1px solid #666;
+	border-right: 1px solid #BBB;
 }
-table tr:first-child th {
-	border-top: 1px solid #666;
+table thead th {
+	border-bottom: 1px solid #BBB;
+}
+table thead tr:first-child th {
+	border-top: 1px solid #BBB;
 }
 table td {
 	vertical-align: top;
 	border: 0;
-	border-right: 1px solid #666;
-	border-bottom: 1px solid #666;
+	border-right: 1px solid #BBB;
+	border-bottom: 1px solid #BBB;
 }
 table td:first-child {
-	border-left: 1px solid #666;
+	border-left: 1px solid #BBB;
 }
 .index ul {
 	padding-left: 1em;
@@ -549,21 +547,26 @@ table td:first-child {
 table thead tr                         th:first-child,
 table tbody:first-child tr:first-child th:first-child {
 	border-top-left-radius: 6px;
-	border-left: 1px solid #666;
+	border-left: 1px solid #BBB;
+}
+table thead tr                         th,
+table tbody:first-child tr:first-child th {
+	border-top: 1px solid #BBB;
+	border-bottom: 1px solid #BBB;
 }
 table thead tr                         th:last-child,
 table tbody:first-child tr:first-child th:last-child,
 table tbody:first-child tr:first-child td:last-child {
-	border-top: 1px solid #666;
+	border-top: 1px solid #BBB;
 	border-top-right-radius: 6px;
 }
 table tbody tr:last-child td:first-child,
 table tbody tr:last-child th:first-child {
 	border-bottom-left-radius: 6px;
-	border-left: 1px solid #666;
+	border-left: 1px solid #BBB;
 }
 table tbody tr th:first-child {
-	border-left: 1px solid #666;
+	border-left: 1px solid #BBB;
 }
 table tbody tr:last-child td:last-child,
 table       tr:last-child td:last-child {
@@ -588,6 +591,15 @@ table       tr:last-child td:last-child {
 	border-collapse: collapse;
 	border-style: hidden;
 }
+.terminfo tbody tr td {
+	margin-bottom: 1em;
+}
+.terminfo th, .terminfo td, .description th, .description td {
+	border-top: 0!important;
+	border-right: 0!important;
+	border-bottom: 0!important;
+	border-left: 0!important;
+}
 .restriction {
 	margin: 0 0 0.5ex 0;
 	padding: 0;
@@ -598,12 +610,10 @@ table       tr:last-child td:last-child {
 }
 .terminfo th {
 	padding: 0 0.75em 0.125em 0;
-	border: 0;
 	vertical-align: top;
 }
 .terminfo td, .terminfo td:first-child {
 	padding: 0 1em 0 0;
-	border: 0;
 }
 .specterm {
 	border: 0;
@@ -653,7 +663,7 @@ table {
 	border: 0;
 }
 td, th {
-	border: 1px solid #666;
+	border: 1px solid #BBB;
 	padding: 0.25em 0.5em 0.25em 0.5em;
 }
 th {
