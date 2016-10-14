@@ -1113,6 +1113,8 @@ def writeIndex(model, index_path):
     # Get extension URI
     ext_node = model.value(None, rdf.type, lv2.Specification)
     if not ext_node:
+        ext_node = model.value(None, rdf.type, owl.Ontology)
+    if not ext_node:
         print('no extension found in %s' % bundle)
         sys.exit(1)
 
