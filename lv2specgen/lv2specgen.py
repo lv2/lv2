@@ -80,6 +80,7 @@ spec_url = None
 spec_ns_str = None
 spec_ns = None
 spec_pre = None
+spec_bundle = None
 specgendir = None
 ns_list = {
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#"   : "rdf",
@@ -148,6 +149,10 @@ def isLiteral(n):
 
 
 def niceName(uri):
+    global spec_bundle
+    if uri.startswith(spec_bundle):
+        return uri[len(spec_bundle):]
+
     regexp = re.compile("^(.*[/#])([^/#]+)$")
     rez = regexp.search(uri)
     if not rez:
@@ -1109,7 +1114,7 @@ def load_tags(path, docdir):
     return linkmap
 
 
-def writeIndex(model, index_path):
+def writeIndex(model, specloc, index_path, root_path):
     # Get extension URI
     ext_node = model.value(None, rdf.type, lv2.Specification)
     if not ext_node:
@@ -1155,7 +1160,7 @@ def writeIndex(model, index_path):
         name = name[4:]
 
     # Specification (comment is to act as a sort key)
-    target = os.path.relpath(path, root_path)
+    target = os.path.relpath(os.path.dirname(specloc), root_path)
     if not options.online_docs:
         target += '/%s.html' % b
     row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
@@ -1195,9 +1200,10 @@ def writeIndex(model, index_path):
     index.close()
 
 
-def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root_link=None, index_path=None):
+def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root_link=None, index_path=None, root_path=None):
     """The meat and potatoes: Everything starts here."""
 
+    global spec_bundle
     global spec_url
     global spec_ns_str
     global spec_ns
@@ -1206,6 +1212,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     global specgendir
     global linkmap
 
+    spec_bundle = "file://%s/" % os.path.abspath(os.path.dirname(specloc))
     specgendir = os.path.abspath(indir)
 
     # Template
@@ -1355,7 +1362,10 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
 
     template = template.replace('@VERSION@', version_string)
 
-    content_links = '<li><a href="%s">API</a></li>' % os.path.join(docdir, 'group__%s.html' % basename)
+    content_links = ''
+    if docdir is not None:
+        content_links = '<li><a href="%s">API</a></li>' % os.path.join(docdir, 'group__%s.html' % basename)
+
     template = template.replace('@CONTENT_LINKS@', content_links)
 
     comment = getComment(m, rdflib.URIRef(spec_url), classlist, proplist, instalist)
@@ -1367,8 +1377,9 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     template = template.replace('@DATE@', datetime.datetime.utcnow().strftime('%F'))
     template = template.replace('@TIME@', datetime.datetime.utcnow().strftime('%F %H:%M UTC'))
 
+    # Write index row
     if index_path is not None:
-        writeIndex(m, index_path)
+        writeIndex(m, specloc, index_path, root_path)
 
     return template
 
@@ -1411,21 +1422,14 @@ def getOntologyNS(m):
 
 def usage():
     script = os.path.basename(sys.argv[0])
-    return """Usage: %s ONTOLOGY INDIR STYLE OUTPUT [INDEX_PATH DOCDIR TAGS] [FLAGS]
-
-        ONTOLOGY  : Path to ontology file
-        INDIR     : Input directory containing template.html and style.css
-        STYLE     : Stylesheet URI
-        OUTPUT    : HTML output path
-        DOCDIR    : Doxygen HTML directory
-        TAGS      : Doxygen tags file
-
-Example:
-    %s lv2_foos.ttl template.html style.css lv2_foos.html ../doc -i -p foos
-""" % (script, script)
+    return "Usage: %s ONTOLOGY_TTL OUTPUT_HTML [OPTION]..." % script
 
 if __name__ == "__main__":
     """Ontology specification generator tool"""
+
+    indir = os.path.abspath(os.path.dirname(sys.argv[0]))
+    if not os.path.exists(os.path.join(indir, 'template.html')):
+        indir = os.path.join(os.path.dirname(indir), 'share', 'lv2specgen')
 
     opt = optparse.OptionParser(usage=usage(),
                                 description='Write HTML documentation for an RDF ontology.')
@@ -1433,33 +1437,40 @@ if __name__ == "__main__":
                    help='Mailing list email address')
     opt.add_option('--list-page', type='string', dest='list_page',
                    help='Mailing list info page address')
-    opt.add_option('-r', '--root', type='string', dest='root', default='', help='Root path')
+    opt.add_option('--template-dir', type='string', dest='template_dir', default=indir,
+                   help='Template directory')
+    opt.add_option('--style-uri', type='string', dest='style_uri', default='style.css',
+                   help='Stylesheet URI')
+    opt.add_option('--docdir', type='string', dest='docdir', default=None,
+                   help='Doxygen output directory')
+    opt.add_option('--index', type='string', dest='index_path', default=None,
+                   help='Index row output file')
+    opt.add_option('--tags', type='string', dest='tags', default=None,
+                   help='Doxygen tags file')
+    opt.add_option('-r', '--root', type='string', dest='root', default='',
+                   help='Root path')
     opt.add_option('-p', '--prefix', type='string', dest='prefix',
                    help='Specification Turtle prefix')
     opt.add_option('-i', '--instances', action='store_true', dest='instances',
                    help='Document instances')
+    opt.add_option('--copy-style', action='store_true', dest='copy_style',
+                   help='Copy style from template directory to output directory')
     opt.add_option('--online', action='store_true', dest='online_docs',
                    help='Generate online documentation')
 
     (options, args) = opt.parse_args()
     opts = vars(options)
 
-    if (len(args) < 3):
-        print(usage())
+    if len(args) < 2:
+        opt.print_help()
         sys.exit(-1)
 
     spec_pre   = options.prefix
     ontology   = "file:" + str(args[0])
-    indir      = args[1]
-    style      = args[2]
-    output     = args[3]
-    index_path = None
-    docdir     = None
-    tags       = None
-    if len(args) > 5:
-        index_path = args[4]
-        docdir     = args[5]
-        tags       = args[6]
+    output     = args[1]
+    index_path = options.index_path
+    docdir     = options.docdir
+    tags       = options.tags
 
     out    = '.'
     spec   = args[0]
@@ -1475,21 +1486,27 @@ if __name__ == "__main__":
 
     # Root link
     root_path = opts['root']
-    root_link = os.path.relpath(root_path, path)
+    root_link = os.path.relpath(root_path, path) if root_path else '.'
     if not options.online_docs:
         root_link = os.path.join(root_link, 'index.html')
 
     # Generate spec documentation
     specdoc = specgen(
-        os.path.abspath(spec),
+        spec,
         indir,
-        style,
+        opts['style_uri'],
         docdir,
         tags,
         opts,
         instances=True,
         root_link=root_link,
-        index_path=index_path)
+        index_path=index_path,
+        root_path=root_path)
 
     # Save to HTML output file
     save(output, specdoc)
+
+    if opts['copy_style']:
+        import shutil
+        shutil.copyfile(os.path.join(indir, 'style.css'),
+                        os.path.join(os.path.dirname(output), 'style.css'))

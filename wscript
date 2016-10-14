@@ -346,10 +346,11 @@ def build(bld):
             bld(rule = '../lv2specgen/lv2specgen.py --root=' + root_path +
                 ' --list-email=devel@lists.lv2plug.in'
                 ' --list-page=http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in'
-                ' ${SRC} ../lv2specgen ' +
-                os.path.relpath('aux/style.css', out_bundle) +
-                ' ${TGT} %s doc/tags' %
-                os.path.relpath('doc/html', os.path.dirname(html_path)),
+                ' --style-uri=' + os.path.relpath('aux/style.css', out_bundle) +
+                ' --docdir=' + os.path.relpath('doc/html', os.path.dirname(html_path)) +
+                ' --tags=doc/tags' +
+                ' --index=' + index_file +
+                ' ${SRC} ${TGT}',
                 source = os.path.join(i.srcpath(), name + '.ttl'),
                 target = [html_path, index_file])
 
