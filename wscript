@@ -279,9 +279,6 @@ def build(bld):
     for i in bld.env.LV2_BUILD:
         bld.recurse(i)
 
-    if bld.env.BUILD_BOOK:
-        bld.recurse('plugins')
-
     # Install lv2specgen
     bld.install_files('${DATADIR}/lv2specgen/',
                       ['lv2specgen/style.css',
@@ -394,6 +391,10 @@ def build(bld):
             source       = bld.path.get_bld().make_node('build-test.c'),
             target       = 'build-test',
             install_path = None)
+
+    if bld.env.BUILD_BOOK:
+        # Build "Programming LV2 Plugins" book from plugin examples
+        bld.recurse('plugins')
 
 def lint(ctx):
     for i in ctx.path.ant_glob('lv2/**/*.h'):
