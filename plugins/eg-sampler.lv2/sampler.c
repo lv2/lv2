@@ -364,7 +364,7 @@ handle_event(Sampler* self, LV2_Atom_Event* ev)
 					self->gain = DB_CO(((LV2_Atom_Float*)value)->body);
 				}
 			}
-		} else if (obj->body.otype == uris->patch_Get) {
+		} else if (obj->body.otype == uris->patch_Get && self->sample) {
 			const LV2_Atom_URID* accept  = NULL;
 			const LV2_Atom_Int*  n_peaks = NULL;
 			lv2_atom_object_get_typed(
@@ -403,7 +403,7 @@ render(Sampler* self, uint32_t start, uint32_t end)
 {
 	float* output = self->output_port;
 
-	if (self->play) {
+	if (self->play && self->sample) {
 		// Start/continue writing sample to output
 		for (; start < end; ++start) {
 			output[start] = self->sample->data[self->frame] * self->gain;
@@ -544,9 +544,12 @@ restore(LV2_Handle                  instance,
 	if (!self->activated || !schedule) {
 		// No scheduling available, load sample immediately
 		lv2_log_trace(&self->logger, "Synchronous restore\n");
-		free_sample(self, self->sample);
-		self->sample         = load_sample(&self->logger, path);
-		self->sample_changed = true;
+		Sample* sample = load_sample(&self->logger, path);
+		if (sample) {
+			free_sample(self, self->sample);
+			self->sample         = sample;
+			self->sample_changed = true;
+		}
 	} else {
 		// Schedule sample to be loaded by the provided worker
 		lv2_log_trace(&self->logger, "Scheduling restore\n");
