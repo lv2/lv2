@@ -42,6 +42,7 @@
 #define LV2_STATE__mapPath           LV2_STATE_PREFIX "mapPath"            ///< http://lv2plug.in/ns/ext/state#mapPath
 #define LV2_STATE__state             LV2_STATE_PREFIX "state"              ///< http://lv2plug.in/ns/ext/state#state
 #define LV2_STATE__threadSafeRestore LV2_STATE_PREFIX "threadSafeRestore"  ///< http://lv2plug.in/ns/ext/state#threadSafeRestore
+#define LV2_STATE__StateChanged      LV2_STATE_PREFIX "StateChanged"       ///< http://lv2plug.in/ns/ext/state#StateChanged
 
 #ifdef __cplusplus
 extern "C" {

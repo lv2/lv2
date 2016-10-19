@@ -15,7 +15,7 @@ import waflib.Utils as Utils
 
 # Variables for 'waf dist'
 APPNAME = 'lv2'
-VERSION = '1.14.1'
+VERSION = '1.15.1'
 
 # Mandatory variables
 top = '.'

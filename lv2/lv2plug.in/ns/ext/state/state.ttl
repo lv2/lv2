@@ -364,3 +364,20 @@ which emits a response which is later applied in the audio thread.</p>
 <p>The host is not required to block run() while restore() and work() load the
 state, so this feature allows state to be restored without dropouts.</p>
 """ .
+
+state:Changed
+	a rdfs:Class ;
+	rdfs:label "State changed" ;
+	lv2:documentation """
+<p>A notification that the internal state of the plugin has been changed in a
+way that the host can not otherwise know about.</p>
+
+<p>This is a one-way notification, intended to be used as the type of an <a
+href="../atom/atom.html#Object">Object</a> sent from plugins when
+necessary.</p>
+
+<p>Plugins SHOULD emit such an event whenever a change has occurred that would
+reesult in a different state being saved, but not when the host explicity makes
+a change which it knows is likely to have that effect, such as changing a
+parameter.</p>
+""" .
