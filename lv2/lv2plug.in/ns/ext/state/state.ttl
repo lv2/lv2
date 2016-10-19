@@ -364,3 +364,16 @@ which emits a response which is later applied in the audio thread.</p>
 <p>The host is not required to block run() while restore() and work() load the
 state, so this feature allows state to be restored without dropouts.</p>
 """ .
+
+
+state:Changed
+	a lv2:Class ;
+	rdfs:label "State modified event" ;
+	lv2:documentation """
+<p>Event message type that allows a plugin to notify a host
+about plugin internal state changes which the host cannot
+otherwise know about.</p>
+<p>It is a one way signaling flag:
+<a href="../atom/atom.html#Object">LV2 Atom Object</a> which
+is-a state:changed event.</p>
+""" .
