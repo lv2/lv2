@@ -377,7 +377,7 @@ href="../atom/atom.html#Object">Object</a> sent from plugins when
 necessary.</p>
 
 <p>Plugins SHOULD emit such an event whenever a change has occurred that would
-reesult in a different state being saved, but not when the host explicity makes
+result in a different state being saved, but not when the host explicity makes
 a change which it knows is likely to have that effect, such as changing a
 parameter.</p>
 """ .
