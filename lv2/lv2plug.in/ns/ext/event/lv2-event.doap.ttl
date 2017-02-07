@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/event>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Event" ;
 	doap:shortdesc "A port-based real-time generic event interface." ;

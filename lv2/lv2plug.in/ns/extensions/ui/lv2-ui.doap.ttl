@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/extensions/ui>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 UI" ;
 	doap:shortdesc "LV2 plugin UIs of any type." ;

@@ -8,7 +8,6 @@
 <http://lv2plug.in/ns/ext/options>
 	a owl:Ontology ;
 	rdfs:seeAlso <options.h> ,
-		<../../meta/meta.ttl> ,
 		<lv2-options.doap.ttl> ;
 	lv2:documentation """
 

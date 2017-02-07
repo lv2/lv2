@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/options>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Options" ;
 	doap:shortdesc "Instantiation time options." ;
 	doap:created "2012-08-20" ;

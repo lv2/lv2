@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/patch>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:created "2012-02-09" ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:developer <http://drobilla.net/drobilla#me> ;

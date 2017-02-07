@@ -7,8 +7,7 @@
 
 <http://lv2plug.in/ns/ext/port-groups>
 	a owl:Ontology ;
-	rdfs:seeAlso <../../meta/meta.ttl> ,
-		<lv2-port-groups.doap.ttl> .
+	rdfs:seeAlso <lv2-port-groups.doap.ttl> .
 
 pg:Group
 	a rdfs:Class ;

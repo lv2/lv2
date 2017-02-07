@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/uri-map>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:created "2008-00-00" ;
 	doap:developer <http://lv2plug.in/ns/meta#larsl> ,

@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/atom>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Atom" ;
 	doap:shortdesc "A generic value container and several data types." ;
 	doap:license <http://opensource.org/licenses/isc> ;

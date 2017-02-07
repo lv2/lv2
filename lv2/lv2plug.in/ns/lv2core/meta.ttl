@@ -7,15 +7,6 @@
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
-<http://lv2plug.in/ns/meta>
-	a owl:Ontology ;
-	doap:license <http://opensource.org/licenses/isc> ;
-	doap:name "LV2 Meta" ;
-	doap:shortdesc "LV2 project metadata" ;
-	doap:created "2012-03-25" ;
-	doap:maintainer <http://drobilla.net/drobilla#me> ;
-	rdfs:comment "This document describes metadata relevant to the LV2 project." .
-
 <http://opensource.org/licenses/isc>
 	rdf:value """
 Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted, provided that the above copyright notice and this permission notice appear in all copies.
@@ -52,6 +43,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "eg-sampler: Add waveform display to UI."
+			] , [
+				rdfs:label "Add lv2_validate utility."
 			]
 		]
 	] , [

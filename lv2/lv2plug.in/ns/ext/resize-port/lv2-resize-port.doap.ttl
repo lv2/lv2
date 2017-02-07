@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/resize-port>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Resize Port" ;
 	doap:shortdesc "Dynamically sized LV2 port buffers." ;
 	doap:created "2007-00-00" ;

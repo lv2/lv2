@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/time>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Time" ;
 	doap:shortdesc "Properties for describing time." ;
 	doap:created "2011-10-05" ;

@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/state>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:created "2010-11-09" ;
 	doap:name "LV2 State" ;
 	doap:shortdesc "An interface for LV2 plugins to save and restore state." ;

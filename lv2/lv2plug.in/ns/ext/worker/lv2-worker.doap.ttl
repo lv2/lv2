@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/worker>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Worker" ;
 	doap:shortdesc "Support for a non-realtime plugin worker method." ;
 	doap:created "2012-03-22" ;

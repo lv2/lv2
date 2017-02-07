@@ -140,7 +140,7 @@ def build_index(task):
     lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
     rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
-    model = load_ttl(['lv2/lv2plug.in/ns/meta/meta.ttl'])
+    model = load_ttl(['lv2/lv2plug.in/ns/lv2core/meta.ttl'])
 
     # Get date for this version, and list of all LV2 distributions
     proj  = rdflib.URIRef('http://lv2plug.in/ns/lv2')
@@ -270,6 +270,14 @@ def build(bld):
         PREFIX       = bld.env.PREFIX,
         INCLUDEDIR   = bld.env.INCLUDEDIR,
         VERSION      = VERSION)
+
+    # Validator
+    bld(features     = 'subst',
+        source       = 'util/lv2_validate.in',
+        target       = 'lv2_validate',
+        chmod        = Utils.O755,
+        install_path = '${BINDIR}',
+        LV2DIR       = bld.env.LV2DIR)
 
     # Build extensions
     for i in exts:
@@ -447,7 +455,7 @@ def posts(ctx):
                                        dev_dist = dev_dist)
 
     entries = autowaf.get_rdf_news('lv2',
-                                   ['lv2/lv2plug.in/ns/meta/meta.ttl'],
+                                   ['lv2/lv2plug.in/ns/lv2core/meta.ttl'],
                                    None,
                                    top_entries,
                                    dev_dist = dev_dist)
@@ -471,7 +479,7 @@ def dist(ctx):
 
     # Write top level amalgamated NEWS file
     entries = autowaf.get_rdf_news('lv2',
-                                   ['lv2/lv2plug.in/ns/meta/meta.ttl'],
+                                   ['lv2/lv2plug.in/ns/lv2core/meta.ttl'],
                                    None,
                                    top_entries,
                                    dev_dist = dev_dist)

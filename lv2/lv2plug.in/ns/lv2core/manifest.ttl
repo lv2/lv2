@@ -1,3 +1,4 @@
+@prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -7,3 +8,7 @@
 	lv2:minorVersion 14 ;
 	lv2:microVersion 0 ;
 	rdfs:seeAlso <lv2core.ttl> .
+
+<http://lv2plug.in/ns/lv2>
+	a doap:Project ;
+	rdfs:seeAlso <meta.ttl> .

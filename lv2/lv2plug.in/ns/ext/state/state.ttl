@@ -6,7 +6,6 @@
 <http://lv2plug.in/ns/ext/state>
 	a lv2:Specification ;
 	rdfs:seeAlso <state.h> ,
-		<../../meta/meta.ttl> ,
 		<lv2-state.doap.ttl> ;
 	lv2:documentation """
 <p>This extension defines a simple mechanism which allows hosts to save and

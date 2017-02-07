@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/morph>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:name "LV2 Morph" ;
 	doap:shortdesc "Ports that can dynamically change type." ;
 	doap:created "2012-05-22" ;

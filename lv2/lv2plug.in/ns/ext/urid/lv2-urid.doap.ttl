@@ -5,7 +5,6 @@
 
 <http://lv2plug.in/ns/ext/urid>
 	a doap:Project ;
-	rdfs:seeAlso <../../meta/meta.ttl> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 URID" ;
 	doap:shortdesc "Features for mapping URIs to and from integers." ;
