@@ -110,7 +110,7 @@ load_sample(LV2_Log_Logger* logger, const char* path)
 	lv2_log_trace(logger, "Loading %s\n", path);
 
 	const size_t   path_len = strlen(path);
-	Sample* const  sample   = (Sample*)malloc(sizeof(Sample));
+	Sample* const  sample   = (Sample*)calloc(1, sizeof(Sample));
 	SF_INFO* const info     = &sample->info;
 	SNDFILE* const sndfile  = sf_open(path, SFM_READ, info);
 	float*         data     = NULL;
