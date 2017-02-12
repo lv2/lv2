@@ -564,6 +564,8 @@ restore(LV2_Handle                  instance,
 		free(buf);
 	}
 
+	free(path);
+
 	return LV2_STATE_SUCCESS;
 }
 
