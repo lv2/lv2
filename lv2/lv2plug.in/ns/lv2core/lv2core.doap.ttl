@@ -16,6 +16,15 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "15.0" ;
+		doap:created "2017-03-19" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add lv2:MIDIPlugin class."
+			]
+		]
+	] , [
 		doap:revision "14.0" ;
 		doap:created "2016-09-18" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.14.0.tar.bz2> ;

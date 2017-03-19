@@ -1045,3 +1045,9 @@ lv2:ConstantPlugin
 		owl:Class ;
 	rdfs:subClassOf lv2:GeneratorPlugin ;
 	rdfs:label "Constant" .
+
+lv2:MIDIPlugin
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf lv2:Plugin ;
+	rdfs:label "MIDI" .
