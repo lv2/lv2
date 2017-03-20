@@ -48,6 +48,7 @@
 #define LV2_PATCH__accept         LV2_PATCH_PREFIX "accept"          ///< http://lv2plug.in/ns/ext/patch#accept
 #define LV2_PATCH__add            LV2_PATCH_PREFIX "add"             ///< http://lv2plug.in/ns/ext/patch#add
 #define LV2_PATCH__body           LV2_PATCH_PREFIX "body"            ///< http://lv2plug.in/ns/ext/patch#body
+#define LV2_PATCH__context        LV2_PATCH_PREFIX "context"         ///< http://lv2plug.in/ns/ext/patch#context
 #define LV2_PATCH__destination    LV2_PATCH_PREFIX "destination"     ///< http://lv2plug.in/ns/ext/patch#destination
 #define LV2_PATCH__property       LV2_PATCH_PREFIX "property"        ///< http://lv2plug.in/ns/ext/patch#property
 #define LV2_PATCH__readable       LV2_PATCH_PREFIX "readable"        ///< http://lv2plug.in/ns/ext/patch#readable

@@ -17,6 +17,8 @@
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add patch:accept property."
+			] , [
+				rdfs:label "Add patch:context property."
 			]
 		]
 	] , [

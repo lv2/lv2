@@ -295,6 +295,23 @@ patch:body
 The details of this property's value depend on the type of message it is a
 part of.""" .
 
+patch:context
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:domain patch:Message ;
+	rdfs:comment """The context of properties in this message.
+
+For example, a plugin may have a special context for ephemeral properties which
+are only relevant during the lifetime of the instance and should not be saved
+in state.
+
+The specific uses for contexts are application specific.  However, the context
+MUST be a URI, and can be interpreted as the ID of a data model where
+properties should be stored.  Implementations MAY have special support for
+contexts, for example by storing in a quad store or serializing to a format
+that supports multiple RDF graphs such as TriG.
+""" .
+
 patch:destination
 	a rdf:Property ,
 		owl:ObjectProperty ,
