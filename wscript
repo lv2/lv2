@@ -15,7 +15,7 @@ import waflib.Utils as Utils
 
 # Variables for 'waf dist'
 APPNAME = 'lv2'
-VERSION = '1.15.3'
+VERSION = '1.15.4'
 
 # Mandatory variables
 top = '.'
@@ -23,6 +23,7 @@ out = 'build'
 
 def options(opt):
     opt.load('compiler_c')
+    opt.load('compiler_cxx')
     opt.load('lv2')
     autowaf.set_options(opt, False, True)
     opt.add_option('--test', action='store_true', dest='build_tests',
@@ -44,9 +45,15 @@ def configure(conf):
         Options.options.build_tests = False
         Options.options.no_plugins = True
 
+    try:
+        conf.load('compiler_cxx')
+    except:
+        pass
+
     conf.load('lv2')
     autowaf.configure(conf)
     autowaf.set_c99_mode(conf)
+    conf.env.append_value('CXXFLAGS', ['-std=c++11'])
 
     if Options.options.online_docs:
         Options.options.docs = True
@@ -220,7 +227,7 @@ def build_ext(bld, path):
             target = bld.path.get_bld().make_node('%s/%s' % (path, i)))
 
     # Build test program if applicable
-    if bld.env.BUILD_TESTS and bld.path.find_node(path + '/%s-test.c' % name):
+    if bld.env.BUILD_TESTS:
         test_lib       = []
         test_cflags    = ['']
         test_linkflags = ['']
@@ -229,14 +236,25 @@ def build_ext(bld, path):
             test_cflags    += ['--coverage']
             test_linkflags += ['--coverage']
 
-        # Unit test program
-        bld(features     = 'c cprogram',
-            source       = path + '/%s-test.c' % name,
-            lib          = test_lib,
-            target       = path + '/%s-test' % name,
-            install_path = None,
-            cflags       = test_cflags,
-            linkflags    = test_linkflags)
+        # C unit test program
+        if bld.path.find_node(path + '/%s-test.c' % name):
+            bld(features     = 'c cprogram',
+                source       = path + '/%s-test.c' % name,
+                lib          = test_lib,
+                target       = path + '/%s-test' % name,
+                install_path = None,
+                cflags       = test_cflags,
+                linkflags    = test_linkflags)
+
+        # C++ unit test program
+        if bld.path.find_node(path + '/%s-test.cpp' % name):
+            bld(features     = 'cxx cxxprogram',
+                source       = path + '/%s-test.cpp' % name,
+                lib          = test_lib,
+                target       = path + '/%s-cpp-test' % name,
+                install_path = None,
+                cflags       = test_cflags,
+                linkflags    = test_linkflags)
 
     # Install bundle
     bld.install_files(bundle_dir,
@@ -400,6 +418,17 @@ def build(bld):
             source       = bld.path.get_bld().make_node('build-test.c'),
             target       = 'build-test',
             install_path = None)
+
+        if 'COMPILER_CXX' in bld.env:
+            bld(rule         = gen_build_test,
+                source       = bld.path.ant_glob('lv2/**/*.hpp'),
+                target       = 'build-test.cpp',
+                install_path = None)
+
+            bld(features     = 'cxx cxxprogram',
+                source       = bld.path.get_bld().make_node('build-test.cpp'),
+                target       = 'build-test-cpp',
+                install_path = None)
 
     if bld.env.BUILD_BOOK:
         # Build "Programming LV2 Plugins" book from plugin examples

@@ -781,6 +781,7 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = @LV2_SRCDIR@/doc/mainpage.dox \
+                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/Forge.hpp \
                          @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/atom.h \
                          @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/forge.h \
                          @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/util.h \

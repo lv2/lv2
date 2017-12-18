@@ -20,43 +20,7 @@
 
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
-
-char** uris   = NULL;
-size_t n_uris = 0;
-
-static char*
-copy_string(const char* str)
-{
-	const size_t len = strlen(str);
-	char*        dup = (char*)malloc(len + 1);
-	memcpy(dup, str, len + 1);
-	return dup;
-}
-
-static LV2_URID
-urid_map(LV2_URID_Map_Handle handle, const char* uri)
-{
-	for (size_t i = 0; i < n_uris; ++i) {
-		if (!strcmp(uris[i], uri)) {
-			return i + 1;
-		}
-	}
-
-	uris = (char**)realloc(uris, ++n_uris * sizeof(char*));
-	uris[n_uris - 1] = copy_string(uri);
-	return n_uris;
-}
-
-static int
-test_fail(const char* fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
-	fprintf(stderr, "error: ");
-	vfprintf(stderr, fmt, args);
-	va_end(args);
-	return 1;
-}
+#include "lv2/lv2plug.in/ns/ext/atom/atom-test-utils.h"
 
 int
 main(void)
