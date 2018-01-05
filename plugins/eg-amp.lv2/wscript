@@ -16,11 +16,10 @@ def options(opt):
     autowaf.set_options(opt)
 
 def configure(conf):
-    conf.load('compiler_c')
-    conf.load('lv2')
-    autowaf.configure(conf)
-    autowaf.set_c99_mode(conf)
     autowaf.display_header('Amp Configuration')
+    conf.load('compiler_c', cache=True)
+    conf.load('lv2', cache=True)
+    conf.load('autowaf', cache=True)
 
     if not autowaf.is_child():
         autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')

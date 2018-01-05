@@ -31,8 +31,8 @@ def configure(conf):
         conf.fatal(
             'os.path.relpath missing, get Python 2.6 or use --copy-headers')
 
-    conf.load('compiler_c')
-    autowaf.configure(conf)
+    conf.load('compiler_c', cache=True)
+    conf.load('autowaf', cache=True)
 
     autowaf.display_msg(conf, "LV2 bundle directory", conf.env['LV2DIR'])
     print('')

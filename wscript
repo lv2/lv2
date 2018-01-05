@@ -39,14 +39,13 @@ def options(opt):
 
 def configure(conf):
     try:
-        conf.load('compiler_c')
+        conf.load('compiler_c', cache=True)
     except:
         Options.options.build_tests = False
         Options.options.no_plugins = True
 
-    conf.load('lv2')
-    autowaf.configure(conf)
-    autowaf.set_c99_mode(conf)
+    conf.load('lv2', cache=True)
+    conf.load('autowaf', cache=True)
 
     if Options.options.online_docs:
         Options.options.docs = True
@@ -54,7 +53,7 @@ def configure(conf):
     if Options.options.ultra_strict:
         conf.env.append_value('CFLAGS', ['-Wconversion'])
 
-    if Options.platform == 'win32' or not hasattr(os.path, 'relpath'):
+    if conf.env.DEST_OS == 'win32' or not hasattr(os.path, 'relpath'):
         Logs.warn('System does not support linking headers, copying')
         Options.options.copy_headers = True
 
@@ -89,7 +88,6 @@ def configure(conf):
             except:
                 Logs.warn('Configuration failed, %s will not be built\n' % i)
 
-    autowaf.configure(conf)
     autowaf.display_header('LV2 Configuration')
     autowaf.display_msg(conf, 'Bundle directory', conf.env.LV2DIR)
     autowaf.display_msg(conf, 'Copy (not link) headers', conf.env.COPY_HEADERS)
@@ -217,7 +215,7 @@ def build_ext(bld, path):
     for i in bld.path.ant_glob(path + '/*.h'):
         bld(rule   = link,
             source = i,
-            target = bld.path.get_bld().make_node('%s/%s' % (path, i)))
+            target = i.relpath())
 
     # Build test program if applicable
     if bld.env.BUILD_TESTS and bld.path.find_node(path + '/%s-test.c' % name):
