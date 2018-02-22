@@ -116,6 +116,7 @@
 #define LV2_CORE__requiredFeature    LV2_CORE_PREFIX "requiredFeature"     ///< http://lv2plug.in/ns/lv2core#requiredFeature
 #define LV2_CORE__sampleRate         LV2_CORE_PREFIX "sampleRate"          ///< http://lv2plug.in/ns/lv2core#sampleRate
 #define LV2_CORE__scalePoint         LV2_CORE_PREFIX "scalePoint"          ///< http://lv2plug.in/ns/lv2core#scalePoint
+#define LV2_CORE__signalsDataChange  LV2_CORE_PREFIX "signalsDataChange"   ///< http://lv2plug.in/ns/lv2core#signalsDataChange
 #define LV2_CORE__symbol             LV2_CORE_PREFIX "symbol"              ///< http://lv2plug.in/ns/lv2core#symbol
 #define LV2_CORE__toggled            LV2_CORE_PREFIX "toggled"             ///< http://lv2plug.in/ns/lv2core#toggled
 
