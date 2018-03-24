@@ -165,7 +165,14 @@ run(LV2_Handle instance, uint32_t sample_count)
 				++self->n_active_notes;
 				break;
 			case LV2_MIDI_MSG_NOTE_OFF:
-				--self->n_active_notes;
+				if (self->n_active_notes > 0) {
+					--self->n_active_notes;
+				}
+				break;
+			case LV2_MIDI_MSG_CONTROLLER:
+				if (msg[1] == LV2_MIDI_CTL_ALL_NOTES_OFF) {
+					self->n_active_notes = 0;
+				}
 				break;
 			case LV2_MIDI_MSG_PGM_CHANGE:
 				if (msg[1] == 0 || msg[1] == 1) {

@@ -44,6 +44,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 			dcs:item [
 				rdfs:label "eg-sampler: Add waveform display to UI."
 			] , [
+				rdfs:label "eg-midigate: Respond to \"all notes off\" MIDI message."
+			] , [
 				rdfs:label "Add lv2_validate utility."
 			]
 		]
