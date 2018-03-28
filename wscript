@@ -257,10 +257,12 @@ def build(bld):
             bld.path.ant_glob('lv2/lv2plug.in/ns/extensions/*', dir=True))
 
     # Copy lv2.h to URI-style include path in build directory
-    lv2_h_path = 'lv2/lv2plug.in/ns/lv2core/lv2.h'
-    bld(rule   = link,
-        source = bld.path.find_node(lv2_h_path),
-        target = bld.path.get_bld().make_node(lv2_h_path))
+    lv2_h_paths = ['lv2/lv2plug.in/ns/lv2core/lv2.h',
+                   'lv2/lv2plug.in/ns/lv2core/lv2_util.h']
+    for path in lv2_h_paths:
+        bld(rule   = link,
+            source = bld.path.find_node(path),
+            target = bld.path.get_bld().make_node(path))
 
     # LV2 pkgconfig file
     bld(features     = 'subst',
