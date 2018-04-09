@@ -746,6 +746,18 @@ plugin MUST satisfy all of the following:</p>
 <p>Note these rules apply to the connect_port() function as well as run().</p>
 """ .
 
+lv2:signalsDataChange
+	a lv2:Feature ;
+	rdfs:label "signals data change" ;
+	lv2:documentation """
+This feature indicates that the Lv2 host will call connect_port() for the 
+corresponding control input port whenever its data has changed.
+Therefore the Lv2 plugin does not need to compare the current control port data
+with the old one to detect whether the data has changed.
+""" .
+
+be called when ever a 
+
 lv2:PortProperty
 	a rdfs:Class ,
 		owl:Class ;
