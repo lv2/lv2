@@ -46,6 +46,7 @@ import optparse
 import os
 import re
 import sys
+import time
 import xml.sax.saxutils
 import xml.dom
 import xml.dom.minidom
@@ -1374,8 +1375,9 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     else:
         template = template.replace('@COMMENT@', '')
 
-    template = template.replace('@DATE@', datetime.datetime.utcnow().strftime('%F'))
-    template = template.replace('@TIME@', datetime.datetime.utcnow().strftime('%F %H:%M UTC'))
+    build_date = datetime.datetime.utcfromtimestamp(int(os.environ.get('SOURCE_DATE_EPOCH', time.time())))
+    template = template.replace('@DATE@', build_date.strftime('%F'))
+    template = template.replace('@TIME@', build_date.strftime('%F %H:%M UTC'))
 
     # Write index row
     if index_path is not None:
