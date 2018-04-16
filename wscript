@@ -184,7 +184,9 @@ def build_index(task):
 
     if date is None:
         import datetime
-        date = datetime.datetime.now().isoformat()
+        import time
+        now = int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
+        date = datetime.datetime.utcfromtimestamp(now).strftime('%F')
 
     subst_file(task.inputs[0].abspath(), task.outputs[0].abspath(),
                { '@ROWS@': ''.join(rows),

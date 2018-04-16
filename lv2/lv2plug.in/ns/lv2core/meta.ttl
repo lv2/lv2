@@ -32,6 +32,7 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 	doap:developer <http://drobilla.net/drobilla#me> ,
 		<http://plugin.org.uk/swh.xrdf#me> ;
 	doap:helper meta:larsl ,
+		meta:bmwiedemann ,
 		meta:gabrbedd ,
 		meta:daste ,
 		meta:kfoltman ,
@@ -202,3 +203,9 @@ meta:harry
 	a foaf:Person ;
 	foaf:name "Harry van Haaren" ;
 	foaf:mbox <harryhaaren@gmail.com> .
+
+meta:bmwiedemann
+	a foaf:Person ;
+	foaf:name "Bernhard M. Wiedemann" ;
+	foaf:mbox <bwiedemann@suse.de> .
+
