@@ -115,7 +115,7 @@ def findStatements(model, s, p, o):
 def findOne(m, s, p, o):
     l = findStatements(m, s, p, o)
     try:
-        return l.next()
+        return sorted(l)[0]
     except:
         return None
 
@@ -402,7 +402,7 @@ def rdfsPropertyInfo(term, m):
     domains = findStatements(m, term, rdfs.domain, None)
     domainsdoc = ""
     first = True
-    for d in domains:
+    for d in sorted(domains):
         union = findOne(m, getObject(d), owl.unionOf, None)
         if union:
             uris = parseCollection(m, getObject(union))
@@ -420,7 +420,7 @@ def rdfsPropertyInfo(term, m):
     ranges = findStatements(m, term, rdfs.range, None)
     rangesdoc = ""
     first = True
-    for r in ranges:
+    for r in sorted(ranges):
         union = findOne(m, getObject(r), owl.unionOf, None)
         if union:
             uris = parseCollection(m, getObject(union))
@@ -483,13 +483,14 @@ def rdfsClassInfo(term, m):
             restrictions.append(getSubject(meta_type))
 
     if len(superclasses) > 0:
+        superclasses.sort()
         doc += "\n<tr><th>Sub-class of</th>"
         first = True
         for superclass in superclasses:
             doc += getProperty(getTermLink(superclass), first)
             first = False
 
-    for r in restrictions:
+    for r in sorted(restrictions):
         props = findStatements(m, r, None, None)
         onProp = None
         comment = None
@@ -535,6 +536,7 @@ def rdfsClassInfo(term, m):
     # Find out about properties which have rdfs:domain of t
     d = classdomains.get(str(term), "")
     if d:
+        d.sort()
         dlist = ''
         first = True
         for k in d:
@@ -545,6 +547,7 @@ def rdfsClassInfo(term, m):
     # Find out about properties which have rdfs:range of t
     r = classranges.get(str(term), "")
     if r:
+        r.sort()
         rlist = ''
         first = True
         for k in r:
@@ -612,7 +615,7 @@ def rdfsInstanceInfo(term, m):
     doc = ""
 
     first = True
-    for match in findStatements(m, term, rdf.type, None):
+    for match in sorted(findStatements(m, term, rdf.type, None)):
         doc += getProperty(getTermLink(getObject(match),
                                        term,
                                        rdf.type),
@@ -948,7 +951,7 @@ def releaseChangeset(m, release, prefix=''):
 
     entry = ''
     #entry = '<dd><ul>\n'
-    for i in findStatements(m, getObject(changeset), dcs.item, None):
+    for i in sorted(findStatements(m, getObject(changeset), dcs.item, None)):
         item  = getObject(i)
         label = findOne(m, item, rdfs.label, None)
         if not label:
