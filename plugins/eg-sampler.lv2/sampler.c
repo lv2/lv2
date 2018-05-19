@@ -220,13 +220,11 @@ work_response(LV2_Handle  instance,
 	                      old_sample };
 	self->schedule->schedule_work(self->schedule->handle, sizeof(msg), &msg);
 
-	if (strcmp(old_sample->path, new_sample->path)) {
-		// Send a notification that we're using a new sample
-		lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
-		write_set_file(&self->forge, &self->uris,
-		               new_sample->path,
-		               new_sample->path_len);
-	}
+	// Send a notification that we're using a new sample
+	lv2_atom_forge_frame_time(&self->forge, self->frame_offset);
+	write_set_file(&self->forge, &self->uris,
+		       new_sample->path,
+		       new_sample->path_len);
 
 	return LV2_WORKER_SUCCESS;
 }
