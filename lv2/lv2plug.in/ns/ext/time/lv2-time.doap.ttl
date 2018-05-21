@@ -10,6 +10,15 @@
 	doap:created "2011-10-05" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "1.5" ;
+		doap:created "2018-05-21" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Clarify time:beat origin."
+			]
+		]
+	] , [
 		doap:revision "1.4" ;
 		doap:created "2016-07-31" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.14.0.tar.bz2> ;

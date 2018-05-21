@@ -76,7 +76,12 @@ time:beat
 		owl:FunctionalProperty ;
 	rdfs:domain time:Time ;
 	rdfs:range xsd:double ;
-	rdfs:label "beat" .
+	rdfs:label "beat" ;
+	rdfs:comment """
+The global running beat number.  This is not the beat within a bar like barBeat,
+but relative to the same origin as time:bar and monotonically increases unless
+the transport is repositioned.
+""" .
 
 time:beatUnit
 	a rdf:Property ,
