@@ -108,8 +108,6 @@ xsd:byte
 	owl:onDatatype xsd:short ;
 	owl:withRestrictions (
 		[
-			xsd:pattern "[0-9A-F][0-9A-F]"
-		] [
 			xsd:maxInclusive 127
 		] [
 			xsd:minInclusive -128
