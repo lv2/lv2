@@ -303,8 +303,7 @@ midi:channel
 
 midi:chunk
 	a rdf:Property ;
-	rdfs:range xsd:byte ,
-		xsd:hexBinary ;
+	rdfs:range midi:Chunk ;
 	rdfs:label "MIDI chunk" ;
 	rdfs:comment "A chunk of a MIDI message." .
 
