@@ -6,6 +6,8 @@
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 
+# dct:rights "Copyright © 2004-2009 Edd Dumbill"
+
 doap:
 	a owl:Ontology ;
 	dct:description "Das Vokabular \"Description of a Project (DOAP)\", beschrieben durch W3C RDF Schema and the Web Ontology Language."@de ,
@@ -15,7 +17,6 @@ doap:
 		décrit en utilisant RDF Schema du W3C et OWL."""@fr ,
 		"Slovník Description of a Project (DOAP, Popis projektu), popsaný použitím W3C RDF Schema a Web Ontology Language."@cs ,
 		"The Description of a Project (DOAP) vocabulary, described using W3C RDF Schema and the Web Ontology Language." ;
-	dct:rights "Copyright © 2004-2009 Edd Dumbill" ;
 	dct:title "Description of a Project (DOAP) vocabulary" ;
 	owl:imports foaf: ;
 	foaf:maker [
