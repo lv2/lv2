@@ -46,7 +46,7 @@
     <!-- INDEX -->
     <!-- <h2 class="sec" id="sec-index">Index</h2> -->
     <div class="content">
-      <a id="sec-index" />
+      <a id="sec-index"></a>
       <table class="index" summary="An index of LV2 specifications">
         <thead>
           <tr>
