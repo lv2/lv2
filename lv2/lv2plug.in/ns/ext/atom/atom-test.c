@@ -15,14 +15,15 @@
 */
 
 #include <stdarg.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "lv2/lv2plug.in/ns/ext/atom/forge.h"
 #include "lv2/lv2plug.in/ns/ext/atom/util.h"
 
-char** uris   = NULL;
-size_t n_uris = 0;
+char**   uris   = NULL;
+uint32_t n_uris = 0;
 
 static char*
 copy_string(const char* str)
@@ -36,7 +37,7 @@ copy_string(const char* str)
 static LV2_URID
 urid_map(LV2_URID_Map_Handle handle, const char* uri)
 {
-	for (size_t i = 0; i < n_uris; ++i) {
+	for (uint32_t i = 0; i < n_uris; ++i) {
 		if (!strcmp(uris[i], uri)) {
 			return i + 1;
 		}
@@ -141,8 +142,8 @@ main(void)
 	}
 
 	// eg_path = (Path)"/foo/bar"
-	const char*  pstr     = "/foo/bar";
-	const size_t pstr_len = strlen(pstr);
+	const char*    pstr     = "/foo/bar";
+	const uint32_t pstr_len = (uint32_t)strlen(pstr);
 	lv2_atom_forge_key(&forge, eg_path);
 	LV2_Atom_String* path  = (LV2_Atom_String*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_uri(&forge, pstr, pstr_len));
@@ -152,8 +153,8 @@ main(void)
 	}
 
 	// eg_uri = (URI)"http://example.org/value"
-	const char*  ustr     = "http://example.org/value";
-	const size_t ustr_len = strlen(ustr);
+	const char*    ustr     = "http://example.org/value";
+	const uint32_t ustr_len = (uint32_t)strlen(ustr);
 	lv2_atom_forge_key(&forge, eg_uri);
 	LV2_Atom_String* uri = (LV2_Atom_String*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_uri(&forge, ustr, ustr_len));
@@ -284,7 +285,7 @@ main(void)
 		++n_events;
 	}
 
-	unsigned n_props = 0;
+	int n_props = 0;
 	LV2_ATOM_OBJECT_FOREACH((LV2_Atom_Object*)obj, prop) {
 		if (!prop->key) {
 			return test_fail("Corrupt property %u has no key\n", n_props);
@@ -338,7 +339,7 @@ main(void)
 		LV2_ATOM_OBJECT_QUERY_END
 	};
 
-	unsigned n_matches = lv2_atom_object_query((LV2_Atom_Object*)obj, q);
+	int n_matches = lv2_atom_object_query((LV2_Atom_Object*)obj, q);
 	for (int n = 0; n < 2; ++n) {
 		if (n_matches != n_props) {
 			return test_fail("Query failed, %u matches != %u\n",
