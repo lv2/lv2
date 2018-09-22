@@ -1262,8 +1262,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     spec_ns = rdflib.Namespace(spec_ns_str)
 
     namespaces = getNamespaces(m)
-    keys = namespaces.keys()
-    keys.sort()
+    keys = sorted(namespaces.keys())
     prefixes_html = "<span>"
     for i in keys:
         uri = namespaces[i]
@@ -1289,8 +1288,8 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
 
     instalist = None
     if instances:
-        instalist = getInstances(m, classlist, proplist)
-        instalist.sort(lambda x, y: cmp(getShortName(x).lower(), getShortName(y).lower()))
+        instalist = sorted(getInstances(m, classlist, proplist),
+                           key=lambda x: getShortName(x).lower())
 
     filelist = []
     see_also_files = specProperties(m, spec, rdfs.seeAlso)
@@ -1393,7 +1392,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
 def save(path, text):
     try:
         f = open(path, "w")
-        f.write(text.encode("utf-8"))
+        f.write(text)
         f.flush()
         f.close()
     except Exception:
