@@ -30,7 +30,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
+#include "lv2/core/lv2.h"
 
 #define LV2_STATE_URI    "http://lv2plug.in/ns/ext/state"  ///< http://lv2plug.in/ns/ext/state
 #define LV2_STATE_PREFIX LV2_STATE_URI "#"                 ///< http://lv2plug.in/ns/ext/state#

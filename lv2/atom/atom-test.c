@@ -19,8 +19,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
-#include "lv2/lv2plug.in/ns/ext/atom/util.h"
+#include "lv2/atom/forge.h"
+#include "lv2/atom/util.h"
 
 char**   uris   = NULL;
 uint32_t n_uris = 0;

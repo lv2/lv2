@@ -18,9 +18,9 @@
 #ifndef FIFTHS_URIS_H
 #define FIFTHS_URIS_H
 
-#include "lv2/lv2plug.in/ns/ext/log/log.h"
-#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
-#include "lv2/lv2plug.in/ns/ext/state/state.h"
+#include "lv2/log/log.h"
+#include "lv2/midi/midi.h"
+#include "lv2/state/state.h"
 
 #define EG_FIFTHS_URI "http://lv2plug.in/plugins/eg-fifths"
 

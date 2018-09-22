@@ -18,10 +18,10 @@
 #ifndef SAMPLER_URIS_H
 #define SAMPLER_URIS_H
 
-#include "lv2/lv2plug.in/ns/ext/log/log.h"
-#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
-#include "lv2/lv2plug.in/ns/ext/state/state.h"
-#include "lv2/lv2plug.in/ns/ext/parameters/parameters.h"
+#include "lv2/log/log.h"
+#include "lv2/midi/midi.h"
+#include "lv2/state/state.h"
+#include "lv2/parameters/parameters.h"
 
 #define EG_SAMPLER_URI          "http://lv2plug.in/plugins/eg-sampler"
 #define EG_SAMPLER__applySample EG_SAMPLER_URI "#applySample"

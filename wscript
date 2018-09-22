@@ -12,9 +12,36 @@ from waflib.extras import autowaf as autowaf
 
 # Mandatory waf variables
 APPNAME = 'lv2'     # Package name for waf dist
-VERSION = '1.15.3'  # Package version for waf dist
+VERSION = '1.15.4'  # Package version for waf dist
 top     = '.'       # Source directory
 out     = 'build'   # Build directory
+
+# Map of specification base name to old URI-style include path
+spec_map = {
+    'atom'            : 'lv2/lv2plug.in/ns/ext/atom',
+    'buf-size'        : 'lv2/lv2plug.in/ns/ext/buf-size',
+    'core'            : 'lv2/lv2plug.in/ns/lv2core',
+    'data-access'     : 'lv2/lv2plug.in/ns/ext/data-access',
+    'dynmanifest'     : 'lv2/lv2plug.in/ns/ext/dynmanifest',
+    'event'           : 'lv2/lv2plug.in/ns/ext/event',
+    'instance-access' : 'lv2/lv2plug.in/ns/ext/instance-access',
+    'log'             : 'lv2/lv2plug.in/ns/ext/log',
+    'midi'            : 'lv2/lv2plug.in/ns/ext/midi',
+    'morph'           : 'lv2/lv2plug.in/ns/ext/morph',
+    'options'         : 'lv2/lv2plug.in/ns/ext/options',
+    'parameters'      : 'lv2/lv2plug.in/ns/ext/parameters',
+    'patch'           : 'lv2/lv2plug.in/ns/ext/patch',
+    'port-groups'     : 'lv2/lv2plug.in/ns/ext/port-groups',
+    'port-props'      : 'lv2/lv2plug.in/ns/ext/port-props',
+    'presets'         : 'lv2/lv2plug.in/ns/ext/presets',
+    'resize-port'     : 'lv2/lv2plug.in/ns/ext/resize-port',
+    'state'           : 'lv2/lv2plug.in/ns/ext/state',
+    'time'            : 'lv2/lv2plug.in/ns/ext/time',
+    'ui'              : 'lv2/lv2plug.in/ns/extensions/ui',
+    'units'           : 'lv2/lv2plug.in/ns/extensions/units',
+    'uri-map'         : 'lv2/lv2plug.in/ns/ext/uri-map',
+    'urid'            : 'lv2/lv2plug.in/ns/ext/urid',
+    'worker'          : 'lv2/lv2plug.in/ns/ext/worker'}
 
 def options(ctx):
     ctx.load('compiler_c')
@@ -23,13 +50,10 @@ def options(ctx):
     opt = ctx.get_option_group('Configuration options')
     autowaf.add_flags(
         opt,
-        {'test':         'Build unit tests',
-         'no-coverage':  'Do not use gcov for code coverage',
+        {'no-coverage':  'Do not use gcov for code coverage',
          'online-docs':  'Build documentation for web hosting',
          'no-plugins':   'Do not build example plugins',
          'copy-headers': 'Copy headers instead of linking to bundle'})
-
-    ctx.recurse('lv2/lv2plug.in/ns/lv2core')
 
 def configure(conf):
     autowaf.display_header('LV2 Configuration')
@@ -73,11 +97,8 @@ def configure(conf):
 
     autowaf.set_recursive()
 
-    conf.recurse('lv2/lv2plug.in/ns/lv2core')
-
-    conf.env.LV2_BUILD = ['lv2/lv2plug.in/ns/lv2core']
     if conf.env.BUILD_PLUGINS:
-        for i in conf.path.ant_glob('plugins/*', src=False, dir=True):
+        for i in conf.path.ant_glob('plugins/*.lv2', src=False, dir=True):
             try:
                 conf.recurse(i.srcpath())
                 conf.env.LV2_BUILD += [i.srcpath()]
@@ -87,7 +108,7 @@ def configure(conf):
     autowaf.display_summary(
         conf,
         {'Bundle directory': conf.env.LV2DIR,
-         'Copy (not link) headers': conf.env.COPY_HEADERS,
+         'Copy (not link) headers': bool(conf.env.COPY_HEADERS),
          'Version': VERSION})
 
 def chop_lv2_prefix(s):
@@ -106,10 +127,8 @@ def subst_file(template, output, dict):
     o.close()
 
 def specdirs(path):
-    return ([path.find_node('lv2/lv2plug.in/ns/lv2core')] +
-            path.ant_glob('plugins/*', dir=True) +
-            path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
-            path.ant_glob('lv2/lv2plug.in/ns/extensions/*', dir=True))
+    return (path.ant_glob('lv2/*', dir=True) +
+            path.ant_glob('plugins/*.lv2', dir=True))
 
 def ttl_files(path, specdir):
     def abspath(node):
@@ -135,7 +154,7 @@ def build_index(task):
     lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
     rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
-    model = load_ttl(['lv2/lv2plug.in/ns/lv2core/meta.ttl'])
+    model = load_ttl(['lv2/core/meta.ttl'])
 
     # Get date for this version, and list of all LV2 distributions
     proj  = rdflib.URIRef('http://lv2plug.in/ns/lv2')
@@ -191,30 +210,11 @@ def build_index(task):
                  '@DATE@' : date,
                  '@HISTORY@' : history})
 
-# Task for making a link in the build directory to a source file
-def link(task):
-    if not task.env.COPY_HEADERS and hasattr(os, 'symlink'):
-        func = os.symlink
-    else:
-        func = shutil.copy  # Symlinks unavailable, make a copy
-
-    try:
-        os.remove(task.outputs[0].abspath())  # Remove old target
-    except:
-        pass  # No old target, whatever
-
-    func(task.inputs[0].abspath(), task.outputs[0].abspath())
-
-def build_ext(bld, path):
-    name        = os.path.basename(path)
-    bundle_dir  = os.path.join(bld.env.LV2DIR, name + '.lv2')
-    include_dir = os.path.join(bld.env.INCLUDEDIR, path)
-
-    # Copy headers to URI-style include paths in build directory
-    for i in bld.path.ant_glob(path + '/*.h'):
-        bld(rule   = link,
-            source = i,
-            target = i.relpath())
+def build_spec(bld, path):
+    name            = os.path.basename(path)
+    bundle_dir      = os.path.join(bld.env.LV2DIR, name + '.lv2')
+    include_dir     = os.path.join(bld.env.INCLUDEDIR, path)
+    old_include_dir = os.path.join(bld.env.INCLUDEDIR, spec_map[name])
 
     # Build test program if applicable
     if bld.env.BUILD_TESTS and bld.path.find_node(path + '/%s-test.c' % name):
@@ -242,24 +242,22 @@ def build_ext(bld, path):
     # Install URI-like includes
     headers = bld.path.ant_glob(path + '/*.h')
     if headers:
-        if bld.env.COPY_HEADERS:
-            bld.install_files(include_dir, headers)
-        else:
-            bld.symlink_as(include_dir,
-                           os.path.relpath(bundle_dir,
-                                           os.path.dirname(include_dir)))
+        for d in [include_dir, old_include_dir]:
+            if bld.env.COPY_HEADERS:
+                bld.install_files(d, headers)
+            else:
+                bld.symlink_as(d,
+                               os.path.relpath(bundle_dir, os.path.dirname(d)))
 
 def build(bld):
-    exts = (bld.path.ant_glob('lv2/lv2plug.in/ns/ext/*', dir=True) +
-            bld.path.ant_glob('lv2/lv2plug.in/ns/extensions/*', dir=True))
+    specs = (bld.path.ant_glob('lv2/*', dir=True))
 
-    # Copy lv2.h to URI-style include path in build directory
-    lv2_h_paths = ['lv2/lv2plug.in/ns/lv2core/lv2.h',
-                   'lv2/lv2plug.in/ns/lv2core/lv2_util.h']
-    for path in lv2_h_paths:
-        bld(rule   = link,
-            source = bld.path.find_node(path),
-            target = bld.path.get_bld().make_node(path))
+    # Copy lv2.h to include directory for backwards compatibility
+    old_lv2_h_path = os.path.join(bld.env.INCLUDEDIR, 'lv2/lv2.h')
+    if bld.env.COPY_HEADERS:
+        bld.install_files(old_lv2_h_path, 'lv2/core/lv2.h')
+    else:
+        bld.symlink_as(old_lv2_h_path, 'core/lv2.h')
 
     # LV2 pkgconfig file
     bld(features     = 'subst',
@@ -279,12 +277,12 @@ def build(bld):
         LV2DIR       = bld.env.LV2DIR)
 
     # Build extensions
-    for i in exts:
-        build_ext(bld, i.srcpath())
+    for spec in specs:
+        build_spec(bld, spec.srcpath())
 
     # Build plugins
-    for i in bld.env.LV2_BUILD:
-        bld.recurse(i)
+    for plugin in bld.env.LV2_BUILD:
+        bld.recurse(plugin)
 
     # Install lv2specgen
     bld.install_files('${DATADIR}/lv2specgen/',
@@ -300,18 +298,20 @@ def build(bld):
 
     if bld.env.DOCS or bld.env.ONLINE_DOCS:
         # Prepare spec output directories
-        specs = exts + [bld.path.find_node('lv2/lv2plug.in/ns/lv2core')]
-        for i in specs:
+        for spec in specs:
             # Copy spec files to build dir
-            for f in bld.path.ant_glob(i.srcpath() + '/*.*'):
+            srcpath   = spec.srcpath()
+            name      = os.path.basename(srcpath)
+            full_path = spec_map[name]
+            path      = chop_lv2_prefix(full_path)
+            base      = full_path[len('lv2/lv2plug.in'):]
+            for f in bld.path.ant_glob(srcpath + '/*.*'):
+                target   = os.path.join(path, os.path.basename(f.srcpath()))
                 bld(features = 'subst',
                     is_copy  = True,
                     name     = 'copy',
                     source   = f,
-                    target   = chop_lv2_prefix(f.srcpath()))
-
-            base = i.srcpath()[len('lv2/lv2plug.in'):]
-            name = os.path.basename(i.srcpath())
+                    target   = target)
 
             # Generate .htaccess file
             if bld.env.ONLINE_DOCS:
@@ -321,7 +321,6 @@ def build(bld):
                     install_path = None,
                     NAME         = name,
                     BASE         = base)
-
 
         # Copy stylesheets to build directory
         for i in ['style.css', 'pygments.css']:
@@ -342,29 +341,37 @@ def build(bld):
         bld.add_group()
 
         index_files = []
-        for i in specs:
+        for spec in specs:
             # Call lv2specgen to generate spec docs
-            name         = os.path.basename(i.srcpath())
+            srcpath      = spec.srcpath()
+            basename     = os.path.basename(srcpath)
+            full_path    = spec_map[basename]
+            name         = 'lv2core' if basename == 'core' else basename
+            ttl_name     = 'lv2.ttl' if basename == 'core' else name + '.ttl'
             index_file   = os.path.join('index_rows', name)
             index_files += [index_file]
-            root_path    = os.path.relpath('lv2/lv2plug.in/ns', name)
-            html_path    = '%s/%s.html' % (chop_lv2_prefix(i.srcpath()), name)
+            root_path    = os.path.relpath('lv2/lv2plug.in/ns', full_path)
+            html_path    = '%s/%s.html' % (chop_lv2_prefix(full_path), name)
             out_bundle   = os.path.dirname(html_path)
-            bld(rule = '../lv2specgen/lv2specgen.py --root=' + root_path +
-                ' --list-email=devel@lists.lv2plug.in'
-                ' --list-page=http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in'
-                ' --style-uri=' + os.path.relpath('aux/style.css', out_bundle) +
-                ' --docdir=' + os.path.relpath('doc/html', os.path.dirname(html_path)) +
-                ' --tags=doc/tags' +
-                ' --index=' + index_file +
-                ' ${SRC} ${TGT}',
-                source = os.path.join(i.srcpath(), name + '.ttl'),
+
+            cmd = ('../lv2specgen/lv2specgen.py' +
+                   ' --root-uri=http://lv2plug.in/ns/ --root-path=' + root_path +
+                   ' --list-email=devel@lists.lv2plug.in'
+                   ' --list-page=http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in'
+                   ' --style-uri=' + os.path.relpath('aux/style.css', out_bundle) +
+                   ' --docdir=' + os.path.relpath('doc/html', os.path.dirname(html_path)) +
+                   ' --tags=doc/tags' +
+                   ' --index=' + index_file +
+                   ' ${SRC} ${TGT}')
+
+            bld(rule   = cmd,
+                source = os.path.join(srcpath, name + '.ttl'),
                 target = [html_path, index_file])
 
             # Install documentation
             if not bld.env.ONLINE_DOCS:
-                base = chop_lv2_prefix(i.srcpath())
-                bld.install_files('${DOCDIR}/' + i.srcpath(),
+                base = chop_lv2_prefix(srcpath)
+                bld.install_files('${DOCDIR}/' + srcpath,
                                   bld.path.get_bld().ant_glob(base + '/*.html'))
 
         index_files.sort()
@@ -373,7 +380,7 @@ def build(bld):
         # Build extension index
         bld(rule   = build_index,
             name   = 'index',
-            source = ['lv2/lv2plug.in/ns/index.html.in'] + index_files,
+            source = ['doc/index.html.in'] + index_files,
             target = 'ns/index.html')
 
         # Install main documentation files
@@ -454,7 +461,7 @@ def posts(ctx):
                                        dev_dist = dev_dist)
 
     entries = autowaf.get_rdf_news('lv2',
-                                   ['lv2/lv2plug.in/ns/lv2core/meta.ttl'],
+                                   ['lv2/core/meta.ttl'],
                                    None,
                                    top_entries,
                                    dev_dist = dev_dist)

@@ -31,7 +31,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "lv2/lv2plug.in/ns/ext/log/log.h"
+#include "lv2/log/log.h"
 
 #ifdef __cplusplus
 extern "C" {

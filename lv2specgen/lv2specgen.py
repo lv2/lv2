@@ -1118,7 +1118,7 @@ def load_tags(path, docdir):
     return linkmap
 
 
-def writeIndex(model, specloc, index_path, root_path):
+def writeIndex(model, specloc, index_path, root_path, root_uri):
     # Get extension URI
     ext_node = model.value(None, rdf.type, lv2.Specification)
     if not ext_node:
@@ -1163,8 +1163,13 @@ def writeIndex(model, specloc, index_path, root_path):
     if name.startswith('LV2 '):
         name = name[4:]
 
+    # Find relative link target
+    if root_uri and ext_node.startswith(root_uri):
+        target = ext_node[len(root_uri):]
+    else:
+        target = os.path.relpath(ext_node, root_path)
+
     # Specification (comment is to act as a sort key)
-    target = os.path.relpath(os.path.dirname(specloc), root_path)
     if not options.online_docs:
         target += '/%s.html' % b
     row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
@@ -1204,7 +1209,7 @@ def writeIndex(model, specloc, index_path, root_path):
     index.close()
 
 
-def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root_link=None, index_path=None, root_path=None):
+def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root_link=None, index_path=None, root_path=None, root_uri=None):
     """The meat and potatoes: Everything starts here."""
 
     global spec_bundle
@@ -1384,7 +1389,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
 
     # Write index row
     if index_path is not None:
-        writeIndex(m, specloc, index_path, root_path)
+        writeIndex(m, specloc, index_path, root_path, root_uri)
 
     return template
 
@@ -1452,8 +1457,10 @@ if __name__ == "__main__":
                    help='Index row output file')
     opt.add_option('--tags', type='string', dest='tags', default=None,
                    help='Doxygen tags file')
-    opt.add_option('-r', '--root', type='string', dest='root', default='',
+    opt.add_option('-r', '--root-path', type='string', dest='root_path', default='',
                    help='Root path')
+    opt.add_option('-R', '--root-uri', type='string', dest='root_uri', default='',
+                   help='Root URI')
     opt.add_option('-p', '--prefix', type='string', dest='prefix',
                    help='Specification Turtle prefix')
     opt.add_option('-i', '--instances', action='store_true', dest='instances',
@@ -1490,7 +1497,8 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Root link
-    root_path = opts['root']
+    root_path = opts['root_path']
+    root_uri  = opts['root_uri']
     root_link = os.path.relpath(root_path, path) if root_path else '.'
     if not options.online_docs:
         root_link = os.path.join(root_link, 'index.html')
@@ -1506,7 +1514,8 @@ if __name__ == "__main__":
         instances=True,
         root_link=root_link,
         index_path=index_path,
-        root_path=root_path)
+        root_path=root_path,
+        root_uri=root_uri)
 
     # Save to HTML output file
     save(output, specdoc)

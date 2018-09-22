@@ -30,7 +30,7 @@
 
 #include <math.h>
 
-#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
+#include "lv2/atom/forge.h"
 
 #define PEAKS_URI          "http://lv2plug.in/ns/peaks#"
 #define PEAKS__PeakUpdate  PEAKS_URI "PeakUpdate"

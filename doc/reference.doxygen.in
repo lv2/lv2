@@ -781,34 +781,34 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = @LV2_SRCDIR@/doc/mainpage.dox \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/atom.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/forge.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/atom/util.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/buf-size/buf-size.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/data-access/data-access.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/dynmanifest/dynmanifest.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/event/event-helpers.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/event/event.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/instance-access/instance-access.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/log/log.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/log/logger.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/midi/midi.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/morph/morph.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/options/options.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/parameters/parameters.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/patch/patch.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/port-groups/port-groups.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/port-props/port-props.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/presets/presets.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/resize-port/resize-port.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/state/state.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/time/time.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/uri-map/uri-map.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/urid/urid.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/ext/worker/worker.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/extensions/ui/ui.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/extensions/units/units.h \
-                         @LV2_SRCDIR@/lv2/lv2plug.in/ns/lv2core/lv2.h
+                         @LV2_SRCDIR@/lv2/atom/atom.h \
+                         @LV2_SRCDIR@/lv2/atom/forge.h \
+                         @LV2_SRCDIR@/lv2/atom/util.h \
+                         @LV2_SRCDIR@/lv2/buf-size/buf-size.h \
+                         @LV2_SRCDIR@/lv2/core/lv2.h \
+                         @LV2_SRCDIR@/lv2/data-access/data-access.h \
+                         @LV2_SRCDIR@/lv2/dynmanifest/dynmanifest.h \
+                         @LV2_SRCDIR@/lv2/event/event-helpers.h \
+                         @LV2_SRCDIR@/lv2/event/event.h \
+                         @LV2_SRCDIR@/lv2/instance-access/instance-access.h \
+                         @LV2_SRCDIR@/lv2/log/log.h \
+                         @LV2_SRCDIR@/lv2/log/logger.h \
+                         @LV2_SRCDIR@/lv2/midi/midi.h \
+                         @LV2_SRCDIR@/lv2/morph/morph.h \
+                         @LV2_SRCDIR@/lv2/options/options.h \
+                         @LV2_SRCDIR@/lv2/parameters/parameters.h \
+                         @LV2_SRCDIR@/lv2/patch/patch.h \
+                         @LV2_SRCDIR@/lv2/port-groups/port-groups.h \
+                         @LV2_SRCDIR@/lv2/port-props/port-props.h \
+                         @LV2_SRCDIR@/lv2/presets/presets.h \
+                         @LV2_SRCDIR@/lv2/resize-port/resize-port.h \
+                         @LV2_SRCDIR@/lv2/state/state.h \
+                         @LV2_SRCDIR@/lv2/time/time.h \
+                         @LV2_SRCDIR@/lv2/ui/ui.h \
+                         @LV2_SRCDIR@/lv2/units/units.h \
+                         @LV2_SRCDIR@/lv2/uri-map/uri-map.h \
+                         @LV2_SRCDIR@/lv2/urid/urid.h \
+                         @LV2_SRCDIR@/lv2/worker/worker.h
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

@@ -20,7 +20,7 @@
 #include <cairo.h>
 #include <gtk/gtk.h>
 
-#include "lv2/lv2plug.in/ns/extensions/ui/ui.h"
+#include "lv2/ui/ui.h"
 #include "./uris.h"
 
 // Drawing area size

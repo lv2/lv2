@@ -26,17 +26,17 @@
 
 #include <sndfile.h>
 
-#include "lv2/lv2plug.in/ns/ext/atom/forge.h"
-#include "lv2/lv2plug.in/ns/ext/atom/util.h"
-#include "lv2/lv2plug.in/ns/ext/log/log.h"
-#include "lv2/lv2plug.in/ns/ext/log/logger.h"
-#include "lv2/lv2plug.in/ns/ext/midi/midi.h"
-#include "lv2/lv2plug.in/ns/ext/patch/patch.h"
-#include "lv2/lv2plug.in/ns/ext/state/state.h"
-#include "lv2/lv2plug.in/ns/ext/urid/urid.h"
-#include "lv2/lv2plug.in/ns/ext/worker/worker.h"
-#include "lv2/lv2plug.in/ns/lv2core/lv2.h"
-#include "lv2/lv2plug.in/ns/lv2core/lv2_util.h"
+#include "lv2/atom/forge.h"
+#include "lv2/atom/util.h"
+#include "lv2/core/lv2.h"
+#include "lv2/core/lv2_util.h"
+#include "lv2/log/log.h"
+#include "lv2/log/logger.h"
+#include "lv2/midi/midi.h"
+#include "lv2/patch/patch.h"
+#include "lv2/state/state.h"
+#include "lv2/urid/urid.h"
+#include "lv2/worker/worker.h"
 
 #include "atom_sink.h"
 #include "peaks.h"

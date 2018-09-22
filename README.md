@@ -58,10 +58,16 @@ By default symbolic links to headers in bundles are installed to `INCLUDEDIR`.
 If symbolic links are a problem, configure with `--copy-headers` and copies
 will be installed instead.
 
-Note that include paths relative to `PREFIX` may not be changed, since projects
-using LV2 use include paths like:
+Headers are installed in two paths, the universal URI-based style:
 
     #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
+
+and the newer simple core style:
+
+    #include "lv2/urid/urid.h"
+
+Projects are encouraged to migrate to the latter style, though note that this
+style of include path may only be used by official LV2 specifications.
 
 
 Documentation

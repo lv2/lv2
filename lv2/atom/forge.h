@@ -50,9 +50,9 @@
 
 #include <assert.h>
 
-#include "lv2/lv2plug.in/ns/ext/atom/atom.h"
-#include "lv2/lv2plug.in/ns/ext/atom/util.h"
-#include "lv2/lv2plug.in/ns/ext/urid/urid.h"
+#include "lv2/atom/atom.h"
+#include "lv2/atom/util.h"
+#include "lv2/urid/urid.h"
 
 #if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)
 #    define LV2_ATOM_FORGE_DEPRECATED __attribute__((__deprecated__))

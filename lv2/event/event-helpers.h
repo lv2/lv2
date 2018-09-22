@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "lv2/lv2plug.in/ns/ext/event/event.h"
+#include "lv2/event/event.h"
 
 #ifdef __cplusplus
 extern "C" {
