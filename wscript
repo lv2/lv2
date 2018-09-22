@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import glob
 import os
 import re
@@ -6,38 +7,32 @@ import shutil
 import subprocess
 import sys
 
+from waflib import Context, Logs, Options, Scripting, Utils
 from waflib.extras import autowaf as autowaf
-import waflib.Context as Context
-import waflib.Logs as Logs
-import waflib.Options as Options
-import waflib.Scripting as Scripting
-import waflib.Utils as Utils
 
-# Variables for 'waf dist'
-APPNAME = 'lv2'
-VERSION = '1.15.3'
+# Mandatory waf variables
+APPNAME = 'lv2'     # Package name for waf dist
+VERSION = '1.15.3'  # Package version for waf dist
+top     = '.'       # Source directory
+out     = 'build'   # Build directory
 
-# Mandatory variables
-top = '.'
-out = 'build'
+def options(ctx):
+    ctx.load('compiler_c')
+    ctx.load('lv2')
+    autowaf.set_options(ctx, test=True)
+    opt = ctx.get_option_group('Configuration options')
+    autowaf.add_flags(
+        opt,
+        {'test':         'Build unit tests',
+         'no-coverage':  'Do not use gcov for code coverage',
+         'online-docs':  'Build documentation for web hosting',
+         'no-plugins':   'Do not build example plugins',
+         'copy-headers': 'Copy headers instead of linking to bundle'})
 
-def options(opt):
-    opt.load('compiler_c')
-    opt.load('lv2')
-    autowaf.set_options(opt, False, True)
-    opt.add_option('--test', action='store_true', dest='build_tests',
-                   help='Build unit tests')
-    opt.add_option('--no-coverage', action='store_true', dest='no_coverage',
-                   help='Do not use gcov for code coverage')
-    opt.add_option('--online-docs', action='store_true', dest='online_docs',
-                   help='Build documentation for web hosting')
-    opt.add_option('--no-plugins', action='store_true', dest='no_plugins',
-                   help='Do not build example plugins')
-    opt.add_option('--copy-headers', action='store_true', dest='copy_headers',
-                   help='Copy headers instead of linking to bundle')
-    opt.recurse('lv2/lv2plug.in/ns/lv2core')
+    ctx.recurse('lv2/lv2plug.in/ns/lv2core')
 
 def configure(conf):
+    autowaf.display_header('LV2 Configuration')
     try:
         conf.load('compiler_c', cache=True)
     except:
@@ -46,6 +41,7 @@ def configure(conf):
 
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
+    autowaf.set_c_lang(conf, 'c99')
 
     if Options.options.online_docs:
         Options.options.docs = True
@@ -88,10 +84,11 @@ def configure(conf):
             except:
                 Logs.warn('Configuration failed, %s will not be built\n' % i)
 
-    autowaf.display_header('LV2 Configuration')
-    autowaf.display_msg(conf, 'Bundle directory', conf.env.LV2DIR)
-    autowaf.display_msg(conf, 'Copy (not link) headers', conf.env.COPY_HEADERS)
-    autowaf.display_msg(conf, 'Version', VERSION)
+    autowaf.display_summary(
+        conf,
+        {'Bundle directory': conf.env.LV2DIR,
+         'Copy (not link) headers': conf.env.COPY_HEADERS,
+         'Version': VERSION})
 
 def chop_lv2_prefix(s):
     if s.startswith('lv2/lv2plug.in/'):
