@@ -20,7 +20,7 @@ def format_text(text):
 def format_code(lang, code):
     if code.strip() == '':
         return code
-    
+
     head = '[source,%s]' % lang
     sep  = '-' * len(head) + '\n'
     return head + '\n' + sep + code.strip('\n') + '\n' + sep
@@ -49,7 +49,7 @@ def format_c_source(filename, file):
                 n_stars += 1
             else:
                 if n_stars > 1:
-                    output += format_code('c', chunk[0:len(chunk)-1])
+                    output += format_code('c', chunk[0:len(chunk) - 1])
                     chunk = ''
                     in_comment = True
                 else:
@@ -57,9 +57,9 @@ def format_c_source(filename, file):
                 in_comment_start = False
         elif in_comment and prev_c == '*' and c == '/':
             if n_stars > 1:
-                output += format_text(chunk[0:len(chunk)-1])
+                output += format_text(chunk[0:len(chunk) - 1])
             else:
-                output += format_code('c', '/* ' + chunk[0:len(chunk)-1] + '*/')
+                output += format_code('c', '/* ' + chunk[0:len(chunk) - 1] + '*/')
             in_comment = False
             in_comment_start = False
             chunk = ''
@@ -115,10 +115,10 @@ def gen(out, filenames):
             out.write('\n')
         else:
             sys.stderr.write("Unknown source format `%s'" % (
-                    filename[filename.find('.'):]))
+                filename[filename.find('.'):]))
 
         file.close()
-    
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.stderr.write('Usage: %s FILENAME...\n' % sys.argv[1])

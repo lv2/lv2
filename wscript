@@ -182,7 +182,8 @@ def build_index(task):
             for dist in dists:
                 release = m.value(None, doap['file-release'], dist[1])
                 if release:
-                    entries[dist] += lv2specgen.releaseChangeset(m, release, str(name))
+                    entries[dist] += lv2specgen.releaseChangeset(
+                        m, release, str(name))
 
     # Generate history for all post-unification LV2 distributions
     history = lv2specgen.specHistoryMarkup(entries)
@@ -201,10 +202,10 @@ def build_index(task):
         date = datetime.datetime.utcfromtimestamp(now).strftime('%F')
 
     subst_file(task.inputs[0].abspath(), task.outputs[0].abspath(),
-               { '@ROWS@': ''.join(rows),
-                 '@LV2_VERSION@': VERSION,
-                 '@DATE@' : date,
-                 '@HISTORY@' : history})
+               {'@ROWS@': ''.join(rows),
+                '@LV2_VERSION@': VERSION,
+                '@DATE@': date,
+                '@HISTORY@': history})
 
 def build_spec(bld, path):
     name            = os.path.basename(path)
@@ -286,7 +287,8 @@ def build(bld):
                        'lv2specgen/template.html'])
     bld.install_files('${DATADIR}/lv2specgen/DTD/',
                       bld.path.ant_glob('lv2specgen/DTD/*'))
-    bld.install_files('${BINDIR}', 'lv2specgen/lv2specgen.py', chmod=Utils.O755)
+    bld.install_files('${BINDIR}', 'lv2specgen/lv2specgen.py',
+                      chmod=Utils.O755)
 
     # Install schema bundle
     bld.install_files('${LV2DIR}/schemas.lv2/',
@@ -361,7 +363,7 @@ def build(bld):
                    ' ${SRC} ${TGT}')
 
             bld(rule   = cmd,
-                source = os.path.join(srcpath, name + '.ttl'),
+                source = os.path.join(srcpath, ttl_name),
                 target = [html_path, index_file])
 
             # Install documentation
@@ -415,10 +417,9 @@ def test(ctx):
     "runs unit tests"
     autowaf.pre_test(ctx, APPNAME, dirs=['.'])
     for i in ctx.path.ant_glob('**/*-test'):
-        name = os.path.basename(i.abspath())
         os.environ['PATH'] = '.' + os.pathsep + os.getenv('PATH')
-        autowaf.run_test(
-            ctx, APPNAME, i.path_from(ctx.path.find_node('build')), dirs=['.'], name=i)
+        test = i.path_from(ctx.path.find_node('build'))
+        autowaf.run_test(ctx, APPNAME, test, dirs=['.'], name=i)
     autowaf.post_test(ctx, APPNAME, dirs=['.'])
 
 class Dist(Scripting.Dist):
@@ -463,7 +464,7 @@ def posts(ctx):
                                    dev_dist = dev_dist)
 
     autowaf.write_posts(entries,
-                        { 'Author': 'drobilla' },
+                        {'Author': 'drobilla'},
                         os.path.join(out, 'posts'))
 
 def dist(ctx):

@@ -30,6 +30,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import datetime
+import optparse
+import os
+import re
+import sys
+import time
+import xml.sax.saxutils
+import xml.dom
+import xml.dom.minidom
+
 __date__    = "2011-10-26"
 __version__ = __date__.replace('-', '.')
 __authors__ = """
@@ -39,17 +49,6 @@ Sergio Fernández,
 David Robillard"""
 __license__ = "MIT License <http://www.opensource.org/licenses/mit>"
 __contact__ = "devel@lists.lv2plug.in"
-
-import datetime
-import glob
-import optparse
-import os
-import re
-import sys
-import time
-import xml.sax.saxutils
-import xml.dom
-import xml.dom.minidom
 
 try:
     from lxml import etree
@@ -98,7 +97,7 @@ ns_list = {
     "http://lv2plug.in/ns/lv2core#"                 : "lv2",
     "http://usefulinc.com/ns/doap#"                 : "doap",
     "http://ontologi.es/doap-changeset#"            : "dcs"
-    }
+}
 
 rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
@@ -457,7 +456,7 @@ def parseCollection(model, node):
 def getTermLink(uri, subject=None, predicate=None):
     uri = str(uri)
     extra = ''
-    if subject != None and predicate != None:
+    if subject is not None and predicate is not None:
         extra = 'about="%s" rel="%s" resource="%s"' % (str(subject), niceName(str(predicate)), uri)
     if (uri.startswith(spec_ns_str)):
         return '<a href="#%s" %s>%s</a>' % (uri.replace(spec_ns_str, ""), extra, niceName(uri))
@@ -500,7 +499,7 @@ def rdfsClassInfo(term, m):
                 onProp = getObject(p)
             elif getPredicate(p) == rdfs.comment:
                 comment = getObject(p)
-        if onProp != None:
+        if onProp is not None:
             doc += '<tr><th>Restriction on %s</th><td>' % getTermLink(onProp)
 
             prop_str = ''
@@ -530,7 +529,7 @@ def rdfsClassInfo(term, m):
 
             if prop_str != '':
                 doc += '<table class=\"restriction\">%s</table>\n' % prop_str
-            if comment != None:
+            if comment is not None:
                 doc += "<span>%s</span>\n" % getLiteralString(comment)
             doc += '</td></tr>'
 
@@ -808,7 +807,7 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
             body += '<li>%s</li>' % termLink(m, p)
         body += '</ul></td>\n'
 
-    if (instalist != None and len(instalist) > 0):
+    if (instalist is not None and len(instalist) > 0):
         head += '<th>Instances</th>'
         body += '<td><ul>'
         instalist.sort()
@@ -818,7 +817,7 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
             body += '<li><a href="#%s">%s</a></li>' % (anchor, p)
         body += '</ul></td>\n'
 
-    if (filelist != None and len(filelist) > 0):
+    if (filelist is not None and len(filelist) > 0):
         head += '<th>Files</th>'
         body += '<td><ul>'
         filelist.sort()
@@ -1030,7 +1029,7 @@ def specVersion(m, subject):
                 latest_doap_revision = revision
                 latest_doap_release = getObject(i)
     date = ""
-    if latest_doap_release != None:
+    if latest_doap_release is not None:
         for i in findStatements(m, latest_doap_release, doap.created, None):
             date = getLiteralString(getObject(i))
 
