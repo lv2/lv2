@@ -45,15 +45,20 @@
 
 #include <stdint.h>
 
+#include "lv2/core/attributes.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+LV2_DISABLE_DEPRECATION_WARNINGS
 
 /**
    The best Pulses Per Quarter Note for tempo-based uint32_t timestamps.
    Equal to 2^12 * 5 * 7 * 9 * 11 * 13 * 17, which is evenly divisble
    by all integers from 1 through 18 inclusive, and powers of 2 up to 2^12.
 */
+LV2_DEPRECATED
 static const uint32_t LV2_EVENT_PPQN = 3136573440U;
 
 /**
@@ -69,6 +74,7 @@ static const uint32_t LV2_EVENT_PPQN = 3136573440U;
 
    memcpy(ev_copy, ev, sizeof(LV2_Event) + ev->size);  (or equivalent)
 */
+LV2_DEPRECATED
 typedef struct {
 	/**
 	   The frames portion of timestamp. The units used here can optionally be
@@ -129,6 +135,7 @@ typedef struct {
    | | | | | | | | | | | | | | | | | | | | | | | | |
    |FRAMES |SUBFRMS|TYP|LEN|DATA..DATA..PAD|FRAMES | ...
 */
+LV2_DEPRECATED
 typedef struct {
 	/**
 	   The contents of the event buffer. This may or may not reside in the
@@ -212,6 +219,7 @@ typedef struct {
 /**
    Opaque pointer to host data.
 */
+LV2_DEPRECATED
 typedef void* LV2_Event_Callback_Data;
 
 
@@ -223,6 +231,7 @@ typedef void* LV2_Event_Callback_Data;
    and data pointed to an instance of this struct.  Note this feature
    is not mandatory to support the event extension.
 */
+LV2_DEPRECATED
 typedef struct {
 	/**
 	   Opaque pointer to host data.
@@ -280,6 +289,8 @@ typedef struct {
 	uint32_t (*lv2_event_unref)(LV2_Event_Callback_Data callback_data,
 	                            LV2_Event*              event);
 } LV2_Event_Feature;
+
+LV2_RESTORE_WARNINGS
 
 #ifdef __cplusplus
 }  /* extern "C" */

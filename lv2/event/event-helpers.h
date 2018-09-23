@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lv2/core/attributes.h"
 #include "lv2/event/event.h"
 
 #ifdef __cplusplus
@@ -33,6 +34,8 @@ extern "C" {
 #else
 #    include <stdbool.h>
 #endif
+
+LV2_DISABLE_DEPRECATION_WARNINGS
 
 /** @file
  * Helper functions for the LV2 Event extension
@@ -256,6 +259,8 @@ lv2_event_write_event(LV2_Event_Iterator* iter,
 
 	return true;
 }
+
+LV2_RESTORE_WARNINGS
 
 #ifdef __cplusplus
 }  /* extern "C" */
