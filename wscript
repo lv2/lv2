@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 
-import glob
 import os
-import re
-import shutil
-import subprocess
 import sys
 
 from waflib import Context, Logs, Options, Scripting, Utils
