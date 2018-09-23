@@ -52,13 +52,8 @@
 
 #include "lv2/atom/atom.h"
 #include "lv2/atom/util.h"
+#include "lv2/core/attributes.h"
 #include "lv2/urid/urid.h"
-
-#if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)
-#    define LV2_ATOM_FORGE_DEPRECATED __attribute__((__deprecated__))
-#else
-#    define LV2_ATOM_FORGE_DEPRECATED
-#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -67,13 +62,7 @@ extern "C" {
 #endif
 
 // Disable deprecation warnings for Blank and Resource
-#if defined(__clang__)
-#    pragma clang diagnostic push
-#    pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#elif __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
-#    pragma GCC diagnostic push
-#    pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+LV2_DISABLE_DEPRECATION_WARNINGS
 
 /** Handle for LV2_Atom_Forge_Sink. */
 typedef void* LV2_Atom_Forge_Sink_Handle;
@@ -110,7 +99,7 @@ typedef struct {
 
 	LV2_Atom_Forge_Frame* stack;
 
-	LV2_URID Blank LV2_ATOM_FORGE_DEPRECATED;
+	LV2_URID Blank LV2_DEPRECATED;
 	LV2_URID Bool;
 	LV2_URID Chunk;
 	LV2_URID Double;
@@ -121,7 +110,7 @@ typedef struct {
 	LV2_URID Object;
 	LV2_URID Path;
 	LV2_URID Property;
-	LV2_URID Resource LV2_ATOM_FORGE_DEPRECATED;
+	LV2_URID Resource LV2_DEPRECATED;
 	LV2_URID Sequence;
 	LV2_URID String;
 	LV2_URID Tuple;
@@ -584,7 +573,7 @@ lv2_atom_forge_object(LV2_Atom_Forge*       forge,
    This function is deprecated and should not be used in new code.
    Use lv2_atom_forge_object() directly instead.
 */
-LV2_ATOM_FORGE_DEPRECATED
+LV2_DEPRECATED
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
                         LV2_Atom_Forge_Frame* frame,
@@ -605,7 +594,7 @@ lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
    This function is deprecated and should not be used in new code.
    Use lv2_atom_forge_object() directly instead.
 */
-LV2_ATOM_FORGE_DEPRECATED
+LV2_DEPRECATED
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_blank(LV2_Atom_Forge*       forge,
                      LV2_Atom_Forge_Frame* frame,
@@ -691,11 +680,7 @@ lv2_atom_forge_beat_time(LV2_Atom_Forge* forge, double beats)
    @}
 */
 
-#if defined(__clang__)
-#    pragma clang diagnostic pop
-#elif __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
-#    pragma GCC diagnostic pop
-#endif
+LV2_RESTORE_WARNINGS
 
 #ifdef __cplusplus
 }  /* extern "C" */

@@ -43,6 +43,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
+				rdfs:label "Add core/attributes.h utility header."
+			] , [
 				rdfs:label "Include waf sources and fix build with Python 3.7."
 			] , [
 				rdfs:label "eg-sampler: Add waveform display to UI."
