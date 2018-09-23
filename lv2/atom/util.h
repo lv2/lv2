@@ -226,7 +226,7 @@ lv2_atom_tuple_next(const LV2_Atom* i)
 
 /** Like LV2_ATOM_TUPLE_FOREACH but for a headerless tuple body. */
 #define LV2_ATOM_TUPLE_BODY_FOREACH(body, size, iter) \
-	for (LV2_Atom* (iter) = (LV2_Atom*)body; \
+	for (LV2_Atom* (iter) = (LV2_Atom*)(body); \
 	     !lv2_atom_tuple_is_end(body, size, (iter)); \
 	     (iter) = lv2_atom_tuple_next(iter))
 
