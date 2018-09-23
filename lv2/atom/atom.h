@@ -26,8 +26,8 @@
 #ifndef LV2_ATOM_H
 #define LV2_ATOM_H
 
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #define LV2_ATOM_URI    "http://lv2plug.in/ns/ext/atom"  ///< http://lv2plug.in/ns/ext/atom
 #define LV2_ATOM_PREFIX LV2_ATOM_URI "#"                 ///< http://lv2plug.in/ns/ext/atom#

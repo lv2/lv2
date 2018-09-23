@@ -14,13 +14,27 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#include <assert.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <cairo.h>
+#include <gdk/gdk.h>
+#include <glib-object.h>
+#include <glib.h>
+#include <gobject/gclosure.h>
 #include <gtk/gtk.h>
 
+#include "lv2/atom/atom.h"
+#include "lv2/atom/forge.h"
+#include "lv2/atom/util.h"
+#include "lv2/core/lv2.h"
 #include "lv2/ui/ui.h"
+#include "lv2/urid/urid.h"
+
 #include "./uris.h"
 
 // Drawing area size
