@@ -94,11 +94,9 @@ lv2_log_vprintf(LV2_Log_Logger* logger,
                 const char*     fmt,
                 va_list         args)
 {
-	if (logger && logger->log) {
-		return logger->log->vprintf(logger->log->handle, type, fmt, args);
-	} else {
-		return vfprintf(stderr, fmt, args);
-	}
+	return ((logger && logger->log)
+	        ? logger->log->vprintf(logger->log->handle, type, fmt, args)
+	        : vfprintf(stderr, fmt, args));
 }
 
 /** Log an error via lv2_log_vprintf(). */

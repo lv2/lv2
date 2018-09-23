@@ -167,11 +167,7 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 static inline LV2_Atom*
 lv2_atom_forge_deref(LV2_Atom_Forge* forge, LV2_Atom_Forge_Ref ref)
 {
-	if (forge->buf) {
-		return (LV2_Atom*)ref;
-	} else {
-		return forge->deref(forge->handle, ref);
-	}
+	return forge->buf ? (LV2_Atom*)ref : forge->deref(forge->handle, ref);
 }
 
 /**
@@ -361,12 +357,10 @@ lv2_atom_forge_atom(LV2_Atom_Forge* forge, uint32_t size, uint32_t type)
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_primitive(LV2_Atom_Forge* forge, const LV2_Atom* a)
 {
-	if (lv2_atom_forge_top_is(forge, forge->Vector)) {
-		return lv2_atom_forge_raw(forge, LV2_ATOM_BODY_CONST(a), a->size);
-	} else {
-		return lv2_atom_forge_write(
-			forge, a, (uint32_t)sizeof(LV2_Atom) + a->size);
-	}
+	return (lv2_atom_forge_top_is(forge, forge->Vector)
+	        ? lv2_atom_forge_raw(forge, LV2_ATOM_BODY_CONST(a), a->size)
+	        : lv2_atom_forge_write(
+		        forge, a, (uint32_t)sizeof(LV2_Atom) + a->size));
 }
 
 /** Write an atom:Int. */

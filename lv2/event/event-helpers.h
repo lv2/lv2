@@ -80,9 +80,8 @@ lv2_event_buffer_new(uint32_t capacity, uint16_t stamp_type)
 		buf->capacity = capacity;
 		lv2_event_buffer_reset(buf, stamp_type, (uint8_t *)(buf + 1));
 		return buf;
-	} else {
-		return NULL;
 	}
+	return NULL;
 }
 
 
