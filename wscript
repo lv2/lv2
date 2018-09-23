@@ -410,8 +410,21 @@ def build(bld):
         bld.recurse('plugins')
 
 def lint(ctx):
-    for i in ctx.path.ant_glob('lv2/**/*.h'):
-        subprocess.call('cpplint.py --filter=+whitespace/comments,-whitespace/tab,-whitespace/braces,-whitespace/labels,-build/header_guard,-readability/casting,-build/include,-runtime/sizeof ' + i.abspath(), shell=True)
+    "checks code for style issues"
+    import subprocess
+
+    subprocess.call("flake8 --ignore E203,E221,W503,W504,E302,E305,E251,E241,E722 "
+                    "wscript lv2specgen/lv2docgen.py lv2specgen/lv2specgen.py "
+                    "plugins/literasc.py",
+                    shell=True)
+
+    cmd = ("clang-tidy -p=. -header-filter=.* -checks=\"*," +
+           "-hicpp-signed-bitwise," +
+           "-llvm-header-guard," +
+           "-misc-unused-parameters," +
+           "-readability-else-after-return\" " +
+           "build-test.c")
+    subprocess.call(cmd, cwd='build', shell=True)
 
 def test(ctx):
     "runs unit tests"
