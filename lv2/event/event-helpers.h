@@ -153,8 +153,9 @@ lv2_event_get(LV2_Event_Iterator* iter,
 
 	LV2_Event* const ev = (LV2_Event*)(iter->buf->data + iter->offset);
 
-	if (data)
+	if (data) {
 		*data = (uint8_t*)ev + sizeof(LV2_Event);
+	}
 
 	return ev;
 }
@@ -173,11 +174,13 @@ lv2_event_write(LV2_Event_Iterator* iter,
                 uint16_t            size,
                 const uint8_t*      data)
 {
-	if (!iter->buf)
+	if (!iter->buf) {
 		return false;
+	}
 
-	if (iter->buf->capacity - iter->buf->size < sizeof(LV2_Event) + size)
+	if (iter->buf->capacity - iter->buf->size < sizeof(LV2_Event) + size) {
 		return false;
+	}
 
 	LV2_Event* const ev = (LV2_Event*)(iter->buf->data + iter->offset);
 
@@ -207,8 +210,9 @@ lv2_event_reserve(LV2_Event_Iterator* iter,
                   uint16_t size)
 {
 	const uint16_t total_size = (uint16_t)(sizeof(LV2_Event) + size);
-	if (iter->buf->capacity - iter->buf->size < total_size)
+	if (iter->buf->capacity - iter->buf->size < total_size) {
 		return NULL;
+	}
 
 	LV2_Event* const ev = (LV2_Event*)(iter->buf->data + iter->offset);
 
@@ -237,8 +241,9 @@ lv2_event_write_event(LV2_Event_Iterator* iter,
                       const uint8_t*      data)
 {
 	const uint16_t total_size = (uint16_t)(sizeof(LV2_Event) + ev->size);
-	if (iter->buf->capacity - iter->buf->size < total_size)
+	if (iter->buf->capacity - iter->buf->size < total_size) {
 		return false;
+	}
 
 	LV2_Event* const write_ev = (LV2_Event*)(iter->buf->data + iter->offset);
 
