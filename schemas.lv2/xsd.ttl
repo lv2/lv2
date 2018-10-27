@@ -3,19 +3,19 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://www.w3.org/2001/XMLSchema#>
+xsd:
 	a owl:Ontology ;
 	rdfs:comment "XML Schema Datatypes" .
+
+xsd:ENTITY
+	a rdfs:Datatype ;
+	owl:onDatatype xsd:NCName .
 
 xsd:ID
 	a rdfs:Datatype ;
 	owl:onDatatype xsd:NCName .
 
 xsd:IDREF
-	a rdfs:Datatype ;
-	owl:onDatatype xsd:NCName .
-
-xsd:ENTITY
 	a rdfs:Datatype ;
 	owl:onDatatype xsd:NCName .
 
@@ -31,50 +31,6 @@ xsd:Name
 	a rdfs:Datatype ;
 	owl:onDatatype xsd:token .
 
-xsd:totalDigits
-	a rdf:Property ,
-		owl:DatatypeProperty ;
-	rdfs:range xsd:positiveInteger ;
-	rdfs:label "total digits" ;
-	rdfs:comment "The maximum number of decimal digits required to represent a value." .
-
-xsd:fractionDigits
-	a rdf:Property ,
-		owl:DatatypeProperty ;
-	rdfs:range xsd:nonNegativeInteger ;
-	rdfs:label "fraction digits" ;
-	rdfs:comment "The total number of digits to the right of the decimal point required to represent a value." .
-
-xsd:pattern
-	a rdf:Property ,
-		owl:DatatypeProperty ;
-	rdfs:label "pattern" ;
-	rdfs:comment "A regular expression that matches complete valid literals." .
-
-xsd:maxInclusive
-	a rdf:Property ,
-		owl:DatatypeProperty ;
-	rdfs:label "max inclusive" ;
-	rdfs:comment "The inclusive upper bound of an ordered datatype." .
-
-xsd:maxExclusive
-	a rdf:Property ,
-		owl:DatatypeProperty ;
-	rdfs:label "max exclusive" ;
-	rdfs:comment "The exclusive upper bound of an ordered datatype." .
-
-xsd:minInclusive
-	a rdf:Property ,
-		owl:DatatypeProperty ;
-	rdfs:label "min inclusive" ;
-	rdfs:comment "The inclusive lower bound of an ordered datatype." .
-
-xsd:minExclusive
-	a rdf:Property ,
-		owl:DatatypeProperty ;
-	rdfs:label "min exclusive" ;
-	rdfs:comment "The exclusive lower bound of an ordered datatype." .
-
 xsd:QName
 	a rdfs:Datatype ;
 	rdfs:label "XML qualified name" .
@@ -85,8 +41,8 @@ xsd:anyURI
 
 xsd:base64Binary
 	a rdfs:Datatype ;
-	rdfs:label "base64 binary" ;
 	rdfs:comment "Base64-encoded arbitrary binary data." ;
+	rdfs:label "base64 binary" ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?"
@@ -109,7 +65,8 @@ xsd:byte
 	owl:withRestrictions (
 		[
 			xsd:maxInclusive 127
-		] [
+		]
+		[
 			xsd:minInclusive -128
 		]
 	) .
@@ -129,8 +86,8 @@ xsd:dateTime
 
 xsd:decimal
 	a rdfs:Datatype ;
-	rdfs:label "decimal" ;
 	rdfs:comment "A subset of the real numbers, which can be represented by decimal numerals." ;
+	rdfs:label "decimal" ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+-]?[0-9]*\\.?[0-9]*"
@@ -139,8 +96,8 @@ xsd:decimal
 
 xsd:double
 	a rdfs:Datatype ;
-	rdfs:label "double" ;
 	rdfs:comment "IEEE double-precision 64-bit floating point." ;
+	rdfs:label "double" ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+-]?[0-9]*\\.?[0-9]*([eE][-+]?[0-9]+)?"
@@ -153,9 +110,16 @@ xsd:duration
 
 xsd:float
 	a rdfs:Datatype ;
-	rdfs:label "float" ;
 	rdfs:comment "IEEE single-precision 32-bit floating point." ;
+	rdfs:label "float" ;
 	owl:onDatatype xsd:double .
+
+xsd:fractionDigits
+	a rdf:Property ,
+	owl:DatatypeProperty ;
+	rdfs:comment "The total number of digits to the right of the decimal point required to represent a value." ;
+	rdfs:label "fraction digits" ;
+	rdfs:range xsd:nonNegativeInteger .
 
 xsd:gDay
 	a rdfs:Datatype .
@@ -174,8 +138,8 @@ xsd:gYearMonth
 
 xsd:hexBinary
 	a rdfs:Datatype ;
-	rdfs:label "hex binary" ;
 	rdfs:comment "Hex-encoded arbitrary binary data." ;
+	rdfs:label "hex binary" ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "[0-9A-F]*"
@@ -189,7 +153,8 @@ xsd:int
 	owl:withRestrictions (
 		[
 			xsd:maxInclusive 2147483647
-		] [
+		]
+		[
 			xsd:minInclusive -2147483648
 		]
 	) .
@@ -201,7 +166,8 @@ xsd:integer
 	owl:withRestrictions (
 		[
 			xsd:pattern "[-+]?[0-9]+"
-		] [
+		]
+		[
 			xsd:fractionDigits 0
 		]
 	) .
@@ -223,10 +189,35 @@ xsd:long
 	owl:withRestrictions (
 		[
 			xsd:maxInclusive 9223372036854775807
-		] [
+		]
+		[
 			xsd:minInclusive -9223372036854775808
 		]
 	) .
+
+xsd:maxExclusive
+	a rdf:Property ,
+	owl:DatatypeProperty ;
+	rdfs:comment "The exclusive upper bound of an ordered datatype." ;
+	rdfs:label "max exclusive" .
+
+xsd:maxInclusive
+	a rdf:Property ,
+	owl:DatatypeProperty ;
+	rdfs:comment "The inclusive upper bound of an ordered datatype." ;
+	rdfs:label "max inclusive" .
+
+xsd:minExclusive
+	a rdf:Property ,
+	owl:DatatypeProperty ;
+	rdfs:comment "The exclusive lower bound of an ordered datatype." ;
+	rdfs:label "min exclusive" .
+
+xsd:minInclusive
+	a rdf:Property ,
+	owl:DatatypeProperty ;
+	rdfs:comment "The inclusive lower bound of an ordered datatype." ;
+	rdfs:label "min inclusive" .
 
 xsd:negativeInteger
 	a rdfs:Datatype ;
@@ -245,7 +236,8 @@ xsd:nonNegativeInteger
 	owl:withRestrictions (
 		[
 			xsd:pattern "[0-9]*"
-		] [
+		]
+		[
 			xsd:minInclusive 0
 		]
 	) .
@@ -257,16 +249,23 @@ xsd:nonPositiveInteger
 	owl:withRestrictions (
 		[
 			xsd:pattern "(0|-[0-9]+)"
-		] [
+		]
+		[
 			xsd:maxInclusive 0
 		]
 	) .
 
 xsd:normalizedString
 	a rdfs:Datatype ;
+	rdfs:comment "The set of strings that do not contain the carriage return (#xD), line feed (#xA) nor tab (#x9) characters." ;
 	rdfs:label "normalized string" ;
-	owl:onDatatype xsd:string ;
-	rdfs:comment "The set of strings that do not contain the carriage return (#xD), line feed (#xA) nor tab (#x9) characters." .
+	owl:onDatatype xsd:string .
+
+xsd:pattern
+	a rdf:Property ,
+	owl:DatatypeProperty ;
+	rdfs:comment "A regular expression that matches complete valid literals." ;
+	rdfs:label "pattern" .
 
 xsd:positiveInteger
 	a rdfs:Datatype ;
@@ -275,7 +274,8 @@ xsd:positiveInteger
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+]?[0-9]+"
-		] [
+		]
+		[
 			xsd:minInclusive 1
 		]
 	) .
@@ -287,15 +287,16 @@ xsd:short
 	owl:withRestrictions (
 		[
 			xsd:maxInclusive 32767
-		] [
+		]
+		[
 			xsd:minInclusive -32768
 		]
 	) .
 
 xsd:string
 	a rdfs:Datatype ;
-	rdfs:label "string" ;
-	rdfs:comment "A character string." .
+	rdfs:comment "A character string." ;
+	rdfs:label "string" .
 
 xsd:time
 	a rdfs:Datatype ;
@@ -308,9 +309,16 @@ xsd:time
 
 xsd:token
 	a rdfs:Datatype ;
+	rdfs:comment "The set of strings that do not contain the carriage return (#xD), line feed (#xA) nor tab (#x9) characters, that have no leading or trailing spaces (#x20) and that have no internal sequences of two or more spaces." ;
 	rdfs:label "token" ;
-	owl:onDatatype xsd:normalizedString ;
-	rdfs:comment "The set of strings that do not contain the carriage return (#xD), line feed (#xA) nor tab (#x9) characters, that have no leading or trailing spaces (#x20) and that have no internal sequences of two or more spaces." .
+	owl:onDatatype xsd:normalizedString .
+
+xsd:totalDigits
+	a rdf:Property ,
+	owl:DatatypeProperty ;
+	rdfs:comment "The maximum number of decimal digits required to represent a value." ;
+	rdfs:label "total digits" ;
+	rdfs:range xsd:positiveInteger .
 
 xsd:unsignedByte
 	a rdfs:Datatype ;
