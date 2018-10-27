@@ -59,8 +59,6 @@ units:Unit
 units:unit
 	a rdf:Property ,
 		owl:ObjectProperty ;
-	rdfs:domain lv2:Port ,
-		lv2:Parameter ;
 	rdfs:range units:Unit ;
 	rdfs:label "unit" ;
 	rdfs:comment "The unit used by the value of a port or parameter." .
