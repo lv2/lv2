@@ -10,6 +10,15 @@
 	doap:created "2012-08-20" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "1.3" ;
+		doap:created "2018-10-27" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Relax range of opts:requiredOption and opts:supportedOption"
+			]
+		]
+	] , [
 		doap:revision "1.2" ;
 		doap:created "2013-01-10" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.4.0.tar.bz2> ;
