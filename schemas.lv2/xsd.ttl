@@ -7,6 +7,9 @@ xsd:
 	a owl:Ontology ;
 	rdfs:comment "XML Schema Datatypes" .
 
+xsd:anySimpleType
+	a rdfs:Datatype .
+
 xsd:ENTITY
 	a rdfs:Datatype ;
 	owl:onDatatype xsd:NCName .
@@ -33,28 +36,48 @@ xsd:Name
 
 xsd:QName
 	a rdfs:Datatype ;
-	rdfs:label "XML qualified name" .
+	rdfs:label "XML qualified name" ;
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:anyURI
 	a rdfs:Datatype ;
-	rdfs:label "URI reference" .
+	rdfs:label "URI reference" ;
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:base64Binary
 	a rdfs:Datatype ;
 	rdfs:comment "Base64-encoded arbitrary binary data." ;
 	rdfs:label "base64 binary" ;
+	owl:onDatatype xsd:anySimpleType ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?"
+		]
+		[
+			xsd:whiteSpace "collapse"
 		]
 	) .
 
 xsd:boolean
 	a rdfs:Datatype ;
 	rdfs:label "boolean" ;
+	owl:onDatatype xsd:anySimpleType ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "(true|false)"
+		]
+		[
+			xsd:whiteSpace "collapse"
 		]
 	) .
 
@@ -64,33 +87,50 @@ xsd:byte
 	owl:onDatatype xsd:short ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 127
+			xsd:minInclusive -128
 		]
 		[
-			xsd:minInclusive -128
+			xsd:maxInclusive 127
 		]
 	) .
 
 xsd:date
 	a rdfs:Datatype ;
 	rdfs:label "date" ;
+	owl:onDatatype xsd:anySimpleType ;
 	owl:withRestrictions (
 		[
-			xsd:pattern "-?[0-9][0-9][0-9][0-9]([0-9]*)?-(0[1-9]|1[0-2])-([0-3][0-9])([+-]([0-1][0-9]|2[0-3]):[0-5][0-9])?"
+			xsd:pattern "-?([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?"
+		]
+		[
+			xsd:whiteSpace "collapse"
 		]
 	) .
 
 xsd:dateTime
 	a rdfs:Datatype ;
-	rdfs:label "date time" .
+	rdfs:label "date time" ;
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:pattern "-?([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?"
+		]
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:decimal
 	a rdfs:Datatype ;
 	rdfs:comment "A subset of the real numbers, which can be represented by decimal numerals." ;
 	rdfs:label "decimal" ;
+	owl:onDatatype xsd:anySimpleType ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+-]?[0-9]*\\.?[0-9]*"
+		]
+		[
+			xsd:whiteSpace "collapse"
 		]
 	) .
 
@@ -98,21 +138,39 @@ xsd:double
 	a rdfs:Datatype ;
 	rdfs:comment "IEEE double-precision 64-bit floating point." ;
 	rdfs:label "double" ;
+	owl:onDatatype xsd:anySimpleType ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+-]?[0-9]*\\.?[0-9]*([eE][-+]?[0-9]+)?"
+		]
+		[
+			xsd:whiteSpace "collapse"
 		]
 	) .
 
 xsd:duration
 	a rdfs:Datatype ;
-	rdfs:label "duration" .
+	rdfs:label "duration" ;
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:float
 	a rdfs:Datatype ;
 	rdfs:comment "IEEE single-precision 32-bit floating point." ;
 	rdfs:label "float" ;
-	owl:onDatatype xsd:double .
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:pattern "[+-]?[0-9]*\\.?[0-9]*([eE][-+]?[0-9]+)?"
+		]
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:fractionDigits
 	a rdf:Property ,
@@ -122,27 +180,61 @@ xsd:fractionDigits
 	rdfs:range xsd:nonNegativeInteger .
 
 xsd:gDay
-	a rdfs:Datatype .
+	a rdfs:Datatype ;
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:gMonth
-	a rdfs:Datatype .
+	a rdfs:Datatype ;
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:gMonthDay
-	a rdfs:Datatype .
+	a rdfs:Datatype ;
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:gYear
-	a rdfs:Datatype .
+	a rdfs:Datatype ;
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:gYearMonth
-	a rdfs:Datatype .
+	a rdfs:Datatype ;
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:hexBinary
 	a rdfs:Datatype ;
 	rdfs:comment "Hex-encoded arbitrary binary data." ;
 	rdfs:label "hex binary" ;
+	owl:onDatatype xsd:anySimpleType ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "[0-9A-F]*"
+		]
+		[
+			xsd:whiteSpace "collapse"
 		]
 	) .
 
@@ -152,10 +244,10 @@ xsd:int
 	owl:onDatatype xsd:long ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 2147483647
+			xsd:minInclusive -2147483648
 		]
 		[
-			xsd:minInclusive -2147483648
+			xsd:maxInclusive 2147483647
 		]
 	) .
 
@@ -188,10 +280,10 @@ xsd:long
 	owl:onDatatype xsd:integer ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 9223372036854775807
+			xsd:minInclusive -9223372036854775808
 		]
 		[
-			xsd:minInclusive -9223372036854775808
+			xsd:maxInclusive 9223372036854775807
 		]
 	) .
 
@@ -259,13 +351,33 @@ xsd:normalizedString
 	a rdfs:Datatype ;
 	rdfs:comment "The set of strings that do not contain the carriage return (#xD), line feed (#xA) nor tab (#x9) characters." ;
 	rdfs:label "normalized string" ;
-	owl:onDatatype xsd:string .
+	owl:onDatatype xsd:string ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "replace"
+		]
+	) .
 
 xsd:pattern
 	a rdf:Property ,
 	owl:DatatypeProperty ;
 	rdfs:comment "A regular expression that matches complete valid literals." ;
 	rdfs:label "pattern" .
+
+xsd:whiteSpace
+	a rdf:Property ,
+	owl:DatatypeProperty ;
+	rdfs:comment "A string that describes whitespace normalization for a string type." ;
+	rdfs:label "white space" ;
+	rdfs:range [
+		a rdfs:Datatype ;
+		owl:onDatatype xsd:string ;
+		owl:withRestrictions (
+			[
+				xsd:pattern "(preserve|replace|collapse)"
+			]
+		)
+	] .
 
 xsd:positiveInteger
 	a rdfs:Datatype ;
@@ -286,24 +398,34 @@ xsd:short
 	owl:onDatatype xsd:int ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 32767
+			xsd:minInclusive -32768
 		]
 		[
-			xsd:minInclusive -32768
+			xsd:maxInclusive 32767
 		]
 	) .
 
 xsd:string
 	a rdfs:Datatype ;
 	rdfs:comment "A character string." ;
-	rdfs:label "string" .
+	rdfs:label "string" ;
+	owl:onDatatype xsd:anySimpleType ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "preserve"
+		]
+	) .
 
 xsd:time
 	a rdfs:Datatype ;
 	rdfs:label "time" ;
+	owl:onDatatype xsd:anySimpleType ;
 	owl:withRestrictions (
 		[
 			xsd:pattern "[1-2][0-9]:[0-5][0-9]:[0-5][0-9].[0-9][0-9][0-9]"
+		]
+		[
+			xsd:whiteSpace "collapse"
 		]
 	) .
 
@@ -311,7 +433,12 @@ xsd:token
 	a rdfs:Datatype ;
 	rdfs:comment "The set of strings that do not contain the carriage return (#xD), line feed (#xA) nor tab (#x9) characters, that have no leading or trailing spaces (#x20) and that have no internal sequences of two or more spaces." ;
 	rdfs:label "token" ;
-	owl:onDatatype xsd:normalizedString .
+	owl:onDatatype xsd:normalizedString ;
+	owl:withRestrictions (
+		[
+			xsd:whiteSpace "collapse"
+		]
+	) .
 
 xsd:totalDigits
 	a rdf:Property ,
