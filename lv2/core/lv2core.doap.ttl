@@ -17,11 +17,13 @@
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "15.0" ;
-		doap:created "2017-03-19" ;
+		doap:created "2018-10-28" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add lv2:MIDIPlugin class."
+			] , [
+				rdfs:label "Rework port restrictions so that presets can be validated."
 			]
 		]
 	] , [

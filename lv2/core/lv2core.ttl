@@ -146,6 +146,11 @@ lv2:Plugin
 		owl:onProperty doap:name ;
 		owl:someValuesFrom rdf:PlainLiteral ;
 		rdfs:comment "A plugin MUST have at least one untranslated doap:name." ;
+	] , [
+		a owl:Restriction ;
+		owl:onProperty lv2:port ;
+		owl:allValuesFrom lv2:Port ;
+		rdfs:comment "All ports on a plugin MUST be fully specified lv2:Port instances." ;
 	] ;
 	lv2:documentation """
 <p>The class which represents an LV2 plugin.</p>
@@ -162,25 +167,32 @@ e.g. <q>Tape Delay Unit</q>. Use doap:shortdesc or doap:description for more
 detailed descriptions.</p>
 """ .
 
-lv2:Port
+lv2:PortBase
 	a rdfs:Class ,
 		owl:Class ;
-	rdfs:label "Port" ;
+	rdfs:label "Port Base" ;
 	rdfs:subClassOf [
-		a owl:Restriction ;
-		owl:onProperty lv2:index ;
-		owl:cardinality 1 ;
-		rdfs:comment "A port MUST have exactly one lv2:index." ;
-	] , [
 		a owl:Restriction ;
 		owl:onProperty lv2:symbol ;
 		owl:cardinality 1 ;
 		rdfs:comment "A port MUST have exactly one lv2:symbol." ;
-	] , [
+	] ;
+	lv2:documentation """
+<p>Similar to lv2:PluginBase, an abstract port-like resource that MAY not
+actually be a fully specified LV2 port.  For example, this is used for preset
+"ports" which do not specify an index.</p>
+""" .
+
+lv2:Port
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:label "Port" ;
+	rdfs:subClassOf lv2:PortBase ;
+	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:onProperty lv2:name ;
 		owl:minCardinality 1 ;
-		rdfs:comment "A port MUST have at least one lv2:name." ;
+		rdfs:comment "A port MUST have at least one lv2:name."
 	] ;
 	lv2:documentation """
 <p>The class which represents an LV2 port.</p>
@@ -262,7 +274,7 @@ lv2:port
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:domain lv2:PluginBase ;
-	rdfs:range lv2:Port ;
+	rdfs:range lv2:PortBase ;
 	rdfs:label "port" ;
 	rdfs:comment "A port (input or output) on this plugin." .
 
