@@ -64,6 +64,7 @@
 <http://lv2plug.in/plugins/eg-sampler#ui>
 	a ui:GtkUI ;
 	lv2:requiredFeature urid:map ;
+	lv2:optionalFeature ui:requestValue ;
 	lv2:extensionData ui:showInterface ;
 	ui:portNotification [
 		ui:plugin <http://lv2plug.in/plugins/eg-sampler> ;
