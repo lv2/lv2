@@ -47,11 +47,12 @@
 #define MIN_CANVAS_H 80
 
 typedef struct {
-	LV2_Atom_Forge forge;
-	LV2_URID_Map*  map;
-	LV2_Log_Logger logger;
-	SamplerURIs    uris;
-	PeaksReceiver  precv;
+	LV2_Atom_Forge       forge;
+	LV2_URID_Map*        map;
+	LV2UI_Request_Value* request_value;
+	LV2_Log_Logger       logger;
+	SamplerURIs          uris;
+	PeaksReceiver        precv;
 
 	LV2UI_Write_Function write;
 	LV2UI_Controller     controller;
@@ -59,6 +60,7 @@ typedef struct {
 	GtkWidget* box;
 	GtkWidget* play_button;
 	GtkWidget* file_button;
+	GtkWidget* request_file_button;
 	GtkWidget* button_box;
 	GtkWidget* canvas;
 	GtkWidget* window;  /* For optional show interface. */
@@ -88,6 +90,17 @@ on_file_set(GtkFileChooserButton* widget, void* handle)
 	          msg);
 
 	g_free(filename);
+}
+
+static void
+on_request_file(GtkButton* widget, void* handle)
+{
+	SamplerUI* ui = (SamplerUI*)handle;
+
+	ui->request_value->request(ui->request_value->handle,
+	                           ui->uris.eg_sample,
+	                           0,
+	                           NULL);
 }
 
 static void
@@ -220,8 +233,9 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	// Get host features
 	const char* missing = lv2_features_query(
 		features,
-		LV2_LOG__log,  &ui->logger.log, false,
-		LV2_URID__map, &ui->map,        true,
+		LV2_LOG__log,         &ui->logger.log ,   false,
+		LV2_URID__map,        &ui->map,           true,
+		LV2_UI__requestValue, &ui->request_value, false,
 		NULL);
 	lv2_log_logger_set_map(&ui->logger, ui->map);
 	if (missing) {
@@ -242,15 +256,20 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	ui->button_box  = gtk_hbox_new(FALSE, 4);
 	ui->file_button = gtk_file_chooser_button_new(
 		"Load Sample", GTK_FILE_CHOOSER_ACTION_OPEN);
+	ui->request_file_button = gtk_button_new_with_label("Request Sample");
 	gtk_widget_set_size_request(ui->canvas, MIN_CANVAS_W, MIN_CANVAS_H);
 	gtk_container_set_border_width(GTK_CONTAINER(ui->box), 4);
 	gtk_box_pack_start(GTK_BOX(ui->box), ui->canvas, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(ui->box), ui->button_box, FALSE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(ui->button_box), ui->play_button, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(ui->button_box), ui->request_file_button, FALSE, FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(ui->button_box), ui->file_button, TRUE, TRUE, 0);
 
 	g_signal_connect(ui->file_button, "file-set",
 	                 G_CALLBACK(on_file_set), ui);
+
+	g_signal_connect(ui->request_file_button, "clicked",
+	                 G_CALLBACK(on_request_file), ui);
 
 	g_signal_connect(ui->play_button, "clicked",
 	                 G_CALLBACK(on_play_clicked), ui);
@@ -283,6 +302,7 @@ cleanup(LV2UI_Handle handle)
 	gtk_widget_destroy(ui->canvas);
 	gtk_widget_destroy(ui->button_box);
 	gtk_widget_destroy(ui->file_button);
+	gtk_widget_destroy(ui->request_file_button);
 	free(ui);
 }
 

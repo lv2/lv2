@@ -309,6 +309,19 @@ plugin UI.  This feature corresponds to the LV2UI_Touch struct, which
 should be passed with the URI LV2_UI__touch.</p>
 """ .
 
+ui:requestValue
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature to request a parameter value from the user via the host.  This
+allows a plugin UI to request a new parameter value using the host's UI, for
+example by showing a dialog or integrating with the host's built-in content
+browser.  This should only be used for complex parameter types where the plugin
+UI is not capable of showing the expected native platform or host interface to
+choose a value, such as file path parameters. This feature corresponds to the
+LV2UI_Request_Value struct, which should be passed with the URI
+LV2_UI__requestValue.</p>
+ """ .
+
 ui:idleInterface
 	a lv2:Feature ,
 		lv2:ExtensionData ;

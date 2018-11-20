@@ -36,7 +36,7 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
-		doap:revision "1.17.0" ;
+		doap:revision "1.17.2" ;
 		doap:created "2019-03-27" ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
