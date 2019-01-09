@@ -26,12 +26,11 @@
 #ifndef LV2_MIDI_H
 #define LV2_MIDI_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
-#else
-#    include <stdbool.h>
 #endif
 
 #define LV2_MIDI_URI    "http://lv2plug.in/ns/ext/midi"  ///< http://lv2plug.in/ns/ext/midi

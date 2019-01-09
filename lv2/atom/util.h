@@ -32,6 +32,7 @@
 #define LV2_ATOM_UTIL_H
 
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -39,8 +40,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#else
-#    include <stdbool.h>
 #endif
 
 /** Pad a size to 64 bits. */

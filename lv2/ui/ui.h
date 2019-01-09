@@ -28,6 +28,7 @@
 #ifndef LV2_UI_H
 #define LV2_UI_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "lv2/core/lv2.h"
@@ -73,8 +74,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#else
-#    include <stdbool.h>
 #endif
 
 /**

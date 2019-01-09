@@ -15,13 +15,11 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef __cplusplus
-#    include <stdbool.h>
-#endif
 
 #include "lv2/atom/atom.h"
 #include "lv2/atom/forge.h"

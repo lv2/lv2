@@ -49,6 +49,7 @@
 #define LV2_ATOM_FORGE_H
 
 #include <assert.h>
+#include <stdbool.h>
 
 #include "lv2/atom/atom.h"
 #include "lv2/atom/util.h"
@@ -57,8 +58,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#else
-#    include <stdbool.h>
 #endif
 
 // Disable deprecation warnings for Blank and Resource

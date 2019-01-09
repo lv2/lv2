@@ -25,6 +25,7 @@
 #ifndef LV2_RESIZE_PORT_H
 #define LV2_RESIZE_PORT_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -37,8 +38,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#else
-#    include <stdbool.h>
 #endif
 
 /** A status code for state functions. */

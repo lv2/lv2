@@ -27,6 +27,7 @@
 #ifndef LV2_STATE_H
 #define LV2_STATE_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -46,8 +47,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#else
-#    include <stdbool.h>
 #endif
 
 typedef void* LV2_State_Handle;            ///< Opaque handle for state save/restore
