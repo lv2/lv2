@@ -14,6 +14,8 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#include "lv2/atom/forge.h"
+
 /**
    A forge sink that writes to an atom buffer.
 

@@ -15,6 +15,10 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#include "lv2/atom/atom.h"
+#include "lv2/urid/urid.h"
+
+#include <stdarg.h>
 #include <stdlib.h>
 
 /** Entry in an array that serves as a dictionary of properties. */

@@ -28,10 +28,10 @@
 #ifndef LV2_UI_H
 #define LV2_UI_H
 
+#include "lv2/core/lv2.h"
+
 #include <stdbool.h>
 #include <stdint.h>
-
-#include "lv2/core/lv2.h"
 
 #define LV2_UI_URI    "http://lv2plug.in/ns/extensions/ui"  ///< http://lv2plug.in/ns/extensions/ui
 #define LV2_UI_PREFIX LV2_UI_URI "#"                        ///< http://lv2plug.in/ns/extensions/ui#

@@ -24,6 +24,8 @@
 #include "lv2/patch/patch.h"
 #include "lv2/state/state.h"
 
+#include <stdio.h>
+
 #define EG_SAMPLER_URI          "http://lv2plug.in/plugins/eg-sampler"
 #define EG_SAMPLER__applySample EG_SAMPLER_URI "#applySample"
 #define EG_SAMPLER__freeSample  EG_SAMPLER_URI "#freeSample"

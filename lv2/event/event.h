@@ -43,9 +43,9 @@
 
 #define LV2_EVENT_AUDIO_STAMP 0  ///< Special timestamp type for audio frames
 
-#include <stdint.h>
-
 #include "lv2/core/attributes.h"
+
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {

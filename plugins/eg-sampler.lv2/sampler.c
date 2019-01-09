@@ -17,14 +17,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <math.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <sndfile.h>
+#include "atom_sink.h"
+#include "peaks.h"
+#include "uris.h"
 
 #include "lv2/atom/atom.h"
 #include "lv2/atom/forge.h"
@@ -38,9 +33,14 @@
 #include "lv2/urid/urid.h"
 #include "lv2/worker/worker.h"
 
-#include "atom_sink.h"
-#include "peaks.h"
-#include "uris.h"
+#include <sndfile.h>
+
+#include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 enum {
 	SAMPLER_CONTROL = 0,

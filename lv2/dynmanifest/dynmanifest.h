@@ -27,9 +27,9 @@
 #ifndef LV2_DYN_MANIFEST_H_INCLUDED
 #define LV2_DYN_MANIFEST_H_INCLUDED
 
-#include <stdio.h>
-
 #include "lv2/core/lv2.h"
+
+#include <stdio.h>
 
 #define LV2_DYN_MANIFEST_URI    "http://lv2plug.in/ns/ext/dynmanifest"  ///< http://lv2plug.in/ns/ext/dynmanifest
 #define LV2_DYN_MANIFEST_PREFIX LV2_DYN_MANIFEST_URI "#"                ///< http://lv2plug.in/ns/ext/dynmanifest#

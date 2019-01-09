@@ -31,12 +31,12 @@
 #ifndef LV2_ATOM_UTIL_H
 #define LV2_ATOM_UTIL_H
 
+#include "lv2/atom/atom.h"
+
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
-
-#include "lv2/atom/atom.h"
 
 #ifdef __cplusplus
 extern "C" {

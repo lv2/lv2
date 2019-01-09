@@ -48,13 +48,13 @@
 #ifndef LV2_ATOM_FORGE_H
 #define LV2_ATOM_FORGE_H
 
-#include <assert.h>
-#include <stdbool.h>
-
 #include "lv2/atom/atom.h"
 #include "lv2/atom/util.h"
 #include "lv2/core/attributes.h"
 #include "lv2/urid/urid.h"
+
+#include <assert.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {

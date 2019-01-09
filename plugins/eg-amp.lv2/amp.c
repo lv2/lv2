@@ -15,11 +15,6 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-/** Include standard C headers */
-#include <math.h>
-#include <stdint.h>
-#include <stdlib.h>
-
 /**
    LV2 headers are based on the URI of the specification they come from, so a
    consistent convention can be used even for unofficial extensions.  The URI
@@ -28,6 +23,11 @@
    included, in this case `lv2.h`.
 */
 #include "lv2/core/lv2.h"
+
+/** Include standard C headers */
+#include <math.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 /**
    The URI is the identifier for a plugin, and how the host associates this

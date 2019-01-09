@@ -18,6 +18,7 @@
 #ifndef FIFTHS_URIS_H
 #define FIFTHS_URIS_H
 
+#include "lv2/atom/atom.h"
 #include "lv2/log/log.h"
 #include "lv2/midi/midi.h"
 #include "lv2/patch/patch.h"

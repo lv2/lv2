@@ -20,11 +20,11 @@
    @{
 */
 
+#include "lv2/core/lv2.h"
+
 #include <stdarg.h>
 #include <stdbool.h>
 #include <string.h>
-
-#include "lv2/core/lv2.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -28,10 +28,10 @@
 #ifndef LV2_ATOM_LOGGER_H
 #define LV2_ATOM_LOGGER_H
 
+#include "lv2/log/log.h"
+
 #include <stdio.h>
 #include <string.h>
-
-#include "lv2/log/log.h"
 
 #ifdef __cplusplus
 extern "C" {

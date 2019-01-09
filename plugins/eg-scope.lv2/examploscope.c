@@ -15,11 +15,7 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "./uris.h"
 
 #include "lv2/atom/atom.h"
 #include "lv2/atom/forge.h"
@@ -31,7 +27,11 @@
 #include "lv2/state/state.h"
 #include "lv2/urid/urid.h"
 
-#include "./uris.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /**
    ==== Private Plugin Instance Structure ====

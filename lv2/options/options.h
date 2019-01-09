@@ -26,10 +26,10 @@
 #ifndef LV2_OPTIONS_H
 #define LV2_OPTIONS_H
 
-#include <stdint.h>
-
 #include "lv2/core/lv2.h"
 #include "lv2/urid/urid.h"
+
+#include <stdint.h>
 
 #define LV2_OPTIONS_URI    "http://lv2plug.in/ns/ext/options"  ///< http://lv2plug.in/ns/ext/options
 #define LV2_OPTIONS_PREFIX LV2_OPTIONS_URI "#"                 ///< http://lv2plug.in/ns/ext/options#

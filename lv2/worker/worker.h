@@ -26,9 +26,9 @@
 #ifndef LV2_WORKER_H
 #define LV2_WORKER_H
 
-#include <stdint.h>
-
 #include "lv2/core/lv2.h"
+
+#include <stdint.h>
 
 #define LV2_WORKER_URI    "http://lv2plug.in/ns/ext/worker"  ///< http://lv2plug.in/ns/ext/worker
 #define LV2_WORKER_PREFIX LV2_WORKER_URI "#"                 ///< http://lv2plug.in/ns/ext/worker#

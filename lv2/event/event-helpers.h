@@ -22,13 +22,13 @@
 #ifndef LV2_EVENT_HELPERS_H
 #define LV2_EVENT_HELPERS_H
 
+#include "lv2/core/attributes.h"
+#include "lv2/event/event.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "lv2/core/attributes.h"
-#include "lv2/event/event.h"
 
 #ifdef __cplusplus
 extern "C" {

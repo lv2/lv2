@@ -36,9 +36,9 @@
 #define LV2_LOG__Warning LV2_LOG_PREFIX "Warning"  ///< http://lv2plug.in/ns/ext/log#Warning
 #define LV2_LOG__log     LV2_LOG_PREFIX "log"      ///< http://lv2plug.in/ns/ext/log#log
 
-#include <stdarg.h>
-
 #include "lv2/urid/urid.h"
+
+#include <stdarg.h>
 
 #ifdef __cplusplus
 extern "C" {
