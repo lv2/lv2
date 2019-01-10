@@ -345,7 +345,7 @@ def build(bld):
             basename     = os.path.basename(srcpath)
             full_path    = spec_map[basename]
             name         = 'lv2core' if basename == 'core' else basename
-            ttl_name     = 'lv2.ttl' if basename == 'core' else name + '.ttl'
+            ttl_name     = name + '.ttl'
             index_file   = os.path.join('index_rows', name)
             index_files += [index_file]
             root_path    = os.path.relpath('lv2/lv2plug.in/ns', full_path)
