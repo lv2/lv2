@@ -62,8 +62,7 @@ xsd:base64Binary
 	owl:withRestrictions (
 		[
 			xsd:pattern "(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?"
-		]
-		[
+		] [
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -75,8 +74,7 @@ xsd:boolean
 	owl:withRestrictions (
 		[
 			xsd:pattern "(true|false)"
-		]
-		[
+		] [
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -88,8 +86,7 @@ xsd:byte
 	owl:withRestrictions (
 		[
 			xsd:minInclusive -128
-		]
-		[
+		] [
 			xsd:maxInclusive 127
 		]
 	) .
@@ -101,8 +98,7 @@ xsd:date
 	owl:withRestrictions (
 		[
 			xsd:pattern "-?([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?"
-		]
-		[
+		] [
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -114,8 +110,7 @@ xsd:dateTime
 	owl:withRestrictions (
 		[
 			xsd:pattern "-?([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?"
-		]
-		[
+		] [
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -128,8 +123,7 @@ xsd:decimal
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+-]?[0-9]*\\.?[0-9]*"
-		]
-		[
+		] [
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -142,8 +136,7 @@ xsd:double
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+-]?[0-9]*\\.?[0-9]*([eE][-+]?[0-9]+)?"
-		]
-		[
+		] [
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -166,8 +159,7 @@ xsd:float
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+-]?[0-9]*\\.?[0-9]*([eE][-+]?[0-9]+)?"
-		]
-		[
+		] [
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -232,8 +224,7 @@ xsd:hexBinary
 	owl:withRestrictions (
 		[
 			xsd:pattern "[0-9A-F]*"
-		]
-		[
+		] [
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -245,8 +236,7 @@ xsd:int
 	owl:withRestrictions (
 		[
 			xsd:minInclusive -2147483648
-		]
-		[
+		] [
 			xsd:maxInclusive 2147483647
 		]
 	) .
@@ -258,8 +248,7 @@ xsd:integer
 	owl:withRestrictions (
 		[
 			xsd:pattern "[-+]?[0-9]+"
-		]
-		[
+		] [
 			xsd:fractionDigits 0
 		]
 	) .
@@ -281,8 +270,7 @@ xsd:long
 	owl:withRestrictions (
 		[
 			xsd:minInclusive -9223372036854775808
-		]
-		[
+		] [
 			xsd:maxInclusive 9223372036854775807
 		]
 	) .
@@ -328,8 +316,7 @@ xsd:nonNegativeInteger
 	owl:withRestrictions (
 		[
 			xsd:pattern "[0-9]*"
-		]
-		[
+		] [
 			xsd:minInclusive 0
 		]
 	) .
@@ -341,8 +328,7 @@ xsd:nonPositiveInteger
 	owl:withRestrictions (
 		[
 			xsd:pattern "(0|-[0-9]+)"
-		]
-		[
+		] [
 			xsd:maxInclusive 0
 		]
 	) .
@@ -366,7 +352,7 @@ xsd:pattern
 
 xsd:whiteSpace
 	a rdf:Property ,
-	owl:DatatypeProperty ;
+		owl:DatatypeProperty ;
 	rdfs:comment "A string that describes whitespace normalization for a string type." ;
 	rdfs:label "white space" ;
 	rdfs:range [
@@ -386,8 +372,7 @@ xsd:positiveInteger
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+]?[0-9]+"
-		]
-		[
+		] [
 			xsd:minInclusive 1
 		]
 	) .
@@ -399,8 +384,7 @@ xsd:short
 	owl:withRestrictions (
 		[
 			xsd:minInclusive -32768
-		]
-		[
+		] [
 			xsd:maxInclusive 32767
 		]
 	) .
@@ -423,8 +407,7 @@ xsd:time
 	owl:withRestrictions (
 		[
 			xsd:pattern "[1-2][0-9]:[0-5][0-9]:[0-5][0-9].[0-9][0-9][0-9]"
-		]
-		[
+		] [
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -486,3 +469,4 @@ xsd:unsignedShort
 			xsd:maxInclusive 65535
 		]
 	) .
+
