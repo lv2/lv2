@@ -250,11 +250,11 @@ def build(bld):
     specs = (bld.path.ant_glob('lv2/*', dir=True))
 
     # Copy lv2.h to include directory for backwards compatibility
-    old_lv2_h_path = os.path.join(bld.env.INCLUDEDIR, 'lv2/lv2.h')
+    old_lv2_h_path = os.path.join(bld.env.INCLUDEDIR, 'lv2.h')
     if bld.env.COPY_HEADERS:
-        bld.install_files(old_lv2_h_path, 'lv2/core/lv2.h')
+        bld.install_files(os.path.dirname(old_lv2_h_path), 'lv2/core/lv2.h')
     else:
-        bld.symlink_as(old_lv2_h_path, 'core/lv2.h')
+        bld.symlink_as(old_lv2_h_path, 'lv2/core/lv2.h')
 
     # LV2 pkgconfig file
     bld(features     = 'subst',
