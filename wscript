@@ -318,7 +318,7 @@ def build(bld):
             if bld.env.ONLINE_DOCS:
                 bld(features     = 'subst',
                     source       = 'doc/htaccess.in',
-                    target       = os.path.join(base, '.htaccess'),
+                    target       = os.path.join(path, '.htaccess'),
                     install_path = None,
                     NAME         = name,
                     BASE         = base)
