@@ -38,20 +38,27 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
-		doap:revision "1.15.4" ;
-		doap:created "2018-09-22" ;
+		doap:revision "1.16.0" ;
+		doap:created "2019-02-03" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.16.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Add core/attributes.h utility header."
 			] , [
-				rdfs:label "Include waf sources and fix build with Python 3.7."
-			] , [
 				rdfs:label "eg-sampler: Add waveform display to UI."
 			] , [
 				rdfs:label "eg-midigate: Respond to \"all notes off\" MIDI message."
 			] , [
+				rdfs:label "Simplify use of lv2specgen."
+			] , [
 				rdfs:label "Add lv2_validate utility."
+			] , [
+				rdfs:label "Install headers to simpler paths."
+			] , [
+				rdfs:label "Aggressively deprecate uri-map and event extensions."
+			] , [
+				rdfs:label "Upgrade build system and fix building with Python 3.7."
 			]
 		]
 	] , [

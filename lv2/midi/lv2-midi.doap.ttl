@@ -13,8 +13,10 @@
 	doap:developer <http://lv2plug.in/ns/meta#larsl> ,
 		<http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "1.9" ;
-		doap:created "2018-05-27" ;
+		doap:revision "1.10" ;
+		doap:created "2019-02-03" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.16.0.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Fix incorrect range of midi:chunk."
