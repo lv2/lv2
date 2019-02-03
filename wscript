@@ -133,11 +133,12 @@ def ttl_files(path, specdir):
     return map(abspath,
                path.ant_glob(specdir.path_from(path) + '/*.ttl'))
 
-def load_ttl(files):
+def load_ttl(files, exclude = []):
     import rdflib
     model = rdflib.ConjunctiveGraph()
     for f in files:
-        model.parse(f, format='n3')
+        if f not in exclude:
+            model.parse(f, format='n3')
     return model
 
 # Task to build extension index
@@ -175,9 +176,11 @@ def build_index(task):
     ctx     = task.generator.bld
     subdirs = specdirs(ctx.path)
     for specdir in subdirs:
-        m    = load_ttl(ttl_files(ctx.path, specdir))
-        name = os.path.basename(specdir.abspath())
-        spec = m.value(None, rdf.type, lv2.Specification)
+        files   = ttl_files(ctx.path, specdir)
+        exclude = [os.path.join(str(ctx.path), 'lv2/core/meta.ttl')]
+        m       = load_ttl(files, exclude)
+        name    = os.path.basename(specdir.abspath())
+        spec    = m.value(None, rdf.type, lv2.Specification)
         if spec:
             for dist in dists:
                 release = m.value(None, doap['file-release'], dist[1])
