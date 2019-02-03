@@ -498,7 +498,7 @@ def dist(ctx):
 
     # Write top level amalgamated NEWS file
     entries = autowaf.get_rdf_news('lv2',
-                                   ['lv2/lv2plug.in/ns/lv2core/meta.ttl'],
+                                   ['lv2/core/meta.ttl'],
                                    None,
                                    top_entries,
                                    dev_dist = dev_dist)
