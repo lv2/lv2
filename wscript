@@ -42,17 +42,14 @@ spec_map = {
 def options(ctx):
     ctx.load('compiler_c')
     ctx.load('lv2')
-    autowaf.set_options(ctx, test=True)
-    opt = ctx.get_option_group('Configuration options')
-    autowaf.add_flags(
-        opt,
+    ctx.add_flags(
+        ctx.configuration_options(),
         {'no-coverage':  'Do not use gcov for code coverage',
          'online-docs':  'Build documentation for web hosting',
          'no-plugins':   'Do not build example plugins',
          'copy-headers': 'Copy headers instead of linking to bundle'})
 
 def configure(conf):
-    autowaf.display_header('LV2 Configuration')
     try:
         conf.load('compiler_c', cache=True)
     except:
@@ -429,14 +426,11 @@ def lint(ctx):
            "build-test.c")
     subprocess.call(cmd, cwd='build', shell=True)
 
-def test(ctx):
-    "runs unit tests"
-    autowaf.pre_test(ctx, APPNAME, dirs=['.'])
-    for i in ctx.path.ant_glob('**/*-test'):
-        os.environ['PATH'] = '.' + os.pathsep + os.getenv('PATH')
-        test = i.path_from(ctx.path.find_node('build'))
-        autowaf.run_test(ctx, APPNAME, test, dirs=['.'], name=i)
-    autowaf.post_test(ctx, APPNAME, dirs=['.'])
+def test(tst):
+    with tst.group('Unit') as check:
+        for i in tst.path.ant_glob('**/*-test'):
+            test = './' + i.path_from(tst.path.find_node('build'))
+            check([test])
 
 class Dist(Scripting.Dist):
     def execute(self):

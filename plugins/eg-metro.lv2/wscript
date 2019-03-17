@@ -16,7 +16,6 @@ def options(opt):
     autowaf.set_options(opt)
 
 def configure(conf):
-    autowaf.display_header('Metro Configuration')
     conf.load('compiler_c', cache=True)
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
@@ -25,9 +24,6 @@ def configure(conf):
         autowaf.check_pkg(conf, 'lv2', atleast_version='0.2.0', uselib_store='LV2')
 
     conf.check(features='c cshlib', lib='m', uselib_store='M', mandatory=False)
-
-    autowaf.display_msg(conf, 'LV2 bundle directory', conf.env.LV2DIR)
-    print('')
 
 def build(bld):
     bundle = 'eg-metro.lv2'
