@@ -270,7 +270,7 @@ lv2_atom_object_next(const LV2_Atom_Property_Body* i)
    This macro is used similarly to a for loop (which it expands to), e.g.:
    @code
    LV2_ATOM_OBJECT_FOREACH(object, i) {
-       // Do something with prop (an LV2_Atom_Property_Body*) here...
+       // Do something with i (an LV2_Atom_Property_Body*) here...
    }
    @endcode
 */
