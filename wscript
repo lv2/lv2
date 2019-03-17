@@ -299,8 +299,9 @@ def build(bld):
         for spec in specs:
             # Copy spec files to build dir
             srcpath   = spec.srcpath()
-            name      = os.path.basename(srcpath)
-            full_path = spec_map[name]
+            basename  = os.path.basename(srcpath)
+            full_path = spec_map[basename]
+            name      = 'lv2core' if basename == 'core' else basename
             path      = chop_lv2_prefix(full_path)
             base      = full_path[len('lv2/lv2plug.in'):]
             for f in bld.path.ant_glob(srcpath + '/*.*'):
@@ -360,6 +361,7 @@ def build(bld):
                    ' --docdir=' + os.path.relpath('doc/html', os.path.dirname(html_path)) +
                    ' --tags=doc/tags' +
                    ' --index=' + index_file +
+                   (' --online' if bld.env.ONLINE_DOCS else '') +
                    ' ${SRC} ${TGT}')
 
             bld(rule   = cmd,
