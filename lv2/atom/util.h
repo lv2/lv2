@@ -297,6 +297,7 @@ typedef struct {
 	const LV2_Atom** value;  /**< Found value (output set by query function) */
 } LV2_Atom_Object_Query;
 
+/** Sentinel for lv2_atom_object_query(). */
 static const LV2_Atom_Object_Query LV2_ATOM_OBJECT_QUERY_END = { 0, NULL };
 
 /**
