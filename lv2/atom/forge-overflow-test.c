@@ -28,7 +28,7 @@ static int
 test_string_overflow(void)
 {
 	static const size_t max_chars = 15;
-	static const size_t capacity  = sizeof(LV2_Atom_String) + max_chars + 1;
+	static const size_t capacity  = 8 + max_chars + 1;
 	static const char*  str       = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	uint8_t*       buf = (uint8_t*)malloc(capacity);
@@ -66,7 +66,7 @@ test_string_overflow(void)
 static int
 test_literal_overflow(void)
 {
-	static const size_t capacity = sizeof(LV2_Atom_Literal) + 2;
+	static const size_t capacity = 16 + 2;
 
 	uint8_t*           buf = (uint8_t*)malloc(capacity);
 	LV2_URID_Map       map = { NULL, urid_map };
