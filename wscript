@@ -214,7 +214,7 @@ def build_spec(bld, path):
     old_include_dir = os.path.join(bld.env.INCLUDEDIR, spec_map[name])
 
     # Build test program if applicable
-    if bld.env.BUILD_TESTS and bld.path.find_node(path + '/%s-test.c' % name):
+    for test in bld.path.ant_glob(os.path.join(path, '*-test.c')):
         test_lib       = []
         test_cflags    = ['']
         test_linkflags = ['']
@@ -225,9 +225,9 @@ def build_spec(bld, path):
 
         # Unit test program
         bld(features     = 'c cprogram',
-            source       = path + '/%s-test.c' % name,
+            source       = test,
             lib          = test_lib,
-            target       = path + '/%s-test' % name,
+            target       = os.path.splitext(str(test.get_bld()))[0],
             install_path = None,
             cflags       = test_cflags,
             linkflags    = test_linkflags)
