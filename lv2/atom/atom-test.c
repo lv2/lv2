@@ -14,54 +14,14 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#include "lv2/atom/atom-test-utils.c"
 #include "lv2/atom/atom.h"
 #include "lv2/atom/forge.h"
 #include "lv2/atom/util.h"
 #include "lv2/urid/urid.h"
 
-#include <stdarg.h>
-#include <stdbool.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-
-char**   uris   = NULL;
-uint32_t n_uris = 0;
-
-static char*
-copy_string(const char* str)
-{
-	const size_t len = strlen(str);
-	char*        dup = (char*)malloc(len + 1);
-	memcpy(dup, str, len + 1);
-	return dup;
-}
-
-static LV2_URID
-urid_map(LV2_URID_Map_Handle handle, const char* uri)
-{
-	for (uint32_t i = 0; i < n_uris; ++i) {
-		if (!strcmp(uris[i], uri)) {
-			return i + 1;
-		}
-	}
-
-	uris = (char**)realloc(uris, ++n_uris * sizeof(char*));
-	uris[n_uris - 1] = copy_string(uri);
-	return n_uris;
-}
-
-static int
-test_fail(const char* fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
-	fprintf(stderr, "error: ");
-	vfprintf(stderr, fmt, args);
-	va_end(args);
-	return 1;
-}
 
 int
 main(void)
