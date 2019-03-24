@@ -223,43 +223,31 @@ img.footer {
 
 /* @group Code Colorization */
 span.keyword {
-	color: green;
+    color: #586E75;
 }
 
 span.keywordtype {
-	color: #3E873E;
+	color: #546E00;
 }
 
 span.keywordflow {
-	color: #e08000;
+	color: #586E75;
 }
 
 span.comment {
-	color: maroon;
+	color: #6C71C4;
 }
 
 span.preprocessor {
-	color: #806020;
+	color: #D33682;
 }
 
 span.stringliteral {
-	color: #002080;
+	color: #CB4B16;
 }
 
 span.charliteral {
-	color: teal;
-}
-
-span.vhdldigit {
-	color: #F0F;
-}
-
-span.vhdlkeyword {
-	color: #700070;
-}
-
-span.vhdllogic {
-	color: red;
+	color: #CB4B16;
 }
 
 /* @end */
