@@ -466,30 +466,14 @@ def getTermLink(uri, subject=None, predicate=None):
         return '<a href="%s" %s>%s</a>' % (uri, extra, niceName(uri))
 
 
-def rdfsClassInfo(term, m):
-    """Generate rdfs-type information for Classes: ranges, and domains."""
-    global classranges
-    global classdomains
+def owlRestrictionInfo(term, m):
+    """Generate OWL restriction information for Classes"""
     doc = ""
 
-    # Find subClassOf information
     restrictions = []
-    superclasses = []
-    for st in findStatements(m, term, rdfs.subClassOf, None):
-        if not isBlank(getObject(st)):
-            uri = getObject(st)
-            if not uri in superclasses:
-                superclasses.append(uri)
-        else:
-            meta_type = findOne(m, getObject(st), rdf.type, None)
-            restrictions.append(getSubject(meta_type))
-
-    if len(superclasses) > 0:
-        doc += "\n<tr><th>Subclass of</th>"
-        first = True
-        for superclass in sorted(superclasses):
-            doc += getProperty(getTermLink(superclass), first)
-            first = False
+    for s in findStatements(m, term, rdfs.subClassOf, None):
+        if findOne(m, getObject(s), rdf.type, owl.Restriction):
+            restrictions.append(getObject(s))
 
     for r in sorted(restrictions):
         props = findStatements(m, r, None, None)
@@ -501,38 +485,49 @@ def rdfsClassInfo(term, m):
             elif getPredicate(p) == rdfs.comment:
                 comment = getObject(p)
         if onProp is not None:
-            doc += '<tr><th>Restriction on %s</th><td>' % getTermLink(onProp)
+            doc += '<dl><dt>Restriction on %s</dt>\n' % getTermLink(onProp)
 
             prop_str = ''
-            last_pred = None
-            first = True
             for p in findStatements(m, r, None, None):
                 if (getPredicate(p) == owl.onProperty
                     or getPredicate(p) == rdfs.comment
                     or (getPredicate(p) == rdf.type and getObject(p) == owl.Restriction)
                     or getPredicate(p) == lv2.documentation):
-                    last_pred = None
                     continue
 
-                if getPredicate(p) != last_pred:
-                    prop_str += '<tr><th>%s</th>\n' % getTermLink(getPredicate(p))
-                    first = True
+                prop_str += getTermLink(getPredicate(p))
+
                 if isResource(getObject(p)):
-                    prop_str += getProperty(getTermLink(getObject(p)), first)
-                    first = False
+                    prop_str += ' ' + getTermLink(getObject(p))
                 elif isLiteral(getObject(p)):
-                    prop_str += getProperty(getLiteralString(getObject(p)), first)
-                    first = False
+                    prop_str += ' ' + getLiteralString(getObject(p))
 
-                last_pred = getPredicate(p)
-
-            prop_str += endProperties(first)
-
-            if prop_str != '':
-                doc += '<table class=\"restriction\">%s</table>\n' % prop_str
             if comment is not None:
-                doc += "<span>%s</span>\n" % getLiteralString(comment)
-            doc += '</td></tr>'
+                prop_str += '\n<div>%s</div>\n' % getLiteralString(comment)
+
+            doc += '<dd>%s</dd></dl>' % prop_str if prop_str else '';
+
+    return doc
+
+def rdfsClassInfo(term, m):
+    """Generate rdfs-type information for Classes: ranges, and domains."""
+    global classranges
+    global classdomains
+    doc = ""
+
+    # Find subClassOf information
+    superclasses = set()
+    for st in findStatements(m, term, rdfs.subClassOf, None):
+        if not isBlank(getObject(st)):
+            uri = getObject(st)
+            superclasses |= set([uri])
+
+    if len(superclasses) > 0:
+        doc += "\n<tr><th>Subclass of</th>"
+        first = True
+        for superclass in sorted(superclasses):
+            doc += getProperty(getTermLink(superclass), first)
+            first = False
 
     # Find out about properties which have rdfs:domain of t
     d = classdomains.get(str(term), "")
@@ -683,27 +678,15 @@ def docTerms(category, list, m, classlist, proplist, instalist):
         is_deprecated = isDeprecated(m, term)
 
         doc += '<div class="spectermbody">'
-        if label != '' or comment != '' or is_deprecated:
-            doc += '<div class="description">'
-
-        if label != '':
-            doc += "<div property=\"rdfs:label\" class=\"label\">%s</div>" % label
-
-        if is_deprecated:
-            doc += '<div class="warning">DEPRECATED</div>'
-
-        if comment != '':
-            doc += "<div property=\"rdfs:comment\">%s</div>" % comment
-
-        if label != '' or comment != '' or is_deprecated:
-            doc += "</div>"
 
         terminfo = ""
+        extrainfo = ""
         if category == 'Property':
             terminfo += owlInfo(term, m)
             terminfo += rdfsPropertyInfo(term, m)
         if category == 'Class':
             terminfo += rdfsClassInfo(term, m)
+            extrainfo += owlRestrictionInfo(term, m)
         if category == 'Instance':
             terminfo += rdfsInstanceInfo(term, m)
 
@@ -711,6 +694,23 @@ def docTerms(category, list, m, classlist, proplist, instalist):
 
         if (len(terminfo) > 0):  # to prevent empty list (bug #882)
             doc += '\n<table class="terminfo">%s</table>\n' % terminfo
+
+        if label != '' or comment != '' or is_deprecated:
+            doc += '<div class="description">'
+
+        if label != '':
+            doc += "<div property=\"rdfs:label\" class=\"label\">%s</div>" % label
+
+        if is_deprecated:
+            doc += '<div class="warning">Deprecated</div>'
+
+        if comment != '':
+            doc += "<div class=\"comment\" property=\"rdfs:comment\">%s</div>" % comment
+
+        doc += extrainfo
+
+        if label != '' or comment != '' or is_deprecated:
+            doc += "</div>"
 
         doc += '</div>'
         doc += "\n</div>\n\n"

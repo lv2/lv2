@@ -1,23 +1,37 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>LV2: File List</title>
-<link href="doxy-style.css" rel="stylesheet" type="text/css" />
-</head>
-<body>
-<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
-<div id="titlearea">
-<table cellspacing="0" cellpadding="0">
- <tbody>
- <tr style="height: 56px;">
-  <td style="padding-left: 0.5em;">
-   <div id="projectname">LV2
-   &#160;<span id="projectnumber">1.0.13</span>
-   </div>
-  </td>
- </tr>
- </tbody>
-</table>
-</div>
-<!-- end header part -->
+  <head>
+    <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+    <!--BEGIN PROJECT_NAME--><title>$projectname: $title</title><!--END PROJECT_NAME-->
+    <!--BEGIN !PROJECT_NAME--><title>$title</title><!--END !PROJECT_NAME-->
+    <link href="$relpath^$stylesheet" rel="stylesheet" type="text/css" />
+    $extrastylesheet
+  </head>
+  <body>
+    <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+
+      <!--BEGIN TITLEAREA-->
+      <div id="titlearea">
+        <div id="header">
+          <div id="titlebox">
+            <!--BEGIN PROJECT_LOGO-->
+            <div id="projectlogo"><img alt="Logo" src="$relpath^$projectlogo"/></div>
+            <!--END PROJECT_LOGO-->
+            <!--BEGIN PROJECT_NAME-->
+            <h1 id="title">$projectname</h1>
+            <!--END PROJECT_NAME-->
+            <!--BEGIN PROJECT_BRIEF-->
+            <div id="shortdesc">$projectbrief</div>
+            <!--END PROJECT_BRIEF-->
+          </div>
+          <div id="metabox">
+            <table id="meta">
+              <!--BEGIN PROJECT_NUMBER-->
+              <tr><th>Version</th><td>$projectnumber</td></tr>
+              <!--END PROJECT_NUMBER-->
+            </table>
+          </div>
+        </div>
+      </div>
+      <!--END TITLEAREA-->
+      <!-- end header part -->

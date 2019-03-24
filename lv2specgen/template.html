@@ -17,77 +17,79 @@
   </head>
   <body>
 
-  <!-- HEADER -->
-  <div id="topbar">
-    <div id="header">
-      <div id="titlebox">
-        <h1 id="title">@NAME@</h1>
-        <div id="subtitle"><a href="@URI@">@URI@</a></div>
-        <div id="shortdesc">@SHORT_DESC@</div>
+    <!-- HEADER -->
+    <div id="topbar">
+      <div id="header">
+        <div id="titlebox">
+          <h1 id="title">@NAME@</h1>
+          <div id="shortdesc">@SHORT_DESC@</div>
+        </div>
+        <div id="metabox">
+          <table id="meta">
+            <tr><th>ID</th><td><a href="@URI@">@URI@</a></td></tr>
+            <tr><th>Version</th><td>@VERSION@</td></tr>
+            <tr><th>Date</th><td>@DATE@</td></tr>
+            @MAIL@
+            @AUTHORS@
+          </table>
+        </div>
       </div>
-      <table id="meta">
-        <!--<tr><th>URI</th><td><a href="@URI@">@URI@</a></td></tr>
-            <tr><th>Version</th><td>@REVISION@</td></tr>-->
-        <!--<tr><th>Prefixes</th><td>@PREFIXES@</td></tr>-->
-        <tr><th>Version</th><td>@VERSION@</td></tr>
-        <tr><th>Date</th><td>@DATE@</td></tr>
-        @MAIL@
-        @AUTHORS@
-      </table>
     </div>
-    <ul id="contents">
-      <!-- <li><a href="#sec-description">Description</a></li> -->
-      <li><a href="#sec-index">Index</a></li>
-      <li><a href="#sec-reference">Reference</a></li>
-      <li><a href="#sec-history">History</a></li>
-      @CONTENT_LINKS@
-    </ul>
-  </div>
 
-  <!-- DESCRIPTION -->
-  <!--<h2 class="sec" id="sec-description">Description</h2>-->
-  <div class="content">@COMMENT@</div>
+    <div id="content">
+      <div id="contentsbox">
+        <!-- Contents: -->
+        <ul id="contents">
+          <!-- <li><a href="#sec-description">Description</a></li> -->
+          <li><a href="#sec-reference">Reference</a></li>
+          <li><a href="#sec-history">History</a></li>
+          @CONTENT_LINKS@
+        </ul>
+      </div>
+      <hr class="contentssep" />
 
-  <!-- INDEX -->
-  <h2 class="sec" id="sec-index">Index</h2>
-  <div class="content" id="index">
-  @INDEX@
-  </div>
+      <!-- DESCRIPTION -->
+      <!--<h2 class="sec" id="sec-description">Description</h2>-->
+      <div class="section">@COMMENT@</div>
 
-  <!-- DOCUMENTATION -->
-  <h2 class="sec" id="sec-reference">Reference</h2>
-  <div class="content">
-  @REFERENCE@
-  </div>
+      <!-- REFERENCE -->
+      <h2 class="sec" id="sec-reference">Reference</h2>
+      <div class="section">
+        <div id="indexbox">
+          @INDEX@
+          @REFERENCE@
+        </div>
+      </div>
 
-  <!-- HISTORY -->
-  <h2 class="sec" id="sec-history">History</h2>
-  <div class="content">
-  @HISTORY@
-  </div>
+      <!-- HISTORY -->
+      <h2 class="sec" id="sec-history">History</h2>
+      <div class="section">
+        @HISTORY@
+      </div>
 
-  <!-- FOOTER -->
-  <div id="footer">
-    <div>
-      This document is available under the
-      <a about="" rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
-        Creative Commons Attribution-ShareAlike License
-      </a>
+      <!-- FOOTER -->
+      <div id="footer">
+        <div>
+          This document is available under the
+          <a about="" rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">
+            Creative Commons Attribution-ShareAlike License
+          </a>
+        </div>
+	    <div>
+          Valid
+          <a about="" rel="dct:conformsTo" resource="http://www.w3.org/TR/rdfa-syntax"
+             href="http://validator.w3.org/check?uri=referer">
+            XHTML+RDFa
+          </a>
+          and
+          <a about="" rel="dct:conformsTo" resource="http://www.w3.org/TR/CSS2"
+             href="http://jigsaw.w3.org/css-validator/check/referer">
+            CSS
+          </a>
+          generated from @FILENAME@ by <a href="http://drobilla.net/software/lv2specgen">lv2specgen</a>
+        </div>
+      </div>
+
     </div>
-	<div>
-      Valid
-      <a about="" rel="dct:conformsTo" resource="http://www.w3.org/TR/rdfa-syntax"
-         href="http://validator.w3.org/check?uri=referer">
-        XHTML+RDFa
-      </a>
-      and
-      <a about="" rel="dct:conformsTo" resource="http://www.w3.org/TR/CSS2"
-         href="http://jigsaw.w3.org/css-validator/check/referer">
-        CSS
-      </a>
-      generated from @FILENAME@ by <a href="http://drobilla.net/software/lv2specgen">lv2specgen</a>
-    </div>
-  </div>
-
   </body>
 </html>
