@@ -803,7 +803,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = @LV2_SRCDIR@/doc/mainpage.dox \
+INPUT                  = @LV2_SRCDIR@/doc/mainpage.md \
                          @LV2_SRCDIR@/lv2/atom/atom.h \
                          @LV2_SRCDIR@/lv2/atom/forge.h \
                          @LV2_SRCDIR@/lv2/atom/util.h \
@@ -980,7 +980,7 @@ FILTER_SOURCE_PATTERNS =
 # (index.html). This can be useful if you have a project on for instance GitHub
 # and want to reuse the introduction page also for the doxygen output.
 
-USE_MDFILE_AS_MAINPAGE =
+USE_MDFILE_AS_MAINPAGE = @LV2_SRCDIR@/doc/mainpage.md
 
 #---------------------------------------------------------------------------
 # Configuration options related to source browsing
