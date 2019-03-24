@@ -185,9 +185,6 @@ def build_index(task):
                     entries[dist] += lv2specgen.releaseChangeset(
                         m, release, str(name))
 
-    # Generate history for all post-unification LV2 distributions
-    history = lv2specgen.specHistoryMarkup(entries)
-
     rows = []
     for f in task.inputs:
         if not f.abspath().endswith('index.html.in'):
@@ -204,8 +201,7 @@ def build_index(task):
     subst_file(task.inputs[0].abspath(), task.outputs[0].abspath(),
                {'@ROWS@': ''.join(rows),
                 '@LV2_VERSION@': VERSION,
-                '@DATE@': date,
-                '@HISTORY@': history})
+                '@DATE@': date})
 
 def build_spec(bld, path):
     name            = os.path.basename(path)
