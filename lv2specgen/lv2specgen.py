@@ -752,7 +752,7 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
             return '<a href="%s">%s</a>' % (str(t), str(t))
 
     if (len(classlist) > 0):
-        head += '<th>Classes</th>'
+        head += '<th><a href="#ref-classes" />Classes</th>'
         body += '<td><ul>'
         classlist.sort()
         shown = {}
@@ -792,7 +792,7 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
         body += '</ul></td>\n'
 
     if (len(proplist) > 0):
-        head += '<th>Properties</th>'
+        head += '<th><a href="#ref-properties" />Properties</th>'
         body += '<td><ul>'
         proplist.sort()
         for p in proplist:
@@ -800,7 +800,7 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
         body += '</ul></td>\n'
 
     if (instalist is not None and len(instalist) > 0):
-        head += '<th>Instances</th>'
+        head += '<th><a href="#ref-instances" />Instances</th>'
         body += '<td><ul>'
         instalist.sort()
         for i in instalist:
@@ -1304,10 +1304,18 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     azlist = buildIndex(m, classlist, proplist, instalist, filelist)
 
     # Generate Term HTML
-    termlist = docTerms('Property', proplist, m, classlist, proplist, instalist)
-    termlist = docTerms('Class', classlist, m, classlist, proplist, instalist) + termlist
+    classlist = docTerms('Class', classlist, m, classlist, proplist, instalist)
+    proplist = docTerms('Property', proplist, m, classlist, proplist, instalist)
     if instances:
-        termlist += docTerms('Instance', instalist, m, classlist, proplist, instalist)
+        instlist = docTerms('Instance', instalist, m, classlist, proplist, instalist)
+
+    termlist = ''
+    if classlist:
+        termlist += '<h3><a id="ref-classes" />Classes</h3>' + classlist
+    if proplist:
+        termlist += '<h3><a id="ref-properties" />Properties</h3>' + proplist
+    if instlist:
+        termlist += '<h3><a id="ref-instances" />Instances</h3>' + instlist
 
     name = specProperty(m, spec, doap.name)
     title = name
