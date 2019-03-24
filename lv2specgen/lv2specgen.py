@@ -559,7 +559,7 @@ def rdfsClassInfo(term, m):
 
 def isSpecial(pred):
     """Return True if the predicate is "special" and shouldn't be emitted generically"""
-    return pred in [rdf.type, rdfs.range, rdfs.domain, rdfs.label, rdfs.comment, rdfs.subClassOf, rdfs.subPropertyOf, lv2.documentation]
+    return pred in [rdf.type, rdfs.range, rdfs.domain, rdfs.label, rdfs.comment, rdfs.subClassOf, rdfs.subPropertyOf, lv2.documentation, owl.withRestrictions]
 
 
 def blankNodeDesc(node, m):
