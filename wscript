@@ -56,12 +56,12 @@ def configure(conf):
         Options.options.build_tests = False
         Options.options.no_plugins = True
 
+    if Options.options.online_docs:
+        Options.options.docs = True
+
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
     autowaf.set_c_lang(conf, 'c99')
-
-    if Options.options.online_docs:
-        Options.options.docs = True
 
     if Options.options.ultra_strict:
         conf.env.append_value('CFLAGS', ['-Wconversion'])
