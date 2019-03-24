@@ -326,7 +326,9 @@ def getComment(m, urinode, classlist, proplist, instalist):
                 return text
         markup = rgx.sub(translateLocalLink, markup)
 
-        if have_lxml:
+        if not have_lxml:
+            print("warning: No Python lxml module found, output may be invalid")
+        else:
             try:
                 # Parse and validate documentation as XHTML Basic 1.1
                 doc = """<?xml version="1.0" encoding="UTF-8"?>
