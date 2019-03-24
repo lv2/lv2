@@ -741,8 +741,8 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
     if not (classlist or proplist or instalist or filelist):
         return ''
 
-    head  = '<tr>'
-    body  = '<tr>'
+    head = ''
+    body = ''
 
     def termLink(m, t):
         if str(t).startswith(spec_ns_str):
@@ -819,10 +819,13 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
             body += '<li><a href="%s">%s</a></li>' % (i, os.path.basename(i))
         body += '</ul></td>\n'
 
-    head += '</tr>'
-    body += '</tr>'
-    return '<table class="index"><thead>%s</thead>\n<tbody>%s</tbody></table>' % (head, body)
+    if head and body:
+        return '''<table class="index">
+<thead><tr>%s</tr></thead>
+<tbody><tr>%s</tr></tbody></table>
+''' % (head, body)
 
+    return ''
 
 def add(where, key, value):
     if not key in where:
