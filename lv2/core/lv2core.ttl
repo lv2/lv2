@@ -45,7 +45,7 @@ devices). See <a href="http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules"
 C/C++ which can be dynamically loaded into many applications, or <q>hosts</q>.
 This <q>core</q> specification is simple and minimal, but is designed so that
 <q>extensions</q> can be defined to add more advanced features, making it
-possibly to implement nearly any feature imaginable.</p>
+possible to implement nearly any feature imaginable.</p>
 
 <p>LV2 maintains a strong distinction between <q>code</q> and <q>data</q>.
 Plugin code is in a shared library, while data is in a companion data file
