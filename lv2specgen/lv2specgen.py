@@ -485,7 +485,7 @@ def rdfsClassInfo(term, m):
             restrictions.append(getSubject(meta_type))
 
     if len(superclasses) > 0:
-        doc += "\n<tr><th>Sub-class of</th>"
+        doc += "\n<tr><th>Subclass of</th>"
         first = True
         for superclass in sorted(superclasses):
             doc += getProperty(getTermLink(superclass), first)
@@ -644,7 +644,7 @@ def owlInfo(term, m):
 
     def owlTypeInfo(term, propertyType, name):
         if findOne(m, term, rdf.type, propertyType):
-            return "<tr><th>OWL Type</th><td>%s</td></tr>\n" % name
+            return "<tr><th>Type</th><td>%s</td></tr>\n" % name
         else:
             return ""
 
