@@ -906,7 +906,7 @@ def specAuthors(m, subject):
 
     devdoc = ''
     first = True
-    for d in dev:
+    for d in sorted(dev):
         if not first:
             devdoc += ', '
         devdoc += '<span class="author" property="doap:developer">%s</span>' % d
@@ -918,7 +918,7 @@ def specAuthors(m, subject):
 
     maintdoc = ''
     first = True
-    for m in maint:
+    for m in sorted(maint):
         if not first:
             maintdoc += ', '
         maintdoc += '<span class="author" property="doap:maintainer">%s</span>' % m
