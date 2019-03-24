@@ -44,10 +44,11 @@ def options(ctx):
     ctx.load('lv2')
     ctx.add_flags(
         ctx.configuration_options(),
-        {'no-coverage':  'Do not use gcov for code coverage',
-         'online-docs':  'Build documentation for web hosting',
-         'no-plugins':   'Do not build example plugins',
-         'copy-headers': 'Copy headers instead of linking to bundle'})
+        {'no-coverage':    'Do not use gcov for code coverage',
+         'online-docs':    'Build documentation for web hosting',
+         'no-check-links': 'Do not check documentation for broken links',
+         'no-plugins':     'Do not build example plugins',
+         'copy-headers':   'Copy headers instead of linking to bundle'})
 
 def configure(conf):
     try:
@@ -81,6 +82,11 @@ def configure(conf):
             conf.env.BUILD_BOOK = True
         except:
             Logs.warn('Asciidoc not found, book will not be built')
+
+        if not Options.options.no_check_links:
+            if not conf.find_program('linkchecker',
+                                     var='LINKCHECKER', mandatory=False):
+                Logs.warn('Documentation will not be checked for broken links')
 
     # Check for gcov library (for test coverage)
     if (conf.env.BUILD_TESTS
@@ -377,6 +383,14 @@ def build(bld):
         if not bld.env.ONLINE_DOCS:
             bld.install_files('${DOCDIR}/lv2/aux/', 'aux/style.css')
             bld.install_files('${DOCDIR}/lv2/ns/', 'ns/index.html')
+
+        def check_links(ctx):
+            import subprocess
+            if ctx.env.LINKCHECKER:
+                if subprocess.call([ctx.env.LINKCHECKER[0], '--no-status', out]):
+                    ctx.fatal('Documentation contains broken links')
+
+        bld.add_post_fun(check_links)
 
     if bld.env.BUILD_TESTS:
         # Generate a compile test .c file that includes all headers
