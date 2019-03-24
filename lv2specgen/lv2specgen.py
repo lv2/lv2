@@ -370,7 +370,7 @@ def getProperty(val, first=True):
     "Return a string representing a property value in a property table"
     doc = ''
     if not first:
-        doc += '<tr><td></td>'  # Empty cell in header column
+        doc += '<tr><th></th>'  # Empty cell in header column
     doc += '<td>%s</td></tr>\n' % val
     return doc
 
