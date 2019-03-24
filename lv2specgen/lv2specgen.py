@@ -339,22 +339,22 @@ def getComment(m, urinode, classlist, proplist, instalist):
     <title>Validation Skeleton Document</title>
   </head>
   <body>
-%s
+""" + markup + """
   </body>
-</html>
-""" % str(markup.decode())
+</html>"""
 
                 oldcwd = os.getcwd()
                 os.chdir(specgendir)
                 parser = etree.XMLParser(dtd_validation=True, no_network=True)
-                root = etree.fromstring(doc, parser)
-                os.chdir(oldcwd)
+                root = etree.fromstring(doc.encode('utf-8'), parser)
             except Exception as e:
                 print("Invalid lv2:documentation for %s\n%s" % (urinode, e))
                 line_num = 1
                 for line in doc.split('\n'):
                     print('%3d: %s' % (line_num, line))
                     line_num += 1
+            finally:
+                os.chdir(oldcwd)
 
         return markup
 
