@@ -326,7 +326,7 @@ def build(bld):
                 target   = 'aux/%s' % i)
 
         # Build Doxygen documentation (and tags file)
-        autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc', False)
+        autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'doc', False)
         bld.add_group()
 
         index_files = []
@@ -361,8 +361,8 @@ def build(bld):
             # Install documentation
             if not bld.env.ONLINE_DOCS:
                 base = chop_lv2_prefix(srcpath)
-                bld.install_files('${DOCDIR}/' + srcpath,
-                                  bld.path.get_bld().ant_glob(base + '/*.html'))
+                bld.install_files(os.path.join('${DOCDIR}', 'lv2', os.path.dirname(html_path)),
+                                  html_path)
 
         index_files.sort()
         bld.add_group()
@@ -375,8 +375,8 @@ def build(bld):
 
         # Install main documentation files
         if not bld.env.ONLINE_DOCS:
-            bld.install_files('${DOCDIR}/lv2/lv2plug.in/aux/', 'aux/style.css')
-            bld.install_files('${DOCDIR}/lv2/lv2plug.in/ns/', 'ns/index.html')
+            bld.install_files('${DOCDIR}/lv2/aux/', 'aux/style.css')
+            bld.install_files('${DOCDIR}/lv2/ns/', 'ns/index.html')
 
     if bld.env.BUILD_TESTS:
         # Generate a compile test .c file that includes all headers
