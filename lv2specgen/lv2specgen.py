@@ -1386,6 +1386,19 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     if index_path is not None:
         writeIndex(m, specloc, index_path, root_path, root_uri)
 
+    # Validate complete output page
+    try:
+        oldcwd = os.getcwd()
+        os.chdir(specgendir)
+        root = etree.fromstring(
+            template.replace('"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"',
+                             '"DTD/xhtml-rdfa-1.dtd"').encode('utf-8'),
+            etree.XMLParser(dtd_validation=True, no_network=True))
+    except Exception as e:
+        sys.stderr.write("error: Validation failed for %s: %s" % (specloc, e))
+    finally:
+        os.chdir(oldcwd)
+
     return template
 
 
