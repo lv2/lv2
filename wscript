@@ -329,12 +329,6 @@ def build(bld):
                 source   = 'doc/%s' % i,
                 target   = 'aux/%s' % i)
 
-        bld(features = 'subst',
-            is_copy  = True,
-            name     = 'copy',
-            source   = 'doc/doxy-style.css',
-            target   = 'doc/html/doxy-style.css')
-
         # Build Doxygen documentation (and tags file)
         autowaf.build_dox(bld, 'LV2', VERSION, top, out, 'lv2plug.in/doc', False)
         bld.add_group()

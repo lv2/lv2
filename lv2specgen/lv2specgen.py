@@ -1494,9 +1494,9 @@ if __name__ == "__main__":
     # Root link
     root_path = opts['root_path']
     root_uri  = opts['root_uri']
-    root_link = os.path.relpath(root_path, path) if root_path else '.'
+    root_link = root_path
     if not options.online_docs:
-        root_link = os.path.join(root_link, 'index.html')
+        root_link = os.path.join(root_path, 'index.html')
 
     # Generate spec documentation
     specdoc = specgen(
