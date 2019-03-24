@@ -485,10 +485,9 @@ def rdfsClassInfo(term, m):
             restrictions.append(getSubject(meta_type))
 
     if len(superclasses) > 0:
-        superclasses.sort()
         doc += "\n<tr><th>Sub-class of</th>"
         first = True
-        for superclass in superclasses:
+        for superclass in sorted(superclasses):
             doc += getProperty(getTermLink(superclass), first)
             first = False
 
@@ -538,10 +537,9 @@ def rdfsClassInfo(term, m):
     # Find out about properties which have rdfs:domain of t
     d = classdomains.get(str(term), "")
     if d:
-        d.sort()
         dlist = ''
         first = True
-        for k in d:
+        for k in sorted(d):
             dlist += getProperty(getTermLink(k), first)
             first = False
         doc += "<tr><th>In domain of</th>%s" % dlist
@@ -549,10 +547,9 @@ def rdfsClassInfo(term, m):
     # Find out about properties which have rdfs:range of t
     r = classranges.get(str(term), "")
     if r:
-        r.sort()
         rlist = ''
         first = True
-        for k in r:
+        for k in sorted(r):
             rlist += getProperty(getTermLink(k), first)
             first = False
         doc += "<tr><th>In range of</th>%s" % rlist
@@ -754,9 +751,8 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
     if (len(classlist) > 0):
         head += '<th><a href="#ref-classes" />Classes</th>'
         body += '<td><ul>'
-        classlist.sort()
         shown = {}
-        for c in classlist:
+        for c in sorted(classlist):
             if c in shown:
                 continue
 
@@ -778,9 +774,8 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
                 subclasses = []
                 for s in findStatements(m, None, rdfs.subClassOf, c):
                     subclasses += [getSubject(s)]
-                subclasses.sort()
 
-                for s in subclasses:
+                for s in sorted(subclasses):
                     tree += '<li>' + termLink(m, s)
                     tree += class_tree(s)
                     tree += '</li>'
@@ -794,16 +789,14 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
     if (len(proplist) > 0):
         head += '<th><a href="#ref-properties" />Properties</th>'
         body += '<td><ul>'
-        proplist.sort()
-        for p in proplist:
+        for p in sorted(proplist):
             body += '<li>%s</li>' % termLink(m, p)
         body += '</ul></td>\n'
 
     if (instalist is not None and len(instalist) > 0):
         head += '<th><a href="#ref-instances" />Instances</th>'
         body += '<td><ul>'
-        instalist.sort()
-        for i in instalist:
+        for i in sorted(instalist):
             p = getShortName(i)
             anchor = getAnchor(i)
             body += '<li><a href="#%s">%s</a></li>' % (anchor, p)
@@ -812,8 +805,7 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
     if (filelist is not None and len(filelist) > 0):
         head += '<th>Files</th>'
         body += '<td><ul>'
-        filelist.sort()
-        for i in filelist:
+        for i in sorted(filelist):
             p = getShortName(i)
             anchor = getAnchor(i)
             body += '<li><a href="%s">%s</a></li>' % (i, os.path.basename(i))
@@ -1294,8 +1286,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
 
     filelist = []
     see_also_files = specProperties(m, spec, rdfs.seeAlso)
-    see_also_files.sort()
-    for f in see_also_files:
+    for f in sorted(see_also_files):
         uri = str(f)
         if uri[:7] == 'file://':
             uri = uri[7:]
