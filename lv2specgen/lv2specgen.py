@@ -734,7 +734,7 @@ def getAnchor(uri):
         return getShortName(uri)
 
 
-def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
+def buildIndex(m, classlist, proplist, instalist=None, filelist=None, online=False):
     if not (classlist or proplist or instalist or filelist):
         return ''
 
@@ -802,7 +802,7 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None):
             body += '<li><a href="#%s">%s</a></li>' % (anchor, p)
         body += '</ul></td>\n'
 
-    if (filelist is not None and len(filelist) > 0):
+    if online and filelist and len(filelist) > 0:
         head += '<th>Files</th>'
         body += '<td><ul>'
         for i in sorted(filelist):
@@ -1297,7 +1297,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
 
         filelist += [uri]
 
-    azlist = buildIndex(m, classlist, proplist, instalist, filelist)
+    azlist = buildIndex(m, classlist, proplist, instalist, filelist, opts['online_docs'])
 
     # Generate Term HTML
     classlist = docTerms('Class', classlist, m, classlist, proplist, instalist)
