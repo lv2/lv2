@@ -1160,15 +1160,17 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
     else:
         target = os.path.relpath(ext_node, root_path)
 
+    stem = os.path.splitext(os.path.basename(target))[0]
+
     # Specification (comment is to act as a sort key)
     if not options.online_docs:
-        target += '/' + os.path.basename(target) + '.html'
+        target += '/' + stem + '.html'
     row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
         b, target, name)
 
     # API
     row += '<td><a rel="rdfs:seeAlso" href="../doc/html/group__%s.html">%s</a></td>' % (
-        b, b)
+        stem, name)
 
     # Description
     if shortdesc:
