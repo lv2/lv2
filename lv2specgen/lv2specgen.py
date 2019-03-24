@@ -150,8 +150,8 @@ def isLiteral(n):
 
 def niceName(uri):
     global spec_bundle
-    if uri.startswith(spec_bundle):
-        return uri[len(spec_bundle):]
+    if uri.startswith(spec_ns_str):
+        return uri[len(spec_ns_str):]
 
     regexp = re.compile("^(.*[/#])([^/#]+)$")
     rez = regexp.search(uri)
@@ -667,29 +667,19 @@ def docTerms(category, list, m, classlist, proplist, instalist):
     """
     A wrapper class for listing all the terms in a specific class (either
     Properties, or Classes. Category is 'Property' or 'Class', list is a
-    list of term names (strings), return value is a chunk of HTML.
+    list of term URI strings, return value is a chunk of HTML.
     """
     doc = ""
     nspre = spec_pre
-    for item in list:
-        t = termName(m, item)
-        if (t.startswith(spec_ns_str)) and (
-            len(t[len(spec_ns_str):].split("/")) < 2):
-            term = t
-            t = t.split(spec_ns_str[-1])[1]
-            curie = "%s:%s" % (nspre, t)
-        else:
-            if t.startswith("http://"):
-                term = t
-                curie = getShortName(t)
-                t = getAnchor(t)
-            else:
-                term = spec_ns[t]
-                curie = "%s:%s" % (nspre, t)
+    for term in list:
+        if not term.startswith(spec_ns_str):
+            sys.stderr.write("warning: Skipping external term `%s'" % term)
+            continue
 
-        term_uri = term
-
-        doc += """<div class="specterm" id="%s" about="%s">\n<h3>%s <a href="#%s">%s</a></h3>\n""" % (t, term_uri, category, getAnchor(str(term_uri)), curie)
+        t = termName(m, term)
+        curie = term.split(spec_ns_str[-1])[1]
+        doc += '<div class="specterm" id="%s" about="%s">' % (t, term)
+        doc += '<h4><a href="#%s">%s</a></h4>' % (getAnchor(term), curie)
 
         label = getLabel(m, term)
         comment = getComment(m, term, classlist, proplist, instalist)
