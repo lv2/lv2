@@ -10,7 +10,7 @@
 	doap:name "LV2" ;
 	doap:homepage <http://lv2plug.in> ;
 	doap:created "2004-04-21" ;
-	doap:shortdesc "An audio plugin interface specification." ;
+	doap:shortdesc "An open and extensible audio plugin standard" ;
 	doap:programming-language "C" ;
 	doap:developer <http://plugin.org.uk/swh.xrdf#me> ,
 		<http://drobilla.net/drobilla#me> ;
