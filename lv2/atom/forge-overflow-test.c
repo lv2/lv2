@@ -20,6 +20,7 @@
 #include "lv2/atom/util.h"
 #include "lv2/urid/urid.h"
 
+#include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,8 +30,8 @@ test_string_overflow(void)
 {
 #define MAX_CHARS 15
 
-	static const size_t capacity  = sizeof(LV2_Atom_String) + MAX_CHARS + 1;
-	static const char*  str       = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	static const size_t capacity = sizeof(LV2_Atom_String) + MAX_CHARS + 1;
+	static const char*  str      = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	uint8_t*       buf = (uint8_t*)malloc(capacity);
 	LV2_URID_Map   map = { NULL, urid_map };
@@ -103,10 +104,132 @@ test_literal_overflow(void)
 	return 0;
 }
 
+static int
+test_sequence_overflow(void)
+{
+	static const size_t size = sizeof(LV2_Atom_Sequence) + 6 * sizeof(LV2_Atom);
+	LV2_URID_Map        map  = { NULL, urid_map };
+
+	// Test over a range that fails in the sequence header and event components
+	for (size_t capacity = 1; capacity < size; ++capacity) {
+		uint8_t* buf = (uint8_t*)malloc(capacity);
+
+		LV2_Atom_Forge forge;
+		lv2_atom_forge_init(&forge, &map);
+		lv2_atom_forge_set_buffer(&forge, buf, capacity);
+
+		LV2_Atom_Forge_Frame frame;
+		LV2_Atom_Forge_Ref   ref =
+		        lv2_atom_forge_sequence_head(&forge, &frame, 0);
+
+		assert(capacity >= sizeof(LV2_Atom_Sequence) || !frame.ref);
+		assert(capacity >= sizeof(LV2_Atom_Sequence) || !ref);
+
+		lv2_atom_forge_frame_time(&forge, 0);
+		lv2_atom_forge_int(&forge, 42);
+		lv2_atom_forge_pop(&forge, &frame);
+
+		free(buf);
+	}
+
+	return 0;
+}
+
+static int
+test_vector_head_overflow(void)
+{
+	static const size_t size = sizeof(LV2_Atom_Vector) + 3 * sizeof(LV2_Atom);
+	LV2_URID_Map        map  = { NULL, urid_map };
+
+	// Test over a range that fails in the vector header and elements
+	for (size_t capacity = 1; capacity < size; ++capacity) {
+		uint8_t* buf = (uint8_t*)malloc(capacity);
+
+		LV2_Atom_Forge forge;
+		lv2_atom_forge_init(&forge, &map);
+		lv2_atom_forge_set_buffer(&forge, buf, capacity);
+
+		LV2_Atom_Forge_Frame frame;
+		LV2_Atom_Forge_Ref   ref = lv2_atom_forge_vector_head(
+                &forge, &frame, sizeof(int32_t), forge.Int);
+
+		assert(capacity >= sizeof(LV2_Atom_Vector) || !frame.ref);
+		assert(capacity >= sizeof(LV2_Atom_Vector) || !ref);
+
+		lv2_atom_forge_int(&forge, 1);
+		lv2_atom_forge_int(&forge, 2);
+		lv2_atom_forge_int(&forge, 3);
+		lv2_atom_forge_pop(&forge, &frame);
+
+		free(buf);
+	}
+
+	return 0;
+}
+
+static int
+test_vector_overflow(void)
+{
+	static const size_t  size  = sizeof(LV2_Atom_Vector) + 3 * sizeof(LV2_Atom);
+	static const int32_t vec[] = { 1, 2, 3 };
+	LV2_URID_Map         map   = { NULL, urid_map };
+
+	// Test over a range that fails in the vector header and elements
+	for (size_t capacity = 1; capacity < size; ++capacity) {
+		uint8_t* buf = (uint8_t*)malloc(capacity);
+
+		LV2_Atom_Forge forge;
+		lv2_atom_forge_init(&forge, &map);
+		lv2_atom_forge_set_buffer(&forge, buf, capacity);
+
+		LV2_Atom_Forge_Ref ref = lv2_atom_forge_vector(
+		        &forge, sizeof(int32_t), forge.Int, 3, vec);
+
+		assert(capacity >= sizeof(LV2_Atom_Vector) || !ref);
+
+		free(buf);
+	}
+
+	return 0;
+}
+
+static int
+test_tuple_overflow(void)
+{
+	static const size_t size = sizeof(LV2_Atom_Tuple) + 3 * sizeof(LV2_Atom);
+	LV2_URID_Map        map  = { NULL, urid_map };
+
+	// Test over a range that fails in the tuple header and elements
+	for (size_t capacity = 1; capacity < size; ++capacity) {
+		uint8_t* buf = (uint8_t*)malloc(capacity);
+
+		LV2_Atom_Forge forge;
+		lv2_atom_forge_init(&forge, &map);
+		lv2_atom_forge_set_buffer(&forge, buf, capacity);
+
+		LV2_Atom_Forge_Frame frame;
+		LV2_Atom_Forge_Ref   ref = lv2_atom_forge_tuple(&forge, &frame);
+
+		assert(capacity >= sizeof(LV2_Atom_Tuple) || !frame.ref);
+		assert(capacity >= sizeof(LV2_Atom_Tuple) || !ref);
+
+		lv2_atom_forge_int(&forge, 1);
+		lv2_atom_forge_float(&forge, 2.0f);
+		lv2_atom_forge_string(&forge, "three", 5);
+		lv2_atom_forge_pop(&forge, &frame);
+
+		free(buf);
+	}
+
+	return 0;
+}
+
 int
 main(void)
 {
-	const int ret = test_string_overflow() || test_literal_overflow();
+	const int ret = test_string_overflow() || test_literal_overflow() ||
+	                test_sequence_overflow() || test_vector_head_overflow() ||
+	                test_vector_overflow() || test_tuple_overflow();
 
 	free_urid_map();
 

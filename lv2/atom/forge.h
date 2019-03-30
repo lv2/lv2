@@ -176,7 +176,11 @@ lv2_atom_forge_push(LV2_Atom_Forge*       forge,
 {
 	frame->parent = forge->stack;
 	frame->ref    = ref;
-	forge->stack  = frame;
+
+	if (ref) {
+		forge->stack = frame; // Don't push, so walking the stack is always safe
+	}
+
 	return ref;
 }
 
@@ -184,8 +188,12 @@ lv2_atom_forge_push(LV2_Atom_Forge*       forge,
 static inline void
 lv2_atom_forge_pop(LV2_Atom_Forge* forge, LV2_Atom_Forge_Frame* frame)
 {
-	assert(frame == forge->stack);
-	forge->stack = frame->parent;
+	if (frame->ref) {
+		// If frame has a valid ref, it must be the top of the stack
+		assert(frame == forge->stack);
+		forge->stack = frame->parent;
+	}
+	// Otherwise, frame was not pushed because of overflow, do nothing
 }
 
 /** Return true iff the top of the stack has the given type. */
