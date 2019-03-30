@@ -49,6 +49,16 @@ urid_map(LV2_URID_Map_Handle handle, const char* uri)
 	return n_uris;
 }
 
+static void
+free_urid_map(void)
+{
+	for (uint32_t i = 0; i < n_uris; ++i) {
+		free(uris[i]);
+	}
+
+	free(uris);
+}
+
 static int
 test_fail(const char* fmt, ...)
 {

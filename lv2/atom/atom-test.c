@@ -357,5 +357,7 @@ main(void)
 		                                0);
 	}
 
+	free_urid_map();
+
 	return 0;
 }

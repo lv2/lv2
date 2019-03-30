@@ -106,5 +106,9 @@ test_literal_overflow(void)
 int
 main(void)
 {
-	return test_string_overflow() || test_literal_overflow();
+	const int ret = test_string_overflow() || test_literal_overflow();
+
+	free_urid_map();
+
+	return ret;
 }
