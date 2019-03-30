@@ -37,3 +37,11 @@ urid:map.  To support this feature, the host must pass an LV2_Feature to
 LV2_Descriptor::instantiate() with URI LV2_URID__unmap and data pointed to
 an instance of LV2_URID_Unmap.</p>
 """ .
+
+urid:blank
+	a lv2:Feature ;
+	lv2:documentation """
+<p>A feature which is used to get unique integer identifiers. To support this
+feature, the host must pass an LV2_Feature to LV2_Descriptor::instantiate() with
+URI LV2_URID__blank and data pointed to an instance of LV2_URID_Blank.</p>
+""" .

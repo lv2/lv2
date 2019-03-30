@@ -219,7 +219,7 @@ def build_spec(bld, path):
         test_cflags    = ['']
         test_linkflags = ['']
         if bld.is_defined('HAVE_GCOV'):
-            test_lib       += ['gcov', 'rt']
+            test_lib       += ['gcov', 'rt', 'pthread']
             test_cflags    += ['--coverage']
             test_linkflags += ['--coverage']
 

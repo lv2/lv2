@@ -220,3 +220,7 @@ meta:bmwiedemann
 	foaf:name "Bernhard M. Wiedemann" ;
 	foaf:mbox <bwiedemann@suse.de> .
 
+meta:ventosus
+	a foaf:Person ;
+	foaf:name "Hanspeter Portner" ;
+	foaf:mbox <mailto:dev@open-music-kontrollers.ch> .

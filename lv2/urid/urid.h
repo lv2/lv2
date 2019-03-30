@@ -1,5 +1,6 @@
 /*
-  Copyright 2008-2016 David Robillard <http://drobilla.net>
+  Copyright 2008-2019 David Robillard <http://drobilla.net>
+  Copyright 2019 Hanspeter Portner <https://open-music-kontrollers.ch>
   Copyright 2011 Gabriel M. Beddingfield <gabrbedd@gmail.com>
 
   Permission to use, copy, modify, and/or distribute this software for any
@@ -32,6 +33,7 @@
 
 #define LV2_URID__map   LV2_URID_PREFIX "map"    ///< http://lv2plug.in/ns/ext/urid#map
 #define LV2_URID__unmap LV2_URID_PREFIX "unmap"  ///< http://lv2plug.in/ns/ext/urid#unmap
+#define LV2_URID__blank LV2_URID_PREFIX "blank"  ///< http://lv2plug.in/ns/ext/urid#blank
 
 #define LV2_URID_MAP_URI   LV2_URID__map    ///< Legacy
 #define LV2_URID_UNMAP_URI LV2_URID__unmap  ///< Legacy
@@ -53,9 +55,19 @@ typedef void* LV2_URID_Map_Handle;
 typedef void* LV2_URID_Unmap_Handle;
 
 /**
+   Opaque pointer to host data for LV2_URID_Blank.
+*/
+typedef void* LV2_URID_Blank_Handle;
+
+/**
    URI mapped to an integer.
 */
 typedef uint32_t LV2_URID;
+
+/**
+   Blank integer ID.
+*/
+typedef uint32_t LV2_URID_Blank_ID;
 
 /**
    URID Map Feature (LV2_URID__map)
@@ -124,6 +136,32 @@ typedef struct _LV2_URID_Unmap {
 	const char* (*unmap)(LV2_URID_Unmap_Handle handle,
 	                     LV2_URID              urid);
 } LV2_URID_Unmap;
+
+/**
+   URID Blank Feature (LV2_URID__blank)
+*/
+typedef struct _LV2_URID_Blank {
+	/**
+	   Opaque pointer to host data.
+
+	   This MUST be passed to id() whenever it is called.
+	   Otherwise, it must not be interpreted in any way.
+	*/
+	LV2_URID_Blank_Handle handle;
+
+	/**
+	   Get a unique unsigned integer identifier.
+
+	   This function MUST be RT-safe, non-blocking, lock-free and wait-free.
+
+	   @param handle MUST be the callback_data member of this struct.
+	   @param flags Currently unused.
+
+		 @par Example host implementation (with C11 atomics):
+		 @snippet lv2/urid/blank-host.h lv2-urid-blank-host-example
+	*/
+	LV2_URID_Blank_ID (*id)(LV2_URID_Blank_Handle handle, uint32_t flags);
+} LV2_URID_Blank;
 
 #ifdef __cplusplus
 }  /* extern "C" */
