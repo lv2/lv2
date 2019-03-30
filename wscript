@@ -88,6 +88,10 @@ def configure(conf):
                                      var='LINKCHECKER', mandatory=False):
                 Logs.warn('Documentation will not be checked for broken links')
 
+    if conf.env.BUILD_TESTS:
+        autowaf.check_pkg(conf, 'serd-1', uselib_store='SERD',
+                          atleast_version='1.0.0', mandatory=False)
+
     # Check for gcov library (for test coverage)
     if (conf.env.BUILD_TESTS
         and not Options.options.no_coverage
@@ -226,13 +230,13 @@ def build_spec(bld, path):
             test_linkflags += ['--coverage']
 
         # Unit test program
-        bld(features     = 'c cprogram',
-            source       = test,
-            lib          = test_lib,
-            target       = os.path.splitext(str(test.get_bld()))[0],
-            install_path = None,
-            cflags       = test_cflags,
-            linkflags    = test_linkflags)
+        obj = bld(features     = 'c cprogram',
+                  source       = test,
+                  lib          = test_lib,
+                  target       = os.path.splitext(str(test.get_bld()))[0],
+                  install_path = None,
+                  cflags       = test_cflags,
+                  linkflags    = test_linkflags)
 
     # Install bundle
     bld.install_files(bundle_dir,
@@ -411,6 +415,14 @@ def build(bld):
             target       = 'build-test',
             install_path = None)
 
+        # Unit test program
+        if bld.env.HAVE_SERD:
+            obj = bld(features     = 'c cprogram',
+                      source       = 'lv2/urid/check-static-ids.c',
+                      target       = 'lv2/urid/check-static-ids',
+                      install_path = None,
+                      use          = 'SERD')
+
     if bld.env.BUILD_BOOK:
         # Build "Programming LV2 Plugins" book from plugin examples
         bld.recurse('plugins')
@@ -437,6 +449,18 @@ def test(tst):
         for i in tst.path.ant_glob('**/*-test'):
             test = './' + i.path_from(tst.path.find_node('build'))
             check([test])
+
+    with tst.group('URID') as check:
+        specs = (tst.path.ant_glob('lv2/*', dir=True))
+
+        for name, path in spec_map.items():
+            if name == 'core':
+                schema = tst.path.find_node('lv2/core/lv2core.ttl')
+            else:
+                schema = tst.path.find_node('lv2/%s/%s.ttl' % (name, name))
+
+            uri = path.replace('lv2/lv2plug.in/', 'http://lv2plug.in/')
+            check(['lv2/urid/check-static-ids', str(schema), uri])
 
 class Dist(Scripting.Dist):
     def execute(self):

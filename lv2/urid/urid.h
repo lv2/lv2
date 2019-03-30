@@ -125,6 +125,23 @@ typedef struct _LV2_URID_Unmap {
 	                     LV2_URID              urid);
 } LV2_URID_Unmap;
 
+#if 0
+/**
+   Static URIDs Feature (LV2_URID__staticURIDs)
+*/
+typedef struct _LV2_URID_Static_URIDs {
+	/**
+	   Opaque pointer to host data.
+
+	   This MUST be passed to unmap() whenever it is called.
+	   Otherwise, it must not be interpreted in any way.
+	*/
+	LV2_URID_Static_URIDs_Handle handle;
+
+	int max_static_id;
+} LV2_URID_Static_URIDs;
+#endif
+
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
