@@ -72,10 +72,10 @@ sord_validate \
     "$LV2DIR/log.lv2/log.ttl" \
     "$LV2DIR/log.lv2/manifest.ttl" \
     "$LV2DIR/log.lv2/lv2-log.doap.ttl" \
-    "$LV2DIR/lv2core.lv2/manifest.ttl" \
-    "$LV2DIR/lv2core.lv2/lv2core.ttl" \
-    "$LV2DIR/lv2core.lv2/lv2core.doap.ttl" \
-    "$LV2DIR/lv2core.lv2/meta.ttl" \
+    "$LV2DIR/core.lv2/manifest.ttl" \
+    "$LV2DIR/core.lv2/lv2core.ttl" \
+    "$LV2DIR/core.lv2/lv2core.doap.ttl" \
+    "$LV2DIR/core.lv2/meta.ttl" \
     "$LV2DIR/eg-metro.lv2/manifest.ttl" \
     "$LV2DIR/eg-metro.lv2/metro.ttl" \
     "$LV2DIR/presets.lv2/manifest.ttl" \
