@@ -93,6 +93,9 @@ def set_options(opt, debug_by_default=False):
         test_opts.add_option('--wrapper', type='string',
                              dest='test_wrapper',
                              help='command prefix for tests (e.g. valgrind)')
+        test_opts.add_option('--test-filter', type='string',
+                             dest='test_filter',
+                             help='regular expression for tests to run')
 
     # Run options
     run_opts = opt.add_option_group('Run options')
@@ -539,7 +542,7 @@ def build_pc(bld, name, version, version_suffix, libs, subst_dict={}):
     """
 
     pkg_prefix       = bld.env['PREFIX']
-    if pkg_prefix[-1] == '/':
+    if len(pkg_prefix) > 1 and pkg_prefix[-1] == '/':
         pkg_prefix = pkg_prefix[:-1]
 
     target = name.lower()
@@ -807,11 +810,15 @@ def show_diff(from_lines, to_lines, from_filename, to_filename):
     import difflib
     import sys
 
+    same = True
     for line in difflib.unified_diff(
             from_lines, to_lines,
             fromfile=os.path.abspath(from_filename),
             tofile=os.path.abspath(to_filename)):
         sys.stderr.write(line)
+        same = False
+
+    return same
 
 def test_file_equals(patha, pathb):
     import filecmp
@@ -827,9 +834,7 @@ def test_file_equals(patha, pathb):
 
     with io.open(patha, 'rU', encoding='utf-8') as fa:
         with io.open(pathb, 'rU', encoding='utf-8') as fb:
-            show_diff(fa.readlines(), fb.readlines(), patha, pathb)
-
-    return False
+            return show_diff(fa.readlines(), fb.readlines(), patha, pathb)
 
 def bench_time():
     if hasattr(time, 'perf_counter'): # Added in Python 3.3
@@ -864,12 +869,26 @@ class TestScope:
         self.n_total = 0
 
     def run(self, test, **kwargs):
+        if type(test) == list and 'name' not in kwargs:
+            import pipes
+            kwargs['name'] = ' '.join(map(pipes.quote, test))
+
+        if Options.options.test_filter and 'name' in kwargs:
+            import re
+            found = False
+            for scope in self.tst.stack:
+                if re.search(Options.options.test_filter, scope.name):
+                    found = True
+                    break
+
+            if (not found and
+                not re.search(Options.options.test_filter, self.name) and
+                not re.search(Options.options.test_filter, kwargs['name'])):
+                return True
+
         if callable(test):
             output = self._run_callable(test, **kwargs)
         elif type(test) == list:
-            if 'name' not in kwargs:
-                import pipes
-                kwargs['name'] = ' '.join(map(pipes.quote, test))
 
             output = self._run_command(test, **kwargs)
         else:
@@ -888,9 +907,10 @@ class TestScope:
         if 'stderr' in kwargs and kwargs['stderr'] == NONEMPTY:
             # Run with a temp file for stderr and check that it is non-empty
             import tempfile
-            with tempfile.TemporaryFile(mode='w') as stderr:
+            with tempfile.TemporaryFile() as stderr:
                 kwargs['stderr'] = stderr
                 output = self.run(test, **kwargs)
+                stderr.seek(0, 2) # Seek to end
                 return (output if not output else
                         self.run(
                             lambda: stderr.tell() > 0,
@@ -991,7 +1011,7 @@ class TestContext(Build.BuildContext):
         Logs.info("Waf: Entering directory `%s'\n", bld_dir)
         os.chdir(str(bld_dir))
 
-        if str(node.parent) == Context.top_dir:
+        if not self.env.NO_COVERAGE and str(node.parent) == Context.top_dir:
             self.clear_coverage()
 
         self.log_good('=' * 10, 'Running %s tests', group_name)
@@ -1026,7 +1046,7 @@ class TestContext(Build.BuildContext):
                 self.gen_coverage()
 
             if os.path.exists('coverage/index.html'):
-                self.log_good('COVERAGE', '<file://%s>',
+                self.log_good('REPORT', '<file://%s>',
                               os.path.abspath('coverage/index.html'))
 
         successes = scope.n_total - scope.n_failed
@@ -1097,6 +1117,19 @@ class TestContext(Build.BuildContext):
                                  '--rc', 'genhtml_branch_coverage=1',
                                  'cov.lcov'],
                                 stdout=log, stderr=log)
+
+            summary = subprocess.check_output(
+                ['lcov', '--summary',
+                 '--rc', 'lcov_branch_coverage=1',
+                 'cov.lcov'],
+                stderr=subprocess.STDOUT).decode('ascii')
+
+            import re
+            lines = re.search('lines\.*: (.*)%.*', summary).group(1)
+            functions = re.search('functions\.*: (.*)%.*', summary).group(1)
+            branches = re.search('branches\.*: (.*)%.*', summary).group(1)
+            self.log_good('COVERAGE', '%s%% lines, %s%% functions, %s%% branches',
+                          lines, functions, branches)
 
         except Exception:
             Logs.warn('Failed to run lcov to generate coverage report')
