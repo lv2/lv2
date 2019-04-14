@@ -99,10 +99,12 @@ def configure(conf):
     if conf.env.BUILD_PLUGINS:
         for i in conf.path.ant_glob('plugins/*.lv2', src=False, dir=True):
             try:
-                conf.recurse(i.srcpath())
-                conf.env.LV2_BUILD += [i.srcpath()]
-            except:
-                Logs.warn('Configuration failed, %s will not be built\n' % i)
+                conf.recurse(i.bldpath())
+                conf.env.LV2_BUILD += [i.bldpath()]
+            except Exception as e:
+                Logs.warn('Configuration failed, not building %s (%s)' % (i, e))
+
+    autowaf.set_lib_env(conf, 'lv2', VERSION, has_objects=False)
 
     autowaf.display_summary(
         conf,
