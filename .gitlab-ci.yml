@@ -1,31 +1,167 @@
-lin_dbg:
-  script:
-    - python ./waf -dsT --no-coverage configure build test
+stages:
+  - build
+  - test
 
-lin_rel:
-  script:
-    - python ./waf -sT --no-coverage configure build test
+.build_template: &build_definition
+  stage: build
+  artifacts:
+    paths:
+      - build/
+      - .lock-waf*
+
+.test_template: &test_definition
+  stage: test
+  artifacts:
+    paths:
+      - build/coverage
+
+
+arm_dbg:
+  <<: *build_definition
+  image: drobilla/debian-stretch
+  script: python ./waf configure build -dsT
+  variables:
+    CC: "arm-linux-gnueabihf-gcc"
+    CXX: "arm-linux-gnueabihf-g++"
+
+test:arm_dbg:
+  <<: *test_definition
+  image: drobilla/debian-stretch
+  script: python ./waf test --wrapper=qemu-arm
+  dependencies:
+    - arm_dbg
+
+
+arm_rel:
+  <<: *build_definition
+  image: drobilla/debian-stretch
+  script: python ./waf configure build -sT
+  variables:
+    CC: "arm-linux-gnueabihf-gcc"
+    CXX: "arm-linux-gnueabihf-g++"
+
+test:arm_rel:
+  <<: *test_definition
+  image: drobilla/debian-stretch
+  script: python ./waf test --wrapper=qemu-arm
+  dependencies:
+    - arm_rel
+
+
+aarch64_dbg:
+  <<: *build_definition
+  image: drobilla/debian-stretch
+  script: python ./waf configure build -dsT
+  variables:
+    CC: "aarch64-linux-gnu-gcc"
+    CXX: "aarch64-linux-gnu-g++"
+
+test:aarch64_dbg:
+  <<: *test_definition
+  image: drobilla/debian-stretch
+  script: python ./waf test --wrapper=qemu-aarch64
+  dependencies:
+    - aarch64_dbg
+
+
+aarch64_rel:
+  <<: *build_definition
+  image: drobilla/debian-stretch
+  script: python ./waf configure build -sT
+  variables:
+    CC: "aarch64-linux-gnu-gcc"
+    CXX: "aarch64-linux-gnu-g++"
+
+test:aarch64_rel:
+  <<: *test_definition
+  image: drobilla/debian-stretch
+  script: python ./waf test --wrapper=qemu-aarch64
+  dependencies:
+    - aarch64_rel
+
+
+amd64_dbg:
+  <<: *build_definition
+  image: drobilla/debian-stretch
+  script: python ./waf configure build -dsT
+
+test:amd64_dbg:
+  <<: *test_definition
+  image: drobilla/debian-stretch
+  script: python ./waf test
+  dependencies:
+    - amd64_dbg
+
+
+amd64_rel:
+  <<: *build_definition
+  image: drobilla/debian-stretch
+  script: python ./waf configure build -sT
+
+test:amd64_rel:
+  <<: *test_definition
+  image: drobilla/debian-stretch
+  script: python ./waf test
+  dependencies:
+    - amd64_rel
+
 
 mac_dbg:
-  script:
-    - python ./waf -dsT --no-coverage configure build test
+  <<: *build_definition
+  script: python ./waf configure build -dsT --no-coverage
   tags:
     - macos
+
+test:mac_dbg:
+  <<: *test_definition
+  script: python ./waf test
+  dependencies:
+    - mac_dbg
+  tags:
+    - macos
+
 
 mac_rel:
-  script:
-    - python ./waf -sT --no-coverage configure build test
+  <<: *build_definition
+  script: python ./waf configure build -sT --no-coverage
   tags:
     - macos
 
+test:mac_rel:
+  <<: *test_definition
+  script: python ./waf test
+  dependencies:
+    - mac_rel
+  tags:
+    - macos
+
+
 win_dbg:
+  <<: *build_definition
   script:
-    - python ./waf -dsT --no-coverage configure build test
+    - python ./waf configure build -dT --no-coverage
   tags:
     - windows
 
+test:win_dbg:
+  <<: *test_definition
+  script: python ./waf test
+  dependencies:
+    - win_dbg
+  tags:
+    - windows
+
+
 win_rel:
-  script:
-    - python ./waf -sT --no-coverage configure build test
+  <<: *build_definition
+  script: python ./waf configure build -T --no-coverage
+  tags:
+    - windows
+
+test:win_rel:
+  <<: *test_definition
+  script: python ./waf test
+  dependencies:
+    - win_rel
   tags:
     - windows
