@@ -97,10 +97,17 @@ def configure(conf):
     autowaf.set_recursive()
 
     if conf.env.BUILD_PLUGINS:
-        for i in conf.path.ant_glob('plugins/*.lv2', src=False, dir=True):
+        for i in ['eg-amp.lv2',
+                  'eg-fifths.lv2',
+                  'eg-metro.lv2',
+                  'eg-midigate.lv2',
+                  'eg-params.lv2',
+                  'eg-sampler.lv2',
+                  'eg-scope.lv2']:
             try:
-                conf.recurse(i.bldpath())
-                conf.env.LV2_BUILD += [i.bldpath()]
+                path = os.path.join('plugins', i)
+                conf.recurse(path)
+                conf.env.LV2_BUILD += [path]
             except Exception as e:
                 Logs.warn('Configuration failed, not building %s (%s)' % (i, e))
 
