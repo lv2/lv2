@@ -174,7 +174,8 @@ def define(conf, var_name, value):
 
 def check_pkg(conf, name, **args):
     "Check for a package iff it hasn't been checked for yet"
-    if args['uselib_store'].lower() in conf.env['AUTOWAF_LOCAL_LIBS']:
+    if (args['uselib_store'].lower() in conf.env['AUTOWAF_LOCAL_LIBS'] or
+        args['uselib_store'].lower() in conf.env['AUTOWAF_LOCAL_HEADERS']):
         return
 
     class CheckType:
@@ -483,7 +484,7 @@ def version_lib(self):
         if [x for x in applicable if x in self.features]:
             self.target = self.target + 'D'
 
-def set_lib_env(conf, name, version):
+def set_lib_env(conf, name, version, has_objects=True):
     "Set up environment for local library as if found via pkg-config."
     NAME         = name.upper()
     major_ver    = version.split('.')[0]
@@ -495,7 +496,8 @@ def set_lib_env(conf, name, version):
     conf.env[pkg_var_name]       = lib_name
     conf.env['INCLUDES_' + NAME] = ['${INCLUDEDIR}/%s-%s' % (name, major_ver)]
     conf.env['LIBPATH_' + NAME]  = lib_path
-    conf.env['LIB_' + NAME]      = [lib_name]
+    if has_objects:
+        conf.env['LIB_' + NAME] = [lib_name]
 
     conf.run_env.append_unique(lib_path_name, lib_path)
     conf.define(NAME + '_VERSION', version)
