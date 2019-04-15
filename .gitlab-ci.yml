@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - deploy
 
 .build_template: &build_definition
   stage: build
@@ -165,3 +166,16 @@ test:win_rel:
     - win_rel
   tags:
     - windows
+
+
+pages:
+  stage: deploy
+  script: mv build/coverage/ public/
+  dependencies:
+    - test:amd64_dbg
+  artifacts:
+    expire_in: 30 days
+    paths:
+      - public
+  only:
+    - master
