@@ -20,9 +20,7 @@ def configure(conf):
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
 
-    if not autowaf.is_child():
-        autowaf.check_pkg(conf, 'lv2', atleast_version='1.2.1', uselib_store='LV2')
-
+    autowaf.check_pkg(conf, 'lv2', atleast_version='1.2.1', uselib_store='LV2')
     autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
                       atleast_version='1.0.0', mandatory=True)
     autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
@@ -51,19 +49,13 @@ def build(bld):
             target       = '%s/%s' % (bundle, i),
             install_path = '${LV2DIR}/%s' % bundle)
 
-    # Use LV2 headers from parent directory if building as a sub-project
-    includes = ['.']
-    if autowaf.is_child:
-        includes += ['../..']
-
     # Build plugin library
     obj = bld(features     = 'c cshlib',
               source       = 'sampler.c',
               name         = 'sampler',
               target       = '%s/sampler' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              use          = ['M', 'SNDFILE', 'LV2'],
-              includes     = includes)
+              use          = ['M', 'SNDFILE', 'LV2'])
     obj.env.cshlib_PATTERN = module_pat
 
     # Build UI library
@@ -73,6 +65,5 @@ def build(bld):
                   name         = 'sampler_ui',
                   target       = '%s/sampler_ui' % bundle,
                   install_path = '${LV2DIR}/%s' % bundle,
-                  use          = ['GTK2', 'LV2'],
-                  includes     = includes)
+                  use          = ['GTK2', 'LV2'])
     obj.env.cshlib_PATTERN = module_pat

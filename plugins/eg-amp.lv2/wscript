@@ -20,8 +20,7 @@ def configure(conf):
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
 
-    if not autowaf.is_child():
-        autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
+    autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
 
     conf.check(features='c cshlib', lib='m', uselib_store='M', mandatory=False)
 
@@ -47,17 +46,11 @@ def build(bld):
             target       = '%s/%s' % (bundle, i),
             install_path = '${LV2DIR}/%s' % bundle)
 
-    # Use LV2 headers from parent directory if building as a sub-project
-    includes = None
-    if autowaf.is_child:
-        includes = '../..'
-
     # Build plugin library
     obj = bld(features     = 'c cshlib',
               source       = 'amp.c',
               name         = 'amp',
               target       = '%s/amp' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              uselib       = 'M LV2',
-              includes     = includes)
+              uselib       = 'M LV2')
     obj.env.cshlib_PATTERN = module_pat

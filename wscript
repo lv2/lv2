@@ -94,8 +94,6 @@ def configure(conf):
         and not conf.is_defined('HAVE_GCOV')):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
-    autowaf.set_recursive()
-
     if conf.env.BUILD_PLUGINS:
         for i in ['eg-amp.lv2',
                   'eg-fifths.lv2',
@@ -155,7 +153,8 @@ def load_ttl(files, exclude = []):
 
 # Task to build extension index
 def build_index(task):
-    sys.path.append('./lv2specgen')
+    src_dir = task.inputs[0].parent.parent
+    sys.path.append(str(src_dir.find_node('lv2specgen')))
     import rdflib
     import lv2specgen
 
@@ -163,7 +162,7 @@ def build_index(task):
     lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
     rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
-    model = load_ttl(['lv2/core/meta.ttl'])
+    model = load_ttl([str(src_dir.find_node('lv2/core/meta.ttl'))])
 
     # Get date for this version, and list of all LV2 distributions
     proj  = rdflib.URIRef('http://lv2plug.in/ns/lv2')
@@ -286,7 +285,7 @@ def build(bld):
 
     # Build extensions
     for spec in specs:
-        build_spec(bld, spec.srcpath())
+        build_spec(bld, spec.path_from(bld.path))
 
     # Build plugins
     for plugin in bld.env.LV2_BUILD:
@@ -347,25 +346,25 @@ def build(bld):
         index_files = []
         for spec in specs:
             # Call lv2specgen to generate spec docs
-            srcpath      = spec.srcpath()
+            srcpath      = spec.path_from(bld.path)
             basename     = os.path.basename(srcpath)
             full_path    = spec_map[basename]
             name         = 'lv2core' if basename == 'core' else basename
             ttl_name     = name + '.ttl'
-            index_file   = os.path.join('index_rows', name)
-            index_files += [index_file]
+            index_file   = bld.path.get_bld().make_node('index_rows/' + name)
+            index_files += [index_file.path_from(bld.path)]
             root_path    = os.path.relpath('lv2/lv2plug.in/ns', full_path)
             html_path    = '%s/%s.html' % (chop_lv2_prefix(full_path), name)
             out_bundle   = os.path.dirname(html_path)
 
-            cmd = ('../lv2specgen/lv2specgen.py' +
+            cmd = (str(bld.path.find_node('lv2specgen/lv2specgen.py')) +
                    ' --root-uri=http://lv2plug.in/ns/ --root-path=' + root_path +
                    ' --list-email=devel@lists.lv2plug.in'
                    ' --list-page=http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in'
                    ' --style-uri=' + os.path.relpath('aux/style.css', out_bundle) +
                    ' --docdir=' + os.path.relpath('doc/html', os.path.dirname(html_path)) +
-                   ' --tags=doc/tags' +
-                   ' --index=' + index_file +
+                   ' --tags=%s' % bld.path.get_bld().make_node('doc/tags') +
+                   ' --index=' + str(index_file) +
                    (' --online' if bld.env.ONLINE_DOCS else '') +
                    ' ${SRC} ${TGT}')
 
@@ -418,6 +417,7 @@ def build(bld):
         bld(features     = 'c cprogram',
             source       = bld.path.get_bld().make_node('build-test.c'),
             target       = 'build-test',
+            includes     = '.',
             install_path = None)
 
     if bld.env.BUILD_BOOK:

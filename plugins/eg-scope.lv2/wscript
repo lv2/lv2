@@ -20,9 +20,7 @@ def configure(conf):
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
 
-    if not autowaf.is_child():
-        autowaf.check_pkg(conf, 'lv2', atleast_version='1.2.1', uselib_store='LV2')
-
+    autowaf.check_pkg(conf, 'lv2', atleast_version='1.2.1', uselib_store='LV2')
     autowaf.check_pkg(conf, 'cairo', uselib_store='CAIRO',
                       atleast_version='1.8.10', mandatory=True)
     autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
@@ -43,19 +41,13 @@ def build(bld):
             install_path = '${LV2DIR}/%s' % bundle,
             LIB_EXT      = module_ext)
 
-    # Use LV2 headers from parent directory if building as a sub-project
-    includes = ['.']
-    if autowaf.is_child:
-        includes += ['../..']
-
     # Build plugin library
     obj = bld(features     = 'c cshlib',
               source       = 'examploscope.c',
               name         = 'examploscope',
               target       = '%s/examploscope' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              use          = 'LV2',
-              includes     = includes)
+              use          = 'LV2')
     obj.env.cshlib_PATTERN = module_pat
 
     # Build UI library
@@ -65,6 +57,5 @@ def build(bld):
                   name         = 'examploscope_ui',
                   target       = '%s/examploscope_ui' % bundle,
                   install_path = '${LV2DIR}/%s' % bundle,
-                  use          = 'GTK2 CAIRO LV2',
-                  includes     = includes)
+                  use          = 'GTK2 CAIRO LV2')
     obj.env.cshlib_PATTERN = module_pat

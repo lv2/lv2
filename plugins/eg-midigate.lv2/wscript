@@ -20,8 +20,7 @@ def configure(conf):
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
 
-    if not autowaf.is_child():
-        autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
+    autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
 
 def build(bld):
     bundle = 'eg-midigate.lv2'
@@ -45,17 +44,11 @@ def build(bld):
             target       = '%s/%s' % (bundle, i),
             install_path = '${LV2DIR}/%s' % bundle)
 
-    # Use LV2 headers from parent directory if building as a sub-project
-    includes = None
-    if autowaf.is_child:
-        includes = '../..'
-
     # Build plugin library
     obj = bld(features     = 'c cshlib',
               source       = 'midigate.c',
               name         = 'midigate',
               target       = '%s/midigate' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              uselib       = 'LV2',
-              includes     = includes)
+              uselib       = 'LV2')
     obj.env.cshlib_PATTERN = module_pat
