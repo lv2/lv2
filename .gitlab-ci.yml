@@ -17,94 +17,94 @@ stages:
       - build/coverage
 
 
-arm_dbg:
+arm32_dbg:
   <<: *build_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-arm32
   script: python ./waf configure build -dsT
   variables:
     CC: "arm-linux-gnueabihf-gcc"
     CXX: "arm-linux-gnueabihf-g++"
 
-test:arm_dbg:
+test:arm32_dbg:
   <<: *test_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-arm32
   script: python ./waf test --wrapper=qemu-arm
   dependencies:
-    - arm_dbg
+    - arm32_dbg
 
 
-arm_rel:
+arm32_rel:
   <<: *build_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-arm32
   script: python ./waf configure build -sT
   variables:
     CC: "arm-linux-gnueabihf-gcc"
     CXX: "arm-linux-gnueabihf-g++"
 
-test:arm_rel:
+test:arm32_rel:
   <<: *test_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-arm32
   script: python ./waf test --wrapper=qemu-arm
   dependencies:
-    - arm_rel
+    - arm32_rel
 
 
-aarch64_dbg:
+arm64_dbg:
   <<: *build_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-arm64
   script: python ./waf configure build -dsT
   variables:
     CC: "aarch64-linux-gnu-gcc"
     CXX: "aarch64-linux-gnu-g++"
 
-test:aarch64_dbg:
+test:arm64_dbg:
   <<: *test_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-arm64
   script: python ./waf test --wrapper=qemu-aarch64
   dependencies:
-    - aarch64_dbg
+    - arm64_dbg
 
 
-aarch64_rel:
+arm64_rel:
   <<: *build_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-arm64
   script: python ./waf configure build -sT
   variables:
     CC: "aarch64-linux-gnu-gcc"
     CXX: "aarch64-linux-gnu-g++"
 
-test:aarch64_rel:
+test:arm64_rel:
   <<: *test_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-arm64
   script: python ./waf test --wrapper=qemu-aarch64
   dependencies:
-    - aarch64_rel
+    - arm64_rel
 
 
-amd64_dbg:
+x64_dbg:
   <<: *build_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-x64
   script: python ./waf configure build -dsT
 
-test:amd64_dbg:
+test:x64_dbg:
   <<: *test_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-x64
   script: python ./waf test
   dependencies:
-    - amd64_dbg
+    - x64_dbg
 
 
-amd64_rel:
+x64_rel:
   <<: *build_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-x64
   script: python ./waf configure build -sT
 
-test:amd64_rel:
+test:x64_rel:
   <<: *test_definition
-  image: drobilla/debian-stretch
+  image: lv2plugin/debian-x64
   script: python ./waf test
   dependencies:
-    - amd64_rel
+    - x64_rel
 
 
 mac_dbg:
@@ -172,7 +172,7 @@ pages:
   stage: deploy
   script: mv build/coverage/ public/
   dependencies:
-    - test:amd64_dbg
+    - test:x64_dbg
   artifacts:
     expire_in: 30 days
     paths:
