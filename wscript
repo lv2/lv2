@@ -64,7 +64,7 @@ def configure(conf):
     conf.load('autowaf', cache=True)
     autowaf.set_c_lang(conf, 'c99')
 
-    if Options.options.ultra_strict:
+    if Options.options.ultra_strict and not conf.env.MSVC_COMPILER:
         conf.env.append_value('CFLAGS', ['-Wconversion'])
 
     if conf.env.DEST_OS == 'win32' or not hasattr(os.path, 'relpath'):
