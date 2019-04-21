@@ -94,6 +94,9 @@ def configure(conf):
         and not conf.is_defined('HAVE_GCOV')):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
+    autowaf.set_lib_env(conf, 'lv2', VERSION, has_objects=False)
+    autowaf.set_local_lib(conf, 'lv2', has_objects=False)
+
     if conf.env.BUILD_PLUGINS:
         for i in ['eg-amp.lv2',
                   'eg-fifths.lv2',
@@ -108,8 +111,6 @@ def configure(conf):
                 conf.env.LV2_BUILD += [path]
             except Exception as e:
                 Logs.warn('Configuration failed, not building %s (%s)' % (i, e))
-
-    autowaf.set_lib_env(conf, 'lv2', VERSION, has_objects=False)
 
     autowaf.display_summary(
         conf,
@@ -237,6 +238,7 @@ def build_spec(bld, path):
         bld(features     = 'c cprogram',
             source       = test,
             lib          = test_lib,
+            uselib       = 'LV2',
             target       = os.path.splitext(str(test.get_bld()))[0],
             install_path = None,
             cflags       = test_cflags,
@@ -418,6 +420,7 @@ def build(bld):
             source       = bld.path.get_bld().make_node('build-test.c'),
             target       = 'build-test',
             includes     = '.',
+            uselib       = 'LV2',
             install_path = None)
 
     if bld.env.BUILD_BOOK:
