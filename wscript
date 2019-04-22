@@ -446,7 +446,8 @@ def lint(ctx):
 
 def test(tst):
     with tst.group('Unit') as check:
-        for test in tst.path.get_bld().ant_glob('**/*-test'):
+        pattern = tst.env.cprogram_PATTERN % '**/*-test'
+        for test in tst.path.get_bld().ant_glob(pattern):
             check([str(test)])
 
 class Dist(Scripting.Dist):
