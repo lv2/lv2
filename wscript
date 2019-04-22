@@ -446,9 +446,8 @@ def lint(ctx):
 
 def test(tst):
     with tst.group('Unit') as check:
-        for i in tst.path.ant_glob('**/*-test'):
-            test = './' + i.path_from(tst.path.find_node('build'))
-            check([test])
+        for test in tst.path.get_bld().ant_glob('**/*-test'):
+            check([str(test)])
 
 class Dist(Scripting.Dist):
     def execute(self):
