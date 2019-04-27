@@ -400,7 +400,8 @@ def build(bld):
                 if subprocess.call([ctx.env.LINKCHECKER[0], '--no-status', out]):
                     ctx.fatal('Documentation contains broken links')
 
-        bld.add_post_fun(check_links)
+        if bld.cmd == 'build':
+            bld.add_post_fun(check_links)
 
     if bld.env.BUILD_TESTS:
         # Generate a compile test .c file that includes all headers
