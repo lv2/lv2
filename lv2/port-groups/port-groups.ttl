@@ -1,9 +1,9 @@
-@prefix amb:  <http://ambisonics.ch/standards/channels/> .
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix pg:   <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/port-groups>
 	a owl:Ontology ;
@@ -357,53 +357,130 @@ pg:SevenPointOneWideGroup
 		lv2:designation pg:lowFrequencyEffects
 	] .
 
-amb:ACN0
-	a lv2:Channel .
+pg:letterCode
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:InverseFunctionalProperty ;
+	rdfs:domain lv2:Channel ;
+	rdfs:range rdf:PlainLiteral ;
+	rdfs:label "ambisonic letter code" ;
+	rdfs:comment "The YuMa letter code for an Ambisonic channel." .
 
-amb:ACN1
-	a lv2:Channel .
+pg:harmonicDegree
+	a rdf:Property ,
+		owl:DatatypeProperty ;
+	rdfs:domain lv2:Channel ;
+	rdfs:range xsd:integer ;
+	rdfs:label "harmonic degree" ;
+	rdfs:comment """The degree coefficient (l) of the spherical harmonic for
+an Ambisonic channel.
+""" .
 
-amb:ACN2
-	a lv2:Channel .
+pg:harmonicIndex
+	a rdf:Property ,
+		owl:DatatypeProperty ;
+	rdfs:domain lv2:Channel ;
+	rdfs:range xsd:integer ;
+	rdfs:label "harmonic index" ;
+	rdfs:comment """The index coefficient (m) of the spherical harmonic for
+an Ambisonic channel.
+""" .
 
-amb:ACN3
-	a lv2:Channel .
+pg:ACN0
+	a lv2:Channel ;
+	pg:letterCode "W" ;
+	pg:harmonicDegree 0 ;
+	pg:harmonicIndex 0 .
 
-amb:ACN4
-	a lv2:Channel .
+pg:ACN1
+	a lv2:Channel ;
+	pg:letterCode "Y" ;
+	pg:harmonicDegree 1 ;
+	pg:harmonicIndex -1 .
 
-amb:ACN5
-	a lv2:Channel .
+pg:ACN2
+	a lv2:Channel ;
+	pg:letterCode "Z" ;
+	pg:harmonicDegree 1 ;
+	pg:harmonicIndex 0 .
 
-amb:ACN6
-	a lv2:Channel .
+pg:ACN3
+	a lv2:Channel ;
+	pg:letterCode "X" ;
+	pg:harmonicDegree 1 ;
+	pg:harmonicIndex 1 .
 
-amb:ACN7
-	a lv2:Channel .
+pg:ACN4
+	a lv2:Channel ;
+	pg:letterCode "V" ;
+	pg:harmonicDegree 2 ;
+	pg:harmonicIndex -2 .
 
-amb:ACN8
-	a lv2:Channel .
+pg:ACN5
+	a lv2:Channel ;
+	pg:letterCode "T" ;
+	pg:harmonicDegree 2 ;
+	pg:harmonicIndex -1 .
 
-amb:ACN9
-	a lv2:Channel .
+pg:ACN6
+	a lv2:Channel ;
+	pg:letterCode "R" ;
+	pg:harmonicDegree 2 ;
+	pg:harmonicIndex 0 .
 
-amb:ACN10
-	a lv2:Channel .
+pg:ACN7
+	a lv2:Channel ;
+	pg:letterCode "S" ;
+	pg:harmonicDegree 2 ;
+	pg:harmonicIndex 1 .
 
-amb:ACN11
-	a lv2:Channel .
+pg:ACN8
+	a lv2:Channel ;
+	pg:letterCode "U" ;
+	pg:harmonicDegree 2 ;
+	pg:harmonicIndex 2 .
 
-amb:ACN12
-	a lv2:Channel .
+pg:ACN9
+	a lv2:Channel ;
+	pg:letterCode "Q" ;
+	pg:harmonicDegree 3 ;
+	pg:harmonicIndex -3 .
 
-amb:ACN13
-	a lv2:Channel .
+pg:ACN10
+	a lv2:Channel ;
+	pg:letterCode "O" ;
+	pg:harmonicDegree 3 ;
+	pg:harmonicIndex -2 .
 
-amb:ACN14
-	a lv2:Channel .
+pg:ACN11
+	a lv2:Channel ;
+	pg:letterCode "M" ;
+	pg:harmonicDegree 3 ;
+	pg:harmonicIndex -1 .
 
-amb:ACN15
-	a lv2:Channel .
+pg:ACN12
+	a lv2:Channel ;
+	pg:letterCode "K" ;
+	pg:harmonicDegree 3 ;
+	pg:harmonicIndex 0 .
+
+pg:ACN13
+	a lv2:Channel ;
+	pg:letterCode "L" ;
+	pg:harmonicDegree 3 ;
+	pg:harmonicIndex 1 .
+
+pg:ACN14
+	a lv2:Channel ;
+	pg:letterCode "N" ;
+	pg:harmonicDegree 3 ;
+	pg:harmonicIndex 2 .
+
+pg:ACN15
+	a lv2:Channel ;
+	pg:letterCode "P" ;
+	pg:harmonicDegree 3 ;
+	pg:harmonicIndex 3 .
 
 pg:AmbisonicGroup
 	a rdfs:Class ;
@@ -416,13 +493,13 @@ pg:AmbisonicBH1P0Group
 	rdfs:label "Ambisonic B stream of horizontal order 1 and peripheral order 0." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0
+		lv2:designation pg:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1
+		lv2:designation pg:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN3
+		lv2:designation pg:ACN3
 	] .
 
 pg:AmbisonicBH1P1Group
@@ -431,16 +508,16 @@ pg:AmbisonicBH1P1Group
 	rdfs:label "Ambisonic B stream of horizontal order 1 and peripheral order 1." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0
+		lv2:designation pg:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1
+		lv2:designation pg:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2
+		lv2:designation pg:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3
+		lv2:designation pg:ACN3
 	] .
 
 pg:AmbisonicBH2P0Group
@@ -449,19 +526,19 @@ pg:AmbisonicBH2P0Group
 	rdfs:label "Ambisonic B stream of horizontal order 2 and peripheral order 0." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0
+		lv2:designation pg:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1
+		lv2:designation pg:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN3
+		lv2:designation pg:ACN3
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN4
+		lv2:designation pg:ACN4
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN8
+		lv2:designation pg:ACN8
 	] .
 
 pg:AmbisonicBH2P1Group
@@ -470,22 +547,22 @@ pg:AmbisonicBH2P1Group
 	rdfs:label "Ambisonic B stream of horizontal order 2 and peripheral order 1." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0
+		lv2:designation pg:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1
+		lv2:designation pg:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2
+		lv2:designation pg:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3
+		lv2:designation pg:ACN3
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN4
+		lv2:designation pg:ACN4
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN8
+		lv2:designation pg:ACN8
 	] .
 
 pg:AmbisonicBH2P2Group
@@ -494,31 +571,31 @@ pg:AmbisonicBH2P2Group
 	rdfs:label "Ambisonic B stream of horizontal order 2 and peripheral order 2." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0
+		lv2:designation pg:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1
+		lv2:designation pg:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2
+		lv2:designation pg:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3
+		lv2:designation pg:ACN3
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN4
+		lv2:designation pg:ACN4
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN5
+		lv2:designation pg:ACN5
 	] , [
 		lv2:index 6 ;
-		lv2:designation amb:ACN6
+		lv2:designation pg:ACN6
 	] , [
 		lv2:index 7 ;
-		lv2:designation amb:ACN7
+		lv2:designation pg:ACN7
 	] , [
 		lv2:index 8 ;
-		lv2:designation amb:ACN8
+		lv2:designation pg:ACN8
 	] .
 
 pg:AmbisonicBH3P0Group
@@ -527,25 +604,25 @@ pg:AmbisonicBH3P0Group
 	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 0." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0
+		lv2:designation pg:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1
+		lv2:designation pg:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN3
+		lv2:designation pg:ACN3
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN4
+		lv2:designation pg:ACN4
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN8
+		lv2:designation pg:ACN8
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN9
+		lv2:designation pg:ACN9
 	] , [
 		lv2:index 6 ;
-		lv2:designation amb:ACN15
+		lv2:designation pg:ACN15
 	] .
 
 pg:AmbisonicBH3P1Group
@@ -554,28 +631,28 @@ pg:AmbisonicBH3P1Group
 	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 1." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0
+		lv2:designation pg:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1
+		lv2:designation pg:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2
+		lv2:designation pg:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3
+		lv2:designation pg:ACN3
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN4
+		lv2:designation pg:ACN4
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN8
+		lv2:designation pg:ACN8
 	] , [
 		lv2:index 6 ;
-		lv2:designation amb:ACN9
+		lv2:designation pg:ACN9
 	] , [
 		lv2:index 7 ;
-		lv2:designation amb:ACN15
+		lv2:designation pg:ACN15
 	] .
 
 pg:AmbisonicBH3P2Group
@@ -584,37 +661,37 @@ pg:AmbisonicBH3P2Group
 	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 2." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0
+		lv2:designation pg:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1
+		lv2:designation pg:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2
+		lv2:designation pg:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3
+		lv2:designation pg:ACN3
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN4
+		lv2:designation pg:ACN4
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN5
+		lv2:designation pg:ACN5
 	] , [
 		lv2:index 6 ;
-		lv2:designation amb:ACN6
+		lv2:designation pg:ACN6
 	] , [
 		lv2:index 7 ;
-		lv2:designation amb:ACN7
+		lv2:designation pg:ACN7
 	] , [
 		lv2:index 8 ;
-		lv2:designation amb:ACN8
+		lv2:designation pg:ACN8
 	] , [
 		lv2:index 9 ;
-		lv2:designation amb:ACN9
+		lv2:designation pg:ACN9
 	] , [
 		lv2:index 10 ;
-		lv2:designation amb:ACN15
+		lv2:designation pg:ACN15
 	] .
 
 pg:AmbisonicBH3P3Group
@@ -623,50 +700,50 @@ pg:AmbisonicBH3P3Group
 	rdfs:label "Ambisonic B stream of horizontal order 3 and peripheral order 3." ;
 	pg:element [
 		lv2:index 0 ;
-		lv2:designation amb:ACN0
+		lv2:designation pg:ACN0
 	] , [
 		lv2:index 1 ;
-		lv2:designation amb:ACN1
+		lv2:designation pg:ACN1
 	] , [
 		lv2:index 2 ;
-		lv2:designation amb:ACN2
+		lv2:designation pg:ACN2
 	] , [
 		lv2:index 3 ;
-		lv2:designation amb:ACN3
+		lv2:designation pg:ACN3
 	] , [
 		lv2:index 4 ;
-		lv2:designation amb:ACN4
+		lv2:designation pg:ACN4
 	] , [
 		lv2:index 5 ;
-		lv2:designation amb:ACN5
+		lv2:designation pg:ACN5
 	] , [
 		lv2:index 6 ;
-		lv2:designation amb:ACN6
+		lv2:designation pg:ACN6
 	] , [
 		lv2:index 7 ;
-		lv2:designation amb:ACN7
+		lv2:designation pg:ACN7
 	] , [
 		lv2:index 8 ;
-		lv2:designation amb:ACN8
+		lv2:designation pg:ACN8
 	] , [
 		lv2:index 9 ;
-		lv2:designation amb:ACN9
+		lv2:designation pg:ACN9
 	] , [
 		lv2:index 10 ;
-		lv2:designation amb:ACN10
+		lv2:designation pg:ACN10
 	] , [
 		lv2:index 11 ;
-		lv2:designation amb:ACN11
+		lv2:designation pg:ACN11
 	] , [
 		lv2:index 12 ;
-		lv2:designation amb:ACN12
+		lv2:designation pg:ACN12
 	] , [
 		lv2:index 13 ;
-		lv2:designation amb:ACN13
+		lv2:designation pg:ACN13
 	] , [
 		lv2:index 14 ;
-		lv2:designation amb:ACN14
+		lv2:designation pg:ACN14
 	] , [
 		lv2:index 15 ;
-		lv2:designation amb:ACN15
+		lv2:designation pg:ACN15
 	] .
