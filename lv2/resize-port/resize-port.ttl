@@ -44,7 +44,7 @@ asLargeAs several ports, it is asLargeAs the largest such port (not the sum of
 those ports' sizes).</p>
 
 <p>The host guarantees that whenever an ObjectPort's run method is called, any
-output O that is obj:asLargeAs an input I is connected to a buffer large enough
+output O that is asLargeAs an input I is connected to a buffer large enough
 to copy I, or NULL if the port is lv2:connectionOptional.</p>
 """ .
 
