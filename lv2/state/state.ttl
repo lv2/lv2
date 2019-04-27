@@ -44,9 +44,9 @@ single property.  The host is free to implement property storage and retrieval
 in any way.</p>
 
 <p>Since value types are defined by URI, any type is possible.  However, a set
-of standard types is defined by the <a href="../atom/atom.html">LV2 Atom</a>
+of standard types is defined by the <a href="atom.html">LV2 Atom</a>
 extension.  Use of these types is recommended.  Hosts MUST implement at least
-<a href="../atom/atom.html#String">atom:String</a>, which is simply a C
+<a href="atom.html#String">atom:String</a>, which is simply a C
 string.</p>
 
 <h3>Referring to Files</h3>
@@ -55,7 +55,7 @@ string.</p>
 state.  This is done by storing the file's path as a property just like any
 other value.  However, there are some rules which MUST be followed when storing
 paths, see state:mapPath for details.  Plugins MUST use the type <a
-href="../atom/atom.html#Path">atom:Path</a> for all paths in their state.</p>
+href="atom.html#Path">atom:Path</a> for all paths in their state.</p>
 
 <p>Plugins are strongly encouraged to avoid creating files, instead storing all
 state as properties.  However, occasionally the ability to create files is
@@ -204,9 +204,9 @@ plugins.</p>
 <q>Don't stop; set playing to false</q>.</p>
 
 <p>This extension does not define a dynamic mechanism for state access and
-manipulation.  The <a href="../patch/patch.html">LV2 Patch</a> extension
+manipulation.  The <a href="patch.html">LV2 Patch</a> extension
 defines a generic set of messages which can be used to access or manipulate
-properties, and the <a href="../atom/atom.html">LV2 Atom</a> extension defines
+properties, and the <a href="atom.html">LV2 Atom</a> extension defines
 a port type and data container capable of transmitting those messages.</p>
 """ .
 
@@ -355,7 +355,7 @@ state:threadSafeRestore
 is thread-safe and may be called concurrently with audio class functions.</p>
 
 <p>To support this feature, the host MUST pass a <a
-href="../worker/worker.html#schedule">work:schedule</a> feature to the restore
+href="worker.html#schedule">work:schedule</a> feature to the restore
 method, which will be used to complete the state restoration.  The usual
 mechanics of the worker apply: the host will call the plugin's work method,
 which emits a response which is later applied in the audio thread.</p>
@@ -372,7 +372,7 @@ state:Changed
 way that the host can not otherwise know about.</p>
 
 <p>This is a one-way notification, intended to be used as the type of an <a
-href="../atom/atom.html#Object">Object</a> sent from plugins when
+href="atom.html#Object">Object</a> sent from plugins when
 necessary.</p>
 
 <p>Plugins SHOULD emit such an event whenever a change has occurred that would

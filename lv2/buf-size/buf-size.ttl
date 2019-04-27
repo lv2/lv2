@@ -18,7 +18,7 @@ the block length.</p>
 
 <p>This extension defines features and properties but has no special purpose
 API of its own.  The host provides all the relevant information to the plugin
-as <a href="../options/options.html#options">options</a>.</p>
+as <a href="options.html#options">options</a>.</p>
 
 <p>To require restrictions on the block length, plugins can require additional
 features: bufsz:boundedBlockLength, bufsz:powerOf2BlockLength, and

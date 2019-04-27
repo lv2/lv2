@@ -306,32 +306,30 @@ def build(bld):
     bld.install_files('${LV2DIR}/schemas.lv2/',
                       bld.path.ant_glob('schemas.lv2/*.ttl'))
 
+    if bld.env.ONLINE_DOCS:
+        # Generate .htaccess files
+        for d in ('ns', 'ns/ext', 'ns/extensions'):
+            path = os.path.join(str(bld.path.get_bld()), d)
+            bld(features     = 'subst',
+                source       = 'doc/htaccess.in',
+                target       = os.path.join(path, '.htaccess'),
+                install_path = None,
+                BASE         = '/' + d)
+
     if bld.env.DOCS or bld.env.ONLINE_DOCS:
-        # Prepare spec output directories
+        # Copy spec files to build dir
         for spec in specs:
-            # Copy spec files to build dir
             srcpath   = spec.srcpath()
             basename  = os.path.basename(srcpath)
             full_path = spec_map[basename]
             name      = 'lv2core' if basename == 'core' else basename
             path      = chop_lv2_prefix(full_path)
-            base      = full_path[len('lv2/lv2plug.in'):]
-            for f in bld.path.ant_glob(srcpath + '/*.*'):
-                target   = os.path.join(path, os.path.basename(f.srcpath()))
-                bld(features = 'subst',
-                    is_copy  = True,
-                    name     = 'copy',
-                    source   = f,
-                    target   = target)
+            spec_path = os.path.join(path[3:], name + '.ttl')
 
-            # Generate .htaccess file
-            if bld.env.ONLINE_DOCS:
-                bld(features     = 'subst',
-                    source       = 'doc/htaccess.in',
-                    target       = os.path.join(path, '.htaccess'),
-                    install_path = None,
-                    NAME         = name,
-                    BASE         = base)
+            bld(features = 'subst',
+                is_copy  = True,
+                source   = os.path.join(spec.srcpath(), name + '.ttl'),
+                target   = path + '.ttl')
 
         # Copy stylesheets to build directory
         for i in ['style.css', 'pygments.css']:
@@ -355,30 +353,32 @@ def build(bld):
             ttl_name     = name + '.ttl'
             index_file   = bld.path.get_bld().make_node('index_rows/' + name)
             index_files += [index_file.path_from(bld.path)]
-            root_path    = os.path.relpath('lv2/lv2plug.in/ns', full_path)
-            html_path    = '%s/%s.html' % (chop_lv2_prefix(full_path), name)
-            out_bundle   = os.path.dirname(html_path)
+            chopped_path = chop_lv2_prefix(full_path)
+
+            assert chopped_path.startswith('ns/')
+            root_path    = os.path.relpath('/', os.path.dirname(chopped_path[2:]))
+            html_path    = '%s.html' % chopped_path
+            out_dir      = os.path.dirname(html_path)
 
             cmd = (str(bld.path.find_node('lv2specgen/lv2specgen.py')) +
                    ' --root-uri=http://lv2plug.in/ns/ --root-path=' + root_path +
                    ' --list-email=devel@lists.lv2plug.in'
                    ' --list-page=http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in'
-                   ' --style-uri=' + os.path.relpath('aux/style.css', out_bundle) +
-                   ' --docdir=' + os.path.relpath('doc/html', os.path.dirname(html_path)) +
+                   ' --style-uri=' + os.path.relpath('aux/style.css', out_dir) +
+                   ' --docdir=' + os.path.relpath('doc/html', out_dir) +
                    ' --tags=%s' % bld.path.get_bld().make_node('doc/tags') +
                    ' --index=' + str(index_file) +
-                   (' --online' if bld.env.ONLINE_DOCS else '') +
                    ' ${SRC} ${TGT}')
 
             bld(rule   = cmd,
                 source = os.path.join(srcpath, ttl_name),
-                target = [html_path, index_file])
+                target = [html_path, index_file],
+                shell  = False)
 
             # Install documentation
-            if not bld.env.ONLINE_DOCS:
-                base = chop_lv2_prefix(srcpath)
-                bld.install_files(os.path.join('${DOCDIR}', 'lv2', os.path.dirname(html_path)),
-                                  html_path)
+            base = chop_lv2_prefix(srcpath)
+            bld.install_files(os.path.join('${DOCDIR}', 'lv2', os.path.dirname(html_path)),
+                              html_path)
 
         index_files.sort()
         bld.add_group()
@@ -390,9 +390,8 @@ def build(bld):
             target = 'ns/index.html')
 
         # Install main documentation files
-        if not bld.env.ONLINE_DOCS:
-            bld.install_files('${DOCDIR}/lv2/aux/', 'aux/style.css')
-            bld.install_files('${DOCDIR}/lv2/ns/', 'ns/index.html')
+        bld.install_files('${DOCDIR}/lv2/aux/', 'aux/style.css')
+        bld.install_files('${DOCDIR}/lv2/ns/', 'ns/index.html')
 
         def check_links(ctx):
             import subprocess

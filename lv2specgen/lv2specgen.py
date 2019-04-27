@@ -1142,15 +1142,13 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
 
     # Find relative link target
     if root_uri and ext_node.startswith(root_uri):
-        target = ext_node[len(root_uri):]
+        target = ext_node[len(root_uri):] + '.html'
     else:
-        target = os.path.relpath(ext_node, root_path)
+        target = os.path.relpath(ext_node, root_path) + '.html'
 
     stem = os.path.splitext(os.path.basename(target))[0]
 
     # Specification (comment is to act as a sort key)
-    if not options.online_docs:
-        target += '/' + stem + '.html'
     row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
         b, target, name)
 
@@ -1182,7 +1180,6 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
 
     row += '</tr>'
 
-    # index = open(os.path.join(out, 'index_rows', b), 'w')
     index = open(index_path, 'w')
     index.write(row)
     index.close()
@@ -1453,8 +1450,6 @@ if __name__ == "__main__":
                    help='Document instances')
     opt.add_option('--copy-style', action='store_true', dest='copy_style',
                    help='Copy style from template directory to output directory')
-    opt.add_option('--online', action='store_true', dest='online_docs',
-                   help='Generate online documentation')
 
     (options, args) = opt.parse_args()
     opts = vars(options)
@@ -1485,9 +1480,7 @@ if __name__ == "__main__":
     # Root link
     root_path = opts['root_path']
     root_uri  = opts['root_uri']
-    root_link = root_path
-    if not options.online_docs:
-        root_link = os.path.join(root_path, 'index.html')
+    root_link = os.path.join(root_path, 'index.html')
 
     # Generate spec documentation
     specdoc = specgen(
