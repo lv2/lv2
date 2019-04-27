@@ -75,7 +75,7 @@ int lv2_dyn_manifest_open(LV2_Dyn_Manifest_Handle *  handle,
    example, if the plugin library exposes a regular LV2 plugin, it should
    output only a triple like the following:
 
-   <http://www.example.com/plugin/uri> a lv2:Plugin .
+   <http://example.org/plugin> a lv2:Plugin .
 
    The objects that are elegible for exposure are those that would need to be
    represented by a subject node in a static manifest.
@@ -99,11 +99,11 @@ int lv2_dyn_manifest_get_subjects(LV2_Dyn_Manifest_Handle handle,
    The dynamic manifest generator has to fill the resource with data related to
    object represented by the given URI. For example, if the library exposes a
    regular LV2 plugin whose URI, as retrieved by the host using
-   lv2_dyn_manifest_get_subjects() is http://www.example.com/plugin/uri, it
+   lv2_dyn_manifest_get_subjects() is http://example.org/plugin then it
    should output something like:
 
    <pre>
-   <http://www.example.com/plugin/uri>
+   <http://example.org/plugin>
        a lv2:Plugin ;
        doap:name "My Plugin" ;
        lv2:binary <mylib.so> ;
