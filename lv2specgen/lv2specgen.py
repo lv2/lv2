@@ -734,8 +734,8 @@ def getAnchor(uri):
         return getShortName(uri)
 
 
-def buildIndex(m, classlist, proplist, instalist=None, filelist=None, online=False):
-    if not (classlist or proplist or instalist or filelist):
+def buildIndex(m, classlist, proplist, instalist=None):
+    if not (classlist or proplist or instalist):
         return ''
 
     head = ''
@@ -800,15 +800,6 @@ def buildIndex(m, classlist, proplist, instalist=None, filelist=None, online=Fal
             p = getShortName(i)
             anchor = getAnchor(i)
             body += '<li><a href="#%s">%s</a></li>' % (anchor, p)
-        body += '</ul></td>\n'
-
-    if online and filelist and len(filelist) > 0:
-        head += '<th>Files</th>'
-        body += '<td><ul>'
-        for i in sorted(filelist):
-            p = getShortName(i)
-            anchor = getAnchor(i)
-            body += '<li><a href="%s">%s</a></li>' % (i, os.path.basename(i))
         body += '</ul></td>\n'
 
     if head and body:
@@ -1284,20 +1275,7 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
         instalist = sorted(getInstances(m, classlist, proplist),
                            key=lambda x: getShortName(x).lower())
 
-    filelist = []
-    see_also_files = specProperties(m, spec, rdfs.seeAlso)
-    for f in sorted(see_also_files):
-        uri = str(f)
-        if uri[:7] == 'file://':
-            uri = uri[7:]
-            if uri[:len(abs_bundle_path)] == abs_bundle_path:
-                uri = uri[len(abs_bundle_path) + 1:]
-            else:
-                continue  # Skip seeAlso file outside bundle
-
-        filelist += [uri]
-
-    azlist = buildIndex(m, classlist, proplist, instalist, filelist, opts['online_docs'])
+    azlist = buildIndex(m, classlist, proplist, instalist)
 
     # Generate Term HTML
     classlist = docTerms('Class', classlist, m, classlist, proplist, instalist)
