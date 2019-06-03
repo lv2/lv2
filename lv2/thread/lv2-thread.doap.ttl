@@ -7,7 +7,7 @@
 	doap:name "LV2 Thread" ;
 	doap:shortdesc "Facilitate plugin background threads." ;
 	doap:created "2019-05-31" ;
-	doap:developer meta:x42 ;
+	doap:developer <http://lv2plug.in/ns/meta#x42> ;
 #TODO:
 #	doap:release [
 #		doap:revision "1.0" ;

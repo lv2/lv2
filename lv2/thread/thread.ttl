@@ -10,8 +10,7 @@
 
 <http://lv2plug.in/ns/ext/thread>
 	a owl:Ontology ;
-	rdfs:seeAlso <thread.h> ,
-		<lv2-thread.doap.ttl> ;
+	rdfs:seeAlso <thread.h>, <lv2-thread.doap.ttl> ;
 	lv2:documentation """
 <p>This extension defines two instantiation options: thread:schedPolicy and
 thread:schedPriority. Plugins that require custom realtime background
@@ -36,18 +35,16 @@ on all OS.</p>
 """ .
 
 thread:schedPolicy
-	a rdf:Property ,
-		opts:Option ,
-		rdfs:range xsd:nonNegativeInteger;
+	a rdf:Property, opts:Option;
+	rdfs:range xsd:nonNegativeInteger;
 	rdfs:label "Schedule policy" ;
 	lv2:documentation """
 <p>The scheduling policy to use.</p>
 """ .
 
 thread:schedPriority
-	a rdf:Property ,
-		opts:Option ,
-		rdfs:range xsd:nonNegativeInteger;
+	a rdf:Property, opts:Option;
+	rdfs:range xsd:nonNegativeInteger;
 	rdfs:label "Schedule Priority" ;
 	lv2:documentation """
 <p>The scheduling priority to use.</p>
