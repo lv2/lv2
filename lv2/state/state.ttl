@@ -364,6 +364,15 @@ which emits a response which is later applied in the audio thread.</p>
 state, so this feature allows state to be restored without dropouts.</p>
 """ .
 
+state:freePath
+	a lv2:Feature ;
+	rdfs:label "free a file path" ;
+	lv2:documentation """
+<p>This feature provides a function that can be used by plugins to free paths
+that were allocated by the host via other state features (state:mapPath and
+state:makePath).</p>
+""" .
+
 state:Changed
 	a rdfs:Class ;
 	rdfs:label "State changed" ;

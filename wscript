@@ -8,7 +8,7 @@ from waflib.extras import autowaf as autowaf
 
 # Mandatory waf variables
 APPNAME = 'lv2'     # Package name for waf dist
-VERSION = '1.16.2'  # Package version for waf dist
+VERSION = '1.17.0'  # Package version for waf dist
 top     = '.'       # Source directory
 out     = 'build'   # Build directory
 

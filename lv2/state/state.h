@@ -39,6 +39,7 @@
 #define LV2_STATE__State             LV2_STATE_PREFIX "State"              ///< http://lv2plug.in/ns/ext/state#State
 #define LV2_STATE__interface         LV2_STATE_PREFIX "interface"          ///< http://lv2plug.in/ns/ext/state#interface
 #define LV2_STATE__loadDefaultState  LV2_STATE_PREFIX "loadDefaultState"   ///< http://lv2plug.in/ns/ext/state#loadDefaultState
+#define LV2_STATE__freePath          LV2_STATE_PREFIX "freePath"           ///< http://lv2plug.in/ns/ext/state#freePath
 #define LV2_STATE__makePath          LV2_STATE_PREFIX "makePath"           ///< http://lv2plug.in/ns/ext/state#makePath
 #define LV2_STATE__mapPath           LV2_STATE_PREFIX "mapPath"            ///< http://lv2plug.in/ns/ext/state#mapPath
 #define LV2_STATE__state             LV2_STATE_PREFIX "state"              ///< http://lv2plug.in/ns/ext/state#state
@@ -50,6 +51,7 @@ extern "C" {
 #endif
 
 typedef void* LV2_State_Handle;            ///< Opaque handle for state save/restore
+typedef void* LV2_State_Free_Path_Handle;  ///< Opaque handle for state:freePath feature
 typedef void* LV2_State_Map_Path_Handle;   ///< Opaque handle for state:mapPath feature
 typedef void* LV2_State_Make_Path_Handle;  ///< Opaque handle for state:makePath feature
 
@@ -292,8 +294,8 @@ typedef struct {
 	   not necessarily the same original path) using absolute_path().
 
 	   This function may only be called within the context of
-	   LV2_State_Interface methods.  The caller is responsible for freeing the
-	   returned value with free().
+	   LV2_State_Interface methods.  The caller must free the returned value
+	   with LV2_State_Free_Path.free_path().
 	*/
 	char* (*abstract_path)(LV2_State_Map_Path_Handle handle,
 	                       const char*               absolute_path);
@@ -308,8 +310,8 @@ typedef struct {
 	   use any paths loaded from plugin state.
 
 	   This function may only be called within the context of
-	   LV2_State_Interface methods.  The caller is responsible for freeing the
-	   returned value with free().
+	   LV2_State_Interface methods.  The caller must free the returned value
+	   with LV2_State_Free_Path.free_path().
 	*/
 	char* (*absolute_path)(LV2_State_Map_Path_Handle handle,
 	                       const char*               abstract_path);
@@ -345,11 +347,35 @@ typedef struct {
 	   LV2_State_Interface.save(), it may only be called within the dynamic
 	   scope of that function call.
 
-	   The caller is responsible for freeing the returned value with free().
+	   The caller must free the returned value with
+	   LV2_State_Free_Path.free_path().
 	*/
 	char* (*path)(LV2_State_Make_Path_Handle handle,
 	              const char*                path);
 } LV2_State_Make_Path;
+
+/**
+   Feature data for state:freePath (@ref LV2_STATE__freePath).
+*/
+typedef struct {
+	/**
+	   Opaque host data.
+	*/
+	LV2_State_Free_Path_Handle handle;
+
+	/**
+	   Free a path returned by a state feature.
+
+	   @param handle MUST be the `handle` member of this struct.
+	   @param path The path previously returned by a state feature.
+
+	   This function can be used by plugins to free paths allocated by the host
+	   and returned by state features (LV2_State_Map_Path.abstract_path(),
+	   LV2_State_Map_Path.absolute_path(), and LV2_State_Make_Path.path()).
+	*/
+	void (*free_path)(LV2_State_Free_Path_Handle handle,
+	                  char*                      path);
+} LV2_State_Free_Path;
 
 #ifdef __cplusplus
 } /* extern "C" */
