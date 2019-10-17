@@ -20,11 +20,9 @@ def configure(conf):
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
 
-    autowaf.check_pkg(conf, 'lv2', atleast_version='1.2.1', uselib_store='LV2')
-    autowaf.check_pkg(conf, 'sndfile', uselib_store='SNDFILE',
-                      atleast_version='1.0.0', mandatory=True)
-    autowaf.check_pkg(conf, 'gtk+-2.0', uselib_store='GTK2',
-                      atleast_version='2.18.0', mandatory=False)
+    conf.check_pkg('lv2 >= 1.2.1', uselib_store='LV2')
+    conf.check_pkg('sndfile >= 1.0.0', uselib_store='SNDFILE')
+    conf.check_pkg('gtk+-2.0 >= 2.18.0', uselib_store='GTK2', mandatory=False)
     conf.check(features='c cshlib', lib='m', uselib_store='M', mandatory=False)
 
 def build(bld):

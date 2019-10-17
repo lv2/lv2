@@ -20,7 +20,7 @@ def configure(conf):
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
 
-    autowaf.check_pkg(conf, 'lv2', uselib_store='LV2')
+    conf.check_pkg('lv2', uselib_store='LV2')
 
 def build(bld):
     bundle = 'eg-midigate.lv2'

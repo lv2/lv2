@@ -20,7 +20,7 @@ def configure(conf):
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
 
-    autowaf.check_pkg(conf, 'lv2', atleast_version='0.2.0', uselib_store='LV2')
+    conf.check_pkg('lv2 >= 0.2.0', uselib_store='LV2')
 
     conf.check(features='c cshlib', lib='m', uselib_store='M', mandatory=False)
 
