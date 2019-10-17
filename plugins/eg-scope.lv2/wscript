@@ -22,7 +22,10 @@ def configure(conf):
 
     conf.check_pkg('lv2 >= 1.2.1', uselib_store='LV2')
     conf.check_pkg('cairo >= 1.8.10', uselib_store='CAIRO')
-    conf.check_pkg('gtk+-2.0 >= 2.18.0', uselib_store='GTK2', mandatory=False)
+    conf.check_pkg('gtk+-2.0 >= 2.18.0',
+                   uselib_store='GTK2',
+                   system=True,
+                   mandatory=False)
 
 def build(bld):
     bundle = 'eg-scope.lv2'

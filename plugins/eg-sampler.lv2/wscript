@@ -22,7 +22,10 @@ def configure(conf):
 
     conf.check_pkg('lv2 >= 1.2.1', uselib_store='LV2')
     conf.check_pkg('sndfile >= 1.0.0', uselib_store='SNDFILE')
-    conf.check_pkg('gtk+-2.0 >= 2.18.0', uselib_store='GTK2', mandatory=False)
+    conf.check_pkg('gtk+-2.0 >= 2.18.0',
+                   uselib_store='GTK2',
+                   system=True,
+                   mandatory=False)
     conf.check(features='c cshlib', lib='m', uselib_store='M', mandatory=False)
 
 def build(bld):
