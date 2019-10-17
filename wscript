@@ -230,9 +230,11 @@ def build_spec(bld, path):
         test_cflags    = ['']
         test_linkflags = ['']
         if bld.is_defined('HAVE_GCOV'):
-            test_lib       += ['gcov', 'rt']
+            test_lib       += ['gcov']
             test_cflags    += ['--coverage']
             test_linkflags += ['--coverage']
+            if bld.env.DEST_OS not in ['darwin', 'win32']:
+                test_lib += ['rt']
 
         # Unit test program
         bld(features     = 'c cprogram',
