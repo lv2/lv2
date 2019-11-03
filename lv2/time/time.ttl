@@ -90,6 +90,7 @@ time:beatUnit
 		owl:FunctionalProperty ;
 	rdfs:domain time:Rate ;
 	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:label "beat unit" ;
 	lv2:documentation """
 <p>Beat unit, the note value that counts as one beat.  This is the bottom number
 in a time signature: 2 for half note, 4 for quarter note, and so on.</p>
