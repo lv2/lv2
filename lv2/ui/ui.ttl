@@ -178,6 +178,46 @@ The data pointer for the LV2_Feature for this feature should always be set
 to NULL.</p>
 """ .
 
+ui:scaleFactor
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		opts:Option ;
+	rdfs:range xsd:float ;
+	rdfs:label "UI scale factor" ;
+	lv2:documentation """
+<p>Suggested GUI scale factor (default 1.0). This can provide for a
+consistent user-experience on HiDPI displays. The host can inform
+the plugin about its current zoom/scale factor.</p>
+""" .
+
+ui:backgroundColor
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		opts:Option ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:label "RGBA background color from host's theme" ;
+	lv2:documentation """
+<p>This allos a host to inform plugin UIs about the currently used
+color-theme. It allows UIs with round-corners or rackmount ears to integrate
+nicely with a host-window around it.
+Along wiht ui:foregroundColor this also allows plugin UIs to match the
+host's look/feel.
+</p>
+""" .
+
+ui:foregroundColor
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		opts:Option ;
+	rdfs:range xsd:nonNegativeInteger ;
+	rdfs:label "RGBA foreground color from host's theme" ;
+	lv2:documentation """
+<p>This allos a host to inform plugin UIs about the currently used
+color-theme. Along wiht ui:backgroundColor this allows plugin UIs to match the
+host's look/feel.
+</p>
+""" .
+
 ui:parent
 	a lv2:Feature ;
 	lv2:documentation """

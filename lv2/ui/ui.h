@@ -66,6 +66,9 @@
 #define LV2_UI__ui               LV2_UI_PREFIX "ui"                ///< http://lv2plug.in/ns/extensions/ui#ui
 #define LV2_UI__updateRate       LV2_UI_PREFIX "updateRate"        ///< http://lv2plug.in/ns/extensions/ui#updateRate
 #define LV2_UI__windowTitle      LV2_UI_PREFIX "windowTitle"       ///< http://lv2plug.in/ns/extensions/ui#windowTitle
+#define LV2_UI__scaleFactor      LV2_UI_PREFIX "scaleFactor"       ///< http://lv2plug.in/ns/extensions/ui#scaleFactor
+#define LV2_UI__foregroundColor  LV2_UI_PREFIX "foregroundColor"   ///< http://lv2plug.in/ns/extensions/ui#foregroundColor
+#define LV2_UI__backgroundColor  LV2_UI_PREFIX "backgroundColor"   ///< http://lv2plug.in/ns/extensions/ui#backgroundColor
 
 /**
    The index returned by LV2UI_Port_Map::port_index() for unknown ports.
