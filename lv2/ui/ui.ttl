@@ -1,4 +1,5 @@
 @prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix opts: <http://lv2plug.in/ns/ext/options#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -177,6 +178,52 @@ the main widget on its own - it will always remain the same size (e.g. a
 pixmap based GUI). This feature may not make sense for all UI types.
 The data pointer for the LV2_Feature for this feature should always be set
 to NULL.</p>
+""" .
+
+ui:scaleFactor
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		opts:Option ;
+	rdfs:range xsd:float ;
+	rdfs:label "UI scale factor" ;
+	lv2:documentation """
+<p>HiDPI (High Dots Per Inch) displays have a high resolution on a relatively
+small form factor.  Many systems use a scale factor to compensate for this, so
+for example, a scale factor of 2 means things are drawn twice as large as
+normal.</p>
+
+<p>Hosts can pass this as an option to UIs to communicate this information, so
+that the UI can draw at an appropriate scale.</p>
+""" .
+
+ui:backgroundColor
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		opts:Option ;
+	rdfs:label "Background color" ;
+	lv2:documentation """
+<p>The background color of the host's UI.  The host can pass this as an option
+so that UIs can integrate nicely with the host window around it.</p>
+
+<p>Hosts should pass this as an option to UIs with an integer RGBA32 color
+value.  If the value is a 32-bit integer, it is guaranteed to be in RGBA32
+format, but the UI must check the value type and not assume this, to allow for
+other types of color in the future.</p>
+""" .
+
+ui:foregroundColor
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		opts:Option ;
+	rdfs:label "Foreground color" ;
+	lv2:documentation """
+<p>The foreground color of the host's UI.  The host can pass this as an option
+so that UIs can integrate nicely with the host window around it.</p>
+
+<p>Hosts should pass this as an option to UIs with an integer RGBA32 color
+value.  If the value is a 32-bit integer, it is guaranteed to be in RGBA32
+format, but the UI must check the value type and not assume this, to allow for
+other types of color in the future.</p>
 """ .
 
 ui:parent
