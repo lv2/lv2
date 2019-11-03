@@ -185,9 +185,15 @@ ui:scaleFactor
 	rdfs:range xsd:float ;
 	rdfs:label "UI scale factor" ;
 	lv2:documentation """
-<p>Suggested GUI scale factor (default 1.0). This can provide for a
-consistent user-experience on HiDPI displays. The host can inform
-the plugin about its current zoom/scale factor.</p>
+<p>Suggested GUI scale factor (default 1.0).</p>
+<p>HiDPI (High Dots Per Inch) or 'Retina' displays have a high resolution
+on a relatively small form factor. Since there is a wide variety of screen-sizes
+and DPI ranges. It is common that authoring tools allow a user to pick a
+custom-scale factor appropriate for the task at hand.</p>
+<p>This option can provide for a consistent user-experience on HiDPI displays.
+The host can inform the plugin about its current zoom/scale factor.</p>
+<p>Normal 1.0 (100%) should be relative to standard FHD (1920x1080) 17" displays
+(around 130dpi)</p>
 """ .
 
 ui:backgroundColor
@@ -197,12 +203,11 @@ ui:backgroundColor
 	rdfs:range xsd:nonNegativeInteger ;
 	rdfs:label "RGBA background color from host's theme" ;
 	lv2:documentation """
-<p>This allos a host to inform plugin UIs about the currently used
+<p>This allows a host to inform plugin UIs about the currently used
 color-theme. It allows UIs with round-corners or rackmount ears to integrate
 nicely with a host-window around it.
 Along wiht ui:foregroundColor this also allows plugin UIs to match the
-host's look/feel.
-</p>
+host's look/feel.</p>
 """ .
 
 ui:foregroundColor
@@ -212,10 +217,9 @@ ui:foregroundColor
 	rdfs:range xsd:nonNegativeInteger ;
 	rdfs:label "RGBA foreground color from host's theme" ;
 	lv2:documentation """
-<p>This allos a host to inform plugin UIs about the currently used
+<p>This allows a host to inform plugin UIs about the currently used
 color-theme. Along wiht ui:backgroundColor this allows plugin UIs to match the
-host's look/feel.
-</p>
+host's look/feel.</p>
 """ .
 
 ui:parent
