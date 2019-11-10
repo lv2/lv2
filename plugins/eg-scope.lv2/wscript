@@ -30,33 +30,27 @@ def configure(conf):
 def build(bld):
     bundle = 'eg-scope.lv2'
 
-    # Make a pattern for shared objects without the 'lib' prefix
-    module_pat = re.sub('^lib', '', bld.env.cshlib_PATTERN)
-    module_ext = module_pat[module_pat.rfind('.'):]
-
     # Build manifest.ttl by substitution (for portable lib extension)
     for i in ['manifest.ttl', 'examploscope.ttl']:
         bld(features     = 'subst',
             source       = i + '.in',
-            target       = '%s/%s' % (bundle, i),
+            target       = 'lv2/%s/%s' % (bundle, i),
             install_path = '${LV2DIR}/%s' % bundle,
-            LIB_EXT      = module_ext)
+            LIB_EXT      = bld.env.LV2_LIB_EXT)
 
     # Build plugin library
-    obj = bld(features     = 'c cshlib',
+    obj = bld(features     = 'c cshlib lv2lib',
               source       = 'examploscope.c',
               name         = 'examploscope',
-              target       = '%s/examploscope' % bundle,
+              target       = 'lv2/%s/examploscope' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
               use          = 'LV2')
-    obj.env.cshlib_PATTERN = module_pat
 
     # Build UI library
     if bld.env.HAVE_GTK2:
-        obj = bld(features     = 'c cshlib',
+        obj = bld(features     = 'c cshlib lv2lib',
                   source       = 'examploscope_ui.c',
                   name         = 'examploscope_ui',
-                  target       = '%s/examploscope_ui' % bundle,
+                  target       = 'lv2/%s/examploscope_ui' % bundle,
                   install_path = '${LV2DIR}/%s' % bundle,
                   use          = 'GTK2 CAIRO LV2')
-    obj.env.cshlib_PATTERN = module_pat

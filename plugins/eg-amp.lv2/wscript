@@ -27,30 +27,25 @@ def configure(conf):
 def build(bld):
     bundle = 'eg-amp.lv2'
 
-    # Make a pattern for shared objects without the 'lib' prefix
-    module_pat = re.sub('^lib', '', bld.env.cshlib_PATTERN)
-    module_ext = module_pat[module_pat.rfind('.'):]
-
     # Build manifest.ttl by substitution (for portable lib extension)
     bld(features     = 'subst',
         source       = 'manifest.ttl.in',
-        target       = '%s/%s' % (bundle, 'manifest.ttl'),
+        target       = 'lv2/%s/%s' % (bundle, 'manifest.ttl'),
         install_path = '${LV2DIR}/%s' % bundle,
-        LIB_EXT      = module_ext)
+        LIB_EXT      = bld.env.LV2_LIB_EXT)
 
     # Copy other data files to build bundle (build/eg-amp.lv2)
     for i in ['amp.ttl']:
         bld(features     = 'subst',
             is_copy      = True,
             source       = i,
-            target       = '%s/%s' % (bundle, i),
+            target       = 'lv2/%s/%s' % (bundle, i),
             install_path = '${LV2DIR}/%s' % bundle)
 
     # Build plugin library
-    obj = bld(features     = 'c cshlib',
+    obj = bld(features     = 'c cshlib lv2lib',
               source       = 'amp.c',
               name         = 'amp',
-              target       = '%s/amp' % bundle,
+              target       = 'lv2/%s/amp' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
               uselib       = 'M LV2')
-    obj.env.cshlib_PATTERN = module_pat

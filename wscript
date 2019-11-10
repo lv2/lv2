@@ -97,6 +97,9 @@ def configure(conf):
     autowaf.set_lib_env(conf, 'lv2', VERSION, has_objects=False)
     autowaf.set_local_lib(conf, 'lv2', has_objects=False)
 
+    conf.run_env.append_unique('LV2_PATH',
+                               [os.path.join(conf.path.abspath(), 'lv2')])
+
     if conf.env.BUILD_PLUGINS:
         for i in ['eg-amp.lv2',
                   'eg-fifths.lv2',
@@ -109,6 +112,8 @@ def configure(conf):
                 path = os.path.join('plugins', i)
                 conf.recurse(path)
                 conf.env.LV2_BUILD += [path]
+                conf.run_env.append_unique(
+                    'LV2_PATH', [conf.build_path('plugins/%s/lv2' % i)])
             except Exception as e:
                 Logs.warn('Configuration failed, not building %s (%s)' % (i, e))
 
