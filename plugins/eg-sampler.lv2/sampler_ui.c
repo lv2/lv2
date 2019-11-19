@@ -62,6 +62,7 @@ typedef struct {
 	GtkWidget* button_box;
 	GtkWidget* canvas;
 	GtkWidget* window;  /* For optional show interface. */
+	bool       window_init;
 
 	uint32_t width;
 	uint32_t requested_n_peaks;
@@ -198,6 +199,16 @@ on_canvas_expose(GtkWidget* widget, GdkEventExpose* event, gpointer data)
 	return TRUE;
 }
 
+gboolean
+on_window_closed(GtkWidget* widget, GdkEvent* event, gpointer data)
+{
+	SamplerUI* ui = (SamplerUI*)data;
+	/* Remove widget so Gtk doesn't delete it when window close button pressed */
+    gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
+	ui->window = NULL;
+    return FALSE;
+}
+
 static LV2UI_Handle
 instantiate(const LV2UI_Descriptor*   descriptor,
             const char*               plugin_uri,
@@ -212,10 +223,12 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 		return NULL;
 	}
 
-	ui->write      = write_function;
-	ui->controller = controller;
-	ui->width      = MIN_CANVAS_W;
-	*widget        = NULL;
+	ui->write       = write_function;
+	ui->controller  = controller;
+	ui->width       = MIN_CANVAS_W;
+	*widget         = NULL;
+	ui->window      = NULL;
+	ui->window_init = false;
 
 	// Get host features
 	const char* missing = lv2_features_query(
@@ -330,13 +343,23 @@ ui_show(LV2UI_Handle handle)
 {
 	SamplerUI* ui = (SamplerUI*)handle;
 
-	int argc = 0;
-	gtk_init(&argc, NULL);
+	if (ui->window == NULL) {
+		if (!ui->window_init) {
+			int argc = 0;
+			gtk_init_check(&argc, NULL);
+			g_object_ref(ui->box);
+			ui->window_init = true;
+		}
 
-	ui->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_container_add(GTK_CONTAINER(ui->window), ui->box);
-	gtk_widget_show_all(ui->window);
-	gtk_window_present(GTK_WINDOW(ui->window));
+		ui->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+		gtk_container_add(GTK_CONTAINER(ui->window), ui->box);
+		
+    	g_signal_connect(G_OBJECT(ui->window), 
+        	"delete-event", G_CALLBACK(on_window_closed), handle);
+
+		gtk_widget_show_all(ui->window);
+		gtk_window_present(GTK_WINDOW(ui->window));
+	}
 
 	return 0;
 }
@@ -345,6 +368,14 @@ ui_show(LV2UI_Handle handle)
 static int
 ui_hide(LV2UI_Handle handle)
 {
+	SamplerUI* ui = (SamplerUI*)handle;
+
+	if (ui->window != NULL) {
+		gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
+		gtk_widget_destroy(ui->window);
+		ui->window = NULL;
+	}
+
 	return 0;
 }
 
@@ -354,7 +385,7 @@ ui_idle(LV2UI_Handle handle)
 {
 	SamplerUI* ui = (SamplerUI*)handle;
 	if (ui->window) {
-		gtk_main_iteration();
+		gtk_main_iteration_do(false);
 	}
 	return 0;
 }
