@@ -199,14 +199,23 @@ on_canvas_expose(GtkWidget* widget, GdkEventExpose* event, gpointer data)
 	return TRUE;
 }
 
+static void
+hide_window(SamplerUI* ui) {
+	if (ui->window != NULL) {
+		gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
+		gtk_widget_destroy(ui->window);
+		ui->window = NULL;
+	}
+}
+
 gboolean
 on_window_closed(GtkWidget* widget, GdkEvent* event, gpointer data)
 {
 	SamplerUI* ui = (SamplerUI*)data;
 	/* Remove widget so Gtk doesn't delete it when window close button pressed */
-    gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
+	gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
 	ui->window = NULL;
-    return FALSE;
+	return FALSE;
 }
 
 static LV2UI_Handle
@@ -291,11 +300,14 @@ static void
 cleanup(LV2UI_Handle handle)
 {
 	SamplerUI* ui = (SamplerUI*)handle;
-	gtk_widget_destroy(ui->box);
-	gtk_widget_destroy(ui->play_button);
+	if (ui->window) {
+		hide_window(ui);
+	}
 	gtk_widget_destroy(ui->canvas);
-	gtk_widget_destroy(ui->button_box);
+	gtk_widget_destroy(ui->play_button);
 	gtk_widget_destroy(ui->file_button);
+	gtk_widget_destroy(ui->button_box);
+	gtk_widget_destroy(ui->box);
 	free(ui);
 }
 
@@ -353,9 +365,9 @@ ui_show(LV2UI_Handle handle)
 
 		ui->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 		gtk_container_add(GTK_CONTAINER(ui->window), ui->box);
-		
-    	g_signal_connect(G_OBJECT(ui->window), 
-        	"delete-event", G_CALLBACK(on_window_closed), handle);
+
+		g_signal_connect(G_OBJECT(ui->window), 
+			"delete-event", G_CALLBACK(on_window_closed), handle);
 
 		gtk_widget_show_all(ui->window);
 		gtk_window_present(GTK_WINDOW(ui->window));
@@ -369,13 +381,9 @@ static int
 ui_hide(LV2UI_Handle handle)
 {
 	SamplerUI* ui = (SamplerUI*)handle;
-
-	if (ui->window != NULL) {
-		gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
-		gtk_widget_destroy(ui->window);
-		ui->window = NULL;
+	if (ui->window) {
+		hide_window(ui);
 	}
-
 	return 0;
 }
 
