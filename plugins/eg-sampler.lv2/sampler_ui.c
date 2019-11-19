@@ -214,6 +214,16 @@ on_canvas_expose(GtkWidget* widget, GdkEventExpose* event, gpointer data)
 	return TRUE;
 }
 
+static void
+destroy_window(SamplerUI* ui)
+{
+	if (ui->window) {
+		gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
+		gtk_widget_destroy(ui->window);
+		ui->window = NULL;
+	}
+}
+
 static gboolean
 on_window_closed(GtkWidget* widget, GdkEvent* event, gpointer data)
 {
@@ -314,12 +324,17 @@ static void
 cleanup(LV2UI_Handle handle)
 {
 	SamplerUI* ui = (SamplerUI*)handle;
-	gtk_widget_destroy(ui->box);
-	gtk_widget_destroy(ui->play_button);
+
+	if (ui->window) {
+		destroy_window(ui);
+	}
+
 	gtk_widget_destroy(ui->canvas);
-	gtk_widget_destroy(ui->button_box);
+	gtk_widget_destroy(ui->play_button);
 	gtk_widget_destroy(ui->file_button);
 	gtk_widget_destroy(ui->request_file_button);
+	gtk_widget_destroy(ui->button_box);
+	gtk_widget_destroy(ui->box);
 	free(ui);
 }
 
@@ -399,9 +414,7 @@ ui_hide(LV2UI_Handle handle)
 	SamplerUI* ui = (SamplerUI*)handle;
 
 	if (ui->window) {
-		gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
-		gtk_widget_destroy(ui->window);
-		ui->window = NULL;
+		destroy_window(ui);
 	}
 
 	return 0;
