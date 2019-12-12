@@ -1,0 +1,51 @@
+@prefix doap:   <http://usefulinc.com/ns/doap#> .
+@prefix foaf:   <http://xmlns.com/foaf/0.1/> .
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+@prefix opts:   <http://lv2plug.in/ns/ext/options#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix thread: <http://lv2plug.in/ns/ext/thread#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+<http://lv2plug.in/ns/ext/thread>
+	a owl:Ontology ;
+	rdfs:seeAlso <thread.h>, <lv2-thread.doap.ttl> ;
+	lv2:documentation """
+<p>This extension defines two instantiation options: thread:schedPolicy and
+thread:schedPriority. Plugins that require custom realtime background
+threads should call <code>pthread_setschedparam()</code> with the given
+parameters.</p>
+
+<p>This allows which require background threads to set-up correct realtime
+schedule priorities for those threads, that will not interfere with host
+scheduling.<p>
+
+<p>Hosts should pass values appropriate to not interfere with their
+internal processing. e.g. jack hosts should use
+<code>jack_client_real_time_priority</code> when JACK runs with
+realtime scheduling.<p>
+
+<p>This extension is intended to be used with pthread on Unix systems
+and potentially pthread-w32 on Windows. MacOS plugins that use mach-
+threads can combine <code>pthread_mach_thread_np</code> with time-
+constraints passed via the bufsiz extension when calling
+<code>thread_policy_set</code. The sched policy is applicable as-is
+on all OS.</p>
+""" .
+
+thread:schedPolicy
+	a rdf:Property, opts:Option;
+	rdfs:range xsd:nonNegativeInteger;
+	rdfs:label "Schedule policy" ;
+	lv2:documentation """
+<p>The scheduling policy to use.</p>
+""" .
+
+thread:schedPriority
+	a rdf:Property, opts:Option;
+	rdfs:range xsd:nonNegativeInteger;
+	rdfs:label "Schedule Priority" ;
+	lv2:documentation """
+<p>The scheduling priority to use.</p>
+""" .

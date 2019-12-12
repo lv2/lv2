@@ -218,6 +218,11 @@ meta:paniq
 	foaf:name "Leonard Ritter" ;
 	foaf:mbox <mailto:paniq@paniq.org> .
 
+meta:x42
+	a foaf:Person ;
+	foaf:name "Robin Gareus" ;
+	foaf:mbox <mailto:robin@gareus.org> .
+
 meta:harry
 	a foaf:Person ;
 	foaf:name "Harry van Haaren" ;

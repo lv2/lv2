@@ -1,0 +1,23 @@
+@prefix dcs: <http://ontologi.es/doap-changeset#> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<http://lv2plug.in/ns/ext/thread>
+	a doap:Project ;
+	doap:name "LV2 Thread" ;
+	doap:shortdesc "Facilitate plugin background threads." ;
+	doap:created "2019-05-31" ;
+	doap:developer <http://lv2plug.in/ns/meta#x42> ;
+#TODO:
+#	doap:release [
+#		doap:revision "1.0" ;
+#		doap:created "2019-05-31" ;
+#		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
+#		dcs:blame <http://drobilla.net/drobilla#me> ;
+#		dcs:changeset [
+#			dcs:item [
+#				rdfs:label "Initial release."
+#			]
+#		]
+#	]
+	.
