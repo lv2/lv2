@@ -125,25 +125,25 @@ test:mac_rel:
 win_dbg:
   <<: *build_definition
   script: python ./waf configure build -dT --no-coverage
-  tags: [windows]
+  tags: [windows,msvc,python]
 
 test:win_dbg:
   <<: *test_definition
   script: python ./waf test
   dependencies: [win_dbg]
-  tags: [windows]
+  tags: [windows,msvc,python]
 
 
 win_rel:
   <<: *build_definition
   script: python ./waf configure build -T --no-coverage
-  tags: [windows]
+  tags: [windows,msvc,python]
 
 test:win_rel:
   <<: *test_definition
   script: python ./waf test
   dependencies: [win_rel]
-  tags: [windows]
+  tags: [windows,msvc,python]
 
 
 pages:
