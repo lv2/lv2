@@ -26,7 +26,7 @@ test:arm32_dbg:
   <<: *test_definition
   image: lv2plugin/debian-arm32
   script: python ./waf test --wrapper=qemu-arm
-  dependencies: [arm32_dbg]
+  needs: [arm32_dbg]
 
 
 arm32_rel:
@@ -41,7 +41,7 @@ test:arm32_rel:
   <<: *test_definition
   image: lv2plugin/debian-arm32
   script: python ./waf test --wrapper=qemu-arm
-  dependencies: [arm32_rel]
+  needs: [arm32_rel]
 
 
 arm64_dbg:
@@ -56,7 +56,7 @@ test:arm64_dbg:
   <<: *test_definition
   image: lv2plugin/debian-arm64
   script: python ./waf test --wrapper=qemu-aarch64
-  dependencies: [arm64_dbg]
+  needs: [arm64_dbg]
 
 
 arm64_rel:
@@ -71,7 +71,7 @@ test:arm64_rel:
   <<: *test_definition
   image: lv2plugin/debian-arm64
   script: python ./waf test --wrapper=qemu-aarch64
-  dependencies: [arm64_rel]
+  needs: [arm64_rel]
 
 
 x64_dbg:
@@ -83,7 +83,7 @@ test:x64_dbg:
   <<: *test_definition
   image: lv2plugin/debian-x64
   script: python ./waf test
-  dependencies: [x64_dbg]
+  needs: [x64_dbg]
 
 
 x64_rel:
@@ -95,7 +95,7 @@ test:x64_rel:
   <<: *test_definition
   image: lv2plugin/debian-x64
   script: python ./waf test
-  dependencies: [x64_rel]
+  needs: [x64_rel]
 
 
 mac_dbg:
@@ -106,7 +106,7 @@ mac_dbg:
 test:mac_dbg:
   <<: *test_definition
   script: python ./waf test
-  dependencies: [mac_dbg]
+  needs: [mac_dbg]
   tags: [macos]
 
 
@@ -118,7 +118,7 @@ mac_rel:
 test:mac_rel:
   <<: *test_definition
   script: python ./waf test
-  dependencies: [mac_rel]
+  needs: [mac_rel]
   tags: [macos]
 
 
@@ -130,7 +130,7 @@ win_dbg:
 test:win_dbg:
   <<: *test_definition
   script: python ./waf test
-  dependencies: [win_dbg]
+  needs: [win_dbg]
   tags: [windows,msvc,python]
 
 
@@ -142,14 +142,14 @@ win_rel:
 test:win_rel:
   <<: *test_definition
   script: python ./waf test
-  dependencies: [win_rel]
+  needs: [win_rel]
   tags: [windows,msvc,python]
 
 
 pages:
   stage: deploy
   script: mv build/coverage/ public/
-  dependencies: [test:x64_dbg]
+  needs: ["test:x64_dbg"]
   artifacts:
     expire_in: 30 days
     paths: [public]
