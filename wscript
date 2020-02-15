@@ -168,7 +168,8 @@ def build_index(task):
     lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
     rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
-    model = load_ttl([str(src_dir.find_node('lv2/core/meta.ttl'))])
+    model = load_ttl([str(src_dir.find_node('lv2/core/meta.ttl')),
+                      str(src_dir.find_node('lv2/core/people.ttl'))])
 
     # Get date for this version, and list of all LV2 distributions
     proj  = rdflib.URIRef('http://lv2plug.in/ns/lv2')
@@ -474,7 +475,8 @@ def posts(ctx):
                                        dev_dist = dev_dist)
 
     entries = autowaf.get_rdf_news('lv2',
-                                   ['lv2/core/meta.ttl'],
+                                   ['lv2/core/meta.ttl',
+                                    'lv2/core/people.ttl'],
                                    None,
                                    top_entries,
                                    dev_dist = dev_dist)
@@ -498,7 +500,8 @@ def dist(ctx):
 
     # Write top level amalgamated NEWS file
     entries = autowaf.get_rdf_news('lv2',
-                                   ['lv2/core/meta.ttl'],
+                                   ['lv2/core/meta.ttl',
+                                    'lv2/core/people.ttl'],
                                    None,
                                    top_entries,
                                    dev_dist = dev_dist)

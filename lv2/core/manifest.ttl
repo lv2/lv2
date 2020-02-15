@@ -10,4 +10,5 @@
 
 <http://lv2plug.in/ns/lv2>
 	a doap:Project ;
-	rdfs:seeAlso <meta.ttl> .
+	rdfs:seeAlso <meta.ttl> ;
+	rdfs:seeAlso <people.ttl> .
