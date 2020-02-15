@@ -1,13 +1,14 @@
 @prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
 @prefix doap:  <http://usefulinc.com/ns/doap#> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
 @prefix patch: <http://lv2plug.in/ns/ext/patch#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix state: <http://lv2plug.in/ns/ext/state#> .
 @prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
 @prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
 @prefix work:  <http://lv2plug.in/ns/ext/worker#> .
-@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/plugins/eg-sampler#sample>
 	a lv2:Parameter ;
@@ -57,7 +58,7 @@
 	] ;
 	state:state [
 		<http://lv2plug.in/plugins/eg-sampler#sample> <click.wav> ;
-		param:gain 1.0
+		param:gain "1.0"^^xsd:float
 	] .
 
 <http://lv2plug.in/plugins/eg-sampler#ui>

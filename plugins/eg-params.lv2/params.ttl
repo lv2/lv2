@@ -116,11 +116,11 @@ plug:spring
 	state:state [
 		plug:int 0 ;
 		plug:long "0"^^xsd:long ;
-		plug:float 0.1234 ;
+		plug:float "0.1234"^^xsd:float ;
 		plug:double "0e0"^^xsd:double ;
 		plug:bool false ;
 		plug:string "Hello, world" ;
 		plug:path <params.ttl> ;
-		plug:spring 0.0 ;
-		plug:lfo 0.0
+		plug:spring "0.0"^^xsd:float ;
+		plug:lfo "0.0"^^xsd:float
 	] .
