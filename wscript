@@ -94,6 +94,10 @@ def configure(conf):
         and not conf.is_defined('HAVE_GCOV')):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
+    if conf.env.BUILD_TESTS:
+        conf.find_program('serdi', mandatory=False)
+        conf.find_program('sord_validate', mandatory=False)
+
     autowaf.set_lib_env(conf, 'lv2', VERSION, has_objects=False)
     autowaf.set_local_lib(conf, 'lv2', has_objects=False)
 
@@ -434,6 +438,26 @@ def lint(ctx):
     subprocess.call(cmd, cwd='build', shell=True)
 
 def test(tst):
+    import tempfile
+
+    with tst.group("Data") as check:
+        schemas = list(map(str, tst.path.ant_glob("schemas.lv2/*.ttl")))
+        spec_files = list(map(str, tst.path.ant_glob("lv2/**/*.ttl")))
+        plugin_files = list(map(str, tst.path.ant_glob("plugins/**/*.ttl")))
+        bld_files = list(map(str, tst.path.get_bld().ant_glob("**/*.ttl")))
+
+        if "SERDI" in tst.env:
+            for f in spec_files:
+                with tempfile.NamedTemporaryFile(mode="w") as tmp:
+                    base_dir = os.path.dirname(f)
+                    cmd = tst.env.SERDI + ["-o", "turtle", f, base_dir]
+                    check(cmd, stdout=tmp.name)
+                    check.file_equals(f, tmp.name)
+
+        if "SORD_VALIDATE" in tst.env:
+            all_files = schemas + spec_files + plugin_files + bld_files
+            check(tst.env.SORD_VALIDATE + all_files)
+
     with tst.group('Unit') as check:
         pattern = tst.env.cprogram_PATTERN % '**/*-test'
         for test in tst.path.get_bld().ant_glob(pattern):
