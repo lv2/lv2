@@ -2,7 +2,6 @@
 .waf-*
 .lock-waf*
 /build
-NEWS
 *.pyc
 
 # misc editor/tools
