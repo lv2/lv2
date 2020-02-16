@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import os
+import re
 import sys
 
 from waflib import Context, Logs, Options, Scripting, Utils
@@ -11,6 +12,11 @@ APPNAME = 'lv2'     # Package name for waf dist
 VERSION = '1.17.0'  # Package version for waf dist
 top     = '.'       # Source directory
 out     = 'build'   # Build directory
+
+# Release variables
+uri          = 'http://lv2plug.in/ns/lv2'
+dist_pattern = 'http://lv2plug.in/spec/lv2-%d.%d.%d.tar.bz2'
+post_tags    = []
 
 # Map of specification base name to old URI-style include path
 spec_map = {
@@ -480,63 +486,69 @@ class DistCheck(Dist, Scripting.DistCheck):
     def archive(self):
         Dist.archive(self)
 
+def _get_news_entries(ctx):
+    from waflib.extras import autoship
+
+    # Get project-level news entries
+    lv2_entries = autoship.read_ttl_news('lv2',
+                                         ['lv2/core/meta.ttl',
+                                          'lv2/core/people.ttl'],
+                                         dist_pattern = dist_pattern)
+
+    release_pattern = r'http://lv2plug.in/spec/lv2-([0-9\.]*).tar.bz2'
+    current_version = sorted(lv2_entries.keys(), reverse=True)[0]
+
+    # Add items from every specification
+    for specdir in specdirs(ctx.path):
+        name = os.path.basename(specdir.abspath())
+        entries = autoship.read_ttl_news(name, ttl_files(ctx.path, specdir))
+
+        def add_items(lv2_version, name, items):
+            for item in items:
+                lv2_entries[lv2_version]["items"] += ["%s: %s" % (name, item)]
+
+        if entries and name != "core":
+            latest_revision = sorted(entries.keys(), reverse=True)[0]
+            for revision, entry in entries.items():
+                if "dist" in entry:
+                    match = re.match(release_pattern, entry["dist"])
+                    if match:
+                        # Append news items to corresponding LV2 version
+                        version = tuple(map(int, match.group(1).split('.')))
+                        add_items(version, name, entry["items"])
+
+                elif revision == latest_revision:
+                    # Dev version that isn't in a release yet, append to current
+                    add_items(current_version, name, entry["items"])
+
+    # Sort news items in each versions
+    for revision, entry in lv2_entries.items():
+        entry["items"].sort()
+
+    return lv2_entries
+
 def posts(ctx):
     "generates news posts in Pelican Markdown format"
-    subdirs = specdirs(ctx.path)
-    dev_dist = 'http://lv2plug.in/spec/lv2-%s.tar.bz2' % VERSION
+
+    from waflib.extras import autoship
 
     try:
         os.mkdir(os.path.join(out, 'posts'))
     except:
         pass
 
-    # Get all entries (as in dist())
-    top_entries = {}
-    for specdir in subdirs:
-        entries = autowaf.get_rdf_news(os.path.basename(specdir.abspath()),
-                                       ttl_files(ctx.path, specdir),
-                                       top_entries,
-                                       dev_dist = dev_dist)
+    autoship.write_posts(_get_news_entries(ctx),
+                         os.path.join(out, 'posts'),
+                         {'Author': 'drobilla'})
 
-    entries = autowaf.get_rdf_news('lv2',
-                                   ['lv2/core/meta.ttl',
-                                    'lv2/core/people.ttl'],
-                                   None,
-                                   top_entries,
-                                   dev_dist = dev_dist)
+def news(ctx):
+    """write an amalgamated NEWS file to the source directory"""
 
-    autowaf.write_posts(entries,
-                        {'Author': 'drobilla'},
-                        os.path.join(out, 'posts'))
+    from waflib.extras import autoship
+
+    autoship.write_news(_get_news_entries(ctx), 'NEWS')
 
 def dist(ctx):
-    subdirs  = specdirs(ctx.path)
-    dev_dist = 'http://lv2plug.in/spec/lv2-%s.tar.bz2' % VERSION
-
-    # Write NEWS files in source directory
-    top_entries = {}
-    for specdir in subdirs:
-        entries = autowaf.get_rdf_news(os.path.basename(specdir.abspath()),
-                                       ttl_files(ctx.path, specdir),
-                                       top_entries,
-                                       dev_dist = dev_dist)
-        autowaf.write_news(entries, specdir.abspath() + '/NEWS')
-
-    # Write top level amalgamated NEWS file
-    entries = autowaf.get_rdf_news('lv2',
-                                   ['lv2/core/meta.ttl',
-                                    'lv2/core/people.ttl'],
-                                   None,
-                                   top_entries,
-                                   dev_dist = dev_dist)
-    autowaf.write_news(entries, 'NEWS')
-
-    # Build archive
+    news(ctx)
     ctx.archive()
-
-    # Delete generated NEWS files from source directory
-    for i in subdirs + [ctx.path]:
-        try:
-            os.remove(os.path.join(i.abspath(), 'NEWS'))
-        except:
-            pass
+    os.remove('NEWS')
