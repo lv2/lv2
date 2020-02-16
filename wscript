@@ -186,25 +186,6 @@ def build_index(task):
         else:
             print('warning: %s has no file release\n' % proj)
 
-    # Get history for this LV2 release
-    entries = lv2specgen.specHistoryEntries(model, proj, {})
-
-    # Add entries for every spec that has the same distribution
-    ctx     = task.generator.bld
-    subdirs = specdirs(ctx.path)
-    for specdir in subdirs:
-        files   = ttl_files(ctx.path, specdir)
-        exclude = [os.path.join(str(ctx.path), 'lv2/core/meta.ttl')]
-        m       = load_ttl(files, exclude)
-        name    = os.path.basename(specdir.abspath())
-        spec    = m.value(None, rdf.type, lv2.Specification)
-        if spec:
-            for dist in dists:
-                release = m.value(None, doap['file-release'], dist[1])
-                if release:
-                    entries[dist] += lv2specgen.releaseChangeset(
-                        m, release, str(name))
-
     rows = []
     for f in task.inputs:
         if not f.abspath().endswith('index.html.in'):
