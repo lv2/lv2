@@ -5,7 +5,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/ext/event>
-	a owl:Ontology ;
+	a owl:Ontology ,
+		lv2:Specification ;
 	owl:deprecated true ;
 	rdfs:seeAlso <event.h> ,
 		<event-helpers.h> ,

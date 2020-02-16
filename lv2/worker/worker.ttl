@@ -6,7 +6,8 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/worker>
-	a owl:Ontology ;
+	a owl:Ontology ,
+		lv2:Specification ;
 	rdfs:seeAlso <worker.h> ,
 		<lv2-worker.doap.ttl> ;
 	lv2:documentation """

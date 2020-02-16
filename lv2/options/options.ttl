@@ -6,7 +6,8 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/options>
-	a owl:Ontology ;
+	a owl:Ontology ,
+		lv2:Specification ;
 	rdfs:seeAlso <options.h> ,
 		<lv2-options.doap.ttl> ;
 	lv2:documentation """

@@ -7,7 +7,8 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/patch>
-	a owl:Ontology ;
+	a owl:Ontology ,
+		lv2:Specification ;
 	rdfs:seeAlso <patch.h> ,
 		<lv2-patch.doap.ttl> ;
 	lv2:documentation """

@@ -8,7 +8,8 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/atom>
-	a owl:Ontology ;
+	a owl:Ontology ,
+		lv2:Specification ;
 	rdfs:seeAlso <atom.h> ,
 		<util.h> ,
 		<forge.h> ,

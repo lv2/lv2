@@ -9,7 +9,8 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/morph>
-	a owl:Ontology ;
+	a owl:Ontology ,
+		lv2:Specification ;
 	rdfs:seeAlso <morph.h> ,
 		<lv2-morph.doap.ttl> ;
 	lv2:documentation """

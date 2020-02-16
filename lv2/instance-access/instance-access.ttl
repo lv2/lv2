@@ -3,7 +3,8 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/ext/instance-access>
-	a lv2:Feature ;
+	a lv2:Feature ,
+		lv2:Specification ;
 	rdfs:seeAlso <instance-access.h> ,
 		<lv2-instance-access.doap.ttl> ;
 	lv2:documentation """
