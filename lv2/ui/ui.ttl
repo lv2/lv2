@@ -1,9 +1,9 @@
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix ui:   <http://lv2plug.in/ns/extensions/ui#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix ui: <http://lv2plug.in/ns/extensions/ui#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/extensions/ui>
 	a owl:Ontology ;
@@ -88,63 +88,63 @@ ui:GtkUI
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "GTK2 UI" ;
-	rdfs:comment """A UI where the LV2_Widget is a pointer to a Gtk+ 2.0 compatible GtkWidget, and the host guarantees that the Gtk+ library has been initialised and the Glib main loop is running before a UI of this type is instantiated.""" .
+	rdfs:comment "A UI where the LV2_Widget is a pointer to a Gtk+ 2.0 compatible GtkWidget, and the host guarantees that the Gtk+ library has been initialised and the Glib main loop is running before a UI of this type is instantiated." .
 
 ui:Gtk3UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "GTK3 UI" ;
-	rdfs:comment """A UI where the LV2_Widget is a pointer to a Gtk+ 3.0 compatible GtkWidget, and the host guarantees that the Gtk+ library has been initialised and the Glib main loop is running before a UI of this type is instantiated.""" .
+	rdfs:comment "A UI where the LV2_Widget is a pointer to a Gtk+ 3.0 compatible GtkWidget, and the host guarantees that the Gtk+ library has been initialised and the Glib main loop is running before a UI of this type is instantiated." .
 
 ui:Qt4UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "Qt4 UI" ;
-	rdfs:comment """A UI where the LV2_Widget is a pointer to a Qt4 compatible QWidget, and the host guarantees that the Qt4 library has been initialised and the Qt4 main loop is running before a UI of this type is instantiated.""" .
+	rdfs:comment "A UI where the LV2_Widget is a pointer to a Qt4 compatible QWidget, and the host guarantees that the Qt4 library has been initialised and the Qt4 main loop is running before a UI of this type is instantiated." .
 
 ui:Qt5UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "Qt5 UI" ;
-	rdfs:comment """A UI where the LV2_Widget is a pointer to a Qt5 compatible QWidget, and the host guarantees that the Qt5 library has been initialised and the Qt5 main loop is running before a UI of this type is instantiated.""" .
+	rdfs:comment "A UI where the LV2_Widget is a pointer to a Qt5 compatible QWidget, and the host guarantees that the Qt5 library has been initialised and the Qt5 main loop is running before a UI of this type is instantiated." .
 
 ui:X11UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "X11 UI" ;
-	rdfs:comment """A UI where the LV2_Widget is an X11 window ID.  Note this is actually an integer, i.e. the LV2_Widget is not a pointer to an X11 window ID, but should be itself taken as an integer value.  This is the native UI type on most POSIX systems.""" .
+	rdfs:comment "A UI where the LV2_Widget is an X11 window ID.  Note this is actually an integer, i.e. the LV2_Widget is not a pointer to an X11 window ID, but should be itself taken as an integer value.  This is the native UI type on most POSIX systems." .
 
 ui:WindowsUI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "Windows UI" ;
-	rdfs:comment """A UI where the LV2_Widget is a Windows HWND window ID.  Note this is actually an unsigned 32-bit integer, i.e. the LV2_Widget is not a pointer to a HWND but should be interpreted as an HWND itself.  This is the native UI type on Microsoft Windows.""" .
+	rdfs:comment "A UI where the LV2_Widget is a Windows HWND window ID.  Note this is actually an unsigned 32-bit integer, i.e. the LV2_Widget is not a pointer to a HWND but should be interpreted as an HWND itself.  This is the native UI type on Microsoft Windows." .
 
 ui:CocoaUI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "Cocoa UI" ;
-	rdfs:comment """A UI where the LV2_Widget is a pointer to a NSView, the basic view type for the Cocoa API (formerly OpenStep).  This is the native UI type on Mac OS X.""" .
+	rdfs:comment "A UI where the LV2_Widget is a pointer to a NSView, the basic view type for the Cocoa API (formerly OpenStep).  This is the native UI type on Mac OS X." .
 
 ui:ui
 	a rdf:Property ;
 	rdfs:domain lv2:Plugin ;
 	rdfs:range ui:UI ;
 	rdfs:label "user interface" ;
-	rdfs:comment """Relates a plugin to a UI that applies to it.""" .
+	rdfs:comment "Relates a plugin to a UI that applies to it." .
 
 ui:binary
 	a rdf:Property ;
 	owl:sameAs lv2:binary ;
 	owl:deprecated "true"^^xsd:boolean ;
 	rdfs:label "binary" ;
-	rdfs:comment """The shared library a UI resides in.  This property is redundant, new UIs SHOULD use lv2:binary, however hosts MUST still support ui:binary at this time.""" .
+	rdfs:comment "The shared library a UI resides in.  This property is redundant, new UIs SHOULD use lv2:binary, however hosts MUST still support ui:binary at this time." .
 
 ui:makeSONameResident
 	a lv2:Feature ;
@@ -200,7 +200,7 @@ ui:PortNotification
 		a owl:Restriction ;
 		owl:onProperty ui:plugin ;
 		owl:cardinality 1 ;
-		rdfs:comment "A PortNotification MUST have exactly one ui:plugin." ;
+		rdfs:comment "A PortNotification MUST have exactly one ui:plugin."
 	] ;
 	lv2:documentation """
 <p>A port notification.  This describes which ports the host must send
@@ -459,3 +459,4 @@ computed is called a <em>measurement period</em>.</p>
     <td>None.</td></tr>
 </table>
 """ .
+

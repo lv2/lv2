@@ -1,9 +1,9 @@
-@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
-@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
-@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/port-props>
 	a owl:Ontology ;
@@ -22,7 +22,7 @@ pprops:trigger
 pprops:supportsStrictBounds
 	a lv2:Feature ;
 	rdfs:label "supports strict bounds" ;
-	rdfs:comment """Indicates use of host support for pprops:hasStrictBounds port property.  A plugin that specifies it as optional feature can omit value clamping for hasStrictBounds ports, if the feature is supported by the host.  When specified as required feature, it indicates that the plugin does not do any clamping for input ports that have a pprops:hasStrictBounds property.""" .
+	rdfs:comment "Indicates use of host support for pprops:hasStrictBounds port property.  A plugin that specifies it as optional feature can omit value clamping for hasStrictBounds ports, if the feature is supported by the host.  When specified as required feature, it indicates that the plugin does not do any clamping for input ports that have a pprops:hasStrictBounds property." .
 
 pprops:hasStrictBounds
 	a lv2:PortProperty ;
@@ -32,12 +32,12 @@ pprops:hasStrictBounds
 pprops:expensive
 	a lv2:PortProperty ;
 	rdfs:label "changes are expensive" ;
-	rdfs:comment """Input ports only.  Indicates that any changes to the port value may trigger expensive background calculation (e.g. regenerate some lookup tables in a background thread).  Any value changes may have not have immediate effect, or may cause silence or diminished-quality version of the output until background processing is finished.  Ports having this property are typically not well suited for connection to outputs of other plugins, and should not be offered as connection targets or for automation by default.""" .
+	rdfs:comment "Input ports only.  Indicates that any changes to the port value may trigger expensive background calculation (e.g. regenerate some lookup tables in a background thread).  Any value changes may have not have immediate effect, or may cause silence or diminished-quality version of the output until background processing is finished.  Ports having this property are typically not well suited for connection to outputs of other plugins, and should not be offered as connection targets or for automation by default." .
 
 pprops:causesArtifacts
 	a lv2:PortProperty ;
 	rdfs:label "changes cause artifacts" ;
-	rdfs:comment """Input ports only.  Indicates that any changes to the port value may produce slight artifacts to produced audio signals (zipper noise and other results of signal discontinuities).  Connecting ports of this type to continuous signals is not recommended, and when presenting a list of automation targets, those ports may be marked as artifact-producing.""" .
+	rdfs:comment "Input ports only.  Indicates that any changes to the port value may produce slight artifacts to produced audio signals (zipper noise and other results of signal discontinuities).  Connecting ports of this type to continuous signals is not recommended, and when presenting a list of automation targets, those ports may be marked as artifact-producing." .
 
 pprops:continuousCV
 	a lv2:PortProperty ;
@@ -52,24 +52,24 @@ pprops:discreteCV
 pprops:logarithmic
 	a lv2:PortProperty ;
 	rdfs:label "logarithmic scale" ;
-	rdfs:comment """Indicates that port value behaviour within specified range (bounds) is a value using logarithmic scale.  The lower and upper bounds must be specified, and must be of the same sign.""" .
+	rdfs:comment "Indicates that port value behaviour within specified range (bounds) is a value using logarithmic scale.  The lower and upper bounds must be specified, and must be of the same sign." .
 
 pprops:notAutomatic
 	a lv2:PortProperty ;
 	rdfs:label "not intended as a CV input" ;
-	rdfs:comment """Indicates that the port is not primarily intended to be fed with modulation signals from external sources (other plugins, etc.).  It is merely a UI hint and hosts may allow the user to override it.""" .
+	rdfs:comment "Indicates that the port is not primarily intended to be fed with modulation signals from external sources (other plugins, etc.).  It is merely a UI hint and hosts may allow the user to override it." .
 
 pprops:notOnGUI
 	a lv2:PortProperty ;
 	rdfs:label "not on GUI" ;
-	rdfs:comment """Indicates that the port is not primarily intended to be represented by a separate control in the user interface window (or any similar mechanism used for direct, immediate control of control ports).  It is merely a UI hint and hosts may allow the user to override it.""" .
+	rdfs:comment "Indicates that the port is not primarily intended to be represented by a separate control in the user interface window (or any similar mechanism used for direct, immediate control of control ports).  It is merely a UI hint and hosts may allow the user to override it." .
 
 pprops:displayPriority
 	a rdf:Property ;
 	rdfs:domain lv2:Port ;
 	rdfs:range xsd:nonNegativeInteger ;
 	rdfs:label "display priority" ;
-	rdfs:comment """Indicates how important a port is to controlling the plugin.  If a host can only display some ports of a plugin, it should prefer ports with a higher display priority.  Priorities do not need to be unique, and are only meaningful when compared to each other.""" .
+	rdfs:comment "Indicates how important a port is to controlling the plugin.  If a host can only display some ports of a plugin, it should prefer ports with a higher display priority.  Priorities do not need to be unique, and are only meaningful when compared to each other." .
 
 pprops:rangeSteps
 	a rdf:Property ;
@@ -103,3 +103,4 @@ step = (steps - 1) * log(value / lower) / log(upper / lower)
 <li><code>lower</code> and <code>upper</code> are the bounds</li>
 </ul>
 """ .
+

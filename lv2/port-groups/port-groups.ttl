@@ -1,9 +1,9 @@
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix pg:   <http://lv2plug.in/ns/ext/port-groups#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/port-groups>
 	a owl:Ontology ;
@@ -54,7 +54,7 @@ pg:element
 		owl:ObjectProperty ;
 	rdfs:range pg:Element ;
 	rdfs:label "element" ;
-	rdfs:comment """Indicates that a group has a certain element (a parameter or channel designation with a possible index).""" .
+	rdfs:comment "Indicates that a group has a certain element (a parameter or channel designation with a possible index)." .
 
 pg:sideChainOf
 	a rdf:Property ,
@@ -69,7 +69,7 @@ pg:subGroupOf
 	rdfs:domain pg:Group ;
 	rdfs:range pg:Group ;
 	rdfs:label "sub-group of" ;
-	rdfs:comment """Indicates that this group is a child of another group.  This property has no meaning with respect to plugin execution, but the host may find this information useful (e.g. to provide a compact user interface).  Note that being a sub-group does not relax the restriction that the group MUST have a unique symbol with respect to the plugin.""" .
+	rdfs:comment "Indicates that this group is a child of another group.  This property has no meaning with respect to plugin execution, but the host may find this information useful (e.g. to provide a compact user interface).  Note that being a sub-group does not relax the restriction that the group MUST have a unique symbol with respect to the plugin." .
 
 pg:source
 	a rdf:Property ,
@@ -104,12 +104,12 @@ pg:group
 	rdfs:domain lv2:Port ;
 	rdfs:range pg:Group ;
 	rdfs:label "group" ;
-	rdfs:comment """Indicates that this port is a part of a group of ports on the plugin.  The port should also have an lv2:designation property to define its designation within that group.""" .
+	rdfs:comment "Indicates that this port is a part of a group of ports on the plugin.  The port should also have an lv2:designation property to define its designation within that group." .
 
 pg:DiscreteGroup
 	a rdfs:Class ;
 	rdfs:subClassOf pg:Group ;
-	rdfs:comment """Discrete channel configurations.  These groups are divided into channels where each represents a particular speaker location.  The position of sound in one of these groups depends on a particular speaker configuration.""" .
+	rdfs:comment "Discrete channel configurations.  These groups are divided into channels where each represents a particular speaker location.  The position of sound in one of these groups depends on a particular speaker configuration." .
 
 pg:left
 	a lv2:Channel ;
@@ -485,7 +485,7 @@ pg:ACN15
 pg:AmbisonicGroup
 	a rdfs:Class ;
 	rdfs:subClassOf pg:Group ;
-	rdfs:comment """Ambisonic channel configurations.  These groups are divided into channels which together represent a position in an abstract n-dimensional space. The position of sound in one of these groups does not depend on a particular speaker configuration; a decoder can be used to convert an ambisonic stream for any speaker configuration.""" .
+	rdfs:comment "Ambisonic channel configurations.  These groups are divided into channels which together represent a position in an abstract n-dimensional space. The position of sound in one of these groups does not depend on a particular speaker configuration; a decoder can be used to convert an ambisonic stream for any speaker configuration." .
 
 pg:AmbisonicBH1P0Group
 	a rdfs:Class ;
@@ -747,3 +747,4 @@ pg:AmbisonicBH3P3Group
 		lv2:index 15 ;
 		lv2:designation pg:ACN15
 	] .
+

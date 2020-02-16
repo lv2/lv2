@@ -1,11 +1,11 @@
-@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix owl:   <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix ui:    <http://lv2plug.in/ns/extensions/ui#> .
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ui: <http://lv2plug.in/ns/extensions/ui#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
-@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/atom>
 	a owl:Ontology ;
@@ -65,7 +65,7 @@ atom:cType
 	rdfs:label "C type" ;
 	rdfs:domain rdfs:Class ;
 	rdfs:range lv2:Symbol ;
-	rdfs:comment """The identifier for a C type describing the binary representation of an Atom of this type.""" .
+	rdfs:comment "The identifier for a C type describing the binary representation of an Atom of this type." .
 
 atom:Atom
 	a rdfs:Class ;
@@ -550,7 +550,7 @@ atom:childType
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:label "child type" ;
-	rdfs:comment "The type of a container's children." .
+	rdfs:comment """The type of a container's children.""" .
 
 atom:supports
 	a rdf:Property ;
@@ -600,3 +600,4 @@ atom:atomTransfer
 <p>This protocol applies to atom ports.  The host must transfer the complete
 atom contained in the port, including header.</p>
 """ .
+

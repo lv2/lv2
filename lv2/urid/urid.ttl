@@ -1,4 +1,4 @@
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix urid: <http://lv2plug.in/ns/ext/urid#> .
 
@@ -37,3 +37,4 @@ urid:map.  To support this feature, the host must pass an LV2_Feature to
 LV2_Descriptor::instantiate() with URI LV2_URID__unmap and data pointed to
 an instance of LV2_URID_Unmap.</p>
 """ .
+

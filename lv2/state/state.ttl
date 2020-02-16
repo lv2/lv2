@@ -1,6 +1,6 @@
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix state: <http://lv2plug.in/ns/ext/state#> .
 
 <http://lv2plug.in/ns/ext/state>
@@ -389,3 +389,4 @@ result in a different state being saved, but not when the host explicity makes
 a change which it knows is likely to have that effect, such as changing a
 parameter.</p>
 """ .
+

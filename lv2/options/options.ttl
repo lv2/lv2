@@ -1,9 +1,9 @@
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix opts: <http://lv2plug.in/ns/ext/options#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/options>
 	a owl:Ontology ;
@@ -101,3 +101,4 @@ provide a value for the specified option if one is known, or provide the user
 an opportunity to specify one if one is Indicates that the instance host MUST
 pass a value for the specified option in order to instantiate the instance.</p>
 """ .
+

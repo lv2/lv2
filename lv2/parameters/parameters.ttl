@@ -1,9 +1,9 @@
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix param: <http://lv2plug.in/ns/ext/parameters#> .
-@prefix atom:  <http://lv2plug.in/ns/ext/atom#> .
-@prefix pg:    <http://lv2plug.in/ns/ext/port-groups#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 
 <http://lv2plug.in/ns/ext/parameters>
@@ -30,7 +30,7 @@ param:attack
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "attack" ;
-	rdfs:comment "The duration of an envelope's attack stage." .
+	rdfs:comment """The duration of an envelope's attack stage.""" .
 
 param:cutoffFrequency
 	a lv2:Parameter ;
@@ -41,13 +41,13 @@ param:decay
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "decay" ;
-	rdfs:comment "The duration of an envelope's decay stage." .
+	rdfs:comment """The duration of an envelope's decay stage.""" .
 
 param:delay
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "delay" ;
-	rdfs:comment "The duration of an envelope's delay stage." .
+	rdfs:comment """The duration of an envelope's delay stage.""" .
 
 param:frequency
 	a lv2:Parameter ;
@@ -58,7 +58,7 @@ param:hold
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "hold" ;
-	rdfs:comment "The duration of an envelope's hold stage." .
+	rdfs:comment """The duration of an envelope's hold stage.""" .
 
 param:pulseWidth
 	a lv2:Parameter ;
@@ -76,7 +76,7 @@ param:release
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "release" ;
-	rdfs:comment "The duration of an envelope's release stage." .
+	rdfs:comment """The duration of an envelope's release stage.""" .
 
 param:resonance
 	a lv2:Parameter ;
@@ -88,7 +88,7 @@ param:sustain
 	a lv2:Parameter ;
 	rdfs:label "sustain" ;
 	rdfs:range atom:Float ;
-	rdfs:comment "The level (not duration) of an envelope's sustain stage." .
+	rdfs:comment """The level (not duration) of an envelope's sustain stage.""" .
 
 param:threshold
 	a lv2:Parameter ;
@@ -204,3 +204,4 @@ param:CompressorControls
 	] , [
 		lv2:designation param:ratio
 	] .
+

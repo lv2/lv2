@@ -45,3 +45,4 @@
 	doap:shortdesc "Common parameters for audio processing." ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:developer <http://lv2plug.in/ns/meta#larsl> .
+

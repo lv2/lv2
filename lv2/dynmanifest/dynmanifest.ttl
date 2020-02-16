@@ -1,15 +1,15 @@
 @prefix dman: <http://lv2plug.in/ns/ext/dynmanifest#> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/dynmanifest>
 	a lv2:Specification ;
 	rdfs:seeAlso <dynmanifest.h> ,
 		<lv2-dynmanifest.doap.ttl> ;
-    lv2:documentation """
+	lv2:documentation """
 <p>The LV2 API, on its own, cannot be used to write plugin libraries where data
 is dynamically generated at runtime (e.g. API wrappers), since LV2 requires
 needed information to be provided in one or more static data (RDF) files. This
@@ -83,3 +83,4 @@ dman:DynManifest
 There MUST NOT be any instances of dman:DynManifest in the generated manifest.
 
 All relative URIs in the generated data MUST be relative to the base path that would be used to parse a normal LV2 manifest (the bundle path).""" .
+

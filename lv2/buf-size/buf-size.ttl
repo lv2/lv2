@@ -1,10 +1,10 @@
 @prefix bufsz: <http://lv2plug.in/ns/ext/buf-size#> .
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix opts:  <http://lv2plug.in/ns/ext/options#> .
-@prefix owl:   <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix opts: <http://lv2plug.in/ns/ext/options#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/buf-size>
 	a lv2:Specification ;
@@ -127,3 +127,4 @@ bufsz:sequenceSize
 option by hosts that support event ports (including but not limited to MIDI),
 so plugins have the ability to allocate auxiliary buffers large enough to copy
 the input.</p> """ .
+

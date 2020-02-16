@@ -107,3 +107,4 @@
 	] ;
 	doap:developer <http://plugin.org.uk/swh.xrdf#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> .
+

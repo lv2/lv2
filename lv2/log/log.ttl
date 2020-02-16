@@ -1,8 +1,8 @@
-@prefix log:  <http://lv2plug.in/ns/ext/log#> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix log: <http://lv2plug.in/ns/ext/log#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/log>
 	a lv2:Specification ;
@@ -66,3 +66,4 @@ log:log
 the host must pass an LV2_Feature to LV2_Descriptor::instantiate() with URI
 LV2_LOG__log and data pointed to an instance of LV2_Log_Log.</p>
 """ .
+

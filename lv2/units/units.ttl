@@ -1,9 +1,9 @@
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix owl:   <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
-@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/extensions/units>
 	a owl:Ontology ;
@@ -106,7 +106,7 @@ units:prefixConversion
 	rdfs:domain units:Unit ;
 	rdfs:range units:Conversion ;
 	rdfs:label "prefix conversion" ;
-	rdfs:comment """A conversion from this unit to the same unit but with a different SI prefix (e.g. Hz to kHz).""" .
+	rdfs:comment "A conversion from this unit to the same unit but with a different SI prefix (e.g. Hz to kHz)." .
 
 units:to
 	a rdf:Property ,
@@ -121,7 +121,7 @@ units:factor
 		owl:DatatypeProperty ;
 	rdfs:domain units:Conversion ;
 	rdfs:label "conversion factor" ;
-	rdfs:comment """The factor to multiply the source value by in order to convert to the target unit.""" .
+	rdfs:comment "The factor to multiply the source value by in order to convert to the target unit." .
 
 units:s
 	a units:Unit ;
@@ -262,7 +262,7 @@ units:inch
 		units:to units:cm
 	] ;
 	rdfs:label "inches" ;
-	units:render """%f\"""" ;
+	units:render "%f\"" ;
 	units:symbol "in" .
 
 units:mile
@@ -391,3 +391,4 @@ units:midiNote
 	rdfs:label "MIDI note" ;
 	units:render "MIDI note %d" ;
 	units:symbol "note" .
+

@@ -1,7 +1,7 @@
-@prefix ev:   <http://lv2plug.in/ns/ext/event#> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ev: <http://lv2plug.in/ns/ext/event#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/ext/event>
@@ -31,7 +31,7 @@ ev:EventPort
 	a rdfs:Class ;
 	rdfs:label "Event Port" ;
 	rdfs:subClassOf lv2:Port ;
-	rdfs:comment """Ports of this type will be connected to a struct of type LV2_Event_Buffer, defined in event.h.  These ports contain a sequence of generic events (possibly several types mixed in a single stream), the specific types of which are defined by some URI in another LV2 extension.""" .
+	rdfs:comment "Ports of this type will be connected to a struct of type LV2_Event_Buffer, defined in event.h.  These ports contain a sequence of generic events (possibly several types mixed in a single stream), the specific types of which are defined by some URI in another LV2 extension." .
 
 ev:Event
 	a rdfs:Class ;
@@ -81,7 +81,7 @@ ev:inheritsEvent
 		lv2:OutputPort ;
 	rdfs:range lv2:Port ;
 	rdfs:label "inherits event type" ;
-	rdfs:comment """Indicates that this output port might pass through events that arrived at some other input port (or generate an event of the same type as events arriving at that input).  The host must always check the stamp type of all outputs when connecting an input, but this property should be set whenever it applies.""" .
+	rdfs:comment "Indicates that this output port might pass through events that arrived at some other input port (or generate an event of the same type as events arriving at that input).  The host must always check the stamp type of all outputs when connecting an input, but this property should be set whenever it applies." .
 
 ev:supportsTimeStamp
 	a rdf:Property ;
@@ -112,3 +112,4 @@ ev:inheritsTimeStamp
 	rdfs:comment """Indicates that this port follows the time stamp type of an input port.
 
 This property is not necessary, but it should be set for outputs that base their output type on an input port so the host can make more sense of the plugin and provide a more sensible interface.""" .
+

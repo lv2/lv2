@@ -1,9 +1,9 @@
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix time: <http://lv2plug.in/ns/ext/time#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/time>
 	a owl:Ontology ;
@@ -141,3 +141,4 @@ example, a rate of 0.0 is stopped, 1.0 is rolling at normal speed, 0.5 is
 rolling at half speed, -1.0 is reverse, and so on.
 </p>
 """ .
+

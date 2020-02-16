@@ -1,11 +1,11 @@
 @prefix atom: <http://lv2plug.in/ns/ext/atom#> .
-@prefix ev:   <http://lv2plug.in/ns/ext/event#> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix ev: <http://lv2plug.in/ns/ext/event#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix midi: <http://lv2plug.in/ns/ext/midi#> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/midi>
 	a owl:Ontology ;
@@ -386,7 +386,7 @@ midi:statusMask
 		owl:FunctionalProperty ;
 	rdfs:label "status mask" ;
 	rdfs:range midi:HexByte ;
-	rdfs:comment """The status byte for a message of this type on channel 1, i.e. a status byte with the lower nibble set to zero.""" .
+	rdfs:comment "The status byte for a message of this type on channel 1, i.e. a status byte with the lower nibble set to zero." .
 
 midi:velocity
 	a rdf:Property ,
@@ -395,3 +395,4 @@ midi:velocity
 	rdfs:label "velocity" ;
 	rdfs:range midi:HexByte ;
 	rdfs:comment "The velocity of a note message (0 to 127)." .
+

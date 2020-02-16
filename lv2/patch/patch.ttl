@@ -1,10 +1,10 @@
-@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
-@prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
-@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix patch: <http://lv2plug.in/ns/ext/patch#> .
-@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/patch>
 	a owl:Ontology ;
@@ -46,7 +46,7 @@ patch:Ack
 	a rdfs:Class ;
 	rdfs:subClassOf patch:Response ;
 	rdfs:label "Ack" ;
-	rdfs:comment """An acknowledgement that a request has been successfully processed.  This is returned as a reply when a specific reply type is not necessary or appropriate. """ .
+	rdfs:comment "An acknowledgement that a request has been successfully processed.  This is returned as a reply when a specific reply type is not necessary or appropriate. " .
 
 patch:Copy
 	a rdfs:Class ;
@@ -141,7 +141,7 @@ patch:Insert
 		owl:cardinality 1 ;
 		owl:onProperty patch:subject
 	] ;
-	rdfs:comment """Insert the patch:body at patch:subject.  If the subject does not exist, it is created.  If the subject does already exist, it is added to.  This request only adds properties, it never removes them.  The user must take care that multiple values are not set for properties which should only have one value.""" .
+	rdfs:comment "Insert the patch:body at patch:subject.  If the subject does not exist, it is created.  If the subject does already exist, it is added to.  This request only adds properties, it never removes them.  The user must take care that multiple values are not set for properties which should only have one value." .
 
 patch:Message
 	a rdfs:Class ;
@@ -160,7 +160,7 @@ patch:Move
 		owl:cardinality 1 ;
 		owl:onProperty patch:destination
 	] ;
-	rdfs:comment "Move the patch:subject to patch:destination.  After this, patch:destination has the description patch:subject had prior to this request's execution, and patch:subject no longer exists.  It is an error if the subject does not exist or the destination already exists." .
+	rdfs:comment """Move the patch:subject to patch:destination.  After this, patch:destination has the description patch:subject had prior to this request's execution, and patch:subject no longer exists.  It is an error if the subject does not exist or the destination already exists.""" .
 
 patch:Patch
 	a rdfs:Class ;
@@ -222,7 +222,7 @@ patch:Request
 	a rdfs:Class ;
 	rdfs:label "Request" ;
 	rdfs:subClassOf patch:Message ;
-	rdfs:comment """A request.  A request may have a patch:subject property, which indicates which resource the request applies to.  The subject may be omitted in contexts where it is implicit (e.g. the recipient is the subject).""" .
+	rdfs:comment "A request.  A request may have a patch:subject property, which indicates which resource the request applies to.  The subject may be omitted in contexts where it is implicit (e.g. the recipient is the subject)." .
 
 patch:Response
 	a rdfs:Class ;
@@ -346,7 +346,7 @@ patch:request
 	rdfs:label "request" ;
 	rdfs:domain patch:Response ;
 	rdfs:range patch:Request ;
-	rdfs:comment """The request this is a response to.  This can be used if referring directly to the URI or blank node ID of the request is possible.  Otherwise, use patch:sequenceNumber.""" .
+	rdfs:comment "The request this is a response to.  This can be used if referring directly to the URI or blank node ID of the request is possible.  Otherwise, use patch:sequenceNumber." .
 
 patch:sequenceNumber
 	a rdf:Property ,
@@ -375,7 +375,7 @@ patch:value
 
 patch:wildcard
 	a rdfs:Resource ;
-	rdfs:comment """A wildcard which matches any resource.  This makes it possible to describe the removal of all values for a given property.""" .
+	rdfs:comment "A wildcard which matches any resource.  This makes it possible to describe the removal of all values for a given property." .
 
 patch:writable
 	a rdf:Property ;
@@ -400,3 +400,4 @@ eg:plugin
     patch:writable eg:title .
 </pre>
 """ .
+

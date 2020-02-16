@@ -1,8 +1,8 @@
-@prefix dcs:  <http://ontologi.es/doap-changeset#> .
+@prefix dcs: <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix meta: <http://lv2plug.in/ns/meta#> .
-@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://opensource.org/licenses/isc>
@@ -75,7 +75,7 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "eg-scope: Don't feed back UI state updates."
+				rdfs:label """eg-scope: Don't feed back UI state updates."""
 			] , [
 				rdfs:label "eg-sampler: Fix handling of state file paths."
 			] , [
@@ -173,9 +173,10 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Initial release as a unified project.  Projects can now simply depend on the pkg-config package 'lv2' for all official LV2 APIs."
+				rdfs:label """Initial release as a unified project.  Projects can now simply depend on the pkg-config package 'lv2' for all official LV2 APIs."""
 			] , [
 				rdfs:label "New extensions: atom, log, parameters, patch, port-groups, port-props, resize-port, state, time, worker."
 			]
 		]
 	] .
+

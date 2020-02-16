@@ -1,5 +1,5 @@
-@prefix da:   <http://lv2plug.in/ns/ext/data-access#> .
-@prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
+@prefix da: <http://lv2plug.in/ns/ext/data-access#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/ext/data-access>
@@ -21,3 +21,4 @@ do so.</p>
 instantiate method with URI LV2_DATA_ACCESS_URI and data pointed to an instance
 of LV2_Extension_Data_Feature.</p>
 """ .
+
