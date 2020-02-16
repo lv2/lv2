@@ -168,7 +168,7 @@ connect_port(LV2_Handle handle,
 
    This function forges a message for sending a vector of raw data.  The object
    is a http://lv2plug.in/ns/ext/atom#Blank[Blank] with a few properties, like:
-   [source,n3]
+   [source,turtle]
    --------
    []
    	a sco:RawAudio ;

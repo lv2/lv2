@@ -120,7 +120,7 @@ peaks_sender_start(PeaksSender* sender,
    Forge a message which sends a range of peaks.  Writes a peaks:PeakUpdate
    object to `forge`, like:
 
-   [source,n3]
+   [source,turtle]
    ----
    []
    	   a peaks:PeakUpdate ;

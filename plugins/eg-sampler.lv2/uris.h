@@ -73,7 +73,7 @@ map_sampler_uris(LV2_URID_Map* map, SamplerURIs* uris)
 
 /**
    Write a message like the following to `forge`:
-   [source,n3]
+   [source,turtle]
    ----
    []
    a patch:Set ;
@@ -102,7 +102,7 @@ write_set_file(LV2_Atom_Forge*    forge,
 
 /**
    Get the file path from `obj` which is a message like:
-   [source,n3]
+   [source,turtle]
    ----
    []
    a patch:Set ;

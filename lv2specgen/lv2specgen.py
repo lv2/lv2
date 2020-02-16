@@ -59,9 +59,8 @@ except:
 try:
     import pygments
     import pygments.lexers
+    import pygments.lexers.rdf
     import pygments.formatters
-    from pygments.lexer import RegexLexer, include, bygroups
-    from pygments.token import Text, Comment, Operator, Keyword, Name, String, Literal, Punctuation
     have_pygments = True
 except ImportError:
     print("Error importing pygments, syntax highlighting disabled")
@@ -178,61 +177,6 @@ def getLabel(m, urinode):
     else:
         return ''
 
-if have_pygments:
-    # Based on sw.py by Philip Cooper
-    class Notation3Lexer(RegexLexer):
-        """
-        Lexer for N3 / Turtle / NT
-        """
-        name = 'N3'
-        aliases = ['n3', 'turtle']
-        filenames = ['*.n3', '*.ttl', '*.nt']
-        mimetypes = ['text/rdf+n3','application/x-turtle','application/n3']
-
-        tokens = {
-            'comments': [
-                (r'(\s*#.*)', Comment)
-            ],
-            'root': [
-                include('comments'),
-                (r'(\s*@(?:prefix|base|keywords)\s*)(\w*:\s+)?(<[^> ]*>\s*\.\s*)',bygroups(Keyword,Name.Variable,Name.Namespace)),
-                (r'\s*(<[^>]*\>)', Name.Class, ('triple','predObj')),
-                (r'(\s*[a-zA-Z_:][a-zA-Z0-9\-_:]*\s)', Name.Class, ('triple','predObj')),
-                (r'\s*\[\]\s*', Name.Class, ('triple','predObj')),
-            ],
-            'triple' : [
-                (r'\s*\.\s*', Text, '#pop')
-            ],
-            'predObj': [
-                include('comments'),
-                (r'\s*a\s*', Name.Keyword, 'object'),
-                (r'\s*[a-zA-Z_:][a-zA-Z0-9\-_:]*\b\s*', Name.Tag, 'object'),
-                (r'\s*(<[^>]*\>)', Name.Tag, 'object'),
-                (r'\s*\]\s*', Text, '#pop'),
-                (r'(?=\s*\.\s*)', Keyword, '#pop'),
-            ],
-            'objList': [
-                include('comments'),
-                (r'\s*\)', Text, '#pop'),
-                include('object')
-            ],
-            'object': [
-                include('comments'),
-                (r'\s*\[', Text, 'predObj'),
-                (r'\s*<[^> ]*>', Name.Tag),
-                (r'\s*("""(?:.|\n)*?""")(\@[a-z]{2-4}|\^\^<?[a-zA-Z0-9\-\:_#/\.]*>?)?\s*', bygroups(Literal.String,Text)),
-                (r'\s*".*?[^\\]"(?:\@[a-z]{2-4}|\^\^<?[a-zA-Z0-9\-\:_#/\.]*>?)?\s*', Literal.String),
-                (r'\s*[0-9]+\.[0-9]*\s*\n?', Literal.Number),
-                (r'\s*[0-9]+\s*\n?', Literal.Number),
-                (r'\s*[a-zA-Z0-9\-_\:]+\s*', Name.Tag),
-                (r'\s*\(', Text, 'objList'),
-                (r'\s*;\s*\n?', Punctuation, '#pop'),
-                (r'\s*,\s*\n?', Punctuation),  # Added by drobilla so "," is not an error
-                (r'(?=\s*\])', Text, '#pop'),
-                (r'(?=\s*\.)', Text, '#pop'),
-            ],
-        }
-
 def linkify(string):
     if linkmap == {}:
         return string
@@ -280,7 +224,7 @@ def getComment(m, urinode, classlist, proplist, instalist):
                 match_str = xml.sax.saxutils.unescape(code.group(1))
                 code_str = pygments.highlight(
                     match_str,
-                    Notation3Lexer(),
+                    pygments.lexers.rdf.TurtleLexer(),
                     pygments.formatters.HtmlFormatter())
                 markup = code_rgx.sub(code_str, markup, 1)
 

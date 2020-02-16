@@ -87,7 +87,7 @@ def format_ttl_source(filename, file):
                 chunk = line
         else:
             if is_comment:
-                output += format_code('n3', chunk)
+                output += format_code('turtle', chunk)
                 in_comment = True
                 chunk = line.strip().lstrip('# ') + ' \n'
             else:
@@ -96,7 +96,7 @@ def format_ttl_source(filename, file):
     if in_comment:
         return output + format_text(chunk)
     else:
-        return output + format_code('n3', chunk)
+        return output + format_code('turtle', chunk)
 
 def gen(out, filenames):
     for filename in filenames:
