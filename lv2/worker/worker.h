@@ -71,7 +71,7 @@ typedef LV2_Worker_Status (*LV2_Worker_Respond_Function)(
    The plugin's extension_data() method should return an LV2_Worker_Interface
    when called with LV2_WORKER__interface as its argument.
 */
-typedef struct _LV2_Worker_Interface {
+typedef struct {
 	/**
 	   The worker method.  This is called by the host in a non-realtime context
 	   as requested, possibly with an arbitrary message to handle.
@@ -129,7 +129,7 @@ typedef void* LV2_Worker_Schedule_Handle;
    The host passes this feature to provide a schedule_work() function, which
    the plugin can use to schedule a worker call from run().
 */
-typedef struct _LV2_Worker_Schedule {
+typedef struct {
 	/**
 	   Opaque host data.
 	*/

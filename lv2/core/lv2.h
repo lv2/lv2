@@ -140,7 +140,7 @@ typedef void * LV2_Handle;
    features and specify the `URI` and `data` to be used if necessary.
    Some features, such as lv2:isLive, do not require the host to pass data.
 */
-typedef struct _LV2_Feature {
+typedef struct {
 	/**
 	   A globally unique, case-sensitive identifier (URI) for this feature.
 

@@ -194,7 +194,7 @@ typedef const void* (*LV2_State_Retrieve_Function)(
    authors should consider this possibility, and always store sensible data
    with meaningful types to avoid such problems in the future.
 */
-typedef struct _LV2_State_Interface {
+typedef struct {
 	/**
 	   Save plugin state using a host-provided `store` callback.
 

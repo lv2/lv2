@@ -61,7 +61,7 @@ typedef void* LV2_Log_Handle;
 /**
    Log feature (LV2_LOG__log)
 */
-typedef struct _LV2_Log {
+typedef struct {
 	/**
 	   Opaque pointer to host data.
 

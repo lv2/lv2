@@ -223,7 +223,7 @@ typedef struct _LV2UI_Descriptor {
    LV2UI_Descriptor::instantiate(), or as an interface provided by a UI via
    LV2UI_Descriptor::extension_data()).
 */
-typedef struct _LV2UI_Resize {
+typedef struct {
 	/**
 	   Pointer to opaque data which must be passed to ui_resize().
 	*/
@@ -251,7 +251,7 @@ typedef struct _LV2UI_Resize {
    symbol.  This makes it possible to implement and distribute a UI separately
    from the plugin (since symbol, unlike index, is a stable port identifier).
 */
-typedef struct _LV2UI_Port_Map {
+typedef struct {
 	/**
 	   Pointer to opaque data which must be passed to port_index().
 	*/
@@ -269,7 +269,7 @@ typedef struct _LV2UI_Port_Map {
 /**
    Feature to subscribe to port updates (LV2_UI__portSubscribe).
 */
-typedef struct _LV2UI_Port_Subscribe {
+typedef struct {
 	/**
 	   Pointer to opaque data which must be passed to subscribe() and
 	   unsubscribe().
@@ -320,7 +320,7 @@ typedef struct _LV2UI_Port_Subscribe {
 /**
    A feature to notify the host that the user has grabbed a UI control.
 */
-typedef struct _LV2UI_Touch {
+typedef struct {
 	/**
 	   Pointer to opaque data which must be passed to ui_resize().
 	*/
@@ -348,7 +348,7 @@ typedef struct _LV2UI_Touch {
    UIs can provide this interface to have an idle() callback called by the host
    rapidly to update the UI.
 */
-typedef struct _LV2UI_Idle_Interface {
+typedef struct {
 	/**
 	   Run a single iteration of the UI's idle loop.
 
@@ -377,7 +377,7 @@ typedef struct _LV2UI_Idle_Interface {
    - If idle() returns non-zero, the host MUST call hide() and stop calling
      idle().  It MAY later call show() then resume calling idle().
 */
-typedef struct _LV2UI_Show_Interface {
+typedef struct {
 	/**
 	   Show a window for this UI.
 
@@ -400,7 +400,7 @@ typedef struct _LV2UI_Show_Interface {
 /**
    Peak data for a slice of time, the update format for ui:peakProtocol.
 */
-typedef struct _LV2UI_Peak_Data {
+typedef struct {
 	/**
 	   The start of the measurement period.  This is just a running counter
 	   that is only meaningful in comparison to previous values and must not be
