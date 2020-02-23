@@ -163,7 +163,7 @@ typedef struct {
    This structure provides the core functions necessary to instantiate and use
    a plugin.
 */
-typedef struct _LV2_Descriptor {
+typedef struct LV2_Descriptor {
 	/**
 	   A globally unique, case-sensitive identifier for this plugin.
 
@@ -201,10 +201,10 @@ typedef struct _LV2_Descriptor {
 	   @return A handle for the new plugin instance, or NULL if instantiation
 	   has failed.
 	*/
-	LV2_Handle (*instantiate)(const struct _LV2_Descriptor * descriptor,
-	                          double                         sample_rate,
-	                          const char *                   bundle_path,
-	                          const LV2_Feature *const *     features);
+	LV2_Handle (*instantiate)(const struct LV2_Descriptor * descriptor,
+	                          double                        sample_rate,
+	                          const char *                  bundle_path,
+	                          const LV2_Feature *const *    features);
 
 	/**
 	   Connect a port on a plugin instance to a memory location.

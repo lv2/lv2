@@ -81,9 +81,9 @@ typedef LV2_Atom*
                              LV2_Atom_Forge_Ref         ref);
 
 /** A stack frame used for keeping track of nested Atom containers. */
-typedef struct _LV2_Atom_Forge_Frame {
-	struct _LV2_Atom_Forge_Frame* parent;
-	LV2_Atom_Forge_Ref            ref;
+typedef struct LV2_Atom_Forge_Frame {
+	struct LV2_Atom_Forge_Frame* parent;
+	LV2_Atom_Forge_Ref           ref;
 } LV2_Atom_Forge_Frame;
 
 /** A "forge" for creating atoms by appending to a buffer. */
