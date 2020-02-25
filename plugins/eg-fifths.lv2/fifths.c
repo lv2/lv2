@@ -128,7 +128,7 @@ run(LV2_Handle instance,
 	// Read incoming events
 	LV2_ATOM_SEQUENCE_FOREACH(self->in_port, ev) {
 		if (ev->body.type == uris->midi_Event) {
-			const uint8_t* const msg = (const uint8_t*)(ev + 1);
+			const uint8_t* const msg = (const uint8_t*)LV2_ATOM_BODY_CONST(ev);
 			switch (lv2_midi_message_type(msg)) {
 			case LV2_MIDI_MSG_NOTE_ON:
 			case LV2_MIDI_MSG_NOTE_OFF:
