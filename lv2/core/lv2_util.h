@@ -99,5 +99,4 @@ lv2_features_query(const LV2_Feature* const* features, ...)
 
 /**
    @}
-   @}
 */
