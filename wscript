@@ -318,7 +318,7 @@ def build(bld):
     if bld.env.DOCS or bld.env.ONLINE_DOCS:
         # Copy spec files to build dir
         for spec in specs:
-            srcpath   = spec.srcpath()
+            srcpath   = spec.path_from(bld.path)
             basename  = os.path.basename(srcpath)
             full_path = spec_map[basename]
             name      = 'lv2core' if basename == 'core' else basename
@@ -327,7 +327,7 @@ def build(bld):
 
             bld(features = 'subst',
                 is_copy  = True,
-                source   = os.path.join(spec.srcpath(), name + '.ttl'),
+                source   = os.path.join(srcpath, name + '.ttl'),
                 target   = path + '.ttl')
 
         # Copy stylesheets to build directory
