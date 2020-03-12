@@ -16,6 +16,7 @@
 
 /**
    @defgroup options Options
+   @ingroup lv2
 
    Instantiation time options, see <http://lv2plug.in/ns/ext/options> for
    details.

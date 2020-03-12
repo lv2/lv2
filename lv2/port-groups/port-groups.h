@@ -16,6 +16,7 @@
 
 /**
    @defgroup port-groups Port Groups
+   @ingroup lv2
 
    Multi-channel groups of LV2 ports, see
    <http://lv2plug.in/ns/ext/port-groups> for details.

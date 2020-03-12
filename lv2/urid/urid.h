@@ -17,6 +17,7 @@
 
 /**
    @defgroup urid URID
+   @ingroup lv2
 
    Features for mapping URIs to and from integers, see
    <http://lv2plug.in/ns/ext/urid> for details.

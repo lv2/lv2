@@ -16,6 +16,7 @@
 
 /**
    @defgroup atom Atom
+   @ingroup lv2
 
    A generic value container and several data types, see
    <http://lv2plug.in/ns/ext/atom> for details.

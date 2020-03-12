@@ -16,6 +16,7 @@
 
 /**
    @defgroup uri-map URI Map
+   @ingroup lv2
 
    C API for the LV2 URI Map extension <http://lv2plug.in/ns/ext/uri-map>.
 

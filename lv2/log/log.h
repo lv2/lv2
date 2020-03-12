@@ -16,6 +16,7 @@
 
 /**
    @defgroup log Log
+   @ingroup lv2
 
    Interface for plugins to log via the host; see
    <http://lv2plug.in/ns/ext/log> for details.

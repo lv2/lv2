@@ -16,6 +16,7 @@
 
 /**
    @defgroup presets Presets
+   @ingroup lv2
 
    Presets for plugins, see <http://lv2plug.in/ns/ext/presets> for details.
 

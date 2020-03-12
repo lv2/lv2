@@ -16,6 +16,7 @@
 
 /**
    @defgroup patch Patch
+   @ingroup lv2
 
    Messages for accessing and manipulating properties, see
    <http://lv2plug.in/ns/ext/patch> for details.

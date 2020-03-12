@@ -19,6 +19,7 @@
 
 /**
    @defgroup attributes Attributes
+   @ingroup lv2
 
    Macros for source code attributes.
 

@@ -19,6 +19,14 @@
 */
 
 /**
+   @defgroup lv2 LV2
+
+   The LV2 specification.
+
+   @{
+*/
+
+/**
    @defgroup lv2core LV2 Core
 
    Core LV2 specification, see <http://lv2plug.in/ns/lv2core> for details.
@@ -470,5 +478,6 @@ typedef const LV2_Lib_Descriptor *
 #endif /* LV2_H_INCLUDED */
 
 /**
+   @}
    @}
 */

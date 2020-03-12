@@ -16,6 +16,7 @@
 
 /**
    @defgroup midi MIDI
+   @ingroup lv2
 
    Definitions of standard MIDI messages, see <http://lv2plug.in/ns/ext/midi>
    for details.

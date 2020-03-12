@@ -16,6 +16,7 @@
 
 /**
    @defgroup port-props Port Properties
+   @ingroup lv2
 
    Various port properties.
 

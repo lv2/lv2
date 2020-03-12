@@ -16,6 +16,7 @@
 
 /**
    @defgroup time Time
+   @ingroup lv2
 
    Properties for describing time, see <http://lv2plug.in/ns/ext/time> for
    details.

@@ -16,6 +16,7 @@
 
 /**
    @defgroup resize-port Resize Port
+   @ingroup lv2
 
    Dynamically sized LV2 port buffers.
 
