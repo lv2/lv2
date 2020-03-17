@@ -89,28 +89,28 @@ ui:GtkUI
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "GTK2 UI" ;
-	rdfs:comment "A UI where the LV2_Widget is a pointer to a Gtk+ 2.0 compatible GtkWidget, and the host guarantees that the Gtk+ library has been initialised and the Glib main loop is running before a UI of this type is instantiated." .
+	rdfs:comment "A UI where the LV2_Widget is a pointer to a Gtk+ 2.0 compatible GtkWidget, and the host guarantees that the Gtk+ library has been initialised and the Glib main loop is running before the UI is instantiated.  Note that this UI type is not suitable for binary distribution since multiple versions of Gtk can not be used in the same process." .
 
 ui:Gtk3UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "GTK3 UI" ;
-	rdfs:comment "A UI where the LV2_Widget is a pointer to a Gtk+ 3.0 compatible GtkWidget, and the host guarantees that the Gtk+ library has been initialised and the Glib main loop is running before a UI of this type is instantiated." .
+	rdfs:comment "A UI where the LV2_Widget is a pointer to a Gtk+ 3.0 compatible GtkWidget, and the host guarantees that the Gtk+ library has been initialised and the Glib main loop is running before the UI is instantiated.  Note that this UI type is not suitable for binary distribution since multiple versions of Gtk can not be used in the same process." .
 
 ui:Qt4UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "Qt4 UI" ;
-	rdfs:comment "A UI where the LV2_Widget is a pointer to a Qt4 compatible QWidget, and the host guarantees that the Qt4 library has been initialised and the Qt4 main loop is running before a UI of this type is instantiated." .
+	rdfs:comment "A UI where the LV2_Widget is a pointer to a Qt4 compatible QWidget, and the host guarantees that the Qt4 library has been initialised and the Qt4 main loop is running before the UI is instantiated.  Note that this UI type is not suitable for binary distribution since multiple versions of Qt can not be used in the same process." .
 
 ui:Qt5UI
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "Qt5 UI" ;
-	rdfs:comment "A UI where the LV2_Widget is a pointer to a Qt5 compatible QWidget, and the host guarantees that the Qt5 library has been initialised and the Qt5 main loop is running before a UI of this type is instantiated." .
+	rdfs:comment "A UI where the LV2_Widget is a pointer to a Qt5 compatible QWidget, and the host guarantees that the Qt5 library has been initialised and the Qt5 main loop is running before the UI is instantiated.  Note that this UI type is not suitable for binary distribution since multiple versions of Qt can not be used in the same process." .
 
 ui:X11UI
 	a rdfs:Class ,
