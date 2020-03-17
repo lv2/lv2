@@ -153,4 +153,7 @@ pages:
   artifacts:
     expire_in: 30 days
     paths: [public]
-  only: [master]
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - when: on_success
