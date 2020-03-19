@@ -196,87 +196,84 @@ def linkifyCodeIdentifiers(string):
 
     return rgx.sub(translateCodeLink, string)
 
-def getComment(m, urinode, classlist, proplist, instalist):
-    c = findOne(m, urinode, lv2.documentation, None)
-    if c:
-        markup = getLiteralString(getObject(c))
 
-        # Syntax highlight all C code
-        if have_pygments:
-            code_rgx = re.compile('<pre class="c-code">(.*?)</pre>', re.DOTALL)
-            while True:
-                code = code_rgx.search(markup)
-                if not code:
-                    break
-                match_str = xml.sax.saxutils.unescape(code.group(1))
-                code_str = pygments.highlight(
-                    match_str,
-                    pygments.lexers.CLexer(),
-                    pygments.formatters.HtmlFormatter())
-                markup = code_rgx.sub(code_str, markup, 1)
+def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
+    # Syntax highlight all C code
+    if have_pygments:
+        code_rgx = re.compile('<pre class="c-code">(.*?)</pre>', re.DOTALL)
+        while True:
+            code = code_rgx.search(markup)
+            if not code:
+                break
+            match_str = xml.sax.saxutils.unescape(code.group(1))
+            code_str = pygments.highlight(
+                match_str,
+                pygments.lexers.CLexer(),
+                pygments.formatters.HtmlFormatter())
+            markup = code_rgx.sub(code_str, markup, 1)
 
-        # Syntax highlight all Turtle code
-        if have_pygments:
-            code_rgx = re.compile('<pre class="turtle-code">(.*?)</pre>', re.DOTALL)
-            while True:
-                code = code_rgx.search(markup)
-                if not code:
-                    break
-                match_str = xml.sax.saxutils.unescape(code.group(1))
-                code_str = pygments.highlight(
-                    match_str,
-                    pygments.lexers.rdf.TurtleLexer(),
-                    pygments.formatters.HtmlFormatter())
-                markup = code_rgx.sub(code_str, markup, 1)
+    # Syntax highlight all Turtle code
+    if have_pygments:
+        code_rgx = re.compile('<pre class="turtle-code">(.*?)</pre>', re.DOTALL)
+        while True:
+            code = code_rgx.search(markup)
+            if not code:
+                break
+            match_str = xml.sax.saxutils.unescape(code.group(1))
+            code_str = pygments.highlight(
+                match_str,
+                pygments.lexers.rdf.TurtleLexer(),
+                pygments.formatters.HtmlFormatter())
+            markup = code_rgx.sub(code_str, markup, 1)
 
-        # Add links to code documentation for identifiers
-        markup = linkifyCodeIdentifiers(markup)
+    # Add links to code documentation for identifiers
+    markup = linkifyCodeIdentifiers(markup)
 
-        # Transform prefixed names like eg:something into links if possible
-        rgx = re.compile('([a-zA-Z0-9_-]+):([a-zA-Z0-9_-]+)')
-        namespaces = getNamespaces(m)
-        def translateLink(match):
-            text   = match.group(0)
-            prefix = match.group(1)
-            name   = match.group(2)
-            curie = match.group(0)
-            uri   = rdflib.URIRef(spec_ns + name)
-            if prefix == spec_pre:
-                if not ((classlist and uri in classlist) or
-                        (instalist and uri in instalist) or
-                        (proplist and uri in proplist)):
-                    print("warning: Link to undefined resource <%s>\n" % text)
-                return '<a href="#%s">%s</a>' % (name, name)
-            elif prefix in namespaces:
-                return '<a href="%s">%s</a>' % (
-                    namespaces[match.group(1)] + match.group(2),
-                    match.group(0))
-            else:
-                return text
-        markup = rgx.sub(translateLink, markup)
-
-        # Transform names like #foo into links into this spec if possible
-        rgx = re.compile('([ \t\n\r\f\v^]+)\#([a-zA-Z0-9_-]+)')
-        def translateLocalLink(match):
-            text  = match.group(0)
-            space = match.group(1)
-            name  = match.group(2)
-            uri   = rdflib.URIRef(spec_ns + name)
-            if ((classlist and uri in classlist) or
-                (instalist and uri in instalist) or
-                (proplist and uri in proplist)):
-                return '%s<a href="#%s">%s</a>' % (space, name, name)
-            else:
-                print("warning: Link to undefined resource <%s>\n" % name)
-                return text
-        markup = rgx.sub(translateLocalLink, markup)
-
-        if not have_lxml:
-            print("warning: No Python lxml module found, output may be invalid")
+    # Transform prefixed names like eg:something into links if possible
+    rgx = re.compile('([a-zA-Z0-9_-]+):([a-zA-Z0-9_-]+)')
+    namespaces = getNamespaces(m)
+    def translateLink(match):
+        text   = match.group(0)
+        prefix = match.group(1)
+        name   = match.group(2)
+        curie = match.group(0)
+        uri   = rdflib.URIRef(spec_ns + name)
+        if prefix == spec_pre:
+            if not ((classlist and uri in classlist) or
+                    (instalist and uri in instalist) or
+                    (proplist and uri in proplist)):
+                print("warning: Link to undefined resource <%s>\n" % text)
+            return '<a href="#%s">%s</a>' % (name, name)
+        elif prefix in namespaces:
+            return '<a href="%s">%s</a>' % (
+                namespaces[match.group(1)] + match.group(2),
+                match.group(0))
         else:
-            try:
-                # Parse and validate documentation as XHTML Basic 1.1
-                doc = """<?xml version="1.0" encoding="UTF-8"?>
+            return text
+    markup = rgx.sub(translateLink, markup)
+
+    # Transform names like #foo into links into this spec if possible
+    rgx = re.compile('([ \t\n\r\f\v^]+)\#([a-zA-Z0-9_-]+)')
+    def translateLocalLink(match):
+        text  = match.group(0)
+        space = match.group(1)
+        name  = match.group(2)
+        uri   = rdflib.URIRef(spec_ns + name)
+        if ((classlist and uri in classlist) or
+            (instalist and uri in instalist) or
+            (proplist and uri in proplist)):
+            return '%s<a href="#%s">%s</a>' % (space, name, name)
+        else:
+            print("warning: Link to undefined resource <%s>\n" % name)
+            return text
+    markup = rgx.sub(translateLocalLink, markup)
+
+    if not have_lxml:
+        print("warning: No Python lxml module found, output may be invalid")
+    else:
+        try:
+            # Parse and validate documentation as XHTML Basic 1.1
+            doc = """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
                       "DTD/xhtml-basic11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -288,27 +285,36 @@ def getComment(m, urinode, classlist, proplist, instalist):
   </body>
 </html>"""
 
-                oldcwd = os.getcwd()
-                os.chdir(specgendir)
-                parser = etree.XMLParser(dtd_validation=True, no_network=True)
-                root = etree.fromstring(doc.encode('utf-8'), parser)
-            except Exception as e:
-                print("Invalid lv2:documentation for %s\n%s" % (urinode, e))
-                line_num = 1
-                for line in doc.split('\n'):
-                    print('%3d: %s' % (line_num, line))
-                    line_num += 1
-            finally:
-                os.chdir(oldcwd)
+            oldcwd = os.getcwd()
+            os.chdir(specgendir)
+            parser = etree.XMLParser(dtd_validation=True, no_network=True)
+            root = etree.fromstring(doc.encode('utf-8'), parser)
+        except Exception as e:
+            print("Invalid documentation for %s\n%s" % (subject, e))
+            line_num = 1
+            for line in doc.split('\n'):
+                print('%3d: %s' % (line_num, line))
+                line_num += 1
+        finally:
+            os.chdir(oldcwd)
 
+    return markup
+
+
+def getComment(m, urinode, classlist, proplist, instalist):
+    c = findOne(m, urinode, lv2.documentation, None)
+    if c:
+        markup = getLiteralString(getObject(c))
+        markup = prettifyHtml(m, markup, urinode, classlist, proplist, instalist)
         return markup
 
     c = findOne(m, urinode, rdfs.comment, None)
-    if c:
-        text = getLiteralString(getObject(c))
-        return '<p>%s</p>' % xml.sax.saxutils.escape(text)
+    if not c:
+        return ''
 
-    return ''
+    comment = getObject(c)
+
+    return '<p>%s</p>' % xml.sax.saxutils.escape(getLiteralString(comment))
 
 
 def getProperty(val, first=True):
