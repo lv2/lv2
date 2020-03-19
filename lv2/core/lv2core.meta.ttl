@@ -15,6 +15,15 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "17.0" ;
+		doap:created "2019-03-19" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Add lv2:Markdown datatype."
+			]
+		]
+	] , [
 		doap:revision "16.0" ;
 		doap:created "2019-02-03" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.16.0.tar.bz2> ;

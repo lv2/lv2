@@ -17,6 +17,18 @@ lv2:Specification
 so hosts may discover <em>all</em> present LV2 data.</p>
 """ .
 
+lv2:Markdown
+	a rdfs:Datatype ;
+	owl:onDatatype xsd:string ;
+	lv2:documentation """
+<p>A string in <a href="https://daringfireball.net/projects/markdown/syntax">Markdown</a> syntax.</p>
+
+<p>Generally, documentation with this datatype should stay as close to readable
+plain text as possible, but may use core Markdown syntax for nicer
+presentation.  Documentation can assume that basic extensions like codehilite
+and tables are available.</p>
+""" .
+
 lv2:documentation
 	a rdf:Property ,
 		owl:AnnotationProperty ;
