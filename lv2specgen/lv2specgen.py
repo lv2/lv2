@@ -177,11 +177,12 @@ def getLabel(m, urinode):
     else:
         return ''
 
-def linkify(string):
+def linkifyCodeIdentifiers(string):
+    "Add links to code documentation for identifiers"
+
     if linkmap == {}:
         return string
 
-    "Add links to code documentation for identifiers"
     if string in linkmap.keys():
         # Exact match for complete string
         return linkmap[string]
@@ -229,7 +230,7 @@ def getComment(m, urinode, classlist, proplist, instalist):
                 markup = code_rgx.sub(code_str, markup, 1)
 
         # Add links to code documentation for identifiers
-        markup = linkify(markup)
+        markup = linkifyCodeIdentifiers(markup)
 
         # Transform prefixed names like eg:something into links if possible
         rgx = re.compile('([a-zA-Z0-9_-]+):([a-zA-Z0-9_-]+)')
@@ -537,7 +538,7 @@ def extraInfo(term, m):
         if isResource(getObject(p)):
             doc += getProperty(getTermLink(getObject(p), term, getPredicate(p)), first)
         elif isLiteral(getObject(p)):
-            doc += getProperty(linkify(str(getObject(p))), first)
+            doc += getProperty(linkifyCodeIdentifiers(str(getObject(p))), first)
         elif isBlank(getObject(p)):
             doc += getProperty(str(blankNodeDesc(getObject(p), m)), first)
         else:
