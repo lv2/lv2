@@ -246,7 +246,7 @@ def getComment(m, urinode, classlist, proplist, instalist):
                         (instalist and uri in instalist) or
                         (proplist and uri in proplist)):
                     print("warning: Link to undefined resource <%s>\n" % text)
-                return '<a href="#%s">%s</a>' % (name, curie)
+                return '<a href="#%s">%s</a>' % (name, name)
             elif prefix in namespaces:
                 return '<a href="%s">%s</a>' % (
                     namespaces[match.group(1)] + match.group(2),
