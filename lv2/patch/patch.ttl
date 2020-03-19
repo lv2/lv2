@@ -284,13 +284,16 @@ patch:add
 	a rdf:Property ,
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
-	rdfs:domain patch:Message .
+	rdfs:domain patch:Message ;
+	rdfs:label "add" ;
+	rdfs:comment "The properties to add to the subject." .
 
 patch:body
 	a rdf:Property ,
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
 	rdfs:domain patch:Message ;
+	rdfs:label "body" ;
 	rdfs:comment """The body of a message.
 
 The details of this property's value depend on the type of message it is a
@@ -300,6 +303,7 @@ patch:context
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:domain patch:Message ;
+	rdfs:label "context" ;
 	rdfs:comment """The context of properties in this message.
 
 For example, a plugin may have a special context for ephemeral properties which
@@ -317,7 +321,8 @@ patch:destination
 	a rdf:Property ,
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
-	rdfs:domain patch:Message .
+	rdfs:domain patch:Message ;
+	rdfs:label "destination" .
 
 patch:property
 	a rdf:Property ;
@@ -338,7 +343,8 @@ patch:remove
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
 	rdfs:label "remove" ;
-	rdfs:domain patch:Message .
+	rdfs:domain patch:Message ;
+	rdfs:comment "The properties to remove from the subject." .
 
 patch:request
 	a rdf:Property ,
@@ -365,6 +371,7 @@ patch:subject
 		owl:ObjectProperty ,
 		owl:FunctionalProperty ;
 	rdfs:domain patch:Message ;
+	rdfs:label "subject" ;
 	rdfs:comment "The subject this message applies to." .
 
 patch:value

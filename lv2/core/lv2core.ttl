@@ -9,6 +9,7 @@ lv2:Specification
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf doap:Project ;
+	rdfs:label "Specification" ;
 	lv2:documentation """
 <p>An LV2 specification (i.e. this specification, or an LV2 extension).</p>
 

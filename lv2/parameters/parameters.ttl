@@ -19,6 +19,7 @@ to the user more efficiently.</p> """ .
 param:ControlGroup
 	a rdfs:Class ;
 	rdfs:subClassOf pg:Group ;
+	rdfs:label "Control Group" ;
 	rdfs:comment "A group representing a set of associated controls." .
 
 param:amplitude

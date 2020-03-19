@@ -110,6 +110,7 @@ pg:group
 pg:DiscreteGroup
 	a rdfs:Class ;
 	rdfs:subClassOf pg:Group ;
+	rdfs:label "Discrete Group" ;
 	rdfs:comment "Discrete channel configurations.  These groups are divided into channels where each represents a particular speaker location.  The position of sound in one of these groups depends on a particular speaker configuration." .
 
 pg:left
@@ -486,6 +487,7 @@ pg:ACN15
 pg:AmbisonicGroup
 	a rdfs:Class ;
 	rdfs:subClassOf pg:Group ;
+	rdfs:label "Ambisonic Group" ;
 	rdfs:comment "Ambisonic channel configurations.  These groups are divided into channels which together represent a position in an abstract n-dimensional space. The position of sound in one of these groups does not depend on a particular speaker configuration; a decoder can be used to convert an ambisonic stream for any speaker configuration." .
 
 pg:AmbisonicBH1P0Group

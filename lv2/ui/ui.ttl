@@ -250,6 +250,7 @@ ui:PortNotification
 		owl:cardinality 1 ;
 		rdfs:comment "A PortNotification MUST have exactly one ui:plugin."
 	] ;
+	rdfs:label "Port Notification" ;
 	lv2:documentation """
 <p>A port notification.  This describes which ports the host must send
 notifications to the UI about.  The port can be specific by index, using the

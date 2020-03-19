@@ -443,6 +443,31 @@ def lint(ctx):
            "build-test.c")
     subprocess.call(cmd, cwd='build', shell=True)
 
+
+def test_vocabularies(check, files):
+    import rdflib
+
+    lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
+    owl = rdflib.Namespace('http://www.w3.org/2002/07/owl#')
+    rdf = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+    rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
+
+    model = rdflib.ConjunctiveGraph()
+    for f in files:
+        model.parse(f, format='n3')
+
+    # Check that all classes and properties have labels
+    for t in [rdf.Property, rdfs.Class]:
+        for r in sorted(model.triples([None, rdf.type, t])):
+            subject = r[0]
+
+            def has_property(subject, prop):
+                return model.value(subject, prop, None) is not None
+
+            check(lambda: has_property(subject, rdfs.label),
+                  name = '%s has rdfs:label' % subject)
+
+
 def test(tst):
     import tempfile
 
@@ -463,6 +488,11 @@ def test(tst):
         if "SORD_VALIDATE" in tst.env:
             all_files = schemas + spec_files + plugin_files + bld_files
             check(tst.env.SORD_VALIDATE + all_files)
+
+        try:
+            test_vocabularies(check, spec_files)
+        except ImportError as e:
+            Logs.warn('Not running vocabulary tests (%s)' % e)
 
     with tst.group('Unit') as check:
         pattern = tst.env.cprogram_PATTERN % '**/*-test'
