@@ -279,7 +279,7 @@ should be a midi:MidiEvent but the property that represents the control value ma
 be omitted.  For example, to bind to the value of controller 17:</p>
 
 <pre class="turtle-code">
-port midi:binding [
+eg:port midi:binding [
     a midi:Controller ;
     midi:controllerNumber 17
 ] .
