@@ -460,7 +460,7 @@ def rdfsClassInfo(term, m):
     global classdomains
     doc = ""
 
-    # Find subClassOf information
+    # Find superclasses
     superclasses = set()
     for st in findStatements(m, term, rdfs.subClassOf, None):
         if not isBlank(getObject(st)):
@@ -471,6 +471,20 @@ def rdfsClassInfo(term, m):
         doc += "\n<tr><th>Subclass of</th>"
         first = True
         for superclass in sorted(superclasses):
+            doc += getProperty(getTermLink(superclass), first)
+            first = False
+
+    # Find subclasses
+    subclasses = set()
+    for st in findStatements(m, None, rdfs.subClassOf, term):
+        if not isBlank(getObject(st)):
+            uri = getSubject(st)
+            subclasses |= set([uri])
+
+    if len(subclasses) > 0:
+        doc += "\n<tr><th>Superclass of</th>"
+        first = True
+        for superclass in sorted(subclasses):
             doc += getProperty(getTermLink(superclass), first)
             first = False
 
