@@ -6,7 +6,7 @@
 <http://lv2plug.in/ns/ext/state>
 	a lv2:Specification ;
 	rdfs:seeAlso <state.h> ,
-		<lv2-state.doap.ttl> ;
+		<state.meta.ttl> ;
 	lv2:documentation """
 <p>This extension defines a simple mechanism which allows hosts to save and
 restore a plugin instance's state.  The goal is for an instance's state to be

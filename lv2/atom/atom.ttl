@@ -13,7 +13,7 @@
 	rdfs:seeAlso <atom.h> ,
 		<util.h> ,
 		<forge.h> ,
-		<lv2-atom.doap.ttl> ;
+		<atom.meta.ttl> ;
 	lv2:documentation """
 
 <p>An #Atom is a simple generic data container for holding any type of Plain

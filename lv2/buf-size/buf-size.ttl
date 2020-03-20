@@ -9,7 +9,7 @@
 <http://lv2plug.in/ns/ext/buf-size>
 	a lv2:Specification ;
 	rdfs:seeAlso <buf-size.h> ,
-		<lv2-buf-size.doap.ttl> ;
+		<buf-size.meta.ttl> ;
 	lv2:documentation """
 <p>This extension defines a facility for plugins to get information about the
 block length (the sample_count parameter of LV2_Descriptor::run) and

@@ -11,7 +11,7 @@
 		lv2:Specification ;
 	owl:imports <http://lv2plug.in/ns/lv2core> ;
 	rdfs:seeAlso <ui.h> ,
-		<lv2-ui.doap.ttl> ;
+		<ui.meta.ttl> ;
 	lv2:documentation """
 <p>This extension is used to create User Interfaces (UIs) for LV2 plugins.</p>
 

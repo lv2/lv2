@@ -9,7 +9,7 @@
 	a owl:Ontology ,
 		lv2:Specification ;
 	rdfs:seeAlso <options.h> ,
-		<lv2-options.doap.ttl> ;
+		<options.meta.ttl> ;
 	lv2:documentation """
 <p>This extension defines a facility for <q>options</q>, which are dynamic
 properties that may be changed at run time.</p>

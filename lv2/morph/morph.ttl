@@ -12,7 +12,7 @@
 	a owl:Ontology ,
 		lv2:Specification ;
 	rdfs:seeAlso <morph.h> ,
-		<lv2-morph.doap.ttl> ;
+		<morph.meta.ttl> ;
 	lv2:documentation """
 <p>This extension defines two port types: morph:MorphPort, which has a
 host-configurable type, and morph:AutoMorphPort, which may automatically change

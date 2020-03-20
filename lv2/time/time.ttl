@@ -9,7 +9,7 @@
 	a owl:Ontology ,
 		lv2:Specification ;
 	rdfs:seeAlso <time.h> ,
-		<lv2-time.doap.ttl> ;
+		<time.meta.ttl> ;
 	lv2:documentation """
 <p>This is a vocabulary for precisely describing a position in time and the
 passage of time itself, in both real and musical terms.</p>

@@ -9,7 +9,7 @@
 	a owl:Ontology ,
 		lv2:Specification ;
 	rdfs:seeAlso <worker.h> ,
-		<lv2-worker.doap.ttl> ;
+		<worker.meta.ttl> ;
 	lv2:documentation """
 <p>This extension allows plugins to schedule work that must be performed in
 another thread.  Plugins can use this interface to safely perform work that is

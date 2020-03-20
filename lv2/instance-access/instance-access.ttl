@@ -6,7 +6,7 @@
 	a lv2:Feature ,
 		lv2:Specification ;
 	rdfs:seeAlso <instance-access.h> ,
-		<lv2-instance-access.doap.ttl> ;
+		<instance-access.meta.ttl> ;
 	lv2:documentation """
 <p>This extension defines a feature which allows plugin UIs to get a direct
 handle to an LV2 plugin instance (LV2_Handle), if possible.</p>

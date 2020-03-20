@@ -8,7 +8,7 @@
 <http://lv2plug.in/ns/ext/port-props>
 	a owl:Ontology ,
 		lv2:Specification ;
-	rdfs:seeAlso <lv2-port-props.doap.ttl> ;
+	rdfs:seeAlso <port-props.meta.ttl> ;
 	lv2:documentation """
 <p>This vocabulary defines various properties for plugin ports, which can be
 used to better describe how a plugin can be controlled.  Using this metadata,

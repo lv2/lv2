@@ -10,7 +10,7 @@
 		lv2:Specification ;
 	owl:imports <http://lv2plug.in/ns/lv2core> ;
 	rdfs:seeAlso <units.h> ,
-		<lv2-units.doap.ttl> ;
+		<units.meta.ttl> ;
 	lv2:documentation """
 <p>This vocabulary defines a number of units for use in audio processing.</p>
 

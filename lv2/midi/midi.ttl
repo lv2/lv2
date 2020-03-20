@@ -11,7 +11,7 @@
 	a owl:Ontology ,
 		lv2:Specification ;
 	rdfs:seeAlso <midi.h> ,
-		<lv2-midi.doap.ttl> ;
+		<midi.meta.ttl> ;
 	lv2:documentation """
 <p>This specification defines a data type for a MIDI message, midi:MidiEvent,
 which is normalised for fast and convenient real-time processing.  MIDI is the

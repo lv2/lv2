@@ -7,7 +7,7 @@
 <http://lv2plug.in/ns/ext/log>
 	a lv2:Specification ;
 	rdfs:seeAlso <log.h> ,
-		<lv2-log.doap.ttl> ;
+		<log.meta.ttl> ;
 	lv2:documentation """
 <p>This extension defines a feature, log:log, which allows plugins to print log
 messages with an API much like the standard C printf functions.  This allows,

@@ -6,7 +6,7 @@
 	a lv2:Feature ,
 		lv2:Specification ;
 	rdfs:seeAlso <data-access.h> ,
-		<lv2-data-access.doap.ttl> ;
+		<data-access.meta.ttl> ;
 	lv2:documentation """
 <p>This extension defines a feature, LV2_Extension_Data_Feature, which provides
 access to LV2_Descriptor::extension_data() for plugin UIs or other potentially

@@ -5,7 +5,7 @@
 <http://lv2plug.in/ns/ext/urid>
 	a lv2:Specification ;
 	rdfs:seeAlso <urid.h> ,
-		<lv2-urid.doap.ttl> ;
+		<urid.meta.ttl> ;
 	lv2:documentation """
 <p>This extension defines a simple mechanism for plugins to map URIs to and
 from integers, usually for performance reasons (e.g. processing events typed by

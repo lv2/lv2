@@ -10,7 +10,7 @@
 	a owl:Ontology ,
 		lv2:Specification ;
 	rdfs:seeAlso <patch.h> ,
-		<lv2-patch.doap.ttl> ;
+		<patch.meta.ttl> ;
 	lv2:documentation """
 <p>This vocabulary defines messages which can be used to access and manipulate
 properties.  It is designed to provide a dynamic control interface for LV2

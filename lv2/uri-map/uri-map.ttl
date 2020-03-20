@@ -9,7 +9,7 @@
 		lv2:Specification ;
 	owl:deprecated true ;
 	rdfs:seeAlso <uri-map.h> ,
-		<lv2-uri-map.doap.ttl> ;
+		<uri-map.meta.ttl> ;
 	lv2:documentation """
 <p><span class="warning">This extension is deprecated.</span> New
 implementations should use <a href="urid.html">LV2 URID</a>

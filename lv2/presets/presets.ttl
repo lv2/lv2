@@ -8,7 +8,7 @@
 <http://lv2plug.in/ns/ext/presets>
 	a owl:Ontology ,
 		lv2:Specification ;
-	rdfs:seeAlso <lv2-presets.doap.ttl> ;
+	rdfs:seeAlso <presets.meta.ttl> ;
 	lv2:documentation """
 <p>This vocabulary describes a format for presets (i.e. named sets of control
 values and possibly other state) for LV2 plugins.  The structure of a
