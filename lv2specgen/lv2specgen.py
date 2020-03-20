@@ -179,8 +179,9 @@ def getLabel(m, urinode):
     else:
         return ''
 
+
 def linkifyCodeIdentifiers(string):
-    "Add links to code documentation for identifiers"
+    "Add links to code documentation for identifiers like LV2_Type"
 
     if linkmap == {}:
         return string
@@ -198,6 +199,33 @@ def linkifyCodeIdentifiers(string):
 
     return rgx.sub(translateCodeLink, string)
 
+
+def linkifyVocabIdentifiers(m, string, classlist, proplist, instalist):
+    "Add links to vocabulary documentation for prefixed names like eg:Thing"
+
+    rgx = re.compile('([a-zA-Z0-9_-]+):([a-zA-Z0-9_-]+)')
+    namespaces = getNamespaces(m)
+
+    def translateLink(match):
+        text   = match.group(0)
+        prefix = match.group(1)
+        name   = match.group(2)
+        curie = match.group(0)
+        uri   = rdflib.URIRef(spec_ns + name)
+        if prefix == spec_pre:
+            if not ((classlist and uri in classlist) or
+                    (instalist and uri in instalist) or
+                    (proplist and uri in proplist)):
+                print("warning: Link to undefined resource <%s>\n" % text)
+            return '<a href="#%s">%s</a>' % (name, name)
+        elif prefix in namespaces:
+            return '<a href="%s">%s</a>' % (
+                namespaces[match.group(1)] + match.group(2),
+                match.group(0))
+        else:
+            return text
+
+    return rgx.sub(translateLink, string)
 
 def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
     # Syntax highlight all C code
@@ -231,28 +259,8 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
     # Add links to code documentation for identifiers
     markup = linkifyCodeIdentifiers(markup)
 
-    # Transform prefixed names like eg:something into links if possible
-    rgx = re.compile('([a-zA-Z0-9_-]+):([a-zA-Z0-9_-]+)')
-    namespaces = getNamespaces(m)
-    def translateLink(match):
-        text   = match.group(0)
-        prefix = match.group(1)
-        name   = match.group(2)
-        curie = match.group(0)
-        uri   = rdflib.URIRef(spec_ns + name)
-        if prefix == spec_pre:
-            if not ((classlist and uri in classlist) or
-                    (instalist and uri in instalist) or
-                    (proplist and uri in proplist)):
-                print("warning: Link to undefined resource <%s>\n" % text)
-            return '<a href="#%s">%s</a>' % (name, name)
-        elif prefix in namespaces:
-            return '<a href="%s">%s</a>' % (
-                namespaces[match.group(1)] + match.group(2),
-                match.group(0))
-        else:
-            return text
-    markup = rgx.sub(translateLink, markup)
+    # Add internal links for known prefixed names
+    markup = linkifyVocabIdentifiers(m, markup, classlist, proplist, instalist)
 
     # Transform names like #foo into links into this spec if possible
     rgx = re.compile('([ \t\n\r\f\v^]+)\#([a-zA-Z0-9_-]+)')
