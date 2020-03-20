@@ -151,6 +151,8 @@ def niceName(uri):
     global spec_bundle
     if uri.startswith(spec_ns_str):
         return uri[len(spec_ns_str):]
+    elif uri == str(rdfs.seeAlso):
+        return "See also"
 
     regexp = re.compile("^(.*[/#])([^/#]+)$")
     rez = regexp.search(uri)
