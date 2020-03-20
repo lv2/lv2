@@ -429,12 +429,15 @@ def getTermLink(uri, subject=None, predicate=None):
 
 def owlRestrictionInfo(term, m):
     """Generate OWL restriction information for Classes"""
-    doc = ""
-
     restrictions = []
     for s in findStatements(m, term, rdfs.subClassOf, None):
         if findOne(m, getObject(s), rdf.type, owl.Restriction):
             restrictions.append(getObject(s))
+
+    if not restrictions:
+        return ''
+
+    doc = '<dl>'
 
     for r in sorted(restrictions):
         props = findStatements(m, r, None, None)
@@ -446,7 +449,7 @@ def owlRestrictionInfo(term, m):
             elif getPredicate(p) == rdfs.comment:
                 comment = getObject(p)
         if onProp is not None:
-            doc += '<dl><dt>Restriction on %s</dt>\n' % getTermLink(onProp)
+            doc += '<dt>Restriction on %s</dt>\n' % getTermLink(onProp)
 
             prop_str = ''
             for p in findStatements(m, r, None, None):
@@ -466,8 +469,9 @@ def owlRestrictionInfo(term, m):
             if comment is not None:
                 prop_str += '\n<div>%s</div>\n' % getLiteralString(comment)
 
-            doc += '<dd>%s</dd></dl>' % prop_str if prop_str else '';
+            doc += '<dd>%s</dd>' % prop_str if prop_str else '';
 
+    doc += '</dl>'
     return doc
 
 def rdfsClassInfo(term, m):
