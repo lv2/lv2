@@ -31,6 +31,8 @@
 # THE SOFTWARE.
 
 import datetime
+import markdown
+import markdown.extensions
 import optparse
 import os
 import re
@@ -311,20 +313,61 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
     return markup
 
 
-def getComment(m, urinode, classlist, proplist, instalist):
-    c = findOne(m, urinode, lv2.documentation, None)
+def formatDoc(m, urinode, literal, classlist, proplist, instalist):
+    string = getLiteralString(literal)
+
+    if literal.datatype == lv2.Markdown:
+        ext = ["markdown.extensions.codehilite",
+               "markdown.extensions.tables",
+               "markdown.extensions.def_list"]
+
+        doc = markdown.markdown(string, extensions=ext)
+
+        # Hack to make tables valid XHTML Basic 1.1
+        for tag in ['thead', 'tbody']:
+            doc = doc.replace('<%s>\n' % tag, '')
+            doc = doc.replace('</%s>\n' % tag, '')
+
+        return prettifyHtml(m, doc, urinode, classlist, proplist, instalist)
+    else:
+        doc = xml.sax.saxutils.escape(string)
+        doc = linkifyCodeIdentifiers(doc)
+        doc = linkifyVocabIdentifiers(m, doc, classlist, proplist, instalist)
+        return '<p>%s</p>' % doc
+
+
+def getComment(m, subject, classlist, proplist, instalist):
+    c = findOne(m, subject, rdfs.comment, None)
     if c:
-        markup = getLiteralString(getObject(c))
-        markup = prettifyHtml(m, markup, urinode, classlist, proplist, instalist)
-        return markup
+        comment = getObject(c)
+        return formatDoc(m, subject, comment, classlist, proplist, instalist)
 
-    c = findOne(m, urinode, rdfs.comment, None)
-    if not c:
-        return ''
+    return ''
 
-    comment = getObject(c)
 
-    return '<p>%s</p>' % xml.sax.saxutils.escape(getLiteralString(comment))
+def getDetailedDocumentation(m, subject, classlist, proplist, instalist):
+    markup = ''
+
+    d = findOne(m, subject, lv2.documentation, None)
+    if d:
+        doc = getObject(d)
+        if doc.datatype == lv2.Markdown:
+            markup += formatDoc(m, subject, doc, classlist, proplist, instalist)
+        else:
+            html = getLiteralString(doc)
+            markup += prettifyHtml(m, html, subject, classlist, proplist, instalist)
+
+    return markup
+
+
+def getFullDocumentation(m, subject, classlist, proplist, instalist):
+    # Use rdfs:comment for first summary line
+    markup = getComment(m, subject, classlist, proplist, instalist)
+
+    # Use lv2:documentation for further details
+    markup += getDetailedDocumentation(m, subject, classlist, proplist, instalist)
+
+    return markup
 
 
 def getProperty(val, first=True):
@@ -653,7 +696,7 @@ def docTerms(category, list, m, classlist, proplist, instalist):
         doc += '<h4><a href="#%s">%s</a></h4>' % (getAnchor(term), curie)
 
         label = getLabel(m, term)
-        comment = getComment(m, term, classlist, proplist, instalist)
+        comment = getFullDocumentation(m, term, classlist, proplist, instalist)
         is_deprecated = isDeprecated(m, term)
 
         doc += '<div class="spectermbody">'
@@ -1325,11 +1368,8 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
 
     template = template.replace('@CONTENT_LINKS@', content_links)
 
-    comment = getComment(m, rdflib.URIRef(spec_url), classlist, proplist, instalist)
-    if comment != '':
-        template = template.replace('@COMMENT@', comment)
-    else:
-        template = template.replace('@COMMENT@', '')
+    docs = getDetailedDocumentation(m, rdflib.URIRef(spec_url), classlist, proplist, instalist)
+    template = template.replace('@DESCRIPTION@', docs)
 
     now = int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
     build_date = datetime.datetime.utcfromtimestamp(now)
