@@ -707,6 +707,7 @@ def docTerms(category, list, m, classlist, proplist, instalist):
         curie = term.split(spec_ns_str[-1])[1]
         doc += '<div class="specterm" id="%s" about="%s">' % (t, term)
         doc += '<h3><a href="#%s">%s</a></h3>' % (getAnchor(term), curie)
+        doc += '<span class="spectermtype">%s</span>' % category
 
         comment = getFullDocumentation(m, term, classlist, proplist, instalist)
         is_deprecated = isDeprecated(m, term)
