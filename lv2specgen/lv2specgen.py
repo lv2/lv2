@@ -706,7 +706,7 @@ def docTerms(category, list, m, classlist, proplist, instalist):
         t = termName(m, term)
         curie = term.split(spec_ns_str[-1])[1]
         doc += '<div class="specterm" id="%s" about="%s">' % (t, term)
-        doc += '<h4><a href="#%s">%s</a></h4>' % (getAnchor(term), curie)
+        doc += '<h3><a href="#%s">%s</a></h3>' % (getAnchor(term), curie)
 
         comment = getFullDocumentation(m, term, classlist, proplist, instalist)
         is_deprecated = isDeprecated(m, term)
@@ -1311,11 +1311,19 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
 
     termlist = ''
     if classlist:
-        termlist += '<h3><a id="ref-classes" />Classes</h3>' + classlist
+        termlist += '<div class="section">'
+        termlist += '<h2><a id="ref-classes" />Classes</h2>' + classlist
+        termlist += '</div>'
+
     if proplist:
-        termlist += '<h3><a id="ref-properties" />Properties</h3>' + proplist
+        termlist += '<div class="section">'
+        termlist += '<h2><a id="ref-properties" />Properties</h2>' + proplist
+        termlist += '</div>'
+
     if instlist:
-        termlist += '<h3><a id="ref-instances" />Instances</h3>' + instlist
+        termlist += '<div class="section">'
+        termlist += '<h2><a id="ref-instances" />Instances</h2>' + instlist
+        termlist += '</div>'
 
     name = specProperty(m, spec, doap.name)
     title = name
