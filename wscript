@@ -175,7 +175,6 @@ def build_index(task):
     import lv2specgen
 
     doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
-    lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
     rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
     model = load_ttl([str(src_dir.find_node('lv2/core/meta.ttl')),
@@ -444,34 +443,69 @@ def lint(ctx):
     subprocess.call(cmd, cwd='build', shell=True)
 
 
-def test_vocabularies(check, files):
+def test_vocabularies(check, specs, files):
     import rdflib
 
-    lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
+    foaf = rdflib.Namespace('http://xmlns.com/foaf/0.1/')
+    lv2 = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
     owl = rdflib.Namespace('http://www.w3.org/2002/07/owl#')
     rdf = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
     rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
+    # Check that extended documentation is not in main specification file
+    for spec in specs:
+        path = str(spec.abspath())
+        name = os.path.basename(path)
+        name = 'lv2core' if name == 'core' else name
+        vocab = os.path.join(path, name + '.ttl')
+
+        spec_model = rdflib.ConjunctiveGraph()
+        spec_model.parse(vocab, format='n3')
+
+        def has_statement(s, p, o):
+            for t in spec_model.triples([s, p, o]):
+                return True
+
+            return False
+
+        check(lambda: not has_statement(None, lv2.documentation, None),
+              name = name + ".ttl does not contain lv2:documentation")
+
+    # Load everything into one big model
     model = rdflib.ConjunctiveGraph()
     for f in files:
         model.parse(f, format='n3')
 
-    # Check that all classes and properties have labels
-    for t in [rdf.Property, rdfs.Class]:
-        for r in sorted(model.triples([None, rdf.type, t])):
-            subject = r[0]
+    # Check that all named and typed resources have labels and comments
+    for r in sorted(model.triples([None, rdf.type, None])):
+        subject = r[0]
+        if (type(subject) == rdflib.term.BNode or
+            foaf.Person in model.objects(subject, rdf.type)):
+            continue
 
-            def has_property(subject, prop):
-                return model.value(subject, prop, None) is not None
+        def has_property(subject, prop):
+            return model.value(subject, prop, None) is not None
 
-            check(lambda: has_property(subject, rdfs.label),
-                  name = '%s has rdfs:label' % subject)
+        check(lambda: has_property(subject, rdfs.label),
+              name = '%s has rdfs:label' % subject)
+
+        if check(lambda: has_property(subject, rdfs.comment),
+                 name = '%s has rdfs:comment' % subject):
+            comment = str(model.value(subject, rdfs.comment, None))
+
+            check(lambda: comment.endswith('.'),
+                  name = "%s comment ends in '.'" % subject)
+            check(lambda: comment.find('\n') == -1,
+                  name = "%s comment contains no newlines" % subject)
+            check(lambda: comment == comment.strip(),
+                  name = "%s comment has stripped whitespace" % subject)
 
 
 def test(tst):
     import tempfile
 
     with tst.group("Data") as check:
+        specs = (tst.path.ant_glob('lv2/*', dir=True))
         schemas = list(map(str, tst.path.ant_glob("schemas.lv2/*.ttl")))
         spec_files = list(map(str, tst.path.ant_glob("lv2/**/*.ttl")))
         plugin_files = list(map(str, tst.path.ant_glob("plugins/**/*.ttl")))
@@ -490,7 +524,7 @@ def test(tst):
             check(tst.env.SORD_VALIDATE + all_files)
 
         try:
-            test_vocabularies(check, spec_files)
+            test_vocabularies(check, specs, spec_files)
         except ImportError as e:
             Logs.warn('Not running vocabulary tests (%s)' % e)
 
