@@ -13,6 +13,15 @@
 	doap:name "LV2 Patch" ;
 	doap:shortdesc "A protocol for accessing and manipulating properties." ;
 	doap:release [
+		doap:revision "2.7" ;
+		doap:created "2019-03-22" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix incorrect type of patch:sequenceNumber."
+			]
+		]
+	] , [
 		doap:revision "2.6" ;
 		doap:created "2019-02-03" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.16.0.tar.bz2> ;

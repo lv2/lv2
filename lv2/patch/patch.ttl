@@ -214,7 +214,7 @@ patch:request
 
 patch:sequenceNumber
 	a rdf:Property ,
-		owl:ObjectProperty ,
+		owl:DatatypeProperty ,
 		owl:FunctionalProperty ;
 	rdfs:label "sequence number" ;
 	rdfs:domain patch:Message ;
