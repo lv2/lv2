@@ -500,6 +500,16 @@ def test_vocabularies(check, specs, files):
             check(lambda: comment == comment.strip(),
                   name = "%s comment has stripped whitespace" % subject)
 
+        # Check that lv2:documentation, if present, is proper Markdown
+        documentation = model.value(subject, lv2.documentation, None)
+        if documentation is not None:
+            check(lambda: documentation.datatype == lv2.Markdown,
+                  name = "%s documentation is explicitly Markdown" % subject)
+            check(lambda: str(documentation).startswith('\n\n'),
+                  name = "%s documentation starts with blank line" % subject)
+            check(lambda: str(documentation).endswith('\n\n'),
+                  name = "%s documentation ends with blank line" % subject)
+
 
 def test(tst):
     import tempfile
