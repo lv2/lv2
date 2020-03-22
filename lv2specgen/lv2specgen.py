@@ -394,6 +394,10 @@ def rdfsPropertyInfo(term, m):
     range = ""
     domain = ""
 
+    label = getLabel(m, term)
+    if label != '':
+        doc += "<tr><th>Label</th><td>%s</td></tr>" % label
+
     # Find subPropertyOf information
     rlist = ''
     first = True
@@ -523,6 +527,10 @@ def rdfsClassInfo(term, m):
     global classdomains
     doc = ""
 
+    label = getLabel(m, term)
+    if label != '':
+        doc += "<tr><th>Label</th><td>%s</td></tr>" % label
+
     # Find superclasses
     superclasses = set()
     for st in findStatements(m, term, rdfs.subClassOf, None):
@@ -630,16 +638,21 @@ def rdfsInstanceInfo(term, m):
     """Generate rdfs-type information for instances"""
     doc = ""
 
+    label = getLabel(m, term)
+    if label != '':
+        doc += "<tr><th>Label</th><td>%s</td></tr>" % label
+
     first = True
+    types = ""
     for match in sorted(findStatements(m, term, rdf.type, None)):
-        doc += getProperty(getTermLink(getObject(match),
-                                       term,
-                                       rdf.type),
-                           first)
+        types += getProperty(getTermLink(getObject(match),
+                                         term,
+                                         rdf.type),
+                             first)
         first = False
 
-    if doc != "":
-        doc = "<tr><th>Type</th>" + doc
+    if types != "":
+        doc += "<tr><th>Type</th>" + types
 
     doc += endProperties(first)
 
