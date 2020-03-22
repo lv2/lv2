@@ -695,7 +695,6 @@ def docTerms(category, list, m, classlist, proplist, instalist):
         doc += '<div class="specterm" id="%s" about="%s">' % (t, term)
         doc += '<h4><a href="#%s">%s</a></h4>' % (getAnchor(term), curie)
 
-        label = getLabel(m, term)
         comment = getFullDocumentation(m, term, classlist, proplist, instalist)
         is_deprecated = isDeprecated(m, term)
 
@@ -717,11 +716,7 @@ def docTerms(category, list, m, classlist, proplist, instalist):
         if (len(terminfo) > 0):  # to prevent empty list (bug #882)
             doc += '\n<table class="terminfo">%s</table>\n' % terminfo
 
-        if label != '' or comment != '' or is_deprecated:
-            doc += '<div class="description">'
-
-        if label != '':
-            doc += "<div property=\"rdfs:label\" class=\"label\">%s</div>" % label
+        doc += '<div class="description">'
 
         if is_deprecated:
             doc += '<div class="warning">Deprecated</div>'
@@ -731,8 +726,7 @@ def docTerms(category, list, m, classlist, proplist, instalist):
 
         doc += extrainfo
 
-        if label != '' or comment != '' or is_deprecated:
-            doc += "</div>"
+        doc += "</div>"
 
         doc += '</div>'
         doc += "\n</div>\n\n"
