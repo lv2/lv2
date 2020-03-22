@@ -1,6 +1,8 @@
 @prefix dcs: <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ia: <http://lv2plug.in/ns/ext/instance-access#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/ext/instance-access>
@@ -54,5 +56,20 @@
 				rdfs:label "Initial release."
 			]
 		]
-	] .
+	] ;
+	lv2:documentation """
+
+This extension defines a feature which allows plugin UIs to get a direct handle
+to an LV2 plugin instance (LV2_Handle), if possible.
+
+Note that the use of this extension by UIs violates the important principle of
+UI/plugin separation, and is potentially a source of many problems.
+Accordingly, **use of this extension is highly discouraged**, and plugins
+should not expect hosts to support it, since it is often impossible to do so.
+
+To support this feature the host must pass an LV2_Feature struct to the UI
+instantiate method with URI LV2_INSTANCE_ACCESS_URI and data pointed directly
+to the LV2_Handle of the plugin instance.
+
+"""^^lv2:Markdown .
 

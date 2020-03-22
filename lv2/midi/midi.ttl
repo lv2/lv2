@@ -10,36 +10,23 @@
 <http://lv2plug.in/ns/ext/midi>
 	a owl:Ontology ,
 		lv2:Specification ;
+	rdfs:label "LV2 MIDI" ;
+	rdfs:comment "A normalised definition of raw MIDI." ;
 	rdfs:seeAlso <midi.h> ,
-		<midi.meta.ttl> ;
-	lv2:documentation """
-<p>This specification defines a data type for a MIDI message, midi:MidiEvent,
-which is normalised for fast and convenient real-time processing.  MIDI is the
-<q>Musical Instrument Digital Interface</q>, a ubiquitous binary standard for
-controlling digital music devices.</p>
-
-<p>For plugins that process MIDI (or other situations where MIDI is sent via a
-generic transport) the main type defined here, midi:MidiEvent, can be mapped to
-an integer and used as the type of an LV2 <a
-href="atom.html#Atom">Atom</a> or <a
-href="event.html#Event">Event</a>.</p>
-
-<p>This specification also defines a complete human and machine readable
-description of the MIDI standard (except for standard controller numbers).
-These descriptions are detailed enough to express any MIDI message as
-properties.</p>
-""" .
+		<midi.meta.ttl> .
 
 midi:ActiveSense
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Active Sense Message" ;
+	rdfs:label "Active Sense" ;
+	rdfs:comment "MIDI active sense message." ;
 	midi:status "FE"^^xsd:hexBinary .
 
 midi:Aftertouch
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Aftertouch Message" ;
+	rdfs:label "Aftertouch" ;
+	rdfs:comment "MIDI aftertouch message." ;
 	midi:statusMask "A0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -52,7 +39,8 @@ midi:Aftertouch
 midi:Bender
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Bender Message" ;
+	rdfs:label "Bender" ;
+	rdfs:comment "MIDI bender message." ;
 	midi:statusMask "E0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ,
@@ -63,7 +51,8 @@ midi:Bender
 midi:ChannelPressure
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Channel Pressure Message" ;
+	rdfs:label "Channel Pressure" ;
+	rdfs:comment "MIDI channel pressure message." ;
 	midi:statusMask "D0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -72,25 +61,28 @@ midi:ChannelPressure
 
 midi:Chunk
 	a rdfs:Class ;
-	rdfs:label "MIDI Chunk" ;
-	rdfs:comment "A series of contiguous bytes (usually one) in a message." .
+	rdfs:label "Chunk" ;
+	rdfs:comment "A sequence of contiguous bytes in a MIDI message." .
 
 midi:Clock
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Clock Message" ;
+	rdfs:label "Clock" ;
+	rdfs:comment "MIDI clock message." ;
 	midi:status "F8"^^xsd:hexBinary .
 
 midi:Continue
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Continue Message" ;
+	rdfs:label "Continue" ;
+	rdfs:comment "MIDI continue message." ;
 	midi:status "FB"^^xsd:hexBinary .
 
 midi:Controller
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Controller Change Message" ;
+	rdfs:label "Controller" ;
+	rdfs:comment "MIDI controller change message." ;
 	midi:statusMask "B0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -108,50 +100,23 @@ midi:HexByte
 			xsd:maxInclusive "FF"
 		]
 	) ;
-	rdfs:comment "A hexadecimal byte, which is a xsd:hexBinary value <= FF" .
+	rdfs:label "Hex Byte" ;
+	rdfs:comment "A hexadecimal byte, which has a value <= FF." .
 
 midi:MidiEvent
 	a rdfs:Class ,
 		rdfs:Datatype ;
-	rdfs:label "MIDI Message" ;
 	rdfs:subClassOf ev:Event ,
 		atom:Atom ;
 	owl:onDatatype xsd:hexBinary ;
-	lv2:documentation """
-<p>A single raw MIDI message (i.e. a sequence of bytes).</p>
-
-<p>This is equivalent to a standard MIDI messages, except with the following
-restrictions to simplify handling:</p>
-<ul>
-  <li>Running status is not allowed, every message must have its own status
-  byte.</li>
-
-  <li>Note On messages with velocity 0 are not allowed.  These messages are
-  equivalent to Note Off in standard MIDI streams, but here only proper Note
-  Off messages are allowed.</li>
-
-  <li>"Realtime messages" (status bytes 0xF8 to 0xFF) are allowed, but may
-  not occur inside other messages like they can in standard MIDI streams.</li>
-
-  <li>All messages are complete valid MIDI messages.  This means, for example,
-  that only the first byte in each event (the status byte) may have the eighth
-  bit set, that Note On and Note Off events are always 3 bytes long, etc.
-  Where messages are communicated, the writer is responsible for writing valid
-  messages, and the reader may assume that all events are valid.</li>
-</ul>
-
-<p>If a midi:MidiEvent is serialised to a string, the format should be
-xsd:hexBinary, e.g. (in Turtle notation):</p>
-
-<pre class="turtle-code">
-[] eg:someEvent "901A01"^^midi:MidiEvent .
-</pre>
-""" .
+	rdfs:label "MIDI Message" ;
+	rdfs:comment "A single raw MIDI message." .
 
 midi:NoteOff
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Note Off Message" ;
+	rdfs:label "Note Off" ;
+	rdfs:comment "MIDI note off message." ;
 	midi:statusMask "80"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -164,7 +129,8 @@ midi:NoteOff
 midi:NoteOn
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Note On Message" ;
+	rdfs:label "Note On" ;
+	rdfs:comment "MIDI note on message." ;
 	midi:statusMask "90"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -177,7 +143,8 @@ midi:NoteOn
 midi:ProgramChange
 	a rdfs:Class ;
 	rdfs:subClassOf midi:VoiceMessage ;
-	rdfs:label "Program Change Message" ;
+	rdfs:label "Program Change" ;
+	rdfs:comment "MIDI program change message." ;
 	midi:statusMask "C0"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ;
@@ -187,19 +154,22 @@ midi:ProgramChange
 midi:QuarterFrame
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemCommon ;
-	rdfs:label "Quarter Frame Message" ;
+	rdfs:label "Quarter Frame" ;
+	rdfs:comment "MIDI quarter frame message." ;
 	midi:status "F1"^^xsd:hexBinary .
 
 midi:Reset
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Reset Message" ;
+	rdfs:label "Reset" ;
+	rdfs:comment "MIDI reset message." ;
 	midi:status "FF"^^xsd:hexBinary .
 
 midi:SongPosition
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemCommon ;
-	rdfs:label "Song Position Pointer Message" ;
+	rdfs:label "Song Position" ;
+	rdfs:comment "MIDI song position pointer message." ;
 	midi:status "F2"^^xsd:hexBinary ;
 	midi:chunk [
 		midi:byteNumber 0 ,
@@ -210,53 +180,62 @@ midi:SongPosition
 midi:SongSelect
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemCommon ;
-	rdfs:label "Song Select Message" ;
+	rdfs:label "Song Select" ;
+	rdfs:comment "MIDI song select message." ;
 	midi:status "F3"^^xsd:hexBinary .
 
 midi:Start
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Start Message" ;
+	rdfs:label "Start" ;
+	rdfs:comment "MIDI start message." ;
 	midi:status "FA"^^xsd:hexBinary .
 
 midi:Stop
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemRealtime ;
-	rdfs:label "Stop Message" ;
+	rdfs:label "Stop" ;
+	rdfs:comment "MIDI stop message." ;
 	midi:status "FC"^^xsd:hexBinary .
 
 midi:SystemCommon
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemMessage ;
-	rdfs:label "System Common Message" .
+	rdfs:label "System Common" ;
+	rdfs:comment "MIDI system common message." .
 
 midi:SystemExclusive
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemMessage ;
-	rdfs:label "System Exclusive Message" ;
+	rdfs:label "System Exclusive" ;
+	rdfs:comment "MIDI system exclusive message." ;
 	midi:status "F0"^^xsd:hexBinary .
 
 midi:SystemMessage
 	a rdfs:Class ;
 	rdfs:subClassOf midi:MidiEvent ;
 	rdfs:label "System Message" ;
+	rdfs:comment "MIDI system message." ;
 	midi:statusMask "F0"^^xsd:hexBinary .
 
 midi:SystemRealtime
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemMessage ;
-	rdfs:label "System Realtime Message" .
+	rdfs:label "System Realtime" ;
+	rdfs:comment "MIDI system realtime message." .
 
 midi:TuneRequest
 	a rdfs:Class ;
 	rdfs:subClassOf midi:SystemCommon ;
-	rdfs:label "Tune Request Message" ;
+	rdfs:label "Tune Request" ;
+	rdfs:comment "MIDI tune request message." ;
 	midi:status "F6"^^xsd:hexBinary .
 
 midi:VoiceMessage
 	a rdfs:Class ;
 	rdfs:subClassOf midi:MidiEvent ;
 	rdfs:label "Voice Message" ;
+	rdfs:comment "MIDI voice message." ;
 	midi:statusMask "F0"^^xsd:hexBinary .
 
 midi:benderValue
@@ -265,26 +244,14 @@ midi:benderValue
 		owl:FunctionalProperty ;
 	rdfs:label "bender value" ;
 	rdfs:range xsd:short ;
-	rdfs:comment "The value of a pitch bender (-8192 to 8192)." .
+	rdfs:comment "MIDI pitch bender message (-8192 to 8192)." .
 
 midi:binding
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:range midi:MidiEvent ;
 	rdfs:label "binding" ;
-	lv2:documentation """
-<p>The MIDI event to bind a parameter to.  This describes which MIDI events
-should be used to control a port, parameter, or other object.  The binding
-should be a midi:MidiEvent but the property that represents the control value may
-be omitted.  For example, to bind to the value of controller 17:</p>
-
-<pre class="turtle-code">
-eg:port midi:binding [
-    a midi:Controller ;
-    midi:controllerNumber 17
-] .
-</pre>
-""" .
+	rdfs:comment "The MIDI event to bind a parameter to." .
 
 midi:byteNumber
 	a rdf:Property ,
@@ -387,7 +354,7 @@ midi:statusMask
 		owl:FunctionalProperty ;
 	rdfs:label "status mask" ;
 	rdfs:range midi:HexByte ;
-	rdfs:comment "The status byte for a message of this type on channel 1, i.e. a status byte with the lower nibble set to zero." .
+	rdfs:comment "The status byte for a message of this type on channel 1." .
 
 midi:velocity
 	a rdf:Property ,

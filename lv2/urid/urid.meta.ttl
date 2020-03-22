@@ -1,7 +1,9 @@
 @prefix dcs: <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix urid: <http://lv2plug.in/ns/ext/urid#> .
 
 <http://lv2plug.in/ns/ext/urid>
 	a doap:Project ;
@@ -43,5 +45,40 @@
 				rdfs:label "Initial release."
 			]
 		]
-	] .
+	] ;
+	lv2:documentation """
+
+This extension defines a simple mechanism for plugins to map URIs to and from
+integers.  This is usually used for performance reasons, for example for
+processing events with URI types in real-time audio code).  Typically, plugins
+map URIs to integers for things they "understand" at instantiation time, and
+store those values for use in the audio thread without doing any string
+comparison.  This allows for the extensibility of RDF but with the performance
+of integers.
+
+This extension is intended as an improved and simplified replacement for the
+[uri-map](uri-map.html) extension, since the `map` context parameter there has
+proven problematic.  This extension is functionally equivalent to the uri-map
+extension with a NULL context.  New implementations are encouraged to use this
+extension for URI mapping.
+
+"""^^lv2:Markdown .
+
+urid:map
+	lv2:documentation """
+
+To support this feature, the host must pass an LV2_Feature to
+LV2_Descriptor::instantiate() with URI LV2_URID__map and data pointed to an
+instance of LV2_URID_Map.
+
+"""^^lv2:Markdown .
+
+urid:unmap
+	lv2:documentation """
+
+To support this feature, the host must pass an LV2_Feature to
+LV2_Descriptor::instantiate() with URI LV2_URID__unmap and data pointed to an
+instance of LV2_URID_Unmap.
+
+"""^^lv2:Markdown .
 

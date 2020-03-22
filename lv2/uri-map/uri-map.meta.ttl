@@ -1,3 +1,4 @@
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix dcs: <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -53,5 +54,19 @@
 				rdfs:label "Initial release."
 			]
 		]
-	] .
+	] ;
+	lv2:documentation """
+
+<span class="warning">This extension is deprecated.</span> New implementations
+should use [LV2 URID](urid.html) instead.
+
+This extension defines a simple mechanism for plugins to map URIs to integers,
+usually for performance reasons (e.g. processing events typed by URIs in real
+time).  The expected use case is for plugins to map URIs to integers for things
+they 'understand' at instantiation time, and store those values for use in the
+audio thread without doing any string comparison.  This allows the
+extensibility of RDF with the performance of integers (or centrally defined
+enumerations).
+
+"""^^lv2:Markdown .
 

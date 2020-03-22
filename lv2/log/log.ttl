@@ -6,26 +6,15 @@
 
 <http://lv2plug.in/ns/ext/log>
 	a lv2:Specification ;
+	rdfs:label "LV2 Log" ;
+	rdfs:comment "A feature for writing log messages." ;
 	rdfs:seeAlso <log.h> ,
-		<log.meta.ttl> ;
-	lv2:documentation """
-<p>This extension defines a feature, log:log, which allows plugins to print log
-messages with an API much like the standard C printf functions.  This allows,
-for example, plugin logs to be nicely presented to the user in a graphical user
-interface.</p>
-
-<p>Different log levels (e.g. <q>error</q> or <q>information</q>) are defined
-by URI and passed as an LV2_URID.  This document defines the typical levels
-which should be sufficient, but implementations may define and use additional
-levels to suit their needs.</p>
-""" .
+		<log.meta.ttl> .
 
 log:Entry
 	a rdfs:Class ;
-	rdfs:label "Log Entry" ;
-	lv2:documentation """
-<p>A log entry.  Subclasses of this class can be passed to LV2_Log_Log methods
-to describe the nature of the log message.</p>""" .
+	rdfs:label "Entry" ;
+	rdfs:comment "A log entry." .
 
 log:Error
 	a rdfs:Class ;
@@ -49,21 +38,10 @@ log:Trace
 	a rdfs:Class ;
 	rdfs:label "Trace" ;
 	rdfs:subClassOf log:Entry ;
-	lv2:documentation """
-<p>A debugging trace.  These entries should not be displayed during normal
-operation, but the host may implement an option to display them for debugging
-purposes.</p>
-
-<p>This entry type is special in that it may be written to in a real-time
-thread.  It is assumed that if debug tracing is enabled, real-time
-considerations are not a concern.</p>
-""" .
+	rdfs:comment "A debugging trace message." .
 
 log:log
 	a lv2:Feature ;
-	lv2:documentation """
-<p>A feature which plugins may use to log messages.  To support this feature,
-the host must pass an LV2_Feature to LV2_Descriptor::instantiate() with URI
-LV2_LOG__log and data pointed to an instance of LV2_Log_Log.</p>
-""" .
+	rdfs:label "log" ;
+	rdfs:comment "Logging feature." .
 

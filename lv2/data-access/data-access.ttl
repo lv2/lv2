@@ -5,21 +5,8 @@
 <http://lv2plug.in/ns/ext/data-access>
 	a lv2:Feature ,
 		lv2:Specification ;
+	rdfs:label "data access" ;
+	rdfs:comment "A feature that provides access to plugin extension data." ;
 	rdfs:seeAlso <data-access.h> ,
-		<data-access.meta.ttl> ;
-	lv2:documentation """
-<p>This extension defines a feature, LV2_Extension_Data_Feature, which provides
-access to LV2_Descriptor::extension_data() for plugin UIs or other potentially
-remote users of a plugin.</p>
-
-<p>Note that the use of this extension by UIs violates the important principle
-of UI/plugin separation, and is potentially a source of many problems.
-Accordingly, <strong>use of this extension is highly discouraged</strong>, and
-plugins should not expect hosts to support it, since it is often impossible to
-do so.</p>
-
-<p>To support this feature the host must pass an LV2_Feature struct to the
-instantiate method with URI LV2_DATA_ACCESS_URI and data pointed to an instance
-of LV2_Extension_Data_Feature.</p>
-""" .
+		<data-access.meta.ttl> .
 

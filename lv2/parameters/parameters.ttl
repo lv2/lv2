@@ -8,13 +8,9 @@
 
 <http://lv2plug.in/ns/ext/parameters>
 	a lv2:Specification ;
-	rdfs:seeAlso <parameters.meta.ttl> ;
-	lv2:documentation """
-<p>This vocabulary describes parameters common in audio processing software.  A
-<q>parameter</q> is purely a metadata concept, unrelated to any particular code
-mechanism.  Parameters are used to assign meaning to controls (e.g. using
-lv2:designation for ports) so they can be used more intelligently or presented
-to the user more efficiently.</p> """ .
+	rdfs:label "LV2 Parameters" ;
+	rdfs:comment "Common parameters for audio processing." ;
+	rdfs:seeAlso <parameters.meta.ttl> .
 
 param:ControlGroup
 	a rdfs:Class ;
@@ -25,41 +21,44 @@ param:ControlGroup
 param:amplitude
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
-	rdfs:label "amplitude" .
+	rdfs:label "amplitude" ;
+	rdfs:comment "An amplitude as a factor, where 0 is silent and 1 is unity." .
 
 param:attack
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "attack" ;
-	rdfs:comment """The duration of an envelope's attack stage.""" .
+	rdfs:comment "The duration of an envelope attack stage." .
 
 param:cutoffFrequency
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
-	rdfs:label "cutoff frequency" .
+	rdfs:label "cutoff frequency" ;
+	rdfs:comment "The cutoff frequency, typically in Hz, for a filter." .
 
 param:decay
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "decay" ;
-	rdfs:comment """The duration of an envelope's decay stage.""" .
+	rdfs:comment "The duration of an envelope decay stage." .
 
 param:delay
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "delay" ;
-	rdfs:comment """The duration of an envelope's delay stage.""" .
+	rdfs:comment "The duration of an envelope delay stage." .
 
 param:frequency
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
-	rdfs:label "frequency" .
+	rdfs:label "frequency" ;
+	rdfs:comment "A frequency, typically in Hz." .
 
 param:hold
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "hold" ;
-	rdfs:comment """The duration of an envelope's hold stage.""" .
+	rdfs:comment "The duration of an envelope hold stage." .
 
 param:pulseWidth
 	a lv2:Parameter ;
@@ -77,7 +76,7 @@ param:release
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
 	rdfs:label "release" ;
-	rdfs:comment """The duration of an envelope's release stage.""" .
+	rdfs:comment "The duration of an envelope release stage." .
 
 param:resonance
 	a lv2:Parameter ;
@@ -89,7 +88,7 @@ param:sustain
 	a lv2:Parameter ;
 	rdfs:label "sustain" ;
 	rdfs:range atom:Float ;
-	rdfs:comment """The level (not duration) of an envelope's sustain stage.""" .
+	rdfs:comment "The level of an envelope sustain stage as a factor." .
 
 param:threshold
 	a lv2:Parameter ;
@@ -100,7 +99,8 @@ param:threshold
 param:waveform
 	a lv2:Parameter ;
 	rdfs:range atom:Float ;
-	rdfs:label "waveform" .
+	rdfs:label "waveform" ;
+	rdfs:comment """The waveform "fader" for oscillators or modulators that have several.""" .
 
 param:gain
 	a lv2:Parameter ;
@@ -115,18 +115,7 @@ param:gain
 param:wetDryRatio
 	a lv2:Parameter ;
 	rdfs:label "wet/dry ratio" ;
-	lv2:documentation """
-<p>The ratio between processed and bypass components in output signal.  The dry
-and wet percentages can be calculated from the following equations:</p>
-
-<pre class="c-code">
-    dry = (wetDryRatio.maximum - wetDryRatio.value) / wetDryRatio.maximum
-    wet = wetDryRatio.value / wetDryRatio.maximum
-</pre>
-
-<p>Typically, maximum value of 1 or 100 and minimum value of 0 should be
-used.</p>
-""" .
+	rdfs:comment "The ratio between processed and bypassed levels in the output." .
 
 param:wetLevel
 	a lv2:Parameter ;
@@ -141,7 +130,7 @@ param:dryLevel
 param:bypass
 	a lv2:Parameter ;
 	rdfs:label "bypass" ;
-	rdfs:comment "A boolean parameter that disabled processing if true." .
+	rdfs:comment "A boolean parameter that disables processing if true." .
 
 param:sampleRate
 	a lv2:Parameter ;
@@ -151,7 +140,8 @@ param:sampleRate
 param:EnvelopeControls
 	a rdfs:Class ;
 	rdfs:subClassOf param:ControlGroup ;
-	rdfs:label "DAHDSR Envelope Controls" ;
+	rdfs:label "Envelope Controls" ;
+	rdfs:comment "Typical controls for a DAHDSR envelope." ;
 	pg:element [
 		lv2:index 0 ;
 		lv2:designation param:delay
@@ -176,6 +166,7 @@ param:OscillatorControls
 	a rdfs:Class ;
 	rdfs:subClassOf param:ControlGroup ;
 	rdfs:label "Oscillator Controls" ;
+	rdfs:comment "Typical controls for an oscillator." ;
 	pg:element [
 		lv2:designation param:frequency
 	] , [
@@ -190,6 +181,7 @@ param:FilterControls
 	a rdfs:Class ;
 	rdfs:subClassOf param:ControlGroup ;
 	rdfs:label "Filter Controls" ;
+	rdfs:comment "Typical controls for a filter." ;
 	pg:element [
 		lv2:designation param:cutoffFrequency
 	] , [
@@ -200,6 +192,7 @@ param:CompressorControls
 	a rdfs:Class ;
 	rdfs:subClassOf param:ControlGroup ;
 	rdfs:label "Compressor Controls" ;
+	rdfs:comment "Typical controls for a compressor." ;
 	pg:element [
 		lv2:designation param:threshold
 	] , [

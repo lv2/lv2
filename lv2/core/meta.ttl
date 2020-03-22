@@ -15,9 +15,11 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 <http://lv2plug.in/ns/lv2>
 	a doap:Project ;
 	lv2:symbol "lv2" ;
+	rdfs:label "LV2" ;
+	rdfs:comment "The LV2 Plugin Interface Project." ;
 	doap:name "LV2" ;
 	doap:license <http://opensource.org/licenses/isc> ;
-	doap:shortdesc "The LV2 Plugin Interface Project" ;
+	doap:shortdesc "The LV2 Plugin Interface Project." ;
 	doap:description "LV2 is a plugin standard for audio systems. It defines a minimal yet extensible C API for plugin code and a format for plugin bundles" ;
 	doap:created "2006-05-10" ;
 	doap:homepage <http://lv2plug.in/> ;

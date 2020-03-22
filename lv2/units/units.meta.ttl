@@ -1,7 +1,9 @@
 @prefix dcs: <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix units: <http://lv2plug.in/ns/extensions/units#> .
 
 <http://lv2plug.in/ns/extensions/units>
 	a doap:Project ;
@@ -106,5 +108,47 @@
 		]
 	] ;
 	doap:developer <http://plugin.org.uk/swh.xrdf#me> ;
-	doap:maintainer <http://drobilla.net/drobilla#me> .
+	doap:maintainer <http://drobilla.net/drobilla#me> ;
+	lv2:documentation """
+
+This is a vocabulary for units typically used for control values in audio
+processing.
+
+For example, to say that a gain control is in decibels:
+
+    :::turtle
+    @prefix units: &lt;http://lv2plug.in/ns/extensions/units#&gt; .
+    @prefix eg:    &lt;http://example.org/&gt; .
+
+    eg:plugin lv2:port [
+        a            lv2:ControlPort , lv2:InputPort ;
+        lv2:index    0 ;
+        lv2:symbol   "gain" ;
+        lv2:name     "Gain" ;
+        units:unit   units:db
+    ] .
+
+Using the same form, plugins may also specify one-off units inline, to give
+better display hints to hosts:
+
+    :::turtle
+    eg:plugin lv2:port [
+        a            lv2:ControlPort , lv2:InputPort ;
+        lv2:index    0 ;
+        lv2:symbol   "frob" ;
+        lv2:name     "frob level" ;
+        units:unit [
+            a            units:Unit ;
+            rdfs:label   "frobnication" ;
+            units:symbol "fr" ;
+            units:render "%f f"
+        ]
+    ] .
+
+It is also possible to define conversions between various units, which makes it
+possible for hosts to automatically convert between units where possible.  The
+units defined in this extension include conversion definitions where it makes
+sense to do so.
+
+"""^^lv2:Markdown .
 

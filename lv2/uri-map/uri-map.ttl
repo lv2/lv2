@@ -8,19 +8,8 @@
 	a lv2:Feature ,
 		lv2:Specification ;
 	owl:deprecated true ;
+	rdfs:label "LV2 URI Map" ;
+	rdfs:comment "A feature for mapping URIs to integers." ;
 	rdfs:seeAlso <uri-map.h> ,
-		<uri-map.meta.ttl> ;
-	lv2:documentation """
-<p><span class="warning">This extension is deprecated.</span> New
-implementations should use <a href="urid.html">LV2 URID</a>
-instead.</p>
-
-<p>This extension defines a simple mechanism for plugins to map URIs to
-integers, usually for performance reasons (e.g. processing events typed by URIs
-in real time).  The expected use case is for plugins to map URIs to integers
-for things they 'understand' at instantiation time, and store those values for
-use in the audio thread without doing any string comparison.  This allows the
-extensibility of RDF with the performance of integers (or centrally defined
-enumerations).</p>
-""" .
+		<uri-map.meta.ttl> .
 

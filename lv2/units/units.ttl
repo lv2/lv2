@@ -9,53 +9,16 @@
 	a owl:Ontology ,
 		lv2:Specification ;
 	owl:imports <http://lv2plug.in/ns/lv2core> ;
+	rdfs:label "LV2 Units" ;
+	rdfs:comment "Units for LV2 values." ;
 	rdfs:seeAlso <units.h> ,
-		<units.meta.ttl> ;
-	lv2:documentation """
-<p>This vocabulary defines a number of units for use in audio processing.</p>
-
-<p>For example, to say that a gain port's value is in decibels (units:db)</p>
-<pre class="turtle-code">
-@prefix units: &lt;http://lv2plug.in/ns/extensions/units#&gt; .
-@prefix eg:    &lt;http://example.org/&gt; .
-
-eg:plugin lv2:port [
-    a            lv2:ControlPort , lv2:InputPort ;
-    lv2:index    0 ;
-    lv2:symbol   "gain" ;
-    lv2:name     "gain" ;
-    units:unit   units:db
-] .
-</pre>
-
-<p>Using the same form, plugins may also specify one-off units inline, to give
-better display hints to hosts:</p>
-<pre class="turtle-code">
-eg:plugin lv2:port [
-    a            lv2:ControlPort , lv2:InputPort ;
-    lv2:index    0 ;
-    lv2:symbol   "frob" ;
-    lv2:name     "frob level" ;
-    units:unit [
-        a            units:Unit ;
-        rdfs:label   "frobnication" ;
-        units:symbol "fr" ;
-        units:render "%f f"
-    ]
-] .
-</pre>
-
-<p>It is also possible to define conversions between various units, which makes
-it possible for hosts to automatically and generically convert from a given
-unit to a desired unit.  The units defined in this extension include conversion
-definitions where it makes sense to do so.</p>
-""" .
+		<units.meta.ttl> .
 
 units:Unit
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:label "Unit" ;
-	rdfs:comment "A unit for LV2 port data" .
+	rdfs:comment "A unit for a control value." .
 
 units:unit
 	a rdf:Property ,
@@ -70,7 +33,7 @@ units:render
 	rdfs:label "unit format string" ;
 	rdfs:domain units:Unit ;
 	rdfs:range xsd:string ;
-	rdfs:comment """A printf format string for rendering a value (eg. "%f dB").""" .
+	rdfs:comment """A printf format string for rendering a value (e.g., "%f dB").""" .
 
 units:symbol
 	a rdf:Property ,
@@ -78,7 +41,7 @@ units:symbol
 	rdfs:label "unit symbol" ;
 	rdfs:domain units:Unit ;
 	rdfs:range xsd:string ;
-	rdfs:comment "The abbreviated symbol for the unit (e.g. dB)." .
+	rdfs:comment """The abbreviated symbol for this unit (e.g., "dB").""" .
 
 units:Conversion
 	a rdfs:Class ,
@@ -107,7 +70,7 @@ units:prefixConversion
 	rdfs:domain units:Unit ;
 	rdfs:range units:Conversion ;
 	rdfs:label "prefix conversion" ;
-	rdfs:comment "A conversion from this unit to the same unit but with a different SI prefix (e.g. Hz to kHz)." .
+	rdfs:comment "A conversion from this unit to another with the same base but a different prefix." .
 
 units:to
 	a rdf:Property ,
@@ -131,6 +94,7 @@ units:s
 		units:to units:min
 	] ;
 	rdfs:label "seconds" ;
+	rdfs:comment "Seconds, the SI base unit for time." ;
 	units:prefixConversion [
 		units:factor 1000 ;
 		units:to units:ms
@@ -141,6 +105,7 @@ units:s
 units:ms
 	a units:Unit ;
 	rdfs:label "milliseconds" ;
+	rdfs:comment "Milliseconds (thousandths of seconds)." ;
 	units:prefixConversion [
 		units:factor 0.001 ;
 		units:to units:s
@@ -155,24 +120,28 @@ units:min
 		units:to units:s
 	] ;
 	rdfs:label "minutes" ;
+	rdfs:comment "Minutes (60s of seconds and 60ths of an hour)." ;
 	units:render "%f mins" ;
 	units:symbol "min" .
 
 units:bar
 	a units:Unit ;
 	rdfs:label "bars" ;
+	rdfs:comment "Musical bars or measures." ;
 	units:render "%f bars" ;
 	units:symbol "bars" .
 
 units:beat
 	a units:Unit ;
 	rdfs:label "beats" ;
+	rdfs:comment "Musical beats." ;
 	units:render "%f beats" ;
 	units:symbol "beats" .
 
 units:frame
 	a units:Unit ;
 	rdfs:label "audio frames" ;
+	rdfs:comment "Audio frames or samples." ;
 	units:render "%f frames" ;
 	units:symbol "frames" .
 
@@ -183,6 +152,7 @@ units:m
 		units:to units:inch
 	] ;
 	rdfs:label "metres" ;
+	rdfs:comment "Metres, the SI base unit for length." ;
 	units:prefixConversion [
 		units:factor 100 ;
 		units:to units:cm
@@ -203,6 +173,7 @@ units:cm
 		units:to units:inch
 	] ;
 	rdfs:label "centimetres" ;
+	rdfs:comment "Centimetres (hundredths of metres)." ;
 	units:prefixConversion [
 		units:factor 0.01 ;
 		units:to units:m
@@ -223,6 +194,7 @@ units:mm
 		units:to units:inch
 	] ;
 	rdfs:label "millimetres" ;
+	rdfs:comment "Millimetres (thousandths of metres)." ;
 	units:prefixConversion [
 		units:factor 0.001 ;
 		units:to units:m
@@ -243,6 +215,7 @@ units:km
 		units:to units:mile
 	] ;
 	rdfs:label "kilometres" ;
+	rdfs:comment "Kilometres (thousands of metres)." ;
 	units:prefixConversion [
 		units:factor 1000 ;
 		units:to units:m
@@ -259,26 +232,29 @@ units:km
 units:inch
 	a units:Unit ;
 	units:conversion [
-		units:factor 2.54 ;
-		units:to units:cm
+		units:factor 0.0254 ;
+		units:to units:m
 	] ;
 	rdfs:label "inches" ;
+	rdfs:comment "An inch, defined as exactly 0.0254 metres." ;
 	units:render "%f\"" ;
 	units:symbol "in" .
 
 units:mile
 	a units:Unit ;
 	units:conversion [
-		units:factor 1.6093 ;
-		units:to units:km
+		units:factor 1609.344 ;
+		units:to units:m
 	] ;
 	rdfs:label "miles" ;
+	rdfs:comment "A mile, defined as exactly 1609.344 metres." ;
 	units:render "%f mi" ;
 	units:symbol "mi" .
 
 units:db
 	a units:Unit ;
 	rdfs:label "decibels" ;
+	rdfs:comment "Decibels, a logarithmic relative unit where 0 is unity." ;
 	units:render "%f dB" ;
 	units:symbol "dB" .
 
@@ -289,6 +265,7 @@ units:pc
 		units:to units:coef
 	] ;
 	rdfs:label "percent" ;
+	rdfs:comment "Percentage, a ratio as a fraction of 100." ;
 	units:render "%f%%" ;
 	units:symbol "%" .
 
@@ -299,12 +276,14 @@ units:coef
 		units:to units:pc
 	] ;
 	rdfs:label "coefficient" ;
+	rdfs:comment "A scale coefficient where 1 is unity, or 100 percent." ;
 	units:render "* %f" ;
 	units:symbol "" .
 
 units:hz
 	a units:Unit ;
 	rdfs:label "hertz" ;
+	rdfs:comment "Hertz, or inverse seconds, the SI derived unit for frequency." ;
 	units:prefixConversion [
 		units:factor 0.001 ;
 		units:to units:khz
@@ -318,6 +297,7 @@ units:hz
 units:khz
 	a units:Unit ;
 	rdfs:label "kilohertz" ;
+	rdfs:comment "Kilohertz (thousands of Hertz)." ;
 	units:prefixConversion [
 		units:factor 1000 ;
 		units:to units:hz
@@ -331,6 +311,7 @@ units:khz
 units:mhz
 	a units:Unit ;
 	rdfs:label "megahertz" ;
+	rdfs:comment "Megahertz (millions of Hertz)." ;
 	units:prefixConversion [
 		units:factor 1000000 ;
 		units:to units:hz
@@ -344,6 +325,7 @@ units:mhz
 units:bpm
 	a units:Unit ;
 	rdfs:label "beats per minute" ;
+	rdfs:comment "Beats Per Minute (BPM), the standard unit for musical tempo." ;
 	units:prefixConversion [
 		units:factor 0.0166666666 ;
 		units:to units:hz
@@ -358,6 +340,7 @@ units:oct
 		units:to units:semitone12TET
 	] ;
 	rdfs:label "octaves" ;
+	rdfs:comment "Octaves, relative musical pitch where +1 octave doubles the frequency." ;
 	units:render "%f octaves" ;
 	units:symbol "oct" .
 
@@ -368,6 +351,7 @@ units:cent
 		units:to units:semitone12TET
 	] ;
 	rdfs:label "cents" ;
+	rdfs:comment "Cents (hundredths of semitones)." ;
 	units:render "%f ct" ;
 	units:symbol "ct" .
 
@@ -378,18 +362,21 @@ units:semitone12TET
 		units:to units:oct
 	] ;
 	rdfs:label "semitones" ;
+	rdfs:comment "A semitone in the 12-tone equal temperament scale." ;
 	units:render "%f semi" ;
 	units:symbol "semi" .
 
 units:degree
 	a units:Unit ;
 	rdfs:label "degrees" ;
+	rdfs:comment "An angle where 360 degrees is one full rotation." ;
 	units:render "%f deg" ;
 	units:symbol "deg" .
 
 units:midiNote
 	a units:Unit ;
 	rdfs:label "MIDI note" ;
+	rdfs:comment "A MIDI note number." ;
 	units:render "MIDI note %d" ;
 	units:symbol "note" .
 
