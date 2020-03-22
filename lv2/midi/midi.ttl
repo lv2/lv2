@@ -269,7 +269,8 @@ midi:channel
 	rdfs:comment "The channel number of a MIDI message." .
 
 midi:chunk
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:range midi:Chunk ;
 	rdfs:label "MIDI chunk" ;
 	rdfs:comment "A chunk of a MIDI message." .

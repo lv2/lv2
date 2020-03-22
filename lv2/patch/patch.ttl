@@ -140,7 +140,8 @@ patch:Set
 	rdfs:comment "A compact request to set a property to a value." .
 
 patch:accept
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:label "accept" ;
 	rdfs:domain patch:Request ;
 	rdfs:range rdfs:Class ;
@@ -179,14 +180,16 @@ patch:destination
 	rdfs:comment "The destination to move the patch:subject to." .
 
 patch:property
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:label "property" ;
 	rdfs:domain patch:Message ;
 	rdfs:range rdf:Property ;
 	rdfs:comment "The property for a patch:Set or patch:Get message." .
 
 patch:readable
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:label "readable" ;
 	rdfs:range rdf:Property ;
 	rdfs:comment "A property that can be read with a patch:Get message." .
@@ -227,7 +230,8 @@ patch:subject
 	rdfs:comment "The subject this message applies to." .
 
 patch:value
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:label "value" ;
 	rdfs:domain patch:Set ;
 	rdfs:range rdf:Property ;
@@ -239,7 +243,8 @@ patch:wildcard
 	rdfs:comment "A wildcard that matches any resource." .
 
 patch:writable
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:label "writable" ;
 	rdfs:range rdf:Property ;
 	rdfs:comment "A property that can be set with a patch:Set or patch:Patch message." .

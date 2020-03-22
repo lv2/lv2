@@ -70,14 +70,16 @@ ui:CocoaUI
 	rdfs:comment "A UI where the widget is a pointer to a NSView." .
 
 ui:ui
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:domain lv2:Plugin ;
 	rdfs:range ui:UI ;
 	rdfs:label "user interface" ;
 	rdfs:comment "Relates a plugin to a UI that applies to it." .
 
 ui:binary
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	owl:sameAs lv2:binary ;
 	owl:deprecated "true"^^xsd:boolean ;
 	rdfs:label "binary" ;
@@ -163,7 +165,8 @@ ui:portIndex
 	rdfs:comment "The index of the port a portNotification applies to." .
 
 ui:notifyType
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:domain ui:PortNotification ;
 	rdfs:label "notify type" ;
 	rdfs:comment "A particular type that the UI should be notified of." .
@@ -206,19 +209,22 @@ ui:showInterface
 	rdfs:comment "An interface for showing and hiding a window for a UI." .
 
 ui:windowTitle
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:range xsd:string ;
 	rdfs:label "window title" ;
 	rdfs:comment "The title for the window shown by LV2UI_Show_Interface." .
 
 ui:updateRate
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:range xsd:float ;
 	rdfs:label "update rate" ;
 	rdfs:comment "The target rate, in Hz, to send updates to the UI." .
 
 ui:protocol
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:domain ui:PortNotification ;
 	rdfs:range ui:PortProtocol ;
 	rdfs:label "protocol" ;

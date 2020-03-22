@@ -229,7 +229,8 @@ atom:childType
 	rdfs:comment "The type of children in a container." .
 
 atom:supports
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:label "supports" ;
 	rdfs:comment "A supported atom type." ;
 	rdfs:range rdfs:Class .

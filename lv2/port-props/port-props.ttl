@@ -62,14 +62,16 @@ pprops:notOnGUI
 	rdfs:comment "Port that should not be displayed on a GUI." .
 
 pprops:displayPriority
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:domain lv2:Port ;
 	rdfs:range xsd:nonNegativeInteger ;
 	rdfs:label "display priority" ;
 	rdfs:comment "A priority ranking this port in importance to its plugin." .
 
 pprops:rangeSteps
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:domain lv2:Port ;
 	rdfs:range xsd:nonNegativeInteger ;
 	rdfs:label "range steps" ;

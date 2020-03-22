@@ -27,7 +27,8 @@ state:loadDefaultState
 	rdfs:comment "A feature indicating that the plugin has default state." .
 
 state:state
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:label "state" ;
 	rdfs:range state:State ;
 	rdfs:comment "The state of an LV2 plugin instance." .

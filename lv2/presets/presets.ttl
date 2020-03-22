@@ -35,20 +35,24 @@ pset:Preset
 	] .
 
 pset:bank
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:domain pset:Preset ;
 	rdfs:range pset:Bank ;
 	rdfs:label "bank" ;
 	rdfs:comment "The bank this preset belongs to." .
 
 pset:value
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ,
+		owl:FunctionalProperty ;
 	rdfs:domain lv2:PortBase ;
 	rdfs:label "value" ;
 	rdfs:comment "The value of a port in a preset." .
 
 pset:preset
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:domain lv2:PluginBase ;
 	rdfs:range pset:Preset ;
 	rdfs:label "preset" ;

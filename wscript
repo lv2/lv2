@@ -510,6 +510,15 @@ def test_vocabularies(check, specs, files):
             check(lambda: str(documentation).endswith('\n\n'),
                   name = "%s documentation ends with blank line" % subject)
 
+    # Check that all properties are either datatype or object properties
+    for r in sorted(model.triples([None, rdf.type, rdf.Property])):
+        subject = r[0]
+
+        check(lambda: ((owl.DatatypeProperty in model.objects(subject, rdf.type)) or
+                       (owl.ObjectProperty in model.objects(subject, rdf.type)) or
+                       (owl.AnnotationProperty in model.objects(subject, rdf.type))),
+              name = "%s is a Datatype/Object/Annotation property" % subject)
+
 
 def test(tst):
     import tempfile
