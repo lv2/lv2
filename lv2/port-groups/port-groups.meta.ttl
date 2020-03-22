@@ -20,6 +20,8 @@
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "Replace broken links with detailed Ambisonic channel descriptions."
+			] , [
+				rdfs:label "Remove incorrect type of pg:letterCode."
 			]
 		]
 	] , [

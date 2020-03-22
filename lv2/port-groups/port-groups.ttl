@@ -379,8 +379,7 @@ pg:SevenPointOneWideGroup
 
 pg:letterCode
 	a rdf:Property ,
-		owl:DatatypeProperty ,
-		owl:InverseFunctionalProperty ;
+		owl:DatatypeProperty ;
 	rdfs:domain lv2:Channel ;
 	rdfs:range rdf:PlainLiteral ;
 	rdfs:label "ambisonic letter code" ;
