@@ -5,8 +5,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/ext/event>
-	a owl:Ontology ,
-		lv2:Specification ;
+	a owl:Ontology ;
 	owl:deprecated true ;
 	rdfs:label "LV2 Event" ;
 	rdfs:comment "A port-based real-time generic event interface." ;

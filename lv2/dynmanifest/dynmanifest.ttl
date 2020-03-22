@@ -6,7 +6,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/dynmanifest>
-	a lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:label "LV2 Dyn Manifest" ;
 	rdfs:comment "Support for dynamic manifest data generation." ;
 	rdfs:seeAlso <dynmanifest.h> ,

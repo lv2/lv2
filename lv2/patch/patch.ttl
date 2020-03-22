@@ -1,5 +1,4 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix patch: <http://lv2plug.in/ns/ext/patch#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -7,8 +6,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/patch>
-	a owl:Ontology ,
-		lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:seeAlso <patch.h> ,
 		<patch.meta.ttl> ;
 	rdfs:label "LV2 Patch" ;

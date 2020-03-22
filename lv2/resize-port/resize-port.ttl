@@ -6,7 +6,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/resize-port>
-	a lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:label "LV2 Resize Port" ;
 	rdfs:comment "Dynamically sized LV2 port buffers." ;
 	rdfs:seeAlso <resize-port.h> ,

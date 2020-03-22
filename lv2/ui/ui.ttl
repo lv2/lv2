@@ -7,8 +7,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/extensions/ui>
-	a owl:Ontology ,
-		lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:label "LV2 UI" ;
 	rdfs:comment "User interfaces for LV2 plugins." ;
 	owl:imports <http://lv2plug.in/ns/lv2core> ;

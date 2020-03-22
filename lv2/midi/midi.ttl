@@ -8,8 +8,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/midi>
-	a owl:Ontology ,
-		lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:label "LV2 MIDI" ;
 	rdfs:comment "A normalised definition of raw MIDI." ;
 	rdfs:seeAlso <midi.h> ,

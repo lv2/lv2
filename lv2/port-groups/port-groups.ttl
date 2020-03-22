@@ -6,8 +6,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/port-groups>
-	a owl:Ontology ,
-		lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:label "LV2 Port Groups" ;
 	rdfs:comment "Multi-channel groups of LV2 ports." ;
 	rdfs:seeAlso <port-groups.meta.ttl> .

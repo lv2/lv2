@@ -3,8 +3,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 <http://lv2plug.in/ns/ext/instance-access>
-	a lv2:Feature ,
-		lv2:Specification ;
+	a lv2:Feature ;
 	rdfs:label "instance access" ;
 	rdfs:comment "A feature that provides access to a plugin instance." ;
 	rdfs:seeAlso <instance-access.h> ,

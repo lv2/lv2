@@ -6,10 +6,10 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/worker>
-	a owl:Ontology ,
-		lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:label "LV2 Worker" ;
 	rdfs:comment "Support for doing non-realtime work in plugins." ;
+	owl:imports <http://lv2plug.in/ns/lv2core> ;
 	rdfs:seeAlso <worker.h> ,
 		<worker.meta.ttl> .
 

@@ -6,8 +6,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/presets>
-	a owl:Ontology ,
-		lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:label "LV2 Presets" ;
 	rdfs:comment "Presets for LV2 plugins." ;
 	rdfs:seeAlso <presets.meta.ttl> .

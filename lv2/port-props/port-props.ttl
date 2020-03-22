@@ -6,8 +6,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://lv2plug.in/ns/ext/port-props>
-	a owl:Ontology ,
-		lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:label "LV2 Port Properties" ;
 	rdfs:comment "Various properties for LV2 plugin ports." ;
 	rdfs:seeAlso <port-props.meta.ttl> .

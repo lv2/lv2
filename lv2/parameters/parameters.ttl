@@ -1,13 +1,14 @@
-@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
-@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
 @prefix atom: <http://lv2plug.in/ns/ext/atom#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
 @prefix pg: <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 
 <http://lv2plug.in/ns/ext/parameters>
-	a lv2:Specification ;
+	a owl:Ontology ;
 	rdfs:label "LV2 Parameters" ;
 	rdfs:comment "Common parameters for audio processing." ;
 	rdfs:seeAlso <parameters.meta.ttl> .

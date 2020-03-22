@@ -5,8 +5,7 @@
 @prefix umap: <http://lv2plug.in/ns/ext/uri-map#> .
 
 <http://lv2plug.in/ns/ext/uri-map>
-	a lv2:Feature ,
-		lv2:Specification ;
+	a lv2:Feature ;
 	owl:deprecated true ;
 	rdfs:label "LV2 URI Map" ;
 	rdfs:comment "A feature for mapping URIs to integers." ;
