@@ -704,8 +704,8 @@ def docTerms(category, list, m, classlist, proplist, instalist):
         terminfo = ""
         extrainfo = ""
         if category == 'Property':
-            terminfo += owlInfo(term, m)
             terminfo += rdfsPropertyInfo(term, m)
+            terminfo += owlInfo(term, m)
         if category == 'Class':
             terminfo += rdfsClassInfo(term, m)
             extrainfo += owlRestrictionInfo(term, m)
