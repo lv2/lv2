@@ -85,8 +85,8 @@ pprops:expensive
 	lv2:documentation """
 
 Input ports only.  Indicates that any changes to the port value may trigger
-expensive background calculation (e.g. regenerate some lookup tables in a
-background thread).  Any value changes may have not have immediate effect, or
+expensive background calculation (for example, regeneration of lookup tables in
+a background thread).  Any value changes may have not have immediate effect, or
 may cause silence or diminished-quality version of the output until background
 processing is finished.  Ports having this property are typically not well
 suited for connection to outputs of other plugins, and should not be offered as
@@ -114,7 +114,7 @@ signals (knobs with smoothing, modulation rate oscillators, output ports with
 continuousCV type, etc.).  Typically, the plugin with ports which have this
 property will implement appropriate smoothing to avoid audio artifacts.  For
 output ports, this property suggests the value of the port is likely to change
-frequently, and describes a smooth signal (e.g. successive values may be
+frequently, and describes a smooth signal (so successive values may be
 considered points along a curve).
 
 """^^lv2:Markdown .

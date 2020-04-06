@@ -52,8 +52,8 @@
 This is a vocabulary for parameters that are common in audio processing
 software.  A <q>parameter</q> is purely a metadata concept, unrelated to any
 particular code mechanism.  Parameters are used to assign meaning to controls
-(e.g. using lv2:designation for ports) so they can be used more intelligently
-or presented to the user more efficiently.
+(for example, using lv2:designation for ports) so they can be used more
+intelligently or presented to the user more efficiently.
 
 """^^lv2:Markdown .
 

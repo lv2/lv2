@@ -58,9 +58,9 @@
 	lv2:documentation """
 
 The LV2 API, on its own, cannot be used to write plugin libraries where data is
-dynamically generated at runtime (e.g. API wrappers), since LV2 requires needed
-information to be provided in one or more static data (RDF) files. This API
-addresses this limitation by extending the LV2 API.
+dynamically generated at runtime, since LV2 requires needed information to be
+provided in one or more static data (RDF) files. This API addresses this
+limitation by extending the LV2 API.
 
 To detect that a plugin library implements a dynamic manifest generator, the
 host checks its static manifest for a description like:
@@ -70,8 +70,8 @@ host checks its static manifest for a description like:
         a dman:DynManifest ;
         lv2:binary <mydynmanifest.so> .
 
-To load the data, the host loads the library (e.g. `mydynmanifest.so`) as usual
-and fetches the dynamic Turtle data from it using this API.
+To load the data, the host loads the library (`mydynmanifest.so` in this
+example) as usual and fetches the dynamic Turtle data from it using this API.
 
 The host is allowed to request regeneration of the dynamic manifest multiple
 times, and the plugin library is expected to provide updated data if/when

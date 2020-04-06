@@ -145,10 +145,10 @@ typedef struct {
 
 	   This function is always safe to call from run(), but it is not
 	   guaranteed that the worker is actually called from a different thread.
-	   In particular, when free-wheeling (e.g. for offline rendering), the
-	   worker may be executed immediately.  This allows single-threaded
-	   processing with sample accuracy and avoids timing problems when run() is
-	   executing much faster or slower than real-time.
+	   In particular, when free-wheeling (for example, during offline
+	   rendering), the worker may be executed immediately.  This allows
+	   single-threaded processing with sample accuracy and avoids timing
+	   problems when run() is executing much faster or slower than real-time.
 
 	   Plugins SHOULD be written in such a way that if the worker runs
 	   immediately, and responses from the worker are delivered immediately,

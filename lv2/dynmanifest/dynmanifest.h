@@ -86,8 +86,8 @@ int lv2_dyn_manifest_open(LV2_Dyn_Manifest_Handle *  handle,
    @param fp FILE * identifying the resource the host has to set up for the
    dynamic manifest generator. The host MUST pass a writable, empty resource to
    this function, and the dynamic manifest generator MUST ONLY perform write
-   operations on it at the end of the stream (e.g., using only fprintf(),
-   fwrite() and similar).
+   operations on it at the end of the stream (for example, using only
+   fprintf(), fwrite() and similar).
 
    @return 0 on success, otherwise a non-zero error code.
 */
@@ -116,8 +116,8 @@ int lv2_dyn_manifest_get_subjects(LV2_Dyn_Manifest_Handle handle,
    @param fp FILE * identifying the resource the host has to set up for the
    dynamic manifest generator. The host MUST pass a writable resource to this
    function, and the dynamic manifest generator MUST ONLY perform write
-   operations on it at the current position of the stream (e.g. using only
-   fprintf(), fwrite() and similar).
+   operations on it at the current position of the stream (for example, using
+   only fprintf(), fwrite() and similar).
 
    @param uri URI to get data about (in the "plain" form, i.e., absolute URI
    without Turtle prefixes).

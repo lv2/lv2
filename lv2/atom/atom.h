@@ -80,7 +80,7 @@ typedef char lv2_atom_assert_double_fits_in_64_bits[
 /**
    Return a pointer to the contents of an Atom.  The "contents" of an atom
    is the data past the complete type-specific header.
-   @param type The type of the atom, e.g. LV2_Atom_String.
+   @param type The type of the atom, for example LV2_Atom_String.
    @param atom A variable-sized atom.
 */
 #define LV2_ATOM_CONTENTS(type, atom) \
@@ -180,7 +180,7 @@ typedef struct {
 	LV2_Atom_Vector_Body body;  /**< Body. */
 } LV2_Atom_Vector;
 
-/** The body of an atom:Property (e.g. in an atom:Object). */
+/** The body of an atom:Property (typically in an atom:Object). */
 typedef struct {
 	uint32_t key;      /**< Key (predicate) (mapped URI). */
 	uint32_t context;  /**< Context URID (may be, and generally is, 0). */
@@ -226,7 +226,7 @@ typedef struct {
    LV2_Descriptor::run(), the default stamp type is audio frames.
 
    The contents of a sequence is a series of LV2_Atom_Event, each aligned
-   to 64-bits, e.g.:
+   to 64-bits, for example:
    <pre>
    | Event 1 (size 6)                              | Event 2
    |       |       |       |       |       |       |       |       |

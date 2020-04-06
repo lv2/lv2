@@ -124,7 +124,7 @@ types is recommended. Hosts MUST implement at least
 
 ### Referring to Files
 
-Plugins may need to refer to existing files (e.g. loaded samples) in their
+Plugins may need to refer to existing files (such as loaded samples) in their
 state. This is done by storing the file's path as a property just like any
 other value. However, there are some rules which MUST be followed when storing
 paths, see state:mapPath for details. Plugins MUST use the type

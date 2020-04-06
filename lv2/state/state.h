@@ -69,8 +69,8 @@ typedef enum {
 	   Values with this flag contain no pointers or references to other areas
 	   of memory.  It is safe to copy POD values with a simple memcpy and store
 	   them for the duration of the process.  A POD value is not necessarily
-	   safe to trasmit between processes or machines (e.g. filenames are POD),
-	   see LV2_STATE_IS_PORTABLE for details.
+	   safe to trasmit between processes or machines (for example, filenames
+	   are POD), see LV2_STATE_IS_PORTABLE for details.
 
 	   Implementations MUST NOT attempt to copy or serialise a non-POD value if
 	   they do not understand its type (and thus know how to correctly do so).
@@ -92,9 +92,9 @@ typedef enum {
 	   Native data.
 
 	   This flag is used by the host to indicate that the saved data is only
-	   going to be used locally in the currently running process (e.g. for
-	   instance duplication or snapshots), so the plugin should use the most
-	   efficient representation possible and not worry about serialisation
+	   going to be used locally in the currently running process (for things
+	   like instance duplication or snapshots), so the plugin should use the
+	   most efficient representation possible and not worry about serialisation
 	   and portability.
 	*/
 	LV2_STATE_IS_NATIVE = 1 << 2
@@ -128,7 +128,7 @@ typedef enum {
    DO NOT INVENT NONSENSE URI SCHEMES FOR THE KEY.  Best is to use keys from
    existing vocabularies.  If nothing appropriate is available, use http URIs
    that point to somewhere you can host documents so documentation can be made
-   resolvable (e.g. a child of the plugin or project URI).  If this is not
+   resolvable (typically a child of the plugin or project URI).  If this is not
    possible, invent a URN scheme, e.g. urn:myproj:whatever.  The plugin MUST
    NOT pass an invalid URI key.
 
@@ -219,10 +219,10 @@ typedef struct {
 	   This function has its own special threading class: it may not be called
 	   concurrently with any "Instantiation" function, but it may be called
 	   concurrently with functions in any other class, unless the definition of
-	   that class prohibits it (e.g. it may not be called concurrently with a
-	   "Discovery" function, but it may be called concurrently with an "Audio"
-	   function.  The plugin is responsible for any locking or lock-free
-	   techniques necessary to make this possible.
+	   that class prohibits it (for example, it may not be called concurrently
+	   with a "Discovery" function, but it may be called concurrently with an
+	   "Audio" function.  The plugin is responsible for any locking or
+	   lock-free techniques necessary to make this possible.
 
 	   Note that in the simple case where state is only modified by restore(),
 	   there are no synchronization issues since save() is never called
@@ -304,7 +304,7 @@ typedef struct {
 	/**
 	   Map an abstract path from plugin state to an absolute path.
 	   @param handle MUST be the `handle` member of this struct.
-	   @param abstract_path An abstract path (e.g. a path from plugin state).
+	   @param abstract_path An abstract path (typically from plugin state).
 	   @return An absolute file system path.
 
 	   The plugin MUST use this function in order to actually open or otherwise
@@ -340,8 +340,8 @@ typedef struct {
 	   LV2_Descriptor.instantiate()).
 
 	   The host MUST do whatever is necessary for the plugin to be able to
-	   create a file at the returned path (e.g. using fopen), including
-	   creating any leading directories.
+	   create a file at the returned path (for example, using fopen()),
+	   including creating any leading directories.
 
 	   If this function is passed to LV2_Descriptor.instantiate(), it may be
 	   called from any non-realtime context.  If it is passed to

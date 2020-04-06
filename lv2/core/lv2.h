@@ -193,9 +193,8 @@ typedef struct LV2_Descriptor {
 	   @param sample_rate Sample rate, in Hz, for the new plugin instance.
 
 	   @param bundle_path Path to the LV2 bundle which contains this plugin
-	   binary. It MUST include the trailing directory separator (e.g. '/') so
-	   that simply appending a filename will yield the path to that file in the
-	   bundle.
+	   binary. It MUST include the trailing directory separator so that simply
+	   appending a filename will yield the path to that file in the bundle.
 
 	   @param features A NULL terminated array of LV2_Feature structs which
 	   represent the features the host supports. Plugins may refuse to
@@ -243,7 +242,7 @@ typedef struct LV2_Descriptor {
 	   it does, the plugin's behaviour is undefined (a crash is likely).
 
 	   @param data_location Pointer to data of the type defined by the port
-	   type in the plugin's RDF data (e.g. an array of float for an
+	   type in the plugin's RDF data (for example, an array of float for an
 	   lv2:AudioPort). This pointer must be stored by the plugin instance and
 	   used to read/write data when run() is called. Data present at the time
 	   of the connect_port() call MUST NOT be considered meaningful.
@@ -287,10 +286,10 @@ typedef struct LV2_Descriptor {
 	   lv2core.ttl for details).
 
 	   As a special case, when `sample_count` is 0, the plugin should update
-	   any output ports that represent a single instant in time (e.g. control
-	   ports, but not audio ports). This is particularly useful for latent
-	   plugins, which should update their latency output port so hosts can
-	   pre-roll plugins to compute latency. Plugins MUST NOT crash when
+	   any output ports that represent a single instant in time (for example,
+	   control ports, but not audio ports). This is particularly useful for
+	   latent plugins, which should update their latency output port so hosts
+	   can pre-roll plugins to compute latency. Plugins MUST NOT crash when
 	   `sample_count` is 0.
 
 	   @param instance Instance to be run.

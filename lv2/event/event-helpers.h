@@ -90,7 +90,7 @@ lv2_event_buffer_new(uint32_t capacity, uint16_t stamp_type)
 /** An iterator over an LV2_Event_Buffer.
  *
  * Multiple simultaneous read iterators over a single buffer is fine,
- * but changing the buffer invalidates all iterators (e.g. RW Lock). */
+ * but changing the buffer invalidates all iterators. */
 typedef struct {
 	LV2_Event_Buffer* buf;
 	uint32_t          offset;

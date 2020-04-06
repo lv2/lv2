@@ -79,8 +79,8 @@ pg:subGroupOf
 
 Indicates that this group is a child of another group.  This property has no
 meaning with respect to plugin execution, but the host may find this
-information useful (e.g. to provide a compact user interface).  Note that being
-a sub-group does not relax the restriction that the group MUST have a unique
+information useful to provide a better user interface.  Note that being a
+sub-group does not relax the restriction that the group MUST have a unique
 symbol with respect to the plugin.
 
 """^^lv2:Markdown .

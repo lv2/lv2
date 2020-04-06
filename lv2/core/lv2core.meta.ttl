@@ -465,7 +465,7 @@ number with the usual semantics:
     plugin.
 
   * The micro version is incremented for changes which do not affect
-    compatibility at all, e.g. bug fixes or documentation updates.
+    compatibility at all, for example bug fixes or documentation updates.
 
 Note that there is deliberately no major version: all versions with the same
 URI are compatible by definition.  Replacing a resource with a newer version of
@@ -670,7 +670,7 @@ lv2:control
 
 This should be used as the lv2:designation of ports that are used to send
 commands and receive responses.  Typically this will be an event port that
-supports some protocol, e.g. MIDI or LV2 Atoms.
+supports some protocol, for example MIDI or LV2 Atoms.
 
 """^^lv2:Markdown .
 

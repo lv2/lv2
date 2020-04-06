@@ -114,7 +114,9 @@ lv2_atom_sequence_next(const LV2_Atom_Event* i)
    @param seq  The sequence to iterate over
    @param iter The name of the iterator
 
-   This macro is used similarly to a for loop (which it expands to), e.g.:
+   This macro is used similarly to a for loop (which it expands to), for
+   example:
+
    @code
    LV2_ATOM_SEQUENCE_FOREACH(sequence, ev) {
        // Do something with ev (an LV2_Atom_Event*) here...
@@ -154,7 +156,7 @@ lv2_atom_sequence_clear(LV2_Atom_Sequence* seq)
 
    @param seq Sequence to append to.
    @param capacity Total capacity of the sequence atom
-   (e.g. as set by the host for sequence output ports).
+   (as set by the host for sequence output ports).
    @param event Event to write.
 
    @return A pointer to the newly written event in `seq`,
@@ -211,7 +213,9 @@ lv2_atom_tuple_next(const LV2_Atom* i)
    @param tuple The tuple to iterate over
    @param iter The name of the iterator
 
-   This macro is used similarly to a for loop (which it expands to), e.g.:
+   This macro is used similarly to a for loop (which it expands to), for
+   example:
+
    @code
    LV2_ATOM_TUPLE_FOREACH(tuple, elem) {
        // Do something with elem (an LV2_Atom*) here...
@@ -267,7 +271,9 @@ lv2_atom_object_next(const LV2_Atom_Property_Body* i)
    @param obj The object to iterate over
    @param iter The name of the iterator
 
-   This macro is used similarly to a for loop (which it expands to), e.g.:
+   This macro is used similarly to a for loop (which it expands to), for
+   example:
+
    @code
    LV2_ATOM_OBJECT_FOREACH(object, i) {
        // Do something with i (an LV2_Atom_Property_Body*) here...

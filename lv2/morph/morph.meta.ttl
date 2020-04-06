@@ -55,8 +55,8 @@ morph:AutoMorphPort
 	lv2:documentation """
 
 Ports of this type MUST have another type which defines the default buffer
-format (e.g. lv2:ControlPort) but may dynamically change types based on the
-configured types of any morph:MorphPort ports on the same plugin instance.
+format (for example, lv2:ControlPort) but may dynamically change types based on
+the configured types of any morph:MorphPort ports on the same plugin instance.
 
 The type of a port may only change in response to a host call to
 LV2_Options_Interface::set().  Whenever any port type on the instance changes,

@@ -139,8 +139,8 @@ An ev:EventPort contains an LV2_Event_Buffer which contains a sequence of these
 events.  The binary format of LV2 events is defined by the LV2_Event struct in
 event.h.
 
-Specific event types (e.g. MIDI, OSC) are defined by extensions, and should be
-rdfs:subClassOf this class.
+Specific event types (such as MIDI or OSC) are defined by extensions, and
+should be rdfs:subClassOf this class.
 
 """^^lv2:Markdown .
 
@@ -164,8 +164,8 @@ frames (in the sample rate passed to intantiate), and the subframes field is
 ev:generic
 	lv2:documentation """
 
-Indicates that this port does something meaningful for any event type
-(e.g. event mixers, delays, serialisers, etc).
+Indicates that this port does something meaningful for any event type.  This is
+useful for things like event mixers, delays, serialisers, and so on.
 
 If this property is set, hosts should consider the port suitable for any type
 of event.  Otherwise, hosts should consider the port 'appropriate' only for the
@@ -188,10 +188,10 @@ set (use ev:inheritsEvent for that).
 Plugins with event input ports must always gracefully handle any type of event,
 even if it does not 'support' it.  This property should always be set for event
 types the plugin understands/generates so hosts can discover plugins
-appropriate for a given scenario (e.g. plugins with a MIDI input). Hosts are
-not expected to consider event ports suitable for some type of event if the
-relevant :supportsEvent property is not set, unless the ev:generic property for
-that port is also set.
+appropriate for a given scenario (for example, plugins with a MIDI input).
+Hosts are not expected to consider event ports suitable for some type of event
+if the relevant :supportsEvent property is not set, unless the ev:generic
+property for that port is also set.
 
 
 """^^lv2:Markdown .
