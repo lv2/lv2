@@ -10,7 +10,7 @@
 	rdfs:seeAlso <data-access.h> ;
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 Data Access" ;
-	doap:shortdesc "Provides access to LV2_Descriptor::extension_data()." ;
+	doap:shortdesc "Provides access to plugin extension data." ;
 	doap:created "2008-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
