@@ -177,7 +177,7 @@ atom:Sound
 	rdfs:subClassOf atom:Vector ;
 	rdfs:label "Sound" ;
 	rdfs:comment "A atom:Vector of atom:Float which represents an audio waveform." ;
-	atom:cType "LV2_Atom_Sound" .
+	atom:cType "LV2_Atom_Vector" .
 
 atom:frameTime
 	a rdf:Property ,
