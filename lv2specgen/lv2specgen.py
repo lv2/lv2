@@ -42,8 +42,8 @@ import xml.sax.saxutils
 import xml.dom
 import xml.dom.minidom
 
-__date__    = "2011-10-26"
-__version__ = __date__.replace('-', '.')
+__date__ = "2011-10-26"
+__version__ = __date__.replace("-", ".")
 __authors__ = """
 Christopher Schmidt,
 Uldis Bojars,
@@ -54,6 +54,7 @@ __contact__ = "devel@lists.lv2plug.in"
 
 try:
     from lxml import etree
+
     have_lxml = True
 except:
     have_lxml = False
@@ -63,6 +64,7 @@ try:
     import pygments.lexers
     import pygments.lexers.rdf
     import pygments.formatters
+
     have_pygments = True
 except ImportError:
     print("Error importing pygments, syntax highlighting disabled")
@@ -84,29 +86,29 @@ spec_pre = None
 spec_bundle = None
 specgendir = None
 ns_list = {
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#"   : "rdf",
-    "http://www.w3.org/2000/01/rdf-schema#"         : "rdfs",
-    "http://www.w3.org/2002/07/owl#"                : "owl",
-    "http://www.w3.org/2001/XMLSchema#"             : "xsd",
-    "http://rdfs.org/sioc/ns#"                      : "sioc",
-    "http://xmlns.com/foaf/0.1/"                    : "foaf",
-    "http://purl.org/dc/elements/1.1/"              : "dc",
-    "http://purl.org/dc/terms/"                     : "dct",
-    "http://purl.org/rss/1.0/modules/content/"      : "content",
-    "http://www.w3.org/2003/01/geo/wgs84_pos#"      : "geo",
-    "http://www.w3.org/2004/02/skos/core#"          : "skos",
-    "http://lv2plug.in/ns/lv2core#"                 : "lv2",
-    "http://usefulinc.com/ns/doap#"                 : "doap",
-    "http://ontologi.es/doap-changeset#"            : "dcs"
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#": "rdf",
+    "http://www.w3.org/2000/01/rdf-schema#": "rdfs",
+    "http://www.w3.org/2002/07/owl#": "owl",
+    "http://www.w3.org/2001/XMLSchema#": "xsd",
+    "http://rdfs.org/sioc/ns#": "sioc",
+    "http://xmlns.com/foaf/0.1/": "foaf",
+    "http://purl.org/dc/elements/1.1/": "dc",
+    "http://purl.org/dc/terms/": "dct",
+    "http://purl.org/rss/1.0/modules/content/": "content",
+    "http://www.w3.org/2003/01/geo/wgs84_pos#": "geo",
+    "http://www.w3.org/2004/02/skos/core#": "skos",
+    "http://lv2plug.in/ns/lv2core#": "lv2",
+    "http://usefulinc.com/ns/doap#": "doap",
+    "http://ontologi.es/doap-changeset#": "dcs",
 }
 
-rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
-owl  = rdflib.Namespace('http://www.w3.org/2002/07/owl#')
-lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
-doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
-dcs  = rdflib.Namespace('http://ontologi.es/doap-changeset#')
-foaf = rdflib.Namespace('http://xmlns.com/foaf/0.1/')
+rdf = rdflib.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+rdfs = rdflib.Namespace("http://www.w3.org/2000/01/rdf-schema#")
+owl = rdflib.Namespace("http://www.w3.org/2002/07/owl#")
+lv2 = rdflib.Namespace("http://lv2plug.in/ns/lv2core#")
+doap = rdflib.Namespace("http://usefulinc.com/ns/doap#")
+dcs = rdflib.Namespace("http://ontologi.es/doap-changeset#")
+foaf = rdflib.Namespace("http://xmlns.com/foaf/0.1/")
 
 
 def findStatements(model, s, p, o):
@@ -152,7 +154,7 @@ def isLiteral(n):
 def niceName(uri):
     global spec_bundle
     if uri.startswith(spec_ns_str):
-        return uri[len(spec_ns_str):]
+        return uri[len(spec_ns_str) :]
     elif uri == str(rdfs.seeAlso):
         return "See also"
 
@@ -179,7 +181,7 @@ def getLabel(m, urinode):
     if l:
         return getLiteralString(getObject(l))
     else:
-        return ''
+        return ""
 
 
 def linkifyCodeIdentifiers(string):
@@ -192,9 +194,11 @@ def linkifyCodeIdentifiers(string):
         # Exact match for complete string
         return linkmap[string]
 
-    rgx = re.compile('([^a-zA-Z0-9_:])(' + \
-                     '|'.join(map(re.escape, linkmap)) + \
-                     ')([^a-zA-Z0-9_:])')
+    rgx = re.compile(
+        "([^a-zA-Z0-9_:])("
+        + "|".join(map(re.escape, linkmap))
+        + ")([^a-zA-Z0-9_:])"
+    )
 
     def translateCodeLink(match):
         return match.group(1) + linkmap[match.group(2)] + match.group(3)
@@ -205,29 +209,33 @@ def linkifyCodeIdentifiers(string):
 def linkifyVocabIdentifiers(m, string, classlist, proplist, instalist):
     "Add links to vocabulary documentation for prefixed names like eg:Thing"
 
-    rgx = re.compile('([a-zA-Z0-9_-]+):([a-zA-Z0-9_-]+)')
+    rgx = re.compile("([a-zA-Z0-9_-]+):([a-zA-Z0-9_-]+)")
     namespaces = getNamespaces(m)
 
     def translateLink(match):
-        text   = match.group(0)
+        text = match.group(0)
         prefix = match.group(1)
-        name   = match.group(2)
+        name = match.group(2)
         curie = match.group(0)
-        uri   = rdflib.URIRef(spec_ns + name)
+        uri = rdflib.URIRef(spec_ns + name)
         if prefix == spec_pre:
-            if not ((classlist and uri in classlist) or
-                    (instalist and uri in instalist) or
-                    (proplist and uri in proplist)):
+            if not (
+                (classlist and uri in classlist)
+                or (instalist and uri in instalist)
+                or (proplist and uri in proplist)
+            ):
                 print("warning: Link to undefined resource <%s>\n" % text)
             return '<a href="#%s">%s</a>' % (name, name)
         elif prefix in namespaces:
             return '<a href="%s">%s</a>' % (
                 namespaces[match.group(1)] + match.group(2),
-                match.group(0))
+                match.group(0),
+            )
         else:
             return text
 
     return rgx.sub(translateLink, string)
+
 
 def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
     # Syntax highlight all C code
@@ -241,7 +249,8 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
             code_str = pygments.highlight(
                 match_str,
                 pygments.lexers.CLexer(),
-                pygments.formatters.HtmlFormatter())
+                pygments.formatters.HtmlFormatter(),
+            )
             markup = code_rgx.sub(code_str, markup, 1)
 
     # Syntax highlight all Turtle code
@@ -255,7 +264,8 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
             code_str = pygments.highlight(
                 match_str,
                 pygments.lexers.rdf.TurtleLexer(),
-                pygments.formatters.HtmlFormatter())
+                pygments.formatters.HtmlFormatter(),
+            )
             markup = code_rgx.sub(code_str, markup, 1)
 
     # Add links to code documentation for identifiers
@@ -265,19 +275,23 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
     markup = linkifyVocabIdentifiers(m, markup, classlist, proplist, instalist)
 
     # Transform names like #foo into links into this spec if possible
-    rgx = re.compile('([ \t\n\r\f\v^]+)\#([a-zA-Z0-9_-]+)')
+    rgx = re.compile("([ \t\n\r\f\v^]+)\#([a-zA-Z0-9_-]+)")
+
     def translateLocalLink(match):
-        text  = match.group(0)
+        text = match.group(0)
         space = match.group(1)
-        name  = match.group(2)
-        uri   = rdflib.URIRef(spec_ns + name)
-        if ((classlist and uri in classlist) or
-            (instalist and uri in instalist) or
-            (proplist and uri in proplist)):
+        name = match.group(2)
+        uri = rdflib.URIRef(spec_ns + name)
+        if (
+            (classlist and uri in classlist)
+            or (instalist and uri in instalist)
+            or (proplist and uri in proplist)
+        ):
             return '%s<a href="#%s">%s</a>' % (space, name, name)
         else:
             print("warning: Link to undefined resource <%s>\n" % name)
             return text
+
     markup = rgx.sub(translateLocalLink, markup)
 
     if not have_lxml:
@@ -285,7 +299,8 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
     else:
         try:
             # Parse and validate documentation as XHTML Basic 1.1
-            doc = """<?xml version="1.0" encoding="UTF-8"?>
+            doc = (
+                """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
                       "DTD/xhtml-basic11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -293,19 +308,22 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
     <title>Validation Skeleton Document</title>
   </head>
   <body>
-""" + markup + """
+"""
+                + markup
+                + """
   </body>
 </html>"""
+            )
 
             oldcwd = os.getcwd()
             os.chdir(specgendir)
             parser = etree.XMLParser(dtd_validation=True, no_network=True)
-            root = etree.fromstring(doc.encode('utf-8'), parser)
+            root = etree.fromstring(doc.encode("utf-8"), parser)
         except Exception as e:
             print("Invalid documentation for %s\n%s" % (subject, e))
             line_num = 1
-            for line in doc.split('\n'):
-                print('%3d: %s' % (line_num, line))
+            for line in doc.split("\n"):
+                print("%3d: %s" % (line_num, line))
                 line_num += 1
         finally:
             os.chdir(oldcwd)
@@ -317,23 +335,25 @@ def formatDoc(m, urinode, literal, classlist, proplist, instalist):
     string = getLiteralString(literal)
 
     if literal.datatype == lv2.Markdown:
-        ext = ["markdown.extensions.codehilite",
-               "markdown.extensions.tables",
-               "markdown.extensions.def_list"]
+        ext = [
+            "markdown.extensions.codehilite",
+            "markdown.extensions.tables",
+            "markdown.extensions.def_list",
+        ]
 
         doc = markdown.markdown(string, extensions=ext)
 
         # Hack to make tables valid XHTML Basic 1.1
-        for tag in ['thead', 'tbody']:
-            doc = doc.replace('<%s>\n' % tag, '')
-            doc = doc.replace('</%s>\n' % tag, '')
+        for tag in ["thead", "tbody"]:
+            doc = doc.replace("<%s>\n" % tag, "")
+            doc = doc.replace("</%s>\n" % tag, "")
 
         return prettifyHtml(m, doc, urinode, classlist, proplist, instalist)
     else:
         doc = xml.sax.saxutils.escape(string)
         doc = linkifyCodeIdentifiers(doc)
         doc = linkifyVocabIdentifiers(m, doc, classlist, proplist, instalist)
-        return '<p>%s</p>' % doc
+        return "<p>%s</p>" % doc
 
 
 def getComment(m, subject, classlist, proplist, instalist):
@@ -342,11 +362,11 @@ def getComment(m, subject, classlist, proplist, instalist):
         comment = getObject(c)
         return formatDoc(m, subject, comment, classlist, proplist, instalist)
 
-    return ''
+    return ""
 
 
 def getDetailedDocumentation(m, subject, classlist, proplist, instalist):
-    markup = ''
+    markup = ""
 
     d = findOne(m, subject, lv2.documentation, None)
     if d:
@@ -355,7 +375,9 @@ def getDetailedDocumentation(m, subject, classlist, proplist, instalist):
             markup += formatDoc(m, subject, doc, classlist, proplist, instalist)
         else:
             html = getLiteralString(doc)
-            markup += prettifyHtml(m, html, subject, classlist, proplist, instalist)
+            markup += prettifyHtml(
+                m, html, subject, classlist, proplist, instalist
+            )
 
     return markup
 
@@ -365,25 +387,27 @@ def getFullDocumentation(m, subject, classlist, proplist, instalist):
     markup = getComment(m, subject, classlist, proplist, instalist)
 
     # Use lv2:documentation for further details
-    markup += getDetailedDocumentation(m, subject, classlist, proplist, instalist)
+    markup += getDetailedDocumentation(
+        m, subject, classlist, proplist, instalist
+    )
 
     return markup
 
 
 def getProperty(val, first=True):
     "Return a string representing a property value in a property table"
-    doc = ''
+    doc = ""
     if not first:
-        doc += '<tr><th></th>'  # Empty cell in header column
-    doc += '<td>%s</td></tr>\n' % val
+        doc += "<tr><th></th>"  # Empty cell in header column
+    doc += "<td>%s</td></tr>\n" % val
     return doc
 
 
 def endProperties(first):
     if first:
-        return '</tr>'
+        return "</tr>"
     else:
-        return ''
+        return ""
 
 
 def rdfsPropertyInfo(term, m):
@@ -395,18 +419,18 @@ def rdfsPropertyInfo(term, m):
     domain = ""
 
     label = getLabel(m, term)
-    if label != '':
+    if label != "":
         doc += "<tr><th>Label</th><td>%s</td></tr>" % label
 
     # Find subPropertyOf information
-    rlist = ''
+    rlist = ""
     first = True
     for st in findStatements(m, term, rdfs.subPropertyOf, None):
         k = getTermLink(getObject(st), term, rdfs.subPropertyOf)
         rlist += getProperty(k, first)
         first = False
-    if rlist != '':
-        doc += '<tr><th>Sub-property of</th>' + rlist
+    if rlist != "":
+        doc += "<tr><th>Sub-property of</th>" + rlist
 
     # Domain stuff
     domains = findStatements(m, term, rdfs.domain, None)
@@ -417,13 +441,17 @@ def rdfsPropertyInfo(term, m):
         if union:
             uris = parseCollection(m, getObject(union))
             for uri in uris:
-                domainsdoc += getProperty(getTermLink(uri, term, rdfs.domain), first)
+                domainsdoc += getProperty(
+                    getTermLink(uri, term, rdfs.domain), first
+                )
                 add(classdomains, uri, term)
         else:
             if not isBlank(getObject(d)):
-                domainsdoc += getProperty(getTermLink(getObject(d), term, rdfs.domain), first)
+                domainsdoc += getProperty(
+                    getTermLink(getObject(d), term, rdfs.domain), first
+                )
         first = False
-    if (len(domainsdoc) > 0):
+    if len(domainsdoc) > 0:
         doc += "<tr><th>Domain</th>%s" % domainsdoc
 
     # Range stuff
@@ -435,14 +463,18 @@ def rdfsPropertyInfo(term, m):
         if union:
             uris = parseCollection(m, getObject(union))
             for uri in uris:
-                rangesdoc += getProperty(getTermLink(uri, term, rdfs.range), first)
+                rangesdoc += getProperty(
+                    getTermLink(uri, term, rdfs.range), first
+                )
                 add(classranges, uri, term)
                 first = False
         else:
             if not isBlank(getObject(r)):
-                rangesdoc += getProperty(getTermLink(getObject(r), term, rdfs.range), first)
+                rangesdoc += getProperty(
+                    getTermLink(getObject(r), term, rdfs.range), first
+                )
         first = False
-    if (len(rangesdoc) > 0):
+    if len(rangesdoc) > 0:
         doc += "<tr><th>Range</th>%s" % rangesdoc
 
     return doc
@@ -453,9 +485,9 @@ def parseCollection(model, node):
 
     while node:
         first = findOne(model, node, rdf.first, None)
-        rest  = findOne(model, node, rdf.rest, None)
+        rest = findOne(model, node, rdf.rest, None)
         if not first or not rest:
-            break;
+            break
 
         uris.append(getObject(first))
         node = getObject(rest)
@@ -465,11 +497,19 @@ def parseCollection(model, node):
 
 def getTermLink(uri, subject=None, predicate=None):
     uri = str(uri)
-    extra = ''
+    extra = ""
     if subject is not None and predicate is not None:
-        extra = 'about="%s" rel="%s" resource="%s"' % (str(subject), niceName(str(predicate)), uri)
-    if (uri.startswith(spec_ns_str)):
-        return '<a href="#%s" %s>%s</a>' % (uri.replace(spec_ns_str, ""), extra, niceName(uri))
+        extra = 'about="%s" rel="%s" resource="%s"' % (
+            str(subject),
+            niceName(str(predicate)),
+            uri,
+        )
+    if uri.startswith(spec_ns_str):
+        return '<a href="#%s" %s>%s</a>' % (
+            uri.replace(spec_ns_str, ""),
+            extra,
+            niceName(uri),
+        )
     else:
         return '<a href="%s" %s>%s</a>' % (uri, extra, niceName(uri))
 
@@ -482,9 +522,9 @@ def owlRestrictionInfo(term, m):
             restrictions.append(getObject(s))
 
     if not restrictions:
-        return ''
+        return ""
 
-    doc = '<dl>'
+    doc = "<dl>"
 
     for r in sorted(restrictions):
         props = findStatements(m, r, None, None)
@@ -496,30 +536,36 @@ def owlRestrictionInfo(term, m):
             elif getPredicate(p) == rdfs.comment:
                 comment = getObject(p)
         if onProp is not None:
-            doc += '<dt>Restriction on %s</dt>\n' % getTermLink(onProp)
+            doc += "<dt>Restriction on %s</dt>\n" % getTermLink(onProp)
 
-            prop_str = ''
+            prop_str = ""
             for p in findStatements(m, r, None, None):
-                if (getPredicate(p) == owl.onProperty
+                if (
+                    getPredicate(p) == owl.onProperty
                     or getPredicate(p) == rdfs.comment
-                    or (getPredicate(p) == rdf.type and getObject(p) == owl.Restriction)
-                    or getPredicate(p) == lv2.documentation):
+                    or (
+                        getPredicate(p) == rdf.type
+                        and getObject(p) == owl.Restriction
+                    )
+                    or getPredicate(p) == lv2.documentation
+                ):
                     continue
 
                 prop_str += getTermLink(getPredicate(p))
 
                 if isResource(getObject(p)):
-                    prop_str += ' ' + getTermLink(getObject(p))
+                    prop_str += " " + getTermLink(getObject(p))
                 elif isLiteral(getObject(p)):
-                    prop_str += ' ' + getLiteralString(getObject(p))
+                    prop_str += " " + getLiteralString(getObject(p))
 
             if comment is not None:
-                prop_str += '\n<div>%s</div>\n' % getLiteralString(comment)
+                prop_str += "\n<div>%s</div>\n" % getLiteralString(comment)
 
-            doc += '<dd>%s</dd>' % prop_str if prop_str else '';
+            doc += "<dd>%s</dd>" % prop_str if prop_str else ""
 
-    doc += '</dl>'
+    doc += "</dl>"
     return doc
+
 
 def rdfsClassInfo(term, m):
     """Generate rdfs-type information for Classes: ranges, and domains."""
@@ -528,7 +574,7 @@ def rdfsClassInfo(term, m):
     doc = ""
 
     label = getLabel(m, term)
-    if label != '':
+    if label != "":
         doc += "<tr><th>Label</th><td>%s</td></tr>" % label
 
     # Find superclasses
@@ -562,7 +608,7 @@ def rdfsClassInfo(term, m):
     # Find out about properties which have rdfs:domain of t
     d = classdomains.get(str(term), "")
     if d:
-        dlist = ''
+        dlist = ""
         first = True
         for k in sorted(d):
             dlist += getProperty(getTermLink(k), first)
@@ -572,7 +618,7 @@ def rdfsClassInfo(term, m):
     # Find out about properties which have rdfs:range of t
     r = classranges.get(str(term), "")
     if r:
-        rlist = ''
+        rlist = ""
         first = True
         for k in sorted(r):
             rlist += getProperty(getTermLink(k), first)
@@ -584,29 +630,45 @@ def rdfsClassInfo(term, m):
 
 def isSpecial(pred):
     """Return True if the predicate is "special" and shouldn't be emitted generically"""
-    return pred in [rdf.type, rdfs.range, rdfs.domain, rdfs.label, rdfs.comment, rdfs.subClassOf, rdfs.subPropertyOf, lv2.documentation, owl.withRestrictions]
+    return pred in [
+        rdf.type,
+        rdfs.range,
+        rdfs.domain,
+        rdfs.label,
+        rdfs.comment,
+        rdfs.subClassOf,
+        rdfs.subPropertyOf,
+        lv2.documentation,
+        owl.withRestrictions,
+    ]
 
 
 def blankNodeDesc(node, m):
     properties = findStatements(m, node, None, None)
-    doc = ''
-    last_pred = ''
+    doc = ""
+    last_pred = ""
     for p in sorted(properties):
         if isSpecial(getPredicate(p)):
             continue
-        doc += '<tr>'
+        doc += "<tr>"
         doc += '<td class="blankterm">%s</td>\n' % getTermLink(getPredicate(p))
         if isResource(getObject(p)):
             doc += '<td class="blankdef">%s</td>\n' % getTermLink(getObject(p))
             # getTermLink(str(getObject(p)), node, getPredicate(p))
         elif isLiteral(getObject(p)):
-            doc += '<td class="blankdef">%s</td>\n' % getLiteralString(getObject(p))
+            doc += '<td class="blankdef">%s</td>\n' % getLiteralString(
+                getObject(p)
+            )
         elif isBlank(getObject(p)):
-            doc += '<td class="blankdef">' + blankNodeDesc(getObject(p), m) + '</td>\n'
+            doc += (
+                '<td class="blankdef">'
+                + blankNodeDesc(getObject(p), m)
+                + "</td>\n"
+            )
         else:
             doc += '<td class="blankdef">?</td>\n'
-        doc += '</tr>'
-    if doc != '':
+        doc += "</tr>"
+    if doc != "":
         doc = '<table class="blankdesc">\n%s\n</table>\n' % doc
     return doc
 
@@ -619,17 +681,19 @@ def extraInfo(term, m):
     for p in sorted(properties):
         if isSpecial(getPredicate(p)):
             continue
-        doc += '<tr><th>%s</th>\n' % getTermLink(getPredicate(p))
+        doc += "<tr><th>%s</th>\n" % getTermLink(getPredicate(p))
         if isResource(getObject(p)):
-            doc += getProperty(getTermLink(getObject(p), term, getPredicate(p)), first)
+            doc += getProperty(
+                getTermLink(getObject(p), term, getPredicate(p)), first
+            )
         elif isLiteral(getObject(p)):
             doc += getProperty(linkifyCodeIdentifiers(str(getObject(p))), first)
         elif isBlank(getObject(p)):
             doc += getProperty(str(blankNodeDesc(getObject(p), m)), first)
         else:
-            doc += getProperty('?', first)
+            doc += getProperty("?", first)
 
-    #doc += endProperties(first)
+    # doc += endProperties(first)
 
     return doc
 
@@ -639,16 +703,15 @@ def rdfsInstanceInfo(term, m):
     doc = ""
 
     label = getLabel(m, term)
-    if label != '':
+    if label != "":
         doc += "<tr><th>Label</th><td>%s</td></tr>" % label
 
     first = True
     types = ""
     for match in sorted(findStatements(m, term, rdf.type, None)):
-        types += getProperty(getTermLink(getObject(match),
-                                         term,
-                                         rdf.type),
-                             first)
+        types += getProperty(
+            getTermLink(getObject(match), term, rdf.type), first
+        )
         first = False
 
     if types != "":
@@ -661,7 +724,7 @@ def rdfsInstanceInfo(term, m):
 
 def owlInfo(term, m):
     """Returns an extra information that is defined about a term using OWL."""
-    res = ''
+    res = ""
 
     # Inverse properties ( owl:inverseOf )
     first = True
@@ -681,14 +744,18 @@ def owlInfo(term, m):
     res += owlTypeInfo(term, owl.DatatypeProperty, "Datatype Property")
     res += owlTypeInfo(term, owl.ObjectProperty, "Object Property")
     res += owlTypeInfo(term, owl.AnnotationProperty, "Annotation Property")
-    res += owlTypeInfo(term, owl.InverseFunctionalProperty, "Inverse Functional Property")
+    res += owlTypeInfo(
+        term, owl.InverseFunctionalProperty, "Inverse Functional Property"
+    )
     res += owlTypeInfo(term, owl.SymmetricProperty, "Symmetric Property")
 
     return res
 
+
 def isDeprecated(m, subject):
     deprecated = findOne(m, subject, owl.deprecated, None)
     return deprecated and (str(deprecated[2]).find("true") >= 0)
+
 
 def docTerms(category, list, m, classlist, proplist, instalist):
     """
@@ -716,18 +783,18 @@ def docTerms(category, list, m, classlist, proplist, instalist):
 
         terminfo = ""
         extrainfo = ""
-        if category == 'Property':
+        if category == "Property":
             terminfo += rdfsPropertyInfo(term, m)
             terminfo += owlInfo(term, m)
-        if category == 'Class':
+        if category == "Class":
             terminfo += rdfsClassInfo(term, m)
             extrainfo += owlRestrictionInfo(term, m)
-        if category == 'Instance':
+        if category == "Instance":
             terminfo += rdfsInstanceInfo(term, m)
 
         terminfo += extraInfo(term, m)
 
-        if (len(terminfo) > 0):  # to prevent empty list (bug #882)
+        if len(terminfo) > 0:  # to prevent empty list (bug #882)
             doc += '\n<table class="terminfo">%s</table>\n' % terminfo
 
         doc += '<div class="description">'
@@ -735,14 +802,17 @@ def docTerms(category, list, m, classlist, proplist, instalist):
         if is_deprecated:
             doc += '<div class="warning">Deprecated</div>'
 
-        if comment != '':
-            doc += "<div class=\"comment\" property=\"rdfs:comment\">%s</div>" % comment
+        if comment != "":
+            doc += (
+                '<div class="comment" property="rdfs:comment">%s</div>'
+                % comment
+            )
 
         doc += extrainfo
 
         doc += "</div>"
 
-        doc += '</div>'
+        doc += "</div>"
         doc += "\n</div>\n\n"
 
     return doc
@@ -750,7 +820,7 @@ def docTerms(category, list, m, classlist, proplist, instalist):
 
 def getShortName(uri):
     uri = str(uri)
-    if ("#" in uri):
+    if "#" in uri:
         return uri.split("#")[-1]
     else:
         return uri.split("/")[-1]
@@ -758,18 +828,18 @@ def getShortName(uri):
 
 def getAnchor(uri):
     uri = str(uri)
-    if (uri.startswith(spec_ns_str)):
-        return uri[len(spec_ns_str):].replace("/", "_")
+    if uri.startswith(spec_ns_str):
+        return uri[len(spec_ns_str) :].replace("/", "_")
     else:
         return getShortName(uri)
 
 
 def buildIndex(m, classlist, proplist, instalist=None):
     if not (classlist or proplist or instalist):
-        return ''
+        return ""
 
-    head = ''
-    body = ''
+    head = ""
+    body = ""
 
     def termLink(m, t):
         if str(t).startswith(spec_ns_str):
@@ -778,9 +848,9 @@ def buildIndex(m, classlist, proplist, instalist=None):
         else:
             return '<a href="%s">%s</a>' % (str(t), str(t))
 
-    if (len(classlist) > 0):
+    if len(classlist) > 0:
         head += '<th><a href="#ref-classes" />Classes</th>'
-        body += '<td><ul>'
+        body += "<td><ul>"
         shown = {}
         for c in sorted(classlist):
             if c in shown:
@@ -790,15 +860,16 @@ def buildIndex(m, classlist, proplist, instalist=None):
             local_subclass = False
             for p in findStatements(m, c, rdfs.subClassOf, None):
                 parent = str(p[2])
-                if parent[0:len(spec_ns_str)] == spec_ns_str:
+                if parent[0 : len(spec_ns_str)] == spec_ns_str:
                     local_subclass = True
             if local_subclass:
                 continue
 
             shown[c] = True
-            body += '<li>' + termLink(m, c)
+            body += "<li>" + termLink(m, c)
+
             def class_tree(c):
-                tree = ''
+                tree = ""
                 shown[c] = True
 
                 subclasses = []
@@ -806,39 +877,44 @@ def buildIndex(m, classlist, proplist, instalist=None):
                     subclasses += [getSubject(s)]
 
                 for s in sorted(subclasses):
-                    tree += '<li>' + termLink(m, s)
+                    tree += "<li>" + termLink(m, s)
                     tree += class_tree(s)
-                    tree += '</li>'
-                if tree != '':
-                    tree = '<ul>' + tree + '</ul>'
+                    tree += "</li>"
+                if tree != "":
+                    tree = "<ul>" + tree + "</ul>"
                 return tree
+
             body += class_tree(c)
-            body += '</li>'
-        body += '</ul></td>\n'
+            body += "</li>"
+        body += "</ul></td>\n"
 
-    if (len(proplist) > 0):
+    if len(proplist) > 0:
         head += '<th><a href="#ref-properties" />Properties</th>'
-        body += '<td><ul>'
+        body += "<td><ul>"
         for p in sorted(proplist):
-            body += '<li>%s</li>' % termLink(m, p)
-        body += '</ul></td>\n'
+            body += "<li>%s</li>" % termLink(m, p)
+        body += "</ul></td>\n"
 
-    if (instalist is not None and len(instalist) > 0):
+    if instalist is not None and len(instalist) > 0:
         head += '<th><a href="#ref-instances" />Instances</th>'
-        body += '<td><ul>'
+        body += "<td><ul>"
         for i in sorted(instalist):
             p = getShortName(i)
             anchor = getAnchor(i)
             body += '<li><a href="#%s">%s</a></li>' % (anchor, p)
-        body += '</ul></td>\n'
+        body += "</ul></td>\n"
 
     if head and body:
-        return '''<table class="index">
+        return """<table class="index">
 <thead><tr>%s</tr></thead>
 <tbody><tr>%s</tr></tbody></table>
-''' % (head, body)
+""" % (
+            head,
+            body,
+        )
 
-    return ''
+    return ""
+
 
 def add(where, key, value):
     if not key in where:
@@ -861,23 +937,36 @@ def specInformation(m, ns):
     classlist = []
     for onetype in classtypes:
         for classStatement in findStatements(m, None, rdf.type, onetype):
-            for range in findStatements(m, None, rdfs.range, getSubject(classStatement)):
+            for range in findStatements(
+                m, None, rdfs.range, getSubject(classStatement)
+            ):
                 if not isBlank(getSubject(classStatement)):
-                    add(classranges,
+                    add(
+                        classranges,
                         str(getSubject(classStatement)),
-                        str(getSubject(range)))
-            for domain in findStatements(m, None, rdfs.domain, getSubject(classStatement)):
+                        str(getSubject(range)),
+                    )
+            for domain in findStatements(
+                m, None, rdfs.domain, getSubject(classStatement)
+            ):
                 if not isBlank(getSubject(classStatement)):
-                    add(classdomains,
+                    add(
+                        classdomains,
                         str(getSubject(classStatement)),
-                        str(getSubject(domain)))
+                        str(getSubject(domain)),
+                    )
             if not isBlank(getSubject(classStatement)):
                 klass = getSubject(classStatement)
                 if klass not in classlist and str(klass).startswith(ns):
                     classlist.append(klass)
 
     # Create a list of properties in the schema.
-    proptypes = [rdf.Property, owl.ObjectProperty, owl.DatatypeProperty, owl.AnnotationProperty]
+    proptypes = [
+        rdf.Property,
+        owl.ObjectProperty,
+        owl.DatatypeProperty,
+        owl.AnnotationProperty,
+    ]
     proplist = []
     for onetype in proptypes:
         for propertyStatement in findStatements(m, None, rdf.type, onetype):
@@ -892,7 +981,7 @@ def specProperty(m, subject, predicate):
     "Return a property of the spec."
     for c in findStatements(m, subject, predicate, None):
         return getLiteralString(getObject(c))
-    return ''
+    return ""
 
 
 def specProperties(m, subject, predicate):
@@ -906,7 +995,7 @@ def specProperties(m, subject, predicate):
 def specAuthors(m, subject):
     "Return an HTML description of the authors of the spec."
 
-    subjects = [subject];
+    subjects = [subject]
     p = findOne(m, subject, lv2.project, None)
     if p:
         subjects += [getObject(p)]
@@ -923,44 +1012,56 @@ def specAuthors(m, subject):
             for j in findStatements(m, getObject(i), foaf.name, None):
                 maint.add(getLiteralString(getObject(j)))
 
-    doc = ''
+    doc = ""
 
-    devdoc = ''
+    devdoc = ""
     first = True
     for d in sorted(dev):
         if not first:
-            devdoc += ', '
+            devdoc += ", "
         devdoc += '<span class="author" property="doap:developer">%s</span>' % d
         first = False
     if len(dev) == 1:
-        doc += '<tr><th class="metahead">Developer</th><td>%s</td></tr>' % devdoc
+        doc += (
+            '<tr><th class="metahead">Developer</th><td>%s</td></tr>' % devdoc
+        )
     elif len(dev) > 0:
-        doc += '<tr><th class="metahead">Developers</th><td>%s</td></tr>' % devdoc
+        doc += (
+            '<tr><th class="metahead">Developers</th><td>%s</td></tr>' % devdoc
+        )
 
-    maintdoc = ''
+    maintdoc = ""
     first = True
     for m in sorted(maint):
         if not first:
-            maintdoc += ', '
-        maintdoc += '<span class="author" property="doap:maintainer">%s</span>' % m
+            maintdoc += ", "
+        maintdoc += (
+            '<span class="author" property="doap:maintainer">%s</span>' % m
+        )
         first = False
     if len(maint) == 1:
-        doc += '<tr><th class="metahead">Maintainer</th><td>%s</td></tr>' % maintdoc
+        doc += (
+            '<tr><th class="metahead">Maintainer</th><td>%s</td></tr>'
+            % maintdoc
+        )
     elif len(maint) > 0:
-        doc += '<tr><th class="metahead">Maintainers</th><td>%s</td></tr>' % maintdoc
+        doc += (
+            '<tr><th class="metahead">Maintainers</th><td>%s</td></tr>'
+            % maintdoc
+        )
 
     return doc
 
 
-def releaseChangeset(m, release, prefix=''):
+def releaseChangeset(m, release, prefix=""):
     changeset = findOne(m, release, dcs.changeset, None)
     if changeset is None:
-        return ''
+        return ""
 
-    entry = ''
-    #entry = '<dd><ul>\n'
+    entry = ""
+    # entry = '<dd><ul>\n'
     for i in sorted(findStatements(m, getObject(changeset), dcs.item, None)):
-        item  = getObject(i)
+        item = getObject(i)
         label = findOne(m, item, rdfs.label, None)
         if not label:
             print("error: dcs:item has no rdfs:label")
@@ -968,11 +1069,11 @@ def releaseChangeset(m, release, prefix=''):
 
         text = getLiteralString(getObject(label))
         if prefix:
-            text = prefix + ': ' + text
+            text = prefix + ": " + text
 
-        entry += '<li>%s</li>\n' % text
+        entry += "<li>%s</li>\n" % text
 
-    #entry += '</ul></dd>\n'
+    # entry += '</ul></dd>\n'
     return entry
 
 
@@ -988,19 +1089,19 @@ def specHistoryEntries(m, subject, entries):
 
         created = findOne(m, release, doap.created, None)
 
-        dist = findOne(m, release, doap['file-release'], None)
+        dist = findOne(m, release, doap["file-release"], None)
         if dist:
             entry = '<dt><a href="%s">Version %s</a>' % (getObject(dist), rev)
         else:
-            entry = '<dt>Version %s' % rev
-            #print("warning: doap:release has no doap:file-release")
+            entry = "<dt>Version %s" % rev
+            # print("warning: doap:release has no doap:file-release")
 
         if created:
-            entry += ' (%s)</dt>\n' % getLiteralString(getObject(created))
+            entry += " (%s)</dt>\n" % getLiteralString(getObject(created))
         else:
             entry += ' (<span class="warning">EXPERIMENTAL</span>)</dt>'
 
-        entry += '<dd><ul>\n%s' % releaseChangeset(m, release)
+        entry += "<dd><ul>\n%s" % releaseChangeset(m, release)
 
         if dist is not None:
             entries[(getObject(created), getObject(dist))] = entry
@@ -1010,13 +1111,13 @@ def specHistoryEntries(m, subject, entries):
 
 def specHistoryMarkup(entries):
     if len(entries) > 0:
-        history = '<dl>\n'
+        history = "<dl>\n"
         for e in sorted(entries.keys(), reverse=True):
-            history += entries[e] + '</ul></dd>'
-        history += '</dl>\n'
+            history += entries[e] + "</ul></dd>"
+        history += "</dl>\n"
         return history
     else:
-        return ''
+        return ""
 
 
 def specHistory(m, subject):
@@ -1065,15 +1166,18 @@ def getInstances(model, classes, properties):
             if inst not in instances and str(inst) != spec_url:
                 instances.append(inst)
     for i in findStatements(model, None, rdf.type, None):
-        if ((not isResource(getSubject(i)))
+        if (
+            (not isResource(getSubject(i)))
             or (getSubject(i) in classes)
             or (getSubject(i) in instances)
-            or (getSubject(i) in properties)):
+            or (getSubject(i) in properties)
+        ):
             continue
         full_uri = str(getSubject(i))
-        if (full_uri.startswith(spec_ns_str)):
+        if full_uri.startswith(spec_ns_str):
             instances.append(getSubject(i))
     return instances
+
 
 def load_tags(path, docdir):
     "Build a (symbol => URI) map from a Doxygen tag file."
@@ -1086,40 +1190,51 @@ def load_tags(path, docdir):
         for e in elt.childNodes:
             if e.nodeType == xml.dom.Node.ELEMENT_NODE and e.tagName == tagname:
                 return e.firstChild.nodeValue
-        return ''
+        return ""
 
     def linkTo(filename, anchor, sym):
         if anchor:
-            return '<span><a href="%s/%s#%s">%s</a></span>' % (docdir, filename, anchor, sym)
+            return '<span><a href="%s/%s#%s">%s</a></span>' % (
+                docdir,
+                filename,
+                anchor,
+                sym,
+            )
         else:
-            return '<span><a href="%s/%s">%s</a></span>' % (docdir, filename, sym)
+            return '<span><a href="%s/%s">%s</a></span>' % (
+                docdir,
+                filename,
+                sym,
+            )
 
-    tagdoc  = xml.dom.minidom.parse(path)
-    root    = tagdoc.documentElement
+    tagdoc = xml.dom.minidom.parse(path)
+    root = tagdoc.documentElement
     linkmap = {}
     for cn in root.childNodes:
-        if (cn.nodeType == xml.dom.Node.ELEMENT_NODE
-            and cn.tagName == 'compound'
-            and cn.getAttribute('kind') != 'page'):
+        if (
+            cn.nodeType == xml.dom.Node.ELEMENT_NODE
+            and cn.tagName == "compound"
+            and cn.getAttribute("kind") != "page"
+        ):
 
-            name     = getChildText(cn, 'name')
-            filename = getChildText(cn, 'filename')
-            anchor   = getChildText(cn, 'anchor')
-            if not filename.endswith('.html'):
-                filename += '.html'
+            name = getChildText(cn, "name")
+            filename = getChildText(cn, "filename")
+            anchor = getChildText(cn, "anchor")
+            if not filename.endswith(".html"):
+                filename += ".html"
 
-            if cn.getAttribute('kind') != 'group':
+            if cn.getAttribute("kind") != "group":
                 linkmap[name] = linkTo(filename, anchor, name)
 
-            prefix = ''
-            if cn.getAttribute('kind') == 'struct':
-                prefix = name + '::'
+            prefix = ""
+            if cn.getAttribute("kind") == "struct":
+                prefix = name + "::"
 
-            members = cn.getElementsByTagName('member')
+            members = cn.getElementsByTagName("member")
             for m in members:
-                mname   = prefix + getChildText(m, 'name')
-                mafile  = getChildText(m, 'anchorfile')
-                manchor = getChildText(m, 'anchor')
+                mname = prefix + getChildText(m, "name")
+                mafile = getChildText(m, "anchorfile")
+                manchor = getChildText(m, "anchor")
                 linkmap[mname] = linkTo(mafile, manchor, mname)
 
     return linkmap
@@ -1131,7 +1246,7 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
     if not ext_node:
         ext_node = model.value(None, rdf.type, owl.Ontology)
     if not ext_node:
-        print('no extension found in %s' % bundle)
+        print("no extension found in %s" % bundle)
         sys.exit(1)
 
     ext = str(ext_node)
@@ -1144,13 +1259,13 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
         micro = int(model.value(ext_node, lv2.microVersion, None))
     except:
         e = sys.exc_info()[1]
-        print('warning: %s: failed to find version for %s' % (bundle, ext))
+        print("warning: %s: failed to find version for %s" % (bundle, ext))
 
     # Get date
     date = None
     for r in model.triples([ext_node, doap.release, None]):
         revision = model.value(r[2], doap.revision, None)
-        if str(revision) == ('%d.%d' % (minor, micro)):
+        if str(revision) == ("%d.%d" % (minor, micro)):
             date = model.value(r[2], doap.created, None)
             break
 
@@ -1158,46 +1273,53 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
     for r in model.triples([ext_node, doap.release, None]):
         this_date = model.value(r[2], doap.created, None)
         if this_date > date:
-            print('warning: %s revision %d.%d (%s) is not the latest release' % (
-                ext_node, minor, micro, date))
+            print(
+                "warning: %s revision %d.%d (%s) is not the latest release"
+                % (ext_node, minor, micro, date)
+            )
             break
 
     # Get name and short description
-    name      = model.value(ext_node, doap.name, None)
+    name = model.value(ext_node, doap.name, None)
     shortdesc = model.value(ext_node, doap.shortdesc, None)
 
     # Chop 'LV2' prefix from name for cleaner index
-    if name.startswith('LV2 '):
+    if name.startswith("LV2 "):
         name = name[4:]
 
     # Find relative link target
     if root_uri and ext_node.startswith(root_uri):
-        target = ext_node[len(root_uri):] + '.html'
+        target = ext_node[len(root_uri) :] + ".html"
     else:
-        target = os.path.relpath(ext_node, root_path) + '.html'
+        target = os.path.relpath(ext_node, root_path) + ".html"
 
     stem = os.path.splitext(os.path.basename(target))[0]
 
     # Specification (comment is to act as a sort key)
     row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
-        b, target, name)
+        b,
+        target,
+        name,
+    )
 
     # API
-    row += '<td><a rel="rdfs:seeAlso" href="../doc/html/group__%s.html">%s</a></td>' % (
-        stem, name)
+    row += (
+        '<td><a rel="rdfs:seeAlso" href="../doc/html/group__%s.html">%s</a></td>'
+        % (stem, name)
+    )
 
     # Description
     if shortdesc:
-        row += '<td>' + str(shortdesc) + '</td>'
+        row += "<td>" + str(shortdesc) + "</td>"
     else:
-        row += '<td></td>'
+        row += "<td></td>"
 
     # Version
-    version_str = '%s.%s' % (minor, micro)
+    version_str = "%s.%s" % (minor, micro)
     if minor == 0 or (micro % 2 != 0):
-        row += '<td><span style="color: red">' + version_str + '</span></td>'
+        row += '<td><span style="color: red">' + version_str + "</span></td>"
     else:
-        row += '<td>' + version_str + '</td>'
+        row += "<td>" + version_str + "</td>"
 
     # Status
     deprecated = model.value(ext_node, owl.deprecated, None)
@@ -1208,14 +1330,26 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
     elif micro % 2 == 0:
         row += '<td><span class="success">Stable</span></td>'
 
-    row += '</tr>'
+    row += "</tr>"
 
-    index = open(index_path, 'w')
+    index = open(index_path, "w")
     index.write(row)
     index.close()
 
 
-def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root_link=None, index_path=None, root_path=None, root_uri=None):
+def specgen(
+    specloc,
+    indir,
+    style_uri,
+    docdir,
+    tags,
+    opts,
+    instances=False,
+    root_link=None,
+    index_path=None,
+    root_path=None,
+    root_uri=None,
+):
     """The meat and potatoes: Everything starts here."""
 
     global spec_bundle
@@ -1241,12 +1375,12 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     linkmap = load_tags(tags, docdir)
 
     m = rdflib.ConjunctiveGraph()
-    manifest_path = os.path.join(os.path.dirname(specloc), 'manifest.ttl')
+    manifest_path = os.path.join(os.path.dirname(specloc), "manifest.ttl")
     if os.path.exists(manifest_path):
-        m.parse(manifest_path, format='n3')
-    m.parse(specloc, format='n3')
+        m.parse(manifest_path, format="n3")
+    m.parse(specloc, format="n3")
 
-    bundle_path = os.path.split(specloc[specloc.find(':') + 1:])[0]
+    bundle_path = os.path.split(specloc[specloc.find(":") + 1 :])[0]
     abs_bundle_path = os.path.abspath(bundle_path)
     spec_url = getOntologyNS(m)
     spec = rdflib.URIRef(spec_url)
@@ -1257,17 +1391,19 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     while not done:
         done = True
         for uri in specProperties(m, spec, rdfs.seeAlso):
-            if uri[:7] == 'file://':
+            if uri[:7] == "file://":
                 path = uri[7:]
-                if (path != os.path.abspath(specloc) and
-                    path.endswith('ttl') and
-                    path not in seeAlso):
+                if (
+                    path != os.path.abspath(specloc)
+                    and path.endswith("ttl")
+                    and path not in seeAlso
+                ):
                     seeAlso.add(path)
-                    m.parse(path, format='n3')
+                    m.parse(path, format="n3")
                     done = False
 
     spec_ns_str = spec_url
-    if (spec_ns_str[-1] != "/" and spec_ns_str[-1] != "#"):
+    if spec_ns_str[-1] != "/" and spec_ns_str[-1] != "#":
         spec_ns_str += "#"
 
     spec_ns = rdflib.Namespace(spec_ns_str)
@@ -1277,18 +1413,20 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
     prefixes_html = "<span>"
     for i in keys:
         uri = namespaces[i]
-        if uri.startswith('file:'):
-            continue;
+        if uri.startswith("file:"):
+            continue
         ns_list[str(uri)] = i
-        if (str(uri) == spec_url + '#' or
-            str(uri) == spec_url + '/' or
-            str(uri) == spec_url):
+        if (
+            str(uri) == spec_url + "#"
+            or str(uri) == spec_url + "/"
+            or str(uri) == spec_url
+        ):
             spec_pre = i
         prefixes_html += '<a href="%s">%s</a> ' % (uri, i)
     prefixes_html += "</span>"
 
     if spec_pre is None:
-        print('No namespace prefix for %s defined' % specloc)
+        print("No namespace prefix for %s defined" % specloc)
         sys.exit(1)
 
     ns_list[spec_ns_str] = spec_pre
@@ -1299,69 +1437,79 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
 
     instalist = None
     if instances:
-        instalist = sorted(getInstances(m, classlist, proplist),
-                           key=lambda x: getShortName(x).lower())
+        instalist = sorted(
+            getInstances(m, classlist, proplist),
+            key=lambda x: getShortName(x).lower(),
+        )
 
     azlist = buildIndex(m, classlist, proplist, instalist)
 
     # Generate Term HTML
-    classlist = docTerms('Class', classlist, m, classlist, proplist, instalist)
-    proplist = docTerms('Property', proplist, m, classlist, proplist, instalist)
+    classlist = docTerms("Class", classlist, m, classlist, proplist, instalist)
+    proplist = docTerms("Property", proplist, m, classlist, proplist, instalist)
     if instances:
-        instlist = docTerms('Instance', instalist, m, classlist, proplist, instalist)
+        instlist = docTerms(
+            "Instance", instalist, m, classlist, proplist, instalist
+        )
 
-    termlist = ''
+    termlist = ""
     if classlist:
         termlist += '<div class="section">'
         termlist += '<h2><a id="ref-classes" />Classes</h2>' + classlist
-        termlist += '</div>'
+        termlist += "</div>"
 
     if proplist:
         termlist += '<div class="section">'
         termlist += '<h2><a id="ref-properties" />Properties</h2>' + proplist
-        termlist += '</div>'
+        termlist += "</div>"
 
     if instlist:
         termlist += '<div class="section">'
         termlist += '<h2><a id="ref-instances" />Instances</h2>' + instlist
-        termlist += '</div>'
+        termlist += "</div>"
 
     name = specProperty(m, spec, doap.name)
     title = name
     if root_link:
         name = '<a href="%s">%s</a>' % (root_link, name)
 
-    template = template.replace('@TITLE@', title)
-    template = template.replace('@NAME@', name)
-    template = template.replace('@SHORT_DESC@', specProperty(m, spec, doap.shortdesc))
-    template = template.replace('@URI@', spec)
-    template = template.replace('@PREFIX@', spec_pre)
-    if spec_pre == 'lv2':
-        template = template.replace('@XMLNS@', '')
+    template = template.replace("@TITLE@", title)
+    template = template.replace("@NAME@", name)
+    template = template.replace(
+        "@SHORT_DESC@", specProperty(m, spec, doap.shortdesc)
+    )
+    template = template.replace("@URI@", spec)
+    template = template.replace("@PREFIX@", spec_pre)
+    if spec_pre == "lv2":
+        template = template.replace("@XMLNS@", "")
     else:
-        template = template.replace('@XMLNS@', '      xmlns:%s="%s"' % (spec_pre, spec_ns_str))
+        template = template.replace(
+            "@XMLNS@", '      xmlns:%s="%s"' % (spec_pre, spec_ns_str)
+        )
 
     filename = os.path.basename(specloc)
-    basename = filename[0:filename.rfind('.')]
+    basename = filename[0 : filename.rfind(".")]
 
-    template = template.replace('@STYLE_URI@', style_uri)
-    template = template.replace('@PREFIXES@', str(prefixes_html))
-    template = template.replace('@BASE@', spec_ns_str)
-    template = template.replace('@AUTHORS@', specAuthors(m, spec))
-    template = template.replace('@INDEX@', azlist)
-    template = template.replace('@REFERENCE@', termlist)
-    template = template.replace('@FILENAME@', filename)
-    template = template.replace('@HEADER@', basename + '.h')
-    template = template.replace('@HISTORY@', specHistory(m, spec))
+    template = template.replace("@STYLE_URI@", style_uri)
+    template = template.replace("@PREFIXES@", str(prefixes_html))
+    template = template.replace("@BASE@", spec_ns_str)
+    template = template.replace("@AUTHORS@", specAuthors(m, spec))
+    template = template.replace("@INDEX@", azlist)
+    template = template.replace("@REFERENCE@", termlist)
+    template = template.replace("@FILENAME@", filename)
+    template = template.replace("@HEADER@", basename + ".h")
+    template = template.replace("@HISTORY@", specHistory(m, spec))
 
-    mail_row = ''
-    if 'list_email' in opts:
+    mail_row = ""
+    if "list_email" in opts:
         mail_row = '<tr><th>Discuss</th><td><a href="mailto:%s">%s</a>' % (
-            opts['list_email'], opts['list_email'])
-        if 'list_page' in opts:
-            mail_row += ' <a href="%s">(subscribe)</a>' % opts['list_page']
-        mail_row += '</td></tr>'
-    template = template.replace('@MAIL@', mail_row)
+            opts["list_email"],
+            opts["list_email"],
+        )
+        if "list_page" in opts:
+            mail_row += ' <a href="%s">(subscribe)</a>' % opts["list_page"]
+        mail_row += "</td></tr>"
+    template = template.replace("@MAIL@", mail_row)
 
     version = specVersion(m, spec)  # (minor, micro, date)
     date_string = version[2]
@@ -1369,28 +1517,32 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
         date_string = "Undated"
 
     version_string = "%s.%s" % (version[0], version[1])
-    experimental = (version[0] == 0 or version[1] % 2 == 1)
+    experimental = version[0] == 0 or version[1] % 2 == 1
     if experimental:
         version_string += ' <span class="warning">EXPERIMENTAL</span>'
 
     if isDeprecated(m, rdflib.URIRef(spec_url)):
         version_string += ' <span class="warning">DEPRECATED</span>'
 
-    template = template.replace('@VERSION@', version_string)
+    template = template.replace("@VERSION@", version_string)
 
-    content_links = ''
+    content_links = ""
     if docdir is not None:
-        content_links = '<li><a href="%s">API</a></li>' % os.path.join(docdir, 'group__%s.html' % basename)
+        content_links = '<li><a href="%s">API</a></li>' % os.path.join(
+            docdir, "group__%s.html" % basename
+        )
 
-    template = template.replace('@CONTENT_LINKS@', content_links)
+    template = template.replace("@CONTENT_LINKS@", content_links)
 
-    docs = getDetailedDocumentation(m, rdflib.URIRef(spec_url), classlist, proplist, instalist)
-    template = template.replace('@DESCRIPTION@', docs)
+    docs = getDetailedDocumentation(
+        m, rdflib.URIRef(spec_url), classlist, proplist, instalist
+    )
+    template = template.replace("@DESCRIPTION@", docs)
 
-    now = int(os.environ.get('SOURCE_DATE_EPOCH', time.time()))
+    now = int(os.environ.get("SOURCE_DATE_EPOCH", time.time()))
     build_date = datetime.datetime.utcfromtimestamp(now)
-    template = template.replace('@DATE@', build_date.strftime('%F'))
-    template = template.replace('@TIME@', build_date.strftime('%F %H:%M UTC'))
+    template = template.replace("@DATE@", build_date.strftime("%F"))
+    template = template.replace("@TIME@", build_date.strftime("%F %H:%M UTC"))
 
     # Write index row
     if index_path is not None:
@@ -1401,9 +1553,12 @@ def specgen(specloc, indir, style_uri, docdir, tags, opts, instances=False, root
         oldcwd = os.getcwd()
         os.chdir(specgendir)
         root = etree.fromstring(
-            template.replace('"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"',
-                             '"DTD/xhtml-rdfa-1.dtd"').encode('utf-8'),
-            etree.XMLParser(dtd_validation=True, no_network=True))
+            template.replace(
+                '"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"',
+                '"DTD/xhtml-rdfa-1.dtd"',
+            ).encode("utf-8"),
+            etree.XMLParser(dtd_validation=True, no_network=True),
+        )
     except Exception as e:
         sys.stderr.write("error: Validation failed for %s: %s" % (specloc, e))
     finally:
@@ -1427,7 +1582,7 @@ def getNamespaces(m):
     """Return a prefix:URI dictionary of all namespaces seen during parsing"""
     nspaces = {}
     for prefix, uri in m.namespaces():
-        if not re.match('default[0-9]*', prefix) and not prefix == 'xml':
+        if not re.match("default[0-9]*", prefix) and not prefix == "xml":
             # Skip silly default namespaces added by rdflib
             nspaces[prefix] = uri
     return nspaces
@@ -1442,7 +1597,7 @@ def getOntologyNS(m):
         if not isBlank(getSubject(s)):
             ns = str(getSubject(s))
 
-    if (ns == None):
+    if ns == None:
         sys.exit("Impossible to get ontology's namespace")
     else:
         return ns
@@ -1452,39 +1607,101 @@ def usage():
     script = os.path.basename(sys.argv[0])
     return "Usage: %s ONTOLOGY_TTL OUTPUT_HTML [OPTION]..." % script
 
+
 if __name__ == "__main__":
     """Ontology specification generator tool"""
 
     indir = os.path.abspath(os.path.dirname(sys.argv[0]))
-    if not os.path.exists(os.path.join(indir, 'template.html')):
-        indir = os.path.join(os.path.dirname(indir), 'share', 'lv2specgen')
+    if not os.path.exists(os.path.join(indir, "template.html")):
+        indir = os.path.join(os.path.dirname(indir), "share", "lv2specgen")
 
-    opt = optparse.OptionParser(usage=usage(),
-                                description='Write HTML documentation for an RDF ontology.')
-    opt.add_option('--list-email', type='string', dest='list_email',
-                   help='Mailing list email address')
-    opt.add_option('--list-page', type='string', dest='list_page',
-                   help='Mailing list info page address')
-    opt.add_option('--template-dir', type='string', dest='template_dir', default=indir,
-                   help='Template directory')
-    opt.add_option('--style-uri', type='string', dest='style_uri', default='style.css',
-                   help='Stylesheet URI')
-    opt.add_option('--docdir', type='string', dest='docdir', default=None,
-                   help='Doxygen output directory')
-    opt.add_option('--index', type='string', dest='index_path', default=None,
-                   help='Index row output file')
-    opt.add_option('--tags', type='string', dest='tags', default=None,
-                   help='Doxygen tags file')
-    opt.add_option('-r', '--root-path', type='string', dest='root_path', default='',
-                   help='Root path')
-    opt.add_option('-R', '--root-uri', type='string', dest='root_uri', default='',
-                   help='Root URI')
-    opt.add_option('-p', '--prefix', type='string', dest='prefix',
-                   help='Specification Turtle prefix')
-    opt.add_option('-i', '--instances', action='store_true', dest='instances',
-                   help='Document instances')
-    opt.add_option('--copy-style', action='store_true', dest='copy_style',
-                   help='Copy style from template directory to output directory')
+    opt = optparse.OptionParser(
+        usage=usage(),
+        description="Write HTML documentation for an RDF ontology.",
+    )
+    opt.add_option(
+        "--list-email",
+        type="string",
+        dest="list_email",
+        help="Mailing list email address",
+    )
+    opt.add_option(
+        "--list-page",
+        type="string",
+        dest="list_page",
+        help="Mailing list info page address",
+    )
+    opt.add_option(
+        "--template-dir",
+        type="string",
+        dest="template_dir",
+        default=indir,
+        help="Template directory",
+    )
+    opt.add_option(
+        "--style-uri",
+        type="string",
+        dest="style_uri",
+        default="style.css",
+        help="Stylesheet URI",
+    )
+    opt.add_option(
+        "--docdir",
+        type="string",
+        dest="docdir",
+        default=None,
+        help="Doxygen output directory",
+    )
+    opt.add_option(
+        "--index",
+        type="string",
+        dest="index_path",
+        default=None,
+        help="Index row output file",
+    )
+    opt.add_option(
+        "--tags",
+        type="string",
+        dest="tags",
+        default=None,
+        help="Doxygen tags file",
+    )
+    opt.add_option(
+        "-r",
+        "--root-path",
+        type="string",
+        dest="root_path",
+        default="",
+        help="Root path",
+    )
+    opt.add_option(
+        "-R",
+        "--root-uri",
+        type="string",
+        dest="root_uri",
+        default="",
+        help="Root URI",
+    )
+    opt.add_option(
+        "-p",
+        "--prefix",
+        type="string",
+        dest="prefix",
+        help="Specification Turtle prefix",
+    )
+    opt.add_option(
+        "-i",
+        "--instances",
+        action="store_true",
+        dest="instances",
+        help="Document instances",
+    )
+    opt.add_option(
+        "--copy-style",
+        action="store_true",
+        dest="copy_style",
+        help="Copy style from template directory to output directory",
+    )
 
     (options, args) = opt.parse_args()
     opts = vars(options)
@@ -1493,35 +1710,35 @@ if __name__ == "__main__":
         opt.print_help()
         sys.exit(-1)
 
-    spec_pre   = options.prefix
-    ontology   = "file:" + str(args[0])
-    output     = args[1]
+    spec_pre = options.prefix
+    ontology = "file:" + str(args[0])
+    output = args[1]
     index_path = options.index_path
-    docdir     = options.docdir
-    tags       = options.tags
+    docdir = options.docdir
+    tags = options.tags
 
-    out    = '.'
-    spec   = args[0]
-    path   = os.path.dirname(spec)
+    out = "."
+    spec = args[0]
+    path = os.path.dirname(spec)
     outdir = os.path.abspath(os.path.join(out, path))
 
     bundle = str(outdir)
     b = os.path.basename(outdir)
 
     if not os.access(os.path.abspath(spec), os.R_OK):
-        print('warning: extension %s has no %s.ttl file' % (b, b))
+        print("warning: extension %s has no %s.ttl file" % (b, b))
         sys.exit(1)
 
     # Root link
-    root_path = opts['root_path']
-    root_uri  = opts['root_uri']
-    root_link = os.path.join(root_path, 'index.html')
+    root_path = opts["root_path"]
+    root_uri = opts["root_uri"]
+    root_link = os.path.join(root_path, "index.html")
 
     # Generate spec documentation
     specdoc = specgen(
         spec,
         indir,
-        opts['style_uri'],
+        opts["style_uri"],
         docdir,
         tags,
         opts,
@@ -1529,12 +1746,16 @@ if __name__ == "__main__":
         root_link=root_link,
         index_path=index_path,
         root_path=root_path,
-        root_uri=root_uri)
+        root_uri=root_uri,
+    )
 
     # Save to HTML output file
     save(output, specdoc)
 
-    if opts['copy_style']:
+    if opts["copy_style"]:
         import shutil
-        shutil.copyfile(os.path.join(indir, 'style.css'),
-                        os.path.join(os.path.dirname(output), 'style.css'))
+
+        shutil.copyfile(
+            os.path.join(indir, "style.css"),
+            os.path.join(os.path.dirname(output), "style.css"),
+        )
