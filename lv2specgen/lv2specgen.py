@@ -56,7 +56,7 @@ try:
     from lxml import etree
 
     have_lxml = True
-except:
+except Exception:
     have_lxml = False
 
 try:
@@ -116,10 +116,10 @@ def findStatements(model, s, p, o):
 
 
 def findOne(m, s, p, o):
-    l = findStatements(m, s, p, o)
+    triples = findStatements(m, s, p, o)
     try:
-        return sorted(l)[0]
-    except:
+        return sorted(triples)[0]
+    except Exception:
         return None
 
 
@@ -177,9 +177,9 @@ def termName(m, urinode):
 
 
 def getLabel(m, urinode):
-    l = findOne(m, urinode, rdfs.label, None)
-    if l:
-        return getLiteralString(getObject(l))
+    statement = findOne(m, urinode, rdfs.label, None)
+    if statement:
+        return getLiteralString(getObject(statement))
     else:
         return ""
 
@@ -216,7 +216,6 @@ def linkifyVocabIdentifiers(m, string, classlist, proplist, instalist):
         text = match.group(0)
         prefix = match.group(1)
         name = match.group(2)
-        curie = match.group(0)
         uri = rdflib.URIRef(spec_ns + name)
         if prefix == spec_pre:
             if not (
@@ -255,7 +254,9 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
 
     # Syntax highlight all Turtle code
     if have_pygments:
-        code_rgx = re.compile('<pre class="turtle-code">(.*?)</pre>', re.DOTALL)
+        code_rgx = re.compile(
+            '<pre class="turtle-code">(.*?)</pre>', re.DOTALL
+        )
         while True:
             code = code_rgx.search(markup)
             if not code:
@@ -275,7 +276,7 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
     markup = linkifyVocabIdentifiers(m, markup, classlist, proplist, instalist)
 
     # Transform names like #foo into links into this spec if possible
-    rgx = re.compile("([ \t\n\r\f\v^]+)\#([a-zA-Z0-9_-]+)")
+    rgx = re.compile("([ \t\n\r\f\v^]+)#([a-zA-Z0-9_-]+)")
 
     def translateLocalLink(match):
         text = match.group(0)
@@ -318,7 +319,7 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
             oldcwd = os.getcwd()
             os.chdir(specgendir)
             parser = etree.XMLParser(dtd_validation=True, no_network=True)
-            root = etree.fromstring(doc.encode("utf-8"), parser)
+            etree.fromstring(doc.encode("utf-8"), parser)
         except Exception as e:
             print("Invalid documentation for %s\n%s" % (subject, e))
             line_num = 1
@@ -372,7 +373,9 @@ def getDetailedDocumentation(m, subject, classlist, proplist, instalist):
     if d:
         doc = getObject(d)
         if doc.datatype == lv2.Markdown:
-            markup += formatDoc(m, subject, doc, classlist, proplist, instalist)
+            markup += formatDoc(
+                m, subject, doc, classlist, proplist, instalist
+            )
         else:
             html = getLiteralString(doc)
             markup += prettifyHtml(
@@ -415,8 +418,6 @@ def rdfsPropertyInfo(term, m):
     global classranges
     global classdomains
     doc = ""
-    range = ""
-    domain = ""
 
     label = getLabel(m, term)
     if label != "":
@@ -629,7 +630,7 @@ def rdfsClassInfo(term, m):
 
 
 def isSpecial(pred):
-    """Return True if the predicate is "special" and shouldn't be emitted generically"""
+    """Return True if `pred` shouldn't be documented generically"""
     return pred in [
         rdf.type,
         rdfs.range,
@@ -646,7 +647,6 @@ def isSpecial(pred):
 def blankNodeDesc(node, m):
     properties = findStatements(m, node, None, None)
     doc = ""
-    last_pred = ""
     for p in sorted(properties):
         if isSpecial(getPredicate(p)):
             continue
@@ -687,7 +687,9 @@ def extraInfo(term, m):
                 getTermLink(getObject(p), term, getPredicate(p)), first
             )
         elif isLiteral(getObject(p)):
-            doc += getProperty(linkifyCodeIdentifiers(str(getObject(p))), first)
+            doc += getProperty(
+                linkifyCodeIdentifiers(str(getObject(p))), first
+            )
         elif isBlank(getObject(p)):
             doc += getProperty(str(blankNodeDesc(getObject(p), m)), first)
         else:
@@ -764,7 +766,6 @@ def docTerms(category, list, m, classlist, proplist, instalist):
     list of term URI strings, return value is a chunk of HTML.
     """
     doc = ""
-    nspre = spec_pre
     for term in list:
         if not term.startswith(spec_ns_str):
             sys.stderr.write("warning: Skipping external term `%s'" % term)
@@ -917,9 +918,9 @@ def buildIndex(m, classlist, proplist, instalist=None):
 
 
 def add(where, key, value):
-    if not key in where:
+    if key not in where:
         where[key] = []
-    if not value in where[key]:
+    if value not in where[key]:
         where[key].append(value)
 
 
@@ -1019,7 +1020,9 @@ def specAuthors(m, subject):
     for d in sorted(dev):
         if not first:
             devdoc += ", "
-        devdoc += '<span class="author" property="doap:developer">%s</span>' % d
+        devdoc += (
+            '<span class="author" property="doap:developer">%s</span>' % d
+        )
         first = False
     if len(dev) == 1:
         doc += (
@@ -1188,7 +1191,10 @@ def load_tags(path, docdir):
     def getChildText(elt, tagname):
         "Return the content of the first child node with a certain tag name."
         for e in elt.childNodes:
-            if e.nodeType == xml.dom.Node.ELEMENT_NODE and e.tagName == tagname:
+            if (
+                e.nodeType == xml.dom.Node.ELEMENT_NODE
+                and e.tagName == tagname
+            ):
                 return e.firstChild.nodeValue
         return ""
 
@@ -1257,8 +1263,7 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
     try:
         minor = int(model.value(ext_node, lv2.minorVersion, None))
         micro = int(model.value(ext_node, lv2.microVersion, None))
-    except:
-        e = sys.exc_info()[1]
+    except Exception:
         print("warning: %s: failed to find version for %s" % (bundle, ext))
 
     # Get date
@@ -1303,10 +1308,12 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
     )
 
     # API
-    row += (
-        '<td><a rel="rdfs:seeAlso" href="../doc/html/group__%s.html">%s</a></td>'
-        % (stem, name)
+    row += "<td>"
+    row += '<a rel="rdfs:seeAlso" href="../doc/html/group__%s.html">%s</a>' % (
+        stem,
+        name,
     )
+    row += "</td>"
 
     # Description
     if shortdesc:
@@ -1380,8 +1387,6 @@ def specgen(
         m.parse(manifest_path, format="n3")
     m.parse(specloc, format="n3")
 
-    bundle_path = os.path.split(specloc[specloc.find(":") + 1 :])[0]
-    abs_bundle_path = os.path.abspath(bundle_path)
     spec_url = getOntologyNS(m)
     spec = rdflib.URIRef(spec_url)
 
@@ -1446,7 +1451,9 @@ def specgen(
 
     # Generate Term HTML
     classlist = docTerms("Class", classlist, m, classlist, proplist, instalist)
-    proplist = docTerms("Property", proplist, m, classlist, proplist, instalist)
+    proplist = docTerms(
+        "Property", proplist, m, classlist, proplist, instalist
+    )
     if instances:
         instlist = docTerms(
             "Instance", instalist, m, classlist, proplist, instalist
@@ -1552,7 +1559,7 @@ def specgen(
     try:
         oldcwd = os.getcwd()
         os.chdir(specgendir)
-        root = etree.fromstring(
+        etree.fromstring(
             template.replace(
                 '"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"',
                 '"DTD/xhtml-rdfa-1.dtd"',
@@ -1597,7 +1604,7 @@ def getOntologyNS(m):
         if not isBlank(getSubject(s)):
             ns = str(getSubject(s))
 
-    if ns == None:
+    if ns is None:
         sys.exit("Impossible to get ontology's namespace")
     else:
         return ns
