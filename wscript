@@ -530,7 +530,7 @@ def test(tst):
         plugin_files = list(map(str, tst.path.ant_glob("plugins/**/*.ttl")))
         bld_files = list(map(str, tst.path.get_bld().ant_glob("**/*.ttl")))
 
-        if "SERDI" in tst.env:
+        if "SERDI" in tst.env and sys.platform != 'win32':
             for f in spec_files:
                 with tempfile.NamedTemporaryFile(mode="w") as tmp:
                     base_dir = os.path.dirname(f)
