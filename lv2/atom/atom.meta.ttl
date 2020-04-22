@@ -540,3 +540,25 @@ contained in the port, including header.
 
 """^^lv2:Markdown .
 
+atom:PortEvent
+	lv2:documentation """
+
+Write to control input port event message, typically an element of an atom:Sequence.
+
+Provides an atom:portTuple property, consisting of one or more paired tuples.
+Each tuple pair consists of an atom:Int for `port_index`, followed by an
+atom:Float as the respective `port_value`.
+
+"""^^lv2:Markdown .
+
+atom:portTuple
+	lv2:documentation """
+
+The property body of an atom:PortEvent message.
+
+It consists of an array of paired tuples: a `port_index` (atom:Int) and
+a `port_value` (atom:Float). Typically, each pair of `port_index` and
+`port_value` tuples, correspond to an existing port, of lv2:ControlPort
+and lv2:InputPort types.
+
+"""^^lv2:Markdown .
