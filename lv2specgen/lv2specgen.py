@@ -1246,7 +1246,7 @@ def load_tags(path, docdir):
     return linkmap
 
 
-def writeIndex(model, specloc, index_path, root_path, root_uri):
+def writeIndex(model, specloc, index_path, root_path, root_uri, online):
     # Get extension URI
     ext_node = model.value(None, rdf.type, lv2.Specification)
     if not ext_node:
@@ -1294,9 +1294,12 @@ def writeIndex(model, specloc, index_path, root_path, root_uri):
 
     # Find relative link target
     if root_uri and ext_node.startswith(root_uri):
-        target = ext_node[len(root_uri) :] + ".html"
+        target = ext_node[len(root_uri) :]
     else:
-        target = os.path.relpath(ext_node, root_path) + ".html"
+        target = os.path.relpath(ext_node, root_path)
+
+    if not online:
+        target += ".html"
 
     stem = os.path.splitext(os.path.basename(target))[0]
 
@@ -1553,7 +1556,7 @@ def specgen(
 
     # Write index row
     if index_path is not None:
-        writeIndex(m, specloc, index_path, root_path, root_uri)
+        writeIndex(m, specloc, index_path, root_path, root_uri, opts["online"])
 
     # Validate complete output page
     try:
@@ -1708,6 +1711,13 @@ if __name__ == "__main__":
         action="store_true",
         dest="copy_style",
         help="Copy style from template directory to output directory",
+    )
+    opt.add_option(
+        "-o",
+        "--online",
+        action="store_true",
+        dest="online",
+        help="Generate index for online documentation",
     )
 
     (options, args) = opt.parse_args()

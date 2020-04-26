@@ -373,6 +373,7 @@ def build(bld):
                    ' --docdir=' + os.path.relpath('doc/html', out_dir) +
                    ' --tags=%s' % bld.path.get_bld().make_node('doc/tags') +
                    ' --index=' + str(index_file) +
+                   (' --online' if bld.env.ONLINE_DOCS else '') +
                    ' ${SRC} ${TGT}')
 
             bld(rule   = cmd,
