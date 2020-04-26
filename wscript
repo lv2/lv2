@@ -47,6 +47,7 @@ spec_map = {
 
 def options(ctx):
     ctx.load('compiler_c')
+    ctx.load('compiler_cxx')
     ctx.load('lv2')
     ctx.add_flags(
         ctx.configuration_options(),
@@ -62,6 +63,11 @@ def configure(conf):
     except:
         Options.options.build_tests = False
         Options.options.no_plugins = True
+
+    try:
+        conf.load('compiler_cxx', cache=True)
+    except Exception:
+        pass
 
     if Options.options.online_docs:
         Options.options.docs = True
@@ -401,13 +407,12 @@ def build(bld):
             bld.add_post_fun(check_links)
 
     if bld.env.BUILD_TESTS:
-        # Generate a compile test .c file that includes all headers
+        # Generate a compile test file that includes all headers
         def gen_build_test(task):
-            out = open(task.outputs[0].abspath(), 'w')
-            for i in task.inputs:
-                out.write('#include "%s"\n' % i.bldpath())
-            out.write('int main(void) { return 0; }\n')
-            out.close()
+            with open(task.outputs[0].abspath(), 'w') as out:
+                for i in task.inputs:
+                    out.write('#include "%s"\n' % i.bldpath())
+                out.write('int main(void) { return 0; }\n')
 
         bld(rule         = gen_build_test,
             source       = bld.path.ant_glob('lv2/**/*.h'),
@@ -420,6 +425,19 @@ def build(bld):
             includes     = '.',
             uselib       = 'LV2',
             install_path = None)
+
+        if 'COMPILER_CXX' in bld.env:
+            bld(rule         = gen_build_test,
+                source       = bld.path.ant_glob('lv2/**/*.h'),
+                target       = 'build-test.cpp',
+                install_path = None)
+
+            bld(features     = 'cxx cxxprogram',
+                source       = bld.path.get_bld().make_node('build-test.cpp'),
+                target       = 'build-test-cpp',
+                includes     = '.',
+                uselib       = 'LV2',
+                install_path = None)
 
     if bld.env.BUILD_BOOK:
         # Build "Programming LV2 Plugins" book from plugin examples
