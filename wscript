@@ -630,13 +630,19 @@ def _get_news_entries(ctx):
     # Add items from every specification
     for specdir in specdirs(ctx.path):
         name = os.path.basename(specdir.abspath())
-        entries = autoship.read_ttl_news(name, ttl_files(ctx.path, specdir))
+        files = list(ttl_files(ctx.path, specdir))
+        if name == "core":
+            files = [f for f in files if (not f.endswith('/meta.ttl') and
+                                          not f.endswith('/people.ttl') and
+                                          not f.endswith('/manifest.ttl'))]
+
+        entries = autoship.read_ttl_news(name, files)
 
         def add_items(lv2_version, name, items):
             for item in items:
                 lv2_entries[lv2_version]["items"] += ["%s: %s" % (name, item)]
 
-        if entries and name != "core":
+        if entries:
             latest_revision = sorted(entries.keys(), reverse=True)[0]
             for revision, entry in entries.items():
                 if "dist" in entry:
