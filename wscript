@@ -471,6 +471,10 @@ def test_vocabularies(check, specs, files):
     rdf = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
     rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
 
+    # Check if this is a stable LV2 release to enable additional tests
+    version_tuple = tuple(map(int, VERSION.split(".")))
+    is_stable = version_tuple[1] % 2 == 0 and version_tuple[2] % 2 == 0
+
     # Check that extended documentation is not in main specification file
     for spec in specs:
         path = str(spec.abspath())
@@ -489,6 +493,29 @@ def test_vocabularies(check, specs, files):
 
         check(lambda: not has_statement(None, lv2.documentation, None),
               name = name + ".ttl does not contain lv2:documentation")
+
+    # Check specification manifests
+    for spec in specs:
+        path = str(spec.abspath())
+        manifest_path = os.path.join(path, 'manifest.ttl')
+        manifest_model = rdflib.ConjunctiveGraph()
+        manifest_model.parse(manifest_path, format='n3')
+
+        uri = manifest_model.value(None, rdf.type, lv2.Specification)
+        minor = manifest_model.value(uri, lv2.minorVersion, None)
+        micro = manifest_model.value(uri, lv2.microVersion, None)
+        check(lambda: uri is not None,
+              name = manifest_path + " has a lv2:Specification")
+        check(lambda: minor is not None,
+              name = manifest_path + " has a lv2:minorVersion")
+        check(lambda: micro is not None,
+              name = manifest_path + " has a lv2:microVersion")
+
+        if is_stable:
+            check(lambda: int(minor) > 0,
+                  name = manifest_path + " has even non-zero minor version")
+            check(lambda: int(micro) % 2 == 0,
+                  name = manifest_path + " has even micro version")
 
     # Load everything into one big model
     model = rdflib.ConjunctiveGraph()
