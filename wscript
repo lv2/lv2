@@ -350,7 +350,7 @@ def build(bld):
             name         = 'lv2core' if basename == 'core' else basename
             ttl_name     = name + '.ttl'
             index_file   = bld.path.get_bld().make_node('index_rows/' + name)
-            index_files += [index_file.path_from(bld.path)]
+            index_files += [index_file]
             chopped_path = chop_lv2_prefix(full_path)
 
             assert chopped_path.startswith('ns/')
@@ -378,7 +378,7 @@ def build(bld):
             bld.install_files(os.path.join('${DOCDIR}', 'lv2', os.path.dirname(html_path)),
                               html_path)
 
-        index_files.sort()
+        index_files.sort(key=lambda x: x.path_from(bld.path))
         bld.add_group()
 
         # Build extension index
