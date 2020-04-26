@@ -14,6 +14,7 @@ top     = '.'       # Source directory
 out     = 'build'   # Build directory
 
 # Release variables
+title        = 'LV2'
 uri          = 'http://lv2plug.in/ns/lv2'
 dist_pattern = 'http://lv2plug.in/spec/lv2-%d.%d.%d.tar.bz2'
 post_tags    = []
