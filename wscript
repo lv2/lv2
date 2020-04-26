@@ -686,4 +686,7 @@ def news(ctx):
 def dist(ctx):
     news(ctx)
     ctx.archive()
-    os.remove('NEWS')
+
+def distcheck(ctx):
+    news(ctx)
+    ctx.archive()
