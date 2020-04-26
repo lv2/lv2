@@ -13,8 +13,8 @@
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
 		doap:revision "1.2" ;
-		doap:created "2016-07-31" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.14.0.tar.bz2> ;
+		doap:created "2020-04-26" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.18.0.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
