@@ -3,6 +3,7 @@
 .lock-waf*
 /build
 *.pyc
+NEWS
 
 # misc editor/tools
 *.swp
