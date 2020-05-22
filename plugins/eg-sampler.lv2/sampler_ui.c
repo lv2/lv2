@@ -120,7 +120,7 @@ on_play_clicked(GtkFileChooserButton* widget, void* handle)
 	note_on.msg[0]    = LV2_MIDI_MSG_NOTE_ON;
 	note_on.msg[1]    = 60;
 	note_on.msg[2]    = 60;
-	ui->write(ui->controller, 0, sizeof(note_on),
+	ui->write(ui->controller, 0, sizeof(LV2_Atom) + 3,
 	          ui->uris.atom_eventTransfer,
 	          &note_on);
 }
