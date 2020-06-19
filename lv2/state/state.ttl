@@ -53,8 +53,8 @@ state:freePath
 	rdfs:label "free path" ;
 	rdfs:comment "A feature for freeing paths allocated by the host." .
 
-state:Changed
+state:StateChanged
 	a rdfs:Class ;
-	rdfs:label "Changed" ;
+	rdfs:label "State Changed" ;
 	rdfs:comment "A notification that the internal state of the plugin has changed." .
 
