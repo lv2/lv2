@@ -41,7 +41,7 @@ extern "C" {
    Logger convenience API state.
 */
 typedef struct {
-	LV2_Log_Log* log;
+	const LV2_Log_Log* log;
 
 	LV2_URID Error;
 	LV2_URID Note;
@@ -56,7 +56,7 @@ typedef struct {
    to the log's print functions.
 */
 static inline void
-lv2_log_logger_set_map(LV2_Log_Logger* logger, LV2_URID_Map* map)
+lv2_log_logger_set_map(LV2_Log_Logger* logger, const LV2_URID_Map* map)
 {
 	if (map) {
 		logger->Error   = map->map(map->handle, LV2_LOG__Error);
@@ -76,9 +76,9 @@ lv2_log_logger_set_map(LV2_Log_Logger* logger, LV2_URID_Map* map)
    in which case the implementation will fall back to printing to stderr.
 */
 static inline void
-lv2_log_logger_init(LV2_Log_Logger* logger,
-                    LV2_URID_Map*   map,
-                    LV2_Log_Log*    log)
+lv2_log_logger_init(LV2_Log_Logger*     logger,
+                    const LV2_URID_Map* map,
+                    const LV2_Log_Log*  log)
 {
 	logger->log = log;
 	lv2_log_logger_set_map(logger, map);
@@ -89,10 +89,10 @@ lv2_log_logger_init(LV2_Log_Logger* logger,
 */
 LV2_LOG_FUNC(3, 0)
 static inline int
-lv2_log_vprintf(LV2_Log_Logger* logger,
-                LV2_URID        type,
-                const char*     fmt,
-                va_list         args)
+lv2_log_vprintf(const LV2_Log_Logger* logger,
+                LV2_URID              type,
+                const char*           fmt,
+                va_list               args)
 {
 	return ((logger && logger->log)
 	        ? logger->log->vprintf(logger->log->handle, type, fmt, args)
@@ -102,7 +102,7 @@ lv2_log_vprintf(LV2_Log_Logger* logger,
 /** Log an error via lv2_log_vprintf(). */
 LV2_LOG_FUNC(2, 3)
 static inline int
-lv2_log_error(LV2_Log_Logger* logger, const char* fmt, ...)
+lv2_log_error(const LV2_Log_Logger* logger, const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -114,7 +114,7 @@ lv2_log_error(LV2_Log_Logger* logger, const char* fmt, ...)
 /** Log a note via lv2_log_vprintf(). */
 LV2_LOG_FUNC(2, 3)
 static inline int
-lv2_log_note(LV2_Log_Logger* logger, const char* fmt, ...)
+lv2_log_note(const LV2_Log_Logger* logger, const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -126,7 +126,7 @@ lv2_log_note(LV2_Log_Logger* logger, const char* fmt, ...)
 /** Log a trace via lv2_log_vprintf(). */
 LV2_LOG_FUNC(2, 3)
 static inline int
-lv2_log_trace(LV2_Log_Logger* logger, const char* fmt, ...)
+lv2_log_trace(const LV2_Log_Logger* logger, const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -138,7 +138,7 @@ lv2_log_trace(LV2_Log_Logger* logger, const char* fmt, ...)
 /** Log a warning via lv2_log_vprintf(). */
 LV2_LOG_FUNC(2, 3)
 static inline int
-lv2_log_warning(LV2_Log_Logger* logger, const char* fmt, ...)
+lv2_log_warning(const LV2_Log_Logger* logger, const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
