@@ -26,7 +26,7 @@
    @{
 */
 
-#if __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)
+#if defined(__GNUC__) && __GNUC__ > 3
 #define LV2_DEPRECATED __attribute__((__deprecated__))
 #else
 #define LV2_DEPRECATED
@@ -36,7 +36,7 @@
 #define LV2_DISABLE_DEPRECATION_WARNINGS \
 	_Pragma("clang diagnostic push") \
 	_Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
-#elif __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#elif defined(__GNUC__) && __GNUC__ > 4
 #define LV2_DISABLE_DEPRECATION_WARNINGS \
 	_Pragma("GCC diagnostic push") \
 	_Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
@@ -46,7 +46,7 @@
 
 #if defined(__clang__)
 #define LV2_RESTORE_WARNINGS _Pragma("clang diagnostic pop")
-#elif __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
+#elif defined(__GNUC__) && __GNUC__ > 4
 #define LV2_RESTORE_WARNINGS _Pragma("GCC diagnostic pop")
 #else
 #define LV2_RESTORE_WARNINGS
