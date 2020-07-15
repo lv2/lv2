@@ -124,6 +124,7 @@ test_sequence_overflow(void)
 
 		assert(capacity >= sizeof(LV2_Atom_Sequence) || !frame.ref);
 		assert(capacity >= sizeof(LV2_Atom_Sequence) || !ref);
+		(void)ref;
 
 		lv2_atom_forge_frame_time(&forge, 0);
 		lv2_atom_forge_int(&forge, 42);
@@ -155,6 +156,7 @@ test_vector_head_overflow(void)
 
 		assert(capacity >= sizeof(LV2_Atom_Vector) || !frame.ref);
 		assert(capacity >= sizeof(LV2_Atom_Vector) || !ref);
+		(void)ref;
 
 		lv2_atom_forge_int(&forge, 1);
 		lv2_atom_forge_int(&forge, 2);
@@ -186,6 +188,7 @@ test_vector_overflow(void)
 		        &forge, sizeof(int32_t), forge.Int, 3, vec);
 
 		assert(capacity >= sizeof(LV2_Atom_Vector) || !ref);
+		(void)ref;
 
 		free(buf);
 	}
@@ -212,6 +215,7 @@ test_tuple_overflow(void)
 
 		assert(capacity >= sizeof(LV2_Atom_Tuple) || !frame.ref);
 		assert(capacity >= sizeof(LV2_Atom_Tuple) || !ref);
+		(void)ref;
 
 		lv2_atom_forge_int(&forge, 1);
 		lv2_atom_forge_float(&forge, 2.0f);
