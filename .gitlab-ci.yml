@@ -157,3 +157,5 @@ pages:
     - if: $CI_MERGE_REQUEST_ID
       when: never
     - when: on_success
+  only:
+    - master
