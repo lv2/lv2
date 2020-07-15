@@ -20,6 +20,7 @@
 #include "lv2/atom/util.h"
 #include "lv2/urid/urid.h"
 
+#include <inttypes.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -70,7 +71,7 @@ main(void)
 	LV2_Atom_Long* two = (LV2_Atom_Long*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_long(&forge, 2));
 	if (two->body != 2) {
-		return test_fail("%ld != 2\n", two->body);
+		return test_fail("%" PRId64 " != 2\n", two->body);
 	}
 
 	// eg_three = (Float)3.0
@@ -86,7 +87,7 @@ main(void)
 	LV2_Atom_Double* four = (LV2_Atom_Double*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_double(&forge, 4.0));
 	if (four->body != 4) {
-		return test_fail("%ld != 4\n", four->body);
+		return test_fail("%f != 4\n", four->body);
 	}
 
 	// eg_true = (Bool)1
@@ -94,7 +95,7 @@ main(void)
 	LV2_Atom_Bool* t = (LV2_Atom_Bool*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_bool(&forge, true));
 	if (t->body != 1) {
-		return test_fail("%ld != 1 (true)\n", t->body);
+		return test_fail("%d != 1 (true)\n", t->body);
 	}
 
 	// eg_false = (Bool)0
@@ -102,7 +103,7 @@ main(void)
 	LV2_Atom_Bool* f = (LV2_Atom_Bool*)lv2_atom_forge_deref(
 		&forge, lv2_atom_forge_bool(&forge, false));
 	if (f->body != 0) {
-		return test_fail("%ld != 0 (false)\n", f->body);
+		return test_fail("%d != 0 (false)\n", f->body);
 	}
 
 	// eg_path = (Path)"/foo/bar"
@@ -244,7 +245,7 @@ main(void)
 		} else if (ev->body.type != forge.Int) {
 			return test_fail("Corrupt event %u has bad type\n", n_events);
 		} else if (((LV2_Atom_Int*)&ev->body)->body != (int)n_events + 1) {
-			return test_fail("Event %u != %d\n", n_events, n_events + 1);
+			return test_fail("Event %u != %u\n", n_events, n_events + 1);
 		}
 		++n_events;
 	}
@@ -252,15 +253,15 @@ main(void)
 	int n_props = 0;
 	LV2_ATOM_OBJECT_FOREACH((LV2_Atom_Object*)obj, prop) {
 		if (!prop->key) {
-			return test_fail("Corrupt property %u has no key\n", n_props);
+			return test_fail("Corrupt property %d has no key\n", n_props);
 		} else if (prop->context) {
-			return test_fail("Corrupt property %u has context\n", n_props);
+			return test_fail("Corrupt property %d has context\n", n_props);
 		}
 		++n_props;
 	}
 
 	if (n_props != NUM_PROPS) {
-		return test_fail("Corrupt object has %u properties != %u\n",
+		return test_fail("Corrupt object has %d properties != %d\n",
 		                 n_props, NUM_PROPS);
 	}
 
@@ -306,7 +307,7 @@ main(void)
 	int n_matches = lv2_atom_object_query((LV2_Atom_Object*)obj, q);
 	for (int n = 0; n < 2; ++n) {
 		if (n_matches != n_props) {
-			return test_fail("Query failed, %u matches != %u\n",
+			return test_fail("Query failed, %d matches != %d\n",
 			                 n_matches, n_props);
 		} else if (!lv2_atom_equals((LV2_Atom*)one, matches.one)) {
 			return test_fail("Bad match one\n");

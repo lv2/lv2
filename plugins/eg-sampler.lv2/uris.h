@@ -115,7 +115,7 @@ read_set_file(const SamplerURIs*     uris,
               const LV2_Atom_Object* obj)
 {
 	if (obj->body.otype != uris->patch_Set) {
-		fprintf(stderr, "Ignoring unknown message type %d\n", obj->body.otype);
+		fprintf(stderr, "Ignoring unknown message type %u\n", obj->body.otype);
 		return NULL;
 	}
 

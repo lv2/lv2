@@ -384,11 +384,11 @@ handle_event(Sampler* self, LV2_Atom_Event* ev)
 			}
 		} else {
 			lv2_log_trace(&self->logger,
-			              "Unknown object type %d\n", obj->body.otype);
+			              "Unknown object type %u\n", obj->body.otype);
 		}
 	} else {
 		lv2_log_trace(&self->logger,
-		              "Unknown event type %d\n", ev->body.type);
+		              "Unknown event type %u\n", ev->body.type);
 	}
 
 }

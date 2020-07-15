@@ -17,6 +17,7 @@
 #include "lv2/atom/atom.h"
 #include "lv2/atom/forge.h"
 #include "lv2/atom/util.h"
+#include "lv2/log/log.h"
 #include "lv2/urid/urid.h"
 
 #include <stdarg.h>
@@ -59,6 +60,7 @@ free_urid_map(void)
 	free(uris);
 }
 
+LV2_LOG_FUNC(1, 2)
 static int
 test_fail(const char* fmt, ...)
 {
