@@ -77,8 +77,79 @@ def configure(conf):
     conf.load('autowaf', cache=True)
     autowaf.set_c_lang(conf, 'c99')
 
-    if Options.options.ultra_strict and not conf.env.MSVC_COMPILER:
-        conf.env.append_value('CFLAGS', ['-Wconversion'])
+    if Options.options.ultra_strict:
+        autowaf.add_compiler_flags(conf.env, 'c', {
+            'gcc': [
+                '-Wno-bad-function-cast',
+            ],
+            'clang': [
+                '-Wno-bad-function-cast',
+            ]
+        })
+
+        autowaf.add_compiler_flags(conf.env, '*', {
+            'clang': [
+                '-Wno-cast-align',
+                '-Wno-cast-qual',
+                '-Wno-documentation-unknown-command',
+                '-Wno-double-promotion',
+                '-Wno-float-conversion',
+                '-Wno-float-equal',
+                '-Wno-implicit-float-conversion',
+                '-Wno-implicit-int-float-conversion',
+                '-Wno-padded',
+                '-Wno-reserved-id-macro',
+                '-Wno-shorten-64-to-32',
+                '-Wno-sign-conversion',
+                '-Wno-switch-enum',
+                '-Wno-unused-parameter',
+            ],
+            'gcc': [
+                '-Wno-cast-align',
+                '-Wno-cast-qual',
+                '-Wno-conversion',
+                '-Wno-double-promotion',
+                '-Wno-float-equal',
+                '-Wno-padded',
+                '-Wno-parentheses',
+                '-Wno-suggest-attribute=const',
+                '-Wno-switch-enum',
+                '-Wno-unused-parameter',
+            ],
+            'msvc': [
+                '/wd4061',  # enumerator in switch is not explicitly handled
+                '/wd4100',  # unreferenced formal parameter
+                '/wd4244',  # conversion with possible loss of data
+                '/wd4267',  # conversion from size_t to a smaller type
+                '/wd4310',  # cast truncates constant value
+                '/wd4365',  # signed/unsigned mismatch
+                '/wd4464',  # relative include path contains ".."
+                '/wd4514',  # unreferenced inline function has been removed
+                '/wd4706',  # assignment within conditional expression
+                '/wd4710',  # function not inlined
+                '/wd4820',  # padding added after construct
+                '/wd5045',  # will insert Spectre mitigation for memory load
+            ]
+        })
+
+        autowaf.add_compiler_flags(conf.env, 'cxx', {
+            'gcc': [
+                '-Wno-useless-cast',
+                '-Wno-zero-as-null-pointer-constant',
+            ],
+            'clang': [
+                '-Wno-old-style-cast',
+                '-Wno-zero-as-null-pointer-constant',
+            ]
+        })
+
+        if 'mingw' in conf.env.CC[0]:
+            autowaf.add_compiler_flags(conf.env, '*', {
+                'gcc': [
+                    '-Wno-format',
+                    '-Wno-suggest-attribute=format',
+                ],
+            })
 
     if conf.env.DEST_OS == 'win32' or not hasattr(os.path, 'relpath'):
         Logs.warn('System does not support linking headers, copying')
