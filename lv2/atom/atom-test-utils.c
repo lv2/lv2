@@ -23,8 +23,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char**   uris   = NULL;
-uint32_t n_uris = 0;
+static char**   uris   = NULL;
+static uint32_t n_uris = 0;
 
 static char*
 copy_string(const char* str)
