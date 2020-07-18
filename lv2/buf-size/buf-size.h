@@ -31,6 +31,7 @@
 #define LV2_BUF_SIZE_PREFIX LV2_BUF_SIZE_URI "#" ///< http://lv2plug.in/ns/ext/buf-size#
 
 #define LV2_BUF_SIZE__boundedBlockLength  LV2_BUF_SIZE_PREFIX "boundedBlockLength"   ///< http://lv2plug.in/ns/ext/buf-size#boundedBlockLength
+#define LV2_BUF_SIZE__coarseBlockLength   LV2_BUF_SIZE_PREFIX "coarseBlockLength"    ///< http://lv2plug.in/ns/ext/buf-size#coarseBlockLength
 #define LV2_BUF_SIZE__fixedBlockLength    LV2_BUF_SIZE_PREFIX "fixedBlockLength"     ///< http://lv2plug.in/ns/ext/buf-size#fixedBlockLength
 #define LV2_BUF_SIZE__maxBlockLength      LV2_BUF_SIZE_PREFIX "maxBlockLength"       ///< http://lv2plug.in/ns/ext/buf-size#maxBlockLength
 #define LV2_BUF_SIZE__minBlockLength      LV2_BUF_SIZE_PREFIX "minBlockLength"       ///< http://lv2plug.in/ns/ext/buf-size#minBlockLength
