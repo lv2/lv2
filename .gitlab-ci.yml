@@ -149,13 +149,8 @@ test:win_rel:
 pages:
   stage: deploy
   script: mv build/coverage/ public/
-  needs: ["test:x64_dbg"]
+  dependencies: ["test:x64_dbg"]
   artifacts:
-    expire_in: 30 days
     paths: [public]
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
-      when: never
-    - when: on_success
   only:
     - master
