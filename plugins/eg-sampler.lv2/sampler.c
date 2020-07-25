@@ -322,7 +322,7 @@ handle_event(Sampler* self, LV2_Atom_Event* ev)
 	PeaksURIs*   peaks_uris = &self->psend.uris;
 
 	if (ev->body.type == uris->midi_Event) {
-		const uint8_t* const msg = (const uint8_t*)LV2_ATOM_BODY_CONST(ev);
+		const uint8_t* const msg = (const uint8_t*)(ev + 1);
 		switch (lv2_midi_message_type(msg)) {
 		case LV2_MIDI_MSG_NOTE_ON:
 			self->frame = 0;

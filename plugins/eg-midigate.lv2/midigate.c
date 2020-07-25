@@ -161,7 +161,7 @@ run(LV2_Handle instance, uint32_t sample_count)
 
 	LV2_ATOM_SEQUENCE_FOREACH(self->control, ev) {
 		if (ev->body.type == self->uris.midi_MidiEvent) {
-			const uint8_t* const msg = (const uint8_t*)LV2_ATOM_BODY_CONST(ev);
+			const uint8_t* const msg = (const uint8_t*)(ev + 1);
 			switch (lv2_midi_message_type(msg)) {
 			case LV2_MIDI_MSG_NOTE_ON:
 				++self->n_active_notes;
