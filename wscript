@@ -96,7 +96,6 @@ def configure(conf):
                 '-Wno-float-conversion',
                 '-Wno-float-equal',
                 '-Wno-implicit-float-conversion',
-                '-Wno-implicit-int-float-conversion',
                 '-Wno-padded',
                 '-Wno-reserved-id-macro',
                 '-Wno-shorten-64-to-32',
