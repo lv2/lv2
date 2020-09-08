@@ -523,7 +523,7 @@ lv2_atom_forge_vector(LV2_Atom_Forge* forge,
    // Write tuple (1, 2.0)
    LV2_Atom_Forge_Frame frame;
    LV2_Atom* tup = (LV2_Atom*)lv2_atom_forge_tuple(forge, &frame);
-   lv2_atom_forge_int32(forge, 1);
+   lv2_atom_forge_int(forge, 1);
    lv2_atom_forge_float(forge, 2.0);
    lv2_atom_forge_pop(forge, &frame);
    @endcode
