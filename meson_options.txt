@@ -1,0 +1,61 @@
+# Copyright 2020 Alexandros Theodotou <alex@zrythm.org>
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+option (
+  'coverage',
+  type: 'boolean',
+  value: true,
+  description: 'Use gcov for code coverage')
+
+option (
+  'online-docs',
+  type: 'boolean',
+  value: false,
+  description: 'Build documentation for web hosting')
+
+option (
+  'check-links',
+  type: 'boolean',
+  value: true,
+  description: 'Check documentation for broken links')
+
+option (
+  'plugins',
+  type: 'boolean',
+  value: true,
+  description: 'Build example plugins')
+
+option (
+  'copy-headers',
+  type: 'boolean',
+  value: false,
+  description: 'Copy headers instead of linking to bundle')
+
+option (
+  'ultra-strict',
+  type: 'boolean',
+  value: false,
+  description: 'Ultra strict compilation')
+
+option (
+  'tests',
+  type: 'boolean',
+  value: false,
+  description: 'Build tests')
+
+option (
+  'docs',
+  type: 'boolean',
+  value: false,
+  description: 'Build docs')
