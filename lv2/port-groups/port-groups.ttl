@@ -57,7 +57,7 @@ pg:sideChainOf
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	rdfs:label "side-chain of" ;
-	rdfs:comment "Port or grou is a side chain of another." .
+	rdfs:comment "Port or group is a side chain of another." .
 
 pg:subGroupOf
 	a rdf:Property ,
