@@ -328,7 +328,7 @@ typedef struct {
 */
 typedef struct {
 	/**
-	   Pointer to opaque data which must be passed to ui_resize().
+	   Pointer to opaque data which must be passed to touch().
 	*/
 	LV2UI_Feature_Handle handle;
 
