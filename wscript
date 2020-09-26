@@ -113,6 +113,7 @@ def configure(conf):
                 '-Wno-padded',
                 '-Wno-parentheses',
                 '-Wno-suggest-attribute=const',
+                '-Wno-suggest-attribute=malloc',
                 '-Wno-suggest-attribute=pure',
                 '-Wno-switch-enum',
                 '-Wno-unused-parameter',
