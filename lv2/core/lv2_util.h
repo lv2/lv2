@@ -86,10 +86,12 @@ lv2_features_query(const LV2_Feature* const* features, ...)
 
 		*data = lv2_features_data(features, uri);
 		if (required && !*data) {
+			va_end(args);
 			return uri;
 		}
 	}
 
+	va_end(args);
 	return NULL;
 }
 

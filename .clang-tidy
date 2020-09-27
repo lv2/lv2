@@ -4,7 +4,6 @@ Checks: >
   -*-narrowing-conversions,
   -*-uppercase-literal-suffix,
   -bugprone-macro-parentheses,
-  -clang-analyzer-valist.Unterminated,
   -clang-diagnostic-empty-translation-unit,
   -clang-diagnostic-unused-function,
   -clang-diagnostic-unused-macros,
