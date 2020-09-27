@@ -81,7 +81,7 @@ state_map_init(StateMapItem        dict[],
 	unsigned i = 0;
 	va_list  args;
 	va_start(args, handle);
-	for (const char* uri; (uri = va_arg(args, const char*)); ++i) {
+	for (const char* uri = NULL; (uri = va_arg(args, const char*)); ++i) {
 		const char*     type  = va_arg(args, const char*);
 		const uint32_t  size  = va_arg(args, uint32_t);
 		LV2_Atom* const value = va_arg(args, LV2_Atom*);
