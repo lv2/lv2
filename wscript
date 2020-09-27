@@ -19,32 +19,37 @@ uri          = 'http://lv2plug.in/ns/lv2'
 dist_pattern = 'http://lv2plug.in/spec/lv2-%d.%d.%d.tar.bz2'
 post_tags    = []
 
+# Links for documentation
+list_email = 'devel@lists.lv2plug.in'
+list_page  = 'http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in'
+
 # Map of specification base name to old URI-style include path
 spec_map = {
-    'atom'            : 'lv2/lv2plug.in/ns/ext/atom',
-    'buf-size'        : 'lv2/lv2plug.in/ns/ext/buf-size',
-    'core'            : 'lv2/lv2plug.in/ns/lv2core',
-    'data-access'     : 'lv2/lv2plug.in/ns/ext/data-access',
-    'dynmanifest'     : 'lv2/lv2plug.in/ns/ext/dynmanifest',
-    'event'           : 'lv2/lv2plug.in/ns/ext/event',
-    'instance-access' : 'lv2/lv2plug.in/ns/ext/instance-access',
-    'log'             : 'lv2/lv2plug.in/ns/ext/log',
-    'midi'            : 'lv2/lv2plug.in/ns/ext/midi',
-    'morph'           : 'lv2/lv2plug.in/ns/ext/morph',
-    'options'         : 'lv2/lv2plug.in/ns/ext/options',
-    'parameters'      : 'lv2/lv2plug.in/ns/ext/parameters',
-    'patch'           : 'lv2/lv2plug.in/ns/ext/patch',
-    'port-groups'     : 'lv2/lv2plug.in/ns/ext/port-groups',
-    'port-props'      : 'lv2/lv2plug.in/ns/ext/port-props',
-    'presets'         : 'lv2/lv2plug.in/ns/ext/presets',
-    'resize-port'     : 'lv2/lv2plug.in/ns/ext/resize-port',
-    'state'           : 'lv2/lv2plug.in/ns/ext/state',
-    'time'            : 'lv2/lv2plug.in/ns/ext/time',
-    'ui'              : 'lv2/lv2plug.in/ns/extensions/ui',
-    'units'           : 'lv2/lv2plug.in/ns/extensions/units',
-    'uri-map'         : 'lv2/lv2plug.in/ns/ext/uri-map',
-    'urid'            : 'lv2/lv2plug.in/ns/ext/urid',
-    'worker'          : 'lv2/lv2plug.in/ns/ext/worker'}
+    'atom':            'lv2/lv2plug.in/ns/ext/atom',
+    'buf-size':        'lv2/lv2plug.in/ns/ext/buf-size',
+    'core':            'lv2/lv2plug.in/ns/lv2core',
+    'data-access':     'lv2/lv2plug.in/ns/ext/data-access',
+    'dynmanifest':     'lv2/lv2plug.in/ns/ext/dynmanifest',
+    'event':           'lv2/lv2plug.in/ns/ext/event',
+    'instance-access': 'lv2/lv2plug.in/ns/ext/instance-access',
+    'log':             'lv2/lv2plug.in/ns/ext/log',
+    'midi':            'lv2/lv2plug.in/ns/ext/midi',
+    'morph':           'lv2/lv2plug.in/ns/ext/morph',
+    'options':         'lv2/lv2plug.in/ns/ext/options',
+    'parameters':      'lv2/lv2plug.in/ns/ext/parameters',
+    'patch':           'lv2/lv2plug.in/ns/ext/patch',
+    'port-groups':     'lv2/lv2plug.in/ns/ext/port-groups',
+    'port-props':      'lv2/lv2plug.in/ns/ext/port-props',
+    'presets':         'lv2/lv2plug.in/ns/ext/presets',
+    'resize-port':     'lv2/lv2plug.in/ns/ext/resize-port',
+    'state':           'lv2/lv2plug.in/ns/ext/state',
+    'time':            'lv2/lv2plug.in/ns/ext/time',
+    'ui':              'lv2/lv2plug.in/ns/extensions/ui',
+    'units':           'lv2/lv2plug.in/ns/extensions/units',
+    'uri-map':         'lv2/lv2plug.in/ns/ext/uri-map',
+    'urid':            'lv2/lv2plug.in/ns/ext/urid',
+    'worker':          'lv2/lv2plug.in/ns/ext/worker'}
+
 
 def options(ctx):
     ctx.load('compiler_c')
@@ -58,10 +63,11 @@ def options(ctx):
          'no-plugins':     'Do not build example plugins',
          'copy-headers':   'Copy headers instead of linking to bundle'})
 
+
 def configure(conf):
     try:
         conf.load('compiler_c', cache=True)
-    except:
+    except Exception:
         Options.options.build_tests = False
         Options.options.no_plugins = True
 
@@ -167,7 +173,7 @@ def configure(conf):
         try:
             conf.find_program('asciidoc')
             conf.env.BUILD_BOOK = True
-        except:
+        except Exception:
             Logs.warn('Asciidoc not found, book will not be built')
 
         if not Options.options.no_check_links:
@@ -176,9 +182,9 @@ def configure(conf):
                 Logs.warn('Documentation will not be checked for broken links')
 
     # Check for gcov library (for test coverage)
-    if (conf.env.BUILD_TESTS
-        and not Options.options.no_coverage
-        and not conf.is_defined('HAVE_GCOV')):
+    if (conf.env.BUILD_TESTS and
+        not Options.options.no_coverage and
+        not conf.is_defined('HAVE_GCOV')):
         conf.check_cc(lib='gcov', define_name='HAVE_GCOV', mandatory=False)
 
     if conf.env.BUILD_TESTS:
@@ -206,7 +212,7 @@ def configure(conf):
                 conf.run_env.append_unique(
                     'LV2_PATH', [conf.build_path('plugins/%s/lv2' % i)])
             except Exception as e:
-                Logs.warn('Configuration failed, not building %s (%s)' % (i, e))
+                Logs.warn('Configuration of %s failed (%s)' % (i, e))
 
     autowaf.display_summary(
         conf,
@@ -214,10 +220,12 @@ def configure(conf):
          'Copy (not link) headers': bool(conf.env.COPY_HEADERS),
          'Version': VERSION})
 
+
 def chop_lv2_prefix(s):
     if s.startswith('lv2/lv2plug.in/'):
         return s[len('lv2/lv2plug.in/'):]
     return s
+
 
 def subst_file(template, output, dict):
     i = open(template, 'r')
@@ -229,9 +237,11 @@ def subst_file(template, output, dict):
     i.close()
     o.close()
 
+
 def specdirs(path):
     return (path.ant_glob('lv2/*', dir=True) +
             path.ant_glob('plugins/*.lv2', dir=True))
+
 
 def ttl_files(path, specdir):
     def abspath(node):
@@ -239,6 +249,7 @@ def ttl_files(path, specdir):
 
     return map(abspath,
                path.ant_glob(specdir.path_from(path) + '/*.ttl'))
+
 
 def load_ttl(files, exclude = []):
     import rdflib
@@ -248,15 +259,14 @@ def load_ttl(files, exclude = []):
             model.parse(f, format='n3')
     return model
 
+
 # Task to build extension index
 def build_index(task):
     src_dir = task.inputs[0].parent.parent
     sys.path.append(str(src_dir.find_node('lv2specgen')))
     import rdflib
-    import lv2specgen
 
     doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
-    rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 
     model = load_ttl([str(src_dir.find_node('lv2/core/meta.ttl')),
                       str(src_dir.find_node('lv2/core/people.ttl'))])
@@ -294,6 +304,7 @@ def build_index(task):
                {'@ROWS@': ''.join(rows),
                 '@LV2_VERSION@': VERSION,
                 '@DATE@': date})
+
 
 def build_spec(bld, path):
     name            = os.path.basename(path)
@@ -336,6 +347,7 @@ def build_spec(bld, path):
             else:
                 bld.symlink_as(d,
                                os.path.relpath(bundle_dir, os.path.dirname(d)))
+
 
 def build(bld):
     specs = (bld.path.ant_glob('lv2/*', dir=True))
@@ -403,7 +415,6 @@ def build(bld):
             full_path = spec_map[basename]
             name      = 'lv2core' if basename == 'core' else basename
             path      = chop_lv2_prefix(full_path)
-            spec_path = os.path.join(path[3:], name + '.ttl')
 
             bld(features = 'subst',
                 is_copy  = True,
@@ -435,15 +446,17 @@ def build(bld):
             chopped_path = chop_lv2_prefix(full_path)
 
             assert chopped_path.startswith('ns/')
-            root_path    = os.path.relpath('/', os.path.dirname(chopped_path[2:]))
-            html_path    = '%s.html' % chopped_path
-            out_dir      = os.path.dirname(html_path)
+            root_path = os.path.relpath('/', os.path.dirname(chopped_path[2:]))
+            html_path = '%s.html' % chopped_path
+            out_dir   = os.path.dirname(html_path)
+            style_uri = os.path.relpath('aux/style.css', out_dir)
 
             cmd = (str(bld.path.find_node('lv2specgen/lv2specgen.py')) +
-                   ' --root-uri=http://lv2plug.in/ns/ --root-path=' + root_path +
-                   ' --list-email=devel@lists.lv2plug.in'
-                   ' --list-page=http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in'
-                   ' --style-uri=' + os.path.relpath('aux/style.css', out_dir) +
+                   ' --root-uri=http://lv2plug.in/ns/'
+                   ' --root-path=' + root_path +
+                   ' --list-email=' + list_email +
+                   ' --list-page=' + list_page +
+                   ' --style-uri=' + style_uri +
                    ' --docdir=' + os.path.relpath('doc/html', out_dir) +
                    ' --tags=%s' % bld.path.get_bld().make_node('doc/tags') +
                    ' --index=' + str(index_file) +
@@ -456,9 +469,9 @@ def build(bld):
                 shell  = False)
 
             # Install documentation
-            base = chop_lv2_prefix(srcpath)
-            bld.install_files(os.path.join('${DOCDIR}', 'lv2', os.path.dirname(html_path)),
-                              html_path)
+            bld.install_files(
+                os.path.join('${DOCDIR}', 'lv2', os.path.dirname(html_path)),
+                html_path)
 
         index_files.sort(key=lambda x: x.path_from(bld.path))
         bld.add_group()
@@ -476,7 +489,8 @@ def build(bld):
         def check_links(ctx):
             import subprocess
             if ctx.env.LINKCHECKER:
-                if subprocess.call([ctx.env.LINKCHECKER[0], '--no-status', out]):
+                if subprocess.call([ctx.env.LINKCHECKER[0],
+                                    '--no-status', out]):
                     ctx.fatal('Documentation contains broken links')
 
         if bld.cmd == 'build':
@@ -519,11 +533,12 @@ def build(bld):
         # Build "Programming LV2 Plugins" book from plugin examples
         bld.recurse('plugins')
 
+
 def lint(ctx):
     "checks code for style issues"
     import subprocess
 
-    subprocess.call("flake8 --ignore E203,E221,W503,W504,E302,E305,E251,E241,E722 "
+    subprocess.call("flake8 --ignore E101,E129,W191,E221,W504,E251,E241,E741 "
                     "wscript lv2specgen/lv2docgen.py lv2specgen/lv2specgen.py "
                     "plugins/literasc.py",
                     shell=True)
@@ -634,10 +649,11 @@ def test_vocabularies(check, specs, files):
     # Check that all properties are either datatype or object properties
     for r in sorted(model.triples([None, rdf.type, rdf.Property])):
         subject = r[0]
+        types = list(model.objects(subject, rdf.type))
 
-        check(lambda: ((owl.DatatypeProperty in model.objects(subject, rdf.type)) or
-                       (owl.ObjectProperty in model.objects(subject, rdf.type)) or
-                       (owl.AnnotationProperty in model.objects(subject, rdf.type))),
+        check(lambda: ((owl.DatatypeProperty in types) or
+                       (owl.ObjectProperty in types) or
+                       (owl.AnnotationProperty in types)),
               name = "%s is a Datatype/Object/Annotation property" % subject)
 
 
@@ -673,6 +689,7 @@ def test(tst):
         for test in tst.path.get_bld().ant_glob(pattern):
             check([str(test)])
 
+
 class Dist(Scripting.Dist):
     def execute(self):
         'Execute but do not call archive() since dist() has already done so.'
@@ -682,6 +699,7 @@ class Dist(Scripting.Dist):
         'Resolve symbolic links to avoid broken links in tarball.'
         return os.path.realpath(node.abspath())
 
+
 class DistCheck(Dist, Scripting.DistCheck):
     def execute(self):
         Dist.execute(self)
@@ -689,6 +707,7 @@ class DistCheck(Dist, Scripting.DistCheck):
 
     def archive(self):
         Dist.archive(self)
+
 
 def _get_news_entries(ctx):
     from waflib.extras import autoship
@@ -728,7 +747,7 @@ def _get_news_entries(ctx):
                         add_items(version, name, entry["items"])
 
                 elif revision == latest_revision:
-                    # Dev version that isn't in a release yet, append to current
+                    # Not-yet-released development version, append to current
                     add_items(current_version, name, entry["items"])
 
     # Sort news items in each versions
@@ -737,6 +756,7 @@ def _get_news_entries(ctx):
 
     return lv2_entries
 
+
 def posts(ctx):
     "generates news posts in Pelican Markdown format"
 
@@ -744,12 +764,13 @@ def posts(ctx):
 
     try:
         os.mkdir(os.path.join(out, 'posts'))
-    except:
+    except Exception:
         pass
 
     autoship.write_posts(_get_news_entries(ctx),
                          os.path.join(out, 'posts'),
                          {'Author': 'drobilla'})
+
 
 def news(ctx):
     """write an amalgamated NEWS file to the source directory"""
@@ -758,9 +779,11 @@ def news(ctx):
 
     autoship.write_news(_get_news_entries(ctx), 'NEWS')
 
+
 def dist(ctx):
     news(ctx)
     ctx.archive()
+
 
 def distcheck(ctx):
     news(ctx)
