@@ -1,0 +1,17 @@
+Checks: >
+  *,
+  -*-magic-numbers,
+  -*-narrowing-conversions,
+  -*-uppercase-literal-suffix,
+  -bugprone-macro-parentheses,
+  -clang-analyzer-valist.Unterminated,
+  -clang-diagnostic-empty-translation-unit,
+  -clang-diagnostic-unused-function,
+  -clang-diagnostic-unused-macros,
+  -cppcoreguidelines-init-variables,
+  -hicpp-signed-bitwise,
+  -llvm-header-guard,
+  -readability-else-after-return,
+WarningsAsErrors: '*'
+HeaderFilterRegex: '.*'
+FormatStyle: file
