@@ -17,13 +17,11 @@
 #include "lv2/atom/atom-test-utils.c"
 #include "lv2/atom/atom.h"
 #include "lv2/atom/forge.h"
-#include "lv2/atom/util.h"
 #include "lv2/urid/urid.h"
 
 #include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 
 static int
 test_string_overflow(void)

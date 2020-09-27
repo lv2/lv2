@@ -18,6 +18,8 @@
 #ifndef SAMPLER_URIS_H
 #define SAMPLER_URIS_H
 
+#include "lv2/atom/atom.h"
+#include "lv2/atom/forge.h"
 #include "lv2/log/log.h"
 #include "lv2/midi/midi.h"
 #include "lv2/parameters/parameters.h"
