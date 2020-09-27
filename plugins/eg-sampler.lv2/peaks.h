@@ -160,17 +160,17 @@ peaks_sender_send(PeaksSender*    sender,
 		forge, &vec_frame, sizeof(float), uris->atom_Float);
 
 	// Calculate how many peaks to send this update
-	const int      chunk_size = MAX(1, sender->n_samples / sender->n_peaks);
+	const uint32_t chunk_size = MAX(1u, sender->n_samples / sender->n_peaks);
 	const uint32_t space      = forge->size - forge->offset;
 	const uint32_t remaining  = sender->n_peaks - sender->current_offset;
-	const int      n_update   = MIN(remaining,
-	                                MIN(n_frames / 4, space / sizeof(float)));
+	const uint32_t n_update   = MIN(remaining,
+	                                MIN(n_frames / 4u, space / sizeof(float)));
 
 	// Calculate peak (maximum magnitude) for each chunk
-	for (int i = 0; i < n_update; ++i) {
-		const int start = (sender->current_offset + i) * chunk_size;
-		float     peak  = 0.0f;
-		for (int j = 0; j < chunk_size; ++j) {
+	for (uint32_t i = 0; i < n_update; ++i) {
+		const uint32_t start = (sender->current_offset + i) * chunk_size;
+		float          peak  = 0.0f;
+		for (uint32_t j = 0; j < chunk_size; ++j) {
 			peak = fmaxf(peak, fabsf(sender->samples[start + j]));
 		}
 		lv2_atom_forge_float(forge, peak);
@@ -246,14 +246,14 @@ peaks_receiver_receive(PeaksReceiver* receiver, const LV2_Atom_Object* update)
 			   This preserves the current peaks so that the peaks array can be
 			   reasonably drawn at any time, but the resolution will increase
 			   as new updates arrive. */
-			const int n_per = n / receiver->n_peaks;
-			for (int i = n - 1; i >= 0; --i) {
+			const int64_t n_per = n / receiver->n_peaks;
+			for (int64_t i = n - 1; i >= 0; --i) {
 				receiver->peaks[i] = receiver->peaks[i / n_per];
 			}
 		} else if (receiver->n_peaks > 0) {
 			/* The peak array is being shrunk.  Similar to the above. */
-			const int n_per = receiver->n_peaks / n;
-			for (int i = n - 1; i >= 0; --i) {
+			const int64_t n_per = receiver->n_peaks / n;
+			for (int64_t i = n - 1; i >= 0; --i) {
 				receiver->peaks[i] = receiver->peaks[i * n_per];
 			}
 		}

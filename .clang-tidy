@@ -1,7 +1,6 @@
 Checks: >
   *,
   -*-magic-numbers,
-  -*-narrowing-conversions,
   -*-uppercase-literal-suffix,
   -bugprone-macro-parentheses,
   -clang-diagnostic-empty-translation-unit,
