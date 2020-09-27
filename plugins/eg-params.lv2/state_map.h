@@ -36,9 +36,12 @@ state_map_cmp(const void* a, const void* b)
 	const StateMapItem* kb = (const StateMapItem*)b;
 	if (ka->urid < kb->urid) {
 		return -1;
-	} else if (kb->urid < ka->urid) {
+	}
+
+	if (kb->urid < ka->urid) {
 		return 1;
 	}
+
 	return 0;
 }
 

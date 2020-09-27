@@ -8,7 +8,6 @@ Checks: >
   -clang-diagnostic-unused-macros,
   -hicpp-signed-bitwise,
   -llvm-header-guard,
-  -readability-else-after-return,
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 FormatStyle: file

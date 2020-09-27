@@ -127,10 +127,14 @@ read_set_file(const SamplerURIs*     uris,
 	if (!property) {
 		fprintf(stderr, "Malformed set message has no body.\n");
 		return NULL;
-	} else if (property->type != uris->atom_URID) {
+	}
+
+	if (property->type != uris->atom_URID) {
 		fprintf(stderr, "Malformed set message has non-URID property.\n");
 		return NULL;
-	} else if (((const LV2_Atom_URID*)property)->body != uris->eg_sample) {
+	}
+
+	if (((const LV2_Atom_URID*)property)->body != uris->eg_sample) {
 		fprintf(stderr, "Set message for unknown property.\n");
 		return NULL;
 	}
@@ -141,7 +145,9 @@ read_set_file(const SamplerURIs*     uris,
 	if (!value) {
 		fprintf(stderr, "Malformed set message has no value.\n");
 		return NULL;
-	} else if (value->type != uris->atom_Path) {
+	}
+
+	if (value->type != uris->atom_Path) {
 		fprintf(stderr, "Set message value is not a Path.\n");
 		return NULL;
 	}
