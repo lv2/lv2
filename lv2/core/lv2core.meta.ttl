@@ -323,8 +323,7 @@ LV2 specifications are documented using this property with an lv2:Markdown
 datatype.
 
 If the value has no explicit datatype, it is assumed to be a valid XHTML Basic
-1.1 fragment suitable for use as the content of the <code>&lt;body&gt;</code>
-element of a page.
+1.1 fragment suitable for use as the content of the `body` element of a page.
 
 XHTML Basic is a W3C Recommendation which defines a simplified subset of XHTML
 intended to be reasonable to implement with limited resources, for exampe on
@@ -350,7 +349,7 @@ To be discovered by hosts, plugins MUST explicitly have an rdf:type of lv2:Plugi
 in their bundle's manifest, for example:
 
     :::turtle
-    &lt;http://example.org/my-plugin&gt; a lv2:Plugin .
+    <http://example.org/my-plugin> a lv2:Plugin .
 
 Plugins should have a doap:name property that is at most a few words in length
 using title capitalization, for example <q>Tape Delay Unit</q>.
@@ -548,10 +547,10 @@ SHOULD specify this in their `manifest.ttl` so the host can associate them with
 the correct plugin.  For example:
 
     :::turtle
-    &lt;thing&gt;
+    <thing>
         a             ext:Thing ;
-        lv2:appliesTo &lt;plugin&gt; ;
-        rdfs:seeAlso  &lt;thing.ttl&gt; .
+        lv2:appliesTo <plugin> ;
+        rdfs:seeAlso  <thing.ttl> .
 
 Using this pattern is preferable for large amounts of data, since the host may
 choose whether/when to load the data.

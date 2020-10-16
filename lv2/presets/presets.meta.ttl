@@ -78,7 +78,7 @@ bundle containing presets should list them like so:
     eg:mypreset
         a             pset:Preset ;
         lv2:appliesTo eg:myplugin ;
-        rdfs:seeAlso  &lt;mypreset.ttl&gt; .
+        rdfs:seeAlso  <mypreset.ttl> .
 
 """^^lv2:Markdown .
 
@@ -90,7 +90,7 @@ predicates can be used to describe any data associated with the preset.  For
 example:
 
     :::turtle
-    @prefix eg: &lt;http://example.org/&gt; .
+    @prefix eg: <http://example.org/> .
 
     eg:mypreset
         a pset:Preset ;
@@ -108,10 +108,9 @@ A Preset SHOULD have at least one lv2:appliesTo property.  Each Port on a
 Preset MUST have at least a lv2:symbol property and a pset:value property.
 
 Hosts SHOULD save user presets to a bundle in the user-local LV2 directory (for
-example `~/.lv2`) with a name like
-`&lt;Plugin_Name&gt;_&lt;Preset_Name&gt;.preset.lv2` (for example
-`LV2_Amp_At_Eleven.preset.lv2`), where names are transformed to be valid LV2
-symbols for maximum compatibility.
+example `~/.lv2`) with a name like `<Plugin_Name>_<Preset_Name>.preset.lv2`
+(for example `LV2_Amp_At_Eleven.preset.lv2`), where names are transformed to be
+valid LV2 symbols for maximum compatibility.
 
 """^^lv2:Markdown .
 

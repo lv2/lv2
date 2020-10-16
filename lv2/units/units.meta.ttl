@@ -117,8 +117,8 @@ processing.
 For example, to say that a gain control is in decibels:
 
     :::turtle
-    @prefix units: &lt;http://lv2plug.in/ns/extensions/units#&gt; .
-    @prefix eg:    &lt;http://example.org/&gt; .
+    @prefix units: <http://lv2plug.in/ns/extensions/units#> .
+    @prefix eg:    <http://example.org/> .
 
     eg:plugin lv2:port [
         a            lv2:ControlPort , lv2:InputPort ;

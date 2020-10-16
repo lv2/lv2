@@ -214,8 +214,8 @@ string in any language or a value of any type.  A Literal has a
 encoding.  The length of the string data in bytes is `size -
 sizeof(LV2_Atom_Literal)`, including the terminating NULL character.  The
 `lang` field SHOULD be a URI of the form
-&lt;http://lexvo.org/id/iso639-3/LANG&gt; or
-&lt;http://lexvo.org/id/iso639-1/LANG&gt; where LANG is a 3-character ISO 693-3
+`http://lexvo.org/id/iso639-3/LANG` or
+`http://lexvo.org/id/iso639-1/LANG` where LANG is a 3-character ISO 693-3
 language code, or a 2-character ISO 693-1 language code, respectively.
 
 A Literal may have a `datatype` or a `lang`, but never both.
@@ -484,7 +484,7 @@ MUST be a sub-class of atom:Atom.  For example, an input port that is connected
 directly to an LV2_Atom_Double value is described like so:
 
     :::turtle
-    &lt;plugin&gt;
+    <plugin>
         lv2:port [
             a lv2:InputPort , atom:AtomPort ;
             atom:bufferType atom:Double ;
@@ -508,7 +508,7 @@ expected by a port.  For example, a port that receives MIDI events is described
 like so:
 
     :::turtle
-    &lt;plugin&gt;
+    <plugin>
         lv2:port [
             a lv2:InputPort , atom:AtomPort ;
             atom:bufferType atom:Sequence ;

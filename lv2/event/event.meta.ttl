@@ -109,11 +109,11 @@ OSC, or any other type of event payload.  The type(s) of event supported by
 a port is defined in the data file for a plugin, for example:
 
     :::turtle
-    &lt;http://example.org/some-plugin&gt;
+    <http://example.org/some-plugin>
         lv2:port [
             a ev:EventPort, lv2:InputPort ;
             lv2:index 0 ;
-            ev:supportsEvent &lt;http://lv2plug.in/ns/ext/midi#MidiEvent&gt; ;
+            ev:supportsEvent <http://lv2plug.in/ns/ext/midi#MidiEvent> ;
             lv2:symbol "midi_input" ;
             lv2:name "MIDI input" ;
         ] .

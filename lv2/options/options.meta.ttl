@@ -83,9 +83,9 @@ plugins only, and is not a <q>live</q> plugin control mechanism.
 The plugin data file should advertise this interface like so:
 
     :::turtle
-    @prefix opts: &lt;http://lv2plug.in/ns/ext/options#&gt; .
+    @prefix opts: <http://lv2plug.in/ns/ext/options#> .
 
-    &lt;plugin&gt;
+    <plugin>
         a lv2:Plugin ;
         lv2:extensionData opts:interface .
 

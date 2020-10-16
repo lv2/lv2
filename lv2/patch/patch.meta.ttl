@@ -222,7 +222,7 @@ remove all properties with the given predicate.  For example:
     :::turtle
     []
         a patch:Patch ;
-        patch:subject &lt;something&gt; ;
+        patch:subject <something> ;
         patch:add [
             eg:name "New name" ;
             eg:age 42 ;
@@ -244,7 +244,7 @@ previous version is replaced.
     :::turtle
     []
         a patch:Put ;
-        patch:subject &lt;something&gt; ;
+        patch:subject <something> ;
         patch:body [
             eg:name "New name" ;
             eg:age 42 ;
@@ -273,7 +273,7 @@ the property before setting the new value.  For example:
     :::turtle
     []
         a patch:Set ;
-        patch:subject &lt;something&gt; ;
+        patch:subject <something> ;
         patch:property eg:name ;
         patch:value "New name" .
 
@@ -282,7 +282,7 @@ Which is equivalent to:
     :::turtle
     []
         a patch:Patch ;
-        patch:subject &lt;something&gt; ;
+        patch:subject <something> ;
         patch:add [
             eg:name "New name" ;
         ] ;
@@ -357,10 +357,10 @@ This is used to list properties that can be changed, for example to allow user
 interfaces to present appropriate controls.  For example:
 
     :::turtle
-    @prefix eg:   &lt;http://example.org/&gt; .
-    @prefix rdf:  &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
-    @prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
-    @prefix xsd:  &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+    @prefix eg:   <http://example.org/> .
+    @prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+    @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+    @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 
     eg:title
         a rdf:Property ;
