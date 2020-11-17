@@ -18,11 +18,12 @@
    @defgroup time Time
    @ingroup lv2
 
-   Properties for describing time, see <http://lv2plug.in/ns/ext/time> for
-   details.
+   Properties for describing time.
 
    Note the time extension is purely data, this header merely defines URIs for
    convenience.
+
+   See <http://lv2plug.in/ns/ext/time> for details.
 
    @{
 */

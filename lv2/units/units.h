@@ -18,8 +18,9 @@
    @defgroup units Units
    @ingroup lv2
 
-   Units for LV2 values, see <http://lv2plug.in/ns/extensions/units> for
-   details.
+   Units for LV2 values.
+
+   See <http://lv2plug.in/ns/extensions/units> for details.
 
    @{
 */

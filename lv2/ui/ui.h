@@ -20,8 +20,9 @@
    @defgroup ui User Interfaces
    @ingroup lv2
 
-   User interfaces of any type for plugins,
-   <http://lv2plug.in/ns/extensions/ui> for details.
+   User interfaces of any type for plugins.
+
+   See <http://lv2plug.in/ns/extensions/ui> for details.
 
    @{
 */

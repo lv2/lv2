@@ -18,8 +18,9 @@
    @defgroup parameters Parameters
    @ingroup lv2
 
-   Common parameters for audio processing, see
-   <http://lv2plug.in/ns/ext/parameters>.
+   Common parameters for audio processing.
+
+   See <http://lv2plug.in/ns/ext/parameters> for details.
 
    @{
 */

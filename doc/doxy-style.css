@@ -641,6 +641,7 @@ td.entry {
   width: 16px;
   height: 22px;
   vertical-align: top;
+  visibility: hidden;
 }
 
 td.entry b {

@@ -19,8 +19,9 @@
    @defgroup state State
    @ingroup lv2
 
-   An interface for LV2 plugins to save and restore state, see
-   <http://lv2plug.in/ns/ext/state> for details.
+   An interface for LV2 plugins to save and restore state.
+
+   See <http://lv2plug.in/ns/ext/state> for details.
 
    @{
 */

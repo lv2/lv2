@@ -19,8 +19,9 @@
    @defgroup event Event
    @ingroup lv2
 
-   Generic time-stamped events, see <http://lv2plug.in/ns/ext/event> for
-   details.
+   Generic time-stamped events.
+
+   See <http://lv2plug.in/ns/ext/event> for details.
 
    @{
 */

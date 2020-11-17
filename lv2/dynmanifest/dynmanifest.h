@@ -19,8 +19,9 @@
    @defgroup dynmanifest Dynamic Manifest
    @ingroup lv2
 
-   Support for dynamic data generation, see
-   <http://lv2plug.in/ns/ext/dynmanifest> for details.
+   Support for dynamic data generation.
+
+   See <http://lv2plug.in/ns/ext/dynmanifest> for details.
 
    @{
 */

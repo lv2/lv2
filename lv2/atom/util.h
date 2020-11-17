@@ -25,6 +25,9 @@
 /**
    @defgroup util Utilities
    @ingroup atom
+
+   Utilities for working with atoms.
+
    @{
 */
 

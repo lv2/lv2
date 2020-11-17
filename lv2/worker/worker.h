@@ -18,8 +18,9 @@
    @defgroup worker Worker
    @ingroup lv2
 
-   Support for non-realtime plugin operations, see
-   <http://lv2plug.in/ns/ext/worker> for details.
+   Support for non-realtime plugin operations.
+
+   See <http://lv2plug.in/ns/ext/worker> for details.
 
    @{
 */

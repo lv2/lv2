@@ -18,8 +18,9 @@
    @defgroup morph Morph
    @ingroup lv2
 
-   Ports that can dynamically change type, see <http://lv2plug.in/ns/ext/morph>
-   for details.
+   Ports that can dynamically change type.
+
+   See <http://lv2plug.in/ns/ext/morph> for details.
 
    @{
 */

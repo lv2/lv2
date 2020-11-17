@@ -18,7 +18,7 @@
    @defgroup uri-map URI Map
    @ingroup lv2
 
-   C API for the LV2 URI Map extension <http://lv2plug.in/ns/ext/uri-map>.
+   A feature for mapping URIs to integers.
 
    This extension defines a simple mechanism for plugins to map URIs to
    integers, usually for performance reasons (e.g. processing events typed by
@@ -27,6 +27,8 @@
    values for use in the audio thread without doing any string comparison.
    This allows the extensibility of RDF with the performance of integers (or
    centrally defined enumerations).
+
+   See <http://lv2plug.in/ns/ext/uri-map> for details.
 
    @{
 */

@@ -21,8 +21,9 @@
    @defgroup buf-size Buffer Size
    @ingroup lv2
 
-   Access to, and restrictions on, buffer sizes; see
-   <http://lv2plug.in/ns/ext/buf-size> for details.
+   Access to, and restrictions on, buffer sizes.
+
+   See <http://lv2plug.in/ns/ext/buf-size> for details.
 
    @{
 */

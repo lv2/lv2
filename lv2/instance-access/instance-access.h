@@ -19,8 +19,9 @@
    @defgroup instance-access Instance Access
    @ingroup lv2
 
-   Access to the LV2_Handle of a plugin for UIs; see
-   <http://lv2plug.in/ns/ext/instance-access> for details.
+   Access to the LV2_Handle of a plugin for UIs.
+
+   See <http://lv2plug.in/ns/ext/instance-access> for details.
 
    @{
 */

@@ -42,6 +42,9 @@
 /**
    @defgroup forge Forge
    @ingroup atom
+
+   An API for constructing LV2 atoms.
+
    @{
 */
 

@@ -18,11 +18,12 @@
    @defgroup patch Patch
    @ingroup lv2
 
-   Messages for accessing and manipulating properties, see
-   <http://lv2plug.in/ns/ext/patch> for details.
+   Messages for accessing and manipulating properties.
 
    Note the patch extension is purely data, this header merely defines URIs for
    convenience.
+
+   See <http://lv2plug.in/ns/ext/patch> for details.
 
    @{
 */

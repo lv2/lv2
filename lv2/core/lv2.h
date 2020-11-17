@@ -29,7 +29,9 @@
 /**
    @defgroup lv2core LV2 Core
 
-   Core LV2 specification, see <http://lv2plug.in/ns/lv2core> for details.
+   Core LV2 specification.
+
+   See <http://lv2plug.in/ns/lv2core> for details.
 
    @{
 */
