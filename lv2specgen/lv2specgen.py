@@ -1275,14 +1275,24 @@ def writeIndex(model, specloc, index_path, root_path, root_uri, online):
             break
 
     # Verify that this date is the latest
-    for r in model.triples([ext_node, doap.release, None]):
-        this_date = model.value(r[2], doap.created, None)
-        if this_date > date:
-            print(
-                "warning: %s revision %d.%d (%s) is not the latest release"
-                % (ext_node, minor, micro, date)
-            )
-            break
+    if date is None:
+        print("warning: %s has no doap:created date" % ext_node)
+    else:
+        for r in model.triples([ext_node, doap.release, None]):
+            this_date = model.value(r[2], doap.created, None)
+            if this_date is None:
+                print(
+                    "warning: %s has no doap:created date"
+                    % (ext_node, minor, micro, date)
+                )
+                continue
+
+            if this_date > date:
+                print(
+                    "warning: %s revision %d.%d (%s) is not the latest release"
+                    % (ext_node, minor, micro, date)
+                )
+                break
 
     # Get name and short description
     name = model.value(ext_node, doap.name, None)
