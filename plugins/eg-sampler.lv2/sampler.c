@@ -495,6 +495,16 @@ save(LV2_Handle                instance,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 
 	free(apath);
+
+	// Store the gain value
+	const float gain = self->gain;
+	store(handle,
+	      self->uris.param_gain,
+	      &gain,
+	      sizeof(gain),
+	      self->uris.atom_Float,
+	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
+
 	return LV2_STATE_SUCCESS;
 }
 
@@ -563,6 +573,19 @@ restore(LV2_Handle                  instance,
 	}
 
 	free(path);
+
+	// Get param:gain from state
+	value = retrieve(handle, self->uris.param_gain, &size, &type, &valflags);
+	if (!value) {
+		// This is not fatal, as older versions of eg-sampler were missing this property
+		lv2_log_note(&self->logger, "Missing param:gain\n");
+		return LV2_STATE_SUCCESS;
+	} else if (type != self->uris.atom_Float) {
+		lv2_log_error(&self->logger, "Non-float param:gain\n");
+		return LV2_STATE_ERR_BAD_TYPE;
+	}
+
+	self->gain = *(const float*)value;
 
 	return LV2_STATE_SUCCESS;
 }
