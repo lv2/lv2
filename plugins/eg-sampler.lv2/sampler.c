@@ -78,6 +78,7 @@ typedef struct {
 	Sample*    sample;
 	uint32_t   frame_offset;
 	float      gain;
+	float      gain_dB;
 	sf_count_t frame;
 	bool       play;
 	bool       activated;
@@ -281,7 +282,8 @@ instantiate(const LV2_Descriptor*     descriptor,
 	lv2_atom_forge_init(&self->forge, self->map);
 	peaks_sender_init(&self->psend, self->map);
 
-	self->gain = 1.0f;
+	self->gain    = 1.0f;
+	self->gain_dB = 0.0f;
 
 	return (LV2_Handle)self;
 }
@@ -359,7 +361,8 @@ handle_event(Sampler* self, LV2_Atom_Event* ev)
 			} else if (key == uris->param_gain) {
 				// Gain change
 				if (value->type == uris->atom_Float) {
-					self->gain = DB_CO(((LV2_Atom_Float*)value)->body);
+					self->gain_dB = ((LV2_Atom_Float*)value)->body;
+					self->gain    = DB_CO(self->gain_dB);
 				}
 			}
 		} else if (obj->body.otype == uris->patch_Get && self->sample) {
@@ -495,6 +498,15 @@ save(LV2_Handle                instance,
 	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
 
 	free(apath);
+
+	// Store the gain value
+	store(handle,
+	      self->uris.param_gain,
+	      &self->gain_dB,
+	      sizeof(self->gain_dB),
+	      self->uris.atom_Float,
+	      LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE);
+
 	return LV2_STATE_SUCCESS;
 }
 
@@ -563,6 +575,20 @@ restore(LV2_Handle                  instance,
 	}
 
 	free(path);
+
+	// Get param:gain from state
+	value = retrieve(handle, self->uris.param_gain, &size, &type, &valflags);
+	if (!value) {
+		// Not an error, since older versions did not save this property
+		lv2_log_note(&self->logger, "Missing param:gain\n");
+		return LV2_STATE_SUCCESS;
+	} else if (type != self->uris.atom_Float) {
+		lv2_log_error(&self->logger, "Non-float param:gain\n");
+		return LV2_STATE_ERR_BAD_TYPE;
+	}
+
+	self->gain_dB = *(const float*)value;
+	self->gain    = DB_CO(self->gain_dB);
 
 	return LV2_STATE_SUCCESS;
 }
