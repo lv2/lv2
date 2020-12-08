@@ -80,6 +80,34 @@ map_sampler_uris(LV2_URID_Map* map, SamplerURIs* uris)
    ----
    []
    a patch:Set ;
+   patch:property param:gain ;
+   patch:value 0.0f .
+   ----
+*/
+static inline LV2_Atom_Forge_Ref
+write_set_gain(LV2_Atom_Forge*    forge,
+               const SamplerURIs* uris,
+               const float        gain)
+{
+	LV2_Atom_Forge_Frame frame;
+	LV2_Atom_Forge_Ref   set = lv2_atom_forge_object(
+		forge, &frame, 0, uris->patch_Set);
+
+	lv2_atom_forge_key(forge, uris->patch_property);
+	lv2_atom_forge_urid(forge, uris->param_gain);
+	lv2_atom_forge_key(forge, uris->patch_value);
+	lv2_atom_forge_float(forge, gain);
+
+	lv2_atom_forge_pop(forge, &frame);
+	return set;
+}
+
+/**
+   Write a message like the following to `forge`:
+   [source,turtle]
+   ----
+   []
+   a patch:Set ;
    patch:property eg:sample ;
    patch:value </home/me/foo.wav> .
    ----
