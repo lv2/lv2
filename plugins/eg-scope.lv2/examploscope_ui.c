@@ -193,8 +193,7 @@ on_expose_event(GtkWidget* widget, GdkEventExpose* ev, gpointer data)
 	const float gain = gtk_spin_button_get_value(GTK_SPIN_BUTTON(ui->spb_amp));
 
 	// Get cairo type for the gtk window
-	cairo_t* cr;
-	cr = gdk_cairo_create(ui->darea->window);
+	cairo_t* cr = gdk_cairo_create(ui->darea->window);
 
 	// Limit cairo-drawing to exposed area
 	cairo_rectangle(cr, ev->area.x, ev->area.y, ev->area.width, ev->area.height);
@@ -392,9 +391,9 @@ update_scope(EgScopeUI*    ui,
 		return;
 	}
 
-	uint32_t idx_start;  // Display pixel start
-	uint32_t idx_end;    // Display pixel end
-	int      overflow;   // Received more audio-data than display-pixel
+	uint32_t idx_start = 0; // Display pixel start
+	uint32_t idx_end   = 0; // Display pixel end
+	int      overflow  = 0; // Received more audio-data than display-pixel
 
 	// Process this channel's audio-data for display
 	ScoChan* chn = &ui->chn[channel];

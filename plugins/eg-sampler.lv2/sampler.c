@@ -521,11 +521,11 @@ restore(LV2_Handle                  instance,
 	}
 
 	// Get eg:sample from state
-	size_t      size;
-	uint32_t    type;
-	uint32_t    valflags;
-	const void* value = retrieve(handle, self->uris.eg_sample,
-	                             &size, &type, &valflags);
+	size_t      size     = 0;
+	uint32_t    type     = 0;
+	uint32_t    valflags = 0;
+	const void* value    = retrieve(handle, self->uris.eg_sample,
+	                                &size, &type, &valflags);
 	if (!value) {
 		lv2_log_error(&self->logger, "Missing eg:sample\n");
 		return LV2_STATE_ERR_NO_PROPERTY;

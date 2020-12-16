@@ -358,9 +358,9 @@ state_restore(LV2_Handle                  instance,
 {
 	EgScope* self = (EgScope*)instance;
 
-	size_t   size;
-	uint32_t type;
-	uint32_t valflags;
+	size_t   size     = 0;
+	uint32_t type     = 0;
+	uint32_t valflags = 0;
 
 	const void* spp = retrieve(
 		handle, self->uris.ui_spp, &size, &type, &valflags);

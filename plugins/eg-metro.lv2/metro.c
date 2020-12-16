@@ -266,7 +266,9 @@ update_position(Metro* self, const LV2_Atom_Object* obj)
 	const MetroURIs* uris = &self->uris;
 
 	// Received new transport position/speed
-	LV2_Atom *beat = NULL, *bpm = NULL, *speed = NULL;
+	LV2_Atom* beat  = NULL;
+	LV2_Atom* bpm   = NULL;
+	LV2_Atom* speed = NULL;
 	lv2_atom_object_get(obj,
 	                    uris->time_barBeat, &beat,
 	                    uris->time_beatsPerMinute, &bpm,

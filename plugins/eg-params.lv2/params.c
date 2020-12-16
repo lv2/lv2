@@ -290,7 +290,7 @@ store_prop(Params*                  self,
            LV2_URID                 key,
            const LV2_Atom*          value)
 {
-	LV2_State_Status st;
+	LV2_State_Status st = LV2_STATE_SUCCESS;
 	if (map_path && value->type == self->uris.atom_Path) {
 		// Map path to abstract path for portable storage
 		const char* path  = (const char*)(value + 1);
@@ -352,10 +352,10 @@ retrieve_prop(Params*                     self,
               LV2_URID                    key)
 {
 	// Retrieve value from saved state
-	size_t      vsize;
-	uint32_t    vtype;
-	uint32_t    vflags;
-	const void* value = retrieve(handle, key, &vsize, &vtype, &vflags);
+	size_t      vsize  = 0;
+	uint32_t    vtype  = 0;
+	uint32_t    vflags = 0;
+	const void* value  = retrieve(handle, key, &vsize, &vtype, &vflags);
 
 	// Set plugin instance state
 	const LV2_State_Status st = value
