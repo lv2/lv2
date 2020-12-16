@@ -1,13 +1,20 @@
 Checks: >
   *,
+  -*-else-after-return,
   -*-magic-numbers,
   -*-uppercase-literal-suffix,
   -bugprone-macro-parentheses,
+  -bugprone-suspicious-include,
+  -bugprone-suspicious-string-compare,
   -clang-diagnostic-empty-translation-unit,
   -clang-diagnostic-unused-function,
   -clang-diagnostic-unused-macros,
   -hicpp-signed-bitwise,
   -llvm-header-guard,
+  -llvmlibc-*,
+  -misc-unused-parameters,
+  -modernize-redundant-void-arg,
+  -modernize-use-trailing-return-type,
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 FormatStyle: file
