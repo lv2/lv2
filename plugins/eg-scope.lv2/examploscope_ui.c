@@ -105,6 +105,8 @@ send_ui_state(LV2UI_Handle handle)
 	LV2_Atom*            msg = (LV2_Atom*)lv2_atom_forge_object(
 		&ui->forge, &frame, 0, ui->uris.ui_State);
 
+	assert(msg);
+
 	// msg[samples-per-pixel] = integer
 	lv2_atom_forge_key(&ui->forge, ui->uris.ui_spp);
 	lv2_atom_forge_int(&ui->forge, ui->stride);
@@ -137,6 +139,9 @@ send_ui_disable(LV2UI_Handle handle)
 	LV2_Atom_Forge_Frame frame;
 	LV2_Atom*            msg = (LV2_Atom*)lv2_atom_forge_object(
 		&ui->forge, &frame, 0, ui->uris.ui_Off);
+
+	assert(msg);
+
 	lv2_atom_forge_pop(&ui->forge, &frame);
 	ui->write(ui->controller,
 	          0,
@@ -161,6 +166,9 @@ send_ui_enable(LV2UI_Handle handle)
 	LV2_Atom_Forge_Frame frame;
 	LV2_Atom*            msg = (LV2_Atom*)lv2_atom_forge_object(
 		&ui->forge, &frame, 0, ui->uris.ui_On);
+
+	assert(msg);
+
 	lv2_atom_forge_pop(&ui->forge, &frame);
 	ui->write(ui->controller,
 	          0,

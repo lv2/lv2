@@ -89,6 +89,8 @@ on_file_set(GtkFileChooserButton* widget, void* handle)
 	LV2_Atom* msg = (LV2_Atom*)write_set_file(&ui->forge, &ui->uris,
 	                                          filename, strlen(filename));
 
+	assert(msg);
+
 	ui->write(ui->controller, 0, lv2_atom_total_size(msg),
 	          ui->uris.atom_eventTransfer,
 	          msg);
@@ -310,6 +312,9 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	LV2_Atom_Forge_Frame frame;
 	LV2_Atom*            msg = (LV2_Atom*)lv2_atom_forge_object(
 		&ui->forge, &frame, 0, ui->uris.patch_Get);
+
+	assert(msg);
+
 	lv2_atom_forge_pop(&ui->forge, &frame);
 
 	ui->write(ui->controller, 0, lv2_atom_total_size(msg),
