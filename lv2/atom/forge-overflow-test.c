@@ -48,14 +48,13 @@ test_string_overflow(void)
 	}
 
 	// Failure writing to an exactly full forge
-	LV2_Atom_Forge_Ref ref = 0;
-	if ((ref = lv2_atom_forge_string(&forge, str, MAX_CHARS + 1))) {
+	if (lv2_atom_forge_string(&forge, str, MAX_CHARS + 1)) {
 		return test_fail("Successfully wrote past end of buffer\n");
 	}
 
 	// Failure writing body after successfully writing header
 	lv2_atom_forge_set_buffer(&forge, buf, sizeof(LV2_Atom) + 1);
-	if ((ref = lv2_atom_forge_string(&forge, "AB", 2))) {
+	if (lv2_atom_forge_string(&forge, "AB", 2)) {
 		return test_fail("Successfully wrote atom header past end\n");
 	}
 
@@ -70,31 +69,30 @@ test_literal_overflow(void)
 
 	uint8_t*           buf = (uint8_t*)malloc(capacity);
 	LV2_URID_Map       map = { NULL, urid_map };
-	LV2_Atom_Forge_Ref ref = 0;
 	LV2_Atom_Forge     forge;
 	lv2_atom_forge_init(&forge, &map);
 
 	// Failure in atom header
 	lv2_atom_forge_set_buffer(&forge, buf, 1);
-	if ((ref = lv2_atom_forge_literal(&forge, "A", 1, 0, 0))) {
+	if (lv2_atom_forge_literal(&forge, "A", 1, 0, 0)) {
 		return test_fail("Successfully wrote atom header past end\n");
 	}
 
 	// Failure in literal header
 	lv2_atom_forge_set_buffer(&forge, buf, sizeof(LV2_Atom) + 1);
-	if ((ref = lv2_atom_forge_literal(&forge, "A", 1, 0, 0))) {
+	if (lv2_atom_forge_literal(&forge, "A", 1, 0, 0)) {
 		return test_fail("Successfully wrote literal header past end\n");
 	}
 
 	// Success (only room for one character + null terminator)
 	lv2_atom_forge_set_buffer(&forge, buf, capacity);
-	if (!(ref = lv2_atom_forge_literal(&forge, "A", 1, 0, 0))) {
+	if (!lv2_atom_forge_literal(&forge, "A", 1, 0, 0)) {
 		return test_fail("Failed to write small enough literal\n");
 	}
 
 	// Failure in body
 	lv2_atom_forge_set_buffer(&forge, buf, capacity);
-	if ((ref = lv2_atom_forge_literal(&forge, "AB", 2, 0, 0))) {
+	if (lv2_atom_forge_literal(&forge, "AB", 2, 0, 0)) {
 		return test_fail("Successfully wrote literal body past end\n");
 	}
 
