@@ -353,8 +353,8 @@ process_channel(EgScopeUI*   ui,
 			if (chn->idx == 0) {
 				++overflow;
 			}
-			chn->data_min[chn->idx] = 1.0;
-			chn->data_max[chn->idx] = -1.0;
+			chn->data_min[chn->idx] = 1.0f;
+			chn->data_max[chn->idx] = -1.0f;
 		}
 	}
 	*idx_end = chn->idx;

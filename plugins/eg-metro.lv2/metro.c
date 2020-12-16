@@ -235,7 +235,7 @@ play(Metro* self, uint32_t begin, uint32_t end)
 			// Amplitude decreases from 1..0 until attack_len + decay_len
 			output[i] = 0.0f;
 			output[i] = self->wave[self->wave_offset] *
-				(1 - ((self->elapsed_len - self->attack_len) /
+				(1 - ((float)(self->elapsed_len - self->attack_len) /
 				      (float)self->decay_len));
 			if (self->elapsed_len >= self->attack_len + self->decay_len) {
 				self->state = STATE_OFF;
@@ -285,7 +285,7 @@ update_position(Metro* self, const LV2_Atom_Object* obj)
 	if (beat && beat->type == uris->atom_Float) {
 		// Received a beat position, synchronise
 		// This hard sync may cause clicks, a real plugin would be more graceful
-		const float frames_per_beat = 60.0f / self->bpm * self->rate;
+		const float frames_per_beat = (float)(60.0 / self->bpm * self->rate);
 		const float bar_beats       = ((LV2_Atom_Float*)beat)->body;
 		const float beat_beats      = bar_beats - floorf(bar_beats);
 		self->elapsed_len           = beat_beats * frames_per_beat;

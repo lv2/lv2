@@ -281,7 +281,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	lv2_atom_forge_init(&self->forge, self->map);
 	peaks_sender_init(&self->psend, self->map);
 
-	self->gain = 1.0;
+	self->gain = 1.0f;
 
 	return (LV2_Handle)self;
 }

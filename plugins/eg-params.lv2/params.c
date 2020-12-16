@@ -482,7 +482,7 @@ run(LV2_Handle instance, uint32_t sample_count)
 
 	if (self->state.spring.body > 0.0f) {
 		const float spring = self->state.spring.body;
-		self->state.spring.body = (spring >= 0.001) ? spring - 0.001 : 0.0;
+		self->state.spring.body = (spring >= 0.001) ? spring - 0.001f : 0.0f;
 		lv2_atom_forge_frame_time(&self->forge, 0);
 		LV2_Atom_Forge_Frame frame;
 		lv2_atom_forge_object(&self->forge, &frame, 0, uris->patch_Set);

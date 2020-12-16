@@ -168,7 +168,7 @@ on_canvas_expose(GtkWidget* widget, GdkEventExpose* event, gpointer data)
 	gtk_widget_get_allocation(widget, &size);
 
 	ui->width = size.width;
-	if ((uint32_t)ui->width > 2 * ui->requested_n_peaks) {
+	if (ui->width > 2 * ui->requested_n_peaks) {
 		request_peaks(ui, 2 * ui->requested_n_peaks);
 	}
 
@@ -177,7 +177,7 @@ on_canvas_expose(GtkWidget* widget, GdkEventExpose* event, gpointer data)
 	cairo_set_line_width(cr, 1.0);
 	cairo_translate(cr, 0.5, 0.5);
 
-	const int mid_y = size.height / 2;
+	const double mid_y = size.height / 2.0;
 
 	const float* const peaks   = ui->precv.peaks;
 	const int32_t      n_peaks = ui->precv.n_peaks;

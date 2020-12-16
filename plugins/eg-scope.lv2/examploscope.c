@@ -124,7 +124,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 
 	// Set default UI settings
 	self->ui_spp = 50;
-	self->ui_amp = 1.0;
+	self->ui_amp = 1.0f;
 
 	// Map URIs and initialise forge/logger
 	map_sco_uris(self->map, &self->uris);
@@ -252,7 +252,7 @@ run(LV2_Handle handle, uint32_t n_samples)
 		lv2_atom_forge_key(&self->forge, self->uris.ui_amp);
 		lv2_atom_forge_float(&self->forge, self->ui_amp);
 		lv2_atom_forge_key(&self->forge, self->uris.param_sampleRate);
-		lv2_atom_forge_float(&self->forge, self->rate);
+		lv2_atom_forge_float(&self->forge, (float)self->rate);
 		lv2_atom_forge_pop(&self->forge, &frame);
 	}
 
