@@ -18,7 +18,6 @@
 #define SCO_URIS_H
 
 #include "lv2/atom/atom.h"
-#include "lv2/atom/forge.h"
 #include "lv2/parameters/parameters.h"
 #include "lv2/urid/urid.h"
 

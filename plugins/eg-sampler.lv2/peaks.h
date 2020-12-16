@@ -28,10 +28,16 @@
 #ifndef PEAKS_H_INCLUDED
 #define PEAKS_H_INCLUDED
 
+#include "lv2/atom/atom.h"
 #include "lv2/atom/forge.h"
+#include "lv2/atom/util.h"
+#include "lv2/urid/urid.h"
 
 #include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define PEAKS_URI          "http://lv2plug.in/ns/peaks#"
 #define PEAKS__PeakUpdate  PEAKS_URI "PeakUpdate"

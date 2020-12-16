@@ -31,7 +31,6 @@
 
 #include "lv2/core/lv2.h"
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 

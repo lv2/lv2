@@ -26,7 +26,6 @@
 #ifndef LV2_RESIZE_PORT_H
 #define LV2_RESIZE_PORT_H
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 

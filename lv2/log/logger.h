@@ -29,9 +29,10 @@
 #define LV2_ATOM_LOGGER_H
 
 #include "lv2/log/log.h"
+#include "lv2/urid/urid.h"
 
+#include <stdarg.h>
 #include <stdio.h>
-#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {

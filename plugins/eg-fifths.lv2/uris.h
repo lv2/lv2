@@ -19,10 +19,9 @@
 #define FIFTHS_URIS_H
 
 #include "lv2/atom/atom.h"
-#include "lv2/log/log.h"
 #include "lv2/midi/midi.h"
 #include "lv2/patch/patch.h"
-#include "lv2/state/state.h"
+#include "lv2/urid/urid.h"
 
 #define EG_FIFTHS_URI "http://lv2plug.in/plugins/eg-fifths"
 

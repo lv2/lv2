@@ -19,6 +19,7 @@
 #include "lv2/urid/urid.h"
 
 #include <stdarg.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 /** Entry in an array that serves as a dictionary of properties. */
