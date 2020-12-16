@@ -189,7 +189,7 @@ work(LV2_Handle                  instance,
 		Sample* sample = load_sample(&self->logger, path);
 		if (sample) {
 			// Send new sample to run() to be applied
-			respond(handle, sizeof(sample), &sample);
+			respond(handle, sizeof(Sample*), &sample);
 		}
 	}
 
