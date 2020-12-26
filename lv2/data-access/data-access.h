@@ -48,27 +48,27 @@ extern "C" {
    and data pointed to an instance of this struct.
 */
 typedef struct {
-	/**
-	   A pointer to a method the UI can call to get data (of a type specified
-	   by some other extension) from the plugin.
+  /**
+     A pointer to a method the UI can call to get data (of a type specified
+     by some other extension) from the plugin.
 
-	   This call never is never guaranteed to return anything, UIs should
-	   degrade gracefully if direct access to the plugin data is not possible
-	   (in which case this function will return NULL).
+     This call never is never guaranteed to return anything, UIs should
+     degrade gracefully if direct access to the plugin data is not possible
+     (in which case this function will return NULL).
 
-	   This is for access to large data that can only possibly work if the UI
-	   and plugin are running in the same process.  For all other things, use
-	   the normal LV2 UI communication system.
-	*/
-	const void* (*data_access)(const char* uri);
+     This is for access to large data that can only possibly work if the UI
+     and plugin are running in the same process.  For all other things, use
+     the normal LV2 UI communication system.
+  */
+  const void* (*data_access)(const char* uri);
 } LV2_Extension_Data_Feature;
 
 #ifdef __cplusplus
-}  /* extern "C" */
+} /* extern "C" */
 #endif
 
 /**
    @}
 */
 
-#endif  /* LV2_DATA_ACCESS_H */
+#endif /* LV2_DATA_ACCESS_H */

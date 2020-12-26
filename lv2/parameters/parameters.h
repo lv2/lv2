@@ -65,4 +65,4 @@
    @}
 */
 
-#endif  /* LV2_PARAMETERS_H */
+#endif /* LV2_PARAMETERS_H */

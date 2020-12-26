@@ -56,4 +56,4 @@
    @}
 */
 
-#endif  /* LV2_TIME_H */
+#endif /* LV2_TIME_H */

@@ -70,4 +70,4 @@
    @}
 */
 
-#endif  /* LV2_PATCH_H */
+#endif /* LV2_PATCH_H */

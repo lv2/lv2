@@ -32,27 +32,27 @@
 #define MIDIGATE_URI "http://lv2plug.in/plugins/eg-midigate"
 
 typedef enum {
-	MIDIGATE_CONTROL = 0,
-	MIDIGATE_IN      = 1,
-	MIDIGATE_OUT     = 2
+  MIDIGATE_CONTROL = 0,
+  MIDIGATE_IN      = 1,
+  MIDIGATE_OUT     = 2
 } PortIndex;
 
 typedef struct {
-	// Port buffers
-	const LV2_Atom_Sequence* control;
-	const float*             in;
-	float*                   out;
+  // Port buffers
+  const LV2_Atom_Sequence* control;
+  const float*             in;
+  float*                   out;
 
-	// Features
-	LV2_URID_Map*  map;
-	LV2_Log_Logger logger;
+  // Features
+  LV2_URID_Map*  map;
+  LV2_Log_Logger logger;
 
-	struct {
-		LV2_URID midi_MidiEvent;
-	} uris;
+  struct {
+    LV2_URID midi_MidiEvent;
+  } uris;
 
-	unsigned n_active_notes;
-	unsigned program;  // 0 = normal, 1 = inverted
+  unsigned n_active_notes;
+  unsigned program; // 0 = normal, 1 = inverted
 } Midigate;
 
 static LV2_Handle
@@ -61,59 +61,57 @@ instantiate(const LV2_Descriptor*     descriptor,
             const char*               bundle_path,
             const LV2_Feature* const* features)
 {
-	Midigate* self = (Midigate*)calloc(1, sizeof(Midigate));
-	if (!self) {
-		return NULL;
-	}
+  Midigate* self = (Midigate*)calloc(1, sizeof(Midigate));
+  if (!self) {
+    return NULL;
+  }
 
-	// Scan host features for URID map
-	// clang-format off
-	const char* missing = lv2_features_query(
-		features,
-		LV2_LOG__log,  &self->logger.log, false,
-		LV2_URID__map, &self->map,        true,
-		NULL);
-	// clang-format on
+  // Scan host features for URID map
+  // clang-format off
+  const char* missing = lv2_features_query(
+    features,
+    LV2_LOG__log,  &self->logger.log, false,
+    LV2_URID__map, &self->map,        true,
+    NULL);
+  // clang-format on
 
-	lv2_log_logger_set_map(&self->logger, self->map);
-	if (missing) {
-		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
-		free(self);
-		return NULL;
-	}
+  lv2_log_logger_set_map(&self->logger, self->map);
+  if (missing) {
+    lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
+    free(self);
+    return NULL;
+  }
 
-	self->uris.midi_MidiEvent = self->map->map(
-		self->map->handle, LV2_MIDI__MidiEvent);
+  self->uris.midi_MidiEvent =
+    self->map->map(self->map->handle, LV2_MIDI__MidiEvent);
 
-	return (LV2_Handle)self;
+  return (LV2_Handle)self;
 }
 
 static void
-connect_port(LV2_Handle instance,
-             uint32_t   port,
-             void*      data)
+connect_port(LV2_Handle instance, uint32_t port, void* data)
 {
-	Midigate* self = (Midigate*)instance;
+  Midigate* self = (Midigate*)instance;
 
-	switch ((PortIndex)port) {
-	case MIDIGATE_CONTROL:
-		self->control = (const LV2_Atom_Sequence*)data;
-		break;
-	case MIDIGATE_IN:
-		self->in = (const float*)data;
-		break;
-	case MIDIGATE_OUT:
-		self->out = (float*)data;
-		break;
-	}
+  switch ((PortIndex)port) {
+  case MIDIGATE_CONTROL:
+    self->control = (const LV2_Atom_Sequence*)data;
+    break;
+  case MIDIGATE_IN:
+    self->in = (const float*)data;
+    break;
+  case MIDIGATE_OUT:
+    self->out = (float*)data;
+    break;
+  }
 }
 
 static void
 activate(LV2_Handle instance)
 {
-	Midigate* self = (Midigate*)instance;
-	self->n_active_notes = 0;
-	self->program        = 0;
+  Midigate* self       = (Midigate*)instance;
+  self->n_active_notes = 0;
+  self->program        = 0;
 }
 
 /**
@@ -124,14 +122,13 @@ activate(LV2_Handle instance)
 static void
 write_output(Midigate* self, uint32_t offset, uint32_t len)
 {
-	const bool active = (self->program == 0)
-		? (self->n_active_notes > 0)
-		: (self->n_active_notes == 0);
-	if (active) {
-		memcpy(self->out + offset, self->in + offset, len * sizeof(float));
-	} else {
-		memset(self->out + offset, 0, len * sizeof(float));
-	}
+  const bool active = (self->program == 0) ? (self->n_active_notes > 0)
+                                           : (self->n_active_notes == 0);
+  if (active) {
+    memcpy(self->out + offset, self->in + offset, len * sizeof(float));
+  } else {
+    memset(self->out + offset, 0, len * sizeof(float));
+  }
 }
 
 /**
@@ -159,40 +156,41 @@ write_output(Midigate* self, uint32_t offset, uint32_t len)
 static void
 run(LV2_Handle instance, uint32_t sample_count)
 {
-	Midigate* self   = (Midigate*)instance;
-	uint32_t  offset = 0;
+  Midigate* self   = (Midigate*)instance;
+  uint32_t  offset = 0;
 
-	LV2_ATOM_SEQUENCE_FOREACH(self->control, ev) {
-		if (ev->body.type == self->uris.midi_MidiEvent) {
-			const uint8_t* const msg = (const uint8_t*)(ev + 1);
-			switch (lv2_midi_message_type(msg)) {
-			case LV2_MIDI_MSG_NOTE_ON:
-				++self->n_active_notes;
-				break;
-			case LV2_MIDI_MSG_NOTE_OFF:
-				if (self->n_active_notes > 0) {
-					--self->n_active_notes;
-				}
-				break;
-			case LV2_MIDI_MSG_CONTROLLER:
-				if (msg[1] == LV2_MIDI_CTL_ALL_NOTES_OFF) {
-					self->n_active_notes = 0;
-				}
-				break;
-			case LV2_MIDI_MSG_PGM_CHANGE:
-				if (msg[1] == 0 || msg[1] == 1) {
-					self->program = msg[1];
-				}
-				break;
-			default: break;
-			}
-		}
+  LV2_ATOM_SEQUENCE_FOREACH (self->control, ev) {
+    if (ev->body.type == self->uris.midi_MidiEvent) {
+      const uint8_t* const msg = (const uint8_t*)(ev + 1);
+      switch (lv2_midi_message_type(msg)) {
+      case LV2_MIDI_MSG_NOTE_ON:
+        ++self->n_active_notes;
+        break;
+      case LV2_MIDI_MSG_NOTE_OFF:
+        if (self->n_active_notes > 0) {
+          --self->n_active_notes;
+        }
+        break;
+      case LV2_MIDI_MSG_CONTROLLER:
+        if (msg[1] == LV2_MIDI_CTL_ALL_NOTES_OFF) {
+          self->n_active_notes = 0;
+        }
+        break;
+      case LV2_MIDI_MSG_PGM_CHANGE:
+        if (msg[1] == 0 || msg[1] == 1) {
+          self->program = msg[1];
+        }
+        break;
+      default:
+        break;
+      }
+    }
 
-		write_output(self, offset, ev->time.frames - offset);
-		offset = (uint32_t)ev->time.frames;
-	}
+    write_output(self, offset, ev->time.frames - offset);
+    offset = (uint32_t)ev->time.frames;
+  }
 
-	write_output(self, offset, sample_count - offset);
+  write_output(self, offset, sample_count - offset);
 }
 
 /**
@@ -207,7 +205,7 @@ deactivate(LV2_Handle instance)
 static void
 cleanup(LV2_Handle instance)
 {
-	free(instance);
+  free(instance);
 }
 
 /**
@@ -216,23 +214,21 @@ cleanup(LV2_Handle instance)
 static const void*
 extension_data(const char* uri)
 {
-	return NULL;
+  return NULL;
 }
 
-static const LV2_Descriptor descriptor = {
-	MIDIGATE_URI,
-	instantiate,
-	connect_port,
-	activate,
-	run,
-	deactivate,
-	cleanup,
-	extension_data
-};
+static const LV2_Descriptor descriptor = {MIDIGATE_URI,
+                                          instantiate,
+                                          connect_port,
+                                          activate,
+                                          run,
+                                          deactivate,
+                                          cleanup,
+                                          extension_data};
 
 LV2_SYMBOL_EXPORT
 const LV2_Descriptor*
 lv2_descriptor(uint32_t index)
 {
-	return index == 0 ? &descriptor : NULL;
+  return index == 0 ? &descriptor : NULL;
 }

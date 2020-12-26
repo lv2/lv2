@@ -46,9 +46,9 @@ extern "C" {
 
 /** A status code for state functions. */
 typedef enum {
-	LV2_RESIZE_PORT_SUCCESS      = 0,  /**< Completed successfully. */
-	LV2_RESIZE_PORT_ERR_UNKNOWN  = 1,  /**< Unknown error. */
-	LV2_RESIZE_PORT_ERR_NO_SPACE = 2   /**< Insufficient space. */
+  LV2_RESIZE_PORT_SUCCESS      = 0, /**< Completed successfully. */
+  LV2_RESIZE_PORT_ERR_UNKNOWN  = 1, /**< Unknown error. */
+  LV2_RESIZE_PORT_ERR_NO_SPACE = 2  /**< Insufficient space. */
 } LV2_Resize_Port_Status;
 
 /** Opaque data for resize method. */
@@ -56,34 +56,34 @@ typedef void* LV2_Resize_Port_Feature_Data;
 
 /** Host feature to allow plugins to resize their port buffers. */
 typedef struct {
-	/** Opaque data for resize method. */
-	LV2_Resize_Port_Feature_Data data;
+  /** Opaque data for resize method. */
+  LV2_Resize_Port_Feature_Data data;
 
-	/**
-	   Resize a port buffer to at least `size` bytes.
+  /**
+     Resize a port buffer to at least `size` bytes.
 
-	   This function MAY return an error, in which case the port buffer was not
-	   resized and the port is still connected to the same location.  Plugins
-	   MUST gracefully handle this situation.
+     This function MAY return an error, in which case the port buffer was not
+     resized and the port is still connected to the same location.  Plugins
+     MUST gracefully handle this situation.
 
-	   This function is in the audio threading class.
+     This function is in the audio threading class.
 
-	   The host MUST preserve the contents of the port buffer when resizing.
+     The host MUST preserve the contents of the port buffer when resizing.
 
-	   Plugins MAY resize a port many times in a single run callback.  Hosts
-	   SHOULD make this as inexpensive as possible.
-	*/
-	LV2_Resize_Port_Status (*resize)(LV2_Resize_Port_Feature_Data data,
-	                                 uint32_t                     index,
-	                                 size_t                       size);
+     Plugins MAY resize a port many times in a single run callback.  Hosts
+     SHOULD make this as inexpensive as possible.
+  */
+  LV2_Resize_Port_Status (*resize)(LV2_Resize_Port_Feature_Data data,
+                                   uint32_t                     index,
+                                   size_t                       size);
 } LV2_Resize_Port_Resize;
 
 #ifdef __cplusplus
-}  /* extern "C" */
+} /* extern "C" */
 #endif
 
 /**
    @}
 */
 
-#endif  /* LV2_RESIZE_PORT_H */
+#endif /* LV2_RESIZE_PORT_H */

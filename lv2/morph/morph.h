@@ -45,4 +45,4 @@
    @}
 */
 
-#endif  /* LV2_MORPH_H */
+#endif /* LV2_MORPH_H */

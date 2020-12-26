@@ -68,50 +68,50 @@ typedef void* LV2_URI_Map_Callback_Data;
 */
 LV2_DEPRECATED
 typedef struct {
-	/**
-	   Opaque pointer to host data.
+  /**
+     Opaque pointer to host data.
 
-	   The plugin MUST pass this to any call to functions in this struct.
-	   Otherwise, it must not be interpreted in any way.
-	*/
-	LV2_URI_Map_Callback_Data callback_data;
+     The plugin MUST pass this to any call to functions in this struct.
+     Otherwise, it must not be interpreted in any way.
+  */
+  LV2_URI_Map_Callback_Data callback_data;
 
-	/**
-	   Get the numeric ID of a URI from the host.
+  /**
+     Get the numeric ID of a URI from the host.
 
-	   @param callback_data Must be the callback_data member of this struct.
-	   @param map The 'context' of this URI. Certain extensions may define a
-	   URI that must be passed here with certain restrictions on the return
-	   value (e.g. limited range). This value may be NULL if the plugin needs
-	   an ID for a URI in general. Extensions SHOULD NOT define a context
-	   unless there is a specific need to do so, e.g. to restrict the range of
-	   the returned value.
-	   @param uri The URI to be mapped to an integer ID.
+     @param callback_data Must be the callback_data member of this struct.
+     @param map The 'context' of this URI. Certain extensions may define a
+     URI that must be passed here with certain restrictions on the return
+     value (e.g. limited range). This value may be NULL if the plugin needs
+     an ID for a URI in general. Extensions SHOULD NOT define a context
+     unless there is a specific need to do so, e.g. to restrict the range of
+     the returned value.
+     @param uri The URI to be mapped to an integer ID.
 
-	   This function is referentially transparent; any number of calls with the
-	   same arguments is guaranteed to return the same value over the life of a
-	   plugin instance (though the same URI may return different values with a
-	   different map parameter). However, this function is not necessarily very
-	   fast: plugins SHOULD cache any IDs they might need in performance
-	   critical situations.
+     This function is referentially transparent; any number of calls with the
+     same arguments is guaranteed to return the same value over the life of a
+     plugin instance (though the same URI may return different values with a
+     different map parameter). However, this function is not necessarily very
+     fast: plugins SHOULD cache any IDs they might need in performance
+     critical situations.
 
-	   The return value 0 is reserved and indicates that an ID for that URI
-	   could not be created for whatever reason. Extensions MAY define more
-	   precisely what this means in a certain context, but in general plugins
-	   SHOULD handle this situation as gracefully as possible. However, hosts
-	   SHOULD NOT return 0 from this function in non-exceptional circumstances
-	   (e.g. the URI map SHOULD be dynamic). Hosts that statically support only
-	   a fixed set of URIs should not expect plugins to function correctly.
-	*/
-	uint32_t (*uri_to_id)(LV2_URI_Map_Callback_Data callback_data,
-	                      const char*               map,
-	                      const char*               uri);
+     The return value 0 is reserved and indicates that an ID for that URI
+     could not be created for whatever reason. Extensions MAY define more
+     precisely what this means in a certain context, but in general plugins
+     SHOULD handle this situation as gracefully as possible. However, hosts
+     SHOULD NOT return 0 from this function in non-exceptional circumstances
+     (e.g. the URI map SHOULD be dynamic). Hosts that statically support only
+     a fixed set of URIs should not expect plugins to function correctly.
+  */
+  uint32_t (*uri_to_id)(LV2_URI_Map_Callback_Data callback_data,
+                        const char*               map,
+                        const char*               uri);
 } LV2_URI_Map_Feature;
 
 LV2_RESTORE_WARNINGS
 
 #ifdef __cplusplus
-}  /* extern "C" */
+} /* extern "C" */
 #endif
 
 /**

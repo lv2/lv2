@@ -53,9 +53,9 @@ extern "C" {
 /** @cond */
 #ifdef __GNUC__
 /** Allow type checking of printf-like functions. */
-#    define LV2_LOG_FUNC(fmt, arg1) __attribute__((format(printf, fmt, arg1)))
+#  define LV2_LOG_FUNC(fmt, arg1) __attribute__((format(printf, fmt, arg1)))
 #else
-#    define LV2_LOG_FUNC(fmt, arg1)
+#  define LV2_LOG_FUNC(fmt, arg1)
 #endif
 /** @endcond */
 
@@ -68,48 +68,46 @@ typedef void* LV2_Log_Handle;
    Log feature (LV2_LOG__log)
 */
 typedef struct {
-	/**
-	   Opaque pointer to host data.
+  /**
+     Opaque pointer to host data.
 
-	   This MUST be passed to methods in this struct whenever they are called.
-	   Otherwise, it must not be interpreted in any way.
-	*/
-	LV2_Log_Handle handle;
+     This MUST be passed to methods in this struct whenever they are called.
+     Otherwise, it must not be interpreted in any way.
+  */
+  LV2_Log_Handle handle;
 
-	/**
-	   Log a message, passing format parameters directly.
+  /**
+     Log a message, passing format parameters directly.
 
-	   The API of this function matches that of the standard C printf function,
-	   except for the addition of the first two parameters.  This function may
-	   be called from any non-realtime context, or from any context if `type`
-	   is @ref LV2_LOG__Trace.
-	*/
-	LV2_LOG_FUNC(3, 4)
-	int (*printf)(LV2_Log_Handle handle,
-	              LV2_URID       type,
-	              const char*    fmt, ...);
+     The API of this function matches that of the standard C printf function,
+     except for the addition of the first two parameters.  This function may
+     be called from any non-realtime context, or from any context if `type`
+     is @ref LV2_LOG__Trace.
+  */
+  LV2_LOG_FUNC(3, 4)
+  int (*printf)(LV2_Log_Handle handle, LV2_URID type, const char* fmt, ...);
 
-	/**
-	   Log a message, passing format parameters in a va_list.
+  /**
+     Log a message, passing format parameters in a va_list.
 
-	   The API of this function matches that of the standard C vprintf
-	   function, except for the addition of the first two parameters.  This
-	   function may be called from any non-realtime context, or from any
-	   context if `type` is @ref LV2_LOG__Trace.
-	*/
-	LV2_LOG_FUNC(3, 0)
-	int (*vprintf)(LV2_Log_Handle handle,
-	               LV2_URID       type,
-	               const char*    fmt,
-	               va_list        ap);
+     The API of this function matches that of the standard C vprintf
+     function, except for the addition of the first two parameters.  This
+     function may be called from any non-realtime context, or from any
+     context if `type` is @ref LV2_LOG__Trace.
+  */
+  LV2_LOG_FUNC(3, 0)
+  int (*vprintf)(LV2_Log_Handle handle,
+                 LV2_URID       type,
+                 const char*    fmt,
+                 va_list        ap);
 } LV2_Log_Log;
 
 #ifdef __cplusplus
-}  /* extern "C" */
+} /* extern "C" */
 #endif
 
 /**
    @}
 */
 
-#endif  /* LV2_LOG_H */
+#endif /* LV2_LOG_H */

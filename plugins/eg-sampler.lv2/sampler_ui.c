@@ -48,195 +48,198 @@
 #define MIN_CANVAS_H 80
 
 typedef struct {
-	LV2_Atom_Forge       forge;
-	LV2_URID_Map*        map;
-	LV2UI_Request_Value* request_value;
-	LV2_Log_Logger       logger;
-	SamplerURIs          uris;
-	PeaksReceiver        precv;
+  LV2_Atom_Forge       forge;
+  LV2_URID_Map*        map;
+  LV2UI_Request_Value* request_value;
+  LV2_Log_Logger       logger;
+  SamplerURIs          uris;
+  PeaksReceiver        precv;
 
-	LV2UI_Write_Function write;
-	LV2UI_Controller     controller;
+  LV2UI_Write_Function write;
+  LV2UI_Controller     controller;
 
-	GtkWidget* box;
-	GtkWidget* play_button;
-	GtkWidget* file_button;
-	GtkWidget* request_file_button;
-	GtkWidget* button_box;
-	GtkWidget* canvas;
+  GtkWidget* box;
+  GtkWidget* play_button;
+  GtkWidget* file_button;
+  GtkWidget* request_file_button;
+  GtkWidget* button_box;
+  GtkWidget* canvas;
 
-	uint32_t width;
-	uint32_t requested_n_peaks;
-	char*    filename;
+  uint32_t width;
+  uint32_t requested_n_peaks;
+  char*    filename;
 
-	uint8_t forge_buf[1024];
+  uint8_t forge_buf[1024];
 
-	// Optional show/hide interface
-	GtkWidget* window;
-	bool       did_init;
+  // Optional show/hide interface
+  GtkWidget* window;
+  bool       did_init;
 } SamplerUI;
 
 static void
 on_file_set(GtkFileChooserButton* widget, void* handle)
 {
-	SamplerUI* ui = (SamplerUI*)handle;
+  SamplerUI* ui = (SamplerUI*)handle;
 
-	// Get the filename from the file chooser
-	char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget));
+  // Get the filename from the file chooser
+  char* filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(widget));
 
-	// Write a set message to the plugin to load new file
-	lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
-	LV2_Atom* msg = (LV2_Atom*)write_set_file(&ui->forge, &ui->uris,
-	                                          filename, strlen(filename));
+  // Write a set message to the plugin to load new file
+  lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
+  LV2_Atom* msg = (LV2_Atom*)write_set_file(
+    &ui->forge, &ui->uris, filename, strlen(filename));
 
-	assert(msg);
+  assert(msg);
 
-	ui->write(ui->controller, 0, lv2_atom_total_size(msg),
-	          ui->uris.atom_eventTransfer,
-	          msg);
+  ui->write(ui->controller,
+            0,
+            lv2_atom_total_size(msg),
+            ui->uris.atom_eventTransfer,
+            msg);
 
-	g_free(filename);
+  g_free(filename);
 }
 
 static void
 on_request_file(GtkButton* widget, void* handle)
 {
-	SamplerUI* ui = (SamplerUI*)handle;
+  SamplerUI* ui = (SamplerUI*)handle;
 
-	ui->request_value->request(ui->request_value->handle,
-	                           ui->uris.eg_sample,
-	                           0,
-	                           NULL);
+  ui->request_value->request(
+    ui->request_value->handle, ui->uris.eg_sample, 0, NULL);
 }
 
 static void
 on_play_clicked(GtkFileChooserButton* widget, void* handle)
 {
-	SamplerUI* ui = (SamplerUI*)handle;
-	struct {
-		LV2_Atom atom;
-		uint8_t  msg[3];
-	} note_on;
+  SamplerUI* ui = (SamplerUI*)handle;
+  struct {
+    LV2_Atom atom;
+    uint8_t  msg[3];
+  } note_on;
 
-	note_on.atom.type = ui->uris.midi_Event;
-	note_on.atom.size = 3;
-	note_on.msg[0]    = LV2_MIDI_MSG_NOTE_ON;
-	note_on.msg[1]    = 60;
-	note_on.msg[2]    = 60;
-	ui->write(ui->controller, 0, sizeof(LV2_Atom) + 3,
-	          ui->uris.atom_eventTransfer,
-	          &note_on);
+  note_on.atom.type = ui->uris.midi_Event;
+  note_on.atom.size = 3;
+  note_on.msg[0]    = LV2_MIDI_MSG_NOTE_ON;
+  note_on.msg[1]    = 60;
+  note_on.msg[2]    = 60;
+  ui->write(ui->controller,
+            0,
+            sizeof(LV2_Atom) + 3,
+            ui->uris.atom_eventTransfer,
+            &note_on);
 }
 
 static void
 request_peaks(SamplerUI* ui, uint32_t n_peaks)
 {
-	if (n_peaks == ui->requested_n_peaks) {
-		return;
-	}
+  if (n_peaks == ui->requested_n_peaks) {
+    return;
+  }
 
-	lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
+  lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
 
-	LV2_Atom_Forge_Frame frame;
-	lv2_atom_forge_object(&ui->forge, &frame, 0, ui->uris.patch_Get);
-	lv2_atom_forge_key(&ui->forge, ui->uris.patch_accept);
-	lv2_atom_forge_urid(&ui->forge, ui->precv.uris.peaks_PeakUpdate);
-	lv2_atom_forge_key(&ui->forge, ui->precv.uris.peaks_total);
-	lv2_atom_forge_int(&ui->forge, n_peaks);
-	lv2_atom_forge_pop(&ui->forge, &frame);
+  LV2_Atom_Forge_Frame frame;
+  lv2_atom_forge_object(&ui->forge, &frame, 0, ui->uris.patch_Get);
+  lv2_atom_forge_key(&ui->forge, ui->uris.patch_accept);
+  lv2_atom_forge_urid(&ui->forge, ui->precv.uris.peaks_PeakUpdate);
+  lv2_atom_forge_key(&ui->forge, ui->precv.uris.peaks_total);
+  lv2_atom_forge_int(&ui->forge, n_peaks);
+  lv2_atom_forge_pop(&ui->forge, &frame);
 
-	LV2_Atom* msg = lv2_atom_forge_deref(&ui->forge, frame.ref);
-	ui->write(ui->controller, 0, lv2_atom_total_size(msg),
-	          ui->uris.atom_eventTransfer,
-	          msg);
+  LV2_Atom* msg = lv2_atom_forge_deref(&ui->forge, frame.ref);
+  ui->write(ui->controller,
+            0,
+            lv2_atom_total_size(msg),
+            ui->uris.atom_eventTransfer,
+            msg);
 
-	ui->requested_n_peaks = n_peaks;
+  ui->requested_n_peaks = n_peaks;
 }
 
 /** Set Cairo color to a GDK color (to follow Gtk theme). */
 static void
 cairo_set_source_gdk(cairo_t* cr, const GdkColor* color)
 {
-	cairo_set_source_rgb(
-		cr, color->red / 65535.0, color->green / 65535.0, color->blue / 65535.0);
-
+  cairo_set_source_rgb(
+    cr, color->red / 65535.0, color->green / 65535.0, color->blue / 65535.0);
 }
 
 static gboolean
 on_canvas_expose(GtkWidget* widget, GdkEventExpose* event, gpointer data)
 {
-	SamplerUI* ui = (SamplerUI*)data;
+  SamplerUI* ui = (SamplerUI*)data;
 
-	GtkAllocation size;
-	gtk_widget_get_allocation(widget, &size);
+  GtkAllocation size;
+  gtk_widget_get_allocation(widget, &size);
 
-	ui->width = size.width;
-	if (ui->width > 2 * ui->requested_n_peaks) {
-		request_peaks(ui, 2 * ui->requested_n_peaks);
-	}
+  ui->width = size.width;
+  if (ui->width > 2 * ui->requested_n_peaks) {
+    request_peaks(ui, 2 * ui->requested_n_peaks);
+  }
 
-	cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(widget));
+  cairo_t* cr = gdk_cairo_create(gtk_widget_get_window(widget));
 
-	cairo_set_line_width(cr, 1.0);
-	cairo_translate(cr, 0.5, 0.5);
+  cairo_set_line_width(cr, 1.0);
+  cairo_translate(cr, 0.5, 0.5);
 
-	const double mid_y = size.height / 2.0;
+  const double mid_y = size.height / 2.0;
 
-	const float* const peaks   = ui->precv.peaks;
-	const int32_t      n_peaks = ui->precv.n_peaks;
-	if (peaks) {
-		// Draw waveform
-		const double scale = size.width / ((double)n_peaks - 1.0f);
+  const float* const peaks   = ui->precv.peaks;
+  const int32_t      n_peaks = ui->precv.n_peaks;
+  if (peaks) {
+    // Draw waveform
+    const double scale = size.width / ((double)n_peaks - 1.0f);
 
-		// Start at left origin
-		cairo_move_to(cr, 0, mid_y);
+    // Start at left origin
+    cairo_move_to(cr, 0, mid_y);
 
-		// Draw line through top peaks
-		for (int i = 0; i < n_peaks; ++i) {
-			const float peak = peaks[i];
-			cairo_line_to(cr, i * scale, mid_y + (peak / 2.0f) * size.height);
-		}
+    // Draw line through top peaks
+    for (int i = 0; i < n_peaks; ++i) {
+      const float peak = peaks[i];
+      cairo_line_to(cr, i * scale, mid_y + (peak / 2.0f) * size.height);
+    }
 
-		// Continue through bottom peaks
-		for (int i = n_peaks - 1; i >= 0; --i) {
-			const float peak = peaks[i];
-			cairo_line_to(cr, i * scale, mid_y - (peak / 2.0f) * size.height);
-		}
+    // Continue through bottom peaks
+    for (int i = n_peaks - 1; i >= 0; --i) {
+      const float peak = peaks[i];
+      cairo_line_to(cr, i * scale, mid_y - (peak / 2.0f) * size.height);
+    }
 
-		// Close shape
-		cairo_line_to(cr, 0, mid_y);
+    // Close shape
+    cairo_line_to(cr, 0, mid_y);
 
-		cairo_set_source_gdk(cr, widget->style->mid);
-		cairo_fill_preserve(cr);
+    cairo_set_source_gdk(cr, widget->style->mid);
+    cairo_fill_preserve(cr);
 
-		cairo_set_source_gdk(cr, widget->style->fg);
-		cairo_stroke(cr);
-	}
+    cairo_set_source_gdk(cr, widget->style->fg);
+    cairo_stroke(cr);
+  }
 
-	cairo_destroy(cr);
-	return TRUE;
+  cairo_destroy(cr);
+  return TRUE;
 }
 
 static void
 destroy_window(SamplerUI* ui)
 {
-	if (ui->window) {
-		gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
-		gtk_widget_destroy(ui->window);
-		ui->window = NULL;
-	}
+  if (ui->window) {
+    gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
+    gtk_widget_destroy(ui->window);
+    ui->window = NULL;
+  }
 }
 
 static gboolean
 on_window_closed(GtkWidget* widget, GdkEvent* event, gpointer data)
 {
-	SamplerUI* ui = (SamplerUI*)data;
+  SamplerUI* ui = (SamplerUI*)data;
 
-	// Remove widget so Gtk doesn't delete it when the window is closed
-	gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
-	ui->window = NULL;
+  // Remove widget so Gtk doesn't delete it when the window is closed
+  gtk_container_remove(GTK_CONTAINER(ui->window), ui->box);
+  ui->window = NULL;
 
-	return FALSE;
+  return FALSE;
 }
 
 static LV2UI_Handle
@@ -248,103 +251,104 @@ instantiate(const LV2UI_Descriptor*   descriptor,
             LV2UI_Widget*             widget,
             const LV2_Feature* const* features)
 {
-	SamplerUI* ui = (SamplerUI*)calloc(1, sizeof(SamplerUI));
-	if (!ui) {
-		return NULL;
-	}
+  SamplerUI* ui = (SamplerUI*)calloc(1, sizeof(SamplerUI));
+  if (!ui) {
+    return NULL;
+  }
 
-	ui->write      = write_function;
-	ui->controller = controller;
-	ui->width      = MIN_CANVAS_W;
-	*widget        = NULL;
-	ui->window     = NULL;
-	ui->did_init   = false;
+  ui->write      = write_function;
+  ui->controller = controller;
+  ui->width      = MIN_CANVAS_W;
+  *widget        = NULL;
+  ui->window     = NULL;
+  ui->did_init   = false;
 
-	// Get host features
-	// clang-format off
-	const char* missing = lv2_features_query(
-		features,
-		LV2_LOG__log,         &ui->logger.log ,   false,
-		LV2_URID__map,        &ui->map,           true,
-		LV2_UI__requestValue, &ui->request_value, false,
-		NULL);
-	// clang-format on
+  // Get host features
+  // clang-format off
+  const char* missing = lv2_features_query(
+    features,
+    LV2_LOG__log,         &ui->logger.log,    false,
+    LV2_URID__map,        &ui->map,           true,
+    LV2_UI__requestValue, &ui->request_value, false,
+    NULL);
+  // clang-format on
 
-	lv2_log_logger_set_map(&ui->logger, ui->map);
-	if (missing) {
-		lv2_log_error(&ui->logger, "Missing feature <%s>\n", missing);
-		free(ui);
-		return NULL;
-	}
+  lv2_log_logger_set_map(&ui->logger, ui->map);
+  if (missing) {
+    lv2_log_error(&ui->logger, "Missing feature <%s>\n", missing);
+    free(ui);
+    return NULL;
+  }
 
-	// Map URIs and initialise forge
-	map_sampler_uris(ui->map, &ui->uris);
-	lv2_atom_forge_init(&ui->forge, ui->map);
-	peaks_receiver_init(&ui->precv, ui->map);
+  // Map URIs and initialise forge
+  map_sampler_uris(ui->map, &ui->uris);
+  lv2_atom_forge_init(&ui->forge, ui->map);
+  peaks_receiver_init(&ui->precv, ui->map);
 
-	// Construct Gtk UI
-	ui->box         = gtk_vbox_new(FALSE, 4);
-	ui->play_button = gtk_button_new_with_label("▶");
-	ui->canvas      = gtk_drawing_area_new();
-	ui->button_box  = gtk_hbox_new(FALSE, 4);
-	ui->file_button = gtk_file_chooser_button_new(
-		"Load Sample", GTK_FILE_CHOOSER_ACTION_OPEN);
-	ui->request_file_button = gtk_button_new_with_label("Request Sample");
-	gtk_widget_set_size_request(ui->canvas, MIN_CANVAS_W, MIN_CANVAS_H);
-	gtk_container_set_border_width(GTK_CONTAINER(ui->box), 4);
-	gtk_box_pack_start(GTK_BOX(ui->box), ui->canvas, TRUE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(ui->box), ui->button_box, FALSE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(ui->button_box), ui->play_button, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(ui->button_box), ui->request_file_button, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(ui->button_box), ui->file_button, TRUE, TRUE, 0);
+  // Construct Gtk UI
+  ui->box         = gtk_vbox_new(FALSE, 4);
+  ui->play_button = gtk_button_new_with_label("▶");
+  ui->canvas      = gtk_drawing_area_new();
+  ui->button_box  = gtk_hbox_new(FALSE, 4);
+  ui->file_button =
+    gtk_file_chooser_button_new("Load Sample", GTK_FILE_CHOOSER_ACTION_OPEN);
+  ui->request_file_button = gtk_button_new_with_label("Request Sample");
+  gtk_widget_set_size_request(ui->canvas, MIN_CANVAS_W, MIN_CANVAS_H);
+  gtk_container_set_border_width(GTK_CONTAINER(ui->box), 4);
+  gtk_box_pack_start(GTK_BOX(ui->box), ui->canvas, TRUE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(ui->box), ui->button_box, FALSE, TRUE, 0);
+  gtk_box_pack_start(GTK_BOX(ui->button_box), ui->play_button, FALSE, FALSE, 0);
+  gtk_box_pack_start(
+    GTK_BOX(ui->button_box), ui->request_file_button, FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(ui->button_box), ui->file_button, TRUE, TRUE, 0);
 
-	g_signal_connect(ui->file_button, "file-set",
-	                 G_CALLBACK(on_file_set), ui);
+  g_signal_connect(ui->file_button, "file-set", G_CALLBACK(on_file_set), ui);
 
-	g_signal_connect(ui->request_file_button, "clicked",
-	                 G_CALLBACK(on_request_file), ui);
+  g_signal_connect(
+    ui->request_file_button, "clicked", G_CALLBACK(on_request_file), ui);
 
-	g_signal_connect(ui->play_button, "clicked",
-	                 G_CALLBACK(on_play_clicked), ui);
+  g_signal_connect(ui->play_button, "clicked", G_CALLBACK(on_play_clicked), ui);
 
-	g_signal_connect(G_OBJECT(ui->canvas), "expose_event",
-	                 G_CALLBACK(on_canvas_expose), ui);
+  g_signal_connect(
+    G_OBJECT(ui->canvas), "expose_event", G_CALLBACK(on_canvas_expose), ui);
 
-	// Request state (filename) from plugin
-	lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
-	LV2_Atom_Forge_Frame frame;
-	LV2_Atom*            msg = (LV2_Atom*)lv2_atom_forge_object(
-		&ui->forge, &frame, 0, ui->uris.patch_Get);
+  // Request state (filename) from plugin
+  lv2_atom_forge_set_buffer(&ui->forge, ui->forge_buf, sizeof(ui->forge_buf));
+  LV2_Atom_Forge_Frame frame;
+  LV2_Atom*            msg =
+    (LV2_Atom*)lv2_atom_forge_object(&ui->forge, &frame, 0, ui->uris.patch_Get);
 
-	assert(msg);
+  assert(msg);
 
-	lv2_atom_forge_pop(&ui->forge, &frame);
+  lv2_atom_forge_pop(&ui->forge, &frame);
 
-	ui->write(ui->controller, 0, lv2_atom_total_size(msg),
-	          ui->uris.atom_eventTransfer,
-	          msg);
+  ui->write(ui->controller,
+            0,
+            lv2_atom_total_size(msg),
+            ui->uris.atom_eventTransfer,
+            msg);
 
-	*widget = ui->box;
+  *widget = ui->box;
 
-	return ui;
+  return ui;
 }
 
 static void
 cleanup(LV2UI_Handle handle)
 {
-	SamplerUI* ui = (SamplerUI*)handle;
+  SamplerUI* ui = (SamplerUI*)handle;
 
-	if (ui->window) {
-		destroy_window(ui);
-	}
+  if (ui->window) {
+    destroy_window(ui);
+  }
 
-	gtk_widget_destroy(ui->canvas);
-	gtk_widget_destroy(ui->play_button);
-	gtk_widget_destroy(ui->file_button);
-	gtk_widget_destroy(ui->request_file_button);
-	gtk_widget_destroy(ui->button_box);
-	gtk_widget_destroy(ui->box);
-	free(ui);
+  gtk_widget_destroy(ui->canvas);
+  gtk_widget_destroy(ui->play_button);
+  gtk_widget_destroy(ui->file_button);
+  gtk_widget_destroy(ui->request_file_button);
+  gtk_widget_destroy(ui->button_box);
+  gtk_widget_destroy(ui->box);
+  free(ui);
 }
 
 static void
@@ -354,116 +358,112 @@ port_event(LV2UI_Handle handle,
            uint32_t     format,
            const void*  buffer)
 {
-	SamplerUI* ui = (SamplerUI*)handle;
-	if (format == ui->uris.atom_eventTransfer) {
-		const LV2_Atom* atom = (const LV2_Atom*)buffer;
-		if (lv2_atom_forge_is_object_type(&ui->forge, atom->type)) {
-			const LV2_Atom_Object* obj = (const LV2_Atom_Object*)atom;
-			if (obj->body.otype == ui->uris.patch_Set) {
-				const char* path = read_set_file(&ui->uris, obj);
-				if (path && (!ui->filename || strcmp(path, ui->filename))) {
-					g_free(ui->filename);
-					ui->filename = g_strdup(path);
-					gtk_file_chooser_set_filename(
-						GTK_FILE_CHOOSER(ui->file_button), path);
-					peaks_receiver_clear(&ui->precv);
-					ui->requested_n_peaks = 0;
-					request_peaks(ui, ui->width / 2 * 2);
-				} else if (!path) {
-					lv2_log_warning(&ui->logger, "Set message has no path\n");
-				}
-			} else if (obj->body.otype == ui->precv.uris.peaks_PeakUpdate) {
-				if (!peaks_receiver_receive(&ui->precv, obj)) {
-					gtk_widget_queue_draw(ui->canvas);
-				}
-			}
-		} else {
-			lv2_log_error(&ui->logger, "Unknown message type\n");
-		}
-	} else {
-		lv2_log_warning(&ui->logger, "Unknown port event format\n");
-	}
+  SamplerUI* ui = (SamplerUI*)handle;
+  if (format == ui->uris.atom_eventTransfer) {
+    const LV2_Atom* atom = (const LV2_Atom*)buffer;
+    if (lv2_atom_forge_is_object_type(&ui->forge, atom->type)) {
+      const LV2_Atom_Object* obj = (const LV2_Atom_Object*)atom;
+      if (obj->body.otype == ui->uris.patch_Set) {
+        const char* path = read_set_file(&ui->uris, obj);
+        if (path && (!ui->filename || strcmp(path, ui->filename))) {
+          g_free(ui->filename);
+          ui->filename = g_strdup(path);
+          gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(ui->file_button),
+                                        path);
+          peaks_receiver_clear(&ui->precv);
+          ui->requested_n_peaks = 0;
+          request_peaks(ui, ui->width / 2 * 2);
+        } else if (!path) {
+          lv2_log_warning(&ui->logger, "Set message has no path\n");
+        }
+      } else if (obj->body.otype == ui->precv.uris.peaks_PeakUpdate) {
+        if (!peaks_receiver_receive(&ui->precv, obj)) {
+          gtk_widget_queue_draw(ui->canvas);
+        }
+      }
+    } else {
+      lv2_log_error(&ui->logger, "Unknown message type\n");
+    }
+  } else {
+    lv2_log_warning(&ui->logger, "Unknown port event format\n");
+  }
 }
 
 /* Optional non-embedded UI show interface. */
 static int
 ui_show(LV2UI_Handle handle)
 {
-	SamplerUI* ui = (SamplerUI*)handle;
+  SamplerUI* ui = (SamplerUI*)handle;
 
-	if (ui->window) {
-		return 0;
-	}
+  if (ui->window) {
+    return 0;
+  }
 
-	if (!ui->did_init) {
-		int argc = 0;
-		gtk_init_check(&argc, NULL);
-		g_object_ref(ui->box);
-		ui->did_init = true;
-	}
+  if (!ui->did_init) {
+    int argc = 0;
+    gtk_init_check(&argc, NULL);
+    g_object_ref(ui->box);
+    ui->did_init = true;
+  }
 
-	ui->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_container_add(GTK_CONTAINER(ui->window), ui->box);
+  ui->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_container_add(GTK_CONTAINER(ui->window), ui->box);
 
-	g_signal_connect(G_OBJECT(ui->window),
-	                 "delete-event",
-	                 G_CALLBACK(on_window_closed),
-	                 handle);
+  g_signal_connect(
+    G_OBJECT(ui->window), "delete-event", G_CALLBACK(on_window_closed), handle);
 
-	gtk_widget_show_all(ui->window);
-	gtk_window_present(GTK_WINDOW(ui->window));
+  gtk_widget_show_all(ui->window);
+  gtk_window_present(GTK_WINDOW(ui->window));
 
-	return 0;
+  return 0;
 }
 
 /* Optional non-embedded UI hide interface. */
 static int
 ui_hide(LV2UI_Handle handle)
 {
-	SamplerUI* ui = (SamplerUI*)handle;
+  SamplerUI* ui = (SamplerUI*)handle;
 
-	if (ui->window) {
-		destroy_window(ui);
-	}
+  if (ui->window) {
+    destroy_window(ui);
+  }
 
-	return 0;
+  return 0;
 }
 
 /* Idle interface for optional non-embedded UI. */
 static int
 ui_idle(LV2UI_Handle handle)
 {
-	SamplerUI* ui = (SamplerUI*)handle;
-	if (ui->window) {
-		gtk_main_iteration_do(false);
-	}
-	return 0;
+  SamplerUI* ui = (SamplerUI*)handle;
+  if (ui->window) {
+    gtk_main_iteration_do(false);
+  }
+  return 0;
 }
 
 static const void*
 extension_data(const char* uri)
 {
-	static const LV2UI_Show_Interface show = { ui_show, ui_hide };
-	static const LV2UI_Idle_Interface idle = { ui_idle };
-	if (!strcmp(uri, LV2_UI__showInterface)) {
-		return &show;
-	} else if (!strcmp(uri, LV2_UI__idleInterface)) {
-		return &idle;
-	}
-	return NULL;
+  static const LV2UI_Show_Interface show = {ui_show, ui_hide};
+  static const LV2UI_Idle_Interface idle = {ui_idle};
+  if (!strcmp(uri, LV2_UI__showInterface)) {
+    return &show;
+  } else if (!strcmp(uri, LV2_UI__idleInterface)) {
+    return &idle;
+  }
+  return NULL;
 }
 
-static const LV2UI_Descriptor descriptor = {
-	SAMPLER_UI_URI,
-	instantiate,
-	cleanup,
-	port_event,
-	extension_data
-};
+static const LV2UI_Descriptor descriptor = {SAMPLER_UI_URI,
+                                            instantiate,
+                                            cleanup,
+                                            port_event,
+                                            extension_data};
 
 LV2_SYMBOL_EXPORT
 const LV2UI_Descriptor*
 lv2ui_descriptor(uint32_t index)
 {
-	return index == 0 ? &descriptor : NULL;
+  return index == 0 ? &descriptor : NULL;
 }

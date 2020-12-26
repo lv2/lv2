@@ -47,7 +47,7 @@
 
 // clang-format on
 
-#define LV2_EVENT_AUDIO_STAMP 0  ///< Special timestamp type for audio frames
+#define LV2_EVENT_AUDIO_STAMP 0 ///< Special timestamp type for audio frames
 
 #include "lv2/core/attributes.h"
 
@@ -82,48 +82,47 @@ static const uint32_t LV2_EVENT_PPQN = 3136573440U;
 */
 LV2_DEPRECATED
 typedef struct {
-	/**
-	   The frames portion of timestamp. The units used here can optionally be
-	   set for a port (with the lv2ev:timeUnits property), otherwise this is
-	   audio frames, corresponding to the sample_count parameter of the LV2 run
-	   method (frame 0 is the first frame for that call to run).
-	*/
-	uint32_t frames;
+  /**
+     The frames portion of timestamp. The units used here can optionally be
+     set for a port (with the lv2ev:timeUnits property), otherwise this is
+     audio frames, corresponding to the sample_count parameter of the LV2 run
+     method (frame 0 is the first frame for that call to run).
+  */
+  uint32_t frames;
 
-	/**
-	   The sub-frames portion of timestamp. The units used here can optionally
-	   be set for a port (with the lv2ev:timeUnits property), otherwise this is
-	   1/(2^32) of an audio frame.
-	*/
-	uint32_t subframes;
+  /**
+     The sub-frames portion of timestamp. The units used here can optionally
+     be set for a port (with the lv2ev:timeUnits property), otherwise this is
+     1/(2^32) of an audio frame.
+  */
+  uint32_t subframes;
 
-	/**
-	   The type of this event, as a number which represents some URI
-	   defining an event type. This value MUST be some value previously
-	   returned from a call to the uri_to_id function defined in the LV2
-	   URI map extension (see lv2_uri_map.h).
-	   There are special rules which must be followed depending on the type
-	   of an event. If the plugin recognizes an event type, the definition
-	   of that event type will describe how to interpret the event, and
-	   any required behaviour. Otherwise, if the type is 0, this event is a
-	   non-POD event and lv2_event_unref MUST be called if the event is
-	   'dropped' (see above). Even if the plugin does not understand an event,
-	   it may pass the event through to an output by simply copying (and NOT
-	   calling lv2_event_unref). These rules are designed to allow for generic
-	   event handling plugins and large non-POD events, but with minimal hassle
-	   on simple plugins that "don't care" about these more advanced features.
-	*/
-	uint16_t type;
+  /**
+     The type of this event, as a number which represents some URI
+     defining an event type. This value MUST be some value previously
+     returned from a call to the uri_to_id function defined in the LV2
+     URI map extension (see lv2_uri_map.h).
+     There are special rules which must be followed depending on the type
+     of an event. If the plugin recognizes an event type, the definition
+     of that event type will describe how to interpret the event, and
+     any required behaviour. Otherwise, if the type is 0, this event is a
+     non-POD event and lv2_event_unref MUST be called if the event is
+     'dropped' (see above). Even if the plugin does not understand an event,
+     it may pass the event through to an output by simply copying (and NOT
+     calling lv2_event_unref). These rules are designed to allow for generic
+     event handling plugins and large non-POD events, but with minimal hassle
+     on simple plugins that "don't care" about these more advanced features.
+  */
+  uint16_t type;
 
-	/**
-	   The size of the data portion of this event in bytes, which immediately
-	   follows. The header size (12 bytes) is not included in this value.
-	*/
-	uint16_t size;
+  /**
+     The size of the data portion of this event in bytes, which immediately
+     follows. The header size (12 bytes) is not included in this value.
+  */
+  uint16_t size;
 
-	/* size bytes of data follow here */
+  /* size bytes of data follow here */
 } LV2_Event;
-
 
 /**
    A buffer of LV2 events (header only).
@@ -143,91 +142,89 @@ typedef struct {
 */
 LV2_DEPRECATED
 typedef struct {
-	/**
-	   The contents of the event buffer. This may or may not reside in the
-	   same block of memory as this header, plugins must not assume either.
-	   The host guarantees this points to at least capacity bytes of allocated
-	   memory (though only size bytes of that are valid events).
-	*/
-	uint8_t* data;
+  /**
+     The contents of the event buffer. This may or may not reside in the
+     same block of memory as this header, plugins must not assume either.
+     The host guarantees this points to at least capacity bytes of allocated
+     memory (though only size bytes of that are valid events).
+  */
+  uint8_t* data;
 
-	/**
-	   The size of this event header in bytes (including everything).
+  /**
+     The size of this event header in bytes (including everything).
 
-	   This is to allow for extending this header in the future without
-	   breaking binary compatibility. Whenever this header is copied,
-	   it MUST be done using this field (and NOT the sizeof this struct).
-	*/
-	uint16_t header_size;
+     This is to allow for extending this header in the future without
+     breaking binary compatibility. Whenever this header is copied,
+     it MUST be done using this field (and NOT the sizeof this struct).
+  */
+  uint16_t header_size;
 
-	/**
-	   The type of the time stamps for events in this buffer.
-	   As a special exception, '0' always means audio frames and subframes
-	   (1/UINT32_MAX'th of a frame) in the sample rate passed to instantiate.
+  /**
+     The type of the time stamps for events in this buffer.
+     As a special exception, '0' always means audio frames and subframes
+     (1/UINT32_MAX'th of a frame) in the sample rate passed to instantiate.
 
-	   INPUTS: The host must set this field to the numeric ID of some URI
-	   defining the meaning of the frames/subframes fields of contained events
-	   (obtained by the LV2 URI Map uri_to_id function with the URI of this
-	   extension as the 'map' argument, see lv2_uri_map.h).  The host must
-	   never pass a plugin a buffer which uses a stamp type the plugin does not
-	   'understand'. The value of this field must never change, except when
-	   connect_port is called on the input port, at which time the host MUST
-	   have set the stamp_type field to the value that will be used for all
-	   subsequent run calls.
+     INPUTS: The host must set this field to the numeric ID of some URI
+     defining the meaning of the frames/subframes fields of contained events
+     (obtained by the LV2 URI Map uri_to_id function with the URI of this
+     extension as the 'map' argument, see lv2_uri_map.h).  The host must
+     never pass a plugin a buffer which uses a stamp type the plugin does not
+     'understand'. The value of this field must never change, except when
+     connect_port is called on the input port, at which time the host MUST
+     have set the stamp_type field to the value that will be used for all
+     subsequent run calls.
 
-	   OUTPUTS: The plugin may set this to any value that has been returned
-	   from uri_to_id with the URI of this extension for a 'map' argument.
-	   When connected to a buffer with connect_port, output ports MUST set this
-	   field to the type of time stamp they will be writing. On any call to
-	   connect_port on an event input port, the plugin may change this field on
-	   any output port, it is the responsibility of the host to check if any of
-	   these values have changed and act accordingly.
-	*/
-	uint16_t stamp_type;
+     OUTPUTS: The plugin may set this to any value that has been returned
+     from uri_to_id with the URI of this extension for a 'map' argument.
+     When connected to a buffer with connect_port, output ports MUST set this
+     field to the type of time stamp they will be writing. On any call to
+     connect_port on an event input port, the plugin may change this field on
+     any output port, it is the responsibility of the host to check if any of
+     these values have changed and act accordingly.
+  */
+  uint16_t stamp_type;
 
-	/**
-	   The number of events in this buffer.
+  /**
+     The number of events in this buffer.
 
-	   INPUTS: The host must set this field to the number of events contained
-	   in the data buffer before calling run(). The plugin must not change
-	   this field.
+     INPUTS: The host must set this field to the number of events contained
+     in the data buffer before calling run(). The plugin must not change
+     this field.
 
-	   OUTPUTS: The plugin must set this field to the number of events it has
-	   written to the buffer before returning from run(). Any initial value
-	   should be ignored by the plugin.
-	*/
-	uint32_t event_count;
+     OUTPUTS: The plugin must set this field to the number of events it has
+     written to the buffer before returning from run(). Any initial value
+     should be ignored by the plugin.
+  */
+  uint32_t event_count;
 
-	/**
-	   The size of the data buffer in bytes.
-	   This is set by the host and must not be changed by the plugin.
-	   The host is allowed to change this between run() calls.
-	*/
-	uint32_t capacity;
+  /**
+     The size of the data buffer in bytes.
+     This is set by the host and must not be changed by the plugin.
+     The host is allowed to change this between run() calls.
+  */
+  uint32_t capacity;
 
-	/**
-	   The size of the initial portion of the data buffer containing data.
+  /**
+     The size of the initial portion of the data buffer containing data.
 
-	   INPUTS: The host must set this field to the number of bytes used
-	   by all events it has written to the buffer (including headers)
-	   before calling the plugin's run().
-	   The plugin must not change this field.
+     INPUTS: The host must set this field to the number of bytes used
+     by all events it has written to the buffer (including headers)
+     before calling the plugin's run().
+     The plugin must not change this field.
 
-	   OUTPUTS: The plugin must set this field to the number of bytes
-	   used by all events it has written to the buffer (including headers)
-	   before returning from run().
-	   Any initial value should be ignored by the plugin.
-	*/
-	uint32_t size;
+     OUTPUTS: The plugin must set this field to the number of bytes
+     used by all events it has written to the buffer (including headers)
+     before returning from run().
+     Any initial value should be ignored by the plugin.
+  */
+  uint32_t size;
 } LV2_Event_Buffer;
-
 
 /**
    Opaque pointer to host data.
 */
 LV2_DEPRECATED
 typedef void* LV2_Event_Callback_Data;
-
 
 /**
    Non-POD events feature.
@@ -239,67 +236,67 @@ typedef void* LV2_Event_Callback_Data;
 */
 LV2_DEPRECATED
 typedef struct {
-	/**
-	   Opaque pointer to host data.
+  /**
+     Opaque pointer to host data.
 
-	   The plugin MUST pass this to any call to functions in this struct.
-	   Otherwise, it must not be interpreted in any way.
-	*/
-	LV2_Event_Callback_Data callback_data;
+     The plugin MUST pass this to any call to functions in this struct.
+     Otherwise, it must not be interpreted in any way.
+  */
+  LV2_Event_Callback_Data callback_data;
 
-	/**
-	   Take a reference to a non-POD event.
+  /**
+     Take a reference to a non-POD event.
 
-	   If a plugin receives an event with type 0, it means the event is a
-	   pointer to some object in memory and not a flat sequence of bytes
-	   in the buffer. When receiving a non-POD event, the plugin already
-	   has an implicit reference to the event. If the event is stored AND
-	   passed to an output, lv2_event_ref MUST be called on that event.
-	   If the event is only stored OR passed through, this is not necessary
-	   (as the plugin already has 1 implicit reference).
+     If a plugin receives an event with type 0, it means the event is a
+     pointer to some object in memory and not a flat sequence of bytes
+     in the buffer. When receiving a non-POD event, the plugin already
+     has an implicit reference to the event. If the event is stored AND
+     passed to an output, lv2_event_ref MUST be called on that event.
+     If the event is only stored OR passed through, this is not necessary
+     (as the plugin already has 1 implicit reference).
 
-	   @param event An event received at an input that will not be copied to
-	   an output or stored in any way.
+     @param event An event received at an input that will not be copied to
+     an output or stored in any way.
 
-	   @param context The calling context. Like event types, this is a mapped
-	   URI, see lv2_context.h. Simple plugin with just a run() method should
-	   pass 0 here (the ID of the 'standard' LV2 run context). The host
-	   guarantees that this function is realtime safe iff the context is
-	   realtime safe.
+     @param context The calling context. Like event types, this is a mapped
+     URI, see lv2_context.h. Simple plugin with just a run() method should
+     pass 0 here (the ID of the 'standard' LV2 run context). The host
+     guarantees that this function is realtime safe iff the context is
+     realtime safe.
 
-	   PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS.
-	*/
-	uint32_t (*lv2_event_ref)(LV2_Event_Callback_Data callback_data,
-	                          LV2_Event*              event);
+     PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS.
+  */
+  uint32_t (*lv2_event_ref)(LV2_Event_Callback_Data callback_data,
+                            LV2_Event*              event);
 
-	/**
-	   Drop a reference to a non-POD event.
+  /**
+     Drop a reference to a non-POD event.
 
-	   If a plugin receives an event with type 0, it means the event is a
-	   pointer to some object in memory and not a flat sequence of bytes
-	   in the buffer. If the plugin does not pass the event through to
-	   an output or store it internally somehow, it MUST call this function
-	   on the event (more information on using non-POD events below).
+     If a plugin receives an event with type 0, it means the event is a
+     pointer to some object in memory and not a flat sequence of bytes
+     in the buffer. If the plugin does not pass the event through to
+     an output or store it internally somehow, it MUST call this function
+     on the event (more information on using non-POD events below).
 
-	   @param event An event received at an input that will not be copied to an
-	   output or stored in any way.
+     @param event An event received at an input that will not be copied to an
+     output or stored in any way.
 
-	   @param context The calling context. Like event types, this is a mapped
-	   URI, see lv2_context.h. Simple plugin with just a run() method should
-	   pass 0 here (the ID of the 'standard' LV2 run context). The host
-	   guarantees that this function is realtime safe iff the context is
-	   realtime safe.
+     @param context The calling context. Like event types, this is a mapped
+     URI, see lv2_context.h. Simple plugin with just a run() method should
+     pass 0 here (the ID of the 'standard' LV2 run context). The host
+     guarantees that this function is realtime safe iff the context is
+     realtime safe.
 
-	   PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS.
-	*/
-	uint32_t (*lv2_event_unref)(LV2_Event_Callback_Data callback_data,
-	                            LV2_Event*              event);
+     PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS.
+  */
+  uint32_t (*lv2_event_unref)(LV2_Event_Callback_Data callback_data,
+                              LV2_Event*              event);
 } LV2_Event_Feature;
 
 LV2_RESTORE_WARNINGS
 
 #ifdef __cplusplus
-}  /* extern "C" */
+} /* extern "C" */
 #endif
 
 /**

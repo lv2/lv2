@@ -49,30 +49,29 @@ extern "C" {
 static inline uint32_t
 lv2_atom_pad_size(uint32_t size)
 {
-	return (size + 7U) & (~7U);
+  return (size + 7U) & (~7U);
 }
 
 /** Return the total size of `atom`, including the header. */
 static inline uint32_t
 lv2_atom_total_size(const LV2_Atom* atom)
 {
-	return (uint32_t)sizeof(LV2_Atom) + atom->size;
+  return (uint32_t)sizeof(LV2_Atom) + atom->size;
 }
 
 /** Return true iff `atom` is null. */
 static inline bool
 lv2_atom_is_null(const LV2_Atom* atom)
 {
-	return !atom || (atom->type == 0 && atom->size == 0);
+  return !atom || (atom->type == 0 && atom->size == 0);
 }
 
 /** Return true iff `a` is equal to `b`. */
 static inline bool
 lv2_atom_equals(const LV2_Atom* a, const LV2_Atom* b)
 {
-	return (a == b) || ((a->type == b->type) &&
-	                    (a->size == b->size) &&
-	                    !memcmp(a + 1, b + 1, a->size));
+  return (a == b) || ((a->type == b->type) && (a->size == b->size) &&
+                      !memcmp(a + 1, b + 1, a->size));
 }
 
 /**
@@ -84,14 +83,14 @@ lv2_atom_equals(const LV2_Atom* a, const LV2_Atom* b)
 static inline LV2_Atom_Event*
 lv2_atom_sequence_begin(const LV2_Atom_Sequence_Body* body)
 {
-	return (LV2_Atom_Event*)(body + 1);
+  return (LV2_Atom_Event*)(body + 1);
 }
 
 /** Get an iterator pointing to the end of a Sequence body. */
 static inline LV2_Atom_Event*
 lv2_atom_sequence_end(const LV2_Atom_Sequence_Body* body, uint32_t size)
 {
-	return (LV2_Atom_Event*)((const uint8_t*)body + lv2_atom_pad_size(size));
+  return (LV2_Atom_Event*)((const uint8_t*)body + lv2_atom_pad_size(size));
 }
 
 /** Return true iff `i` has reached the end of `body`. */
@@ -100,16 +99,15 @@ lv2_atom_sequence_is_end(const LV2_Atom_Sequence_Body* body,
                          uint32_t                      size,
                          const LV2_Atom_Event*         i)
 {
-	return (const uint8_t*)i >= ((const uint8_t*)body + size);
+  return (const uint8_t*)i >= ((const uint8_t*)body + size);
 }
 
 /** Return an iterator to the element following `i`. */
 static inline LV2_Atom_Event*
 lv2_atom_sequence_next(const LV2_Atom_Event* i)
 {
-	return (LV2_Atom_Event*)((const uint8_t*)i
-	                         + sizeof(LV2_Atom_Event)
-	                         + lv2_atom_pad_size(i->body.size));
+  return (LV2_Atom_Event*)((const uint8_t*)i + sizeof(LV2_Atom_Event) +
+                           lv2_atom_pad_size(i->body.size));
 }
 
 /**
@@ -126,16 +124,16 @@ lv2_atom_sequence_next(const LV2_Atom_Event* i)
    }
    @endcode
 */
-#define LV2_ATOM_SEQUENCE_FOREACH(seq, iter) \
-	for (LV2_Atom_Event* (iter) = lv2_atom_sequence_begin(&(seq)->body); \
-	     !lv2_atom_sequence_is_end(&(seq)->body, (seq)->atom.size, (iter)); \
-	     (iter) = lv2_atom_sequence_next(iter))
+#define LV2_ATOM_SEQUENCE_FOREACH(seq, iter)                              \
+  for (LV2_Atom_Event * (iter) = lv2_atom_sequence_begin(&(seq)->body);   \
+       !lv2_atom_sequence_is_end(&(seq)->body, (seq)->atom.size, (iter)); \
+       (iter) = lv2_atom_sequence_next(iter))
 
 /** Like LV2_ATOM_SEQUENCE_FOREACH but for a headerless sequence body. */
-#define LV2_ATOM_SEQUENCE_BODY_FOREACH(body, size, iter) \
-	for (LV2_Atom_Event* (iter) = lv2_atom_sequence_begin(body); \
-	     !lv2_atom_sequence_is_end(body, size, (iter)); \
-	     (iter) = lv2_atom_sequence_next(iter))
+#define LV2_ATOM_SEQUENCE_BODY_FOREACH(body, size, iter)        \
+  for (LV2_Atom_Event * (iter) = lv2_atom_sequence_begin(body); \
+       !lv2_atom_sequence_is_end(body, size, (iter));           \
+       (iter) = lv2_atom_sequence_next(iter))
 
 /**
    @}
@@ -151,7 +149,7 @@ lv2_atom_sequence_next(const LV2_Atom_Event* i)
 static inline void
 lv2_atom_sequence_clear(LV2_Atom_Sequence* seq)
 {
-	seq->atom.size = sizeof(LV2_Atom_Sequence_Body);
+  seq->atom.size = sizeof(LV2_Atom_Sequence_Body);
 }
 
 /**
@@ -170,17 +168,17 @@ lv2_atom_sequence_append_event(LV2_Atom_Sequence*    seq,
                                uint32_t              capacity,
                                const LV2_Atom_Event* event)
 {
-	const uint32_t total_size = (uint32_t)sizeof(*event) + event->body.size;
-	if (capacity - seq->atom.size < total_size) {
-		return NULL;
-	}
+  const uint32_t total_size = (uint32_t)sizeof(*event) + event->body.size;
+  if (capacity - seq->atom.size < total_size) {
+    return NULL;
+  }
 
-	LV2_Atom_Event* e = lv2_atom_sequence_end(&seq->body, seq->atom.size);
-	memcpy(e, event, total_size);
+  LV2_Atom_Event* e = lv2_atom_sequence_end(&seq->body, seq->atom.size);
+  memcpy(e, event, total_size);
 
-	seq->atom.size += lv2_atom_pad_size(total_size);
+  seq->atom.size += lv2_atom_pad_size(total_size);
 
-	return e;
+  return e;
 }
 
 /**
@@ -193,22 +191,22 @@ lv2_atom_sequence_append_event(LV2_Atom_Sequence*    seq,
 static inline LV2_Atom*
 lv2_atom_tuple_begin(const LV2_Atom_Tuple* tup)
 {
-	return (LV2_Atom*)(LV2_ATOM_BODY(tup));
+  return (LV2_Atom*)(LV2_ATOM_BODY(tup));
 }
 
 /** Return true iff `i` has reached the end of `body`. */
 static inline bool
 lv2_atom_tuple_is_end(const void* body, uint32_t size, const LV2_Atom* i)
 {
-	return (const uint8_t*)i >= ((const uint8_t*)body + size);
+  return (const uint8_t*)i >= ((const uint8_t*)body + size);
 }
 
 /** Return an iterator to the element following `i`. */
 static inline LV2_Atom*
 lv2_atom_tuple_next(const LV2_Atom* i)
 {
-	return (LV2_Atom*)(
-		(const uint8_t*)i + sizeof(LV2_Atom) + lv2_atom_pad_size(i->size));
+  return (LV2_Atom*)((const uint8_t*)i + sizeof(LV2_Atom) +
+                     lv2_atom_pad_size(i->size));
 }
 
 /**
@@ -225,16 +223,17 @@ lv2_atom_tuple_next(const LV2_Atom* i)
    }
    @endcode
 */
-#define LV2_ATOM_TUPLE_FOREACH(tuple, iter) \
-	for (LV2_Atom* (iter) = lv2_atom_tuple_begin(tuple); \
-	     !lv2_atom_tuple_is_end(LV2_ATOM_BODY(tuple), (tuple)->atom.size, (iter)); \
-	     (iter) = lv2_atom_tuple_next(iter))
+#define LV2_ATOM_TUPLE_FOREACH(tuple, iter)                 \
+  for (LV2_Atom * (iter) = lv2_atom_tuple_begin(tuple);     \
+       !lv2_atom_tuple_is_end(                              \
+         LV2_ATOM_BODY(tuple), (tuple)->atom.size, (iter)); \
+       (iter) = lv2_atom_tuple_next(iter))
 
 /** Like LV2_ATOM_TUPLE_FOREACH but for a headerless tuple body. */
 #define LV2_ATOM_TUPLE_BODY_FOREACH(body, size, iter) \
-	for (LV2_Atom* (iter) = (LV2_Atom*)(body); \
-	     !lv2_atom_tuple_is_end(body, size, (iter)); \
-	     (iter) = lv2_atom_tuple_next(iter))
+  for (LV2_Atom * (iter) = (LV2_Atom*)(body);         \
+       !lv2_atom_tuple_is_end(body, size, (iter));    \
+       (iter) = lv2_atom_tuple_next(iter))
 
 /**
    @}
@@ -246,7 +245,7 @@ lv2_atom_tuple_next(const LV2_Atom* i)
 static inline LV2_Atom_Property_Body*
 lv2_atom_object_begin(const LV2_Atom_Object_Body* body)
 {
-	return (LV2_Atom_Property_Body*)(body + 1);
+  return (LV2_Atom_Property_Body*)(body + 1);
 }
 
 /** Return true iff `i` has reached the end of `obj`. */
@@ -255,18 +254,19 @@ lv2_atom_object_is_end(const LV2_Atom_Object_Body*   body,
                        uint32_t                      size,
                        const LV2_Atom_Property_Body* i)
 {
-	return (const uint8_t*)i >= ((const uint8_t*)body + size);
+  return (const uint8_t*)i >= ((const uint8_t*)body + size);
 }
 
 /** Return an iterator to the property following `i`. */
 static inline LV2_Atom_Property_Body*
 lv2_atom_object_next(const LV2_Atom_Property_Body* i)
 {
-	const LV2_Atom* const value = (const LV2_Atom*)(
-		(const uint8_t*)i + 2 * sizeof(uint32_t));
-	return (LV2_Atom_Property_Body*)(
-		(const uint8_t*)i + lv2_atom_pad_size(
-			(uint32_t)sizeof(LV2_Atom_Property_Body) + value->size));
+  const LV2_Atom* const value =
+    (const LV2_Atom*)((const uint8_t*)i + 2 * sizeof(uint32_t));
+  return (LV2_Atom_Property_Body*)((const uint8_t*)i +
+                                   lv2_atom_pad_size(
+                                     (uint32_t)sizeof(LV2_Atom_Property_Body) +
+                                     value->size));
 }
 
 /**
@@ -283,16 +283,16 @@ lv2_atom_object_next(const LV2_Atom_Property_Body* i)
    }
    @endcode
 */
-#define LV2_ATOM_OBJECT_FOREACH(obj, iter) \
-	for (LV2_Atom_Property_Body* (iter) = lv2_atom_object_begin(&(obj)->body); \
-	     !lv2_atom_object_is_end(&(obj)->body, (obj)->atom.size, (iter)); \
-	     (iter) = lv2_atom_object_next(iter))
+#define LV2_ATOM_OBJECT_FOREACH(obj, iter)                                    \
+  for (LV2_Atom_Property_Body * (iter) = lv2_atom_object_begin(&(obj)->body); \
+       !lv2_atom_object_is_end(&(obj)->body, (obj)->atom.size, (iter));       \
+       (iter) = lv2_atom_object_next(iter))
 
 /** Like LV2_ATOM_OBJECT_FOREACH but for a headerless object body. */
-#define LV2_ATOM_OBJECT_BODY_FOREACH(body, size, iter) \
-	for (LV2_Atom_Property_Body* (iter) = lv2_atom_object_begin(body); \
-	     !lv2_atom_object_is_end(body, size, (iter)); \
-	     (iter) = lv2_atom_object_next(iter))
+#define LV2_ATOM_OBJECT_BODY_FOREACH(body, size, iter)                \
+  for (LV2_Atom_Property_Body * (iter) = lv2_atom_object_begin(body); \
+       !lv2_atom_object_is_end(body, size, (iter));                   \
+       (iter) = lv2_atom_object_next(iter))
 
 /**
    @}
@@ -302,12 +302,12 @@ lv2_atom_object_next(const LV2_Atom_Property_Body* i)
 
 /** A single entry in an Object query. */
 typedef struct {
-	uint32_t         key;    /**< Key to query (input set by user) */
-	const LV2_Atom** value;  /**< Found value (output set by query function) */
+  uint32_t         key;   /**< Key to query (input set by user) */
+  const LV2_Atom** value; /**< Found value (output set by query function) */
 } LV2_Atom_Object_Query;
 
 /** Sentinel for lv2_atom_object_query(). */
-static const LV2_Atom_Object_Query LV2_ATOM_OBJECT_QUERY_END = { 0, NULL };
+static const LV2_Atom_Object_Query LV2_ATOM_OBJECT_QUERY_END = {0, NULL};
 
 /**
    Get an object's values for various keys.
@@ -338,26 +338,26 @@ static inline int
 lv2_atom_object_query(const LV2_Atom_Object* object,
                       LV2_Atom_Object_Query* query)
 {
-	int matches   = 0;
-	int n_queries = 0;
+  int matches   = 0;
+  int n_queries = 0;
 
-	/* Count number of query keys so we can short-circuit when done */
-	for (LV2_Atom_Object_Query* q = query; q->key; ++q) {
-		++n_queries;
-	}
+  /* Count number of query keys so we can short-circuit when done */
+  for (LV2_Atom_Object_Query* q = query; q->key; ++q) {
+    ++n_queries;
+  }
 
-	LV2_ATOM_OBJECT_FOREACH(object, prop) {
-		for (LV2_Atom_Object_Query* q = query; q->key; ++q) {
-			if (q->key == prop->key && !*q->value) {
-				*q->value = &prop->value;
-				if (++matches == n_queries) {
-					return matches;
-				}
-				break;
-			}
-		}
-	}
-	return matches;
+  LV2_ATOM_OBJECT_FOREACH (object, prop) {
+    for (LV2_Atom_Object_Query* q = query; q->key; ++q) {
+      if (q->key == prop->key && !*q->value) {
+        *q->value = &prop->value;
+        if (++matches == n_queries) {
+          return matches;
+        }
+        break;
+      }
+    }
+  }
+  return matches;
 }
 
 /**
@@ -366,37 +366,37 @@ lv2_atom_object_query(const LV2_Atom_Object* object,
 static inline int
 lv2_atom_object_body_get(uint32_t size, const LV2_Atom_Object_Body* body, ...)
 {
-	int matches   = 0;
-	int n_queries = 0;
+  int matches   = 0;
+  int n_queries = 0;
 
-	/* Count number of keys so we can short-circuit when done */
-	va_list args;
-	va_start(args, body);
-	for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
-		if (!va_arg(args, const LV2_Atom**)) {
-			va_end(args);
-			return -1;
-		}
-	}
-	va_end(args);
+  /* Count number of keys so we can short-circuit when done */
+  va_list args;
+  va_start(args, body);
+  for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
+    if (!va_arg(args, const LV2_Atom**)) {
+      va_end(args);
+      return -1;
+    }
+  }
+  va_end(args);
 
-	LV2_ATOM_OBJECT_BODY_FOREACH(body, size, prop) {
-		va_start(args, body);
-		for (int i = 0; i < n_queries; ++i) {
-			uint32_t         qkey = va_arg(args, uint32_t);
-			const LV2_Atom** qval = va_arg(args, const LV2_Atom**);
-			if (qkey == prop->key && !*qval) {
-				*qval = &prop->value;
-				if (++matches == n_queries) {
-					va_end(args);
-					return matches;
-				}
-				break;
-			}
-		}
-		va_end(args);
-	}
-	return matches;
+  LV2_ATOM_OBJECT_BODY_FOREACH (body, size, prop) {
+    va_start(args, body);
+    for (int i = 0; i < n_queries; ++i) {
+      uint32_t         qkey = va_arg(args, uint32_t);
+      const LV2_Atom** qval = va_arg(args, const LV2_Atom**);
+      if (qkey == prop->key && !*qval) {
+        *qval = &prop->value;
+        if (++matches == n_queries) {
+          va_end(args);
+          return matches;
+        }
+        break;
+      }
+    }
+    va_end(args);
+  }
+  return matches;
 }
 
 /**
@@ -421,37 +421,37 @@ lv2_atom_object_body_get(uint32_t size, const LV2_Atom_Object_Body* body, ...)
 static inline int
 lv2_atom_object_get(const LV2_Atom_Object* object, ...)
 {
-	int matches   = 0;
-	int n_queries = 0;
+  int matches   = 0;
+  int n_queries = 0;
 
-	/* Count number of keys so we can short-circuit when done */
-	va_list args;
-	va_start(args, object);
-	for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
-		if (!va_arg(args, const LV2_Atom**)) {
-			va_end(args);
-			return -1;
-		}
-	}
-	va_end(args);
+  /* Count number of keys so we can short-circuit when done */
+  va_list args;
+  va_start(args, object);
+  for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
+    if (!va_arg(args, const LV2_Atom**)) {
+      va_end(args);
+      return -1;
+    }
+  }
+  va_end(args);
 
-	LV2_ATOM_OBJECT_FOREACH(object, prop) {
-		va_start(args, object);
-		for (int i = 0; i < n_queries; ++i) {
-			uint32_t         qkey = va_arg(args, uint32_t);
-			const LV2_Atom** qval = va_arg(args, const LV2_Atom**);
-			if (qkey == prop->key && !*qval) {
-				*qval = &prop->value;
-				if (++matches == n_queries) {
-					va_end(args);
-					return matches;
-				}
-				break;
-			}
-		}
-		va_end(args);
-	}
-	return matches;
+  LV2_ATOM_OBJECT_FOREACH (object, prop) {
+    va_start(args, object);
+    for (int i = 0; i < n_queries; ++i) {
+      uint32_t         qkey = va_arg(args, uint32_t);
+      const LV2_Atom** qval = va_arg(args, const LV2_Atom**);
+      if (qkey == prop->key && !*qval) {
+        *qval = &prop->value;
+        if (++matches == n_queries) {
+          va_end(args);
+          return matches;
+        }
+        break;
+      }
+    }
+    va_end(args);
+  }
+  return matches;
 }
 
 /**
@@ -477,43 +477,42 @@ lv2_atom_object_get(const LV2_Atom_Object* object, ...)
 static inline int
 lv2_atom_object_get_typed(const LV2_Atom_Object* object, ...)
 {
-	int matches   = 0;
-	int n_queries = 0;
+  int matches   = 0;
+  int n_queries = 0;
 
-	/* Count number of keys so we can short-circuit when done */
-	va_list args;
-	va_start(args, object);
-	for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
-		if (!va_arg(args, const LV2_Atom**) ||
-		    !va_arg(args, uint32_t)) {
-			va_end(args);
-			return -1;
-		}
-	}
-	va_end(args);
+  /* Count number of keys so we can short-circuit when done */
+  va_list args;
+  va_start(args, object);
+  for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
+    if (!va_arg(args, const LV2_Atom**) || !va_arg(args, uint32_t)) {
+      va_end(args);
+      return -1;
+    }
+  }
+  va_end(args);
 
-	LV2_ATOM_OBJECT_FOREACH(object, prop) {
-		va_start(args, object);
-		for (int i = 0; i < n_queries; ++i) {
-			const uint32_t   qkey  = va_arg(args, uint32_t);
-			const LV2_Atom** qval  = va_arg(args, const LV2_Atom**);
-			const uint32_t   qtype = va_arg(args, uint32_t);
-			if (!*qval && qkey == prop->key && qtype == prop->value.type) {
-				*qval = &prop->value;
-				if (++matches == n_queries) {
-					va_end(args);
-					return matches;
-				}
-				break;
-			}
-		}
-		va_end(args);
-	}
-	return matches;
+  LV2_ATOM_OBJECT_FOREACH (object, prop) {
+    va_start(args, object);
+    for (int i = 0; i < n_queries; ++i) {
+      const uint32_t   qkey  = va_arg(args, uint32_t);
+      const LV2_Atom** qval  = va_arg(args, const LV2_Atom**);
+      const uint32_t   qtype = va_arg(args, uint32_t);
+      if (!*qval && qkey == prop->key && qtype == prop->value.type) {
+        *qval = &prop->value;
+        if (++matches == n_queries) {
+          va_end(args);
+          return matches;
+        }
+        break;
+      }
+    }
+    va_end(args);
+  }
+  return matches;
 }
 
 #ifdef __cplusplus
-}  /* extern "C" */
+} /* extern "C" */
 #endif
 
 /**

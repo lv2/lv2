@@ -74,4 +74,4 @@
    @}
 */
 
-#endif  /* LV2_PORT_GROUPS_H */
+#endif /* LV2_PORT_GROUPS_H */

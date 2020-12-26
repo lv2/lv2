@@ -30,11 +30,11 @@
 static LV2_Atom_Forge_Ref
 atom_sink(LV2_Atom_Forge_Sink_Handle handle, const void* buf, uint32_t size)
 {
-	LV2_Atom*      atom   = (LV2_Atom*)handle;
-	const uint32_t offset = lv2_atom_total_size(atom);
-	memcpy((char*)atom + offset, buf, size);
-	atom->size += size;
-	return offset;
+  LV2_Atom*      atom   = (LV2_Atom*)handle;
+  const uint32_t offset = lv2_atom_total_size(atom);
+  memcpy((char*)atom + offset, buf, size);
+  atom->size += size;
+  return offset;
 }
 
 /**
@@ -43,5 +43,5 @@ atom_sink(LV2_Atom_Forge_Sink_Handle handle, const void* buf, uint32_t size)
 static LV2_Atom*
 atom_sink_deref(LV2_Atom_Forge_Sink_Handle handle, LV2_Atom_Forge_Ref ref)
 {
-	return (LV2_Atom*)((char*)handle + ref);
+  return (LV2_Atom*)((char*)handle + ref);
 }

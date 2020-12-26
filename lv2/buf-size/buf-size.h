@@ -48,4 +48,4 @@
    @}
 */
 
-#endif  /* LV2_BUF_SIZE_H */
+#endif /* LV2_BUF_SIZE_H */

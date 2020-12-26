@@ -72,4 +72,4 @@
    @}
 */
 
-#endif  /* LV2_UNITS_H */
+#endif /* LV2_UNITS_H */

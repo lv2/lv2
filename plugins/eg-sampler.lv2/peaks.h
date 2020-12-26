@@ -39,42 +39,42 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define PEAKS_URI          "http://lv2plug.in/ns/peaks#"
-#define PEAKS__PeakUpdate  PEAKS_URI "PeakUpdate"
-#define PEAKS__magnitudes  PEAKS_URI "magnitudes"
-#define PEAKS__offset      PEAKS_URI "offset"
-#define PEAKS__total       PEAKS_URI "total"
+#define PEAKS_URI "http://lv2plug.in/ns/peaks#"
+#define PEAKS__PeakUpdate PEAKS_URI "PeakUpdate"
+#define PEAKS__magnitudes PEAKS_URI "magnitudes"
+#define PEAKS__offset PEAKS_URI "offset"
+#define PEAKS__total PEAKS_URI "total"
 
 #ifndef MIN
-#    define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#  define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 #ifndef MAX
-#    define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#  define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #endif
 
 typedef struct {
-	LV2_URID atom_Float;
-	LV2_URID atom_Int;
-	LV2_URID atom_Vector;
-	LV2_URID peaks_PeakUpdate;
-	LV2_URID peaks_magnitudes;
-	LV2_URID peaks_offset;
-	LV2_URID peaks_total;
+  LV2_URID atom_Float;
+  LV2_URID atom_Int;
+  LV2_URID atom_Vector;
+  LV2_URID peaks_PeakUpdate;
+  LV2_URID peaks_magnitudes;
+  LV2_URID peaks_offset;
+  LV2_URID peaks_total;
 } PeaksURIs;
 
 typedef struct {
-	PeaksURIs    uris;            ///< URIDs used in protocol
-	const float* samples;         ///< Sample data
-	uint32_t     n_samples;       ///< Total number of samples
-	uint32_t     n_peaks;         ///< Total number of peaks
-	uint32_t     current_offset;  ///< Current peak offset
-	bool         sending;         ///< True iff currently sending
+  PeaksURIs    uris;           ///< URIDs used in protocol
+  const float* samples;        ///< Sample data
+  uint32_t     n_samples;      ///< Total number of samples
+  uint32_t     n_peaks;        ///< Total number of peaks
+  uint32_t     current_offset; ///< Current peak offset
+  bool         sending;        ///< True iff currently sending
 } PeaksSender;
 
 typedef struct {
-	PeaksURIs uris;     ///< URIDs used in protocol
-	float*    peaks;    ///< Received peaks, or zeroes
-	uint32_t  n_peaks;  ///< Total number of peaks
+  PeaksURIs uris;    ///< URIDs used in protocol
+  float*    peaks;   ///< Received peaks, or zeroes
+  uint32_t  n_peaks; ///< Total number of peaks
 } PeaksReceiver;
 
 /**
@@ -83,13 +83,13 @@ typedef struct {
 static inline void
 peaks_map_uris(PeaksURIs* uris, LV2_URID_Map* map)
 {
-	uris->atom_Float       = map->map(map->handle, LV2_ATOM__Float);
-	uris->atom_Int         = map->map(map->handle, LV2_ATOM__Int);
-	uris->atom_Vector      = map->map(map->handle, LV2_ATOM__Vector);
-	uris->peaks_PeakUpdate = map->map(map->handle, PEAKS__PeakUpdate);
-	uris->peaks_magnitudes = map->map(map->handle, PEAKS__magnitudes);
-	uris->peaks_offset     = map->map(map->handle, PEAKS__offset);
-	uris->peaks_total      = map->map(map->handle, PEAKS__total);
+  uris->atom_Float       = map->map(map->handle, LV2_ATOM__Float);
+  uris->atom_Int         = map->map(map->handle, LV2_ATOM__Int);
+  uris->atom_Vector      = map->map(map->handle, LV2_ATOM__Vector);
+  uris->peaks_PeakUpdate = map->map(map->handle, PEAKS__PeakUpdate);
+  uris->peaks_magnitudes = map->map(map->handle, PEAKS__magnitudes);
+  uris->peaks_offset     = map->map(map->handle, PEAKS__offset);
+  uris->peaks_total      = map->map(map->handle, PEAKS__total);
 }
 
 /**
@@ -100,9 +100,9 @@ peaks_map_uris(PeaksURIs* uris, LV2_URID_Map* map)
 static inline PeaksSender*
 peaks_sender_init(PeaksSender* sender, LV2_URID_Map* map)
 {
-	memset(sender, 0, sizeof(*sender));
-	peaks_map_uris(&sender->uris, map);
-	return sender;
+  memset(sender, 0, sizeof(*sender));
+  peaks_map_uris(&sender->uris, map);
+  return sender;
 }
 
 /**
@@ -115,11 +115,11 @@ peaks_sender_start(PeaksSender* sender,
                    uint32_t     n_samples,
                    uint32_t     n_peaks)
 {
-	sender->samples        = samples;
-	sender->n_samples      = n_samples;
-	sender->n_peaks        = n_peaks;
-	sender->current_offset = 0;
-	sender->sending        = true;
+  sender->samples        = samples;
+  sender->n_samples      = n_samples;
+  sender->n_peaks        = n_peaks;
+  sender->current_offset = 0;
+  sender->sending        = true;
 }
 
 /**
@@ -129,10 +129,10 @@ peaks_sender_start(PeaksSender* sender,
    [source,turtle]
    ----
    []
-   	   a peaks:PeakUpdate ;
-   	   peaks:offset 256 ;
-   	   peaks:total 1024 ;
-   	   peaks:magnitudes [ 0.2f, 0.3f, ... ] .
+           a peaks:PeakUpdate ;
+           peaks:offset 256 ;
+           peaks:total 1024 ;
+           peaks:magnitudes [ 0.2f, 0.3f, ... ] .
    ----
 */
 static inline bool
@@ -141,53 +141,53 @@ peaks_sender_send(PeaksSender*    sender,
                   uint32_t        n_frames,
                   uint32_t        offset)
 {
-	const PeaksURIs* uris = &sender->uris;
-	if (!sender->sending || sender->current_offset >= sender->n_peaks) {
-		return sender->sending = false;
-	}
+  const PeaksURIs* uris = &sender->uris;
+  if (!sender->sending || sender->current_offset >= sender->n_peaks) {
+    return sender->sending = false;
+  }
 
-	// Start PeakUpdate object
-	lv2_atom_forge_frame_time(forge, offset);
-	LV2_Atom_Forge_Frame frame;
-	lv2_atom_forge_object(forge, &frame, 0, uris->peaks_PeakUpdate);
+  // Start PeakUpdate object
+  lv2_atom_forge_frame_time(forge, offset);
+  LV2_Atom_Forge_Frame frame;
+  lv2_atom_forge_object(forge, &frame, 0, uris->peaks_PeakUpdate);
 
-	// eg:offset = OFFSET
-	lv2_atom_forge_key(forge, uris->peaks_offset);
-	lv2_atom_forge_int(forge, sender->current_offset);
+  // eg:offset = OFFSET
+  lv2_atom_forge_key(forge, uris->peaks_offset);
+  lv2_atom_forge_int(forge, sender->current_offset);
 
-	// eg:total = TOTAL
-	lv2_atom_forge_key(forge, uris->peaks_total);
-	lv2_atom_forge_int(forge, sender->n_peaks);
+  // eg:total = TOTAL
+  lv2_atom_forge_key(forge, uris->peaks_total);
+  lv2_atom_forge_int(forge, sender->n_peaks);
 
-	// eg:magnitudes = Vector<Float>(PEAK, PEAK, ...)
-	lv2_atom_forge_key(forge, uris->peaks_magnitudes);
-	LV2_Atom_Forge_Frame vec_frame;
-	lv2_atom_forge_vector_head(
-		forge, &vec_frame, sizeof(float), uris->atom_Float);
+  // eg:magnitudes = Vector<Float>(PEAK, PEAK, ...)
+  lv2_atom_forge_key(forge, uris->peaks_magnitudes);
+  LV2_Atom_Forge_Frame vec_frame;
+  lv2_atom_forge_vector_head(
+    forge, &vec_frame, sizeof(float), uris->atom_Float);
 
-	// Calculate how many peaks to send this update
-	const uint32_t chunk_size = MAX(1u, sender->n_samples / sender->n_peaks);
-	const uint32_t space      = forge->size - forge->offset;
-	const uint32_t remaining  = sender->n_peaks - sender->current_offset;
-	const uint32_t n_update   = MIN(remaining,
-	                                MIN(n_frames / 4u, space / sizeof(float)));
+  // Calculate how many peaks to send this update
+  const uint32_t chunk_size = MAX(1u, sender->n_samples / sender->n_peaks);
+  const uint32_t space      = forge->size - forge->offset;
+  const uint32_t remaining  = sender->n_peaks - sender->current_offset;
+  const uint32_t n_update =
+    MIN(remaining, MIN(n_frames / 4u, space / sizeof(float)));
 
-	// Calculate peak (maximum magnitude) for each chunk
-	for (uint32_t i = 0; i < n_update; ++i) {
-		const uint32_t start = (sender->current_offset + i) * chunk_size;
-		float          peak  = 0.0f;
-		for (uint32_t j = 0; j < chunk_size; ++j) {
-			peak = fmaxf(peak, fabsf(sender->samples[start + j]));
-		}
-		lv2_atom_forge_float(forge, peak);
-	}
+  // Calculate peak (maximum magnitude) for each chunk
+  for (uint32_t i = 0; i < n_update; ++i) {
+    const uint32_t start = (sender->current_offset + i) * chunk_size;
+    float          peak  = 0.0f;
+    for (uint32_t j = 0; j < chunk_size; ++j) {
+      peak = fmaxf(peak, fabsf(sender->samples[start + j]));
+    }
+    lv2_atom_forge_float(forge, peak);
+  }
 
-	// Finish message
-	lv2_atom_forge_pop(forge, &vec_frame);
-	lv2_atom_forge_pop(forge, &frame);
+  // Finish message
+  lv2_atom_forge_pop(forge, &vec_frame);
+  lv2_atom_forge_pop(forge, &frame);
 
-	sender->current_offset += n_update;
-	return true;
+  sender->current_offset += n_update;
+  return true;
 }
 
 /**
@@ -197,9 +197,9 @@ peaks_sender_send(PeaksSender*    sender,
 static inline PeaksReceiver*
 peaks_receiver_init(PeaksReceiver* receiver, LV2_URID_Map* map)
 {
-	memset(receiver, 0, sizeof(*receiver));
-	peaks_map_uris(&receiver->uris, map);
-	return receiver;
+  memset(receiver, 0, sizeof(*receiver));
+  peaks_map_uris(&receiver->uris, map);
+  return receiver;
 }
 
 /**
@@ -209,9 +209,9 @@ peaks_receiver_init(PeaksReceiver* receiver, LV2_URID_Map* map)
 static inline void
 peaks_receiver_clear(PeaksReceiver* receiver)
 {
-	free(receiver->peaks);
-	receiver->peaks   = NULL;
-	receiver->n_peaks = 0;
+  free(receiver->peaks);
+  receiver->peaks   = NULL;
+  receiver->n_peaks = 0;
 }
 
 /**
@@ -225,56 +225,56 @@ peaks_receiver_clear(PeaksReceiver* receiver)
 static inline int
 peaks_receiver_receive(PeaksReceiver* receiver, const LV2_Atom_Object* update)
 {
-	const PeaksURIs* uris = &receiver->uris;
+  const PeaksURIs* uris = &receiver->uris;
 
-	// Get properties of interest from update
-	const LV2_Atom_Int*    offset = NULL;
-	const LV2_Atom_Int*    total  = NULL;
-	const LV2_Atom_Vector* peaks  = NULL;
+  // Get properties of interest from update
+  const LV2_Atom_Int*    offset = NULL;
+  const LV2_Atom_Int*    total  = NULL;
+  const LV2_Atom_Vector* peaks  = NULL;
 
-	// clang-format off
-	lv2_atom_object_get_typed(update,
-	                          uris->peaks_offset,     &offset, uris->atom_Int,
-	                          uris->peaks_total,      &total,  uris->atom_Int,
-	                          uris->peaks_magnitudes, &peaks,  uris->atom_Vector,
-	                          0);
-	// clang-format on
+  // clang-format off
+  lv2_atom_object_get_typed(update,
+                            uris->peaks_offset,     &offset, uris->atom_Int,
+                            uris->peaks_total,      &total,  uris->atom_Int,
+                            uris->peaks_magnitudes, &peaks,  uris->atom_Vector,
+                            0);
+  // clang-format on
 
-	if (!offset || !total || !peaks ||
-	    peaks->body.child_type != uris->atom_Float) {
-		return -1;  // Invalid update
-	}
+  if (!offset || !total || !peaks ||
+      peaks->body.child_type != uris->atom_Float) {
+    return -1; // Invalid update
+  }
 
-	const uint32_t n = (uint32_t)total->body;
-	if (receiver->n_peaks != n) {
-		// Update is for a different total number of peaks, resize
-		receiver->peaks = (float*)realloc(receiver->peaks, n * sizeof(float));
-		if (receiver->n_peaks > 0 && receiver->n_peaks < n) {
-			/* The peaks array is being expanded.  Copy the old peaks,
-			   duplicating each as necessary to fill the new peaks buffer.
-			   This preserves the current peaks so that the peaks array can be
-			   reasonably drawn at any time, but the resolution will increase
-			   as new updates arrive. */
-			const int64_t n_per = n / receiver->n_peaks;
-			for (int64_t i = n - 1; i >= 0; --i) {
-				receiver->peaks[i] = receiver->peaks[i / n_per];
-			}
-		} else if (receiver->n_peaks > 0) {
-			/* The peak array is being shrunk.  Similar to the above. */
-			const int64_t n_per = receiver->n_peaks / n;
-			for (int64_t i = n - 1; i >= 0; --i) {
-				receiver->peaks[i] = receiver->peaks[i * n_per];
-			}
-		}
-		receiver->n_peaks = n;
-	}
+  const uint32_t n = (uint32_t)total->body;
+  if (receiver->n_peaks != n) {
+    // Update is for a different total number of peaks, resize
+    receiver->peaks = (float*)realloc(receiver->peaks, n * sizeof(float));
+    if (receiver->n_peaks > 0 && receiver->n_peaks < n) {
+      /* The peaks array is being expanded.  Copy the old peaks,
+         duplicating each as necessary to fill the new peaks buffer.
+         This preserves the current peaks so that the peaks array can be
+         reasonably drawn at any time, but the resolution will increase
+         as new updates arrive. */
+      const int64_t n_per = n / receiver->n_peaks;
+      for (int64_t i = n - 1; i >= 0; --i) {
+        receiver->peaks[i] = receiver->peaks[i / n_per];
+      }
+    } else if (receiver->n_peaks > 0) {
+      /* The peak array is being shrunk.  Similar to the above. */
+      const int64_t n_per = receiver->n_peaks / n;
+      for (int64_t i = n - 1; i >= 0; --i) {
+        receiver->peaks[i] = receiver->peaks[i * n_per];
+      }
+    }
+    receiver->n_peaks = n;
+  }
 
-	// Copy vector contents to corresponding range in peaks array
-	memcpy(receiver->peaks + offset->body,
-	       peaks + 1,
-	       peaks->atom.size - sizeof(LV2_Atom_Vector_Body));
+  // Copy vector contents to corresponding range in peaks array
+  memcpy(receiver->peaks + offset->body,
+         peaks + 1,
+         peaks->atom.size - sizeof(LV2_Atom_Vector_Body));
 
-	return 0;
+  return 0;
 }
 
 #endif // PEAKS_H_INCLUDED

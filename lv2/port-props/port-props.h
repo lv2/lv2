@@ -50,4 +50,4 @@
    @}
 */
 
-#endif  /* LV2_PORT_PROPS_H */
+#endif /* LV2_PORT_PROPS_H */

@@ -39,4 +39,4 @@
    @}
 */
 
-#endif  /* LV2_INSTANCE_ACCESS_H */
+#endif /* LV2_INSTANCE_ACCESS_H */
