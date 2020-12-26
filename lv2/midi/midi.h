@@ -35,6 +35,8 @@
 extern "C" {
 #endif
 
+// clang-format off
+
 #define LV2_MIDI_URI    "http://lv2plug.in/ns/ext/midi"  ///< http://lv2plug.in/ns/ext/midi
 #define LV2_MIDI_PREFIX LV2_MIDI_URI "#"                 ///< http://lv2plug.in/ns/ext/midi#
 
@@ -79,6 +81,8 @@ extern "C" {
 #define LV2_MIDI__status           LV2_MIDI_PREFIX "status"            ///< http://lv2plug.in/ns/ext/midi#status
 #define LV2_MIDI__statusMask       LV2_MIDI_PREFIX "statusMask"        ///< http://lv2plug.in/ns/ext/midi#statusMask
 #define LV2_MIDI__velocity         LV2_MIDI_PREFIX "velocity"          ///< http://lv2plug.in/ns/ext/midi#velocity
+
+// clang-format on
 
 /**
    MIDI Message Type.

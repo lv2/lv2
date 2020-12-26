@@ -261,12 +261,15 @@ instantiate(const LV2UI_Descriptor*   descriptor,
 	ui->did_init   = false;
 
 	// Get host features
+	// clang-format off
 	const char* missing = lv2_features_query(
 		features,
 		LV2_LOG__log,         &ui->logger.log ,   false,
 		LV2_URID__map,        &ui->map,           true,
 		LV2_UI__requestValue, &ui->request_value, false,
 		NULL);
+	// clang-format on
+
 	lv2_log_logger_set_map(&ui->logger, ui->map);
 	if (missing) {
 		lv2_log_error(&ui->logger, "Missing feature <%s>\n", missing);

@@ -36,8 +36,12 @@
 #ifndef LV2_URI_MAP_H
 #define LV2_URI_MAP_H
 
+// clang-format off
+
 #define LV2_URI_MAP_URI    "http://lv2plug.in/ns/ext/uri-map"  ///< http://lv2plug.in/ns/ext/uri-map
 #define LV2_URI_MAP_PREFIX LV2_URI_MAP_URI "#"                 ///< http://lv2plug.in/ns/ext/uri-map#
+
+// clang-format on
 
 #include "lv2/core/attributes.h"
 

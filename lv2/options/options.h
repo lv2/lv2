@@ -33,6 +33,8 @@
 
 #include <stdint.h>
 
+// clang-format off
+
 #define LV2_OPTIONS_URI    "http://lv2plug.in/ns/ext/options"  ///< http://lv2plug.in/ns/ext/options
 #define LV2_OPTIONS_PREFIX LV2_OPTIONS_URI "#"                 ///< http://lv2plug.in/ns/ext/options#
 
@@ -41,6 +43,8 @@
 #define LV2_OPTIONS__options         LV2_OPTIONS_PREFIX "options"          ///< http://lv2plug.in/ns/ext/options#options
 #define LV2_OPTIONS__requiredOption  LV2_OPTIONS_PREFIX "requiredOption"   ///< http://lv2plug.in/ns/ext/options#requiredOption
 #define LV2_OPTIONS__supportedOption LV2_OPTIONS_PREFIX "supportedOption"  ///< http://lv2plug.in/ns/ext/options#supportedOption
+
+// clang-format on
 
 #ifdef __cplusplus
 extern "C" {

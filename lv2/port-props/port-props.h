@@ -26,6 +26,8 @@
 #ifndef LV2_PORT_PROPS_H
 #define LV2_PORT_PROPS_H
 
+// clang-format off
+
 #define LV2_PORT_PROPS_URI    "http://lv2plug.in/ns/ext/port-props"  ///< http://lv2plug.in/ns/ext/port-props
 #define LV2_PORT_PROPS_PREFIX LV2_PORT_PROPS_URI "#"                 ///< http://lv2plug.in/ns/ext/port-props#
 
@@ -41,6 +43,8 @@
 #define LV2_PORT_PROPS__rangeSteps           LV2_PORT_PROPS_PREFIX "rangeSteps"            ///< http://lv2plug.in/ns/ext/port-props#rangeSteps
 #define LV2_PORT_PROPS__supportsStrictBounds LV2_PORT_PROPS_PREFIX "supportsStrictBounds"  ///< http://lv2plug.in/ns/ext/port-props#supportsStrictBounds
 #define LV2_PORT_PROPS__trigger              LV2_PORT_PROPS_PREFIX "trigger"               ///< http://lv2plug.in/ns/ext/port-props#trigger
+
+// clang-format on
 
 #endif  /* LV2_PORT_PROPS_H */
 

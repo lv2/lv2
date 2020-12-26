@@ -152,12 +152,15 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	// Get host features
+	// clang-format off
 	const char* missing = lv2_features_query(
 		features,
 		LV2_LOG__log,    &self->log.log, false,
 		LV2_URID__map,   &self->map,     true,
 		LV2_URID__unmap, &self->unmap,   false,
 		NULL);
+	// clang-format on
+
 	lv2_log_logger_set_map(&self->log, self->map);
 	if (missing) {
 		lv2_log_error(&self->log, "Missing feature <%s>\n", missing);
@@ -170,6 +173,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 	lv2_atom_forge_init(&self->forge, self->map);
 
 	// Initialise state dictionary
+	// clang-format off
 	State* state = &self->state;
 	state_map_init(
 		self->props, self->map, self->map->handle,
@@ -183,6 +187,7 @@ instantiate(const LV2_Descriptor*     descriptor,
 		EG_PARAMS_URI "#lfo",    STATE_MAP_INIT(Float,  &state->lfo),
 		EG_PARAMS_URI "#spring", STATE_MAP_INIT(Float,  &state->spring),
 		NULL);
+	// clang-format on
 
 	return (LV2_Handle)self;
 }
@@ -418,11 +423,15 @@ run(LV2_Handle instance, uint32_t sample_count)
 			const LV2_Atom_URID* subject  = NULL;
 			const LV2_Atom_URID* property = NULL;
 			const LV2_Atom*      value    = NULL;
+
+			// clang-format off
 			lv2_atom_object_get(obj,
 			                    uris->patch_subject,  (const LV2_Atom**)&subject,
 			                    uris->patch_property, (const LV2_Atom**)&property,
 			                    uris->patch_value,    &value,
 			                    0);
+			// clang-format on
+
 			if (!subject_is_plugin(self, subject)) {
 				lv2_log_error(&self->log, "Set for unknown subject\n");
 			} else if (!property) {
@@ -438,10 +447,14 @@ run(LV2_Handle instance, uint32_t sample_count)
 			// Get the property of the get message
 			const LV2_Atom_URID* subject  = NULL;
 			const LV2_Atom_URID* property = NULL;
+
+			// clang-format off
 			lv2_atom_object_get(obj,
 			                    uris->patch_subject,  (const LV2_Atom**)&subject,
 			                    uris->patch_property, (const LV2_Atom**)&property,
 			                    0);
+			// clang-format on
+
 			if (!subject_is_plugin(self, subject)) {
 				lv2_log_error(&self->log, "Get with unknown subject\n");
 			} else if (!property) {

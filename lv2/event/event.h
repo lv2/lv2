@@ -29,6 +29,8 @@
 #ifndef LV2_EVENT_H
 #define LV2_EVENT_H
 
+// clang-format off
+
 #define LV2_EVENT_URI    "http://lv2plug.in/ns/ext/event"  ///< http://lv2plug.in/ns/ext/event
 #define LV2_EVENT_PREFIX LV2_EVENT_URI "#"                 ///< http://lv2plug.in/ns/ext/event#
 
@@ -42,6 +44,8 @@
 #define LV2_EVENT__inheritsTimeStamp  LV2_EVENT_PREFIX "inheritsTimeStamp"   ///< http://lv2plug.in/ns/ext/event#inheritsTimeStamp
 #define LV2_EVENT__supportsEvent      LV2_EVENT_PREFIX "supportsEvent"       ///< http://lv2plug.in/ns/ext/event#supportsEvent
 #define LV2_EVENT__supportsTimeStamp  LV2_EVENT_PREFIX "supportsTimeStamp"   ///< http://lv2plug.in/ns/ext/event#supportsTimeStamp
+
+// clang-format on
 
 #define LV2_EVENT_AUDIO_STAMP 0  ///< Special timestamp type for audio frames
 

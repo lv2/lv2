@@ -28,6 +28,8 @@
 #ifndef LV2_UNITS_H
 #define LV2_UNITS_H
 
+// clang-format off
+
 #define LV2_UNITS_URI    "http://lv2plug.in/ns/extensions/units"  ///< http://lv2plug.in/ns/extensions/units
 #define LV2_UNITS_PREFIX LV2_UNITS_URI "#"                        ///< http://lv2plug.in/ns/extensions/units#
 
@@ -63,6 +65,8 @@
 #define LV2_UNITS__semitone12TET    LV2_UNITS_PREFIX "semitone12TET"     ///< http://lv2plug.in/ns/extensions/units#semitone12TET
 #define LV2_UNITS__symbol           LV2_UNITS_PREFIX "symbol"            ///< http://lv2plug.in/ns/extensions/units#symbol
 #define LV2_UNITS__unit             LV2_UNITS_PREFIX "unit"              ///< http://lv2plug.in/ns/extensions/units#unit
+
+// clang-format on
 
 #endif  /* LV2_UNITS_H */
 

@@ -67,11 +67,14 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	// Scan host features for URID map
+	// clang-format off
 	const char* missing = lv2_features_query(
 		features,
 		LV2_LOG__log,  &self->logger.log, false,
 		LV2_URID__map, &self->map,        true,
 		NULL);
+	// clang-format on
+
 	lv2_log_logger_set_map(&self->logger, self->map);
 	if (missing) {
 		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);

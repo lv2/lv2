@@ -29,6 +29,8 @@
 #ifndef LV2_URID_H
 #define LV2_URID_H
 
+// clang-format off
+
 #define LV2_URID_URI    "http://lv2plug.in/ns/ext/urid"  ///< http://lv2plug.in/ns/ext/urid
 #define LV2_URID_PREFIX LV2_URID_URI "#"                 ///< http://lv2plug.in/ns/ext/urid#
 
@@ -37,6 +39,8 @@
 
 #define LV2_URID_MAP_URI   LV2_URID__map    ///< Legacy
 #define LV2_URID_UNMAP_URI LV2_URID__unmap  ///< Legacy
+
+// clang-format on
 
 #include <stdint.h>
 

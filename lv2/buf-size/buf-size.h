@@ -28,6 +28,8 @@
    @{
 */
 
+// clang-format off
+
 #define LV2_BUF_SIZE_URI    "http://lv2plug.in/ns/ext/buf-size"  ///< http://lv2plug.in/ns/ext/buf-size
 #define LV2_BUF_SIZE_PREFIX LV2_BUF_SIZE_URI "#" ///< http://lv2plug.in/ns/ext/buf-size#
 
@@ -39,6 +41,8 @@
 #define LV2_BUF_SIZE__nominalBlockLength  LV2_BUF_SIZE_PREFIX "nominalBlockLength"   ///< http://lv2plug.in/ns/ext/buf-size#nominalBlockLength
 #define LV2_BUF_SIZE__powerOf2BlockLength LV2_BUF_SIZE_PREFIX "powerOf2BlockLength"  ///< http://lv2plug.in/ns/ext/buf-size#powerOf2BlockLength
 #define LV2_BUF_SIZE__sequenceSize        LV2_BUF_SIZE_PREFIX "sequenceSize"         ///< http://lv2plug.in/ns/ext/buf-size#sequenceSize
+
+// clang-format on
 
 /**
    @}

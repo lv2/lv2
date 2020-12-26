@@ -29,12 +29,16 @@
 #include <stddef.h>
 #include <stdint.h>
 
+// clang-format off
+
 #define LV2_RESIZE_PORT_URI    "http://lv2plug.in/ns/ext/resize-port"  ///< http://lv2plug.in/ns/ext/resize-port
 #define LV2_RESIZE_PORT_PREFIX LV2_RESIZE_PORT_URI "#"                 ///< http://lv2plug.in/ns/ext/resize-port#
 
 #define LV2_RESIZE_PORT__asLargeAs   LV2_RESIZE_PORT_PREFIX "asLargeAs"    ///< http://lv2plug.in/ns/ext/resize-port#asLargeAs
 #define LV2_RESIZE_PORT__minimumSize LV2_RESIZE_PORT_PREFIX "minimumSize"  ///< http://lv2plug.in/ns/ext/resize-port#minimumSize
 #define LV2_RESIZE_PORT__resize      LV2_RESIZE_PORT_PREFIX "resize"       ///< http://lv2plug.in/ns/ext/resize-port#resize
+
+// clang-format on
 
 #ifdef __cplusplus
 extern "C" {

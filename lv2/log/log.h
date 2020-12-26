@@ -28,6 +28,8 @@
 #ifndef LV2_LOG_H
 #define LV2_LOG_H
 
+// clang-format off
+
 #define LV2_LOG_URI    "http://lv2plug.in/ns/ext/log"  ///< http://lv2plug.in/ns/ext/log
 #define LV2_LOG_PREFIX LV2_LOG_URI "#"                 ///< http://lv2plug.in/ns/ext/log#
 
@@ -37,6 +39,8 @@
 #define LV2_LOG__Trace   LV2_LOG_PREFIX "Trace"    ///< http://lv2plug.in/ns/ext/log#Trace
 #define LV2_LOG__Warning LV2_LOG_PREFIX "Warning"  ///< http://lv2plug.in/ns/ext/log#Warning
 #define LV2_LOG__log     LV2_LOG_PREFIX "log"      ///< http://lv2plug.in/ns/ext/log#log
+
+// clang-format on
 
 #include "lv2/urid/urid.h"
 

@@ -28,6 +28,8 @@
 #ifndef LV2_PARAMETERS_H
 #define LV2_PARAMETERS_H
 
+// clang-format off
+
 #define LV2_PARAMETERS_URI    "http://lv2plug.in/ns/ext/parameters"  ///< http://lv2plug.in/ns/ext/parameters
 #define LV2_PARAMETERS_PREFIX LV2_PARAMETERS_URI "#"                 ///< http://lv2plug.in/ns/ext/parameters#
 
@@ -56,6 +58,8 @@
 #define LV2_PARAMETERS__waveform           LV2_PARAMETERS_PREFIX "waveform"            ///< http://lv2plug.in/ns/ext/parameters#waveform
 #define LV2_PARAMETERS__wetDryRatio        LV2_PARAMETERS_PREFIX "wetDryRatio"         ///< http://lv2plug.in/ns/ext/parameters#wetDryRatio
 #define LV2_PARAMETERS__wetLevel           LV2_PARAMETERS_PREFIX "wetLevel"            ///< http://lv2plug.in/ns/ext/parameters#wetLevel
+
+// clang-format on
 
 #endif  /* LV2_PARAMETERS_H */
 

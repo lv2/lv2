@@ -341,6 +341,8 @@ main(void)
 			return test_fail("Bad match sequence\n");
 		}
 		memset(&matches, 0, sizeof(matches));
+
+		// clang-format off
 		n_matches = lv2_atom_object_get((LV2_Atom_Object*)obj,
 		                                eg_one,     &matches.one,
 		                                eg_two,     &matches.two,
@@ -358,6 +360,7 @@ main(void)
 		                                eg_vector2, &matches.vector2,
 		                                eg_seq,     &matches.seq,
 		                                0);
+		// clang-format on
 	}
 
 	free_urid_map();

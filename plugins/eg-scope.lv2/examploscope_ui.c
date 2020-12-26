@@ -559,11 +559,14 @@ recv_raw_audio(EgScopeUI* ui, const LV2_Atom_Object* obj)
 {
 	const LV2_Atom* chan_val = NULL;
 	const LV2_Atom* data_val = NULL;
+
+	// clang-format off
 	const int n_props  = lv2_atom_object_get(
 		obj,
 		ui->uris.channelID, &chan_val,
 		ui->uris.audioData, &data_val,
 		NULL);
+	// clang-format on
 
 	if (n_props != 2 ||
 	    chan_val->type != ui->uris.atom_Int ||
@@ -598,12 +601,15 @@ recv_ui_state(EgScopeUI* ui, const LV2_Atom_Object* obj)
 	const LV2_Atom* spp_val  = NULL;
 	const LV2_Atom* amp_val  = NULL;
 	const LV2_Atom* rate_val = NULL;
+
+	// clang-format off
 	const int n_props  = lv2_atom_object_get(
 		obj,
 		ui->uris.ui_spp, &spp_val,
 		ui->uris.ui_amp, &amp_val,
 		ui->uris.param_sampleRate, &rate_val,
 		NULL);
+	// clang-format on
 
 	if (n_props != 3 ||
 		spp_val->type != ui->uris.atom_Int ||

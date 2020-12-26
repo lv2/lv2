@@ -31,6 +31,8 @@
 #ifndef LV2_PATCH_H
 #define LV2_PATCH_H
 
+// clang-format off
+
 #define LV2_PATCH_URI    "http://lv2plug.in/ns/ext/patch"  ///< http://lv2plug.in/ns/ext/patch
 #define LV2_PATCH_PREFIX LV2_PATCH_URI "#"                 ///< http://lv2plug.in/ns/ext/patch#
 
@@ -61,6 +63,8 @@
 #define LV2_PATCH__value          LV2_PATCH_PREFIX "value"           ///< http://lv2plug.in/ns/ext/patch#value
 #define LV2_PATCH__wildcard       LV2_PATCH_PREFIX "wildcard"        ///< http://lv2plug.in/ns/ext/patch#wildcard
 #define LV2_PATCH__writable       LV2_PATCH_PREFIX "writable"        ///< http://lv2plug.in/ns/ext/patch#writable
+
+// clang-format on
 
 #endif  /* LV2_PATCH_H */
 

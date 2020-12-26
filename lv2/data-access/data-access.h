@@ -29,8 +29,12 @@
 #ifndef LV2_DATA_ACCESS_H
 #define LV2_DATA_ACCESS_H
 
+// clang-format off
+
 #define LV2_DATA_ACCESS_URI    "http://lv2plug.in/ns/ext/data-access"  ///< http://lv2plug.in/ns/ext/data-access
 #define LV2_DATA_ACCESS_PREFIX LV2_DATA_ACCESS_URI "#"                 ///< http://lv2plug.in/ns/ext/data-access#
+
+// clang-format on
 
 #ifdef __cplusplus
 extern "C" {

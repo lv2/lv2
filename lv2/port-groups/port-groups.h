@@ -28,6 +28,8 @@
 #ifndef LV2_PORT_GROUPS_H
 #define LV2_PORT_GROUPS_H
 
+// clang-format off
+
 #define LV2_PORT_GROUPS_URI    "http://lv2plug.in/ns/ext/port-groups"  ///< http://lv2plug.in/ns/ext/port-groups
 #define LV2_PORT_GROUPS_PREFIX LV2_PORT_GROUPS_URI "#"                 ///< http://lv2plug.in/ns/ext/port-groups#
 
@@ -65,6 +67,8 @@
 #define LV2_PORT_GROUPS__sideRight              LV2_PORT_GROUPS_PREFIX "sideRight"               ///< http://lv2plug.in/ns/ext/port-groups#sideRight
 #define LV2_PORT_GROUPS__source                 LV2_PORT_GROUPS_PREFIX "source"                  ///< http://lv2plug.in/ns/ext/port-groups#source
 #define LV2_PORT_GROUPS__subGroupOf             LV2_PORT_GROUPS_PREFIX "subGroupOf"              ///< http://lv2plug.in/ns/ext/port-groups#subGroupOf
+
+// clang-format on
 
 #endif  /* LV2_PORT_GROUPS_H */
 

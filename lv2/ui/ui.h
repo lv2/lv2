@@ -36,6 +36,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+// clang-format off
+
 #define LV2_UI_URI    "http://lv2plug.in/ns/extensions/ui"  ///< http://lv2plug.in/ns/extensions/ui
 #define LV2_UI_PREFIX LV2_UI_URI "#"                        ///< http://lv2plug.in/ns/extensions/ui#
 
@@ -73,6 +75,8 @@
 #define LV2_UI__scaleFactor      LV2_UI_PREFIX "scaleFactor"       ///< http://lv2plug.in/ns/extensions/ui#scaleFactor
 #define LV2_UI__foregroundColor  LV2_UI_PREFIX "foregroundColor"   ///< http://lv2plug.in/ns/extensions/ui#foregroundColor
 #define LV2_UI__backgroundColor  LV2_UI_PREFIX "backgroundColor"   ///< http://lv2plug.in/ns/extensions/ui#backgroundColor
+
+// clang-format on
 
 /**
    The index returned by LV2UI_Port_Map::port_index() for unknown ports.

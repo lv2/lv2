@@ -31,6 +31,8 @@
 #ifndef LV2_TIME_H
 #define LV2_TIME_H
 
+// clang-format off
+
 #define LV2_TIME_URI    "http://lv2plug.in/ns/ext/time"  ///< http://lv2plug.in/ns/ext/time
 #define LV2_TIME_PREFIX LV2_TIME_URI "#"                 ///< http://lv2plug.in/ns/ext/time#
 
@@ -47,6 +49,8 @@
 #define LV2_TIME__frame           LV2_TIME_PREFIX "frame"            ///< http://lv2plug.in/ns/ext/time#frame
 #define LV2_TIME__framesPerSecond LV2_TIME_PREFIX "framesPerSecond"  ///< http://lv2plug.in/ns/ext/time#framesPerSecond
 #define LV2_TIME__speed           LV2_TIME_PREFIX "speed"            ///< http://lv2plug.in/ns/ext/time#speed
+
+// clang-format on
 
 /**
    @}

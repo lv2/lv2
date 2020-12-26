@@ -32,11 +32,15 @@
 
 #include <stdint.h>
 
+// clang-format off
+
 #define LV2_WORKER_URI    "http://lv2plug.in/ns/ext/worker"  ///< http://lv2plug.in/ns/ext/worker
 #define LV2_WORKER_PREFIX LV2_WORKER_URI "#"                 ///< http://lv2plug.in/ns/ext/worker#
 
 #define LV2_WORKER__interface LV2_WORKER_PREFIX "interface"  ///< http://lv2plug.in/ns/ext/worker#interface
 #define LV2_WORKER__schedule  LV2_WORKER_PREFIX "schedule"   ///< http://lv2plug.in/ns/ext/worker#schedule
+
+// clang-format on
 
 #ifdef __cplusplus
 extern "C" {

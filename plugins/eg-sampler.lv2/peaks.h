@@ -231,11 +231,14 @@ peaks_receiver_receive(PeaksReceiver* receiver, const LV2_Atom_Object* update)
 	const LV2_Atom_Int*    offset = NULL;
 	const LV2_Atom_Int*    total  = NULL;
 	const LV2_Atom_Vector* peaks  = NULL;
+
+	// clang-format off
 	lv2_atom_object_get_typed(update,
 	                          uris->peaks_offset,     &offset, uris->atom_Int,
 	                          uris->peaks_total,      &total,  uris->atom_Int,
 	                          uris->peaks_magnitudes, &peaks,  uris->atom_Vector,
 	                          0);
+	// clang-format on
 
 	if (!offset || !total || !peaks ||
 	    peaks->body.child_type != uris->atom_Float) {

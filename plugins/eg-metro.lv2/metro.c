@@ -155,11 +155,14 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	// Scan host features for URID map
+	// clang-format off
 	const char* missing = lv2_features_query(
 		features,
 		LV2_LOG__log,  &self->logger.log, false,
 		LV2_URID__map, &self->map, true,
 		NULL);
+	// clang-format on
+
 	lv2_log_logger_set_map(&self->logger, self->map);
 	if (missing) {
 		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
@@ -269,11 +272,15 @@ update_position(Metro* self, const LV2_Atom_Object* obj)
 	LV2_Atom* beat  = NULL;
 	LV2_Atom* bpm   = NULL;
 	LV2_Atom* speed = NULL;
+
+	// clang-format off
 	lv2_atom_object_get(obj,
 	                    uris->time_barBeat, &beat,
 	                    uris->time_beatsPerMinute, &bpm,
 	                    uris->time_speed, &speed,
 	                    NULL);
+	// clang-format on
+
 	if (bpm && bpm->type == uris->atom_Float) {
 		// Tempo changed, update BPM
 		self->bpm = ((LV2_Atom_Float*)bpm)->body;

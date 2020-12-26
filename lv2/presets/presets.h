@@ -28,6 +28,8 @@
 #ifndef LV2_PRESETS_H
 #define LV2_PRESETS_H
 
+// clang-format off
+
 #define LV2_PRESETS_URI    "http://lv2plug.in/ns/ext/presets"  ///< http://lv2plug.in/ns/ext/presets
 #define LV2_PRESETS_PREFIX LV2_PRESETS_URI "#"                 ///< http://lv2plug.in/ns/ext/presets#
 
@@ -36,6 +38,8 @@
 #define LV2_PRESETS__bank   LV2_PRESETS_PREFIX "bank"    ///< http://lv2plug.in/ns/ext/presets#bank
 #define LV2_PRESETS__preset LV2_PRESETS_PREFIX "preset"  ///< http://lv2plug.in/ns/ext/presets#preset
 #define LV2_PRESETS__value  LV2_PRESETS_PREFIX "value"   ///< http://lv2plug.in/ns/ext/presets#value
+
+// clang-format on
 
 #endif  /* LV2_PRESETS_H */
 

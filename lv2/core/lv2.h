@@ -41,6 +41,8 @@
 
 #include <stdint.h>
 
+// clang-format off
+
 #define LV2_CORE_URI    "http://lv2plug.in/ns/lv2core"  ///< http://lv2plug.in/ns/lv2core
 #define LV2_CORE_PREFIX LV2_CORE_URI "#"                ///< http://lv2plug.in/ns/lv2core#
 
@@ -128,6 +130,8 @@
 #define LV2_CORE__scalePoint         LV2_CORE_PREFIX "scalePoint"          ///< http://lv2plug.in/ns/lv2core#scalePoint
 #define LV2_CORE__symbol             LV2_CORE_PREFIX "symbol"              ///< http://lv2plug.in/ns/lv2core#symbol
 #define LV2_CORE__toggled            LV2_CORE_PREFIX "toggled"             ///< http://lv2plug.in/ns/lv2core#toggled
+
+// clang-format on
 
 #ifdef __cplusplus
 extern "C" {

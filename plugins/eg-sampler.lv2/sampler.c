@@ -265,12 +265,15 @@ instantiate(const LV2_Descriptor*     descriptor,
 	}
 
 	// Get host features
+	// clang-format off
 	const char* missing = lv2_features_query(
 		features,
 		LV2_LOG__log,         &self->logger.log, false,
 		LV2_URID__map,        &self->map,        true,
 		LV2_WORKER__schedule, &self->schedule,   true,
 		NULL);
+	// clang-format on
+
 	lv2_log_logger_set_map(&self->logger, self->map);
 	if (missing) {
 		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
@@ -340,10 +343,14 @@ handle_event(Sampler* self, LV2_Atom_Event* ev)
 			// Get the property and value of the set message
 			const LV2_Atom* property = NULL;
 			const LV2_Atom* value    = NULL;
+
+			// clang-format off
 			lv2_atom_object_get(obj,
 			                    uris->patch_property, &property,
 			                    uris->patch_value,    &value,
 			                    0);
+			// clang-format on
+
 			if (!property) {
 				lv2_log_error(&self->logger, "Set message with no property\n");
 				return;
@@ -369,10 +376,14 @@ handle_event(Sampler* self, LV2_Atom_Event* ev)
 		} else if (obj->body.otype == uris->patch_Get && self->sample) {
 			const LV2_Atom_URID* accept  = NULL;
 			const LV2_Atom_Int*  n_peaks = NULL;
+
+			// clang-format off
 			lv2_atom_object_get_typed(
 				obj,
 				uris->patch_accept,      &accept,  uris->atom_URID,
 				peaks_uris->peaks_total, &n_peaks, peaks_uris->atom_Int, 0);
+			// clang-format on
+
 			if (accept && accept->body == peaks_uris->peaks_PeakUpdate) {
 				// Received a request for peaks, prepare for transmission
 				peaks_sender_start(&self->psend,
@@ -531,11 +542,15 @@ restore(LV2_Handle                  instance,
 	// Get host features
 	LV2_Worker_Schedule* schedule = NULL;
 	LV2_State_Map_Path*  paths    = NULL;
+
+	// clang-format off
 	const char*          missing  = lv2_features_query(
 		features,
 		LV2_STATE__mapPath,   &paths,    true,
 		LV2_WORKER__schedule, &schedule, false,
 		NULL);
+	// clang-format on
+
 	if (missing) {
 		lv2_log_error(&self->logger, "Missing feature <%s>\n", missing);
 		return LV2_STATE_ERR_NO_FEATURE;

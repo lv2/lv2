@@ -30,6 +30,8 @@
 
 #include <stdint.h>
 
+// clang-format off
+
 #define LV2_ATOM_URI    "http://lv2plug.in/ns/ext/atom"  ///< http://lv2plug.in/ns/ext/atom
 #define LV2_ATOM_PREFIX LV2_ATOM_URI "#"                 ///< http://lv2plug.in/ns/ext/atom#
 
@@ -64,6 +66,8 @@
 #define LV2_ATOM__frameTime     LV2_ATOM_PREFIX "frameTime"      ///< http://lv2plug.in/ns/ext/atom#frameTime
 #define LV2_ATOM__supports      LV2_ATOM_PREFIX "supports"       ///< http://lv2plug.in/ns/ext/atom#supports
 #define LV2_ATOM__timeUnit      LV2_ATOM_PREFIX "timeUnit"       ///< http://lv2plug.in/ns/ext/atom#timeUnit
+
+// clang-format on
 
 #define LV2_ATOM_REFERENCE_TYPE 0  ///< The special type for a reference atom
 
