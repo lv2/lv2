@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_LOG_H
+#define LV2_LOG_H
+
 /**
    @defgroup log Log
    @ingroup lv2
@@ -24,9 +27,6 @@
 
    @{
 */
-
-#ifndef LV2_LOG_H
-#define LV2_LOG_H
 
 // clang-format off
 
@@ -108,8 +108,8 @@ typedef struct {
 }  /* extern "C" */
 #endif
 
-#endif  /* LV2_LOG_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_LOG_H */

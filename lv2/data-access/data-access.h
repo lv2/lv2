@@ -15,6 +15,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_DATA_ACCESS_H
+#define LV2_DATA_ACCESS_H
+
 /**
    @defgroup data-access Data Access
    @ingroup lv2
@@ -25,9 +28,6 @@
 
    @{
 */
-
-#ifndef LV2_DATA_ACCESS_H
-#define LV2_DATA_ACCESS_H
 
 // clang-format off
 
@@ -67,8 +67,8 @@ typedef struct {
 }  /* extern "C" */
 #endif
 
-#endif  /* LV2_DATA_ACCESS_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_DATA_ACCESS_H */

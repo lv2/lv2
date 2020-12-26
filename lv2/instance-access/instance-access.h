@@ -15,6 +15,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_INSTANCE_ACCESS_H
+#define LV2_INSTANCE_ACCESS_H
+
 /**
    @defgroup instance-access Instance Access
    @ingroup lv2
@@ -26,17 +29,14 @@
    @{
 */
 
-#ifndef LV2_INSTANCE_ACCESS_H
-#define LV2_INSTANCE_ACCESS_H
-
 // clang-format off
 
 #define LV2_INSTANCE_ACCESS_URI "http://lv2plug.in/ns/ext/instance-access"  ///< http://lv2plug.in/ns/ext/instance-access
 
 // clang-format on
 
-#endif  /* LV2_INSTANCE_ACCESS_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_INSTANCE_ACCESS_H */

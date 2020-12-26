@@ -15,6 +15,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_EVENT_H
+#define LV2_EVENT_H
+
 /**
    @defgroup event Event
    @ingroup lv2
@@ -25,9 +28,6 @@
 
    @{
 */
-
-#ifndef LV2_EVENT_H
-#define LV2_EVENT_H
 
 // clang-format off
 
@@ -302,8 +302,8 @@ LV2_RESTORE_WARNINGS
 }  /* extern "C" */
 #endif
 
-#endif /* LV2_EVENT_H */
-
 /**
    @}
 */
+
+#endif /* LV2_EVENT_H */

@@ -15,6 +15,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_URID_H
+#define LV2_URID_H
+
 /**
    @defgroup urid URID
    @ingroup lv2
@@ -25,9 +28,6 @@
 
    @{
 */
-
-#ifndef LV2_URID_H
-#define LV2_URID_H
 
 // clang-format off
 
@@ -135,8 +135,8 @@ typedef struct {
 }  /* extern "C" */
 #endif
 
-#endif /* LV2_URID_H */
-
 /**
    @}
 */
+
+#endif /* LV2_URID_H */

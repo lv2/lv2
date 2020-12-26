@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_TIME_H
+#define LV2_TIME_H
+
 /**
    @defgroup time Time
    @ingroup lv2
@@ -27,9 +30,6 @@
 
    @{
 */
-
-#ifndef LV2_TIME_H
-#define LV2_TIME_H
 
 // clang-format off
 

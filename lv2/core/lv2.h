@@ -18,6 +18,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_H_INCLUDED
+#define LV2_H_INCLUDED
+
 /**
    @defgroup lv2 LV2
 
@@ -35,9 +38,6 @@
 
    @{
 */
-
-#ifndef LV2_H_INCLUDED
-#define LV2_H_INCLUDED
 
 #include <stdint.h>
 
@@ -477,12 +477,12 @@ typedef const LV2_Lib_Descriptor *
                                const LV2_Feature *const * features);
 
 #ifdef __cplusplus
-}
+} /* extern "C" */
 #endif
-
-#endif /* LV2_H_INCLUDED */
 
 /**
    @}
    @}
 */
+
+#endif /* LV2_H_INCLUDED */

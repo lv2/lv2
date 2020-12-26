@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_ATOM_H
+#define LV2_ATOM_H
+
 /**
    @defgroup atom Atom
    @ingroup lv2
@@ -24,9 +27,6 @@
 
    @{
 */
-
-#ifndef LV2_ATOM_H
-#define LV2_ATOM_H
 
 #include <stdint.h>
 
@@ -250,12 +250,12 @@ typedef struct {
 	LV2_Atom_Sequence_Body body;  /**< Body. */
 } LV2_Atom_Sequence;
 
-/**
-   @}
-*/
-
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
+
+/**
+   @}
+*/
 
 #endif  /* LV2_ATOM_H */

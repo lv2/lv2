@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_RESIZE_PORT_H
+#define LV2_RESIZE_PORT_H
+
 /**
    @defgroup resize-port Resize Port
    @ingroup lv2
@@ -22,9 +25,6 @@
 
    @{
 */
-
-#ifndef LV2_RESIZE_PORT_H
-#define LV2_RESIZE_PORT_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -82,8 +82,8 @@ typedef struct {
 }  /* extern "C" */
 #endif
 
-#endif  /* LV2_RESIZE_PORT_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_RESIZE_PORT_H */

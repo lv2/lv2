@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_PORT_PROPS_H
+#define LV2_PORT_PROPS_H
+
 /**
    @defgroup port-props Port Properties
    @ingroup lv2
@@ -22,9 +25,6 @@
 
    @{
 */
-
-#ifndef LV2_PORT_PROPS_H
-#define LV2_PORT_PROPS_H
 
 // clang-format off
 
@@ -46,8 +46,8 @@
 
 // clang-format on
 
-#endif  /* LV2_PORT_PROPS_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_PORT_PROPS_H */

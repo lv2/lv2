@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_MIDI_H
+#define LV2_MIDI_H
+
 /**
    @defgroup midi MIDI
    @ingroup lv2
@@ -24,9 +27,6 @@
 
    @{
 */
-
-#ifndef LV2_MIDI_H
-#define LV2_MIDI_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -234,8 +234,8 @@ lv2_midi_message_type(const uint8_t* msg) {
 }  /* extern "C" */
 #endif
 
-#endif  /* LV2_MIDI_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_MIDI_H */

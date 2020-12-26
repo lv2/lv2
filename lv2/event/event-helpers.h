@@ -14,13 +14,13 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_EVENT_HELPERS_H
+#define LV2_EVENT_HELPERS_H
+
 /**
    @file event-helpers.h Helper functions for the LV2 Event extension
    <http://lv2plug.in/ns/ext/event>.
 */
-
-#ifndef LV2_EVENT_HELPERS_H
-#define LV2_EVENT_HELPERS_H
 
 #include "lv2/core/attributes.h"
 #include "lv2/event/event.h"

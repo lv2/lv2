@@ -15,6 +15,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_STATE_H
+#define LV2_STATE_H
+
 /**
    @defgroup state State
    @ingroup lv2
@@ -25,9 +28,6 @@
 
    @{
 */
-
-#ifndef LV2_STATE_H
-#define LV2_STATE_H
 
 #include "lv2/core/lv2.h"
 
@@ -386,8 +386,8 @@ typedef struct {
 } /* extern "C" */
 #endif
 
-#endif /* LV2_STATE_H */
-
 /**
    @}
 */
+
+#endif /* LV2_STATE_H */

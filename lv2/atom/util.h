@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_ATOM_UTIL_H
+#define LV2_ATOM_UTIL_H
+
 /**
    @file util.h Helper functions for the LV2 Atom extension.
 
@@ -30,9 +33,6 @@
 
    @{
 */
-
-#ifndef LV2_ATOM_UTIL_H
-#define LV2_ATOM_UTIL_H
 
 #include "lv2/atom/atom.h"
 
@@ -512,13 +512,13 @@ lv2_atom_object_get_typed(const LV2_Atom_Object* object, ...)
 	return matches;
 }
 
+#ifdef __cplusplus
+}  /* extern "C" */
+#endif
+
 /**
    @}
    @}
 */
-
-#ifdef __cplusplus
-}  /* extern "C" */
-#endif
 
 #endif /* LV2_ATOM_UTIL_H */

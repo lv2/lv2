@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_UNITS_H
+#define LV2_UNITS_H
+
 /**
    @defgroup units Units
    @ingroup lv2
@@ -24,9 +27,6 @@
 
    @{
 */
-
-#ifndef LV2_UNITS_H
-#define LV2_UNITS_H
 
 // clang-format off
 
@@ -68,8 +68,8 @@
 
 // clang-format on
 
-#endif  /* LV2_UNITS_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_UNITS_H */

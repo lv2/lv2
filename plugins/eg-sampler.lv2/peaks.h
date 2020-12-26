@@ -15,6 +15,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef PEAKS_H_INCLUDED
+#define PEAKS_H_INCLUDED
+
 /**
    This file defines utilities for sending and receiving audio peaks for
    waveform display.  The functionality is divided into two objects:
@@ -24,9 +27,6 @@
    This allows peaks for a waveform of any size at any resolution to be
    requested, with reasonably sized incremental updates sent over plugin ports.
 */
-
-#ifndef PEAKS_H_INCLUDED
-#define PEAKS_H_INCLUDED
 
 #include "lv2/atom/atom.h"
 #include "lv2/atom/forge.h"

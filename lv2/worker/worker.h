@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_WORKER_H
+#define LV2_WORKER_H
+
 /**
    @defgroup worker Worker
    @ingroup lv2
@@ -24,9 +27,6 @@
 
    @{
 */
-
-#ifndef LV2_WORKER_H
-#define LV2_WORKER_H
 
 #include "lv2/core/lv2.h"
 
@@ -176,8 +176,8 @@ typedef struct {
 }  /* extern "C" */
 #endif
 
-#endif  /* LV2_WORKER_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_WORKER_H */

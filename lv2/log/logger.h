@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_ATOM_LOGGER_H
+#define LV2_ATOM_LOGGER_H
+
 /**
    @defgroup logger Logger
    @ingroup log
@@ -24,9 +27,6 @@
 
    @{
 */
-
-#ifndef LV2_ATOM_LOGGER_H
-#define LV2_ATOM_LOGGER_H
 
 #include "lv2/log/log.h"
 #include "lv2/urid/urid.h"
@@ -152,8 +152,8 @@ lv2_log_warning(LV2_Log_Logger* logger, const char* fmt, ...)
 }  /* extern "C" */
 #endif
 
-#endif  /* LV2_LOG_LOGGER_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_LOG_LOGGER_H */

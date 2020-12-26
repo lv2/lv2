@@ -16,6 +16,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_UI_H
+#define LV2_UI_H
+
 /**
    @defgroup ui User Interfaces
    @ingroup lv2
@@ -26,9 +29,6 @@
 
    @{
 */
-
-#ifndef LV2_UI_H
-#define LV2_UI_H
 
 #include "lv2/core/lv2.h"
 #include "lv2/urid/urid.h"
@@ -537,8 +537,8 @@ typedef const LV2UI_Descriptor* (*LV2UI_DescriptorFunction)(uint32_t index);
 }
 #endif
 
-#endif /* LV2_UI_H */
-
 /**
    @}
 */
+
+#endif /* LV2_UI_H */

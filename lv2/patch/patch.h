@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_PATCH_H
+#define LV2_PATCH_H
+
 /**
    @defgroup patch Patch
    @ingroup lv2
@@ -27,9 +30,6 @@
 
    @{
 */
-
-#ifndef LV2_PATCH_H
-#define LV2_PATCH_H
 
 // clang-format off
 
@@ -66,8 +66,8 @@
 
 // clang-format on
 
-#endif  /* LV2_PATCH_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_PATCH_H */

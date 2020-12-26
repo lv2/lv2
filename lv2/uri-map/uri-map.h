@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_URI_MAP_H
+#define LV2_URI_MAP_H
+
 /**
    @defgroup uri-map URI Map
    @ingroup lv2
@@ -32,9 +35,6 @@
 
    @{
 */
-
-#ifndef LV2_URI_MAP_H
-#define LV2_URI_MAP_H
 
 // clang-format off
 
@@ -114,8 +114,8 @@ LV2_RESTORE_WARNINGS
 }  /* extern "C" */
 #endif
 
-#endif /* LV2_URI_MAP_H */
-
 /**
    @}
 */
+
+#endif /* LV2_URI_MAP_H */

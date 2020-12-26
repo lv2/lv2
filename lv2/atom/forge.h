@@ -39,6 +39,9 @@
    This header is non-normative, it is provided for convenience.
 */
 
+#ifndef LV2_ATOM_FORGE_H
+#define LV2_ATOM_FORGE_H
+
 /**
    @defgroup forge Forge
    @ingroup atom
@@ -47,9 +50,6 @@
 
    @{
 */
-
-#ifndef LV2_ATOM_FORGE_H
-#define LV2_ATOM_FORGE_H
 
 #include "lv2/atom/atom.h"
 #include "lv2/atom/util.h"
@@ -687,15 +687,15 @@ lv2_atom_forge_beat_time(LV2_Atom_Forge* forge, double beats)
 	return lv2_atom_forge_write(forge, &beats, sizeof(beats));
 }
 
-/**
-   @}
-   @}
-*/
-
 LV2_RESTORE_WARNINGS
 
 #ifdef __cplusplus
 }  /* extern "C" */
 #endif
+
+/**
+   @}
+   @}
+*/
 
 #endif  /* LV2_ATOM_FORGE_H */

@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_PRESETS_H
+#define LV2_PRESETS_H
+
 /**
    @defgroup presets Presets
    @ingroup lv2
@@ -24,9 +27,6 @@
 
    @{
 */
-
-#ifndef LV2_PRESETS_H
-#define LV2_PRESETS_H
 
 // clang-format off
 
@@ -41,8 +41,8 @@
 
 // clang-format on
 
-#endif  /* LV2_PRESETS_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_PRESETS_H */

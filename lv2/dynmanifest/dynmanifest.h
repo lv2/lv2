@@ -15,6 +15,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_DYN_MANIFEST_H_INCLUDED
+#define LV2_DYN_MANIFEST_H_INCLUDED
+
 /**
    @defgroup dynmanifest Dynamic Manifest
    @ingroup lv2
@@ -25,9 +28,6 @@
 
    @{
 */
-
-#ifndef LV2_DYN_MANIFEST_H_INCLUDED
-#define LV2_DYN_MANIFEST_H_INCLUDED
 
 #include "lv2/core/lv2.h"
 
@@ -147,11 +147,11 @@ int lv2_dyn_manifest_get_data(LV2_Dyn_Manifest_Handle handle,
 void lv2_dyn_manifest_close(LV2_Dyn_Manifest_Handle handle);
 
 #ifdef __cplusplus
-}
+} /* extern "C" */
 #endif
-
-#endif /* LV2_DYN_MANIFEST_H_INCLUDED */
 
 /**
    @}
 */
+
+#endif /* LV2_DYN_MANIFEST_H_INCLUDED */

@@ -14,6 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
+#ifndef LV2_OPTIONS_H
+#define LV2_OPTIONS_H
+
 /**
    @defgroup options Options
    @ingroup lv2
@@ -24,9 +27,6 @@
 
    @{
 */
-
-#ifndef LV2_OPTIONS_H
-#define LV2_OPTIONS_H
 
 #include "lv2/core/lv2.h"
 #include "lv2/urid/urid.h"
@@ -144,8 +144,8 @@ typedef struct {
 }  /* extern "C" */
 #endif
 
-#endif  /* LV2_OPTIONS_H */
-
 /**
    @}
 */
+
+#endif  /* LV2_OPTIONS_H */
