@@ -6,6 +6,7 @@ Checks: >
   -bugprone-macro-parentheses,
   -bugprone-suspicious-include,
   -bugprone-suspicious-string-compare,
+  -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
   -clang-diagnostic-empty-translation-unit,
   -clang-diagnostic-unused-function,
   -clang-diagnostic-unused-macros,
