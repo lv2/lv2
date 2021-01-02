@@ -1,5 +1,5 @@
 /*
-  Copyright 2008-2016 David Robillard <http://drobilla.net>
+  Copyright 2008-2016 David Robillard <d@drobilla.net>
   Copyright 2011 Gabriel M. Beddingfield <gabrbedd@gmail.com>
 
   Permission to use, copy, modify, and/or distribute this software for any

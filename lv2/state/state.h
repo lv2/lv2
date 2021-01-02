@@ -1,5 +1,5 @@
 /*
-  Copyright 2010-2016 David Robillard <http://drobilla.net>
+  Copyright 2010-2016 David Robillard <d@drobilla.net>
   Copyright 2010 Leonard Ritter <paniq@paniq.org>
 
   Permission to use, copy, modify, and/or distribute this software for any
