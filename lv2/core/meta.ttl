@@ -38,12 +38,15 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
-		doap:revision "1.18.1" ;
-		doap:created "2020-12-18" ;
+		doap:revision "1.18.2" ;
+		doap:created "2021-01-07" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.18.2.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "eg-sample: Save and restore gain parameter value."
+				rdfs:label "eg-sampler: Save and restore gain parameter value."
+			] , [
+				rdfs:label "Various code cleanups and infrastructure improvements."
 			]
 		]
 	] , [

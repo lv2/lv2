@@ -15,7 +15,9 @@
 		<http://drobilla.net/drobilla#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	doap:release [
-		doap:revision "2.7" ;
+		doap:revision "2.8" ;
+		doap:created "2021-01-07" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.18.2.tar.bz2> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
