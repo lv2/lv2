@@ -105,6 +105,7 @@
 #define LV2_CORE__default            LV2_CORE_PREFIX "default"             ///< http://lv2plug.in/ns/lv2core#default
 #define LV2_CORE__designation        LV2_CORE_PREFIX "designation"         ///< http://lv2plug.in/ns/lv2core#designation
 #define LV2_CORE__documentation      LV2_CORE_PREFIX "documentation"       ///< http://lv2plug.in/ns/lv2core#documentation
+#define LV2_CORE__enabled            LV2_CORE_PREFIX "enabled"             ///< http://lv2plug.in/ns/lv2core#enabled
 #define LV2_CORE__enumeration        LV2_CORE_PREFIX "enumeration"         ///< http://lv2plug.in/ns/lv2core#enumeration
 #define LV2_CORE__extensionData      LV2_CORE_PREFIX "extensionData"       ///< http://lv2plug.in/ns/lv2core#extensionData
 #define LV2_CORE__freeWheeling       LV2_CORE_PREFIX "freeWheeling"        ///< http://lv2plug.in/ns/lv2core#freeWheeling
