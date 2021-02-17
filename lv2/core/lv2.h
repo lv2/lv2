@@ -338,7 +338,7 @@ typedef struct LV2_Descriptor {
   void (*cleanup)(LV2_Handle instance);
 
   /**
-     Return additional plugin data defined by some extenion.
+     Return additional plugin data defined by some extension.
 
      A typical use of this facility is to return a struct containing function
      pointers to extend the LV2_Descriptor API.

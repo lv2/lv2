@@ -61,7 +61,7 @@ LV2_DISABLE_DEPRECATION_WARNINGS
 
 /**
    The best Pulses Per Quarter Note for tempo-based uint32_t timestamps.
-   Equal to 2^12 * 5 * 7 * 9 * 11 * 13 * 17, which is evenly divisble
+   Equal to 2^12 * 5 * 7 * 9 * 11 * 13 * 17, which is evenly divisible
    by all integers from 1 through 18 inclusive, and powers of 2 up to 2^12.
 */
 LV2_DEPRECATED

@@ -84,7 +84,7 @@ lv2_dyn_manifest_open(LV2_Dyn_Manifest_Handle*  handle,
 
    <http://example.org/plugin> a lv2:Plugin .
 
-   The objects that are elegible for exposure are those that would need to be
+   The objects that are eligible for exposure are those that would need to be
    represented by a subject node in a static manifest.
 
    @param handle Dynamic manifest generator handle.

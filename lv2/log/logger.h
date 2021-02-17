@@ -23,7 +23,7 @@
 
    Convenience API for easy logging in plugin code.  This API provides simple
    wrappers for logging from a plugin, which automatically fall back to
-   printing to stderr if host support is unavailabe.
+   printing to stderr if host support is unavailable.
 
    @{
 */

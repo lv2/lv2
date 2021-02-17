@@ -27,8 +27,8 @@
    must be popped when the container is finished.
 
    All output is written to a user-provided buffer or sink function.  This
-   makes it popssible to create create atoms on the stack, on the heap, in LV2
-   port buffers, in a ringbuffer, or elsewhere, all using the same API.
+   makes it possible to create atoms on the stack, on the heap, in LV2 port
+   buffers, in a ringbuffer, or elsewhere, all using the same API.
 
    This entire API is realtime safe if used with a buffer or a realtime safe
    sink, except lv2_atom_forge_init() which is only realtime safe if the URI
@@ -282,7 +282,7 @@ lv2_atom_forge_set_sink(LV2_Atom_Forge*            forge,
 /**
    Write raw output.  This is used internally, but is also useful for writing
    atom types not explicitly supported by the forge API.  Note the caller is
-   responsible for ensuring the output is approriately padded.
+   responsible for ensuring the output is appropriately padded.
 */
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_raw(LV2_Atom_Forge* forge, const void* data, uint32_t size)
