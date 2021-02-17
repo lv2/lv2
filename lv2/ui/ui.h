@@ -202,7 +202,7 @@ typedef struct LV2UI_Descriptor {
 
      By default, the host should only call this function for lv2:ControlPort
      inputs.  However, the UI can request updates for other ports statically
-     with ui:portNotification or dynamicaly with ui:portSubscribe.
+     with ui:portNotification or dynamically with ui:portSubscribe.
 
      The UI MUST NOT retain any reference to `buffer` after this function
      returns, it is only valid for the duration of the call.
@@ -357,7 +357,7 @@ typedef enum {
   /**
      Completed successfully.
 
-     The host will set the parameter later if the user choses a new value.
+     The host will set the parameter later if the user chooses a new value.
   */
   LV2UI_REQUEST_VALUE_SUCCESS,
 
@@ -405,7 +405,7 @@ typedef struct {
      any parameter value.
 
      This function returns immediately, and the return value indicates
-     whether the host can fulfill the request.  The host may notify the
+     whether the host can fulfil the request.  The host may notify the
      plugin about the new parameter value, for example when a file is
      selected by the user, via the usual mechanism.  Typically, the host will
      send a message to the plugin that sets the new parameter value, and the
