@@ -223,7 +223,7 @@ play(Metro* self, uint32_t begin, uint32_t end)
     switch (self->state) {
     case STATE_ATTACK:
       // Amplitude increases from 0..1 until attack_len
-      output[i] = self->wave[self->wave_offset] * self->elapsed_len /
+      output[i] = self->wave[self->wave_offset] * (float)self->elapsed_len /
                   (float)self->attack_len;
       if (self->elapsed_len >= self->attack_len) {
         self->state = STATE_DECAY;

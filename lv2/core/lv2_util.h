@@ -81,7 +81,7 @@ lv2_features_query(const LV2_Feature* const* features, ...)
   const char* uri = NULL;
   while ((uri = va_arg(args, const char*))) {
     void** data     = va_arg(args, void**);
-    bool   required = va_arg(args, int);
+    bool   required = (bool)va_arg(args, int);
 
     *data = lv2_features_data(features, uri);
     if (required && !*data) {
