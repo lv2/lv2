@@ -211,6 +211,10 @@ work_response(LV2_Handle instance, uint32_t size, const void* data)
   // Install the new sample
   self->sample = *(Sample* const*)data;
 
+  // Stop playing previous sample, which can be larger than new one
+  self->frame = 0;
+  self->play  = false;
+
   // Schedule work to free the old sample
   SampleMessage msg = {{sizeof(Sample*), self->uris.eg_freeSample}, old_sample};
   self->schedule->schedule_work(self->schedule->handle, sizeof(msg), &msg);
