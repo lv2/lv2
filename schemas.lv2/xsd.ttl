@@ -166,7 +166,7 @@ xsd:float
 
 xsd:fractionDigits
 	a rdf:Property ,
-	owl:DatatypeProperty ;
+		owl:DatatypeProperty ;
 	rdfs:comment "The total number of digits to the right of the decimal point required to represent a value." ;
 	rdfs:label "fraction digits" ;
 	rdfs:range xsd:nonNegativeInteger .
@@ -277,25 +277,25 @@ xsd:long
 
 xsd:maxExclusive
 	a rdf:Property ,
-	owl:DatatypeProperty ;
+		owl:DatatypeProperty ;
 	rdfs:comment "The exclusive upper bound of an ordered datatype." ;
 	rdfs:label "max exclusive" .
 
 xsd:maxInclusive
 	a rdf:Property ,
-	owl:DatatypeProperty ;
+		owl:DatatypeProperty ;
 	rdfs:comment "The inclusive upper bound of an ordered datatype." ;
 	rdfs:label "max inclusive" .
 
 xsd:minExclusive
 	a rdf:Property ,
-	owl:DatatypeProperty ;
+		owl:DatatypeProperty ;
 	rdfs:comment "The exclusive lower bound of an ordered datatype." ;
 	rdfs:label "min exclusive" .
 
 xsd:minInclusive
 	a rdf:Property ,
-	owl:DatatypeProperty ;
+		owl:DatatypeProperty ;
 	rdfs:comment "The inclusive lower bound of an ordered datatype." ;
 	rdfs:label "min inclusive" .
 
@@ -346,7 +346,7 @@ xsd:normalizedString
 
 xsd:pattern
 	a rdf:Property ,
-	owl:DatatypeProperty ;
+		owl:DatatypeProperty ;
 	rdfs:comment "A regular expression that matches complete valid literals." ;
 	rdfs:label "pattern" .
 
@@ -425,7 +425,7 @@ xsd:token
 
 xsd:totalDigits
 	a rdf:Property ,
-	owl:DatatypeProperty ;
+		owl:DatatypeProperty ;
 	rdfs:comment "The maximum number of decimal digits required to represent a value." ;
 	rdfs:label "total digits" ;
 	rdfs:range xsd:positiveInteger .
