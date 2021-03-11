@@ -7,9 +7,6 @@ xsd:
 	a owl:Ontology ;
 	rdfs:comment "XML Schema Datatypes" .
 
-xsd:anySimpleType
-	a rdfs:Datatype .
-
 xsd:ENTITY
 	a rdfs:Datatype ;
 	owl:onDatatype xsd:NCName .
@@ -43,6 +40,9 @@ xsd:QName
 			xsd:whiteSpace "collapse"
 		]
 	) .
+
+xsd:anySimpleType
+	a rdfs:Datatype .
 
 xsd:anyURI
 	a rdfs:Datatype ;
@@ -352,21 +352,6 @@ xsd:pattern
 	rdfs:comment "A regular expression that matches complete valid literals." ;
 	rdfs:label "pattern" .
 
-xsd:whiteSpace
-	a rdf:Property ,
-		owl:DatatypeProperty ;
-	rdfs:comment "A string that describes whitespace normalization for a string type." ;
-	rdfs:label "white space" ;
-	rdfs:range [
-		a rdfs:Datatype ;
-		owl:onDatatype xsd:string ;
-		owl:withRestrictions (
-			[
-				xsd:pattern "(preserve|replace|collapse)"
-			]
-		)
-	] .
-
 xsd:positiveInteger
 	a rdfs:Datatype ;
 	rdfs:label "positive integer" ;
@@ -471,4 +456,19 @@ xsd:unsignedShort
 			xsd:maxInclusive 65535
 		]
 	) .
+
+xsd:whiteSpace
+	a rdf:Property ,
+		owl:DatatypeProperty ;
+	rdfs:comment "A string that describes whitespace normalization for a string type." ;
+	rdfs:label "white space" ;
+	rdfs:range [
+		a rdfs:Datatype ;
+		owl:onDatatype xsd:string ;
+		owl:withRestrictions (
+			[
+				xsd:pattern "(preserve|replace|collapse)"
+			]
+		)
+	] .
 
