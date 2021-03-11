@@ -22,8 +22,7 @@ dcterms:AgentClass
 	dcterms:description "Examples of Agent Class include groups seen as classes, such as students, women, charities, lecturers."@en-us ;
 	rdfs:comment "A group of agents."@en-us ;
 	rdfs:isDefinedBy dcterms: ;
-	rdfs:label "Agent Class"@en-us ;
-	rdfs:subClassOf dcterms:AgentClass .
+	rdfs:label "Agent Class"@en-us .
 
 dcterms:LicenseDocument
 	a rdfs:Class ;
