@@ -180,7 +180,9 @@ dcs:file
 	rdfs:comment "A file involved in the change."@en ;
 	rdfs:domain dcs:Change .
 
-dbug:Issue a rdfs:Class .
+dbug:Issue
+	a rdfs:Class ;
+	rdfs:label "Issue"@en .
 
 dcs:fixes
 	a owl:ObjectProperty ;
