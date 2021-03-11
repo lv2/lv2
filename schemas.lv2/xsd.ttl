@@ -44,9 +44,9 @@ xsd:byte
 	owl:onDatatype xsd:short ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 127
+			xsd:maxInclusive "127"^^xsd:byte
 		] [
-			xsd:minInclusive -128
+			xsd:minInclusive "-128"^^xsd:byte
 		]
 	) .
 
@@ -141,9 +141,9 @@ xsd:int
 	owl:onDatatype xsd:long ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 2147483647
+			xsd:maxInclusive "2147483647"^^xsd:int
 		] [
-			xsd:minInclusive -2147483648
+			xsd:minInclusive "-2147483648"^^xsd:int
 		]
 	) .
 
@@ -175,9 +175,9 @@ xsd:long
 	owl:onDatatype xsd:integer ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 9223372036854775807
+			xsd:maxInclusive "9223372036854775807"^^xsd:long
 		] [
-			xsd:minInclusive -9223372036854775808
+			xsd:minInclusive "-9223372036854775808"^^xsd:long
 		]
 	) .
 
@@ -269,9 +269,9 @@ xsd:short
 	owl:onDatatype xsd:int ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 32767
+			xsd:maxInclusive "32767"^^xsd:short
 		] [
-			xsd:minInclusive -32768
+			xsd:minInclusive "-32768"^^xsd:short
 		]
 	) .
 
@@ -303,7 +303,7 @@ xsd:unsignedByte
 	owl:onDatatype xsd:unsignedShort ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 255
+			xsd:maxInclusive "255"^^xsd:unsignedByte
 		]
 	) .
 
@@ -313,7 +313,7 @@ xsd:unsignedInt
 	owl:onDatatype xsd:unsignedLong ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 4294967295
+			xsd:maxInclusive "4294967295"^^xsd:unsignedInt
 		]
 	) .
 
@@ -323,7 +323,7 @@ xsd:unsignedLong
 	owl:onDatatype xsd:nonNegativeInteger ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 18446744073709551615
+			xsd:maxInclusive "18446744073709551615"^^xsd:unsignedLong
 		]
 	) .
 
@@ -333,7 +333,7 @@ xsd:unsignedShort
 	owl:onDatatype xsd:unsignedInt ;
 	owl:withRestrictions (
 		[
-			xsd:maxInclusive 65535
+			xsd:maxInclusive "65535"^^xsd:unsignedShort
 		]
 	) .
 
