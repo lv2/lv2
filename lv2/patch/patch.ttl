@@ -236,7 +236,7 @@ patch:value
 	rdfs:comment "The value of a property in a patch:Set message." .
 
 patch:wildcard
-	a rdfs:Resource ;
+	a owl:Thing ;
 	rdfs:label "wildcard" ;
 	rdfs:comment "A wildcard that matches any resource." .
 
