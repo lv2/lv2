@@ -25,10 +25,6 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 	doap:homepage <http://lv2plug.in/> ;
 	doap:mailing-list <http://lists.lv2plug.in/listinfo.cgi/devel-lv2plug.in> ;
 	doap:programming-language "C" ;
-	doap:repository [
-		a doap:SVNRepository ;
-		doap:location <http://lv2plug.in/repo>
-	] ;
 	doap:developer <http://drobilla.net/drobilla#me> ,
 		<http://plugin.org.uk/swh.xrdf#me> ;
 	doap:helper meta:larsl ,
