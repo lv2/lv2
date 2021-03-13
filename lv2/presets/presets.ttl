@@ -18,7 +18,7 @@ pset:Bank
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:onProperty rdfs:label ;
-		owl:someValuesFrom xsd:string ;
+		owl:minCardinality 1 ;
 		rdfs:comment "A Bank MUST have at least one string rdfs:label."
 	] ;
 	rdfs:comment "A bank of presets." .
@@ -31,7 +31,7 @@ pset:Preset
 	rdfs:subClassOf [
 		a owl:Restriction ;
 		owl:onProperty rdfs:label ;
-		owl:someValuesFrom xsd:string ;
+		owl:minCardinality 1 ;
 		rdfs:comment "A Preset MUST have at least one string rdfs:label."
 	] .
 
