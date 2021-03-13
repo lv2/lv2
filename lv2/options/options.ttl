@@ -10,7 +10,8 @@
 	rdfs:label "LV2 Options" ;
 	rdfs:comment "Runtime options for LV2 plugins and UIs." ;
 	rdfs:seeAlso <options.h> ,
-		<options.meta.ttl> .
+		<options.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> .
 
 opts:Option
 	a rdfs:Class ;

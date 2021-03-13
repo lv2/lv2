@@ -11,7 +11,8 @@
 	rdfs:comment "A port-based real-time generic event interface." ;
 	rdfs:seeAlso <event.h> ,
 		<event-helpers.h> ,
-		<event.meta.ttl> .
+		<event.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> .
 
 ev:EventPort
 	a rdfs:Class ;

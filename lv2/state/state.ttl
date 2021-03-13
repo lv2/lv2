@@ -9,7 +9,8 @@
 	rdfs:label "LV2 State" ;
 	rdfs:comment "An interface for LV2 plugins to save and restore state." ;
 	rdfs:seeAlso <state.h> ,
-		<state.meta.ttl> .
+		<state.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> .
 
 state:interface
 	a lv2:ExtensionData ;

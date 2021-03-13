@@ -11,7 +11,10 @@
 	a owl:Ontology ;
 	rdfs:label "LV2 Parameters" ;
 	rdfs:comment "Common parameters for audio processing." ;
-	rdfs:seeAlso <parameters.meta.ttl> .
+	rdfs:seeAlso <parameters.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/ext/atom> ,
+		<http://lv2plug.in/ns/ext/port-groups> ,
+		<http://lv2plug.in/ns/lv2core> .
 
 param:ControlGroup
 	a rdfs:Class ;

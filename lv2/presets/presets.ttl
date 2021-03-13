@@ -9,7 +9,8 @@
 	a owl:Ontology ;
 	rdfs:label "LV2 Presets" ;
 	rdfs:comment "Presets for LV2 plugins." ;
-	rdfs:seeAlso <presets.meta.ttl> .
+	rdfs:seeAlso <presets.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> .
 
 pset:Bank
 	a rdfs:Class ;

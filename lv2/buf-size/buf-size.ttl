@@ -11,7 +11,9 @@
 	rdfs:label "LV2 Buf Size" ;
 	rdfs:comment "Access to, and restrictions on, buffer sizes." ;
 	rdfs:seeAlso <buf-size.h> ,
-		<buf-size.meta.ttl> .
+		<buf-size.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> ,
+		<http://lv2plug.in/ns/ext/options> .
 
 bufsz:boundedBlockLength
 	a lv2:Feature ;

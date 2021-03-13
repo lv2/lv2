@@ -9,7 +9,8 @@
 	a owl:Ontology ;
 	rdfs:label "LV2 Port Properties" ;
 	rdfs:comment "Various properties for LV2 plugin ports." ;
-	rdfs:seeAlso <port-props.meta.ttl> .
+	rdfs:seeAlso <port-props.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> .
 
 pprops:trigger
 	a lv2:PortProperty ;

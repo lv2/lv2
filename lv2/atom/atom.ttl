@@ -14,7 +14,10 @@
 		<forge.h> ,
 		<atom.meta.ttl> ;
 	rdfs:label "LV2 Atom" ;
-	rdfs:comment "A generic value container and several data types." .
+	rdfs:comment "A generic value container and several data types." ;
+	owl:imports <http://lv2plug.in/ns/lv2core> ,
+		<http://lv2plug.in/ns/extensions/ui> ,
+		<http://lv2plug.in/ns/extensions/units> .
 
 atom:cType
 	a rdf:Property ,

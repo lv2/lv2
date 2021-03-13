@@ -8,7 +8,8 @@
 	rdfs:label "LV2 URID" ;
 	rdfs:comment "Features for mapping URIs to and from integers." ;
 	rdfs:seeAlso <urid.h> ,
-		<urid.meta.ttl> .
+		<urid.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> .
 
 urid:map
 	a lv2:Feature ;

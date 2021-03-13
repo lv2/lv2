@@ -10,9 +10,10 @@
 	a owl:Ontology ;
 	rdfs:label "LV2 UI" ;
 	rdfs:comment "User interfaces for LV2 plugins." ;
-	owl:imports <http://lv2plug.in/ns/lv2core> ;
 	rdfs:seeAlso <ui.h> ,
-		<ui.meta.ttl> .
+		<ui.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> ,
+		<http://lv2plug.in/ns/ext/options> .
 
 ui:UI
 	a rdfs:Class ,

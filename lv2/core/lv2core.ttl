@@ -11,7 +11,8 @@
 	rdfs:comment "An extensible open standard for audio plugins." ;
 	rdfs:seeAlso <lv2.h> ,
 		<lv2_util.h> ,
-		<lv2core.meta.ttl> .
+		<lv2core.meta.ttl> ;
+	owl:imports doap: .
 
 lv2:Specification
 	a rdfs:Class ,

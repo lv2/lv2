@@ -13,7 +13,8 @@
 	rdfs:label "LV2 Morph" ;
 	rdfs:comment "Ports that can dynamically change type." ;
 	rdfs:seeAlso <morph.h> ,
-		<morph.meta.ttl> .
+		<morph.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> .
 
 morph:MorphPort
 	a rdfs:Class ,

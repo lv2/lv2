@@ -10,7 +10,8 @@
 	rdfs:label "LV2 Log" ;
 	rdfs:comment "A feature for writing log messages." ;
 	rdfs:seeAlso <log.h> ,
-		<log.meta.ttl> .
+		<log.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> .
 
 log:Entry
 	a rdfs:Class ;

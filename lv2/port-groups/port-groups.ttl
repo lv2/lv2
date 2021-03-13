@@ -9,7 +9,8 @@
 	a owl:Ontology ;
 	rdfs:label "LV2 Port Groups" ;
 	rdfs:comment "Multi-channel groups of LV2 ports." ;
-	rdfs:seeAlso <port-groups.meta.ttl> .
+	rdfs:seeAlso <port-groups.meta.ttl> ;
+	owl:imports <http://lv2plug.in/ns/lv2core> .
 
 pg:Group
 	a rdfs:Class ;
