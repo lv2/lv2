@@ -1,16 +1,13 @@
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix doap: <http://usefulinc.com/ns/doap#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix doap: <http://usefulinc.com/ns/doap#> .
-@prefix dct: <http://purl.org/dc/terms/> .
-
-# dct:rights "Copyright © 2004-2009 Edd Dumbill"
 
 doap:
 	a owl:Ontology ;
-	dct:description "Das Vokabular \"Description of a Project (DOAP)\", beschrieben durch W3C RDF Schema and the Web Ontology Language."@de ,
+	rdfs:comment "Das Vokabular \"Description of a Project (DOAP)\", beschrieben durch W3C RDF Schema and the Web Ontology Language."@de ,
 		"""El vocabulario Description of a Project (DOAP, Descripción de un Proyecto), descrito usando RDF Schema de W3C
 		y Web Ontology Language."""@es ,
 		"""Le vocabulaire Description Of A Project (DOAP, Description D'Un Projet),
@@ -153,8 +150,7 @@ doap:Specification
 	a rdfs:Class ;
 	rdfs:comment """A specification of a system's aspects, technical or otherwise."""@en ;
 	rdfs:isDefinedBy doap: ;
-	rdfs:label "Specification"@en ;
-	rdfs:subClassOf rdfs:Resource .
+	rdfs:label "Specification"@en .
 
 doap:Version
 	a rdfs:Class ;
@@ -170,40 +166,25 @@ doap:Version
 		"Versión"@es ,
 		"Verze"@cs .
 
-doap:anon-root
-	a rdf:Property ;
-	rdfs:comment "Dépôt pour accès anonyme."@fr ,
-		"Repositorio para acceso anónimo."@es ,
-		"Repository for anonymous access."@en ,
-		"Repository für anonymen Zugriff"@de ,
-		"Úložiště pro anonymní přístup."@cs ;
-	rdfs:domain doap:Repository ;
-	rdfs:isDefinedBy doap: ;
-	rdfs:label "Anonymes Root"@de ,
-		"anonymní kořen"@cs ,
-		"anonymous root"@en ,
-		"racine anonyme"@fr ,
-		"raíz anónima"@es ;
-	rdfs:range rdfs:Literal .
-
 doap:audience
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:comment "Description of target user base"@en ;
 	rdfs:domain doap:Project ;
 	rdfs:isDefinedBy doap: ;
-	rdfs:label "audience"@en ;
-	rdfs:range rdfs:Literal .
+	rdfs:label "audience"@en .
 
 doap:blog
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "URI of a blog related to a project"@en ;
 	rdfs:domain doap:Project ;
 	rdfs:isDefinedBy doap: ;
-	rdfs:label "blog"@en ;
-	rdfs:range rdfs:Resource .
+	rdfs:label "blog"@en .
 
 doap:browse
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Interface web au dépôt."@fr ,
 		"Interface web del repositorio."@es ,
 		"Web browser interface to repository."@en ,
@@ -218,7 +199,8 @@ doap:browse
 		"visualiser"@fr .
 
 doap:bug-database
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Bug tracker for a project."@en ,
 		"Bug tracker para un proyecto."@es ,
 		"Fehlerdatenbank eines Projektes."@de ,
@@ -233,7 +215,8 @@ doap:bug-database
 		"suivi des bugs"@fr .
 
 doap:category
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "A category of project."@en ,
 		"Eine Kategorie eines Projektes."@de ,
 		"Kategorie projektu."@cs ,
@@ -248,7 +231,8 @@ doap:category
 		"kategorie"@cs .
 
 doap:created
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:comment "Date when something was created, in YYYY-MM-DD form. e.g. 2004-04-05"@en ,
 		"Date à laquelle a été créé quelque chose, au format AAAA-MM-JJ (par ex. 2004-04-05)"@fr ,
 		"Datum, kdy bylo něco vytvořeno ve formátu RRRR-MM-DD, např. 2004-04-05"@cs ,
@@ -259,11 +243,11 @@ doap:created
 		"created"@en ,
 		"créé"@fr ,
 		"erstellt"@de ,
-		"vytvořeno"@cs ;
-	rdfs:range rdfs:Literal .
+		"vytvořeno"@cs .
 
 doap:description
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:comment "Beschreibung eines Projekts als einfacher Text mit der Länge von 2 bis 4 Sätzen."@de ,
 		"Descripción en texto plano de un proyecto, de 2 a 4 enunciados de longitud."@es ,
 		"Plain text description of a project, of 2-4 sentences in length."@en ,
@@ -274,11 +258,11 @@ doap:description
 		"descripción"@es ,
 		"description"@en ,
 		"description"@fr ,
-		"popis"@cs ;
-	rdfs:range rdfs:Literal .
+		"popis"@cs .
 
 doap:developer
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Desarrollador de software para el proyecto."@es ,
 		"Developer of software for the project."@en ,
 		"Développeur pour le projet."@fr ,
@@ -294,7 +278,8 @@ doap:developer
 	rdfs:range foaf:Person .
 
 doap:documenter
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Collaborateur à la documentation du projet."@fr ,
 		"Contributor of documentation to the project."@en ,
 		"Mitarbeiter an der Dokumentation eines Projektes."@de ,
@@ -310,7 +295,8 @@ doap:documenter
 	rdfs:range foaf:Person .
 
 doap:download-mirror
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Miroir de la page de téléchargement du programme."@fr ,
 		"Mirror de la página web de descarga."@es ,
 		"Mirror of software download web page."@en ,
@@ -325,7 +311,8 @@ doap:download-mirror
 		"zrcadlo stránky pro stažení"@cs .
 
 doap:download-page
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Page web à partir de laquelle on peut télécharger le programme."@fr ,
 		"Página web de la cuál se puede bajar el software."@es ,
 		"Web page from which the project software can be downloaded."@en ,
@@ -340,7 +327,8 @@ doap:download-page
 		"stránka pro stažení"@cs .
 
 doap:file-release
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "URI adresa stažení asociované s revizí."@cs ,
 		"URI of download associated with this release."@en ;
 	rdfs:domain doap:Version ;
@@ -349,7 +337,8 @@ doap:file-release
 		"soubor revize"@cs .
 
 doap:helper
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Colaborador del proyecto."@es ,
 		"Collaborateur au projet."@fr ,
 		"Project contributor."@en ,
@@ -386,7 +375,8 @@ doap:homepage
 	rdfs:subPropertyOf foaf:homepage .
 
 doap:implements
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "A specification that a project implements. Could be a standard, API or legally defined level of conformance."@en ;
 	rdfs:domain doap:Project ;
 	rdfs:isDefinedBy doap: ;
@@ -394,12 +384,12 @@ doap:implements
 	rdfs:range doap:Specification .
 
 doap:language
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:comment "ISO language code a project has been translated into"@en ;
 	rdfs:domain doap:Project ;
 	rdfs:isDefinedBy doap: ;
-	rdfs:label "language"@en ;
-	rdfs:range rdfs:Literal .
+	rdfs:label "language"@en .
 
 doap:license
 	a rdf:Property ;
@@ -416,7 +406,8 @@ doap:license
 		"license"@en .
 
 doap:location
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment """Emplacement d'un dépôt."""@fr ,
 		"Location of a repository."@en ,
 		"Lokation eines Repositorys."@de ,
@@ -431,7 +422,8 @@ doap:location
 		"umístění úložiště"@cs .
 
 doap:mailing-list
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Domovská stránka nebo e–mailová adresa e–mailové diskuse."@cs ,
 		"Homepage der Mailing Liste oder E-Mail Adresse."@de ,
 		"Mailing list home page or email address."@en ,
@@ -446,7 +438,8 @@ doap:mailing-list
 		"mailing list"@en .
 
 doap:maintainer
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Desarrollador principal de un proyecto, un líder de proyecto."@es ,
 		"""Développeur principal d'un projet, un meneur du projet."""@fr ,
 		"Hauptentwickler eines Projektes, der Projektleiter"@de ,
@@ -462,7 +455,8 @@ doap:maintainer
 	rdfs:range foaf:Person .
 
 doap:module
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Jméno modulu v CVS, BitKeeper nebo Arch úložišti."@cs ,
 		"Modul-Name eines Subversion, CVS, BitKeeper oder Arch Repositorys."@de ,
 		"Module name of a Subversion, CVS, BitKeeper or Arch repository."@en ,
@@ -484,7 +478,8 @@ doap:module
 		"módulo"@es .
 
 doap:name
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:AnnotationProperty ;
 	rdfs:comment "A name of something."@en ,
 		"Der Name von Irgendwas"@de ,
 		"El nombre de algo."@es ,
@@ -496,7 +491,6 @@ doap:name
 		"name"@en ,
 		"nom"@fr ,
 		"nombre"@es ;
-	rdfs:range rdfs:Literal ;
 	rdfs:subPropertyOf rdfs:label .
 
 doap:old-homepage
@@ -521,7 +515,8 @@ doap:old-homepage
 	rdfs:subPropertyOf foaf:homepage .
 
 doap:os
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:comment "Betriebssystem auf dem das Projekt eingesetzt werden kann. Diese Eigenschaft kann ausgelassen werden, wenn das Projekt nicht BS-spezifisch ist."@de ,
 		"Operating system that a project is limited to.  Omit this property if the project is not OS-specific."@en ,
 		"Operační systém, na jehož použití je projekt limitován. Vynechejte tuto vlastnost, pokud je projekt nezávislý na operačním systému."@cs ,
@@ -536,20 +531,20 @@ doap:os
 		"operating system"@en ,
 		"operační systém"@cs ,
 		"sistema operativo"@es ,
-		"""système d'exploitation"""@fr ;
-	rdfs:range rdfs:Literal .
+		"""système d'exploitation"""@fr .
 
 doap:platform
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:comment "Indicator of software platform (non-OS specific), e.g. Java, Firefox, ECMA CLR"@en ;
 	rdfs:domain doap:Project ,
 		doap:Version ;
 	rdfs:isDefinedBy doap: ;
-	rdfs:label "platform"@en ;
-	rdfs:range rdfs:Literal .
+	rdfs:label "platform"@en .
 
 doap:programming-language
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:comment """Langage de programmation avec lequel un projet est implémenté,
 		ou avec lequel il est prévu de l'utiliser."""@fr ,
 		"Lenguaje de programación en el que un proyecto es implementado o con el cuál pretende usarse."@es ,
@@ -562,11 +557,11 @@ doap:programming-language
 		"langage de programmation"@fr ,
 		"lenguaje de programación"@es ,
 		"programming language"@en ,
-		"programovací jazyk"@cs ;
-	rdfs:range rdfs:Literal .
+		"programovací jazyk"@cs .
 
 doap:release
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "A project release."@en ,
 		"Ein Release (Version) eines Projekts."@de ,
 		"Relase (verze) projektu."@cs ,
@@ -582,7 +577,8 @@ doap:release
 	rdfs:range doap:Version .
 
 doap:repository
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Dépôt du code source."@fr ,
 		"Quellcode-Versionierungssystem."@de ,
 		"Repositorio del código fuente."@es ,
@@ -598,7 +594,8 @@ doap:repository
 	rdfs:range doap:Repository .
 
 doap:revision
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:comment """Identifiant de révision d'une release du programme."""@fr ,
 		"Identifikátor zpřístupněné revize softwaru."@cs ,
 		"Indentificador de la versión de un release de software."@es ,
@@ -610,11 +607,11 @@ doap:revision
 		"revision"@en ,
 		"révision"@fr ,
 		"versión"@es ,
-		"verze"@cs ;
-	rdfs:range rdfs:Literal .
+		"verze"@cs .
 
 doap:screenshots
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment """Page web avec des captures d'écran du projet."""@fr ,
 		"Página web con capturas de pantalla del proyecto."@es ,
 		"Web page with screenshots of project."@en ,
@@ -629,15 +626,16 @@ doap:screenshots
 		"snímek obrazovky"@cs .
 
 doap:service-endpoint
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "The URI of a web service endpoint where software as a service may be accessed"@en ;
 	rdfs:domain doap:Project ;
 	rdfs:isDefinedBy doap: ;
-	rdfs:label "service endpoint"@en ;
-	rdfs:range rdfs:Resource .
+	rdfs:label "service endpoint"@en .
 
 doap:shortdesc
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:DatatypeProperty ;
 	rdfs:comment "Descripción corta (8 o 9 palabras) en texto plano de un proyecto."@es ,
 		"Krátký (8 nebo 9 slov) čistě textový popis projektu."@cs ,
 		"Kurzbeschreibung (8 oder 9 Wörter) eines Projects als einfacher Text."@de ,
@@ -648,11 +646,11 @@ doap:shortdesc
 		"descripción corta"@es ,
 		"description courte"@fr ,
 		"krátký popis"@cs ,
-		"short description"@en ;
-	rdfs:range rdfs:Literal .
+		"short description"@en .
 
 doap:tester
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "A tester or other quality control contributor."@en ,
 		"Ein Tester oder anderer Mitarbeiter der Qualitätskontrolle."@de ,
 		"Tester nebo jiný spoluautor kontrolující kvalitu."@cs ,
@@ -668,7 +666,8 @@ doap:tester
 	rdfs:range foaf:Person .
 
 doap:translator
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Collaborateur à la traduction du projet."@fr ,
 		"Contributor of translations to the project."@en ,
 		"Mitarbeiter an den Übersetzungen eines Projektes."@de ,
@@ -684,7 +683,8 @@ doap:translator
 	rdfs:range foaf:Person .
 
 doap:vendor
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment "Vendor organization: commercial, free or otherwise"@en ;
 	rdfs:domain doap:Project ;
 	rdfs:isDefinedBy doap: ;
@@ -692,7 +692,8 @@ doap:vendor
 	rdfs:range foaf:Organization .
 
 doap:wiki
-	a rdf:Property ;
+	a rdf:Property ,
+		owl:ObjectProperty ;
 	rdfs:comment """L'URL du Wiki pour la discussion collaborative sur le projet."""@fr ,
 		"URL adresa wiki projektu pro společné diskuse."@cs ,
 		"URL del Wiki para discusión colaborativa del proyecto."@es ,
@@ -705,3 +706,4 @@ doap:wiki
 		"wiki"@en ,
 		"wiki"@es ,
 		"wiki"@fr .
+
