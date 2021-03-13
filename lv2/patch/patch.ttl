@@ -230,11 +230,9 @@ patch:subject
 	rdfs:comment "The subject this message applies to." .
 
 patch:value
-	a rdf:Property ,
-		owl:DatatypeProperty ;
+	a rdf:Property ;
 	rdfs:label "value" ;
 	rdfs:domain patch:Set ;
-	rdfs:range rdf:Property ;
 	rdfs:comment "The value of a property in a patch:Set message." .
 
 patch:wildcard

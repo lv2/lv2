@@ -686,6 +686,9 @@ def test_vocabularies(check, specs, files):
     # Check that all properties are either datatype or object properties
     for r in sorted(model.triples([None, rdf.type, rdf.Property])):
         subject = r[0]
+        if str(subject) == 'http://lv2plug.in/ns/ext/patch#value':
+            continue # patch:value is just a "promiscuous" rdf:Property
+
         types = list(model.objects(subject, rdf.type))
 
         check(lambda: ((owl.DatatypeProperty in types) or
