@@ -50,14 +50,14 @@ dcs:ToDoList
 	rdfs:isDefinedBy dcs: ;
 	rdfs:label "To-Do List"@en ;
 	rdfs:comment "A collection of planned changes."@en ;
-	rdfs:subClassOf _:FutureChangeSet .
+	rdfs:subClassOf dcs:ChangeSet .
 
 dcs:WishList
 	a owl:Class ;
 	rdfs:isDefinedBy dcs: ;
 	rdfs:label "Wish List"@en ;
 	rdfs:comment "A collection of desired changes."@en ;
-	rdfs:subClassOf _:FutureChangeSet .
+	rdfs:subClassOf dcs:ChangeSet .
 
 dcs:Change
 	a owl:Class ;
@@ -140,20 +140,12 @@ dcs:BackCompat
 	rdfs:comment "A change that breaks backwards compatibility, changing documented or tested behaviour."@en ;
 	rdfs:subClassOf dcs:Change.
 
-_:FutureChangeSet
-	a owl:Class ;
-	rdfs:subClassOf rdf:Bag , dcs:ChangeSet .
-
-_:VersionOrEvent
-	a owl:Class ;
-	owl:unionOf (doap:Version event:Event) .
-
 dcs:changeset
 	a owl:ObjectProperty ;
 	rdfs:isDefinedBy dcs: ;
 	rdfs:label "change set"@en ;
 	rdfs:comment "A change set may be associated with a particular software version in which those changes were released; or with an event which caused those changes."@en ;
-	rdfs:domain _:VersionOrEvent ;
+	rdfs:domain doap:Version ;
 	rdfs:range dcs:ChangeSet .
 
 dcs:versus
@@ -162,7 +154,7 @@ dcs:versus
 	rdfs:label "versus"@en ;
 	rdfs:comment "The previous version or event which a changeset has changed from."@en ;
 	rdfs:domain dcs:ChangeSet ;
-	rdfs:range _:VersionOrEvent .
+	rdfs:range doap:Version .
 
 dcs:item
 	a owl:ObjectProperty ;
@@ -233,8 +225,8 @@ dcs:milestone
 	a owl:ObjectProperty ;
 	rdfs:isDefinedBy dcs: ;
 	rdfs:label "milestone"@en ;
-	rdfs:domain _:FutureChangeSet ;
-	rdfs:range _:VersionOrEvent .
+	rdfs:domain dcs:ChangeSet ;
+	rdfs:range doap:Version .
 
 dcs:tasks
 	a owl:ObjectProperty ;
