@@ -53,7 +53,7 @@ def build(bld):
               name         = 'sampler',
               target       = 'lv2/%s/sampler' % bundle,
               install_path = '${LV2DIR}/%s' % bundle,
-              use          = ['M', 'SNDFILE', 'LV2'])
+              use          = ['M', 'SNDFILE', 'SAMPLERATE', 'LV2'])
 
     # Build UI library
     if bld.env.HAVE_GTK2:
