@@ -48,6 +48,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 			] , [
 				rdfs:label "eg-midigate: Fix output timing."
 			] , [
+				rdfs:label "eg-sampler: Add resampling via libsamplerate."
+			] , [
 				rdfs:label "eg-sampler: Fix potentially corrupt notification events."
 			]
 		]

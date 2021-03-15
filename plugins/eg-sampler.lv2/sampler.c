@@ -33,6 +33,7 @@
 #include "lv2/urid/urid.h"
 #include "lv2/worker/worker.h"
 
+#include <samplerate.h>
 #include <sndfile.h>
 
 #include <math.h>
@@ -80,6 +81,7 @@ typedef struct {
   bool       activated;
   bool       gain_changed;
   bool       sample_changed;
+  int        sample_rate;
 } Sampler;
 
 /**
@@ -120,7 +122,7 @@ convert_to_mono(float* data, sf_count_t num_input_frames, uint32_t channels)
    not modified.
 */
 static Sample*
-load_sample(LV2_Log_Logger* logger, const char* path)
+load_sample(LV2_Log_Logger* logger, const char* path, const int sample_rate)
 {
   lv2_log_trace(logger, "Loading %s\n", path);
 
@@ -153,6 +155,42 @@ load_sample(LV2_Log_Logger* logger, const char* path)
   if (info->channels != 1) {
     info->frames   = convert_to_mono(data, info->frames, info->channels);
     info->channels = 1;
+  }
+
+  if (info->samplerate != sample_rate) {
+    lv2_log_trace(logger,
+                  "Converting from %d Hz to %d Hz\n",
+                  info->samplerate,
+                  sample_rate);
+
+    const double src_ratio     = (double)sample_rate / (double)info->samplerate;
+    const double output_length = ceil((double)info->frames * src_ratio);
+    const long   output_frames = (long)output_length;
+    float* const output_buffer = (float*)malloc(sizeof(float) * output_frames);
+
+    SRC_DATA src_data = {
+      data,
+      output_buffer,
+      info->frames,
+      output_frames,
+      0,
+      0,
+      0,
+      src_ratio,
+    };
+
+    if (src_simple(&src_data, SRC_SINC_BEST_QUALITY, 1) != 0) {
+      lv2_log_error(logger, "Sample rate conversion failed\n");
+      free(output_buffer);
+    } else {
+      // Replace original data with converted buffer
+      free(data);
+      data         = output_buffer;
+      info->frames = src_data.output_frames_gen;
+    }
+  } else {
+    lv2_log_trace(
+      logger, "Sample matches the current rate of %d Hz\n", sample_rate);
   }
 
   // Fill sample struct and return it
@@ -205,7 +243,7 @@ work(LV2_Handle                  instance,
     }
 
     // Load sample.
-    Sample* sample = load_sample(&self->logger, path);
+    Sample* sample = load_sample(&self->logger, path, self->sample_rate);
     if (sample) {
       // Send new sample to run() to be applied
       respond(handle, sizeof(Sample*), &sample);
@@ -301,8 +339,9 @@ instantiate(const LV2_Descriptor*     descriptor,
   lv2_atom_forge_init(&self->forge, self->map);
   peaks_sender_init(&self->psend, self->map);
 
-  self->gain    = 1.0f;
-  self->gain_dB = 0.0f;
+  self->gain        = 1.0f;
+  self->gain_dB     = 0.0f;
+  self->sample_rate = (int)rate;
 
   return (LV2_Handle)self;
 }
@@ -594,7 +633,7 @@ restore(LV2_Handle                  instance,
   if (!self->activated || !schedule) {
     // No scheduling available, load sample immediately
     lv2_log_trace(&self->logger, "Synchronous restore\n");
-    Sample* sample = load_sample(&self->logger, path);
+    Sample* sample = load_sample(&self->logger, path, self->sample_rate);
     if (sample) {
       free_sample(self, self->sample);
       self->sample         = sample;
