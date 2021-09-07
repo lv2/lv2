@@ -6,7 +6,7 @@ import waflib.Logs as Logs
 
 import literasc
 
-def confgure(conf):
+def configure(conf):
     pass
 
 def bld_book_src(task):
