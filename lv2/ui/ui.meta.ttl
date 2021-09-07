@@ -223,7 +223,7 @@ toolkits, the one the UI main loop runs in).  There is no requirement that a
 
 Note that UIs are completely separate from plugins.  From the plugin's
 perspective, control from a UI is indistinguishable from any other control, as
-it all occcurs via ports.
+it all occurs via ports.
 
 """^^lv2:Markdown .
 

@@ -256,7 +256,7 @@ necessarily constant).
 
 ### Threading Rules
 
-To faciliate use in multi-threaded programs, LV2 functions are partitioned into
+To facilitate use in multi-threaded programs, LV2 functions are partitioned into
 several threading classes:
 
 | Discovery Class                  | Instantiation Class           | Audio Class                    |
@@ -271,7 +271,7 @@ Hosts MUST guarantee that:
  * A function in any class is never called concurrently with another function
    in that class.
 
- * A _Discovery_ function is never called concurrently with any other fuction
+ * A _Discovery_ function is never called concurrently with any other function
    in the same shared object file.
 
  * An _Instantiation_ function for an instance is never called concurrently
@@ -337,7 +337,7 @@ lv2:PluginBase
 
 An abstract plugin-like resource that may not actually be an LV2 plugin, for
 example that may not have a lv2:binary.  This is useful for describing things
-that share common structure with a plugin, but are not themselves an actul
+that share common structure with a plugin, but are not themselves an actual
 plugin, such as presets.
 
 """^^lv2:Markdown .

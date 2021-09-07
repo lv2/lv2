@@ -459,7 +459,7 @@ This is a one-way notification, intended to be used as the type of an
 [Object](atom.html#Object) sent from plugins when necessary.
 
 Plugins SHOULD emit such an event whenever a change has occurred that would
-result in a different state being saved, but not when the host explicity makes
+result in a different state being saved, but not when the host explicitly makes
 a change which it knows is likely to have that effect, such as changing a
 parameter.
 

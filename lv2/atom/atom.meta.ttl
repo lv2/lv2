@@ -258,7 +258,7 @@ may assume any binary Path (e.g. in an event payload) is a valid file path
 which can passed to system functions like fopen() directly, without any
 character encoding or escape expansion required.
 
-Any implemenation that creates a Path atom to transmit to another is
+Any implementation that creates a Path atom to transmit to another is
 responsible for ensuring it is valid.  A Path SHOULD always be absolute, unless
 there is some mechanism in place that defines a base path.  Since this is not
 the case for plugin instances, effectively any Path sent to or received from a
