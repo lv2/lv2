@@ -160,6 +160,9 @@ run(LV2_Handle instance, uint32_t sample_count)
   uint32_t  offset = 0;
 
   LV2_ATOM_SEQUENCE_FOREACH (self->control, ev) {
+    write_output(self, offset, (uint32_t)(ev->time.frames - offset));
+    offset = (uint32_t)ev->time.frames;
+
     if (ev->body.type == self->uris.midi_MidiEvent) {
       const uint8_t* const msg = (const uint8_t*)(ev + 1);
       switch (lv2_midi_message_type(msg)) {
@@ -185,9 +188,6 @@ run(LV2_Handle instance, uint32_t sample_count)
         break;
       }
     }
-
-    write_output(self, offset, (uint32_t)(ev->time.frames - offset));
-    offset = (uint32_t)ev->time.frames;
   }
 
   write_output(self, offset, sample_count - offset);
