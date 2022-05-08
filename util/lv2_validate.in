@@ -14,23 +14,15 @@ sord_validate \
     "$LV2DIR/patch.lv2/manifest.ttl" \
     "$LV2DIR/patch.lv2/patch.meta.ttl" \
     "$LV2DIR/patch.lv2/patch.ttl" \
-    "$LV2DIR/eg-amp.lv2/manifest.ttl" \
-    "$LV2DIR/eg-amp.lv2/amp.ttl" \
-    "$LV2DIR/eg-fifths.lv2/manifest.ttl" \
-    "$LV2DIR/eg-fifths.lv2/fifths.ttl" \
     "$LV2DIR/port-props.lv2/manifest.ttl" \
     "$LV2DIR/port-props.lv2/port-props.meta.ttl" \
     "$LV2DIR/port-props.lv2/port-props.ttl" \
-    "$LV2DIR/eg-midigate.lv2/manifest.ttl" \
-    "$LV2DIR/eg-midigate.lv2/midigate.ttl" \
     "$LV2DIR/worker.lv2/worker.meta.ttl" \
     "$LV2DIR/worker.lv2/manifest.ttl" \
     "$LV2DIR/worker.lv2/worker.ttl" \
     "$LV2DIR/buf-size.lv2/manifest.ttl" \
     "$LV2DIR/buf-size.lv2/buf-size.meta.ttl" \
     "$LV2DIR/buf-size.lv2/buf-size.ttl" \
-    "$LV2DIR/eg-scope.lv2/manifest.ttl" \
-    "$LV2DIR/eg-scope.lv2/examploscope.ttl" \
     "$LV2DIR/midi.lv2/midi.meta.ttl" \
     "$LV2DIR/midi.lv2/manifest.ttl" \
     "$LV2DIR/midi.lv2/midi.ttl" \
@@ -55,8 +47,6 @@ sord_validate \
     "$LV2DIR/port-groups.lv2/manifest.ttl" \
     "$LV2DIR/port-groups.lv2/port-groups.ttl" \
     "$LV2DIR/port-groups.lv2/port-groups.meta.ttl" \
-    "$LV2DIR/eg-sampler.lv2/manifest.ttl" \
-    "$LV2DIR/eg-sampler.lv2/sampler.ttl" \
     "$LV2DIR/ui.lv2/manifest.ttl" \
     "$LV2DIR/ui.lv2/ui.ttl" \
     "$LV2DIR/ui.lv2/ui.meta.ttl" \
@@ -77,13 +67,9 @@ sord_validate \
     "$LV2DIR/core.lv2/lv2core.doap.ttl" \
     "$LV2DIR/core.lv2/meta.ttl" \
     "$LV2DIR/core.lv2/people.ttl" \
-    "$LV2DIR/eg-metro.lv2/manifest.ttl" \
-    "$LV2DIR/eg-metro.lv2/metro.ttl" \
     "$LV2DIR/presets.lv2/manifest.ttl" \
     "$LV2DIR/presets.lv2/presets.ttl" \
     "$LV2DIR/presets.lv2/presets.meta.ttl" \
-    "$LV2DIR/eg-params.lv2/manifest.ttl" \
-    "$LV2DIR/eg-params.lv2/params.ttl" \
     "$LV2DIR/urid.lv2/manifest.ttl" \
     "$LV2DIR/urid.lv2/urid.ttl" \
     "$LV2DIR/urid.lv2/urid.meta.ttl" \
