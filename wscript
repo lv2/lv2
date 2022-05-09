@@ -722,17 +722,20 @@ def test(tst):
 
         if "CODESPELL" in tst.env:
             spell_ignore = [
-                "../doc/pygments.css",
-                "../lv2specgen/DTD/*",
-                "../schemas.lv2/doap.ttl",
-                "../waflib",
+                "doc/pygments.css",
+                "lv2specgen/DTD/*",
+                "schemas.lv2/doap.ttl",
+                "waflib",
             ]
+
+            spell_ignore_paths = [os.path.join(tst.src_path("."), x)
+                                  for x in spell_ignore]
 
             check(tst.env.CODESPELL + [
                 "-d",
                 "-q", "3",
-                "-S", ','.join(spell_ignore),
-                '..',
+                "-S", ','.join(spell_ignore_paths),
+                tst.src_path("."),
             ])
 
         try:
