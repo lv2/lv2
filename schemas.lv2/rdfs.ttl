@@ -67,7 +67,7 @@ rdfs:domain
 
 rdfs:isDefinedBy
     a rdf:Property ;
-    rdfs:comment "The defininition of the subject resource." ;
+    rdfs:comment "The definition of the subject resource." ;
     rdfs:domain rdfs:Resource ;
     rdfs:isDefinedBy <http://www.w3.org/2000/01/rdf-schema#> ;
     rdfs:label "is defined by" ;

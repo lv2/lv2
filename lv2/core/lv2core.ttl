@@ -657,7 +657,7 @@ lv2:FunctionPlugin
 		owl:Class ;
 	rdfs:subClassOf lv2:UtilityPlugin ;
 	rdfs:label "Function Plugin" ;
-	rdfs:comment "A plugin whose output is a mathmatical function of its input." .
+	rdfs:comment "A plugin whose output is a mathematical function of its input." .
 
 lv2:ConstantPlugin
 	a rdfs:Class ,

@@ -156,7 +156,7 @@ ev:FrameStamp
 	lv2:documentation """
 
 The default time stamp unit for an LV2 event: the frames field represents audio
-frames (in the sample rate passed to intantiate), and the subframes field is
+frames (in the sample rate passed to instantiate), and the subframes field is
 1/UINT32_MAX of a frame.
 
 """^^lv2:Markdown .

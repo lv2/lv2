@@ -38,7 +38,7 @@ foaf:Image
 
 foaf:LabelProperty
     a rdfs:Class, owl:Class ;
-    rdfs:comment "A foaf:LabelProperty is any RDF property with texual values that serve as labels." ;
+    rdfs:comment "A foaf:LabelProperty is any RDF property with textual values that serve as labels." ;
     rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
     rdfs:label "Label Property" .
 

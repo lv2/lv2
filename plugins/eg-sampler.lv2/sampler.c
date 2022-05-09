@@ -461,7 +461,7 @@ run(LV2_Handle instance, uint32_t sample_count)
     render(self, self->frame_offset, ev->time.frames);
 
     /* Update current frame offset to this event's time.  This is stored in
-       the instance because it is used for sychronous worker event
+       the instance because it is used for synchronous worker event
        execution.  This allows a sample load event to be executed with
        sample accuracy when running in a non-realtime context (such as
        exporting a session). */

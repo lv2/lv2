@@ -65,7 +65,7 @@ ev:supportsTimeStamp
 		lv2:InputPort ;
 	rdfs:range rdfs:Class ;
 	rdfs:label "supports time stamp type" ;
-	rdfs:comment "A time stamp type suported by this input port." .
+	rdfs:comment "A time stamp type supported by this input port." .
 
 ev:generatesTimeStamp
 	a rdf:Property ,

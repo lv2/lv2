@@ -41,7 +41,7 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Define patch:Get with no subject to implicitly apply to reciever.  This can be used by UIs to get an initial description of a plugin."
+				rdfs:label "Define patch:Get with no subject to implicitly apply to receiver.  This can be used by UIs to get an initial description of a plugin."
 			] , [
 				rdfs:label "Add patch:Copy method."
 			]

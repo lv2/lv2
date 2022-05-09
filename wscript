@@ -9,7 +9,7 @@ from waflib.extras import autowaf as autowaf
 
 # Mandatory waf variables
 APPNAME = 'lv2'     # Package name for waf dist
-VERSION = '1.18.2'  # Package version for waf dist
+VERSION = '1.18.3'  # Package version for waf dist
 top     = '.'       # Source directory
 out     = 'build'   # Build directory
 
@@ -196,6 +196,7 @@ def configure(conf):
     if conf.env.BUILD_TESTS:
         conf.find_program('serdi', mandatory=False)
         conf.find_program('sord_validate', mandatory=False)
+        conf.find_program('codespell', mandatory=False)
 
     autowaf.set_lib_env(conf, 'lv2', VERSION, has_objects=False)
     autowaf.set_local_lib(conf, 'lv2', has_objects=False)
@@ -718,6 +719,21 @@ def test(tst):
         if "SORD_VALIDATE" in tst.env:
             all_files = schemas + spec_files + plugin_files + bld_files
             check(tst.env.SORD_VALIDATE + all_files)
+
+        if "CODESPELL" in tst.env:
+            spell_ignore = [
+                "../doc/pygments.css",
+                "../lv2specgen/DTD/*",
+                "../schemas.lv2/doap.ttl",
+                "../waflib",
+            ]
+
+            check(tst.env.CODESPELL + [
+                "-d",
+                "-q", "3",
+                "-S", ','.join(spell_ignore),
+                '..',
+            ])
 
         try:
             test_vocabularies(check, specs, spec_files)
