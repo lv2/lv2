@@ -722,6 +722,7 @@ def test(tst):
 
         if "CODESPELL" in tst.env:
             spell_ignore = [
+                "build",
                 "doc/pygments.css",
                 "lv2specgen/DTD/*",
                 "schemas.lv2/doap.ttl",
