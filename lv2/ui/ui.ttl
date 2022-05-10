@@ -175,8 +175,9 @@ ui:notifyType
 ui:resize
 	a lv2:Feature ,
 		lv2:ExtensionData ;
+	owl:deprecated "true"^^xsd:boolean ;
 	rdfs:label "resize" ;
-	rdfs:comment """A feature that control of, and notifications about, a UI's size.""" .
+	rdfs:comment """A feature that provides control of, and notifications about, a UI's size.""" .
 
 ui:portMap
 	a lv2:Feature ;
