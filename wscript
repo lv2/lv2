@@ -81,7 +81,6 @@ def configure(conf):
 
     conf.load('lv2', cache=True)
     conf.load('autowaf', cache=True)
-    autowaf.set_c_lang(conf, 'c99')
 
     if Options.options.strict:
         # Check for programs used by lint target
@@ -109,6 +108,7 @@ def configure(conf):
                 '-Wno-float-equal',
                 '-Wno-implicit-float-conversion',
                 '-Wno-padded',
+                '-Wno-poison-system-directories',
                 '-Wno-reserved-id-macro',
                 '-Wno-shorten-64-to-32',
                 '-Wno-sign-conversion',
@@ -165,6 +165,8 @@ def configure(conf):
                     '-Wno-suggest-attribute=format',
                 ],
             })
+
+    autowaf.set_c_lang(conf, 'c99')
 
     if conf.env.DEST_OS == 'win32' or not hasattr(os.path, 'relpath'):
         Logs.warn('System does not support linking headers, copying')
