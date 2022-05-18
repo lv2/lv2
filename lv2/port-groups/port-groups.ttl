@@ -21,7 +21,7 @@ pg:Group
 		owl:cardinality 1 ;
 		rdfs:comment "A Group MUST have exactly one string lv2:symbol."
 	] ;
-	rdfs:comment "A set of ports that are logicaly grouped together." .
+	rdfs:comment "A set of ports that are logically grouped together." .
 
 pg:InputGroup
 	a rdfs:Class ;
