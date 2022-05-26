@@ -199,10 +199,10 @@ unmap(Params* self, LV2_URID urid)
 {
   if (self->unmap) {
     return self->unmap->unmap(self->unmap->handle, urid);
-  } else {
-    snprintf(self->urid_buf, sizeof(self->urid_buf), "%u", urid);
-    return self->urid_buf;
   }
+
+  snprintf(self->urid_buf, sizeof(self->urid_buf), "%u", urid);
+  return self->urid_buf;
 }
 
 static LV2_State_Status

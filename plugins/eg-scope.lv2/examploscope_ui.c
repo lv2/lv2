@@ -261,7 +261,9 @@ on_expose_event(GtkWidget* widget, GdkEventExpose* ev, gpointer data)
     for (uint32_t i = start; i < end; ++i) {
       if (i == chn->idx) {
         continue;
-      } else if (i % 2) {
+      }
+
+      if (i % 2) {
         cairo_line_to(cr, i - .5, CYPOS(chn->data_min[i]));
         cairo_line_to(cr, i - .5, CYPOS(chn->data_max[i]));
         ++pathlength;

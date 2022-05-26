@@ -348,7 +348,9 @@ handle_event(Sampler* self, LV2_Atom_Event* ev)
       if (!property) {
         lv2_log_error(&self->logger, "Set message with no property\n");
         return;
-      } else if (property->type != uris->atom_URID) {
+      }
+
+      if (property->type != uris->atom_URID) {
         lv2_log_error(&self->logger, "Set property is not a URID\n");
         return;
       }
@@ -553,10 +555,13 @@ restore(LV2_Handle                  instance,
   uint32_t    valflags = 0;
   const void* value =
     retrieve(handle, self->uris.eg_sample, &size, &type, &valflags);
+
   if (!value) {
     lv2_log_error(&self->logger, "Missing eg:sample\n");
     return LV2_STATE_ERR_NO_PROPERTY;
-  } else if (type != self->uris.atom_Path) {
+  }
+
+  if (type != self->uris.atom_Path) {
     lv2_log_error(&self->logger, "Non-path eg:sample\n");
     return LV2_STATE_ERR_BAD_TYPE;
   }
@@ -593,11 +598,14 @@ restore(LV2_Handle                  instance,
 
   // Get param:gain from state
   value = retrieve(handle, self->uris.param_gain, &size, &type, &valflags);
+
   if (!value) {
     // Not an error, since older versions did not save this property
     lv2_log_note(&self->logger, "Missing param:gain\n");
     return LV2_STATE_SUCCESS;
-  } else if (type != self->uris.atom_Float) {
+  }
+
+  if (type != self->uris.atom_Float) {
     lv2_log_error(&self->logger, "Non-float param:gain\n");
     return LV2_STATE_ERR_BAD_TYPE;
   }
@@ -614,11 +622,15 @@ extension_data(const char* uri)
 {
   static const LV2_State_Interface  state  = {save, restore};
   static const LV2_Worker_Interface worker = {work, work_response, NULL};
+
   if (!strcmp(uri, LV2_STATE__interface)) {
     return &state;
-  } else if (!strcmp(uri, LV2_WORKER__interface)) {
+  }
+
+  if (!strcmp(uri, LV2_WORKER__interface)) {
     return &worker;
   }
+
   return NULL;
 }
 
