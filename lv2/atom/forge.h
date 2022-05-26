@@ -497,7 +497,7 @@ lv2_atom_forge_vector(LV2_Atom_Forge* forge,
                       const void*     elems)
 {
   const LV2_Atom_Vector a = {
-    {(uint32_t)(sizeof(LV2_Atom_Vector_Body) + n_elems * child_size),
+    {(uint32_t)sizeof(LV2_Atom_Vector_Body) + n_elems * child_size,
      forge->Vector},
     {child_size, child_type}};
   LV2_Atom_Forge_Ref out = lv2_atom_forge_write(forge, &a, sizeof(a));

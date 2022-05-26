@@ -212,7 +212,7 @@ static void
 play(Metro* self, uint32_t begin, uint32_t end)
 {
   float* const   output          = self->ports.output;
-  const uint32_t frames_per_beat = 60.0f / self->bpm * self->rate;
+  const uint32_t frames_per_beat = (uint32_t)(60.0f / self->bpm * self->rate);
 
   if (self->speed == 0.0f) {
     memset(output, 0, (end - begin) * sizeof(float));
@@ -289,7 +289,7 @@ update_position(Metro* self, const LV2_Atom_Object* obj)
     const float frames_per_beat = (float)(60.0 / self->bpm * self->rate);
     const float bar_beats       = ((LV2_Atom_Float*)beat)->body;
     const float beat_beats      = bar_beats - floorf(bar_beats);
-    self->elapsed_len           = beat_beats * frames_per_beat;
+    self->elapsed_len           = (uint32_t)(beat_beats * frames_per_beat);
     if (self->elapsed_len < self->attack_len) {
       self->state = STATE_ATTACK;
     } else if (self->elapsed_len < self->attack_len + self->decay_len) {

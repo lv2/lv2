@@ -48,7 +48,7 @@ state_map_cmp(const void* a, const void* b)
 
 /** Helper macro for terse state map initialisation. */
 #define STATE_MAP_INIT(type, ptr) \
-  (LV2_ATOM__##type), (sizeof(*ptr) - sizeof(LV2_Atom)), (ptr)
+  (LV2_ATOM__##type), (sizeof(*(ptr)) - sizeof(LV2_Atom)), (ptr)
 
 /**
    Initialise a state map.

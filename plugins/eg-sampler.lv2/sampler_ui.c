@@ -365,7 +365,7 @@ port_event(LV2UI_Handle handle,
       const LV2_Atom_Object* obj = (const LV2_Atom_Object*)atom;
       if (obj->body.otype == ui->uris.patch_Set) {
         const char* path = read_set_file(&ui->uris, obj);
-        if (path && (!ui->filename || strcmp(path, ui->filename))) {
+        if (path && (!ui->filename || !!strcmp(path, ui->filename))) {
           g_free(ui->filename);
           ui->filename = g_strdup(path);
           gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(ui->file_button),
@@ -447,11 +447,15 @@ extension_data(const char* uri)
 {
   static const LV2UI_Show_Interface show = {ui_show, ui_hide};
   static const LV2UI_Idle_Interface idle = {ui_idle};
+
   if (!strcmp(uri, LV2_UI__showInterface)) {
     return &show;
-  } else if (!strcmp(uri, LV2_UI__idleInterface)) {
+  }
+
+  if (!strcmp(uri, LV2_UI__idleInterface)) {
     return &idle;
   }
+
   return NULL;
 }
 

@@ -82,7 +82,7 @@ typedef enum {
      Implementations MUST NOT attempt to copy or serialise a non-POD value if
      they do not understand its type (and thus know how to correctly do so).
   */
-  LV2_STATE_IS_POD = 1,
+  LV2_STATE_IS_POD = 1u << 0u,
 
   /**
      Portable (architecture independent) data.
@@ -93,7 +93,7 @@ typedef enum {
      values MUST NOT depend on architecture-specific properties like
      endianness or alignment.  Portable values MUST NOT contain filenames.
   */
-  LV2_STATE_IS_PORTABLE = 1 << 1,
+  LV2_STATE_IS_PORTABLE = 1u << 1u,
 
   /**
      Native data.
@@ -104,7 +104,7 @@ typedef enum {
      most efficient representation possible and not worry about serialisation
      and portability.
   */
-  LV2_STATE_IS_NATIVE = 1 << 2
+  LV2_STATE_IS_NATIVE = 1u << 2u
 } LV2_State_Flags;
 
 /** A status code for state functions. */

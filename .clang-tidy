@@ -3,6 +3,7 @@ Checks: >
   -*-else-after-return,
   -*-magic-numbers,
   -*-uppercase-literal-suffix,
+  -altera-*,
   -bugprone-macro-parentheses,
   -bugprone-suspicious-include,
   -bugprone-suspicious-string-compare,
@@ -16,6 +17,8 @@ Checks: >
   -misc-unused-parameters,
   -modernize-redundant-void-arg,
   -modernize-use-trailing-return-type,
+  -performance-no-int-to-ptr,
+  -readability-function-cognitive-complexity,
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 FormatStyle: file
