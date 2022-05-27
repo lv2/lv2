@@ -13,6 +13,20 @@
 	doap:name "LV2 Patch" ;
 	doap:shortdesc "A protocol for accessing and manipulating properties." ;
 	doap:release [
+		doap:revision "2.10" ;
+		doap:created "2022-05-26" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.18.4.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix spelling errors."
+			] , [
+				rdfs:label "Make the type of patch:wildcard more precise."
+			] , [
+				rdfs:label "Fix type and range of patch:value."
+			]
+		]
+	] , [
 		doap:revision "2.8" ;
 		doap:created "2020-04-26" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.18.0.tar.bz2> ;

@@ -13,6 +13,16 @@
 	doap:created "2007-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:release [
+		doap:revision "2.4" ;
+		doap:created "2022-05-26" ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.18.4.tar.bz2> ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix spelling errors."
+			]
+		]
+	] , [
 		doap:revision "2.2" ;
 		doap:created "2019-02-03" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.16.0.tar.bz2> ;
