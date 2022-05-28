@@ -234,7 +234,7 @@ typedef struct {
    | Event 1 (size 6)                              | Event 2
    |       |       |       |       |       |       |       |       |
    | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | | |
-   |FRAMES |SUBFRMS|TYPE   |SIZE   |DATADATADATAPAD|FRAMES |SUBFRMS|...
+   |FRAMES         |TYPE   |SIZE   |DATADATADATAPAD|FRAMES         |...
    </pre>
 */
 typedef struct {
