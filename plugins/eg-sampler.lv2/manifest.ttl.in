@@ -15,5 +15,5 @@
 
 <http://lv2plug.in/plugins/eg-sampler#ui>
 	a ui:GtkUI ;
-	ui:binary <sampler_ui@LIB_EXT@> ;
+	lv2:binary <sampler_ui@LIB_EXT@> ;
 	rdfs:seeAlso <sampler.ttl> .
