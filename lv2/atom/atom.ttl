@@ -248,3 +248,14 @@ atom:atomTransfer
 	rdfs:label "atom transfer" ;
 	rdfs:comment "A port protocol for transferring atoms." .
 
+atom:PortEvent
+	a rdfs:Class ;
+	rdfs:subClassOf atom:Object ;
+	rdfs:label "port event" ;
+	rdfs:comment "Write to control input port event message." .
+
+atom:portTuple
+	a rdf:Property ,
+		owl:ObjectProperty ;
+	rdfs:label "port tuple" ;
+	rdfs:comment "The body property of an atom:PortEvent message." .

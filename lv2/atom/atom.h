@@ -66,6 +66,8 @@
 #define LV2_ATOM__frameTime     LV2_ATOM_PREFIX "frameTime"      ///< http://lv2plug.in/ns/ext/atom#frameTime
 #define LV2_ATOM__supports      LV2_ATOM_PREFIX "supports"       ///< http://lv2plug.in/ns/ext/atom#supports
 #define LV2_ATOM__timeUnit      LV2_ATOM_PREFIX "timeUnit"       ///< http://lv2plug.in/ns/ext/atom#timeUnit
+#define LV2_ATOM__PortEvent     LV2_ATOM_PREFIX "PortEvent"      ///< http://lv2plug.in/ns/ext/atom#PortEvent
+#define LV2_ATOM__portTuple     LV2_ATOM_PREFIX "portTuple"      ///< http://lv2plug.in/ns/ext/atom#portTuple
 
 // clang-format on
 
