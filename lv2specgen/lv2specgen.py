@@ -1246,7 +1246,7 @@ def load_tags(path, docdir):
     return linkmap
 
 
-def writeIndex(model, specloc, index_path, root_path, root_uri, online):
+def writeIndex(model, index_path, root_path, root_uri, online):
     # Get extension URI
     ext_node = model.value(None, rdf.type, lv2.Specification)
     if not ext_node:
@@ -1570,7 +1570,7 @@ def specgen(
 
     # Write index row
     if index_path is not None:
-        writeIndex(m, specloc, index_path, root_path, root_uri, opts["online"])
+        writeIndex(m, index_path, root_path, root_uri, opts["online"])
 
     # Validate complete output page
     try:
