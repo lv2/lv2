@@ -2,9 +2,12 @@
 
 /* Generic page style */
 
-body {
+html {
   background: #FFF;
   color: #222;
+}
+
+body {
   font-family: "DejaVu Sans", "SF Pro Text", Verdana, sans-serif;
   font-style: normal;
   line-height: 1.6em;
