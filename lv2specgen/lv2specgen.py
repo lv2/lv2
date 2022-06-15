@@ -1352,9 +1352,8 @@ def writeIndex(model, specloc, index_path, root_path, root_uri, online):
 
     row += "</tr>"
 
-    index = open(index_path, "w")
-    index.write(row)
-    index.close()
+    with open(index_path, "w") as index:
+        index.write(row)
 
 
 def specgen(
@@ -1387,9 +1386,8 @@ def specgen(
     # Template
     temploc = os.path.join(indir, "template.html")
     template = None
-    f = open(temploc, "r")
-    template = f.read()
-    f.close()
+    with open(temploc, "r") as f:
+        template = f.read()
 
     # Load code documentation link map from tags file
     linkmap = load_tags(tags, docdir)
@@ -1589,10 +1587,9 @@ def specgen(
 
 def save(path, text):
     try:
-        f = open(path, "w")
-        f.write(text)
-        f.flush()
-        f.close()
+        with open(path, "w") as f:
+            f.write(text)
+            f.flush()
     except Exception:
         e = sys.exc_info()[1]
         print('Error writing to file "' + path + '": ' + str(e))

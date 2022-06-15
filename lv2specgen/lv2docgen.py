@@ -133,6 +133,5 @@ if __name__ == '__main__':
                 raise
 
             print('Writing <%s> documentation to %s' % (plugin, outpath))
-            out = open(outpath, 'w')
-            out.write(html)
-            out.close()
+            with open(outpath, 'w') as out:
+                out.write(html)
