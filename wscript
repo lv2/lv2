@@ -723,22 +723,21 @@ def test(tst):
             check(tst.env.SORD_VALIDATE + all_files)
 
         if "CODESPELL" in tst.env:
-            spell_ignore = [
-                "build",
+            spell_ignore_paths = [
                 "doc/pygments.css",
-                "lv2specgen/DTD/*",
                 "schemas.lv2/doap.ttl",
-                "waflib",
             ]
-
-            spell_ignore_paths = [os.path.join(tst.src_path("."), x)
-                                  for x in spell_ignore]
 
             check(tst.env.CODESPELL + [
                 "-d",
                 "-q", "3",
-                "-S", ','.join(spell_ignore_paths),
-                tst.src_path("."),
+                "-S", ','.join(tst.src_path(p) for p in spell_ignore_paths),
+                tst.src_path("lv2specgen/*.*"),
+                tst.src_path("doc"),
+                tst.src_path("lv2"),
+                tst.src_path("plugins"),
+                tst.src_path("schemas.lv2"),
+                tst.src_path("scripts"),
             ])
 
         try:
