@@ -186,7 +186,7 @@ run(LV2_Handle instance, uint32_t sample_count)
       }
     }
 
-    write_output(self, offset, ev->time.frames - offset);
+    write_output(self, offset, (uint32_t)(ev->time.frames - offset));
     offset = (uint32_t)ev->time.frames;
   }
 

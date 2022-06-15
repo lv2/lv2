@@ -51,7 +51,7 @@ LV2_DISABLE_DEPRECATION_WARNINGS
 static inline uint16_t
 lv2_event_pad_size(uint16_t size)
 {
-  return (uint16_t)(size + 7U) & (uint16_t)(~7U);
+  return (uint16_t)((size + 7U) & ~7U);
 }
 
 /** Initialize (empty, reset..) an existing event buffer.

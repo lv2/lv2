@@ -153,11 +153,11 @@ peaks_sender_send(PeaksSender*    sender,
 
   // eg:offset = OFFSET
   lv2_atom_forge_key(forge, uris->peaks_offset);
-  lv2_atom_forge_int(forge, sender->current_offset);
+  lv2_atom_forge_int(forge, (int32_t)sender->current_offset);
 
   // eg:total = TOTAL
   lv2_atom_forge_key(forge, uris->peaks_total);
-  lv2_atom_forge_int(forge, sender->n_peaks);
+  lv2_atom_forge_int(forge, (int32_t)sender->n_peaks);
 
   // eg:magnitudes = Vector<Float>(PEAK, PEAK, ...)
   lv2_atom_forge_key(forge, uris->peaks_magnitudes);

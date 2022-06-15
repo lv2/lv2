@@ -313,7 +313,7 @@ run(LV2_Handle instance, uint32_t sample_count)
        !lv2_atom_sequence_is_end(&in->body, in->atom.size, ev);
        ev = lv2_atom_sequence_next(ev)) {
     // Play the click for the time slice from last_t until now
-    play(self, last_t, ev->time.frames);
+    play(self, last_t, (uint32_t)ev->time.frames);
 
     // Check if this event is an Object
     // (or deprecated Blank to tolerate old hosts)
@@ -327,7 +327,7 @@ run(LV2_Handle instance, uint32_t sample_count)
     }
 
     // Update time for next iteration and move to next event
-    last_t = ev->time.frames;
+    last_t = (uint32_t)ev->time.frames;
   }
 
   // Play for remainder of cycle
