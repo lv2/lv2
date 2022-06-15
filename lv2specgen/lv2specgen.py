@@ -1315,7 +1315,7 @@ def writeIndex(model, index_path, root_path, root_uri, online):
 
     # Specification (comment is to act as a sort key)
     row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
-        b,
+        stem,
         target,
         name,
     )
