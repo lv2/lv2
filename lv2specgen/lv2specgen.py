@@ -1393,6 +1393,12 @@ def specgen(
     linkmap = load_tags(tags, docdir)
 
     m = rdflib.ConjunctiveGraph()
+
+    # RDFLib adds its own prefixes, so kludge around "time" prefix conflict
+    m.namespace_manager.bind('time',
+                             rdflib.URIRef('http://lv2plug.in/ns/ext/time#'),
+                             replace=True)
+
     manifest_path = os.path.join(os.path.dirname(specloc), "manifest.ttl")
     if os.path.exists(manifest_path):
         m.parse(manifest_path, format="n3")
@@ -1502,7 +1508,7 @@ def specgen(
         template = template.replace("@XMLNS@", "")
     else:
         template = template.replace(
-            "@XMLNS@", '      xmlns:%s="%s"' % (spec_pre, spec_ns_str)
+            "@XMLNS@", 'xmlns:%s="%s"' % (spec_pre, spec_ns_str)
         )
 
     filename = os.path.basename(specloc)
