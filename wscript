@@ -395,7 +395,7 @@ def build(bld):
 
     # Install lv2specgen
     bld.install_files('${DATADIR}/lv2specgen/',
-                      ['lv2specgen/style.css',
+                      ['doc/style.css',
                        'lv2specgen/template.html'])
     bld.install_files('${DATADIR}/lv2specgen/DTD/',
                       bld.path.ant_glob('lv2specgen/DTD/*'))
