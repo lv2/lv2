@@ -20,7 +20,6 @@
 #include "lv2/atom/util.h"
 #include "lv2/urid/urid.h"
 
-#include <inttypes.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -73,7 +72,7 @@ main(void)
   LV2_Atom_Long* two = (LV2_Atom_Long*)lv2_atom_forge_deref(
     &forge, lv2_atom_forge_long(&forge, 2));
   if (two->body != 2) {
-    return test_fail("%" PRId64 " != 2\n", two->body);
+    return test_fail("%ld != 2\n", (long)two->body);
   }
 
   // eg_three = (Float)3.0

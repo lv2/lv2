@@ -37,12 +37,12 @@ test_string_overflow(void)
   lv2_atom_forge_init(&forge, &map);
 
   // Check that writing increasingly long strings fails at the right point
-  for (size_t count = 0; count < MAX_CHARS; ++count) {
+  for (unsigned count = 0; count < MAX_CHARS; ++count) {
     lv2_atom_forge_set_buffer(&forge, buf, capacity);
 
     const LV2_Atom_Forge_Ref ref = lv2_atom_forge_string(&forge, str, count);
     if (!ref) {
-      return test_fail("Failed to write %zu byte string\n", count);
+      return test_fail("Failed to write %u byte string\n", count);
     }
   }
 
