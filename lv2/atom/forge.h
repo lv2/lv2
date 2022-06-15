@@ -365,7 +365,7 @@ static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_int(LV2_Atom_Forge* forge, int32_t val)
 {
   const LV2_Atom_Int a = {{sizeof(val), forge->Int}, val};
-  return lv2_atom_forge_primitive(forge, &a.atom);
+  return lv2_atom_forge_primitive(forge, (const LV2_Atom*)&a);
 }
 
 /** Write an atom:Long. */
@@ -373,7 +373,7 @@ static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_long(LV2_Atom_Forge* forge, int64_t val)
 {
   const LV2_Atom_Long a = {{sizeof(val), forge->Long}, val};
-  return lv2_atom_forge_primitive(forge, &a.atom);
+  return lv2_atom_forge_primitive(forge, (const LV2_Atom*)&a);
 }
 
 /** Write an atom:Float. */
@@ -381,7 +381,7 @@ static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_float(LV2_Atom_Forge* forge, float val)
 {
   const LV2_Atom_Float a = {{sizeof(val), forge->Float}, val};
-  return lv2_atom_forge_primitive(forge, &a.atom);
+  return lv2_atom_forge_primitive(forge, (const LV2_Atom*)&a);
 }
 
 /** Write an atom:Double. */
@@ -389,7 +389,7 @@ static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_double(LV2_Atom_Forge* forge, double val)
 {
   const LV2_Atom_Double a = {{sizeof(val), forge->Double}, val};
-  return lv2_atom_forge_primitive(forge, &a.atom);
+  return lv2_atom_forge_primitive(forge, (const LV2_Atom*)&a);
 }
 
 /** Write an atom:Bool. */
@@ -397,7 +397,7 @@ static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_bool(LV2_Atom_Forge* forge, bool val)
 {
   const LV2_Atom_Bool a = {{sizeof(int32_t), forge->Bool}, val ? 1 : 0};
-  return lv2_atom_forge_primitive(forge, &a.atom);
+  return lv2_atom_forge_primitive(forge, (const LV2_Atom*)&a);
 }
 
 /** Write an atom:URID. */
@@ -405,7 +405,7 @@ static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_urid(LV2_Atom_Forge* forge, LV2_URID id)
 {
   const LV2_Atom_URID a = {{sizeof(id), forge->URID}, id};
-  return lv2_atom_forge_primitive(forge, &a.atom);
+  return lv2_atom_forge_primitive(forge, (const LV2_Atom*)&a);
 }
 
 /** Write an atom compatible with atom:String.  Used internally. */
