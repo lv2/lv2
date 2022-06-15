@@ -22,7 +22,7 @@ h1 {
   font-size: 2.38em;
   font-weight: 600;
   line-height: 1.41em;
-  margin: 0 0 0.25em 0;
+  margin: 0 0 0.25em;
 }
 
 h2 {
@@ -30,7 +30,7 @@ h2 {
   font-size: 1.68em;
   font-weight: 600;
   line-height: 1.3em;
-  margin: 1.25em 0 0.5em 0;
+  margin: 1.25em 0 0.5em;
 }
 
 h3 {
@@ -38,7 +38,7 @@ h3 {
   font-size: 1.41em;
   font-weight: 600;
   line-height: 1.19em;
-  margin: 1.25em 0 0.5em 0;
+  margin: 1.25em 0 0.5em;
 }
 
 h4 {
@@ -46,7 +46,7 @@ h4 {
   font-size: 1.19em;
   font-weight: 600;
   line-height: 1.09em;
-  margin: 1.25em 0 0.5em 0;
+  margin: 1.25em 0 0.5em;
 }
 
 h5, h6 {
@@ -54,7 +54,7 @@ h5, h6 {
   font-size: 1em;
   font-weight: 600;
   line-height: 1em;
-  margin: 1.25em 0 0.5em 0;
+  margin: 1.25em 0 0.5em;
 }
 
 a {
@@ -92,7 +92,7 @@ img {
 }
 
 p {
-  margin: 0.5em 0 0.5em 0;
+  margin: 0.5em 0;
 }
 
 blockquote {
@@ -109,13 +109,13 @@ pre, code, kbd, samp {
 }
 
 ul, ol {
-  margin: 0 0 0.5em 0;
+  margin: 0 0 0.5em;
   padding-top: 0;
 }
 
 dt {
   font-weight: 600;
-  margin: 0.75em 0 0.125em 0;
+  margin: 0.75em 0 0.125em;
 }
 
 dt::after {
@@ -126,7 +126,7 @@ dt::after {
 hr {
   background-color: #EEE;
   border: 0;
-  color: gray;
+  color: #666;
   height: 1px;
   margin-bottom: 1.5ex;
   margin-top: 1.5ex;
@@ -195,7 +195,7 @@ footer {
 #meta tr, #meta th, #meta td {
   border: 0;
   font-weight: normal;
-  padding: 0 0 0.125em 0;
+  padding: 0 0 0.125em;
   background-color: transparent;
 }
 
@@ -214,7 +214,7 @@ footer {
 
 #shortdesc {
   padding: 0;
-  margin: 0 0 0.5em 0;
+  margin: 0 0 0.5em;
   font-style: italic;
   color: #666;
   display: inline-block;
@@ -241,7 +241,7 @@ footer {
   padding: 3px 10px 0 0;
   position: absolute;
   top: 63px;
-  width: 93.900002%;
+  width: 93.9%;
   z-index: 0;
 }
 
@@ -419,17 +419,11 @@ input.formbutton {
   padding: 0 0 0 12px;
 }
 
-blockquote {
-  border-left: 1px solid #CCC;
-  margin-left: 1em;
-  padding-left: 1em;
-}
-
 #footer {
   bottom: 0;
   clear: both;
   font-size: x-small;
-  margin: 2em 0 0 0;
+  margin: 2em 0 0;
   padding: 0;
   color: #888;
 }
@@ -452,8 +446,8 @@ blockquote {
 @media print {
   #topbar {
     color: #000;
-    margin: 0.25em auto 0.25em auto;
-    padding: 0.25em 0.5em 0.5em 0.5em;
+    margin: 0.25em auto;
+    padding: 0.25em 0.5em 0.5em;
     max-width: 60em;
     position: relative;
   }
@@ -473,7 +467,7 @@ blockquote {
 
 @media screen {
   #topbar {
-    margin: 0.25em auto 0.25em auto;
+    margin: 0.25em auto;
     padding: 0;
     max-width: 60em;
     position: relative;
@@ -482,7 +476,7 @@ blockquote {
   #contentsbox {
     color: #546E00;
     font-size: small;
-    margin: 0 0 1.5em 0;
+    margin: 0 0 1.5em;
   }
 
   #contents {
@@ -509,7 +503,7 @@ blockquote {
 
 .section {
   clear: right;
-  padding: 0 0 1.5em 0;
+  padding: 0 0 1.5em;
 }
 
 .category {
@@ -584,12 +578,11 @@ table.index {
   border-bottom-left-radius: 6px;
 }
 
-
 table.terminfo {
   border-top: 0;
   border-collapse: collapse;
   margin: -1px 0 2em 2em;
-  padding: 0.25em 0 0.25em 0;
+  padding: 0.25em 0;
   float: right;
   border-bottom: 1px solid #EEE;
   border-left: 1px solid #EEE;
@@ -605,7 +598,7 @@ table.terminfo td {
 
 .restriction {
   border-style: hidden;
-  margin: 0 0 0.5ex 0;
+  margin: 0 0 0.5ex;
   padding: 0;
   vertical-align: text-top;
 }
@@ -660,15 +653,6 @@ table.terminfo td {
 dl {
   margin: 0;
   padding: 0;
-}
-
-hr {
-  background-color: #EEE;
-  border: 0;
-  color: gray;
-  height: 1px;
-  margin-bottom: 1.5ex;
-  margin-top: 1.5ex;
 }
 
 div.head {
