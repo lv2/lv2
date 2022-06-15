@@ -688,3 +688,118 @@ div.head table {
 .highlight, .codehilite {
   margin-left: 2em;
 }
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  /* Dark generic page style */
+
+  html {
+    background: #222;
+    color: #DDD;
+  }
+
+  a {
+    color: #B4C342;
+  }
+
+  a:link {
+    color: #B4C342;
+  }
+
+  a:visited {
+    color: #B4C342;
+  }
+
+  h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    color: #DDD;
+  }
+
+  h1 a:link, h2 a:link, h3 a:link, h4 a:link, h5 a:link, h6 a:link {
+    color: #DDD;
+  }
+
+  h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visited {
+    color: #DDD;
+  }
+
+  blockquote {
+    border-left: 1px solid #444;
+  }
+
+  pre, code, kbd, samp {
+    color: #DDD;
+  }
+
+  hr {
+    background-color: #333;
+    border: 0;
+    color: #666;
+  }
+
+  th {
+    border: 1px solid #444;
+  }
+
+  td {
+    border: 1px solid #444;
+  }
+
+  footer {
+    color: #BBB;
+  }
+
+  /* Dark specgen style */
+
+  #metabox {
+    color: #999;
+  }
+
+  #shortdesc {
+    color: #999;
+  }
+
+  #titlesep {
+    color: #444;
+  }
+
+  .terminfo, .restriction {
+    color: #999;
+  }
+
+  table.terminfo {
+    border-bottom: 1px solid #444;
+    border-left: 1px solid #444;
+  }
+
+  .spectermbody {
+    border-top: 1px solid #444;
+  }
+
+  .spectermbody .description .comment > p:first-child {
+    color: #BBB;
+  }
+
+  .error {
+    color: #DC322F;
+  }
+
+  .warning {
+    color: #B58900;
+  }
+
+  .success {
+    color: #859900;
+  }
+
+  #topbar {
+    border-bottom: 1px solid #444;
+  }
+}
+
+/* Hard black for dark mode on mobile (since it's likely to be an OLED screen) */
+@media only screen and (hover: none) and (pointer: coarse) and (prefers-color-scheme: dark) {
+  html {
+    background: #000;
+    color: #CCC;
+  }
+}

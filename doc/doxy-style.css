@@ -1,6 +1,9 @@
-body {
+html {
   background: #FFF;
   color: #222;
+}
+
+body {
   font-style: normal;
   line-height: 1.6em;
   margin-left: auto;
@@ -184,10 +187,6 @@ div.qindex,div.navtab {
 
 div.navtab {
   margin-right: 15px;
-}
-
-.contents a:visited {
-  color: #344E00;
 }
 
 a.qindexHL {
@@ -526,7 +525,6 @@ td.mlabels-right {
   margin-top: 0;
   padding-top: 0.25em;
   font-weight: normal;
-  color: #444;
   font-size: 0.9em;
 }
 
@@ -861,4 +859,229 @@ th {
 
 span.icon {
   display: none;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  html {
+    background: #222;
+    color: #DDD;
+  }
+
+  a {
+    color: #B4C342;
+  }
+
+  h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    color: #DDD;
+  }
+
+  h1 a:link, h2 a:link, h3 a:link, h4 a:link, h5 a:link, h6 a:link {
+    color: #DDD;
+  }
+
+  h1 a:visited, h2 a:visited, h3 a:visited, h4 a:visited, h5 a:visited, h6 a:visited {
+    color: #DDD;
+  }
+
+  #header {
+    border-bottom-color: #333;
+  }
+
+  #title {
+    color: #CCC;
+  }
+
+  #shortdesc {
+    color: #BBB;
+  }
+
+  code {
+    color: #DDD;
+  }
+
+  pre.fragment {
+    border: 1px solid #444;
+    background-color: #333;
+  }
+
+  div.ah {
+    background-color: #000;
+    color: #FFF;
+    border-color: #333;
+  }
+
+  .groupheader + p {
+    color: #BBB;
+  }
+
+  td.indexkey {
+    background-color: #EBEFF6;
+    border: 1px solid #C4CFE5;
+  }
+
+  td.indexvalue {
+    background-color: #EBEFF6;
+    border: 1px solid #C4CFE5;
+  }
+
+  tr.memlist {
+    background-color: #EEF1F7;
+  }
+
+  span.keyword {
+    color: #586E75;
+  }
+
+  span.keywordtype {
+    color: #546E00;
+  }
+
+  span.keywordflow {
+    color: #586E75;
+  }
+
+  span.comment {
+    color: #6C71C4;
+  }
+
+  span.preprocessor {
+    color: #D33682;
+  }
+
+  span.stringliteral {
+    color: #CB4B16;
+  }
+
+  span.charliteral {
+    color: #CB4B16;
+  }
+
+  .dirtab {
+    border: 1px solid #A3B4D7;
+  }
+
+  th.dirtab {
+    background: #EBEFF6;
+  }
+
+  hr {
+    border-top: 1px solid #DDD;
+  }
+
+  #footer {
+    color: #888;
+  }
+
+  .mdescLeft,.mdescRight {
+    color: #555;
+  }
+
+  .memTemplParams {
+    color: #464646;
+  }
+
+  td.mlabels-right {
+    color: #B4C342;
+  }
+
+  .memtitle {
+    border-bottom: 1px solid #666;
+  }
+
+  .memtemplate {
+    color: #888;
+  }
+
+  .memnav {
+    background-color: #666;
+    border: 1px solid #B4C342;
+  }
+
+  .memproto {
+    border-bottom: 1px solid #666;
+    border-left: 1px solid #666;
+    color: #BBB;
+  }
+
+  .memdoc > p:first-child, .memdoc .textblock > p:first-child {
+    color: #BBB;
+  }
+
+  .memdoc > p:first-child, .memdoc .textblock > h3:first-child {
+    color: #BBB;
+  }
+
+  .paramtype {
+    color: #BBB;
+  }
+
+  .params .paramname {
+    color: #E8E8E8;
+  }
+
+  .fieldname {
+    color: #FFF;
+  }
+
+  .fieldtable tbody tr td {
+    border-top-color: #555;
+    border-bottom-color: #555;
+  }
+
+  td.fieldtype {
+    color: #BBB;
+  }
+
+  .arrow {
+    color: #666;
+  }
+
+  address {
+    color: #444;
+  }
+
+  table.doxtable td,table.doxtable th {
+    border-color: #DDD;
+  }
+
+  table.doxtable th {
+    background-color: #F3F3F3;
+    color: #000;
+  }
+
+  div.navpath {
+    color: #444;
+  }
+
+  #metabox {
+    color: #666;
+  }
+
+  .glow {
+    background-color: #00736F;
+    box-shadow: 0 0 10px #00736F;
+  }
+
+  span.lineno {
+    border-right: 2px solid #B4C342;
+    background-color: #383838;
+  }
+
+  span.lineno a {
+    background-color: #404040;
+  }
+
+  span.lineno a:hover {
+    background-color: #484848;
+  }
+
+}
+
+/* Hard black for dark mode on mobile (since it's likely to be an OLED screen) */
+@media only screen and (hover: none) and (pointer: coarse) and (prefers-color-scheme: dark) {
+  html {
+    background: #000;
+    color: #CCC;
+  }
 }
