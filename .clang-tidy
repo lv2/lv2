@@ -4,6 +4,7 @@ Checks: >
   -*-magic-numbers,
   -*-uppercase-literal-suffix,
   -altera-*,
+  -bugprone-easily-swappable-parameters,
   -bugprone-macro-parentheses,
   -bugprone-suspicious-include,
   -bugprone-suspicious-string-compare,

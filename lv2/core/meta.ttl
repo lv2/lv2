@@ -34,6 +34,13 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
+		doap:revision "1.18.5" ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix or avoid new compiler and tool warnings."
+			]
+		]
+	] , [
 		doap:revision "1.18.4" ;
 		doap:created "2022-05-26" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.18.4.tar.bz2> ;
