@@ -35,11 +35,11 @@
 #if defined(__clang__)
 #  define LV2_DISABLE_DEPRECATION_WARNINGS \
     _Pragma("clang diagnostic push")       \
-      _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
+    _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
 #elif defined(__GNUC__) && __GNUC__ > 4
 #  define LV2_DISABLE_DEPRECATION_WARNINGS \
     _Pragma("GCC diagnostic push")         \
-      _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
+    _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\"")
 #else
 #  define LV2_DISABLE_DEPRECATION_WARNINGS
 #endif

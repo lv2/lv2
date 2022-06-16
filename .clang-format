@@ -1,0 +1,34 @@
+---
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignEscapedNewlinesLeft: true
+BasedOnStyle: Mozilla
+BraceWrapping:
+  AfterNamespace: false
+  AfterClass: true
+  AfterEnum: false
+  AfterExternBlock: false
+  AfterFunction: true
+  AfterStruct: false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+BreakBeforeBraces: Custom
+Cpp11BracedListStyle: true
+IndentCaseLabels: false
+IndentPPDirectives: AfterHash
+KeepEmptyLinesAtTheStartOfBlocks: false
+SpacesInContainerLiterals: false
+StatementMacros:
+  - LV2_DEPRECATED
+  - LV2_DISABLE_DEPRECATION_WARNINGS
+  - LV2_RESTORE_WARNINGS
+  - LV2_SYMBOL_EXPORT
+  - _Pragma
+ForEachMacros:
+  - LV2_ATOM_OBJECT_BODY_FOREACH
+  - LV2_ATOM_OBJECT_FOREACH
+  - LV2_ATOM_SEQUENCE_BODY_FOREACH
+  - LV2_ATOM_SEQUENCE_FOREACH
+  - LV2_ATOM_TUPLE_BODY_FOREACH
+  - LV2_ATOM_TUPLE_FOREACH
+...
