@@ -154,7 +154,7 @@ def isLiteral(n):
 def niceName(uri):
     global spec_bundle
     if uri.startswith(spec_ns_str):
-        return uri[len(spec_ns_str) :]
+        return uri.removeprefix(spec_ns_str)
     elif uri == str(rdfs.seeAlso):
         return "See also"
 
@@ -830,7 +830,7 @@ def getShortName(uri):
 def getAnchor(uri):
     uri = str(uri)
     if uri.startswith(spec_ns_str):
-        return uri[len(spec_ns_str) :].replace("/", "_")
+        return uri.removeprefix(spec_ns_str).replace("/", "_")
     else:
         return getShortName(uri)
 
@@ -861,7 +861,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
             local_subclass = False
             for p in findStatements(m, c, rdfs.subClassOf, None):
                 parent = str(p[2])
-                if parent[0 : len(spec_ns_str)] == spec_ns_str:
+                if parent.startswith(spec_ns_str):
                     local_subclass = True
             if local_subclass:
                 continue
@@ -1512,7 +1512,7 @@ def specgen(
         )
 
     filename = os.path.basename(specloc)
-    basename = filename[0 : filename.rfind(".")]
+    basename = os.path.splitext(filename)[0]
 
     template = template.replace("@STYLE_URI@", style_uri)
     template = template.replace("@PREFIXES@", str(prefixes_html))
