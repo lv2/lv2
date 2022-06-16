@@ -254,9 +254,7 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
 
     # Syntax highlight all Turtle code
     if have_pygments:
-        code_rgx = re.compile(
-            '<pre class="turtle-code">(.*?)</pre>', re.DOTALL
-        )
+        code_rgx = re.compile('<pre class="turtle-code">(.*?)</pre>', re.DOTALL)
         while True:
             code = code_rgx.search(markup)
             if not code:
@@ -373,9 +371,7 @@ def getDetailedDocumentation(m, subject, classlist, proplist, instalist):
     if d:
         doc = getObject(d)
         if doc.datatype == lv2.Markdown:
-            markup += formatDoc(
-                m, subject, doc, classlist, proplist, instalist
-            )
+            markup += formatDoc(m, subject, doc, classlist, proplist, instalist)
         else:
             html = getLiteralString(doc)
             markup += prettifyHtml(
@@ -687,9 +683,7 @@ def extraInfo(term, m):
                 getTermLink(getObject(p), term, getPredicate(p)), first
             )
         elif isLiteral(getObject(p)):
-            doc += getProperty(
-                linkifyCodeIdentifiers(str(getObject(p))), first
-            )
+            doc += getProperty(linkifyCodeIdentifiers(str(getObject(p))), first)
         elif isBlank(getObject(p)):
             doc += getProperty(str(blankNodeDesc(getObject(p), m)), first)
         else:
@@ -1020,9 +1014,7 @@ def specAuthors(m, subject):
     for d in sorted(dev):
         if not first:
             devdoc += ", "
-        devdoc += (
-            '<span class="author" property="doap:developer">%s</span>' % d
-        )
+        devdoc += '<span class="author" property="doap:developer">%s</span>' % d
         first = False
     if len(dev) == 1:
         doc += (
@@ -1191,10 +1183,7 @@ def load_tags(path, docdir):
     def getChildText(elt, tagname):
         "Return the content of the first child node with a certain tag name."
         for e in elt.childNodes:
-            if (
-                e.nodeType == xml.dom.Node.ELEMENT_NODE
-                and e.tagName == tagname
-            ):
+            if e.nodeType == xml.dom.Node.ELEMENT_NODE and e.tagName == tagname:
                 return e.firstChild.nodeValue
         return ""
 
@@ -1395,9 +1384,9 @@ def specgen(
     m = rdflib.ConjunctiveGraph()
 
     # RDFLib adds its own prefixes, so kludge around "time" prefix conflict
-    m.namespace_manager.bind('time',
-                             rdflib.URIRef('http://lv2plug.in/ns/ext/time#'),
-                             replace=True)
+    m.namespace_manager.bind(
+        "time", rdflib.URIRef("http://lv2plug.in/ns/ext/time#"), replace=True
+    )
 
     manifest_path = os.path.join(os.path.dirname(specloc), "manifest.ttl")
     if os.path.exists(manifest_path):
@@ -1468,9 +1457,7 @@ def specgen(
 
     # Generate Term HTML
     classlist = docTerms("Class", classlist, m, classlist, proplist, instalist)
-    proplist = docTerms(
-        "Property", proplist, m, classlist, proplist, instalist
-    )
+    proplist = docTerms("Property", proplist, m, classlist, proplist, instalist)
     if instances:
         instlist = docTerms(
             "Instance", instalist, m, classlist, proplist, instalist
