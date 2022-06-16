@@ -38,7 +38,8 @@ rdfs = rdflib.Namespace("http://www.w3.org/2000/01/rdf-schema#")
 
 
 def uri_to_path(uri):
-    path = uri[uri.find(":") :]
+    first_colon = uri.find(":")
+    path = uri[first_colon:]
     while not path[0].isalpha():
         path = path[1:]
     return path

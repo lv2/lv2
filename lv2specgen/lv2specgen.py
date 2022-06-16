@@ -239,9 +239,9 @@ def linkifyVocabIdentifiers(m, string, classlist, proplist, instalist):
 def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
     # Syntax highlight all C code
     if have_pygments:
-        code_rgx = re.compile('<pre class="c-code">(.*?)</pre>', re.DOTALL)
+        code_re = re.compile('<pre class="c-code">(.*?)</pre>', re.DOTALL)
         while True:
-            code = code_rgx.search(markup)
+            code = code_re.search(markup)
             if not code:
                 break
             match_str = xml.sax.saxutils.unescape(code.group(1))
@@ -250,13 +250,13 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
                 pygments.lexers.CLexer(),
                 pygments.formatters.HtmlFormatter(),
             )
-            markup = code_rgx.sub(code_str, markup, 1)
+            markup = code_re.sub(code_str, markup, 1)
 
     # Syntax highlight all Turtle code
     if have_pygments:
-        code_rgx = re.compile('<pre class="turtle-code">(.*?)</pre>', re.DOTALL)
+        code_re = re.compile('<pre class="turtle-code">(.*?)</pre>', re.DOTALL)
         while True:
-            code = code_rgx.search(markup)
+            code = code_re.search(markup)
             if not code:
                 break
             match_str = xml.sax.saxutils.unescape(code.group(1))
@@ -265,7 +265,7 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
                 pygments.lexers.rdf.TurtleLexer(),
                 pygments.formatters.HtmlFormatter(),
             )
-            markup = code_rgx.sub(code_str, markup, 1)
+            markup = code_re.sub(code_str, markup, 1)
 
     # Add links to code documentation for identifiers
     markup = linkifyCodeIdentifiers(markup)
@@ -371,7 +371,9 @@ def getDetailedDocumentation(m, subject, classlist, proplist, instalist):
     if d:
         doc = getObject(d)
         if doc.datatype == lv2.Markdown:
-            markup += formatDoc(m, subject, doc, classlist, proplist, instalist)
+            markup += formatDoc(
+                m, subject, doc, classlist, proplist, instalist
+            )
         else:
             html = getLiteralString(doc)
             markup += prettifyHtml(
@@ -683,7 +685,9 @@ def extraInfo(term, m):
                 getTermLink(getObject(p), term, getPredicate(p)), first
             )
         elif isLiteral(getObject(p)):
-            doc += getProperty(linkifyCodeIdentifiers(str(getObject(p))), first)
+            doc += getProperty(
+                linkifyCodeIdentifiers(str(getObject(p))), first
+            )
         elif isBlank(getObject(p)):
             doc += getProperty(str(blankNodeDesc(getObject(p), m)), first)
         else:
@@ -762,7 +766,7 @@ def docTerms(category, list, m, classlist, proplist, instalist):
     doc = ""
     for term in list:
         if not term.startswith(spec_ns_str):
-            sys.stderr.write("warning: Skipping external term `%s'" % term)
+            sys.stderr.write("warning: Skipping external term `%s'\n" % term)
             continue
 
         t = termName(m, term)
@@ -1014,15 +1018,14 @@ def specAuthors(m, subject):
     for d in sorted(dev):
         if not first:
             devdoc += ", "
-        devdoc += '<span class="author" property="doap:developer">%s</span>' % d
+
+        devdoc += f'<span class="author" property="doap:developer">{d}</span>'
         first = False
     if len(dev) == 1:
-        doc += (
-            '<tr><th class="metahead">Developer</th><td>%s</td></tr>' % devdoc
-        )
+        doc += f'<tr><th class="metahead">Developer</th><td>{devdoc}</td></tr>'
     elif len(dev) > 0:
         doc += (
-            '<tr><th class="metahead">Developers</th><td>%s</td></tr>' % devdoc
+            f'<tr><th class="metahead">Developers</th><td>{devdoc}</td></tr>'
         )
 
     maintdoc = ""
@@ -1030,20 +1033,14 @@ def specAuthors(m, subject):
     for m in sorted(maint):
         if not first:
             maintdoc += ", "
+
         maintdoc += (
-            '<span class="author" property="doap:maintainer">%s</span>' % m
+            f'<span class="author" property="doap:maintainer">{m}</span>'
         )
         first = False
-    if len(maint) == 1:
-        doc += (
-            '<tr><th class="metahead">Maintainer</th><td>%s</td></tr>'
-            % maintdoc
-        )
-    elif len(maint) > 0:
-        doc += (
-            '<tr><th class="metahead">Maintainers</th><td>%s</td></tr>'
-            % maintdoc
-        )
+    if len(maint):
+        label = "Maintainer" if len(maint) == 1 else "Maintainers"
+        doc += f'<tr><th class="metahead">{label}</th><td>{maintdoc}</td></tr>'
 
     return doc
 
@@ -1183,7 +1180,10 @@ def load_tags(path, docdir):
     def getChildText(elt, tagname):
         "Return the content of the first child node with a certain tag name."
         for e in elt.childNodes:
-            if e.nodeType == xml.dom.Node.ELEMENT_NODE and e.tagName == tagname:
+            if (
+                e.nodeType == xml.dom.Node.ELEMENT_NODE
+                and e.tagName == tagname
+            ):
                 return e.firstChild.nodeValue
         return ""
 
@@ -1457,7 +1457,9 @@ def specgen(
 
     # Generate Term HTML
     classlist = docTerms("Class", classlist, m, classlist, proplist, instalist)
-    proplist = docTerms("Property", proplist, m, classlist, proplist, instalist)
+    proplist = docTerms(
+        "Property", proplist, m, classlist, proplist, instalist
+    )
     if instances:
         instlist = docTerms(
             "Instance", instalist, m, classlist, proplist, instalist
@@ -1571,7 +1573,9 @@ def specgen(
             etree.XMLParser(dtd_validation=True, no_network=True),
         )
     except Exception as e:
-        sys.stderr.write("error: Validation failed for %s: %s" % (specloc, e))
+        sys.stderr.write(
+            "error: Validation failed for %s: %s\n" % (specloc, e)
+        )
     finally:
         os.chdir(oldcwd)
 

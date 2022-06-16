@@ -40,6 +40,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 				rdfs:label "Fix or avoid new compiler and tool warnings."
 			] , [
 				rdfs:label "Add dark mode style for documentation."
+			] , [
+				rdfs:label "Clean up and modernize Python support code."
 			]
 		]
 	] , [
