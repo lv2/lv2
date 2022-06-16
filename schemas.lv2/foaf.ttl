@@ -174,13 +174,6 @@ foaf:depicts
     rdfs:range owl:Thing ;
     owl:inverseOf foaf:depiction .
 
-foaf:dnaChecksum
-    a rdf:Property, owl:DatatypeProperty ;
-    rdfs:comment "A checksum for the DNA of some thing. Joke." ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
-    rdfs:label "DNA checksum" ;
-    rdfs:range rdfs:Literal .
-
 foaf:familyName
     a rdf:Property, owl:DatatypeProperty ;
     rdfs:comment "The family name of some person." ;
@@ -197,22 +190,6 @@ foaf:firstName
     rdfs:label "firstName" ;
     rdfs:range rdfs:Literal .
 
-foaf:fundedBy
-    a rdf:Property, owl:ObjectProperty ;
-    rdfs:comment "An organization funding a project or person." ;
-    rdfs:domain owl:Thing ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
-    rdfs:label "funded by" ;
-    rdfs:range owl:Thing .
-
-foaf:geekcode
-    a rdf:Property, owl:DatatypeProperty ;
-    rdfs:comment "A textual geekcode for this person, see http://www.geekcode.com/geek.html" ;
-    rdfs:domain foaf:Person ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
-    rdfs:label "geekcode" ;
-    rdfs:range rdfs:Literal .
-
 foaf:gender
     a rdf:Property, owl:DatatypeProperty, owl:FunctionalProperty ;
     rdfs:comment "The gender of this Agent (typically but not necessarily 'male' or 'female')." ;
@@ -226,20 +203,6 @@ foaf:givenName
     rdfs:comment "The given name of some person." ;
     rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
     rdfs:label "Given name" .
-
-foaf:givenname
-    a rdf:Property, owl:DatatypeProperty ;
-    rdfs:comment "The given name of some person." ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
-    rdfs:label "Given name" .
-
-foaf:holdsAccount
-    a rdf:Property, owl:ObjectProperty ;
-    rdfs:comment "Indicates an account held by this agent." ;
-    rdfs:domain foaf:Agent ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
-    rdfs:label "account" ;
-    rdfs:range foaf:OnlineAccount .
 
 foaf:homepage
     a rdf:Property, owl:InverseFunctionalProperty, owl:ObjectProperty ;
@@ -487,22 +450,6 @@ foaf:status
     rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
     rdfs:label "status" ;
     rdfs:range rdfs:Literal .
-
-foaf:surname
-    a rdf:Property, owl:DatatypeProperty ;
-    rdfs:comment "The surname of some person." ;
-    rdfs:domain foaf:Person ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
-    rdfs:label "Surname" ;
-    rdfs:range rdfs:Literal .
-
-foaf:theme
-    a rdf:Property, owl:ObjectProperty ;
-    rdfs:comment "A theme." ;
-    rdfs:domain owl:Thing ;
-    rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
-    rdfs:label "theme" ;
-    rdfs:range owl:Thing .
 
 foaf:thumbnail
     a rdf:Property, owl:ObjectProperty ;

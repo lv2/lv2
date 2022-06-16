@@ -42,6 +42,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 				rdfs:label "Add dark mode style for documentation."
 			] , [
 				rdfs:label "Clean up and modernize Python support code."
+			] , [
+				rdfs:label "Remove archaic properties from foaf vocabulary."
 			]
 		]
 	] , [
