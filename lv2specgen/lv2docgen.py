@@ -20,7 +20,7 @@ import errno
 import os
 import sys
 
-__date__    = '2012-03-27'
+__date__ = '2012-03-27'
 __version__ = '0.0.0'
 __authors__ = 'David Robillard'
 __license__ = 'ISC License <http://www.opensource.org/licenses/isc>'
@@ -32,9 +32,10 @@ except ImportError:
     sys.exit('Error importing rdflib')
 
 doap = rdflib.Namespace('http://usefulinc.com/ns/doap#')
-lv2  = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
-rdf  = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+lv2 = rdflib.Namespace('http://lv2plug.in/ns/lv2core#')
+rdf = rdflib.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
 rdfs = rdflib.Namespace('http://www.w3.org/2000/01/rdf-schema#')
+
 
 def uri_to_path(uri):
     path = uri[uri.find(':'):]
@@ -42,31 +43,34 @@ def uri_to_path(uri):
         path = path[1:]
     return path
 
+
 def get_doc(model, subject):
     comment = model.value(subject, rdfs.comment, None)
     if comment:
         return '<p class="content">%s</p>' % comment
     return ''
 
+
 def port_doc(model, port):
     name = model.value(port, lv2.name, None)
-    comment = model.value(port, rdfs.comment, None)
     html = '<div class="specterm"><h3>%s</h3>' % name
     html += get_doc(model, port)
     html += '</div>'
     return html
 
+
 def plugin_doc(model, plugin, style_uri):
-    uri  = str(plugin)
+    uri = str(plugin)
     name = model.value(plugin, doap.name, None)
 
-    html = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+    dtd = "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"
+    html = '''<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" %s>
 <html about="%s"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
       xmlns:lv2="http://lv2plug.in/ns/lv2core#"
-      xml:lang="en">''' % uri
+      xml:lang="en">''' % (uri, dtd)
 
     html += '''<head>
     <title>%s</title>
@@ -102,6 +106,7 @@ def plugin_doc(model, plugin, style_uri):
 
     html += '  </body></html>'
     return html
+
 
 if __name__ == '__main__':
     'LV2 plugin documentation generator'
