@@ -21,7 +21,7 @@
 	a owl:Ontology ;
 	rdfs:seeAlso <owl.ttl> .
 
-<http://www.w3.org/2000/01/rdf-schema#>
+rdfs:
 	a owl:Ontology ;
 	rdfs:seeAlso <rdfs.ttl> .
 
@@ -32,3 +32,4 @@
 <http://www.w3.org/2001/XMLSchema#>
 	a owl:Ontology ;
 	rdfs:seeAlso <xsd.ttl> .
+
