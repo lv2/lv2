@@ -7,7 +7,7 @@
 
 <http://purl.org/dc/terms/>
 	a owl:Ontology ;
-	rdfs:seeAlso <dct.ttl> .
+	rdfs:seeAlso <dcterms.ttl> .
 
 <http://usefulinc.com/ns/doap#>
 	a owl:Ontology ;

@@ -442,7 +442,7 @@
      mangle DTDs to appease validation -->
 
 <!ATTLIST html xmlns:dc CDATA #IMPLIED>
-<!ATTLIST html xmlns:dct CDATA #IMPLIED>
+<!ATTLIST html xmlns:dcterms CDATA #IMPLIED>
 <!ATTLIST html xmlns:rdf CDATA #IMPLIED>
 <!ATTLIST html xmlns:rdfs CDATA #IMPLIED>
 

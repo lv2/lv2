@@ -2,10 +2,10 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 
 <http://www.w3.org/2002/07/owl>
-	dct:title "The OWL 2 Schema vocabulary (OWL 2)" ;
+	dcterms:title "The OWL 2 Schema vocabulary (OWL 2)" ;
 	a owl:Ontology ;
 	rdfs:comment """
   This ontology partially describes the built-in classes and

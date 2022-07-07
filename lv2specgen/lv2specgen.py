@@ -93,7 +93,7 @@ ns_list = {
     "http://rdfs.org/sioc/ns#": "sioc",
     "http://xmlns.com/foaf/0.1/": "foaf",
     "http://purl.org/dc/elements/1.1/": "dc",
-    "http://purl.org/dc/terms/": "dct",
+    "http://purl.org/dc/terms/": "dcterms",
     "http://purl.org/rss/1.0/modules/content/": "content",
     "http://www.w3.org/2003/01/geo/wgs84_pos#": "geo",
     "http://www.w3.org/2004/02/skos/core#": "skos",

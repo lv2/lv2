@@ -1,4 +1,4 @@
-@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -14,7 +14,7 @@ doap:
 		décrit en utilisant RDF Schema du W3C et OWL."""@fr ,
 		"Slovník Description of a Project (DOAP, Popis projektu), popsaný použitím W3C RDF Schema a Web Ontology Language."@cs ,
 		"The Description of a Project (DOAP) vocabulary, described using W3C RDF Schema and the Web Ontology Language." ;
-	dct:title "Description of a Project (DOAP) vocabulary" ;
+	dcterms:title "Description of a Project (DOAP) vocabulary" ;
 	owl:imports foaf: ;
 	foaf:maker [
 		a foaf:Person ;
