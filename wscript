@@ -123,7 +123,6 @@ def configure(conf):
                 '-Wno-float-equal',
                 '-Wno-inline',
                 '-Wno-padded',
-                '-Wno-parentheses',
                 '-Wno-suggest-attribute=const',
                 '-Wno-suggest-attribute=malloc',
                 '-Wno-suggest-attribute=pure',
