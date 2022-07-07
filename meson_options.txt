@@ -1,0 +1,23 @@
+option('docs', type: 'feature', value: 'auto', yield: true,
+       description: 'Build documentation')
+
+option('lv2dir', type: 'string', value: '', yield: true,
+       description: 'LV2 bundle installation directory')
+
+option('old_headers', type: 'boolean', value: true, yield: true,
+       description: 'Install backwards compatible headers at URI-style paths')
+
+option('online_docs', type: 'boolean', value: 'false', yield: true,
+       description: 'Build documentation for online hosting')
+
+option('plugins', type: 'feature', value: 'auto', yield: true,
+       description: 'Build example plugins')
+
+option('strict', type: 'boolean', value: false, yield: true,
+       description: 'Enable ultra-strict warnings')
+
+option('tests', type: 'feature', value: 'auto', yield: true,
+       description: 'Build tests')
+
+option('title', type: 'string', value: 'LV2',
+       description: 'Project title')

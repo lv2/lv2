@@ -1235,116 +1235,6 @@ def load_tags(path, docdir):
     return linkmap
 
 
-def writeIndex(model, index_path, root_path, root_uri, online):
-    # Get extension URI
-    ext_node = model.value(None, rdf.type, lv2.Specification)
-    if not ext_node:
-        ext_node = model.value(None, rdf.type, owl.Ontology)
-    if not ext_node:
-        print("no extension found in %s" % bundle)
-        sys.exit(1)
-
-    ext = str(ext_node)
-
-    # Get version
-    minor = 0
-    micro = 0
-    try:
-        minor = int(model.value(ext_node, lv2.minorVersion, None))
-        micro = int(model.value(ext_node, lv2.microVersion, None))
-    except Exception:
-        print("warning: %s: failed to find version for %s" % (bundle, ext))
-
-    # Get date
-    date = None
-    for r in model.triples([ext_node, doap.release, None]):
-        revision = model.value(r[2], doap.revision, None)
-        if str(revision) == ("%d.%d" % (minor, micro)):
-            date = model.value(r[2], doap.created, None)
-            break
-
-    # Verify that this date is the latest
-    if date is None:
-        print("warning: %s has no doap:created date" % ext_node)
-    else:
-        for r in model.triples([ext_node, doap.release, None]):
-            this_date = model.value(r[2], doap.created, None)
-            if this_date is None:
-                print(
-                    "warning: %s has no doap:created date"
-                    % (ext_node, minor, micro, date)
-                )
-                continue
-
-            if this_date > date:
-                print(
-                    "warning: %s revision %d.%d (%s) is not the latest release"
-                    % (ext_node, minor, micro, date)
-                )
-                break
-
-    # Get name and short description
-    name = model.value(ext_node, doap.name, None)
-    shortdesc = model.value(ext_node, doap.shortdesc, None)
-
-    # Chop 'LV2' prefix from name for cleaner index
-    if name.startswith("LV2 "):
-        name = name[4:]
-
-    # Find relative link target
-    if root_uri and ext_node.startswith(root_uri):
-        target = ext_node[len(root_uri) :]
-    else:
-        target = os.path.relpath(ext_node, root_path)
-
-    if not online:
-        target += ".html"
-
-    stem = os.path.splitext(os.path.basename(target))[0]
-
-    # Specification (comment is to act as a sort key)
-    row = '<tr><!-- %s --><td><a rel="rdfs:seeAlso" href="%s">%s</a></td>' % (
-        stem,
-        target,
-        name,
-    )
-
-    # API
-    row += "<td>"
-    row += '<a rel="rdfs:seeAlso" href="../doc/html/group__%s.html">%s</a>' % (
-        stem,
-        name,
-    )
-    row += "</td>"
-
-    # Description
-    if shortdesc:
-        row += "<td>" + str(shortdesc) + "</td>"
-    else:
-        row += "<td></td>"
-
-    # Version
-    version_str = "%s.%s" % (minor, micro)
-    if minor == 0 or (micro % 2 != 0):
-        row += '<td><span style="color: red">' + version_str + "</span></td>"
-    else:
-        row += "<td>" + version_str + "</td>"
-
-    # Status
-    deprecated = model.value(ext_node, owl.deprecated, None)
-    if minor == 0:
-        row += '<td><span class="error">Experimental</span></td>'
-    elif deprecated and str(deprecated[2]) != "false":
-        row += '<td><span class="warning">Deprecated</span></td>'
-    elif micro % 2 == 0:
-        row += '<td><span class="success">Stable</span></td>'
-
-    row += "</tr>"
-
-    with open(index_path, "w") as index:
-        index.write(row)
-
-
 def specgen(
     specloc,
     indir,
@@ -1353,10 +1243,6 @@ def specgen(
     tags,
     opts,
     instances=False,
-    root_link=None,
-    index_path=None,
-    root_path=None,
-    root_uri=None,
 ):
     """The meat and potatoes: Everything starts here."""
 
@@ -1483,8 +1369,6 @@ def specgen(
 
     name = specProperty(m, spec, doap.name)
     title = name
-    if root_link:
-        name = '<a href="%s">%s</a>' % (root_link, name)
 
     template = template.replace("@TITLE@", title)
     template = template.replace("@NAME@", name)
@@ -1556,10 +1440,6 @@ def specgen(
     build_date = datetime.datetime.utcfromtimestamp(now)
     template = template.replace("@DATE@", build_date.strftime("%F"))
     template = template.replace("@TIME@", build_date.strftime("%F %H:%M UTC"))
-
-    # Write index row
-    if index_path is not None:
-        writeIndex(m, index_path, root_path, root_uri, opts["online"])
 
     # Validate complete output page
     try:
@@ -1667,34 +1547,11 @@ if __name__ == "__main__":
         help="Doxygen output directory",
     )
     opt.add_option(
-        "--index",
-        type="string",
-        dest="index_path",
-        default=None,
-        help="Index row output file",
-    )
-    opt.add_option(
         "--tags",
         type="string",
         dest="tags",
         default=None,
         help="Doxygen tags file",
-    )
-    opt.add_option(
-        "-r",
-        "--root-path",
-        type="string",
-        dest="root_path",
-        default="",
-        help="Root path",
-    )
-    opt.add_option(
-        "-R",
-        "--root-uri",
-        type="string",
-        dest="root_uri",
-        default="",
-        help="Root URI",
     )
     opt.add_option(
         "-p",
@@ -1716,13 +1573,6 @@ if __name__ == "__main__":
         dest="copy_style",
         help="Copy style from template directory to output directory",
     )
-    opt.add_option(
-        "-o",
-        "--online",
-        action="store_true",
-        dest="online",
-        help="Generate index for online documentation",
-    )
 
     (options, args) = opt.parse_args()
     opts = vars(options)
@@ -1734,7 +1584,6 @@ if __name__ == "__main__":
     spec_pre = options.prefix
     ontology = "file:" + str(args[0])
     output = args[1]
-    index_path = options.index_path
     docdir = options.docdir
     tags = options.tags
 
@@ -1750,11 +1599,6 @@ if __name__ == "__main__":
         print("warning: extension %s has no %s.ttl file" % (b, b))
         sys.exit(1)
 
-    # Root link
-    root_path = opts["root_path"]
-    root_uri = opts["root_uri"]
-    root_link = os.path.join(root_path, "index.html")
-
     # Generate spec documentation
     specdoc = specgen(
         spec,
@@ -1764,10 +1608,6 @@ if __name__ == "__main__":
         tags,
         opts,
         instances=True,
-        root_link=root_link,
-        index_path=index_path,
-        root_path=root_path,
-        root_uri=root_uri,
     )
 
     # Save to HTML output file

@@ -1,6 +1,4 @@
 # generated files and folders
-.waf-*
-.lock-waf*
 /build
 *.pyc
 NEWS

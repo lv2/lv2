@@ -1,82 +1,49 @@
 LV2
 ===
 
-LV2 is a plugin standard for audio systems. It defines a minimal yet extensible
-C API for plugin code and a format for plugin "bundles".  See
-<http://lv2plug.in> for more information.
+LV2 is a plugin standard for audio systems.  It defines an extensible C API for
+plugins, and a format for self-contained "bundle" directories that contain
+plugins, metadata, and other resources.  See <http://lv2plug.in/> for more
+information.
 
-This package contains specifications (C headers and Turtle files),
-documentation generation tools, and example plugins.
-
-Building and installation requires only Python 2.6.  Building the documentation
-requires Doxygen.
-
+This package contains specifications (C headers and Turtle data files),
+documentation generation tools, tests, and example plugins.
 
 Installation
 ------------
 
-A typical build looks something like this:
+See the [installation instructions](INSTALL.md) for details on how to
+configure, build, and install LV2 with meson.
 
-    ./waf configure --prefix=/foo
-    ./waf
-    sudo ./waf install
+By default, everything is installed within the `prefix` with a UNIX-style
+hierarchy, and LV2 bundles are installed in the "lv2" subdirectory of the
+`libdir`.  The bundle installation directory can be overridden with the
+`lv2dir` option.  For example, standard system-wide values for various
+operating systems are:
 
-or, for packaging:
+    meson configure -Dlv2dir=/Library/Audio/Plug-Ins/LV2
+    meson configure -Dlv2dir=/boot/common/add-ons/lv2
+    meson configure -Dlv2dir=C:/Program Files/Common/LV2
 
-    DESTDIR=/home/packager/lv2root ./waf install
+The [specification bundles](lv2) are run-time dependencies of LV2 applications.
+Programs expect their data to be available somewhere in `LV2_PATH`.  See
+<http://lv2plug.in/pages/filesystem-hierarchy-standard.html> for details on the
+standard installation paths.
 
-For help on the other available options, run:
+Headers
+-------
 
-    ./waf --help
+The `lv2/` include namespace is reserved for this LV2 distribution.
+Other projects may extend LV2, but must place their headers elsewhere.
 
-The bundle installation directory can be set with the --lv2dir option, e.g.:
-
-    ./waf configure --lv2dir=/foo/lib/lv2
-
-Configuring with `--lv2-user` will install bundles to the user-local location.
-
-
-Packaging
----------
-
-Specification bundles are both a build-time and run-time dependency of programs
-that use LV2.  Programs expect their data to be available somewhere in
-`LV2_PATH`.
-
-See <http://lv2plug.in/pages/filesystem-hierarchy-standard.html> for details on
-the standard installation paths.
-
-Do not split up LV2 bundles, they are self-contained and must remain whole.
-Other than that, things may be split to suit distribution needs.  For example,
-separate packages for specifications, tools, and plugins, may be good idea.
-
-
-Header Installation
--------------------
-
-By default symbolic links to headers in bundles are installed to `INCLUDEDIR`.
-If symbolic links are a problem, configure with `--copy-headers` and copies
-will be installed instead.
-
-Headers are installed in two paths, the universal URI-based style:
-
-    #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
-
-and the newer simple core style:
+Headers are installed to `includedir` with paths like:
 
     #include "lv2/urid/urid.h"
 
-Projects are encouraged to migrate to the latter style, though note that this
-style of include path may only be used by official LV2 specifications.
+For backwards compatibility, if the `old_headers` option is set, then headers
+are also installed to the older URI-based paths:
 
+    #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
 
-Documentation
--------------
-
-Configuring with the --docs option will build the documentation for all the
-included specifications if Doxygen is available.  For example:
-
-    ./waf configure --docs
-    ./waf
-
-Specification documentation is also available online at <http://lv2plug.in/ns>.
+Projects still using this style are encourated to migrate to the shorter style
+above.

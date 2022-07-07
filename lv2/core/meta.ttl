@@ -46,6 +46,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 				rdfs:label "Remove archaic properties from foaf vocabulary."
 			] , [
 				rdfs:label "Replace canonical dcs ontology with a minimal version for LV2."
+			] , [
+				rdfs:label "Switch to Meson build system."
 			]
 		]
 	] , [
