@@ -9,7 +9,7 @@
 codespell = find_program('codespell', required: get_option('tests'))
 if codespell.found()
   ignore = [
-    lv2_source_root / 'doc' / 'pygments.css',
+    lv2_source_root / 'doc' / 'style' / 'pygments.css',
     lv2_source_root / 'lv2specgen' / 'DTD',
     lv2_source_root / 'schemas.lv2' / 'doap.ttl',
   ]
@@ -107,4 +107,29 @@ endif
 
 if is_variable('pylint') and pylint.found()
   test('pylint', pylint, args: strict_python_scripts, suite: 'scripts')
+endif
+
+##############
+# Unit Tests #
+##############
+
+test_names = [
+  'atom',
+  'forge_overflow',
+]
+
+# Build and run tests
+if not get_option('tests').disabled()
+  foreach test_name : test_names
+    test(
+      test_name,
+      executable(
+        test_name,
+        files('test_@0@.c'.format(test_name)),
+        c_args: c_suppressions,
+        dependencies: lv2_dep,
+      ),
+      suite: 'unit',
+    )
+  endforeach
 endif

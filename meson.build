@@ -61,33 +61,232 @@ endif
 
 # Generage pkg-config file for external dependants
 pkg.generate(
-  name: 'LV2',
+  description: 'Plugin standard for audio systems',
   filebase: 'lv2',
+  name: 'LV2',
   subdirs: ['lv2'],
+  variables: [
+    'lv2dir=' + lv2dir,
+    'plugindir=' + lv2dir,
+  ],
   version: meson.project_version(),
-  description: 'Plugin standard for audio systems')
+)
 
 # Declare dependency for internal meson dependants
 lv2_dep = declare_dependency(
-  include_directories: include_directories('.'),
-  version: meson.project_version())
+  include_directories: include_directories('include'),
+  variables: [
+    'lv2dir=' + lv2_source_root / 'lv2',
+    'plugindir=' + lv2_build_root / 'plugins',
+  ],
+  version: meson.project_version(),
+)
 
 ##################
 # Specifications #
 ##################
 
-doc_python_modules = [
-  'lxml',
-  'markdown',
-  'pygments',
-  'rdflib',
+# Extensions in http://lv2plug.in/ns/ext/
+ext_names = [
+  'atom',
+  'buf-size',
+  'data-access',
+  'dynmanifest',
+  'event',
+  'instance-access',
+  'log',
+  'midi',
+  'morph',
+  'options',
+  'parameters',
+  'patch',
+  'port-groups',
+  'port-props',
+  'presets',
+  'resize-port',
+  'state',
+  'time',
+  'uri-map',
+  'urid',
+  'worker',
 ]
 
+# Extensions in http://lv2plug.in/ns/extensions/
+extensions_names = [
+  'ui',
+  'units',
+]
+
+# All extensions (not core) in http://lv2plug.in/ns/
+all_extension_names = ext_names + extensions_names
+
+# All specifications in http://lv2plug.in/ns/
+all_spec_names = ['core'] + ext_names + extensions_names
+
+###############
+# API Headers #
+###############
+
+prefix = get_option('prefix')
+includedir = get_option('includedir')
+
+install_subdir('include/lv2', install_dir: includedir)
+
+if get_option('old_headers')
+  uri_include_dir = prefix / includedir / 'lv2' / 'lv2plug.in' / 'ns'
+  include_prefix = 'include' / 'lv2'
+
+  # Install the core headers specially, because they are inconsistent
+
+  core_headers = files(
+    include_prefix / 'core' / 'attributes.h',
+    include_prefix / 'core' / 'lv2.h',
+    include_prefix / 'core' / 'lv2_util.h',
+  )
+
+  # Core headers are inconsistently in "lv2plug.in/ns/lv2core"
+  install_data(core_headers, install_dir: uri_include_dir / 'lv2core')
+
+  # Some extensions are in "lv2plug.in/ns/ext"
+  foreach dir : ext_names
+    install_subdir(
+      include_prefix / dir,
+      install_dir: uri_include_dir / 'ext',
+    )
+  endforeach
+
+  # Some extensions are in "lv2plug.in/ns/extensions"
+  foreach dir : extensions_names
+    install_subdir(
+      include_prefix / dir,
+      install_dir: uri_include_dir / 'extensions',
+    )
+  endforeach
+endif
+
+#######################
+# Scripts and Schemas #
+#######################
+
+subdir('scripts')
+subdir('schemas.lv2')
+
+##################
+# Specifications #
+##################
+
+lv2_check_specification = files('scripts' / 'lv2_check_specification.py')
+
+check_python = pymod.find_installation(
+  'python3',
+  modules: ['rdflib'],
+  required: get_option('tests'),
+)
+
+foreach bundle_name : all_spec_names
+  bundle = 'lv2' / bundle_name + '.lv2'
+
+  # Check specification
+  if check_python.found()
+    test(
+      bundle_name,
+      lv2_check_specification,
+      args: files(bundle / 'manifest.ttl'),
+      suite: ['spec'],
+    )
+  endif
+
+  # Install specification bundle
+  install_subdir(bundle, install_dir: lv2dir)
+endforeach
+
+spec_files = files(
+  'lv2/atom.lv2/atom.meta.ttl',
+  'lv2/atom.lv2/atom.ttl',
+  'lv2/atom.lv2/manifest.ttl',
+  'lv2/buf-size.lv2/buf-size.meta.ttl',
+  'lv2/buf-size.lv2/buf-size.ttl',
+  'lv2/buf-size.lv2/manifest.ttl',
+  'lv2/core.lv2/lv2core.meta.ttl',
+  'lv2/core.lv2/lv2core.ttl',
+  'lv2/core.lv2/manifest.ttl',
+  'lv2/core.lv2/meta.ttl',
+  'lv2/core.lv2/people.ttl',
+  'lv2/data-access.lv2/data-access.meta.ttl',
+  'lv2/data-access.lv2/data-access.ttl',
+  'lv2/data-access.lv2/manifest.ttl',
+  'lv2/dynmanifest.lv2/dynmanifest.meta.ttl',
+  'lv2/dynmanifest.lv2/dynmanifest.ttl',
+  'lv2/dynmanifest.lv2/manifest.ttl',
+  'lv2/event.lv2/event.meta.ttl',
+  'lv2/event.lv2/event.ttl',
+  'lv2/event.lv2/manifest.ttl',
+  'lv2/instance-access.lv2/instance-access.meta.ttl',
+  'lv2/instance-access.lv2/instance-access.ttl',
+  'lv2/instance-access.lv2/manifest.ttl',
+  'lv2/log.lv2/log.meta.ttl',
+  'lv2/log.lv2/log.ttl',
+  'lv2/log.lv2/manifest.ttl',
+  'lv2/midi.lv2/manifest.ttl',
+  'lv2/midi.lv2/midi.meta.ttl',
+  'lv2/midi.lv2/midi.ttl',
+  'lv2/morph.lv2/manifest.ttl',
+  'lv2/morph.lv2/morph.meta.ttl',
+  'lv2/morph.lv2/morph.ttl',
+  'lv2/options.lv2/manifest.ttl',
+  'lv2/options.lv2/options.meta.ttl',
+  'lv2/options.lv2/options.ttl',
+  'lv2/parameters.lv2/manifest.ttl',
+  'lv2/parameters.lv2/parameters.meta.ttl',
+  'lv2/parameters.lv2/parameters.ttl',
+  'lv2/patch.lv2/manifest.ttl',
+  'lv2/patch.lv2/patch.meta.ttl',
+  'lv2/patch.lv2/patch.ttl',
+  'lv2/port-groups.lv2/manifest.ttl',
+  'lv2/port-groups.lv2/port-groups.meta.ttl',
+  'lv2/port-groups.lv2/port-groups.ttl',
+  'lv2/port-props.lv2/manifest.ttl',
+  'lv2/port-props.lv2/port-props.meta.ttl',
+  'lv2/port-props.lv2/port-props.ttl',
+  'lv2/presets.lv2/manifest.ttl',
+  'lv2/presets.lv2/presets.meta.ttl',
+  'lv2/presets.lv2/presets.ttl',
+  'lv2/resize-port.lv2/manifest.ttl',
+  'lv2/resize-port.lv2/resize-port.meta.ttl',
+  'lv2/resize-port.lv2/resize-port.ttl',
+  'lv2/state.lv2/manifest.ttl',
+  'lv2/state.lv2/state.meta.ttl',
+  'lv2/state.lv2/state.ttl',
+  'lv2/time.lv2/manifest.ttl',
+  'lv2/time.lv2/time.meta.ttl',
+  'lv2/time.lv2/time.ttl',
+  'lv2/ui.lv2/manifest.ttl',
+  'lv2/ui.lv2/ui.meta.ttl',
+  'lv2/ui.lv2/ui.ttl',
+  'lv2/units.lv2/manifest.ttl',
+  'lv2/units.lv2/units.meta.ttl',
+  'lv2/units.lv2/units.ttl',
+  'lv2/uri-map.lv2/manifest.ttl',
+  'lv2/uri-map.lv2/uri-map.meta.ttl',
+  'lv2/uri-map.lv2/uri-map.ttl',
+  'lv2/urid.lv2/manifest.ttl',
+  'lv2/urid.lv2/urid.meta.ttl',
+  'lv2/urid.lv2/urid.ttl',
+  'lv2/worker.lv2/manifest.ttl',
+  'lv2/worker.lv2/worker.meta.ttl',
+  'lv2/worker.lv2/worker.ttl',
+)
+
+#################
+# Documentation #
+#################
+
 # Determine if all the dependencies for building documentation are present
+doxygen = find_program('doxygen', required: get_option('docs'))
 build_docs = false
 doc_deps = []
 if not get_option('docs').disabled()
-  doxygen = find_program('doxygen', required: get_option('docs'))
+  doc_python_modules = ['lxml', 'markdown', 'pygments', 'rdflib']
 
   python = pymod.find_installation(
     'python3',
@@ -98,46 +297,23 @@ if not get_option('docs').disabled()
   build_docs = doxygen.found() and python.found()
 endif
 
-# Basic scripts and schema data
-subdir('scripts')
-subdir('schemas.lv2')
+# Run Doxygen first to generate tags
+subdir('doc/c')
 
-# Run Doxygen to generate tags file and HTML code documentation
-if build_docs
-  subdir('doc/c')
-endif
-
-# Set up lv2specgen for generating individual specification documentation
+# Set up lv2specgen and lv2specgen_command_prefix (which references tags)
 subdir('lv2specgen')
 
-# Specifications (and their individual documentation)
-subdir('lv2')
-spec_files = (atom_data +
-              buf_size_data +
-              core_data +
-              data_access_data +
-              dynmanifest_data +
-              event_data +
-              instance_access_data +
-              log_data +
-              midi_data +
-              morph_data +
-              options_data +
-              parameters_data +
-              patch_data +
-              port_groups_data +
-              port_props_data +
-              presets_data +
-              resize_port_data +
-              state_data +
-              time_data +
-              ui_data +
-              units_data +
-              uri_map_data +
-              urid_data +
-              worker_data)
+# Generate specification documentation
+if build_docs
+  subdir('doc/style')
+  subdir('doc/ns')
+endif
 
-# Plugins and "Programming LV2 Plugins" book
+###########
+# Plugins #
+###########
+
+# Example plugins and "Programming LV2 Plugins" book
 if not get_option('plugins').disabled()
   subdir('plugins')
 endif
@@ -151,15 +327,6 @@ subdir('util')
 
 # Data and build tests
 subdir('test')
-
-#################
-# Documentation #
-#################
-
-# Top-level documentation
-if build_docs
-  subdir('doc')
-endif
 
 ########
 # News #

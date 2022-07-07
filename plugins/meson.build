@@ -68,9 +68,9 @@ if not get_option('docs').disabled()
       build_by_default: true,
       command: [
         asciidoc,
-        '-a', 'stylesdir=' + lv2_source_root / 'doc',
+        '-a', 'stylesdir=' + lv2_source_root / 'doc' / 'style',
         '-a', 'source-highlighter=pygments',
-        '-a', 'pygments-style=' + lv2_source_root / 'doc' / 'style.css',
+        '-a', 'pygments-style=' + lv2_source_root / 'doc' / 'style' / 'style.css',
         '-b', 'html',
         '-o', '@OUTPUT@',
         '@INPUT@',
