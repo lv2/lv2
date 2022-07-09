@@ -41,6 +41,11 @@
 
 #include <stdint.h>
 
+#ifdef __EMSCRIPTEN__
+// for EMSCRIPTEN_KEEPALIVE
+#include <emscripten.h>
+#endif
+
 // clang-format off
 
 #define LV2_CORE_URI    "http://lv2plug.in/ns/lv2core"  ///< http://lv2plug.in/ns/lv2core
@@ -366,7 +371,9 @@ typedef struct LV2_Descriptor {
    Put this (LV2_SYMBOL_EXPORT) before any functions that are to be loaded
    by the host as a symbol from the dynamic library.
 */
-#ifdef _WIN32
+#if defined(__EMSCRIPTEN__)
+#  define LV2_SYMBOL_EXPORT LV2_SYMBOL_EXTERN EMSCRIPTEN_KEEPALIVE
+#elif defined(_WIN32)
 #  define LV2_SYMBOL_EXPORT LV2_SYMBOL_EXTERN __declspec(dllexport)
 #else
 #  define LV2_SYMBOL_EXPORT \
