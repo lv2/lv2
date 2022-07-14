@@ -19,6 +19,7 @@ if is_variable('cc')
       c_suppressions += [
         '-Wno-cast-align',
         '-Wno-cast-qual',
+        '-Wno-declaration-after-statement',
         '-Wno-documentation-unknown-command',
         '-Wno-double-promotion',
         '-Wno-float-conversion',

@@ -1,15 +1,20 @@
 Checks: >
   *,
+  -*-else-after-return,
   -*-magic-numbers,
   -*-uppercase-literal-suffix,
   -altera-*,
   -bugprone-easily-swappable-parameters,
   -bugprone-macro-parentheses,
+  -bugprone-suspicious-include,
+  -bugprone-suspicious-string-compare,
   -llvm-header-guard,
   -llvmlibc-implementation-in-namespace,
   -llvmlibc-restrict-system-libc-headers,
   -modernize-use-trailing-return-type,
   -performance-no-int-to-ptr,
+  -readability-function-cognitive-complexity,
+  -readability-identifier-length,
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 FormatStyle: file

@@ -8,6 +8,7 @@ Checks: >
   -bugprone-macro-parentheses,
   -bugprone-suspicious-include,
   -bugprone-suspicious-string-compare,
+  -cert-err33-c,
   -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,
   -clang-diagnostic-empty-translation-unit,
   -clang-diagnostic-unused-function,
@@ -20,6 +21,7 @@ Checks: >
   -modernize-use-trailing-return-type,
   -performance-no-int-to-ptr,
   -readability-function-cognitive-complexity,
+  -readability-identifier-length,
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 FormatStyle: file
