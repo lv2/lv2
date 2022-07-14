@@ -255,14 +255,10 @@ typedef struct {
      If the event is only stored OR passed through, this is not necessary
      (as the plugin already has 1 implicit reference).
 
+     @param callback_data The callback_data field of this struct.
+
      @param event An event received at an input that will not be copied to
      an output or stored in any way.
-
-     @param context The calling context. Like event types, this is a mapped
-     URI, see lv2_context.h. Simple plugin with just a run() method should
-     pass 0 here (the ID of the 'standard' LV2 run context). The host
-     guarantees that this function is realtime safe iff the context is
-     realtime safe.
 
      PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS.
   */
@@ -278,14 +274,10 @@ typedef struct {
      an output or store it internally somehow, it MUST call this function
      on the event (more information on using non-POD events below).
 
+     @param callback_data The callback_data field of this struct.
+
      @param event An event received at an input that will not be copied to an
      output or stored in any way.
-
-     @param context The calling context. Like event types, this is a mapped
-     URI, see lv2_context.h. Simple plugin with just a run() method should
-     pass 0 here (the ID of the 'standard' LV2 run context). The host
-     guarantees that this function is realtime safe iff the context is
-     realtime safe.
 
      PLUGINS THAT VIOLATE THESE RULES MAY CAUSE CRASHES AND MEMORY LEAKS.
   */
