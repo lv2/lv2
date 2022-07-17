@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: CC0-1.0 OR ISC
 
 project('lv2', ['c'],
-        version: '1.18.5',
+        version: '1.18.6',
         license: 'ISC',
         meson_version: '>= 0.56.0',
         default_options: [
