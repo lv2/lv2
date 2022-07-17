@@ -160,8 +160,6 @@ def niceName(uri):
     if pref in ns_list:
         return ns_list.get(pref, pref) + ":" + rez.group(2)
     else:
-        print("warning: prefix %s not in ns list:" % pref)
-        print(ns_list)
         return uri
 
 
@@ -760,7 +758,6 @@ def docTerms(category, list, m, classlist, proplist, instalist):
     doc = ""
     for term in list:
         if not term.startswith(spec_ns_str):
-            sys.stderr.write("warning: Skipping external term `%s'\n" % term)
             continue
 
         t = termName(m, term)
