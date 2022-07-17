@@ -25,3 +25,17 @@ install_data(
 )
 
 meson.override_find_program('lv2specgen.py', lv2specgen_py)
+
+install_data(
+  files(
+    '../doc/style/pygments.css',
+    '../doc/style/style.css',
+    'template.html',
+  ),
+  install_dir: get_option('datadir') / 'lv2specgen',
+)
+
+install_subdir(
+  'DTD',
+  install_dir: get_option('datadir') / 'lv2specgen',
+)

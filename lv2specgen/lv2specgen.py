@@ -1232,7 +1232,7 @@ def load_tags(path, docdir):
 
 def specgen(
     specloc,
-    indir,
+    template_path,
     style_uri,
     docdir,
     tags,
@@ -1251,12 +1251,9 @@ def specgen(
     global linkmap
 
     spec_bundle = "file://%s/" % os.path.abspath(os.path.dirname(specloc))
-    specgendir = os.path.abspath(indir)
 
     # Template
-    temploc = os.path.join(indir, "template.html")
-    template = None
-    with open(temploc, "r") as f:
+    with open(template_path, "r") as f:
         template = f.read()
 
     # Load code documentation link map from tags file
@@ -1491,12 +1488,57 @@ def usage():
     return "Usage: %s ONTOLOGY_TTL OUTPUT_HTML [OPTION]..." % script
 
 
+def _path_from_env(variable, default):
+    value = os.environ.get(variable)
+    return value if value and os.path.isabs(value) else default
+
+
+def _paths_from_env(variable, default):
+    paths = []
+    value = os.environ.get(variable)
+    if value:
+        paths = [p for p in value.split(os.pathsep) if os.path.isabs(p)]
+
+    return paths if paths else default
+
+
+def _data_dirs():
+    return _paths_from_env(
+        "XDG_DATA_DIRS", ["/usr/local/share/", "/usr/share/"]
+    )
+
+
 if __name__ == "__main__":
     """Ontology specification generator tool"""
 
-    indir = os.path.abspath(os.path.dirname(sys.argv[0]))
-    if not os.path.exists(os.path.join(indir, "template.html")):
-        indir = os.path.join(os.path.dirname(indir), "share", "lv2specgen")
+    data_dir = None
+    for d in _data_dirs():
+        path = os.path.join(d, "lv2specgen")
+        if (
+            os.path.exists(os.path.join(d, "template.html"))
+            and os.path.exists(os.path.join(d, "style.css"))
+            and os.path.exists(os.path.join(d, "pygments.css"))
+        ):
+            data_dir = path
+            break
+
+    if data_dir:
+        # Use installed files
+        specgendir = data_dir
+        default_template_path = os.path.join(data_dir, "template.html")
+        default_style_dir = data_dir
+    else:
+        script_path = os.path.realpath(__file__)
+        script_dir = os.path.dirname(os.path.realpath(__file__))
+        if os.path.exists(os.path.join(script_dir, "template.html")):
+            # Run from source repository
+            specgendir = script_dir
+            lv2_source_root = os.path.dirname(script_dir)
+            default_template_path = os.path.join(script_dir, "template.html")
+            default_style_dir = os.path.join(lv2_source_root, "doc", "style")
+        else:
+            sys.stderr.write("error: Unable to find lv2specgen data\n")
+            sys.exit(-2)
 
     opt = optparse.OptionParser(
         usage=usage(),
@@ -1515,11 +1557,18 @@ if __name__ == "__main__":
         help="Mailing list info page address",
     )
     opt.add_option(
-        "--template-dir",
+        "--template",
         type="string",
-        dest="template_dir",
-        default=indir,
-        help="Template directory",
+        dest="template",
+        default=default_template_path,
+        help="Template file for output page",
+    )
+    opt.add_option(
+        "--style-dir",
+        type="string",
+        dest="style_dir",
+        default=default_style_dir,
+        help="Stylesheet directory path",
     )
     opt.add_option(
         "--style-uri",
@@ -1585,13 +1634,13 @@ if __name__ == "__main__":
     b = os.path.basename(outdir)
 
     if not os.access(os.path.abspath(spec), os.R_OK):
-        print("warning: extension %s has no %s.ttl file" % (b, b))
+        sys.stderr.write("error: extension %s has no %s.ttl file\n" % (b, b))
         sys.exit(1)
 
     # Generate spec documentation
     specdoc = specgen(
         spec,
-        indir,
+        opts["template"],
         opts["style_uri"],
         docdir,
         tags,
@@ -1605,7 +1654,10 @@ if __name__ == "__main__":
     if opts["copy_style"]:
         import shutil
 
-        shutil.copyfile(
-            os.path.join(indir, "style.css"),
-            os.path.join(os.path.dirname(output), "style.css"),
-        )
+        for stylesheet in ["pygments.css", "style.css"]:
+            style_dir = opts["style_dir"]
+            output_dir = os.path.dirname(output)
+            shutil.copyfile(
+                os.path.join(style_dir, stylesheet),
+                os.path.join(output_dir, stylesheet),
+            )
