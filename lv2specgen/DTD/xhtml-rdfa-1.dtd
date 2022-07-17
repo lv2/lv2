@@ -437,36 +437,18 @@
 <!-- end of XHTML-RDFa DTD  ................................................ -->
 <!-- ....................................................................... -->
 
-<!-- Add xmlns attributes to validate lv2specgen output -->
-<!-- This is a pretty dirty hack, but avoids needing to write a bunch of code to
-     mangle DTDs to appease validation -->
+<!-- Hack for lv2specgen: declare prefixes for the external vocabularies used
+     in LV2 (most of which are generally common for RDF), so RDFa in spec pages
+     can use prefixed names.  This glaring separation-of-concerns violation
+     is... not nice, but neither is diving into the horrors of custom XML DTD
+     validation, so here we are.
+-->
 
-<!ATTLIST html xmlns:dc CDATA #IMPLIED>
+<!ATTLIST html xmlns:dcs CDATA #IMPLIED>
 <!ATTLIST html xmlns:dcterms CDATA #IMPLIED>
+<!ATTLIST html xmlns:doap CDATA #IMPLIED>
+<!ATTLIST html xmlns:foaf CDATA #IMPLIED>
+<!ATTLIST html xmlns:owl CDATA #IMPLIED>
 <!ATTLIST html xmlns:rdf CDATA #IMPLIED>
 <!ATTLIST html xmlns:rdfs CDATA #IMPLIED>
-
-<!ATTLIST html xmlns:atom CDATA #IMPLIED>
-<!ATTLIST html xmlns:bufsz CDATA #IMPLIED>
-<!ATTLIST html xmlns:da CDATA #IMPLIED>
-<!ATTLIST html xmlns:dman CDATA #IMPLIED>
-<!ATTLIST html xmlns:ev CDATA #IMPLIED>
-<!ATTLIST html xmlns:ia CDATA #IMPLIED>
-<!ATTLIST html xmlns:log CDATA #IMPLIED>
-<!ATTLIST html xmlns:lv2 CDATA #IMPLIED>
-<!ATTLIST html xmlns:midi CDATA #IMPLIED>
-<!ATTLIST html xmlns:morph CDATA #IMPLIED>
-<!ATTLIST html xmlns:opts CDATA #IMPLIED>
-<!ATTLIST html xmlns:param CDATA #IMPLIED>
-<!ATTLIST html xmlns:patch CDATA #IMPLIED>
-<!ATTLIST html xmlns:pg CDATA #IMPLIED>
-<!ATTLIST html xmlns:pprops CDATA #IMPLIED>
-<!ATTLIST html xmlns:pset CDATA #IMPLIED>
-<!ATTLIST html xmlns:rsz CDATA #IMPLIED>
-<!ATTLIST html xmlns:state CDATA #IMPLIED>
-<!ATTLIST html xmlns:time CDATA #IMPLIED>
-<!ATTLIST html xmlns:ui CDATA #IMPLIED>
-<!ATTLIST html xmlns:umap CDATA #IMPLIED>
-<!ATTLIST html xmlns:units CDATA #IMPLIED>
-<!ATTLIST html xmlns:urid CDATA #IMPLIED>
-<!ATTLIST html xmlns:work CDATA #IMPLIED>
+<!ATTLIST html xmlns:xsd CDATA #IMPLIED>

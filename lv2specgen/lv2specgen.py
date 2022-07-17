@@ -86,20 +86,14 @@ spec_pre = None
 spec_bundle = None
 specgendir = None
 ns_list = {
+    "http://ontologi.es/doap-changeset#": "dcs",
+    "http://purl.org/dc/terms/": "dcterms",
+    "http://usefulinc.com/ns/doap#": "doap",
+    "http://xmlns.com/foaf/0.1/": "foaf",
+    "http://www.w3.org/2002/07/owl#": "owl",
     "http://www.w3.org/1999/02/22-rdf-syntax-ns#": "rdf",
     "http://www.w3.org/2000/01/rdf-schema#": "rdfs",
-    "http://www.w3.org/2002/07/owl#": "owl",
     "http://www.w3.org/2001/XMLSchema#": "xsd",
-    "http://rdfs.org/sioc/ns#": "sioc",
-    "http://xmlns.com/foaf/0.1/": "foaf",
-    "http://purl.org/dc/elements/1.1/": "dc",
-    "http://purl.org/dc/terms/": "dcterms",
-    "http://purl.org/rss/1.0/modules/content/": "content",
-    "http://www.w3.org/2003/01/geo/wgs84_pos#": "geo",
-    "http://www.w3.org/2004/02/skos/core#": "skos",
-    "http://lv2plug.in/ns/lv2core#": "lv2",
-    "http://usefulinc.com/ns/doap#": "doap",
-    "http://ontologi.es/doap-changeset#": "dcs",
 }
 
 rdf = rdflib.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
@@ -1377,12 +1371,6 @@ def specgen(
     )
     template = template.replace("@URI@", spec)
     template = template.replace("@PREFIX@", spec_pre)
-    if spec_pre == "lv2":
-        template = template.replace("@XMLNS@", "")
-    else:
-        template = template.replace(
-            "@XMLNS@", 'xmlns:%s="%s"' % (spec_pre, spec_ns_str)
-        )
 
     filename = os.path.basename(specloc)
     basename = os.path.splitext(filename)[0]
