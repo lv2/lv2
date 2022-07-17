@@ -765,7 +765,11 @@ def docTerms(category, list, m, classlist, proplist, instalist):
 
         t = termName(m, term)
         curie = term.split(spec_ns_str[-1])[1]
-        doc += '<div class="specterm" id="%s" about="%s">' % (t, term)
+        if t:
+            doc += '<div class="specterm" id="%s" about="%s">' % (t, term)
+        else:
+            doc += '<div class="specterm" about="%s">' % term
+
         doc += '<h3><a href="#%s">%s</a></h3>' % (getAnchor(term), curie)
         doc += '<span class="spectermtype">%s</span>' % category
 
