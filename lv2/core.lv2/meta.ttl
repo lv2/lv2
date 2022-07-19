@@ -34,6 +34,13 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
+		doap:revision "1.18.7" ;
+		doap:created "2022-07-19" ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "lv2specgen: Fix installed data paths."
+			]
+	] , [
 		doap:revision "1.18.6" ;
 		doap:created "2022-07-07" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.18.6.tar.bz2> ;

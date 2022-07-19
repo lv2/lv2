@@ -1515,9 +1515,9 @@ if __name__ == "__main__":
     for d in _data_dirs():
         path = os.path.join(d, "lv2specgen")
         if (
-            os.path.exists(os.path.join(d, "template.html"))
-            and os.path.exists(os.path.join(d, "style.css"))
-            and os.path.exists(os.path.join(d, "pygments.css"))
+            os.path.exists(os.path.join(path, "template.html"))
+            and os.path.exists(os.path.join(path, "style.css"))
+            and os.path.exists(os.path.join(path, "pygments.css"))
         ):
             data_dir = path
             break
