@@ -41,7 +41,11 @@ def _load_ttl(data_paths, exclude=None):
     model = rdflib.ConjunctiveGraph()
     for path in data_paths:
         if exclude is None or path not in exclude:
-            model.parse(path, format="n3")
+            try:
+                model.parse(path, format="n3")
+            except SyntaxError as e:
+                sys.stderr.write(f"error: Failed to parse {path}\n")
+                raise e
 
     return model
 
