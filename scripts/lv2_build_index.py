@@ -43,9 +43,9 @@ def _load_ttl(data_paths, exclude=None):
         if exclude is None or path not in exclude:
             try:
                 model.parse(path, format="n3")
-            except SyntaxError as e:
+            except SyntaxError as error:
                 sys.stderr.write(f"error: Failed to parse {path}\n")
-                raise e
+                raise error
 
     return model
 
