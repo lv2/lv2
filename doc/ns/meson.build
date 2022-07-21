@@ -55,7 +55,7 @@ subdir('extensions')
 # Index #
 #########
 
-lv2_build_index = files(lv2_source_root / 'scripts' / 'lv2_build_index.py')
+lv2_build_index = find_program(lv2_source_root / 'scripts' / 'lv2_build_index.py')
 
 lv2_build_index_command = [
   lv2_build_index,

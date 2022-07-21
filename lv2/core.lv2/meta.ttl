@@ -39,6 +39,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		dcs:changeset [
 			dcs:item [
 				rdfs:label "lv2specgen: Fix installed data paths."
+			] , [
+				rdfs:label "Fix documentation build with meson 0.56.2."
 			]
 		]
 	] , [
