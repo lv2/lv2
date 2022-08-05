@@ -62,7 +62,7 @@ def _warn(message):
 def _spec_target(spec, root, online=False):
     "Return the relative link target for a specification."
 
-    target = spec.removeprefix(root) if spec.startswith(root) else spec
+    target = spec.replace(root, "") if spec.startswith(root) else spec
 
     return target if online else target + ".html"
 
@@ -144,7 +144,7 @@ def index_row(model, spec, root_uri, online):
     row += _spec_link_columns(
         spec,
         root_uri,
-        model.value(spec, doap.name, None).removeprefix("LV2 "),
+        model.value(spec, doap.name, None).replace("LV2 ", ""),
         online,
     )
 

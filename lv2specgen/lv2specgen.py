@@ -148,7 +148,7 @@ def isLiteral(n):
 def niceName(uri):
     global spec_bundle
     if uri.startswith(spec_ns_str):
-        return uri.removeprefix(spec_ns_str)
+        return uri.replace(spec_ns_str, "")
     elif uri == str(rdfs.seeAlso):
         return "See also"
 
@@ -823,7 +823,7 @@ def getShortName(uri):
 def getAnchor(uri):
     uri = str(uri)
     if uri.startswith(spec_ns_str):
-        return uri.removeprefix(spec_ns_str).replace("/", "_")
+        return uri.replace(spec_ns_str, "").replace("/", "_")
     else:
         return getShortName(uri)
 

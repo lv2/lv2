@@ -43,6 +43,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 				rdfs:label "Fix documentation build with meson 0.56.2."
 			] , [
 				rdfs:label "Fix lv2.h missing from installation."
+			] , [
+				rdfs:label "Fix documentation build with Python 3.7."
 			]
 		]
 	] , [
