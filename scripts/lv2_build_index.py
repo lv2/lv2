@@ -207,7 +207,7 @@ def build_index(
         os.path.join(lv2_source_root, "doc", "index.html.in"),
         sys.stdout,
         {
-            "@ROWS@": "\n".join(rows),
+            "@ROWS@": "\n".join(sorted(rows)),
             "@LV2_VERSION@": lv2_version,
             "@DATE@": date,
         },
