@@ -535,21 +535,21 @@ lv2:CombPlugin
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf lv2:FilterPlugin ;
-	rdfs:label "Comb FilterPlugin" ;
+	rdfs:label "Comb Filter Plugin" ;
 	rdfs:comment "A filter that adds a delayed version of its input to itself." .
 
 lv2:AllpassPlugin
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf lv2:FilterPlugin ;
-	rdfs:label "Allpass Plugin" ;
+	rdfs:label "Allpass Filter Plugin" ;
 	rdfs:comment "A filter that changes the phase relationship between frequency components." .
 
 lv2:EQPlugin
 	a rdfs:Class ,
 		owl:Class ;
 	rdfs:subClassOf lv2:FilterPlugin ;
-	rdfs:label "Equaliser Plugin" ;
+	rdfs:label "EQ Plugin" ;
 	rdfs:comment "A plugin that adjusts the balance between frequency components." .
 
 lv2:ParaEQPlugin
