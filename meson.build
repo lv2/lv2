@@ -186,6 +186,12 @@ check_python = pymod.find_installation(
   required: get_option('tests'),
 )
 
+if (check_python.found() and
+    check_python.language_version().version_compare('<3.7'))
+  warning('Python 3.7 is required for tests')
+  check_python = disabler()
+endif
+
 foreach bundle_name : all_spec_names
   bundle = 'lv2' / bundle_name + '.lv2'
 
@@ -297,7 +303,10 @@ if not get_option('docs').disabled()
     required: get_option('docs'),
   )
 
-  build_docs = doxygen.found() and python.found()
+  if python.found() and python.language_version().version_compare('<3.7')
+    warning('Python 3.7 is required for documentation')
+    build_docs = false
+  endif
 endif
 
 # Run Doxygen first to generate tags
