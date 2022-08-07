@@ -81,32 +81,34 @@ endif
 # Python #
 ##########
 
-flake8 = find_program('flake8', required: get_option('tests'))
-pylint = find_program('pylint', required: get_option('tests'))
-black = find_program('black', required: get_option('tests'))
+if get_option('strict')
+  flake8 = find_program('flake8', required: get_option('tests'))
+  pylint = find_program('pylint', required: get_option('tests'))
+  black = find_program('black', required: get_option('tests'))
 
-# Scripts that don't pass with pylint
-lax_python_scripts = files(
-  '../lv2specgen/lv2docgen.py',
-  '../lv2specgen/lv2specgen.py',
-)
+  # Scripts that don't pass with pylint
+  lax_python_scripts = files(
+    '../lv2specgen/lv2docgen.py',
+    '../lv2specgen/lv2specgen.py',
+  )
 
-# Scripts that pass with everything including pylint
-strict_python_scripts = lv2_scripts + files('../plugins/literasc.py')
+  # Scripts that pass with everything including pylint
+  strict_python_scripts = lv2_scripts + files('../plugins/literasc.py')
 
-all_python_scripts = lax_python_scripts + strict_python_scripts
+  all_python_scripts = lax_python_scripts + strict_python_scripts
 
-if is_variable('black') and black.found()
-  black_opts = ['-l', '79', '-q', '--check']
-  test('black', black, args: black_opts + all_python_scripts, suite: 'scripts')
-endif
+  if is_variable('black') and black.found()
+    black_opts = ['-l', '79', '-q', '--check']
+    test('black', black, args: black_opts + all_python_scripts, suite: 'scripts')
+  endif
 
-if is_variable('flake8') and flake8.found()
-  test('flake8', flake8, args: all_python_scripts, suite: 'scripts')
-endif
+  if is_variable('flake8') and flake8.found()
+    test('flake8', flake8, args: all_python_scripts, suite: 'scripts')
+  endif
 
-if is_variable('pylint') and pylint.found()
-  test('pylint', pylint, args: strict_python_scripts, suite: 'scripts')
+  if is_variable('pylint') and pylint.found()
+    test('pylint', pylint, args: strict_python_scripts, suite: 'scripts')
+  endif
 endif
 
 ##############
