@@ -3,7 +3,7 @@
 
 plugin_sources = files('sampler.c')
 bundle_name = 'eg-sampler.lv2'
-data_filenames = ['manifest.ttl.in', 'sampler.ttl']
+data_filenames = ['manifest.ttl.in', 'sampler.ttl', 'click.wav']
 
 sndfile_dep = dependency('sndfile',
                          version: '>= 1.0.0',
