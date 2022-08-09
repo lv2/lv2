@@ -57,12 +57,15 @@ def run(serdi, filenames):
 
     for filename in filenames:
         rel_path = os.path.relpath(filename)
-        with tempfile.NamedTemporaryFile(mode="w") as out:
+        with tempfile.NamedTemporaryFile(mode="w", delete=False) as out:
+            out_name = out.name
             command = [serdi, "-o", "turtle", rel_path]
             subprocess.check_call(command, stdout=out)
 
-            if _check_file_equals(rel_path, out.name):
-                status = 1
+        if _check_file_equals(rel_path, out_name):
+            status = 1
+
+        os.remove(out_name)
 
     return status
 
