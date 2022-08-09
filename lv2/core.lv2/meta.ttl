@@ -47,6 +47,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 				rdfs:label "Fix documentation build with Python 3.7."
 			] , [
 				rdfs:label "eg-midigate: Fix output timing."
+			] , [
+				rdfs:label "eg-sampler: Fix potentially corrupt notification events."
 			]
 		]
 	] , [

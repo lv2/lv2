@@ -440,20 +440,19 @@ run(LV2_Handle instance, uint32_t sample_count)
   // Start a sequence in the notify output port.
   lv2_atom_forge_sequence_head(&self->forge, &self->notify_frame, 0);
 
-  // Send update to UI if gain or sample has changed due to state restore
-  if (self->gain_changed || self->sample_changed) {
+  // Send update to UI if gain has changed due to state restore
+  if (self->gain_changed) {
     lv2_atom_forge_frame_time(&self->forge, 0);
+    write_set_gain(&self->forge, &self->uris, self->gain_dB);
+    self->gain_changed = false;
+  }
 
-    if (self->gain_changed) {
-      write_set_gain(&self->forge, &self->uris, self->gain_dB);
-      self->gain_changed = false;
-    }
-
-    if (self->sample_changed) {
-      write_set_file(
-        &self->forge, &self->uris, self->sample->path, self->sample->path_len);
-      self->sample_changed = false;
-    }
+  // Send update to UI if sample has changed due to state restore
+  if (self->sample_changed) {
+    lv2_atom_forge_frame_time(&self->forge, 0);
+    write_set_file(
+      &self->forge, &self->uris, self->sample->path, self->sample->path_len);
+    self->sample_changed = false;
   }
 
   // Iterate over incoming events, emitting audio along the way
