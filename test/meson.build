@@ -33,7 +33,7 @@ endif
 
 # Check that specification data is strictly formatted
 serdi = find_program('serdi', required: get_option('tests'))
-if serdi.found()
+if serdi.found() and not meson.is_cross_build()
   lv2_check_syntax = files(lv2_source_root / 'scripts' / 'lv2_check_syntax.py')
 
   test('syntax',
