@@ -56,7 +56,7 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 	] , [
 		doap:revision "1.18.6" ;
 		doap:created "2022-07-07" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.18.6.tar.bz2> ;
+		doap:file-release <http://lv2plug.in/spec/lv2-1.18.6.tar.xz> ;
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
