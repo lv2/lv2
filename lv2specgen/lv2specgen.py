@@ -1092,6 +1092,8 @@ def specHistoryEntries(m, subject, entries):
 
         if dist is not None:
             entries[(getObject(created), getObject(dist))] = entry
+        elif int(rev.split(".")[-1]) % 2 == 0:
+            print("warning: %s %s has no file-release" % (subject, rev))
 
     return entries
 
