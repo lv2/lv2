@@ -307,6 +307,8 @@ if not get_option('docs').disabled()
     warning('Python 3.7 is required for documentation')
     build_docs = false
   endif
+
+  build_docs = doxygen.found() and python.found()
 endif
 
 # Run Doxygen first to generate tags
