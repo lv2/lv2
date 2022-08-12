@@ -20,38 +20,7 @@
 		dcs:blame <http://drobilla.net/drobilla#me> ;
 		dcs:changeset [
 			dcs:item [
-				rdfs:label "Merge with unified LV2 package."
-			]
-		]
-	] , [
-		doap:revision "1.4" ;
-		doap:created "2011-11-21" ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Update packaging."
-			] , [
-				rdfs:label "Deprecate uri-map in favour of urid."
-			]
-		]
-	] , [
-		doap:revision "1.2" ;
-		doap:created "2011-05-26" ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Add build system (for installation)."
-			] , [
-				rdfs:label "Mark up documentation in HTML using lv2:documentation."
-			]
-		]
-	] , [
-		doap:revision "1.0" ;
-		doap:created "2010-10-18" ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial release."
+				rdfs:label "Initial unified release."
 			]
 		]
 	] ;
