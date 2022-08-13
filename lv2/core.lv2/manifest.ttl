@@ -5,7 +5,7 @@
 <http://lv2plug.in/ns/lv2core>
 	a lv2:Specification ;
 	lv2:minorVersion 18 ;
-	lv2:microVersion 5 ;
+	lv2:microVersion 6 ;
 	rdfs:seeAlso <lv2core.ttl> .
 
 <http://lv2plug.in/ns/lv2>
