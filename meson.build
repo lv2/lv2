@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: CC0-1.0 OR ISC
 
 project('lv2', ['c'],
-        version: '1.18.8',
+        version: '1.18.9',
         license: 'ISC',
         meson_version: '>= 0.56.0',
         default_options: [
@@ -64,7 +64,6 @@ pkg.generate(
   description: 'Plugin standard for audio systems',
   filebase: 'lv2',
   name: 'LV2',
-  subdirs: ['lv2'],
   variables: [
     'lv2dir=' + lv2dir,
     'plugindir=' + lv2dir,

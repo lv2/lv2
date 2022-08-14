@@ -34,6 +34,15 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 		meta:kfoltman ,
 		meta:paniq ;
 	doap:release [
+		doap:revision "1.18.9" ;
+		doap:created "2022-08-14" ;
+		dcs:blame <http://drobilla.net/drobilla#me> ;
+		dcs:changeset [
+			dcs:item [
+				rdfs:label "Fix includedir in pkg-config file."
+			]
+		]
+	] , [
 		doap:revision "1.18.8" ;
 		doap:created "2022-08-12" ;
 		doap:file-release <http://lv2plug.in/spec/lv2-1.18.8.tar.xz> ;
