@@ -15,15 +15,11 @@ Installation
 See the [installation instructions](INSTALL.md) for details on how to
 configure, build, and install LV2 with meson.
 
-By default, everything is installed within the `prefix` with a UNIX-style
-hierarchy, and LV2 bundles are installed in the "lv2" subdirectory of the
-`libdir`.  The bundle installation directory can be overridden with the
-`lv2dir` option.  For example, standard system-wide values for various
-operating systems are:
-
-    meson configure -Dlv2dir=/Library/Audio/Plug-Ins/LV2
-    meson configure -Dlv2dir=/boot/common/add-ons/lv2
-    meson configure -Dlv2dir=C:/Program Files/Common/LV2
+By default, on UNIX-like systems, everything is installed within the `prefix`,
+and LV2 bundles are installed in the "lv2" subdirectory of the `libdir`.  On
+other systems, bundles are installed by default to the standard location for
+plugins on the system.  The bundle installation directory can be overridden
+with the `lv2dir` option.
 
 The [specification bundles](lv2) are run-time dependencies of LV2 applications.
 Programs expect their data to be available somewhere in `LV2_PATH`.  See
