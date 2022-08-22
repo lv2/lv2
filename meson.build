@@ -292,6 +292,7 @@ spec_files = files(
 # Determine if all the dependencies for building documentation are present
 doxygen = find_program('doxygen', required: get_option('docs'))
 build_docs = false
+build_lv2specgen = false
 doc_deps = []
 if not get_option('docs').disabled()
   doc_python_modules = ['lxml', 'markdown', 'pygments', 'rdflib']
@@ -308,13 +309,16 @@ if not get_option('docs').disabled()
   endif
 
   build_docs = doxygen.found() and python.found()
+  build_lv2specgen = python.found()
 endif
 
 # Run Doxygen first to generate tags
 subdir('doc/c')
 
 # Set up lv2specgen and lv2specgen_command_prefix (which references tags)
-subdir('lv2specgen')
+if build_lv2specgen
+  subdir('lv2specgen')
+endif
 
 # Generate specification documentation
 if build_docs
