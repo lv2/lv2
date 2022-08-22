@@ -41,6 +41,10 @@ Options can be set by passing C-style "define" options to `configure`:
 
     meson configure -Dc_args="-march=native" -Dprefix="/opt/mypackage/"
 
+Note that some options, such as `strict` and `werror` are for
+developer/maintainer use only.  Please don't file issues about anything that
+happens when they are enabled.
+
 Building
 --------
 
