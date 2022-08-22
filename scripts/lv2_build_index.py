@@ -106,7 +106,7 @@ def _spec_link_columns(spec, root, name, online):
 
     # API
     col += '<td><a rel="rdfs:seeAlso"'
-    col += f' href="../html/group__{stem}.html">{name}'
+    col += f' href="../c/html/group__{stem}.html">{name}'
     col += "</a></td>"
 
     return col

@@ -25,7 +25,7 @@ if doxygen.found()
     command: [doxygen, '@INPUT@'],
     input: reference_doxygen,
     install: true,
-    install_dir: lv2_docdir,
+    install_dir: lv2_docdir / 'c',
     output: ['html', 'tags'],
   )
 
