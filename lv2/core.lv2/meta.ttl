@@ -42,6 +42,8 @@ THIS SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH R
 				rdfs:label "Fix includedir in pkg-config file."
 			] , [
 				rdfs:label "Only install lv2specgen when required Python modules are found."
+			] , [
+				rdfs:label "Fix missing example plugin UI binaries."
 			]
 		]
 	] , [

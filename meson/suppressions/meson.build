@@ -34,6 +34,7 @@ if is_variable('cc')
       ]
     elif cc.get_id() == 'gcc'
       c_suppressions += [
+        '-Wno-bad-function-cast',
         '-Wno-cast-align',
         '-Wno-cast-qual',
         '-Wno-conversion',

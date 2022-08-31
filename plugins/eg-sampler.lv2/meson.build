@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: CC0-1.0 OR ISC
 
 plugin_sources = files('sampler.c')
+ui_sources = files('sampler_ui.c')
 bundle_name = 'eg-sampler.lv2'
 data_filenames = ['manifest.ttl.in', 'sampler.ttl', 'click.wav']
 
@@ -12,6 +13,11 @@ samplerate_dep = dependency('samplerate',
 sndfile_dep = dependency('sndfile',
                          version: '>= 1.0.0',
                          required: get_option('plugins'))
+
+gtk2_dep = dependency('gtk+-2.0',
+                      include_type: 'system',
+                      required: get_option('plugins'),
+                      version: '>= 2.18.0')
 
 if samplerate_dep.found() and sndfile_dep.found()
   module = shared_library(
@@ -45,4 +51,17 @@ if samplerate_dep.found() and sndfile_dep.found()
       )
     endif
   endforeach
+
+  if gtk2_dep.found()
+    shared_library(
+      'sampler_ui',
+      ui_sources,
+      c_args: c_suppressions,
+      dependencies: [lv2_dep, gtk2_dep],
+      gnu_symbol_visibility: 'hidden',
+      install: true,
+      install_dir: lv2dir / bundle_name,
+      name_prefix: '',
+    )
+  endif
 endif
