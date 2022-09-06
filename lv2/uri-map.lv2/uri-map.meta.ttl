@@ -1,5 +1,4 @@
 @prefix lv2: <http://lv2plug.in/ns/lv2core#> .
-@prefix dcs: <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -13,17 +12,6 @@
 	doap:license <http://opensource.org/licenses/isc> ;
 	doap:name "LV2 URI Map" ;
 	doap:shortdesc "A feature for mapping URIs to integers." ;
-	doap:release [
-		doap:revision "1.6" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial unified release."
-			]
-		]
-	] ;
 	lv2:documentation """
 
 <span class="warning">This extension is deprecated.</span> New implementations

@@ -444,7 +444,6 @@
      validation, so here we are.
 -->
 
-<!ATTLIST html xmlns:dcs CDATA #IMPLIED>
 <!ATTLIST html xmlns:dcterms CDATA #IMPLIED>
 <!ATTLIST html xmlns:doap CDATA #IMPLIED>
 <!ATTLIST html xmlns:foaf CDATA #IMPLIED>

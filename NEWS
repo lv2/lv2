@@ -1,0 +1,268 @@
+lv2 (1.18.9) unstable; urgency=medium
+
+  * Fix includedir in pkg-config file
+  * Fix missing example plugin UI binaries
+  * Only install lv2specgen when required Python modules are found
+  * Replace change history data with a plain text NEWS file
+
+ -- David Robillard <d@drobilla.net>  Wed, 07 Sep 2022 00:19:12 +0000
+
+lv2 (1.18.8) stable; urgency=medium
+
+  * Fix documentation build with Python 3.7
+  * Fix documentation build with meson 0.56.2
+  * Fix lv2.h missing from installation
+  * eg-midigate: Fix output timing
+  * eg-sampler: Add resampling via libsamplerate
+  * eg-sampler: Fix potentially corrupt notification events
+  * lv2core: Fix inconsistent plugin class labels
+  * lv2specgen: Fix installed data paths
+
+ -- David Robillard <d@drobilla.net>  Fri, 12 Aug 2022 00:00:00 +0000
+
+lv2 (1.18.6) stable; urgency=medium
+
+  * Add dark mode style for documentation
+  * Clean up and modernize Python support code
+  * Fix or avoid new compiler and tool warnings
+  * Rearrange source tree to be directly usable by dependants
+  * Remove archaic properties from foaf vocabulary
+  * Replace canonical dcs ontology with a minimal version for LV2
+  * Separate API headers from data
+  * Switch to Meson build system
+
+ -- David Robillard <d@drobilla.net>  Thu, 07 Jul 2022 00:00:00 +0000
+
+lv2 (1.18.4) stable; urgency=medium
+
+  * Fix build issues with newer toolchains
+  * Fix spelling errors
+  * atom: Fix spelling errors
+  * event: Fix spelling errors
+  * lv2core: Fix spelling errors
+  * patch: Fix spelling errors
+  * patch: Fix type and range of patch:value
+  * patch: Make the type of patch:wildcard more precise
+  * state: Fix spelling errors
+  * ui: Deprecate ui:resize
+  * ui: Fix spelling errors
+
+ -- David Robillard <d@drobilla.net>  Thu, 26 May 2022 00:00:00 +0000
+
+lv2 (1.18.2) stable; urgency=medium
+
+  * Various code cleanups and infrastructure improvements
+  * eg-sampler: Save and restore gain parameter value
+  * state: Fix state:StateChanged URI in metadata and documentation
+
+ -- David Robillard <d@drobilla.net>  Thu, 07 Jan 2021 00:00:00 +0000
+
+lv2 (1.18.0) stable; urgency=medium
+
+  * Improve documentation
+  * Separate extended documentation from primary data
+  * lv2core: Add lv2:Markdown datatype
+  * lv2core: Deprecate lv2:reportsLatency
+  * patch: Fix incorrect type of patch:sequenceNumber
+  * port-groups: Remove incorrect type of pg:letterCode
+  * port-groups: Replace broken links with detailed channel descriptions
+  * state: Add state:freePath feature
+  * ui: Add ui:requestValue feature
+  * ui: Add ui:scaleFactor, ui:foregroundColor, and ui:backgroundColor
+  * ui: Deprecate ui:binary
+  * worker: Improve documentation
+
+ -- David Robillard <d@drobilla.net>  Sun, 26 Apr 2020 00:00:00 +0000
+
+lv2 (1.16.0) stable; urgency=medium
+
+  * Add core/attributes.h utility header
+  * Add lv2_validate utility
+  * Aggressively deprecate uri-map and event extensions
+  * Install headers to simpler paths
+  * Simplify use of lv2specgen
+  * Upgrade build system and fix building with Python 3.7
+  * atom: Add lv2_atom_object_get_typed()
+  * eg-midigate: Respond to "all notes off" MIDI message
+  * eg-sampler: Add waveform display to UI
+  * lv2core: Add lv2:MIDIPlugin class
+  * lv2core: Rework port restrictions so that presets can be validated
+  * midi: Fix incorrect range of midi:chunk
+  * options: Relax range of opts:requiredOption and opts:supportedOption
+  * patch: Add patch:accept property
+  * patch: Add patch:context property
+  * state: Add state:StateChanged for notification events
+  * time: Clarify time:beat origin
+  * units: Fix outdated port description in documentation
+  * units: Remove overly restrictive domain from units:unit
+
+ -- David Robillard <d@drobilla.net>  Sun, 03 Feb 2019 00:00:00 +0000
+
+lv2 (1.14.0) stable; urgency=medium
+
+  * buf-size: Add bufsz:coarseBlockLength feature
+  * buf-size: Add bufsz:nominalBlockLength option
+  * eg-sampler: Fix handling of state file paths
+  * eg-sampler: Support thread-safe state restoration
+  * eg-scope: Don't feed back UI state updates
+  * log: Add lv2_log_logger_set_map()
+  * lv2core: Add lv2:enabled designation
+  * lv2core: Add lv2_util.h with lv2_features_data() and lv2_features_query()
+  * state: Add LV2_STATE_ERR_NO_SPACE status flag
+  * state: Add state:threadSafeRestore feature
+  * time: Define LV2_TIME_PREFIX
+  * ui: Add missing property labels
+  * ui: Improve documentation
+
+ -- David Robillard <d@drobilla.net>  Mon, 19 Sep 2016 00:00:00 +0000
+
+lv2 (1.12.0) stable; urgency=medium
+
+  * Fix merging of version histories in specification documentation
+  * Improve API documentation
+  * Simplify property restrictions by removing redundancy
+  * eg-sampler: Add gain parameter
+  * eg-sampler: Support patch:Get, and request initial state from UI
+  * lv2core: Add extern C and visibility attribute to LV2_SYMBOL_EXPORT
+  * lv2core: Add lv2:isSideChain port property
+  * lv2core: Relax domain of lv2:minimum lv2:maximum and lv2:default
+  * parameters: Add range to parameters so hosts know how to control them
+  * patch: Add patch:Copy method
+  * patch: Define patch:Get with no subject to implicitly apply to receiver
+  * units: Add lv2:Parameter to domain of units:unit
+  * units: Fix non-existent port type in examples
+
+ -- David Robillard <d@drobilla.net>  Tue, 07 Apr 2015 00:00:00 +0000
+
+lv2 (1.10.0) stable; urgency=medium
+
+  * Fix -Wconversion warnings in headers
+  * Upgrade to waf 1.7.16
+  * atom: Add lv2_atom_forge_is_object_type() and lv2_atom_forge_is_blank()
+  * atom: Add lv2_atom_forge_key() for terser object writing
+  * atom: Add lv2_atom_sequence_clear() and lv2_atom_sequence_append_event()
+  * atom: Deprecate Blank and Resource in favour of just Object
+  * event: Minor documentation improvements
+  * lv2core: Clarify lv2_descriptor() and lv2_lib_descriptor() documentation
+  * lv2specgen: Display deprecated warning on classes marked owl:deprecated
+  * patch: Add patch:sequenceNumber for associating replies with requests
+  * ui: Add show interface so UIs can gracefully degrade to separate windows
+  * ui: Fix identifier typos in documentation
+
+ -- David Robillard <d@drobilla.net>  Fri, 08 Aug 2014 00:00:00 +0000
+
+lv2 (1.8.0) stable; urgency=medium
+
+  * Add scope example plugin from Robin Gareus
+  * Install lv2specgen for use by other projects
+  * atom: Make lv2_atom_*_is_end() arguments const
+  * log: Add missing include string.h to logger.h for memset
+  * lv2core: Add lv2:prototype for property inheritance
+  * lv2specgen: Fix links to externally defined terms
+  * ui: Fix LV2_UI_INVALID_PORT_INDEX identifier in documentation
+
+ -- David Robillard <d@drobilla.net>  Sat, 04 Jan 2014 00:00:00 +0000
+
+lv2 (1.6.0) stable; urgency=medium
+
+  * Fix lv2specgen usage from command line
+  * Fix port indices of metronome example
+  * Upgrade to waf 1.7.11
+  * atom: Fix crash in forge.h when pushing atoms to a full buffer
+  * ui: Add idle interface for native UIs and foreign toolkits
+  * ui: Add ui:updateRate property
+
+ -- David Robillard <d@drobilla.net>  Fri, 09 Aug 2013 00:00:00 +0000
+
+lv2 (1.4.0) stable; urgency=medium
+
+  * Add metronome example plugin to demonstrate sample accurate tempo sync
+  * Generate book-style HTML documentation from example plugins
+  * atom: Fix lv2_atom_sequence_end()
+  * atom: Improve atom documentation
+  * atom: Remove atom:stringType in favour of the more general owl:onDatatype
+  * buf-size: Fix typo in bufsz:sequenceSize label
+  * event: Fix incorrect return type in lv2_event_get()
+  * log: Add logger convenience API
+  * lv2core: Add lv2:EnvelopePlugin class
+  * lv2core: Add lv2:control for designating primary control ports
+  * lv2core: Make lv2:Parameter rdfs:subClassOf rdf:Property
+  * lv2core: Reserve minor version 0 for unstable development plugins
+  * lv2core: Set range of lv2:designation to lv2:Designation
+  * options: Set the range of opts:requiredOption and opts:supportedOption
+  * patch: Add patch:readable and patch:writable properties
+  * patch: Make patch:Set a compact message for setting one property
+  * state: Add state:loadDefaultState feature
+  * ui: Fix incorrect linker flag in ui:makeSONameResident documentation
+
+ -- David Robillard <d@drobilla.net>  Sun, 17 Feb 2013 00:00:00 +0000
+
+lv2 (1.2.0) stable; urgency=medium
+
+  * Move all project metadata for extensions to separate files to save memory
+  * Use stricter datatype definitions conformant with XSD and OWL
+  * atom: Add LV2_ATOM_CONTENTS_CONST and LV2_ATOM_BODY_CONST
+  * atom: Add lv2_atom_object_body_get()
+  * atom: Fix implicit conversions in forge.h that are invalid in C++11
+  * atom: Fix lv2_atom_object_next() on 32-bit platforms
+  * atom: Fix outdated documentation in forge.h
+  * atom: Use consistent label style
+  * buf-size: Initial release
+  * dynmanifest: Use consistent label style
+  * event: Make event iterator gracefully handle optional ports
+  * event: Remove asserts from event-helper.h
+  * event: Use consistent label style
+  * event: Use more precise domain and range for EventPort properties
+  * lv2core: Use consistent label style
+  * midi: Add C definitions for message types and standard controllers
+  * midi: Add midi:HexByte datatype for status bytes and masks
+  * midi: Add midi:binding and midi:channel predicates
+  * midi: Fix definition of SystemExclusive status byte
+  * midi: Remove non-standard midi:Tick message type
+  * midi: Use consistent label style
+  * morph: Initial release
+  * options: Initial release
+  * parameters: Add param:sampleRate
+  * parameters: Add parameters.h of URI defines for convenience
+  * parameters: Use consistent label style
+  * port-groups: Use consistent label style
+  * port-props: Use consistent label style
+  * presets: Add preset banks
+  * presets: Use consistent label style
+  * state: Use consistent label style
+  * time: Use consistent label style
+  * ui: Add missing LV2_SYMBOL_EXPORT declaration for lv2ui_descriptor
+  * ui: Add types for WindowsUI, CocoaUI, and Gtk3UI
+  * ui: Use consistent label style
+  * units: Remove units:name in favour of rdfs:label
+  * units: Use consistent label style
+  * urid: Fix typo in urid:unmap documentation
+
+ -- David Robillard <d@drobilla.net>  Sun, 14 Oct 2012 00:00:00 +0000
+
+lv2 (1.0.0) stable; urgency=medium
+
+  * Initial release as a unified project
+  * atom: Initial release
+  * data-access: Initial unified release
+  * dynmanifest: Initial unified release
+  * event: Initial unified release
+  * instance-access: Initial unified release
+  * log: Initial release
+  * lv2core: Initial unified release
+  * midi: Initial unified release
+  * parameters: Initial release
+  * patch: Initial release
+  * port-groups: Initial release
+  * port-props: Initial release
+  * presets: Initial unified release
+  * resize-port: Initial release
+  * state: Initial release
+  * time: Initial release
+  * ui: Initial unified release
+  * units: Initial unified release
+  * uri-map: Initial unified release
+  * urid: Initial unified release
+  * worker: Initial release
+
+ -- David Robillard <d@drobilla.net>  Mon, 16 Apr 2012 00:00:00 +0000

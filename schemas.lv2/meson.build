@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: CC0-1.0 OR ISC
 
 schema_data = files(
-  'dcs.ttl',
   'dcterms.ttl',
   'doap.ttl',
   'foaf.ttl',

@@ -1,4 +1,3 @@
-@prefix dcs: <http://ontologi.es/doap-changeset#> .
 @prefix dman: <http://lv2plug.in/ns/ext/dynmanifest#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -14,27 +13,6 @@
 	doap:shortdesc "Support for dynamic manifest data generation." ;
 	doap:programming-language "C" ;
 	doap:developer <http://lv2plug.in/ns/meta#daste> ;
-	doap:release [
-		doap:revision "1.6" ;
-		doap:created "2012-10-14" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Use consistent label style."
-			]
-		]
-	] , [
-		doap:revision "1.4" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial unified release."
-			]
-		]
-	] ;
 	lv2:documentation """
 
 The LV2 API, on its own, cannot be used to write plugin libraries where data is

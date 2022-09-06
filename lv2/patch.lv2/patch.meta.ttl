@@ -1,4 +1,3 @@
-@prefix dcs: <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2: <http://lv2plug.in/ns/lv2core#> .
@@ -12,87 +11,6 @@
 	doap:developer <http://drobilla.net/drobilla#me> ;
 	doap:name "LV2 Patch" ;
 	doap:shortdesc "A protocol for accessing and manipulating properties." ;
-	doap:release [
-		doap:revision "2.10" ;
-		doap:created "2022-05-26" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.18.4.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Fix spelling errors."
-			] , [
-				rdfs:label "Make the type of patch:wildcard more precise."
-			] , [
-				rdfs:label "Fix type and range of patch:value."
-			]
-		]
-	] , [
-		doap:revision "2.8" ;
-		doap:created "2020-04-26" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.18.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Fix incorrect type of patch:sequenceNumber."
-			]
-		]
-	] , [
-		doap:revision "2.6" ;
-		doap:created "2019-02-03" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.16.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Add patch:accept property."
-			] , [
-				rdfs:label "Add patch:context property."
-			]
-		]
-	] , [
-		doap:revision "2.4" ;
-		doap:created "2015-04-07" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.12.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Define patch:Get with no subject to implicitly apply to receiver.  This can be used by UIs to get an initial description of a plugin."
-			] , [
-				rdfs:label "Add patch:Copy method."
-			]
-		]
-	] , [
-		doap:revision "2.2" ;
-		doap:created "2014-08-08" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.10.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Add patch:sequenceNumber for associating replies with requests."
-			]
-		]
-	] , [
-		doap:revision "2.0" ;
-		doap:created "2013-01-10" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.4.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Make patch:Set a compact message for setting one property."
-			] , [
-				rdfs:label "Add patch:readable and patch:writable for describing available properties."
-			]
-		]
-	] , [
-		doap:revision "1.0" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial release."
-			]
-		]
-	] ;
 	lv2:documentation """
 
 This is a vocabulary for messages that access and manipulate properties.

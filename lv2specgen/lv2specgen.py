@@ -86,7 +86,6 @@ spec_pre = None
 spec_bundle = None
 specgendir = None
 ns_list = {
-    "http://ontologi.es/doap-changeset#": "dcs",
     "http://purl.org/dc/terms/": "dcterms",
     "http://usefulinc.com/ns/doap#": "doap",
     "http://xmlns.com/foaf/0.1/": "foaf",
@@ -101,7 +100,6 @@ rdfs = rdflib.Namespace("http://www.w3.org/2000/01/rdf-schema#")
 owl = rdflib.Namespace("http://www.w3.org/2002/07/owl#")
 lv2 = rdflib.Namespace("http://lv2plug.in/ns/lv2core#")
 doap = rdflib.Namespace("http://usefulinc.com/ns/doap#")
-dcs = rdflib.Namespace("http://ontologi.es/doap-changeset#")
 foaf = rdflib.Namespace("http://xmlns.com/foaf/0.1/")
 
 

@@ -1,4 +1,3 @@
-@prefix dcs: <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix lv2: <http://lv2plug.in/ns/lv2core#> .
@@ -12,53 +11,6 @@
 	doap:created "2007-02-06" ;
 	doap:homepage <http://lv2plug.in/ns/extensions/units> ;
 	doap:license <http://opensource.org/licenses/isc> ;
-	doap:release [
-		doap:revision "5.12" ;
-		doap:created "2019-02-03" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.16.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Fix outdated port description in documentation."
-			] , [
-				rdfs:label "Remove overly restrictive domain from units:unit."
-			]
-		]
-	] , [
-		doap:revision "5.10" ;
-		doap:created "2015-04-07" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.12.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Fix non-existent port type in examples."
-			] , [
-				rdfs:label "Add lv2:Parameter to domain of units:unit."
-			]
-		]
-	] , [
-		doap:revision "5.8" ;
-		doap:created "2012-10-14" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Remove units:name in favour of rdfs:label."
-			] , [
-				rdfs:label "Use consistent label style."
-			]
-		]
-	] , [
-		doap:revision "5.6" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial unified release."
-			]
-		]
-	] ;
 	doap:developer <http://plugin.org.uk/swh.xrdf#me> ;
 	doap:maintainer <http://drobilla.net/drobilla#me> ;
 	lv2:documentation """

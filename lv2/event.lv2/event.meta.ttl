@@ -1,4 +1,3 @@
-@prefix dcs: <http://ontologi.es/doap-changeset#> .
 @prefix doap: <http://usefulinc.com/ns/doap#> .
 @prefix ev: <http://lv2plug.in/ns/ext/event#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
@@ -13,63 +12,6 @@
 	doap:created "2008-00-00" ;
 	doap:developer <http://drobilla.net/drobilla#me> ,
 		<http://lv2plug.in/ns/meta#larsl> ;
-	doap:release [
-		doap:revision "1.14" ;
-		doap:created "2022-05-26" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.18.4.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Fix spelling errors."
-			]
-		]
-	] , [
-		doap:revision "1.12" ;
-		doap:created "2014-08-08" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.10.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Minor documentation improvements."
-			]
-		]
-	] , [
-		doap:revision "1.10" ;
-		doap:created "2013-01-13" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.4.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Fix incorrect return type in lv2_event_get()."
-			]
-		]
-	] , [
-		doap:revision "1.8" ;
-		doap:created "2012-10-14" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.2.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Make event iterator gracefully handle optional ports."
-			] , [
-				rdfs:label "Remove asserts from event-helper.h."
-			] , [
-				rdfs:label "Use more precise domain and range for EventPort properties."
-			] , [
-				rdfs:label "Use consistent label style."
-			]
-		]
-	] , [
-		doap:revision "1.6" ;
-		doap:created "2012-04-17" ;
-		doap:file-release <http://lv2plug.in/spec/lv2-1.0.0.tar.bz2> ;
-		dcs:blame <http://drobilla.net/drobilla#me> ;
-		dcs:changeset [
-			dcs:item [
-				rdfs:label "Initial unified release."
-			]
-		]
-	] ;
 	lv2:documentation """
 
 <span class="warning">This extension is deprecated.</span> New implementations

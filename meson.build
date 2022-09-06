@@ -345,31 +345,7 @@ subdir('util')
 # Data and build tests
 subdir('test')
 
-########
-# News #
-########
-
-lv2_write_news_py = find_program('scripts' / 'lv2_write_news.py')
-
-write_news_command = [
-  lv2_write_news_py,
-  '-t', 'http://lv2plug.in/ns/lv2',
-  files(lv2_source_root / 'lv2' / 'core.lv2' / 'people.ttl'),
-  files(lv2_source_root / 'lv2' / 'core.lv2' / 'meta.ttl'),
-  spec_files,
-]
-
-custom_target(
-  'NEWS',
-  capture: true,
-  command: write_news_command,
-  output: 'NEWS',
-)
-
 if not meson.is_subproject()
-  # Generate NEWS file from data in distribution archive
-  meson.add_dist_script(write_news_command)
-
   summary('Tests', not get_option('tests').disabled(), bool_yn: true)
   summary('Documentation', build_docs, bool_yn: true)
   summary('Prefix', get_option('prefix'), section: 'Paths')
