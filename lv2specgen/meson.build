@@ -10,6 +10,8 @@ lv2specgen_command_prefix = [
   lv2specgen_py,
   '--list-email=' + lv2_list_email,
   '--list-page=' + lv2_list_page,
+  '--style-dir=' + lv2_source_root / 'doc' / 'style',
+  '--template', files('template.html'),
 ]
 
 if is_variable('lv2_tags')
