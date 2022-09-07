@@ -1040,79 +1040,6 @@ def specAuthors(m, subject):
     return doc
 
 
-def releaseChangeset(m, release, prefix=""):
-    changeset = findOne(m, release, dcs.changeset, None)
-    if changeset is None:
-        return ""
-
-    entry = ""
-    # entry = '<dd><ul>\n'
-    for i in sorted(findStatements(m, getObject(changeset), dcs.item, None)):
-        item = getObject(i)
-        label = findOne(m, item, rdfs.label, None)
-        if not label:
-            print("error: dcs:item has no rdfs:label")
-            continue
-
-        text = getLiteralString(getObject(label))
-        if prefix:
-            text = prefix + ": " + text
-
-        entry += "<li>%s</li>\n" % text
-
-    # entry += '</ul></dd>\n'
-    return entry
-
-
-def specHistoryEntries(m, subject, entries):
-    for r in findStatements(m, subject, doap.release, None):
-        release = getObject(r)
-        revNode = findOne(m, release, doap.revision, None)
-        if not revNode:
-            print("error: doap:release has no doap:revision")
-            continue
-
-        rev = getLiteralString(getObject(revNode))
-
-        created = findOne(m, release, doap.created, None)
-
-        dist = findOne(m, release, doap["file-release"], None)
-        if dist:
-            entry = '<dt><a href="%s">Version %s</a>' % (getObject(dist), rev)
-        else:
-            entry = "<dt>Version %s" % rev
-            # print("warning: doap:release has no doap:file-release")
-
-        if created:
-            entry += " (%s)</dt>\n" % getLiteralString(getObject(created))
-        else:
-            entry += ' (<span class="warning">EXPERIMENTAL</span>)</dt>'
-
-        entry += "<dd><ul>\n%s" % releaseChangeset(m, release)
-
-        if dist is not None:
-            entries[(getObject(created), getObject(dist))] = entry
-        elif int(rev.split(".")[-1]) % 2 == 0:
-            print("warning: %s %s has no file-release" % (subject, rev))
-
-    return entries
-
-
-def specHistoryMarkup(entries):
-    if len(entries) > 0:
-        history = "<dl>\n"
-        for e in sorted(entries.keys(), reverse=True):
-            history += entries[e] + "</ul></dd>"
-        history += "</dl>\n"
-        return history
-    else:
-        return ""
-
-
-def specHistory(m, subject):
-    return specHistoryMarkup(specHistoryEntries(m, subject, {}))
-
-
 def specVersion(m, subject):
     """
     Return a (minorVersion, microVersion, date) tuple
@@ -1383,7 +1310,6 @@ def specgen(
     template = template.replace("@REFERENCE@", termlist)
     template = template.replace("@FILENAME@", filename)
     template = template.replace("@HEADER@", basename + ".h")
-    template = template.replace("@HISTORY@", specHistory(m, spec))
 
     mail_row = ""
     if "list_email" in opts:
