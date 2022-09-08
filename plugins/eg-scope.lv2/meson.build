@@ -47,15 +47,10 @@ foreach filename : data_filenames
 endforeach
 
 if gtk2_dep.found()
-  ui_suppressions = c_suppressions
-  if cc.get_id() == 'gcc'
-    ui_suppressions += ['-Wno-bad-function-cast']
-  endif
-
   shared_library(
     'examploscope_ui',
     ui_sources,
-    c_args: ui_suppressions,
+    c_args: c_suppressions,
     dependencies: [lv2_dep, gtk2_dep],
     gnu_symbol_visibility: 'hidden',
     install: true,

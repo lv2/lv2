@@ -17,6 +17,7 @@ if is_variable('cc')
   if get_option('strict')
     if cc.get_id() in ['clang', 'emscripten']
       c_suppressions += [
+        '-Wno-bad-function-cast',
         '-Wno-cast-align',
         '-Wno-cast-qual',
         '-Wno-declaration-after-statement',
