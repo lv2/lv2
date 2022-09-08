@@ -52,11 +52,16 @@ if samplerate_dep.found() and sndfile_dep.found()
     endif
   endforeach
 
+  ui_suppressions = c_suppressions
+  if cc.get_id() == 'gcc'
+    ui_suppressions += ['-Wno-strict-overflow']
+  endif
+  
   if gtk2_dep.found()
     shared_library(
       'sampler_ui',
       ui_sources,
-      c_args: c_suppressions,
+      c_args: ui_suppressions,
       dependencies: [lv2_dep, gtk2_dep],
       gnu_symbol_visibility: 'hidden',
       install: true,
