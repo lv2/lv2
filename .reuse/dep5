@@ -6,17 +6,17 @@ Source: https://gitlab.com/lv2/lv2
 Files: .stylelintrc.json doc/htaccess.in
 Copyright: 2011-2022 David Robillard <d@drobilla.net>
 Comment: Contributed to the Commons as a tool configuration
-License: CC0-1.0 OR ISC
+License: 0BSD OR ISC
 
 Files: NEWS
 Copyright: 2011-2022 David Robillard <d@drobilla.net>
 Comment: Contributed to the Commons as a representation of simple facts
-License: CC0-1.0 OR ISC
+License: 0BSD OR ISC
 
 Files: **/manifest.ttl
 Copyright: Copyright 2015 David Robillard <d@drobilla.net>
 Comment: Contributed to the Commons as a representation of simple facts
-License: CC0-1.0 OR ISC
+License: 0BSD OR ISC
 
 Files: doc/c/mainpage.md doc/*.css doc/c/layout.xml doc/c/reference.doxygen.in
 Copyright: Copyright 2020-2022 David Robillard <d@drobilla.net>
@@ -43,7 +43,7 @@ License: W3C-19980720
 
 Files: schemas.lv2/xsd.ttl
 Copyright: Copyright 2015-2021 David Robillard <d@drobilla.net>
-License: CC0-1.0 OR ISC
+License: 0BSD OR ISC
 
 Files: schemas.lv2/doap.ttl
 Copyright: Copyright 2004-2016 Edd Dumbill <edd@usefulinc.com>

@@ -1,5 +1,5 @@
 # Copyright 2022 David Robillard <d@drobilla.net>
-# SPDX-License-Identifier: CC0-1.0 OR ISC
+# SPDX-License-Identifier: 0BSD OR ISC
 
 if not get_option('plugins').disabled()
   m_dep = cc.find_library('m', required: false)
