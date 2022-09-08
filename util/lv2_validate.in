@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Copyright 2017-2020 David Robillard <d@drobilla.net>
+# SPDX-License-Identifier: ISC
+
 LV2DIR="@LV2DIR@"
 
 if [ "$#" -eq "0" ]; then

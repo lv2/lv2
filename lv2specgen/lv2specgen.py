@@ -1,34 +1,13 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
-# lv2specgen, a documentation generator for LV2 specifications.
-# Copyright (c) 2009-2014 David Robillard <d@drobilla.net>
+# Copyright 2009-2022 David Robillard <d@drobilla.net>
+# Copyright 2003-2008 Christopher Schmidt <crschmidt@crschmidt.net>
+# Copyright 2005-2008 Uldis Bojars <uldis.bojars@deri.org>
+# Copyright 2007-2008 Sergio Fernández <sergio.fernandez@fundacionctic.org>
+# SPDX-License-Identifier: MIT
 #
 # Based on SpecGen:
 # <http://forge.morfeo-project.org/wiki_en/index.php/SpecGen>
-# Copyright (c) 2003-2008 Christopher Schmidt <crschmidt@crschmidt.net>
-# Copyright (c) 2005-2008 Uldis Bojars <uldis.bojars@deri.org>
-# Copyright (c) 2007-2008 Sergio Fernández <sergio.fernandez@fundacionctic.org>
-#
-# This software is licensed under the terms of the MIT License.
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
 
 import datetime
 import markdown

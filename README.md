@@ -1,3 +1,6 @@
+<!-- Copyright 2010-2022 David Robillard <d@drobilla.net> -->
+<!-- SPDX-License-Identifier: ISC -->
+
 LV2
 ===
 
