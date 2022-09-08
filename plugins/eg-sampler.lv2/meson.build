@@ -52,12 +52,12 @@ if samplerate_dep.found() and sndfile_dep.found()
     endif
   endforeach
 
-  ui_suppressions = c_suppressions
-  if cc.get_id() == 'gcc'
-    ui_suppressions += ['-Wno-strict-overflow']
-  endif
-  
   if gtk2_dep.found()
+    ui_suppressions = c_suppressions
+    if cc.get_id() == 'gcc'
+      ui_suppressions += ['-Wno-strict-overflow']
+    endif
+  
     shared_library(
       'sampler_ui',
       ui_sources,
