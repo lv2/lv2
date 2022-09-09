@@ -9,7 +9,6 @@ Checks: >
   -bugprone-easily-swappable-parameters,
   -bugprone-macro-parentheses,
   -bugprone-suspicious-include,
-  -bugprone-suspicious-string-compare,
   -llvm-header-guard,
   -llvmlibc-implementation-in-namespace,
   -llvmlibc-restrict-system-libc-headers,
