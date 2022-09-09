@@ -19,7 +19,6 @@
         <div id="metabox">
           <table id="meta">
             <tr><th>Version</th><td>@LV2_VERSION@</td></tr>
-            <tr><th>Date</th><td>@DATE@</td></tr>
             <tr><th>Discuss</th>
               <td>
                 <a href="mailto:devel@lists.lv2plug.in">devel@lists.lv2plug.in</a>

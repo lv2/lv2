@@ -7,10 +7,8 @@
 Write an HTML index for a set of LV2 specifications.
 """
 
-import datetime
 import json
 import os
-import time
 import sys
 import argparse
 import subprocess
@@ -67,30 +65,6 @@ def _spec_target(spec, root, online=False):
     return target if online else target + ".html"
 
 
-def _spec_date(model, spec, minor, micro):
-    "Return the date for a release of a specification as an RDF node."
-
-    # Get date
-    date = None
-    for release in model.objects(spec, doap.release):
-        revision = model.value(release, doap.revision, None, any=False)
-        if str(revision) == f"{minor}.{micro}":
-            date = model.value(release, doap.created, None)
-            break
-
-    # Verify that this date is the latest
-    if date is not None:
-        for other_release in model.objects(spec, doap.release):
-            for other_date in model.objects(other_release, doap.created):
-                if other_date is None:
-                    _warn(f"{spec} has no doap:created date")
-                elif other_date > date:
-                    _warn(f"{spec} {minor}.{micro} ({date}) is an old release")
-                    break
-
-    return date
-
-
 def _spec_link_columns(spec, root, name, online):
     "Return the first two link columns in a spec row as an HTML string."
 
@@ -131,11 +105,6 @@ def index_row(model, spec, root_uri, online):
         micro = int(model.value(spec, lv2.microVersion, None, any=False))
     except rdflib.exceptions.UniquenessError:
         _warn(f"{spec} has no unique valid version")
-        return ""
-
-    # Check that date is present and valid
-    if _spec_date(model, spec, minor, micro) is None:
-        _warn(f"{spec} has no doap:created date")
         return ""
 
     row = "<tr>"
@@ -182,26 +151,9 @@ def build_index(
 
     model = _load_ttl(input_paths)
 
-    # Get date for this version, and list of all LV2 distributions
-    proj = rdflib.URIRef("http://lv2plug.in/ns/lv2")
-    date = None
-    for row in model.triples([proj, doap.release, None]):
-        revision = model.value(row[2], doap.revision, None)
-        created = model.value(row[2], doap.created, None)
-        if str(revision) == lv2_version:
-            date = created
-
-        dist = model.value(row[2], doap["file-release"], None)
-        if not dist or not created:
-            _warn(f"{proj} has no file release")
-
     rows = []
     for spec in model.triples([None, rdf.type, lv2.Specification]):
         rows += [index_row(model, spec[0], root_uri, online)]
-
-    if date is None:
-        now = int(os.environ.get("SOURCE_DATE_EPOCH", time.time()))
-        date = datetime.datetime.utcfromtimestamp(now).strftime("%F")
 
     _subst_file(
         os.path.join(lv2_source_root, "doc", "index.html.in"),
@@ -209,7 +161,6 @@ def build_index(
         {
             "@ROWS@": "\n".join(sorted(rows)),
             "@LV2_VERSION@": lv2_version,
-            "@DATE@": date,
         },
     )
 
