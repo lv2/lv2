@@ -5,7 +5,6 @@ Checks: >
   *,
   -*-magic-numbers,
   -*-narrowing-conversions,
-  -*-uppercase-literal-suffix,
   -altera-*,
   -bugprone-easily-swappable-parameters,
   -bugprone-macro-parentheses,
@@ -20,3 +19,8 @@ Checks: >
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
 FormatStyle: file
+CheckOptions:
+  - key: hicpp-uppercase-literal-suffix.NewSuffixes
+    value: L;U;f
+  - key: readability-uppercase-literal-suffix.NewSuffixes
+    value: L;U;f

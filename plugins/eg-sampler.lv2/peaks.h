@@ -152,11 +152,11 @@ peaks_sender_send(PeaksSender*    sender,
     forge, &vec_frame, sizeof(float), uris->atom_Float);
 
   // Calculate how many peaks to send this update
-  const uint32_t chunk_size = MAX(1u, sender->n_samples / sender->n_peaks);
+  const uint32_t chunk_size = MAX(1U, sender->n_samples / sender->n_peaks);
   const uint32_t space      = forge->size - forge->offset;
   const uint32_t remaining  = sender->n_peaks - sender->current_offset;
   const uint32_t n_update =
-    MIN(remaining, MIN(n_frames / 4u, space / sizeof(float)));
+    MIN(remaining, MIN(n_frames / 4U, space / sizeof(float)));
 
   // Calculate peak (maximum magnitude) for each chunk
   for (uint32_t i = 0; i < n_update; ++i) {

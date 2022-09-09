@@ -202,7 +202,7 @@ lv2_midi_is_system_message(const uint8_t* msg)
   case 0xFD:
     return false;
   default:
-    return (msg[0] & 0xF0u) == 0xF0u;
+    return (msg[0] & 0xF0U) == 0xF0U;
   }
 }
 
@@ -214,7 +214,7 @@ static inline LV2_Midi_Message_Type
 lv2_midi_message_type(const uint8_t* msg)
 {
   if (lv2_midi_is_voice_message(msg)) {
-    return (LV2_Midi_Message_Type)(msg[0] & 0xF0u);
+    return (LV2_Midi_Message_Type)(msg[0] & 0xF0U);
   }
 
   if (lv2_midi_is_system_message(msg)) {

@@ -89,11 +89,11 @@ typedef struct {
 
 /** A status code for option functions. */
 typedef enum {
-  LV2_OPTIONS_SUCCESS         = 0u,       /**< Completed successfully. */
-  LV2_OPTIONS_ERR_UNKNOWN     = 1u,       /**< Unknown error. */
-  LV2_OPTIONS_ERR_BAD_SUBJECT = 1u << 1u, /**< Invalid/unsupported subject. */
-  LV2_OPTIONS_ERR_BAD_KEY     = 1u << 2u, /**< Invalid/unsupported key. */
-  LV2_OPTIONS_ERR_BAD_VALUE   = 1u << 3u  /**< Invalid/unsupported value. */
+  LV2_OPTIONS_SUCCESS         = 0U,       /**< Completed successfully. */
+  LV2_OPTIONS_ERR_UNKNOWN     = 1U,       /**< Unknown error. */
+  LV2_OPTIONS_ERR_BAD_SUBJECT = 1U << 1U, /**< Invalid/unsupported subject. */
+  LV2_OPTIONS_ERR_BAD_KEY     = 1U << 2U, /**< Invalid/unsupported key. */
+  LV2_OPTIONS_ERR_BAD_VALUE   = 1U << 3U  /**< Invalid/unsupported value. */
 } LV2_Options_Status;
 
 /**

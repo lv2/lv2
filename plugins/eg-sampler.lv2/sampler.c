@@ -134,7 +134,7 @@ load_sample(LV2_Log_Logger* logger, const char* path, const int sample_rate)
     return NULL;
   }
 
-  sf_seek(sndfile, 0ul, SEEK_SET);
+  sf_seek(sndfile, 0UL, SEEK_SET);
   sf_read_float(sndfile, data, info->frames * info->channels);
   sf_close(sndfile);
 
