@@ -1,11 +1,11 @@
-lv2 (1.18.9) unstable; urgency=medium
+lv2 (1.18.10) stable; urgency=medium
 
   * Fix includedir in pkg-config file
   * Fix missing example plugin UI binaries
   * Only install lv2specgen when required Python modules are found
   * Replace change history data with a plain text NEWS file
 
- -- David Robillard <d@drobilla.net>  Wed, 07 Sep 2022 00:19:12 +0000
+ -- David Robillard <d@drobilla.net>  Fri, 09 Sep 2022 17:26:51 +0000
 
 lv2 (1.18.8) stable; urgency=medium
 
