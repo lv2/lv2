@@ -150,8 +150,8 @@ def _check_specification(checker, spec_dir, is_stable=False):
 
     # Get all subjects that have an explicit rdf:type
     typed_subjects = set()
-    for typing in model.triples([None, rdf.type, None]):
-        typed_subjects.add(typing[0])
+    for subject in model.subjects(rdf.type, None):
+        typed_subjects.add(subject)
 
     # Check that all named and typed resources have labels and comments
     for subject in typed_subjects:

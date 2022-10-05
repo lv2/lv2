@@ -1,3 +1,9 @@
+lv2 (1.18.11) unstable; urgency=medium
+
+  * Fix pylint warning in test script
+
+ -- David Robillard <d@drobilla.net>  Wed, 05 Oct 2022 20:14:31 +0000
+
 lv2 (1.18.10) stable; urgency=medium
 
   * Fix includedir in pkg-config file
