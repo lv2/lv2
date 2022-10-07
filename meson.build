@@ -81,6 +81,9 @@ lv2_dep = declare_dependency(
   version: meson.project_version(),
 )
 
+# Override pkg-config dependency for internal meson dependants
+meson.override_dependency('lv2', lv2_dep)
+
 ##################
 # Specifications #
 ##################
