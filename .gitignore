@@ -10,3 +10,6 @@
 *.swp
 cscope.*
 tags
+
+# cached files when used as a meson subproject
+.meson-subproject-wrap-hash.txt
