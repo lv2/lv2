@@ -346,7 +346,9 @@ endif
 subdir('util')
 
 # Data and build tests
-subdir('test')
+if not get_option('tests').disabled()
+  subdir('test')
+endif
 
 if not meson.is_subproject()
   summary('Tests', not get_option('tests').disabled(), bool_yn: true)

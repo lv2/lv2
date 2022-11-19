@@ -122,17 +122,15 @@ test_names = [
 ]
 
 # Build and run tests
-if not get_option('tests').disabled()
-  foreach test_name : test_names
-    test(
+foreach test_name : test_names
+  test(
+    test_name,
+    executable(
       test_name,
-      executable(
-        test_name,
-        files('test_@0@.c'.format(test_name)),
-        c_args: c_suppressions,
-        dependencies: lv2_dep,
-      ),
-      suite: 'unit',
-    )
-  endforeach
-endif
+      files('test_@0@.c'.format(test_name)),
+      c_args: c_suppressions,
+      dependencies: lv2_dep,
+    ),
+    suite: 'unit',
+  )
+endforeach
