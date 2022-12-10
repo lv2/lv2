@@ -2,14 +2,10 @@
 # SPDX-License-Identifier: 0BSD OR ISC
 
 Checks: >
-  -*-magic-numbers,
   -*-narrowing-conversions,
   -bugprone-easily-swappable-parameters,
-  -bugprone-macro-parentheses,
   -cert-err33-c,
   -hicpp-signed-bitwise,
   -misc-unused-parameters,
-  -performance-no-int-to-ptr,
   -readability-function-cognitive-complexity,
-  -readability-identifier-length,
 InheritParentConfig: true

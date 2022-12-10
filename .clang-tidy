@@ -3,9 +3,16 @@
 
 Checks: >
   *,
+  -*-magic-numbers,
   -altera-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-macro-parentheses,
+  -clang-diagnostic-unused-function,
+  -clang-diagnostic-unused-macros,
   -llvm-header-guard,
   -llvmlibc-restrict-system-libc-headers,
+  -performance-no-int-to-ptr,
+  -readability-identifier-length,
 CheckOptions:
   - key: hicpp-uppercase-literal-suffix.NewSuffixes
     value: L;U;f

@@ -3,13 +3,13 @@
 
 Checks: >
   -*-else-after-return,
-  -*-magic-numbers,
   -bugprone-easily-swappable-parameters,
-  -bugprone-macro-parentheses,
   -bugprone-suspicious-include,
+  -cert-err33-c,
+  -clang-diagnostic-unused-parameter,
+  -cppcoreguidelines-avoid-non-const-global-variables,
   -llvmlibc-implementation-in-namespace,
+  -misc-unused-parameters,
   -modernize-use-trailing-return-type,
-  -performance-no-int-to-ptr,
   -readability-function-cognitive-complexity,
-  -readability-identifier-length,
 InheritParentConfig: true
