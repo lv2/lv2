@@ -1,8 +1,8 @@
 // Copyright 2008-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_DATA_ACCESS_H
-#define LV2_DATA_ACCESS_H
+#ifndef LV2_DATA_ACCESS_DATA_ACCESS_H
+#define LV2_DATA_ACCESS_DATA_ACCESS_H
 
 /**
    @defgroup data-access Data Access
@@ -57,4 +57,4 @@ typedef struct {
    @}
 */
 
-#endif /* LV2_DATA_ACCESS_H */
+#endif // LV2_DATA_ACCESS_DATA_ACCESS_H

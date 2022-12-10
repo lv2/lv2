@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_UNITS_H
-#define LV2_UNITS_H
+#ifndef LV2_UNITS_UNITS_H
+#define LV2_UNITS_UNITS_H
 
 /**
    @defgroup units Units
@@ -59,4 +59,4 @@
    @}
 */
 
-#endif /* LV2_UNITS_H */
+#endif // LV2_UNITS_UNITS_H

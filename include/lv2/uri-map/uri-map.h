@@ -1,8 +1,8 @@
 // Copyright 2008-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_URI_MAP_H
-#define LV2_URI_MAP_H
+#ifndef LV2_URI_MAP_URI_MAP_H
+#define LV2_URI_MAP_URI_MAP_H
 
 /**
    @defgroup uri-map URI Map
@@ -105,4 +105,4 @@ LV2_RESTORE_WARNINGS
    @}
 */
 
-#endif /* LV2_URI_MAP_H */
+#endif // LV2_URI_MAP_URI_MAP_H

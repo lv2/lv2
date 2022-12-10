@@ -6,6 +6,7 @@ Checks: >
   -bugprone-easily-swappable-parameters,
   -cert-err33-c,
   -hicpp-signed-bitwise,
+  -llvm-header-guard,
   -misc-unused-parameters,
   -readability-function-cognitive-complexity,
 InheritParentConfig: true

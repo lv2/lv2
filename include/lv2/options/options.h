@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_OPTIONS_H
-#define LV2_OPTIONS_H
+#ifndef LV2_OPTIONS_OPTIONS_H
+#define LV2_OPTIONS_OPTIONS_H
 
 /**
    @defgroup options Options
@@ -133,4 +133,4 @@ typedef struct {
    @}
 */
 
-#endif /* LV2_OPTIONS_H */
+#endif // LV2_OPTIONS_OPTIONS_H

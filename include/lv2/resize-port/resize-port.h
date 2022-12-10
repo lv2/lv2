@@ -1,8 +1,8 @@
 // Copyright 2007-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_RESIZE_PORT_H
-#define LV2_RESIZE_PORT_H
+#ifndef LV2_RESIZE_PORT_RESIZE_PORT_H
+#define LV2_RESIZE_PORT_RESIZE_PORT_H
 
 /**
    @defgroup resize-port Resize Port
@@ -73,4 +73,4 @@ typedef struct {
    @}
 */
 
-#endif /* LV2_RESIZE_PORT_H */
+#endif // LV2_RESIZE_PORT_RESIZE_PORT_H

@@ -43,4 +43,4 @@
    @}
 */
 
-#endif /* LV2_CORE_ATTRIBUTES_H */
+#endif // LV2_CORE_ATTRIBUTES_H

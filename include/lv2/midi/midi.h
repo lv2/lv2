@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_MIDI_H
-#define LV2_MIDI_H
+#ifndef LV2_MIDI_MIDI_H
+#define LV2_MIDI_MIDI_H
 
 /**
    @defgroup midi MIDI
@@ -232,4 +232,4 @@ lv2_midi_message_type(const uint8_t* msg)
    @}
 */
 
-#endif /* LV2_MIDI_H */
+#endif // LV2_MIDI_MIDI_H

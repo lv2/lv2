@@ -2,8 +2,8 @@
 // Copyright 2006-2011 Lars Luthman <lars.luthman@gmail.com>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_UI_H
-#define LV2_UI_H
+#ifndef LV2_UI_UI_H
+#define LV2_UI_UI_H
 
 /**
    @defgroup ui User Interfaces
@@ -526,4 +526,4 @@ typedef const LV2UI_Descriptor* (*LV2UI_DescriptorFunction)(uint32_t index);
    @}
 */
 
-#endif /* LV2_UI_H */
+#endif // LV2_UI_UI_H

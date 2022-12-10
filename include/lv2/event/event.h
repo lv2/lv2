@@ -2,8 +2,8 @@
 // Copyright 2006-2007 Lars Luthman <lars.luthman@gmail.com>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_EVENT_H
-#define LV2_EVENT_H
+#ifndef LV2_EVENT_EVENT_H
+#define LV2_EVENT_EVENT_H
 
 /**
    @defgroup event Event
@@ -282,4 +282,4 @@ LV2_RESTORE_WARNINGS
    @}
 */
 
-#endif /* LV2_EVENT_H */
+#endif // LV2_EVENT_EVENT_H

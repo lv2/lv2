@@ -37,4 +37,4 @@ map_fifths_uris(LV2_URID_Map* map, FifthsURIs* uris)
   uris->patch_value        = map->map(map->handle, LV2_PATCH__value);
 }
 
-#endif /* FIFTHS_URIS_H */
+#endif // FIFTHS_URIS_H

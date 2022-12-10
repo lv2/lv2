@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_ATOM_LOGGER_H
-#define LV2_ATOM_LOGGER_H
+#ifndef LV2_LOG_LOGGER_H
+#define LV2_LOG_LOGGER_H
 
 /**
    @defgroup logger Logger
@@ -141,4 +141,4 @@ lv2_log_warning(LV2_Log_Logger* logger, const char* fmt, ...)
    @}
 */
 
-#endif /* LV2_LOG_LOGGER_H */
+#endif // LV2_LOG_LOGGER_H

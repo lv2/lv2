@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_PARAMETERS_H
-#define LV2_PARAMETERS_H
+#ifndef LV2_PARAMETERS_PARAMETERS_H
+#define LV2_PARAMETERS_PARAMETERS_H
 
 /**
    @defgroup parameters Parameters
@@ -52,4 +52,4 @@
    @}
 */
 
-#endif /* LV2_PARAMETERS_H */
+#endif // LV2_PARAMETERS_PARAMETERS_H

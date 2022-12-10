@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_PATCH_H
-#define LV2_PATCH_H
+#ifndef LV2_PATCH_PATCH_H
+#define LV2_PATCH_PATCH_H
 
 /**
    @defgroup patch Patch
@@ -57,4 +57,4 @@
    @}
 */
 
-#endif /* LV2_PATCH_H */
+#endif // LV2_PATCH_PATCH_H

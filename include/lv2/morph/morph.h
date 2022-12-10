@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_MORPH_H
-#define LV2_MORPH_H
+#ifndef LV2_MORPH_MORPH_H
+#define LV2_MORPH_MORPH_H
 
 /**
    @defgroup morph Morph
@@ -32,4 +32,4 @@
    @}
 */
 
-#endif /* LV2_MORPH_H */
+#endif // LV2_MORPH_MORPH_H

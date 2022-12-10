@@ -1,8 +1,8 @@
 // Copyright 2008-2011 Stefano D'Angelo <zanga.mail@gmail.com>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_DYN_MANIFEST_H_INCLUDED
-#define LV2_DYN_MANIFEST_H_INCLUDED
+#ifndef LV2_DYNMANIFEST_DYNMANIFEST_H
+#define LV2_DYNMANIFEST_DYNMANIFEST_H
 
 /**
    @defgroup dynmanifest Dynamic Manifest
@@ -143,4 +143,4 @@ lv2_dyn_manifest_close(LV2_Dyn_Manifest_Handle handle);
    @}
 */
 
-#endif /* LV2_DYN_MANIFEST_H_INCLUDED */
+#endif // LV2_DYNMANIFEST_DYNMANIFEST_H

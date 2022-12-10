@@ -507,4 +507,4 @@ lv2_atom_object_get_typed(const LV2_Atom_Object* object, ...)
    @}
 */
 
-#endif /* LV2_ATOM_UTIL_H */
+#endif // LV2_ATOM_UTIL_H

@@ -667,4 +667,4 @@ LV2_RESTORE_WARNINGS
    @}
 */
 
-#endif /* LV2_ATOM_FORGE_H */
+#endif // LV2_ATOM_FORGE_H

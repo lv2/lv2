@@ -1,8 +1,8 @@
 // Copyright 2008-2015 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_EVENT_HELPERS_H
-#define LV2_EVENT_HELPERS_H
+#ifndef LV2_EVENT_EVENT_HELPERS_H
+#define LV2_EVENT_EVENT_HELPERS_H
 
 /**
    @file event-helpers.h Helper functions for the LV2 Event extension
@@ -239,4 +239,4 @@ LV2_RESTORE_WARNINGS
 } /* extern "C" */
 #endif
 
-#endif /* LV2_EVENT_HELPERS_H */
+#endif // LV2_EVENT_EVENT_HELPERS_H

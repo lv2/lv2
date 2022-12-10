@@ -1,6 +1,9 @@
 // Copyright 2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
+#ifndef LV2_CORE_LV2_UTIL_H
+#define LV2_CORE_LV2_UTIL_H
+
 /**
    @defgroup util Utilities
    @ingroup lv2core
@@ -88,3 +91,5 @@ lv2_features_query(const LV2_Feature* const* features, ...)
 /**
    @}
 */
+
+#endif // LV2_CORE_LV2_UTIL_H

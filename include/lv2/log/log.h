@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_LOG_H
-#define LV2_LOG_H
+#ifndef LV2_LOG_LOG_H
+#define LV2_LOG_LOG_H
 
 /**
    @defgroup log Log
@@ -97,4 +97,4 @@ typedef struct {
    @}
 */
 
-#endif /* LV2_LOG_H */
+#endif // LV2_LOG_LOG_H

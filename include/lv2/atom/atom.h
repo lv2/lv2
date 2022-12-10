@@ -1,8 +1,8 @@
 // Copyright 2008-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_ATOM_H
-#define LV2_ATOM_H
+#ifndef LV2_ATOM_ATOM_H
+#define LV2_ATOM_ATOM_H
 
 /**
    @defgroup atom Atom
@@ -244,4 +244,4 @@ typedef struct {
    @}
 */
 
-#endif /* LV2_ATOM_H */
+#endif // LV2_ATOM_ATOM_H

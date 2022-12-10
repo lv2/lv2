@@ -2,8 +2,8 @@
 // Copyright 2010 Leonard Ritter <paniq@paniq.org>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_STATE_H
-#define LV2_STATE_H
+#ifndef LV2_STATE_STATE_H
+#define LV2_STATE_STATE_H
 
 /**
    @defgroup state State
@@ -376,4 +376,4 @@ typedef struct {
    @}
 */
 
-#endif /* LV2_STATE_H */
+#endif // LV2_STATE_STATE_H

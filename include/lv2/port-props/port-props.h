@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_PORT_PROPS_H
-#define LV2_PORT_PROPS_H
+#ifndef LV2_PORT_PROPS_PORT_PROPS_H
+#define LV2_PORT_PROPS_PORT_PROPS_H
 
 /**
    @defgroup port-props Port Properties
@@ -37,4 +37,4 @@
    @}
 */
 
-#endif /* LV2_PORT_PROPS_H */
+#endif // LV2_PORT_PROPS_PORT_PROPS_H

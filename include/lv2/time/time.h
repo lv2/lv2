@@ -1,8 +1,8 @@
 // Copyright 2011-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_TIME_H
-#define LV2_TIME_H
+#ifndef LV2_TIME_TIME_H
+#define LV2_TIME_TIME_H
 
 /**
    @defgroup time Time
@@ -43,4 +43,4 @@
    @}
 */
 
-#endif /* LV2_TIME_H */
+#endif // LV2_TIME_TIME_H

@@ -1,8 +1,8 @@
 // Copyright 2007-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_BUF_SIZE_H
-#define LV2_BUF_SIZE_H
+#ifndef LV2_BUF_SIZE_BUF_SIZE_H
+#define LV2_BUF_SIZE_BUF_SIZE_H
 
 /**
    @defgroup buf-size Buffer Size
@@ -35,4 +35,4 @@
    @}
 */
 
-#endif /* LV2_BUF_SIZE_H */
+#endif // LV2_BUF_SIZE_BUF_SIZE_H

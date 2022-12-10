@@ -2,8 +2,8 @@
 // Copyright 2011 Gabriel M. Beddingfield <gabrbedd@gmail.com>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_URID_H
-#define LV2_URID_H
+#ifndef LV2_URID_URID_H
+#define LV2_URID_URID_H
 
 /**
    @defgroup urid URID
@@ -124,4 +124,4 @@ typedef struct {
    @}
 */
 
-#endif /* LV2_URID_H */
+#endif // LV2_URID_URID_H

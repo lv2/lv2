@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_WORKER_H
-#define LV2_WORKER_H
+#ifndef LV2_WORKER_WORKER_H
+#define LV2_WORKER_WORKER_H
 
 /**
    @defgroup worker Worker
@@ -167,4 +167,4 @@ typedef struct {
    @}
 */
 
-#endif /* LV2_WORKER_H */
+#endif // LV2_WORKER_WORKER_H

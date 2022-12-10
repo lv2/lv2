@@ -7,7 +7,6 @@ Checks: >
   -altera-*,
   -bugprone-easily-swappable-parameters,
   -bugprone-macro-parentheses,
-  -llvm-header-guard,
   -llvmlibc-restrict-system-libc-headers,
   -performance-no-int-to-ptr,
   -readability-identifier-length,

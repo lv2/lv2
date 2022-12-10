@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_PRESETS_H
-#define LV2_PRESETS_H
+#ifndef LV2_PRESETS_PRESETS_H
+#define LV2_PRESETS_PRESETS_H
 
 /**
    @defgroup presets Presets
@@ -32,4 +32,4 @@
    @}
 */
 
-#endif /* LV2_PRESETS_H */
+#endif // LV2_PRESETS_PRESETS_H

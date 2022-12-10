@@ -1,8 +1,8 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_PORT_GROUPS_H
-#define LV2_PORT_GROUPS_H
+#ifndef LV2_PORT_GROUPS_PORT_GROUPS_H
+#define LV2_PORT_GROUPS_PORT_GROUPS_H
 
 /**
    @defgroup port-groups Port Groups
@@ -61,4 +61,4 @@
    @}
 */
 
-#endif /* LV2_PORT_GROUPS_H */
+#endif // LV2_PORT_GROUPS_PORT_GROUPS_H

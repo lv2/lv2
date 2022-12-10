@@ -3,8 +3,8 @@
 // Copyright 2000-2002 Richard W.E. Furse, Paul Barton-Davis, Stefan Westerfeld.
 // SPDX-License-Identifier: ISC
 
-#ifndef LV2_H_INCLUDED
-#define LV2_H_INCLUDED
+#ifndef LV2_CORE_LV2_H
+#define LV2_CORE_LV2_H
 
 /**
    @defgroup lv2 LV2
@@ -469,4 +469,4 @@ typedef const LV2_Lib_Descriptor* (*LV2_Lib_Descriptor_Function)(
    @}
 */
 
-#endif /* LV2_H_INCLUDED */
+#endif // LV2_CORE_LV2_H
