@@ -71,7 +71,7 @@ if is_variable('cpp')
   test('cpp',
        executable(
          'test_build_cpp',
-         files('test_build.cpp'),
+         files('cpp/test_build.cpp'),
          cpp_args: cpp_suppressions,
          dependencies: [lv2_dep],
        ),
@@ -111,6 +111,12 @@ if get_option('strict')
     test('pylint', pylint, args: strict_python_scripts, suite: 'scripts')
   endif
 endif
+
+###################
+# Header Warnings #
+###################
+
+subdir('headers')
 
 ##############
 # Unit Tests #

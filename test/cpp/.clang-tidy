@@ -1,0 +1,26 @@
+# Copyright 2020-2022 David Robillard <d@drobilla.net>
+# SPDX-License-Identifier: 0BSD OR ISC
+
+Checks: >
+  -*-avoid-c-arrays,
+  -*-deprecated-headers,
+  -*-no-malloc,
+  -*-use-auto,
+  -bugprone-reserved-identifier,
+  -cert-dcl37-c,
+  -cert-dcl50-cpp,
+  -cert-dcl51-cpp,
+  -cppcoreguidelines-macro-usage,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-cstyle-cast,
+  -cppcoreguidelines-pro-type-vararg,
+  -hicpp-no-array-decay,
+  -hicpp-vararg,
+  -llvmlibc-callee-namespace,
+  -modernize-use-nullptr,
+  -modernize-use-using,
+  -readability-implicit-bool-conversion,
+InheritParentConfig: true
+

@@ -2,25 +2,14 @@
 # SPDX-License-Identifier: 0BSD OR ISC
 
 Checks: >
-  *,
   -*-magic-numbers,
   -*-narrowing-conversions,
-  -altera-*,
   -bugprone-easily-swappable-parameters,
   -bugprone-macro-parentheses,
   -cert-err33-c,
   -hicpp-signed-bitwise,
-  -llvm-header-guard,
-  -llvmlibc-*,
   -misc-unused-parameters,
   -performance-no-int-to-ptr,
   -readability-function-cognitive-complexity,
   -readability-identifier-length,
-WarningsAsErrors: '*'
-HeaderFilterRegex: '.*'
-FormatStyle: file
-CheckOptions:
-  - key: hicpp-uppercase-literal-suffix.NewSuffixes
-    value: L;U;f
-  - key: readability-uppercase-literal-suffix.NewSuffixes
-    value: L;U;f
+InheritParentConfig: true
