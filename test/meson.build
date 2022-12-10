@@ -62,7 +62,7 @@ test('c',
        'test_build_c',
        files('test_build.c'),
        c_args: c_suppressions,
-       dependencies: lv2_dep,
+       dependencies: [lv2_dep],
      ),
      suite: 'build')
 
@@ -73,7 +73,7 @@ if is_variable('cpp')
          'test_build_cpp',
          files('test_build.cpp'),
          cpp_args: cpp_suppressions,
-         dependencies: lv2_dep,
+         dependencies: [lv2_dep],
        ),
        suite: 'build')
 endif
@@ -129,7 +129,7 @@ foreach test_name : test_names
       test_name,
       files('test_@0@.c'.format(test_name)),
       c_args: c_suppressions,
-      dependencies: lv2_dep,
+      dependencies: [lv2_dep],
     ),
     suite: 'unit',
   )
