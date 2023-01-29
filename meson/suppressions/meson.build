@@ -124,6 +124,7 @@ if is_variable('cpp')
         '/wd4711', # function selected for automatic inline expansion
         '/wd4820', # padding added after data member
         '/wd5045', # will insert Spectre mitigation
+        '/wd5264', # const variable is not used
       ]
     endif
   endif
