@@ -3,10 +3,12 @@
 
 Checks: >
   -*-narrowing-conversions,
+  -bugprone-assignment-in-if-condition,
   -bugprone-easily-swappable-parameters,
   -cert-err33-c,
   -hicpp-signed-bitwise,
   -llvm-header-guard,
   -misc-unused-parameters,
+  -modernize-macro-to-enum,
   -readability-function-cognitive-complexity,
 InheritParentConfig: true
