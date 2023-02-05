@@ -68,7 +68,7 @@ state_map_init(
 {
   // Set dict entries from parameters
   unsigned i = 0;
-  va_list  args;
+  va_list  args; // NOLINT(cppcoreguidelines-init-variables)
   va_start(args, handle);
   for (const char* uri = NULL; (uri = va_arg(args, const char*)); ++i) {
     const char*     type  = va_arg(args, const char*);

@@ -90,7 +90,7 @@ LV2_LOG_FUNC(2, 3)
 static inline int
 lv2_log_error(LV2_Log_Logger* logger, const char* fmt, ...)
 {
-  va_list args;
+  va_list args; // NOLINT(cppcoreguidelines-init-variables)
   va_start(args, fmt);
   const int ret = lv2_log_vprintf(logger, logger->Error, fmt, args);
   va_end(args);
@@ -102,7 +102,7 @@ LV2_LOG_FUNC(2, 3)
 static inline int
 lv2_log_note(LV2_Log_Logger* logger, const char* fmt, ...)
 {
-  va_list args;
+  va_list args; // NOLINT(cppcoreguidelines-init-variables)
   va_start(args, fmt);
   const int ret = lv2_log_vprintf(logger, logger->Note, fmt, args);
   va_end(args);
@@ -114,7 +114,7 @@ LV2_LOG_FUNC(2, 3)
 static inline int
 lv2_log_trace(LV2_Log_Logger* logger, const char* fmt, ...)
 {
-  va_list args;
+  va_list args; // NOLINT(cppcoreguidelines-init-variables)
   va_start(args, fmt);
   const int ret = lv2_log_vprintf(logger, logger->Trace, fmt, args);
   va_end(args);
@@ -126,7 +126,7 @@ LV2_LOG_FUNC(2, 3)
 static inline int
 lv2_log_warning(LV2_Log_Logger* logger, const char* fmt, ...)
 {
-  va_list args;
+  va_list args; // NOLINT(cppcoreguidelines-init-variables)
   va_start(args, fmt);
   const int ret = lv2_log_vprintf(logger, logger->Warning, fmt, args);
   va_end(args);

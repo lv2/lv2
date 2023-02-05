@@ -33,6 +33,13 @@ if is_variable('cc')
         '-Wno-switch-enum',
         '-Wno-unused-parameter',
       ]
+
+      if host_machine.system() == 'windows'
+        c_suppressions += [
+          '-Wno-format-nonliteral',
+        ]
+      endif
+
     elif cc.get_id() == 'gcc'
       c_suppressions += [
         '-Wno-bad-function-cast',
@@ -91,7 +98,7 @@ if is_variable('cpp')
 
   if get_option('strict')
     if cpp.get_id() in ['clang', 'emscripten']
-      cpp_suppressions = [
+      cpp_suppressions += [
         '-Wno-cast-align',
         '-Wno-cast-qual',
         '-Wno-documentation-unknown-command',
@@ -100,8 +107,14 @@ if is_variable('cpp')
         '-Wno-reserved-id-macro',
       ]
 
+      if host_machine.system() == 'windows'
+        cpp_suppressions += [
+          '-Wno-format-nonliteral',
+        ]
+      endif
+
     elif cpp.get_id() == 'gcc'
-      cpp_suppressions = [
+      cpp_suppressions += [
         '-Wno-cast-align',
         '-Wno-cast-qual',
         '-Wno-inline',
@@ -117,7 +130,7 @@ if is_variable('cpp')
       endif
 
     elif cpp.get_id() == 'msvc'
-      cpp_suppressions = [
+      cpp_suppressions += [
         '/wd4514', # unreferenced inline function has been removed
         '/wd4706', # assignment within conditional expression
         '/wd4710', # function not inlined

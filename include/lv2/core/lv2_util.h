@@ -65,7 +65,7 @@ lv2_features_data(const LV2_Feature* const* features, const char* const uri)
 static inline const char*
 lv2_features_query(const LV2_Feature* const* features, ...)
 {
-  va_list args;
+  va_list args; // NOLINT(cppcoreguidelines-init-variables)
   va_start(args, features);
 
   const char* uri = NULL;

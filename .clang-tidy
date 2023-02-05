@@ -5,11 +5,13 @@ Checks: >
   *,
   -*-magic-numbers,
   -altera-*,
+  -bugprone-assignment-in-if-condition,
   -bugprone-easily-swappable-parameters,
   -bugprone-macro-parentheses,
   -clang-diagnostic-unused-function,
   -clang-diagnostic-unused-macros,
   -llvmlibc-restrict-system-libc-headers,
+  -modernize-macro-to-enum,
   -performance-no-int-to-ptr,
   -readability-identifier-length,
 CheckOptions:

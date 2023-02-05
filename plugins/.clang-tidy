@@ -9,6 +9,5 @@ Checks: >
   -hicpp-signed-bitwise,
   -llvm-header-guard,
   -misc-unused-parameters,
-  -modernize-macro-to-enum,
   -readability-function-cognitive-complexity,
 InheritParentConfig: true

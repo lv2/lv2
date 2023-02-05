@@ -12,6 +12,12 @@ if get_option('strict')
       '-Wno-padded',
     ]
 
+    if host_machine.system() == 'windows'
+      header_c_suppressions += [
+        '-Wno-format-nonliteral',
+      ]
+    endif
+
   elif cc.get_id() == 'gcc'
     header_c_suppressions += [
       '-Wno-cast-align',

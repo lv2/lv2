@@ -356,7 +356,7 @@ lv2_atom_object_body_get(uint32_t size, const LV2_Atom_Object_Body* body, ...)
   int n_queries = 0;
 
   /* Count number of keys so we can short-circuit when done */
-  va_list args;
+  va_list args; // NOLINT(cppcoreguidelines-init-variables)
   va_start(args, body);
   for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
     if (!va_arg(args, const LV2_Atom**)) {
@@ -411,7 +411,7 @@ lv2_atom_object_get(const LV2_Atom_Object* object, ...)
   int n_queries = 0;
 
   /* Count number of keys so we can short-circuit when done */
-  va_list args;
+  va_list args; // NOLINT(cppcoreguidelines-init-variables)
   va_start(args, object);
   for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
     if (!va_arg(args, const LV2_Atom**)) {
@@ -467,7 +467,7 @@ lv2_atom_object_get_typed(const LV2_Atom_Object* object, ...)
   int n_queries = 0;
 
   /* Count number of keys so we can short-circuit when done */
-  va_list args;
+  va_list args; // NOLINT(cppcoreguidelines-init-variables)
   va_start(args, object);
   for (n_queries = 0; va_arg(args, uint32_t); ++n_queries) {
     if (!va_arg(args, const LV2_Atom**) || !va_arg(args, uint32_t)) {
