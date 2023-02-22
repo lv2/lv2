@@ -1112,7 +1112,6 @@ def load_tags(path, docdir):
             and cn.tagName == "compound"
             and cn.getAttribute("kind") != "page"
         ):
-
             name = getChildText(cn, "name")
             filename = getChildText(cn, "filename")
             anchor = getChildText(cn, "anchor")
