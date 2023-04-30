@@ -14,7 +14,7 @@
 if is_variable('cc')
   c_suppressions = []
 
-  if get_option('strict')
+  if get_option('warning_level') == 'everything'
     if cc.get_id() in ['clang', 'emscripten']
       c_suppressions += [
         '-Wno-bad-function-cast',
@@ -31,7 +31,6 @@ if is_variable('cc')
         '-Wno-shorten-64-to-32',
         '-Wno-sign-conversion',
         '-Wno-switch-enum',
-        '-Wno-unused-parameter',
       ]
 
       if host_machine.system() == 'windows'
@@ -57,7 +56,6 @@ if is_variable('cc')
         '-Wno-switch-enum',
         '-Wno-unsuffixed-float-constants',
         '-Wno-unused-const-variable',
-        '-Wno-unused-parameter',
       ]
 
       if target_machine.system() == 'windows'
@@ -69,7 +67,6 @@ if is_variable('cc')
     elif cc.get_id() == 'msvc'
       c_suppressions += [
         '/wd4061', # enumerator in switch is not explicitly handled
-        '/wd4100', # unreferenced formal parameter
         '/wd4244', # conversion with possible loss of data
         '/wd4267', # conversion from size_t to a smaller type
         '/wd4310', # cast truncates constant value
@@ -86,6 +83,16 @@ if is_variable('cc')
     endif
   endif
 
+  if cc.get_id() in ['clang', 'emscripten']
+    c_suppressions += ['-Wno-unused-parameter']
+  elif cc.get_id() == 'gcc'
+    c_suppressions += ['-Wno-unused-parameter']
+  elif cc.get_id() == 'msvc'
+    c_suppressions += [
+      '/wd4100', # unreferenced formal parameter
+    ]
+  endif
+
   c_suppressions = cc.get_supported_arguments(c_suppressions)
 endif
 
@@ -96,7 +103,7 @@ endif
 if is_variable('cpp')
   cpp_suppressions = []
 
-  if get_option('strict')
+  if get_option('warning_level') == 'everything'
     if cpp.get_id() in ['clang', 'emscripten']
       cpp_suppressions += [
         '-Wno-cast-align',

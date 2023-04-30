@@ -4,6 +4,9 @@
 option('docs', type: 'feature', value: 'auto', yield: true,
        description: 'Build documentation')
 
+option('lint', type: 'boolean', value: false, yield: true,
+       description: 'Run code quality checks')
+
 option('lv2dir', type: 'string', value: '', yield: true,
        description: 'LV2 bundle installation directory')
 
@@ -15,9 +18,6 @@ option('online_docs', type: 'boolean', value: 'false', yield: true,
 
 option('plugins', type: 'feature', value: 'auto', yield: true,
        description: 'Build example plugins')
-
-option('strict', type: 'boolean', value: false, yield: true,
-       description: 'Enable ultra-strict warnings')
 
 option('tests', type: 'feature', value: 'auto', yield: true,
        description: 'Build tests')
