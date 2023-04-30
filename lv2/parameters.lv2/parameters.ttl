@@ -202,4 +202,3 @@ param:CompressorControls
 	] , [
 		lv2:designation param:ratio
 	] .
-

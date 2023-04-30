@@ -43,4 +43,3 @@ morph:currentType
 	rdfs:domain morph:MorphPort ;
 	rdfs:label "current type" ;
 	rdfs:comment "The currently active type of the port." .
-

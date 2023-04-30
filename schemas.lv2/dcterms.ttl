@@ -337,4 +337,3 @@ dcterms:title
 	rdfs:isDefinedBy dcterms: ;
 	rdfs:label "title"@en-us ;
 	rdfs:range rdfs:Literal .
-

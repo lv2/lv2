@@ -118,4 +118,3 @@ time:speed
 	rdfs:range xsd:float ;
 	rdfs:label "speed" ;
 	rdfs:comment "The rate of the progress of time as a fraction of normal speed." .
-

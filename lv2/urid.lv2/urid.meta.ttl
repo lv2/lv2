@@ -47,4 +47,3 @@ LV2_Descriptor::instantiate() with URI LV2_URID__unmap and data pointed to an
 instance of LV2_URID_Unmap.
 
 """^^lv2:Markdown .
-

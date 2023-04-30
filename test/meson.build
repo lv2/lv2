@@ -33,7 +33,11 @@ if get_option('lint')
   endif
 
   # Check that specification data is strictly formatted
-  serdi = find_program('serdi', required: get_option('tests'))
+  serdi = find_program(
+    'serdi',
+    required: get_option('tests'),
+    version: '>= 0.31.5',
+  )
   native_build = not meson.is_cross_build() and host_machine.system() != 'windows'
   if serdi.found() and native_build
     lv2_check_syntax = files(lv2_source_root / 'scripts' / 'lv2_check_syntax.py')

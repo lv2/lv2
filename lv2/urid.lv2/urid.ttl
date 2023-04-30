@@ -19,4 +19,3 @@ urid:unmap
 	a lv2:Feature ;
 	rdfs:label "unmap" ;
 	rdfs:comment "A feature to unmap URIDs back to strings." .
-

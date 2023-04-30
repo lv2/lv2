@@ -82,4 +82,3 @@ ev:inheritsTimeStamp
 	rdfs:range lv2:Port ;
 	rdfs:label "inherits time stamp type" ;
 	rdfs:comment "Output port inherits time stamp types from an input port." .
-

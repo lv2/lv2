@@ -246,4 +246,3 @@ ui:peakProtocol
 	a ui:PortProtocol ;
 	rdfs:label "peak protocol" ;
 	rdfs:comment "A protocol for sending continuous peak measurements of an audio signal." .
-

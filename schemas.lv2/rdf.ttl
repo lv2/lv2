@@ -126,4 +126,3 @@ rdf:value
 	rdfs:isDefinedBy rdf: ;
 	rdfs:label "value" ;
 	rdfs:range rdfs:Resource .
-

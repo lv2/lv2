@@ -12,4 +12,3 @@
 	a doap:Project ;
 	rdfs:seeAlso <meta.ttl> ,
 		<people.ttl> .
-

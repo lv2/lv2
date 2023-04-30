@@ -33,4 +33,3 @@ rsz:minimumSize
 	rdfs:range xsd:nonNegativeInteger ;
 	rdfs:label "minimum size" ;
 	rdfs:comment "Minimum buffer size required by a port, in bytes." .
-

@@ -706,4 +706,3 @@ doap:wiki
 		"wiki"@en ,
 		"wiki"@es ,
 		"wiki"@fr .
-

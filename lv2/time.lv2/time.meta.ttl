@@ -67,4 +67,3 @@ rate of 0.0 is stopped, 1.0 is rolling at normal speed, 0.5 is rolling at half
 speed, -1.0 is reverse, and so on.
 
 """^^lv2:Markdown .
-

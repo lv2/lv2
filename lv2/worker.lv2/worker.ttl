@@ -21,4 +21,3 @@ work:schedule
 	a lv2:Feature ;
 	rdfs:label "work schedule" ;
 	rdfs:comment "The work scheduling feature provided by a host." .
-

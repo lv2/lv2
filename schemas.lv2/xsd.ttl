@@ -45,7 +45,8 @@ xsd:byte
 	owl:withRestrictions (
 		[
 			xsd:maxInclusive "127"^^xsd:byte
-		] [
+		]
+		[
 			xsd:minInclusive "-128"^^xsd:byte
 		]
 	) .
@@ -99,7 +100,8 @@ xsd:duration
 	owl:withRestrictions (
 		[
 			xsd:pattern "-?P([0-9]+Y)?([0-9]+M)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\\.[0-9]+)?S)?)?"
-		] [
+		]
+		[
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -112,7 +114,8 @@ xsd:float
 	owl:withRestrictions (
 		[
 			xsd:pattern "-?INF|NaN|[+-]?(([0-9]+[.]?[0-9]*)|([0-9]*[.]?[0-9]+))([eE][-+]?[0-9]+)?"
-		] [
+		]
+		[
 			xsd:whiteSpace "collapse"
 		]
 	) .
@@ -142,7 +145,8 @@ xsd:int
 	owl:withRestrictions (
 		[
 			xsd:maxInclusive "2147483647"^^xsd:int
-		] [
+		]
+		[
 			xsd:minInclusive "-2147483648"^^xsd:int
 		]
 	) .
@@ -154,7 +158,8 @@ xsd:integer
 	owl:withRestrictions (
 		[
 			xsd:pattern "[-+]?[0-9]+"
-		] [
+		]
+		[
 			xsd:fractionDigits 0
 		]
 	) .
@@ -176,7 +181,8 @@ xsd:long
 	owl:withRestrictions (
 		[
 			xsd:maxInclusive "9223372036854775807"^^xsd:long
-		] [
+		]
+		[
 			xsd:minInclusive "-9223372036854775808"^^xsd:long
 		]
 	) .
@@ -222,7 +228,8 @@ xsd:nonNegativeInteger
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+]?[0-9]+"
-		] [
+		]
+		[
 			xsd:minInclusive 0
 		]
 	) .
@@ -234,7 +241,8 @@ xsd:nonPositiveInteger
 	owl:withRestrictions (
 		[
 			xsd:pattern "(0|-[0-9]+)"
-		] [
+		]
+		[
 			xsd:maxInclusive 0
 		]
 	) .
@@ -258,7 +266,8 @@ xsd:positiveInteger
 	owl:withRestrictions (
 		[
 			xsd:pattern "[+]?[0-9]*[1-9]+[0-9]*"
-		] [
+		]
+		[
 			xsd:minInclusive 1
 		]
 	) .
@@ -270,7 +279,8 @@ xsd:short
 	owl:withRestrictions (
 		[
 			xsd:maxInclusive "32767"^^xsd:short
-		] [
+		]
+		[
 			xsd:minInclusive "-32768"^^xsd:short
 		]
 	) .
@@ -351,4 +361,3 @@ xsd:whiteSpace
 			]
 		)
 	] .
-

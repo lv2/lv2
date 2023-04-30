@@ -120,4 +120,3 @@ This should be provided as an option by hosts that support event ports
 auxiliary buffers large enough to copy the input.
 
 """^^lv2:Markdown .
-

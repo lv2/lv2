@@ -7,4 +7,3 @@
 	rdfs:label "instance access" ;
 	rdfs:comment "A feature that provides access to a plugin instance." ;
 	rdfs:seeAlso <instance-access.meta.ttl> .
-

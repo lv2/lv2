@@ -58,4 +58,3 @@ pset:preset
 	rdfs:range pset:Preset ;
 	rdfs:label "preset" ;
 	rdfs:comment "The preset currently applied to a plugin instance." .
-

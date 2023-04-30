@@ -45,4 +45,3 @@ log:log
 	a lv2:Feature ;
 	rdfs:label "log" ;
 	rdfs:comment "Logging feature." .
-

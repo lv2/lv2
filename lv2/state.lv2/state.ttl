@@ -57,4 +57,3 @@ state:StateChanged
 	a rdfs:Class ;
 	rdfs:label "State Changed" ;
 	rdfs:comment "A notification that the internal state of the plugin has changed." .
-

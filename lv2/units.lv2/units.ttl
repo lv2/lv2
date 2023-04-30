@@ -375,4 +375,3 @@ units:midiNote
 	rdfs:comment "A MIDI note number." ;
 	units:render "MIDI note %d" ;
 	units:symbol "note" .
-

@@ -55,4 +55,3 @@ units defined in this extension include conversion definitions where it makes
 sense to do so.
 
 """^^lv2:Markdown .
-

@@ -79,4 +79,3 @@ be useful for saving state, or notifying a plugin instance at run-time about a
 preset change.
 
 """^^lv2:Markdown .
-

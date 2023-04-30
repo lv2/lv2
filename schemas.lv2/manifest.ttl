@@ -28,4 +28,3 @@ rdfs:
 <http://www.w3.org/2001/XMLSchema#>
 	a owl:Ontology ;
 	rdfs:seeAlso <xsd.ttl> .
-

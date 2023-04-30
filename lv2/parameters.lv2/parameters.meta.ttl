@@ -36,4 +36,3 @@ and wet percentages can be calculated from the following equations:
 Typically, maximum value of 1 or 100 and minimum value of 0 should be used.
 
 """^^lv2:Markdown .
-

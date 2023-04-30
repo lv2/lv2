@@ -177,4 +177,3 @@ where:
   * `lower` and <code>upper</code> are the bounds.
 
 """^^lv2:Markdown .
-

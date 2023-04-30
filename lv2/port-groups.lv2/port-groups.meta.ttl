@@ -107,4 +107,3 @@ does not depend on a particular speaker configuration; a decoder can be used to
 convert an ambisonic stream for any speaker configuration.
 
 """^^lv2:Markdown .
-

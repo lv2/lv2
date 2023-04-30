@@ -362,4 +362,3 @@ midi:velocity
 	rdfs:label "velocity" ;
 	rdfs:range midi:HexByte ;
 	rdfs:comment "The velocity of a note message (0 to 127)." .
-

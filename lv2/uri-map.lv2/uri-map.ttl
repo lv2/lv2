@@ -10,4 +10,3 @@
 	rdfs:label "LV2 URI Map" ;
 	rdfs:comment "A feature for mapping URIs to integers." ;
 	rdfs:seeAlso <uri-map.meta.ttl> .
-

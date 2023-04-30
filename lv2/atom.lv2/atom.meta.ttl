@@ -447,4 +447,3 @@ This protocol applies to atom ports.  The host must transfer the complete atom
 contained in the port, including header.
 
 """^^lv2:Markdown .
-

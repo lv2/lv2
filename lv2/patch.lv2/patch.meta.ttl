@@ -303,4 +303,3 @@ interfaces to present appropriate controls.  For example:
         patch:writable eg:title .
 
 """^^lv2:Markdown .
-

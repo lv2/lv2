@@ -77,4 +77,3 @@ pprops:rangeSteps
 	rdfs:range xsd:nonNegativeInteger ;
 	rdfs:label "range steps" ;
 	rdfs:comment "The number of even steps the range should be divided into." .
-

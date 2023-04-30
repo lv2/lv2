@@ -75,4 +75,3 @@ The currently active type of the port.  This is for dynamic use as an option
 and SHOULD NOT be listed in the static plugin data.
 
 """^^lv2:Markdown .
-

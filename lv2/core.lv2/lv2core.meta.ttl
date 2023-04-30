@@ -702,4 +702,3 @@ but should not be considered a part of the main signal chain.  Sidechain ports
 SHOULD be lv2:connectionOptional, and may be ignored by hosts.
 
 """^^lv2:Markdown .
-

@@ -244,4 +244,3 @@ atom:atomTransfer
 	a ui:PortProtocol ;
 	rdfs:label "atom transfer" ;
 	rdfs:comment "A port protocol for transferring atoms." .
-

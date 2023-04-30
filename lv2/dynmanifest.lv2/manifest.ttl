@@ -6,4 +6,3 @@
 	lv2:minorVersion 1 ;
 	lv2:microVersion 6 ;
 	rdfs:seeAlso <dynmanifest.ttl> .
-

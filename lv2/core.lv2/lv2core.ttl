@@ -670,4 +670,3 @@ lv2:MIDIPlugin
 	rdfs:subClassOf lv2:Plugin ;
 	rdfs:label "MIDI Plugin" ;
 	rdfs:comment "A plugin that primarily processes MIDI messages." .
-

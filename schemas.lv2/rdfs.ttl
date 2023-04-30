@@ -121,4 +121,3 @@ rdfs:subPropertyOf
 	rdfs:isDefinedBy rdfs: ;
 	rdfs:label "sub-property of" ;
 	rdfs:range rdf:Property .
-

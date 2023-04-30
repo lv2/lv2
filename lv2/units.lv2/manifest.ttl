@@ -6,4 +6,3 @@
 	lv2:minorVersion 5 ;
 	lv2:microVersion 12 ;
 	rdfs:seeAlso <units.ttl> .
-

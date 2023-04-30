@@ -609,4 +609,3 @@ foaf:yahooChatID
 	rdfs:label "Yahoo chat ID" ;
 	rdfs:range rdfs:Literal ;
 	rdfs:subPropertyOf foaf:nick .
-

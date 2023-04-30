@@ -48,4 +48,3 @@ meta:bmwiedemann
 	a foaf:Person ;
 	foaf:name "Bernhard M. Wiedemann" ;
 	foaf:mbox <bwiedemann@suse.de> .
-

@@ -41,4 +41,3 @@ opts:supportedOption
 	rdfs:range rdf:Property ;
 	rdfs:label "supported option" ;
 	rdfs:comment "An option supported or by the instance." .
-

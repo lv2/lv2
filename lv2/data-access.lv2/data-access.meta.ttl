@@ -27,4 +27,3 @@ LV2_Descriptor::extension_data() with URI LV2_DATA_ACCESS_URI and data pointed
 to an instance of LV2_Extension_Data_Feature.
 
 """^^lv2:Markdown .
-

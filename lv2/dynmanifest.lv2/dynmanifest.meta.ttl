@@ -86,4 +86,3 @@ All relative URIs in the generated data MUST be relative to the base path that
 would be used to parse a normal LV2 manifest (the bundle path).
 
 """^^lv2:Markdown .
-

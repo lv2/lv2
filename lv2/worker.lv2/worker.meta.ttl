@@ -57,4 +57,3 @@ the plugin MAY use it to schedule work in the calling context.  The plugin MUST
 NOT assume any relationship between different schedule features.
 
 """^^lv2:Markdown .
-

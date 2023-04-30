@@ -7,4 +7,3 @@
 	rdfs:label "data access" ;
 	rdfs:comment "A feature that provides access to plugin extension data." ;
 	rdfs:seeAlso <data-access.meta.ttl> .
-

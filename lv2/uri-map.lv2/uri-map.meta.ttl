@@ -26,4 +26,3 @@ extensibility of RDF with the performance of integers (or centrally defined
 enumerations).
 
 """^^lv2:Markdown .
-

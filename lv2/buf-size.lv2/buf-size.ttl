@@ -65,4 +65,3 @@ bufsz:sequenceSize
 	rdfs:label "sequence size" ;
 	rdfs:comment "The maximum size of a sequence, in bytes." ;
 	rdfs:range xsd:nonNegativeInteger .
-

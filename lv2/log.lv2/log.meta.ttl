@@ -81,4 +81,3 @@ the host must pass an LV2_Feature to LV2_Descriptor::instantiate() with URI
 LV2_LOG__log and data pointed to an instance of LV2_Log_Log.
 
 """^^lv2:Markdown .
-

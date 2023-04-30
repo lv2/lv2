@@ -618,4 +618,3 @@ owl:withRestrictions
 	rdfs:isDefinedBy owl: ;
 	rdfs:label "with restrictions" ;
 	rdfs:range rdf:List .
-

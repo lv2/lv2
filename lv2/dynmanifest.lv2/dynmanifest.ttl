@@ -21,4 +21,3 @@ dman:DynManifest
 		rdfs:comment "A DynManifest MUST have at least one lv2:binary."
 	] ;
 	rdfs:comment "Dynamic manifest for an LV2 binary." .
-

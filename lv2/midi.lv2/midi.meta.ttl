@@ -70,4 +70,3 @@ midi:statusMask
 This is a status byte with the lower nibble set to zero.
 
 """^^lv2:Markdown .
-

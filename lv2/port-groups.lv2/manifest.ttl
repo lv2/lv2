@@ -6,4 +6,3 @@
 	lv2:minorVersion 1 ;
 	lv2:microVersion 4 ;
 	rdfs:seeAlso <port-groups.ttl> .
-

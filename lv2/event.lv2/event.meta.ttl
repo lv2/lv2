@@ -157,4 +157,3 @@ their output type on an input port so the host can make more sense of the
 plugin and provide a more sensible interface.
 
 """^^lv2:Markdown .
-

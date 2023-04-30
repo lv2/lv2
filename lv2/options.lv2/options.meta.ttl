@@ -94,4 +94,3 @@ The host SHOULD provide a value for the specified option if one is known, or
 provide the user an opportunity to specify one if possible.
 
 """^^lv2:Markdown .
-
