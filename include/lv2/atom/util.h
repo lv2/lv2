@@ -28,6 +28,8 @@
 #include <stdint.h>
 #include <string.h>
 
+// NOLINTBEGIN(bugprone-macro-parentheses)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -36,7 +38,9 @@ extern "C" {
 static inline uint32_t
 lv2_atom_pad_size(uint32_t size)
 {
-  return (size + 7U) & (~7U);
+  static const uint32_t mask = 7U;
+
+  return (size + mask) & ~mask;
 }
 
 /** Return the total size of `atom`, including the header. */
@@ -500,6 +504,8 @@ lv2_atom_object_get_typed(const LV2_Atom_Object* object, ...)
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
+// NOLINTEND(bugprone-macro-parentheses)
 
 /**
    @}

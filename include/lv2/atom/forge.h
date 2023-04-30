@@ -316,11 +316,18 @@ lv2_atom_forge_write(LV2_Atom_Forge* forge, const void* data, uint32_t size)
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_string_body(LV2_Atom_Forge* forge, const char* str, uint32_t len)
 {
-  LV2_Atom_Forge_Ref out = lv2_atom_forge_raw(forge, str, len);
-  if (out && (out = lv2_atom_forge_raw(forge, "", 1))) {
-    lv2_atom_forge_pad(forge, len + 1);
+  const LV2_Atom_Forge_Ref s = lv2_atom_forge_raw(forge, str, len);
+  if (!s) {
+    return s;
   }
-  return out;
+
+  const LV2_Atom_Forge_Ref t = lv2_atom_forge_raw(forge, "", 1);
+  if (!t) {
+    return t;
+  }
+
+  lv2_atom_forge_pad(forge, len + 1U);
+  return t;
 }
 
 /**
