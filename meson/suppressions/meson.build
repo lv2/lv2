@@ -1,11 +1,9 @@
-# Copyright 2020-2022 David Robillard <d@drobilla.net>
+# Copyright 2020-2023 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
-# Project-specific warning suppressions.
-#
-# This should be used in conjunction with the generic "warnings" sibling that
-# enables all reasonable warnings for the compiler.  It lives here just to keep
-# the top-level meson.build more readable.
+# Project-specific warning suppressions
+
+warning_level = get_option('warning_level')
 
 #####
 # C #
@@ -14,7 +12,7 @@
 if is_variable('cc')
   c_suppressions = []
 
-  if get_option('warning_level') == 'everything'
+  if warning_level == 'everything'
     if cc.get_id() in ['clang', 'emscripten']
       c_suppressions += [
         '-Wno-bad-function-cast',
@@ -103,7 +101,7 @@ endif
 if is_variable('cpp')
   cpp_suppressions = []
 
-  if get_option('warning_level') == 'everything'
+  if warning_level == 'everything'
     if cpp.get_id() in ['clang', 'emscripten']
       cpp_suppressions += [
         '-Wno-cast-align',
