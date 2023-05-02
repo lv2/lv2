@@ -12,6 +12,12 @@ if get_option('warning_level') == 'everything'
       '-Wno-padded',
     ]
 
+    if not meson.is_cross_build()
+      header_c_suppressions += [
+        '-Wno-poison-system-directories',
+      ]
+    endif
+
     if host_machine.system() == 'windows'
       header_c_suppressions += [
         '-Wno-format-nonliteral',

@@ -31,6 +31,12 @@ if is_variable('cc')
         '-Wno-switch-enum',
       ]
 
+      if not meson.is_cross_build()
+        c_suppressions += [
+          '-Wno-poison-system-directories',
+        ]
+      endif
+
       if host_machine.system() == 'windows'
         c_suppressions += [
           '-Wno-format-nonliteral',
@@ -112,6 +118,12 @@ if is_variable('cpp')
         '-Wno-padded',
         '-Wno-reserved-id-macro',
       ]
+
+      if not meson.is_cross_build()
+        cpp_suppressions += [
+          '-Wno-poison-system-directories',
+        ]
+      endif
 
       if host_machine.system() == 'windows'
         cpp_suppressions += [
