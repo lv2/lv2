@@ -104,6 +104,7 @@ if is_variable('cpp')
   if warning_level == 'everything'
     if cpp.get_id() in ['clang', 'emscripten']
       cpp_suppressions += [
+        '-Wno-c++98-compat',
         '-Wno-cast-align',
         '-Wno-cast-qual',
         '-Wno-documentation-unknown-command',
