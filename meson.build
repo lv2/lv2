@@ -348,9 +348,21 @@ if not get_option('tests').disabled()
 endif
 
 if not meson.is_subproject()
-  summary('Tests', not get_option('tests').disabled(), bool_yn: true)
-  summary('Documentation', build_docs, bool_yn: true)
-  summary('Prefix', get_option('prefix'), section: 'Paths')
-  summary('LV2 bundles', lv2dir, section: 'Paths')
-  summary('Headers', get_option('prefix') / get_option('includedir'), section: 'Paths')
+  summary(
+    {
+      'Tests': not get_option('tests').disabled(),
+      'Documentation': build_docs,
+    },
+    bool_yn: true,
+    section: 'Components',
+  )
+
+  summary(
+    {
+      'Install prefix': get_option('prefix'),
+      'Headers': get_option('prefix') / get_option('includedir'),
+      'LV2 bundles': lv2dir,
+    },
+    section: 'Directories',
+  )
 endif
