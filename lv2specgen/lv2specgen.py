@@ -111,15 +111,15 @@ def getLiteralString(s):
 
 
 def isResource(n):
-    return type(n) == rdflib.URIRef
+    return isinstance(n, rdflib.URIRef)
 
 
 def isBlank(n):
-    return type(n) == rdflib.BNode
+    return isinstance(n, rdflib.BNode)
 
 
 def isLiteral(n):
-    return type(n) == rdflib.Literal
+    return isinstance(n, rdflib.Literal)
 
 
 def niceName(uri):
