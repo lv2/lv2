@@ -147,6 +147,7 @@ lv2_atom_forge_init(LV2_Atom_Forge* forge, LV2_URID_Map* map)
 static inline LV2_Atom*
 lv2_atom_forge_deref(LV2_Atom_Forge* forge, LV2_Atom_Forge_Ref ref)
 {
+  // NOLINTNEXTLINE(performance-no-int-to-ptr)
   return forge->buf ? (LV2_Atom*)ref : forge->deref(forge->handle, ref);
 }
 
