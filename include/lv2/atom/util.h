@@ -373,7 +373,7 @@ lv2_atom_object_body_get(uint32_t size, const LV2_Atom_Object_Body* body, ...)
   LV2_ATOM_OBJECT_BODY_FOREACH (body, size, prop) {
     va_start(args, body);
     for (int i = 0; i < n_queries; ++i) {
-      uint32_t         qkey = va_arg(args, uint32_t);
+      const uint32_t   qkey = va_arg(args, uint32_t);
       const LV2_Atom** qval = va_arg(args, const LV2_Atom**);
       if (qkey == prop->key && !*qval) {
         *qval = &prop->value;
@@ -428,7 +428,7 @@ lv2_atom_object_get(const LV2_Atom_Object* object, ...)
   LV2_ATOM_OBJECT_FOREACH (object, prop) {
     va_start(args, object);
     for (int i = 0; i < n_queries; ++i) {
-      uint32_t         qkey = va_arg(args, uint32_t);
+      const uint32_t   qkey = va_arg(args, uint32_t);
       const LV2_Atom** qval = va_arg(args, const LV2_Atom**);
       if (qkey == prop->key && !*qval) {
         *qval = &prop->value;

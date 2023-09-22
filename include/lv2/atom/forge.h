@@ -306,7 +306,7 @@ lv2_atom_forge_pad(LV2_Atom_Forge* forge, uint32_t written)
 static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_write(LV2_Atom_Forge* forge, const void* data, uint32_t size)
 {
-  LV2_Atom_Forge_Ref out = lv2_atom_forge_raw(forge, data, size);
+  const LV2_Atom_Forge_Ref out = lv2_atom_forge_raw(forge, data, size);
   if (out) {
     lv2_atom_forge_pad(forge, size);
   }
@@ -495,7 +495,7 @@ lv2_atom_forge_vector(LV2_Atom_Forge* forge,
     {(uint32_t)sizeof(LV2_Atom_Vector_Body) + n_elems * child_size,
      forge->Vector},
     {child_size, child_type}};
-  LV2_Atom_Forge_Ref out = lv2_atom_forge_write(forge, &a, sizeof(a));
+  const LV2_Atom_Forge_Ref out = lv2_atom_forge_write(forge, &a, sizeof(a));
   if (out) {
     lv2_atom_forge_write(forge, elems, child_size * n_elems);
   }
