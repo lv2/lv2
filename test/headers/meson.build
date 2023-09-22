@@ -10,6 +10,7 @@ if get_option('warning_level') == 'everything'
       '-Wno-cast-qual',
       '-Wno-declaration-after-statement',
       '-Wno-padded',
+      '-Wno-unsafe-buffer-usage',
     ]
 
     if not meson.is_cross_build()

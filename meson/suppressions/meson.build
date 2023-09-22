@@ -17,6 +17,7 @@ if is_variable('cc')
       c_suppressions += [
         '-Wno-bad-function-cast',
         '-Wno-cast-align',
+        '-Wno-cast-function-type-strict',
         '-Wno-cast-qual',
         '-Wno-declaration-after-statement',
         '-Wno-documentation-unknown-command',
@@ -29,6 +30,7 @@ if is_variable('cc')
         '-Wno-shorten-64-to-32',
         '-Wno-sign-conversion',
         '-Wno-switch-enum',
+        '-Wno-unsafe-buffer-usage',
       ]
 
       if not meson.is_cross_build()
@@ -117,6 +119,7 @@ if is_variable('cpp')
         '-Wno-nullability-extension',
         '-Wno-padded',
         '-Wno-reserved-id-macro',
+        '-Wno-unsafe-buffer-usage',
       ]
 
       if not meson.is_cross_build()
