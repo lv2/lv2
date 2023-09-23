@@ -54,6 +54,8 @@ if cc.get_id() == 'clang'
   ]
 endif
 
+header_c_suppressions = cc.get_supported_arguments(header_c_suppressions)
+
 test(
   'headers',
   executable(
