@@ -6,18 +6,24 @@ ui_sources = files('sampler_ui.c')
 bundle_name = 'eg-sampler.lv2'
 data_filenames = ['manifest.ttl.in', 'sampler.ttl', 'click.wav']
 
-samplerate_dep = dependency('samplerate',
-                            version: '>= 0.1.0',
-                            required: get_option('plugins'))
+samplerate_dep = dependency(
+  'samplerate',
+  required: get_option('plugins'),
+  version: '>= 0.1.0',
+)
 
-sndfile_dep = dependency('sndfile',
-                         version: '>= 1.0.0',
-                         required: get_option('plugins'))
+sndfile_dep = dependency(
+  'sndfile',
+  required: get_option('plugins'),
+  version: '>= 1.0.0',
+)
 
-gtk2_dep = dependency('gtk+-2.0',
-                      include_type: 'system',
-                      required: get_option('plugins'),
-                      version: '>= 2.18.0')
+gtk2_dep = dependency(
+  'gtk+-2.0',
+  include_type: 'system',
+  required: get_option('plugins'),
+  version: '>= 2.18.0',
+)
 
 if samplerate_dep.found() and sndfile_dep.found()
   module = shared_library(
@@ -57,7 +63,7 @@ if samplerate_dep.found() and sndfile_dep.found()
     if cc.get_id() == 'gcc'
       ui_suppressions += ['-Wno-strict-overflow']
     endif
-  
+
     shared_library(
       'sampler_ui',
       ui_sources,

@@ -18,8 +18,8 @@ if not get_option('docs').disabled()
   asciidoc = find_program('asciidoc', required: get_option('docs'))
 
   if asciidoc.found()
-    book_inputs = files(
-      'README.txt',
+    book_inputs = files('README.txt')
+    book_inputs += files(
       'eg-amp.lv2/README.txt',
       'eg-amp.lv2/amp.c',
       'eg-amp.lv2/amp.ttl',

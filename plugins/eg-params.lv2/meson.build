@@ -19,7 +19,7 @@ module = shared_library(
 config = configuration_data(
   {
     'LIB_EXT': '.' + module.full_path().split('.')[-1],
-  }
+  },
 )
 
 foreach filename : data_filenames

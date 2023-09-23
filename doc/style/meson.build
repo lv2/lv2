@@ -1,10 +1,7 @@
 # Copyright 2022 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
-style_files = files(
-  'pygments.css',
-  'style.css'
-)
+style_files = files('pygments.css', 'style.css')
 
 foreach file : style_files
   configure_file(

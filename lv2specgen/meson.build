@@ -11,12 +11,13 @@ lv2specgen_command_prefix = [
   '--list-email=' + lv2_list_email,
   '--list-page=' + lv2_list_page,
   '--style-dir=' + lv2_source_root / 'doc' / 'style',
-  '--template', files('template.html'),
+  '--template',
+  files('template.html'),
 ]
 
 if is_variable('lv2_tags')
   lv2specgen_command_prefix += [
-    '--tags', lv2_tags.full_path(), # TODO: Remove full_path() in meson 0.60.0
+    ['--tags', lv2_tags.full_path()], # TODO: Remove full_path() in meson 0.60.0
   ]
 endif
 

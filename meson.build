@@ -1,15 +1,18 @@
 # Copyright 2021-2022 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
-project('lv2', ['c'],
-        version: '1.18.11',
-        license: 'ISC',
-        meson_version: '>= 0.56.0',
-        default_options: [
-          'b_ndebug=if-release',
-          'buildtype=release',
-          'c_std=c99',
-        ])
+project(
+  'lv2',
+  ['c'],
+  default_options: [
+    'b_ndebug=if-release',
+    'buildtype=release',
+    'c_std=c99',
+  ],
+  license: 'ISC',
+  meson_version: '>= 0.56.0',
+  version: '1.18.11',
+)
 
 lv2_docdir = get_option('datadir') / 'doc' / 'lv2'
 lv2_source_root = meson.current_source_dir()
@@ -185,8 +188,10 @@ check_python = pymod.find_installation(
   required: get_option('tests'),
 )
 
-if (check_python.found() and
-    check_python.language_version().version_compare('<3.7'))
+if (
+  check_python.found()
+  and check_python.language_version().version_compare('<3.7')
+)
   warning('Python 3.7 is required for tests')
   check_python = disabler()
 endif

@@ -45,6 +45,7 @@ if build_docs
       command: lv2specgen_command_prefix + [
         '--docdir=../../c/html',
         '--style-uri=../../style/style.css',
+      ] + [
         '@INPUT@',
         '@OUTPUT@',
       ],

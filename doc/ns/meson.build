@@ -24,6 +24,7 @@ if build_docs
     command: lv2specgen_command_prefix + [
       '--docdir=../c/html',
       '--style-uri=../style/style.css',
+    ] + [
       '@INPUT@',
       '@OUTPUT@',
     ],
@@ -55,12 +56,14 @@ subdir('extensions')
 # Index #
 #########
 
-lv2_build_index = find_program(lv2_source_root / 'scripts' / 'lv2_build_index.py')
+lv2_build_index = find_program(
+  lv2_source_root / 'scripts' / 'lv2_build_index.py',
+)
 
 lv2_build_index_command = [
   lv2_build_index,
-  '--lv2-version', meson.project_version(),
-  '--lv2-source-root', lv2_source_root,
+  ['--lv2-version', meson.project_version()],
+  ['--lv2-source-root', lv2_source_root],
 ]
 
 if get_option('online_docs')

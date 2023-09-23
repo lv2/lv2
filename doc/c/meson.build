@@ -11,7 +11,7 @@ if doxygen.found()
       'LV2_SRCDIR': lv2_source_root,
       'LV2_BUILDDIR': lv2_build_root,
       'LV2_VERSION': meson.project_version(),
-    }
+    },
   )
 
   reference_doxygen = configure_file(

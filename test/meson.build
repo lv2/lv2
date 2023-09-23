@@ -20,8 +20,8 @@ if get_option('lint')
       codespell,
       args: [
         '-d',
-        '-q', '3',
-        '-S', ','.join(ignore),
+        ['-q', '3'],
+        ['-S', ','.join(ignore)],
         lv2_source_root / 'doc',
         lv2_source_root / 'lv2',
         lv2_source_root / 'lv2specgen',
@@ -38,23 +38,27 @@ if get_option('lint')
     required: get_option('tests'),
     version: '>= 0.31.5',
   )
-  native_build = not meson.is_cross_build() and host_machine.system() != 'windows'
+  native_build = (
+    not meson.is_cross_build()
+    and host_machine.system() != 'windows'
+  )
   if serdi.found() and native_build
-    lv2_check_syntax = files(lv2_source_root / 'scripts' / 'lv2_check_syntax.py')
+    lv2_check_syntax = files(
+      lv2_source_root / 'scripts' / 'lv2_check_syntax.py',
+    )
 
-    test('syntax',
-         lv2_check_syntax,
-         args: ['--serdi', serdi.full_path()] + spec_files + schema_data,
-         suite: 'data')
+    test(
+      'syntax',
+      lv2_check_syntax,
+      args: ['--serdi', serdi.full_path()] + spec_files + schema_data,
+      suite: 'data',
+    )
   endif
 
   # Check that specification data validates
   sord_validate = find_program('sord_validate', required: get_option('tests'))
   if sord_validate.found()
-    test('valid',
-         sord_validate,
-         args: spec_files + schema_data,
-         suite: 'data')
+    test('valid', sord_validate, args: spec_files + schema_data, suite: 'data')
   endif
 endif
 
@@ -63,25 +67,29 @@ endif
 ########
 
 # Check that all the headers compile cleanly in C
-test('c',
-     executable(
-       'test_build_c',
-       files('test_build.c'),
-       c_args: c_suppressions,
-       dependencies: [lv2_dep],
-     ),
-     suite: 'build')
+test(
+  'c',
+  executable(
+    'test_build_c',
+    files('test_build.c'),
+    c_args: c_suppressions,
+    dependencies: [lv2_dep],
+  ),
+  suite: 'build',
+)
 
 # Check that all the headers compile cleanly in C++
 if is_variable('cpp')
-  test('cpp',
-       executable(
-         'test_build_cpp',
-         files('cpp/test_build.cpp'),
-         cpp_args: cpp_suppressions,
-         dependencies: [lv2_dep],
-       ),
-       suite: 'build')
+  test(
+    'cpp',
+    executable(
+      'test_build_cpp',
+      files('cpp/test_build.cpp'),
+      cpp_args: cpp_suppressions,
+      dependencies: [lv2_dep],
+    ),
+    suite: 'build',
+  )
 endif
 
 ##########
@@ -104,7 +112,12 @@ if get_option('lint')
   black = find_program('black', required: get_option('tests'))
   if black.found()
     black_opts = ['-l', '79', '-q', '--check']
-    test('black', black, args: black_opts + all_python_scripts, suite: 'scripts')
+    test(
+      'black',
+      black,
+      args: black_opts + all_python_scripts,
+      suite: 'scripts',
+    )
   endif
 
   # Check scripts for errors with flake8

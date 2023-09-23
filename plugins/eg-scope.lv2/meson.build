@@ -6,10 +6,12 @@ ui_sources = files('examploscope_ui.c')
 bundle_name = 'eg-scope.lv2'
 data_filenames = ['manifest.ttl.in', 'examploscope.ttl.in']
 
-gtk2_dep = dependency('gtk+-2.0',
-                      include_type: 'system',
-                      required: get_option('plugins'),
-                      version: '>= 2.18.0')
+gtk2_dep = dependency(
+  'gtk+-2.0',
+  include_type: 'system',
+  required: get_option('plugins'),
+  version: '>= 2.18.0',
+)
 
 module = shared_library(
   'examploscope',
@@ -25,7 +27,7 @@ module = shared_library(
 config = configuration_data(
   {
     'LIB_EXT': '.' + module.full_path().split('.')[-1],
-  }
+  },
 )
 
 foreach filename : data_filenames
