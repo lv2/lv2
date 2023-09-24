@@ -5,7 +5,7 @@
 #define LV2_CORE_LV2_UTIL_H
 
 /**
-   @defgroup util Utilities
+   @defgroup lv2_util Utilities
    @ingroup lv2core
    @{
 */

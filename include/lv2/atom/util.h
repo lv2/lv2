@@ -13,7 +13,7 @@
 */
 
 /**
-   @defgroup util Utilities
+   @defgroup atom_util Utilities
    @ingroup atom
 
    Utilities for working with atoms.
