@@ -208,6 +208,10 @@ dl.el {
   font-family: "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace, fixed;
 }
 
+.ttc {
+  display: none;
+}
+
 pre.fragment {
   border: 1px solid #C4C4C4;
   background-color: #F9F9F9;
