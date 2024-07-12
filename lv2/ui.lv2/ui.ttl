@@ -95,13 +95,13 @@ ui:binary
 	a rdf:Property ,
 		owl:ObjectProperty ;
 	owl:sameAs lv2:binary ;
-	owl:deprecated "true"^^xsd:boolean ;
+	owl:deprecated true ;
 	rdfs:label "binary" ;
 	rdfs:comment "The shared library that a UI resides in." .
 
 ui:makeSONameResident
 	a lv2:Feature ;
-	owl:deprecated "true"^^xsd:boolean ;
+	owl:deprecated true ;
 	rdfs:label "make SO name resident" ;
 	rdfs:comment "UI binary must not be unloaded." .
 
@@ -188,7 +188,7 @@ ui:notifyType
 ui:resize
 	a lv2:Feature ,
 		lv2:ExtensionData ;
-	owl:deprecated "true"^^xsd:boolean ;
+	owl:deprecated true ;
 	rdfs:label "resize" ;
 	rdfs:comment """A feature that provides control of, and notifications about, a UI's size.""" .
 

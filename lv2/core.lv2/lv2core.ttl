@@ -374,7 +374,7 @@ lv2:connectionOptional
 
 lv2:reportsLatency
 	a lv2:PortProperty ;
-	owl:deprecated "true"^^xsd:boolean ;
+	owl:deprecated true ;
 	rdfs:label "reports latency" ;
 	rdfs:comment "Control port value is the plugin latency in frames." .
 

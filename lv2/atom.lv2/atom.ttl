@@ -161,7 +161,7 @@ atom:Resource
 	rdfs:subClassOf atom:Object ;
 	rdfs:label "Resource" ;
 	rdfs:comment "A named collection of properties with a URI." ;
-	owl:deprecated "true"^^xsd:boolean ;
+	owl:deprecated true ;
 	atom:cType "LV2_Atom_Object" .
 
 atom:Blank
@@ -169,7 +169,7 @@ atom:Blank
 	rdfs:subClassOf atom:Object ;
 	rdfs:label "Blank" ;
 	rdfs:comment "An anonymous collection of properties without a URI." ;
-	owl:deprecated "true"^^xsd:boolean ;
+	owl:deprecated true ;
 	atom:cType "LV2_Atom_Object" .
 
 atom:Sound
