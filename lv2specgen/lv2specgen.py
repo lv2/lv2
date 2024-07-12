@@ -1327,7 +1327,7 @@ def specgen(
     template = template.replace("@DESCRIPTION@", docs)
 
     now = int(os.environ.get("SOURCE_DATE_EPOCH", time.time()))
-    build_date = datetime.datetime.utcfromtimestamp(now)
+    build_date = datetime.datetime.fromtimestamp(now, datetime.timezone.utc)
     template = template.replace("@DATE@", build_date.strftime("%F"))
     template = template.replace("@TIME@", build_date.strftime("%F %H:%M UTC"))
 
