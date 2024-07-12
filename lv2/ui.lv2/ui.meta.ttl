@@ -99,6 +99,16 @@ not be used in the same process.
 
 """^^lv2:Markdown .
 
+ui:Gtk4UI
+	lv2:documentation """
+
+The host must guarantee that the Gtk+ 4 library has been initialised and the
+Glib main loop is running before the UI is instantiated.  Note that this UI
+type is not suitable for binary distribution since multiple versions of Gtk can
+not be used in the same process.
+
+"""^^lv2:Markdown .
+
 ui:Qt4UI
 	lv2:documentation """
 
@@ -113,6 +123,16 @@ ui:Qt5UI
 	lv2:documentation """
 
 The host must guarantee that the Qt5 library has been initialised and the Qt5
+main loop is running before the UI is instantiated.  Note that this UI type is
+not suitable for binary distribution since multiple versions of Qt can not be
+used in the same process.
+
+"""^^lv2:Markdown .
+
+ui:Qt6UI
+	lv2:documentation """
+
+The host must guarantee that the Qt6 library has been initialised and the Qt6
 main loop is running before the UI is instantiated.  Note that this UI type is
 not suitable for binary distribution since multiple versions of Qt can not be
 used in the same process.

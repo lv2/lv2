@@ -34,6 +34,13 @@ ui:Gtk3UI
 	rdfs:label "GTK3 UI" ;
 	rdfs:comment "A UI where the widget is a pointer to a Gtk+ 3.0 GtkWidget." .
 
+ui:Gtk4UI
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf ui:UI ;
+	rdfs:label "GTK4 UI" ;
+	rdfs:comment "A UI where the widget is a pointer to a Gtk+ 4.0 GtkWidget." .
+
 ui:Qt4UI
 	a rdfs:Class ,
 		owl:Class ;
@@ -47,6 +54,13 @@ ui:Qt5UI
 	rdfs:subClassOf ui:UI ;
 	rdfs:label "Qt5 UI" ;
 	rdfs:comment "A UI where the widget is a pointer to a Qt5 QWidget." .
+
+ui:Qt6UI
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf ui:UI ;
+	rdfs:label "Qt6 UI" ;
+	rdfs:comment "A UI where the widget is a pointer to a Qt6 QWidget." .
 
 ui:X11UI
 	a rdfs:Class ,

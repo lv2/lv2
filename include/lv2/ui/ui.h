@@ -29,11 +29,13 @@
 
 #define LV2_UI__CocoaUI          LV2_UI_PREFIX "CocoaUI"           ///< http://lv2plug.in/ns/extensions/ui#CocoaUI
 #define LV2_UI__Gtk3UI           LV2_UI_PREFIX "Gtk3UI"            ///< http://lv2plug.in/ns/extensions/ui#Gtk3UI
+#define LV2_UI__Gtk4UI           LV2_UI_PREFIX "Gtk4UI"            ///< http://lv2plug.in/ns/extensions/ui#Gtk4UI
 #define LV2_UI__GtkUI            LV2_UI_PREFIX "GtkUI"             ///< http://lv2plug.in/ns/extensions/ui#GtkUI
 #define LV2_UI__PortNotification LV2_UI_PREFIX "PortNotification"  ///< http://lv2plug.in/ns/extensions/ui#PortNotification
 #define LV2_UI__PortProtocol     LV2_UI_PREFIX "PortProtocol"      ///< http://lv2plug.in/ns/extensions/ui#PortProtocol
 #define LV2_UI__Qt4UI            LV2_UI_PREFIX "Qt4UI"             ///< http://lv2plug.in/ns/extensions/ui#Qt4UI
 #define LV2_UI__Qt5UI            LV2_UI_PREFIX "Qt5UI"             ///< http://lv2plug.in/ns/extensions/ui#Qt5UI
+#define LV2_UI__Qt6UI            LV2_UI_PREFIX "Qt6UI"             ///< http://lv2plug.in/ns/extensions/ui#Qt6UI
 #define LV2_UI__UI               LV2_UI_PREFIX "UI"                ///< http://lv2plug.in/ns/extensions/ui#UI
 #define LV2_UI__WindowsUI        LV2_UI_PREFIX "WindowsUI"         ///< http://lv2plug.in/ns/extensions/ui#WindowsUI
 #define LV2_UI__X11UI            LV2_UI_PREFIX "X11UI"             ///< http://lv2plug.in/ns/extensions/ui#X11UI
