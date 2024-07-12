@@ -17,7 +17,7 @@ lv2:Specification
 		owl:Class ;
 	rdfs:subClassOf doap:Project ;
 	rdfs:label "Specification" ;
-	rdfs:comment "An LV2 specifiation." .
+	rdfs:comment "An LV2 specification." .
 
 lv2:Markdown
 	a rdfs:Datatype ;

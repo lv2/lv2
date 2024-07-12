@@ -18,7 +18,7 @@ typedef struct {
   LV2_URID atom_eventTransfer;
   LV2_URID param_sampleRate;
 
-  /* URIs defined for this plugin.  It is best to re-use existing URIs as
+  /* URIs defined for this plugin.  It is best to reuse existing URIs as
      much as possible, but plugins may need more vocabulary specific to their
      needs.  These are used as types and properties for plugin:UI
      communication, as well as for saving state. */
