@@ -36,7 +36,7 @@ if get_option('lint')
   serdi = find_program(
     'serdi',
     required: get_option('tests'),
-    version: '>= 0.31.5',
+    version: '>= 0.32.0',
   )
   native_build = (
     not meson.is_cross_build()
