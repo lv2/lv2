@@ -36,6 +36,7 @@
 #define LV2_CORE__AnalyserPlugin     LV2_CORE_PREFIX "AnalyserPlugin"      ///< http://lv2plug.in/ns/lv2core#AnalyserPlugin
 #define LV2_CORE__AudioPort          LV2_CORE_PREFIX "AudioPort"           ///< http://lv2plug.in/ns/lv2core#AudioPort
 #define LV2_CORE__BandpassPlugin     LV2_CORE_PREFIX "BandpassPlugin"      ///< http://lv2plug.in/ns/lv2core#BandpassPlugin
+#define LV2_CORE__BandstopPlugin     LV2_CORE_PREFIX "BandstopPlugin"      ///< http://lv2plug.in/ns/lv2core#BandstopPlugin
 #define LV2_CORE__CVPort             LV2_CORE_PREFIX "CVPort"              ///< http://lv2plug.in/ns/lv2core#CVPort
 #define LV2_CORE__ChorusPlugin       LV2_CORE_PREFIX "ChorusPlugin"        ///< http://lv2plug.in/ns/lv2core#ChorusPlugin
 #define LV2_CORE__CombPlugin         LV2_CORE_PREFIX "CombPlugin"          ///< http://lv2plug.in/ns/lv2core#CombPlugin

@@ -524,6 +524,13 @@ lv2:BandpassPlugin
 	rdfs:label "Bandpass Filter Plugin" ;
 	rdfs:comment "A filter that attenuates frequencies outside of some band." .
 
+lv2:BandstopPlugin
+	a rdfs:Class ,
+		owl:Class ;
+	rdfs:subClassOf lv2:FilterPlugin ;
+	rdfs:label "Bandstop Filter Plugin" ;
+	rdfs:comment "A filter that attenuates frequencies inside of some band." .
+
 lv2:HighpassPlugin
 	a rdfs:Class ,
 		owl:Class ;
