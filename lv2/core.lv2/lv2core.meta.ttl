@@ -126,7 +126,7 @@ If the value has no explicit datatype, it is assumed to be a valid XHTML Basic
 1.1 fragment suitable for use as the content of the `body` element of a page.
 
 XHTML Basic is a W3C Recommendation which defines a simplified subset of XHTML
-intended to be reasonable to implement with limited resources, for exampe on
+intended to be reasonable to implement with limited resources, for example on
 embedded devices. See [XHTML Basic, Section
 3](http://www.w3.org/TR/xhtml-basic/#s_xhtmlmodules) for a list of valid tags.
 
