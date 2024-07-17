@@ -164,7 +164,7 @@ read_set_file(const SamplerURIs* uris, const LV2_Atom_Object* obj)
     return NULL;
   }
 
-  return (const char*)LV2_ATOM_BODY_CONST(value);
+  return (const char*)&value[1];
 }
 
 #endif /* SAMPLER_URIS_H */

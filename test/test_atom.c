@@ -101,7 +101,7 @@ main(void)
   lv2_atom_forge_key(&forge, eg_path);
   LV2_Atom_String* path = (LV2_Atom_String*)lv2_atom_forge_deref(
     &forge, lv2_atom_forge_uri(&forge, pstr, pstr_len));
-  char* pbody = (char*)LV2_ATOM_BODY(path);
+  char* pbody = (char*)&path[1];
   if (!!strcmp(pbody, pstr)) {
     return test_fail("%s != \"%s\"\n", pbody, pstr);
   }
@@ -112,7 +112,7 @@ main(void)
   lv2_atom_forge_key(&forge, eg_uri);
   LV2_Atom_String* uri = (LV2_Atom_String*)lv2_atom_forge_deref(
     &forge, lv2_atom_forge_uri(&forge, ustr, ustr_len));
-  char* ubody = (char*)LV2_ATOM_BODY(uri);
+  char* ubody = (char*)&uri[1];
   if (!!strcmp(ubody, ustr)) {
     return test_fail("%s != \"%s\"\n", ubody, ustr);
   }
@@ -130,7 +130,7 @@ main(void)
   lv2_atom_forge_key(&forge, eg_string);
   LV2_Atom_String* string = (LV2_Atom_String*)lv2_atom_forge_deref(
     &forge, lv2_atom_forge_string(&forge, "hello", strlen("hello")));
-  char* sbody = (char*)LV2_ATOM_BODY(string);
+  char* sbody = (char*)&string[1];
   if (!!strcmp(sbody, "hello")) {
     return test_fail("%s != \"hello\"\n", sbody);
   }
@@ -144,7 +144,7 @@ main(void)
                            strlen("bonjour"),
                            0,
                            urid_map(NULL, "http://lexvo.org/id/term/fr")));
-  char* lbody = (char*)LV2_ATOM_CONTENTS(LV2_Atom_Literal, literal);
+  char* lbody = (char*)&literal[1];
   if (!!strcmp(lbody, "bonjour")) {
     return test_fail("%s != \"bonjour\"\n", lbody);
   }

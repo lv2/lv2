@@ -182,7 +182,7 @@ lv2_atom_sequence_append_event(LV2_Atom_Sequence*    seq,
 static inline LV2_Atom*
 lv2_atom_tuple_begin(const LV2_Atom_Tuple* tup)
 {
-  return (LV2_Atom*)(LV2_ATOM_BODY(tup));
+  return (LV2_Atom*)tup + 1U;
 }
 
 /** Return true iff `i` has reached the end of `body`. */

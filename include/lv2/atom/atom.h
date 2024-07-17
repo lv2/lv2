@@ -68,13 +68,13 @@ extern "C" {
    @param type The type of the atom, for example LV2_Atom_String.
    @param atom A variable-sized atom.
 */
-#define LV2_ATOM_CONTENTS(type, atom) ((void*)((uint8_t*)(atom) + sizeof(type)))
+#define LV2_ATOM_CONTENTS(type, atom) ((void*)((type*)(atom) + 1U))
 
 /**
    Const version of LV2_ATOM_CONTENTS.
 */
 #define LV2_ATOM_CONTENTS_CONST(type, atom) \
-  ((const void*)((const uint8_t*)(atom) + sizeof(type)))
+  ((const void*)((const type*)(atom) + 1U))
 
 /**
    Return a pointer to the body of an Atom.  The "body" of an atom is the
