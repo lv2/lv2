@@ -5,6 +5,7 @@ Checks: >
   -*-narrowing-conversions,
   -bugprone-assignment-in-if-condition,
   -bugprone-easily-swappable-parameters,
+  -bugprone-multi-level-implicit-pointer-conversion,
   -bugprone-suspicious-realloc-usage,
   -cert-err33-c,
   -hicpp-signed-bitwise,
