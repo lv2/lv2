@@ -60,6 +60,20 @@ The plugin would then respond with the same patch:Set message as above.
 In this case, the plugin instance is implicitly the patch:subject,
 but a specific subject can also be given for deeper control.
 
+The plugin also may be an initiator of changing legacy lv2:port values. For that purpose it can emit another type of a patch:Set message:
+
+    :::turtle
+    [
+        a patch:Set ;
+        patch:portIndex 42 ;
+        patch:value 440.0 ;
+    ]
+
+In this case the host is responsible for handling this message and delivering the new value to the plugin and it's user interface via the ui:portNotification protocol.
+For this case, the patch:value property should be of xsd:float type.
+The plugin's custom user interface may handle such patch:Set message but take into account that host can reject the value passed in patch:Set message in case when more
+prioritized port change action like automation or user input occurred.
+
 """^^lv2:Markdown .
 
 patch:Copy
