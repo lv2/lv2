@@ -1,4 +1,5 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
+// Copyright 2024 Vladimir Sadovnikov <sadko4u@gmail.com>
 // SPDX-License-Identifier: ISC
 
 #ifndef LV2_PATCH_PATCH_H
@@ -41,6 +42,7 @@
 #define LV2_PATCH__body           LV2_PATCH_PREFIX "body"            ///< http://lv2plug.in/ns/ext/patch#body
 #define LV2_PATCH__context        LV2_PATCH_PREFIX "context"         ///< http://lv2plug.in/ns/ext/patch#context
 #define LV2_PATCH__destination    LV2_PATCH_PREFIX "destination"     ///< http://lv2plug.in/ns/ext/patch#destination
+#define LV2_PATCH__portIndex      LV2_PATCH_PREFIX "portIndex"       ///< http://lv2plug.in/ns/ext/patch#portIndex
 #define LV2_PATCH__property       LV2_PATCH_PREFIX "property"        ///< http://lv2plug.in/ns/ext/patch#property
 #define LV2_PATCH__readable       LV2_PATCH_PREFIX "readable"        ///< http://lv2plug.in/ns/ext/patch#readable
 #define LV2_PATCH__remove         LV2_PATCH_PREFIX "remove"          ///< http://lv2plug.in/ns/ext/patch#remove
