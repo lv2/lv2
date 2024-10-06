@@ -1,7 +1,7 @@
 # Copyright 2021-2022 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
-option('docs', type: 'feature', value: 'auto', yield: true,
+option('docs', type: 'feature', yield: true,
        description: 'Build documentation')
 
 option('lint', type: 'boolean', value: false, yield: true,
@@ -16,10 +16,10 @@ option('old_headers', type: 'boolean', value: true, yield: true,
 option('online_docs', type: 'boolean', value: false, yield: true,
        description: 'Build documentation for online hosting')
 
-option('plugins', type: 'feature', value: 'auto', yield: true,
+option('plugins', type: 'feature', yield: true,
        description: 'Build example plugins')
 
-option('tests', type: 'feature', value: 'auto', yield: true,
+option('tests', type: 'feature', yield: true,
        description: 'Build tests')
 
 option('title', type: 'string', value: 'LV2',
