@@ -1,12 +1,15 @@
 // Copyright 2012-2018 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
+#undef NDEBUG
+
 #include "lv2/atom/atom.h"
 #include "lv2/atom/forge.h"
 #include "lv2/atom/util.h"
 #include "lv2/log/log.h"
 #include "lv2/urid/urid.h"
 
+#include <assert.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,8 +35,11 @@ urid_map(LV2_URID_Map_Handle handle, const char* uri)
     }
   }
 
-  uris             = (char**)realloc(uris, ++n_uris * sizeof(char*));
-  uris[n_uris - 1] = copy_string(uri);
+  char** const new_uris = (char**)realloc(uris, (n_uris + 1) * sizeof(char*));
+  assert(new_uris);
+
+  uris           = new_uris;
+  uris[n_uris++] = copy_string(uri);
   return n_uris;
 }
 
