@@ -222,7 +222,7 @@ on_expose_event(GtkWidget* widget, GdkEventExpose* ev, gpointer data)
     const float chn_y_offset = DAHEIGHT * c + DAHEIGHT * 0.5f - 0.5f;
     const float chn_y_scale  = DAHEIGHT * 0.5f * gain;
 
-#define CYPOS(VAL) (chn_y_offset - (VAL)*chn_y_scale)
+#define CYPOS(VAL) (chn_y_offset - (VAL) * chn_y_scale)
 
     cairo_save(cr);
 

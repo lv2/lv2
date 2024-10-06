@@ -69,7 +69,7 @@
 /**
    The index returned by LV2UI_Port_Map::port_index() for unknown ports.
 */
-#define LV2UI_INVALID_PORT_INDEX ((uint32_t)-1)
+#define LV2UI_INVALID_PORT_INDEX ((uint32_t)(-1))
 
 #ifdef __cplusplus
 extern "C" {
