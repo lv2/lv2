@@ -249,9 +249,9 @@ work(LV2_Handle                  instance,
 static LV2_Worker_Status
 work_response(LV2_Handle instance, uint32_t size, const void* data)
 {
-  Sampler* self       = (Sampler*)instance;
-  Sample*  old_sample = self->sample;
-  Sample*  new_sample = *(Sample* const*)data;
+  Sampler*      self       = (Sampler*)instance;
+  Sample*       old_sample = self->sample;
+  const Sample* new_sample = *(Sample* const*)data;
 
   // Install the new sample
   self->sample = *(Sample* const*)data;

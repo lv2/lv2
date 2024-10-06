@@ -186,7 +186,7 @@ main(void)
   LV2_Atom_Vector* vector  = (LV2_Atom_Vector*)lv2_atom_forge_deref(
     &forge,
     lv2_atom_forge_vector(&forge, sizeof(int32_t), forge.Int, 4, elems));
-  void* vec_body = LV2_ATOM_CONTENTS(LV2_Atom_Vector, vector);
+  const void* vec_body = LV2_ATOM_CONTENTS_CONST(LV2_Atom_Vector, vector);
   if (!!memcmp(elems, vec_body, sizeof(elems))) {
     return test_fail("Corrupt vector\n");
   }

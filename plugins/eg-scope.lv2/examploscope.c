@@ -169,11 +169,11 @@ connect_port(LV2_Handle handle, uint32_t port, void* data)
    http://lv2plug.in/ns/ext/atom#Float[Float].
 */
 static void
-tx_rawaudio(LV2_Atom_Forge* forge,
-            ScoLV2URIs*     uris,
-            const int32_t   channel,
-            const size_t    n_samples,
-            const float*    data)
+tx_rawaudio(LV2_Atom_Forge*   forge,
+            const ScoLV2URIs* uris,
+            const int32_t     channel,
+            const size_t      n_samples,
+            const float*      data)
 {
   LV2_Atom_Forge_Frame frame;
 

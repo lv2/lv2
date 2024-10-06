@@ -421,7 +421,7 @@ ui_hide(LV2UI_Handle handle)
 static int
 ui_idle(LV2UI_Handle handle)
 {
-  SamplerUI* ui = (SamplerUI*)handle;
+  const SamplerUI* ui = (const SamplerUI*)handle;
   if (ui->window) {
     gtk_main_iteration_do(false);
   }

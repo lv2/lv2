@@ -167,7 +167,7 @@ send_ui_enable(LV2UI_Handle handle)
 static gboolean
 on_cfg_changed(GtkWidget* widget, gpointer data)
 {
-  EgScopeUI* ui = (EgScopeUI*)data;
+  const EgScopeUI* ui = (const EgScopeUI*)data;
   if (!ui->updating) {
     // Only send UI state if the change is from user interaction
     send_ui_state(data);
@@ -327,12 +327,12 @@ on_expose_event(GtkWidget* widget, GdkEventExpose* ev, gpointer data)
    and https://github.com/x42/sisco.lv2
 */
 static int
-process_channel(EgScopeUI*   ui,
-                ScoChan*     chn,
-                const size_t n_elem,
-                float const* data,
-                uint32_t*    idx_start,
-                uint32_t*    idx_end)
+process_channel(const EgScopeUI* ui,
+                ScoChan*         chn,
+                const size_t     n_elem,
+                float const*     data,
+                uint32_t*        idx_start,
+                uint32_t*        idx_end)
 {
   int overflow = 0;
   *idx_start   = chn->idx;

@@ -107,7 +107,8 @@ lv2_event_increment(LV2_Event_Iterator* iter)
     return false;
   }
 
-  LV2_Event* const ev = (LV2_Event*)(iter->buf->data + iter->offset);
+  const LV2_Event* const ev =
+    (const LV2_Event*)(iter->buf->data + iter->offset);
 
   iter->offset +=
     lv2_event_pad_size((uint16_t)((uint16_t)sizeof(LV2_Event) + ev->size));

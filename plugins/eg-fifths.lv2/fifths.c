@@ -90,8 +90,8 @@ cleanup(LV2_Handle instance)
 static void
 run(LV2_Handle instance, uint32_t sample_count)
 {
-  Fifths*     self = (Fifths*)instance;
-  FifthsURIs* uris = &self->uris;
+  Fifths*           self = (Fifths*)instance;
+  const FifthsURIs* uris = &self->uris;
 
   // Struct for a 3 byte MIDI event, used for writing notes
   typedef struct {

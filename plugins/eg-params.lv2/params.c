@@ -320,7 +320,7 @@ save(LV2_Handle                instance,
 
   LV2_State_Status st = LV2_STATE_SUCCESS;
   for (unsigned i = 0; i < N_PROPS; ++i) {
-    StateMapItem* prop = &self->props[i];
+    const StateMapItem* prop = &self->props[i];
     store_prop(self, map_path, &st, store, handle, prop->urid, prop->value);
   }
 
