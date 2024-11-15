@@ -43,8 +43,7 @@ LV2_DISABLE_DEPRECATION_WARNINGS
 /**
    Opaque pointer to host data.
 */
-LV2_DEPRECATED
-typedef void* LV2_URI_Map_Callback_Data;
+LV2_DEPRECATED typedef void* LV2_URI_Map_Callback_Data;
 
 /**
    URI Map Feature.
@@ -53,8 +52,7 @@ typedef void* LV2_URI_Map_Callback_Data;
    plugin's instantiate method with URI "http://lv2plug.in/ns/ext/uri-map"
    and data pointed to an instance of this struct.
 */
-LV2_DEPRECATED
-typedef struct {
+LV2_DEPRECATED typedef struct {
   /**
      Opaque pointer to host data.
 

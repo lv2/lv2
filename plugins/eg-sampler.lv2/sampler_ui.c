@@ -451,8 +451,7 @@ static const LV2UI_Descriptor descriptor = {SAMPLER_UI_URI,
                                             port_event,
                                             extension_data};
 
-LV2_SYMBOL_EXPORT
-const LV2UI_Descriptor*
+LV2_SYMBOL_EXPORT const LV2UI_Descriptor*
 lv2ui_descriptor(uint32_t index)
 {
   return index == 0 ? &descriptor : NULL;

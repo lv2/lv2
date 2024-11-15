@@ -1,32 +1,25 @@
-# Copyright 2020-2022 David Robillard <d@drobilla.net>
+# Copyright 2020-2024 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
 ---
 AlignConsecutiveAssignments: true
 AlignConsecutiveDeclarations: true
-AlignEscapedNewlinesLeft: true
+AlignEscapedNewlines: Left
+AttributeMacros:
+  - LV2_DEPRECATED
+  - LV2_SYMBOL_EXPORT
 BasedOnStyle: Mozilla
 BraceWrapping:
-  AfterNamespace: false
   AfterClass: true
   AfterEnum: false
   AfterExternBlock: false
   AfterFunction: true
+  AfterNamespace: false
   AfterStruct: false
   SplitEmptyFunction: false
   SplitEmptyRecord: false
 BreakBeforeBraces: Custom
 Cpp11BracedListStyle: true
-IndentCaseLabels: false
-IndentPPDirectives: AfterHash
-KeepEmptyLinesAtTheStartOfBlocks: false
-SpacesInContainerLiterals: false
-StatementMacros:
-  - LV2_DEPRECATED
-  - LV2_DISABLE_DEPRECATION_WARNINGS
-  - LV2_RESTORE_WARNINGS
-  - LV2_SYMBOL_EXPORT
-  - _Pragma
 ForEachMacros:
   - LV2_ATOM_OBJECT_BODY_FOREACH
   - LV2_ATOM_OBJECT_FOREACH
@@ -34,4 +27,12 @@ ForEachMacros:
   - LV2_ATOM_SEQUENCE_FOREACH
   - LV2_ATOM_TUPLE_BODY_FOREACH
   - LV2_ATOM_TUPLE_FOREACH
+IndentCaseLabels: false
+IndentPPDirectives: AfterHash
+KeepEmptyLinesAtTheStartOfBlocks: false
+SpacesInContainerLiterals: false
+StatementMacros:
+  - LV2_DISABLE_DEPRECATION_WARNINGS
+  - LV2_RESTORE_WARNINGS
+  - _Pragma
 ...

@@ -196,8 +196,7 @@ static const LV2_Descriptor descriptor = {AMP_URI,
    This method is in the ``discovery'' threading class, so no other functions
    or methods in this plugin library will be called concurrently with it.
 */
-LV2_SYMBOL_EXPORT
-const LV2_Descriptor*
+LV2_SYMBOL_EXPORT const LV2_Descriptor*
 lv2_descriptor(uint32_t index)
 {
   return index == 0 ? &descriptor : NULL;

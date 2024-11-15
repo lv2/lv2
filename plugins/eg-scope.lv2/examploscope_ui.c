@@ -655,8 +655,7 @@ static const LV2UI_Descriptor descriptor = {SCO_URI "#ui",
                                             port_event,
                                             NULL};
 
-LV2_SYMBOL_EXPORT
-const LV2UI_Descriptor*
+LV2_SYMBOL_EXPORT const LV2UI_Descriptor*
 lv2ui_descriptor(uint32_t index)
 {
   return index == 0 ? &descriptor : NULL;

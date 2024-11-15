@@ -384,8 +384,7 @@ typedef struct LV2_Descriptor {
    Note that `index` has no meaning, hosts MUST NOT depend on it remaining
    consistent between loads of the plugin library.
 */
-LV2_SYMBOL_EXPORT
-const LV2_Descriptor*
+LV2_SYMBOL_EXPORT const LV2_Descriptor*
 lv2_descriptor(uint32_t index);
 
 /**
@@ -450,8 +449,7 @@ typedef struct {
    be destroyed (using LV2_Lib_Descriptor::cleanup()) until all plugins loaded
    from that library have been destroyed.
 */
-LV2_SYMBOL_EXPORT
-const LV2_Lib_Descriptor*
+LV2_SYMBOL_EXPORT const LV2_Lib_Descriptor*
 lv2_lib_descriptor(const char* bundle_path, const LV2_Feature* const* features);
 
 /**

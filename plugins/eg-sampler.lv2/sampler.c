@@ -688,8 +688,7 @@ static const LV2_Descriptor descriptor = {EG_SAMPLER_URI,
                                           cleanup,
                                           extension_data};
 
-LV2_SYMBOL_EXPORT
-const LV2_Descriptor*
+LV2_SYMBOL_EXPORT const LV2_Descriptor*
 lv2_descriptor(uint32_t index)
 {
   return index == 0 ? &descriptor : NULL;

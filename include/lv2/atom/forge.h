@@ -90,24 +90,24 @@ typedef struct {
 
   LV2_Atom_Forge_Frame* stack;
 
-  LV2_URID Blank    LV2_DEPRECATED;
-  LV2_URID          Bool;
-  LV2_URID          Chunk;
-  LV2_URID          Double;
-  LV2_URID          Float;
-  LV2_URID          Int;
-  LV2_URID          Long;
-  LV2_URID          Literal;
-  LV2_URID          Object;
-  LV2_URID          Path;
-  LV2_URID          Property;
+  LV2_URID Blank LV2_DEPRECATED;
+  LV2_URID Bool;
+  LV2_URID Chunk;
+  LV2_URID Double;
+  LV2_URID Float;
+  LV2_URID Int;
+  LV2_URID Long;
+  LV2_URID Literal;
+  LV2_URID Object;
+  LV2_URID Path;
+  LV2_URID Property;
   LV2_URID Resource LV2_DEPRECATED;
-  LV2_URID          Sequence;
-  LV2_URID          String;
-  LV2_URID          Tuple;
-  LV2_URID          URI;
-  LV2_URID          URID;
-  LV2_URID          Vector;
+  LV2_URID Sequence;
+  LV2_URID String;
+  LV2_URID Tuple;
+  LV2_URID URI;
+  LV2_URID URID;
+  LV2_URID Vector;
 } LV2_Atom_Forge;
 
 static inline void
@@ -569,8 +569,7 @@ lv2_atom_forge_object(LV2_Atom_Forge*       forge,
    This function is deprecated and should not be used in new code.
    Use lv2_atom_forge_object() directly instead.
 */
-LV2_DEPRECATED
-static inline LV2_Atom_Forge_Ref
+LV2_DEPRECATED static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
                         LV2_Atom_Forge_Frame* frame,
                         LV2_URID              id,
@@ -588,8 +587,7 @@ lv2_atom_forge_resource(LV2_Atom_Forge*       forge,
    This function is deprecated and should not be used in new code.
    Use lv2_atom_forge_object() directly instead.
 */
-LV2_DEPRECATED
-static inline LV2_Atom_Forge_Ref
+LV2_DEPRECATED static inline LV2_Atom_Forge_Ref
 lv2_atom_forge_blank(LV2_Atom_Forge*       forge,
                      LV2_Atom_Forge_Frame* frame,
                      uint32_t              id,

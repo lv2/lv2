@@ -511,8 +511,7 @@ typedef struct {
    This is the entry point to a UI library, which works in the same way as
    lv2_descriptor() but for UIs rather than plugins.
 */
-LV2_SYMBOL_EXPORT
-const LV2UI_Descriptor*
+LV2_SYMBOL_EXPORT const LV2UI_Descriptor*
 lv2ui_descriptor(uint32_t index);
 
 /**

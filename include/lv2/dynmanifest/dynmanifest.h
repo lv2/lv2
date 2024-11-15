@@ -56,8 +56,7 @@ typedef void* LV2_Dyn_Manifest_Handle;
    evaluate the result of the operation by examining the returned value and
    MUST NOT try to interpret the value of handle.
 */
-LV2_SYMBOL_EXPORT
-int
+LV2_SYMBOL_EXPORT int
 lv2_dyn_manifest_open(LV2_Dyn_Manifest_Handle*  handle,
                       const LV2_Feature* const* features);
 
@@ -84,8 +83,7 @@ lv2_dyn_manifest_open(LV2_Dyn_Manifest_Handle*  handle,
 
    @return 0 on success, otherwise a non-zero error code.
 */
-LV2_SYMBOL_EXPORT
-int
+LV2_SYMBOL_EXPORT int
 lv2_dyn_manifest_get_subjects(LV2_Dyn_Manifest_Handle handle, FILE* fp);
 
 /**
@@ -118,8 +116,7 @@ lv2_dyn_manifest_get_subjects(LV2_Dyn_Manifest_Handle handle, FILE* fp);
 
    @return 0 on success, otherwise a non-zero error code.
 */
-LV2_SYMBOL_EXPORT
-int
+LV2_SYMBOL_EXPORT int
 lv2_dyn_manifest_get_data(LV2_Dyn_Manifest_Handle handle,
                           FILE*                   fp,
                           const char*             uri);
@@ -135,8 +132,7 @@ lv2_dyn_manifest_get_data(LV2_Dyn_Manifest_Handle handle,
 
    @param handle Dynamic manifest generator handle.
 */
-LV2_SYMBOL_EXPORT
-void
+LV2_SYMBOL_EXPORT void
 lv2_dyn_manifest_close(LV2_Dyn_Manifest_Handle handle);
 
 #ifdef __cplusplus

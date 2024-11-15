@@ -51,8 +51,7 @@ LV2_DISABLE_DEPRECATION_WARNINGS
    Equal to 2^12 * 5 * 7 * 9 * 11 * 13 * 17, which is evenly divisible
    by all integers from 1 through 18 inclusive, and powers of 2 up to 2^12.
 */
-LV2_DEPRECATED
-static const uint32_t LV2_EVENT_PPQN = 3136573440U;
+LV2_DEPRECATED static const uint32_t LV2_EVENT_PPQN = 3136573440U;
 
 /**
    An LV2 event (header only).
@@ -67,8 +66,7 @@ static const uint32_t LV2_EVENT_PPQN = 3136573440U;
 
    memcpy(ev_copy, ev, sizeof(LV2_Event) + ev->size);  (or equivalent)
 */
-LV2_DEPRECATED
-typedef struct {
+LV2_DEPRECATED typedef struct {
   /**
      The frames portion of timestamp. The units used here can optionally be
      set for a port (with the lv2ev:timeUnits property), otherwise this is
@@ -127,8 +125,7 @@ typedef struct {
    | | | | | | | | | | | | | | | | | | | | | | | | |
    |FRAMES |SUBFRMS|TYP|LEN|DATA..DATA..PAD|FRAMES | ...
 */
-LV2_DEPRECATED
-typedef struct {
+LV2_DEPRECATED typedef struct {
   /**
      The contents of the event buffer. This may or may not reside in the
      same block of memory as this header, plugins must not assume either.
@@ -210,8 +207,7 @@ typedef struct {
 /**
    Opaque pointer to host data.
 */
-LV2_DEPRECATED
-typedef void* LV2_Event_Callback_Data;
+LV2_DEPRECATED typedef void* LV2_Event_Callback_Data;
 
 /**
    Non-POD events feature.
@@ -221,8 +217,7 @@ typedef void* LV2_Event_Callback_Data;
    and data pointed to an instance of this struct.  Note this feature
    is not mandatory to support the event extension.
 */
-LV2_DEPRECATED
-typedef struct {
+LV2_DEPRECATED typedef struct {
   /**
      Opaque pointer to host data.
 
