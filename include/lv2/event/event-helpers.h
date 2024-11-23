@@ -9,8 +9,8 @@
    <http://lv2plug.in/ns/ext/event>.
 */
 
-#include "lv2/core/attributes.h"
-#include "lv2/event/event.h"
+#include <lv2/core/attributes.h>
+#include <lv2/event/event.h>
 
 #include <stdbool.h>
 #include <stdint.h>

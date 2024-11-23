@@ -3,9 +3,9 @@
 
 #include "atom_test_utils.c"
 
-#include "lv2/atom/atom.h"
-#include "lv2/atom/forge.h"
-#include "lv2/urid/urid.h"
+#include <lv2/atom/atom.h>
+#include <lv2/atom/forge.h>
+#include <lv2/urid/urid.h>
 
 #include <assert.h>
 #include <stdint.h>

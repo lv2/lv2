@@ -38,10 +38,10 @@
    @{
 */
 
-#include "lv2/atom/atom.h"
-#include "lv2/atom/util.h"
-#include "lv2/core/attributes.h"
-#include "lv2/urid/urid.h"
+#include <lv2/atom/atom.h>
+#include <lv2/atom/util.h>
+#include <lv2/core/attributes.h>
+#include <lv2/urid/urid.h>
 
 #include <assert.h>
 #include <stdbool.h>

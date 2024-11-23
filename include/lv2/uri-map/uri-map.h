@@ -30,7 +30,7 @@
 
 // clang-format on
 
-#include "lv2/core/attributes.h"
+#include <lv2/core/attributes.h>
 
 #include <stdint.h>
 

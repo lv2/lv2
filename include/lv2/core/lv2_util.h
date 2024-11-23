@@ -10,7 +10,7 @@
    @{
 */
 
-#include "lv2/core/lv2.h"
+#include <lv2/core/lv2.h>
 
 #include <stdarg.h>
 #include <stdbool.h>

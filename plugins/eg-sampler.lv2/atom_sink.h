@@ -1,9 +1,9 @@
 // Copyright 2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#include "lv2/atom/atom.h"
-#include "lv2/atom/forge.h"
-#include "lv2/atom/util.h"
+#include <lv2/atom/atom.h>
+#include <lv2/atom/forge.h>
+#include <lv2/atom/util.h>
 
 #include <stdint.h>
 #include <string.h>

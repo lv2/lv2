@@ -37,12 +37,12 @@ Other projects may extend LV2, but must place their headers elsewhere.
 
 Headers are installed to `includedir` with paths like:
 
-    #include "lv2/urid/urid.h"
+    #include <lv2/urid/urid.h>
 
 For backwards compatibility, if the `old_headers` option is set, then headers
 are also installed to the older URI-based paths:
 
-    #include "lv2/lv2plug.in/ns/ext/urid/urid.h"
+    #include <lv2/lv2plug.in/ns/ext/urid/urid.h>
 
 Projects still using this style are encourated to migrate to the shorter style
 above.

@@ -4,13 +4,13 @@
 #ifndef SAMPLER_URIS_H
 #define SAMPLER_URIS_H
 
-#include "lv2/atom/atom.h"
-#include "lv2/atom/forge.h"
-#include "lv2/atom/util.h"
-#include "lv2/midi/midi.h"
-#include "lv2/parameters/parameters.h"
-#include "lv2/patch/patch.h"
-#include "lv2/urid/urid.h"
+#include <lv2/atom/atom.h>
+#include <lv2/atom/forge.h>
+#include <lv2/atom/util.h>
+#include <lv2/midi/midi.h>
+#include <lv2/parameters/parameters.h>
+#include <lv2/patch/patch.h>
+#include <lv2/urid/urid.h>
 
 #include <stdint.h>
 #include <stdio.h>

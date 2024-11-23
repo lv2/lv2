@@ -16,8 +16,8 @@
    @{
 */
 
-#include "lv2/core/lv2.h"
-#include "lv2/urid/urid.h"
+#include <lv2/core/lv2.h>
+#include <lv2/urid/urid.h>
 
 #include <stdbool.h>
 #include <stdint.h>

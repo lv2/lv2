@@ -29,7 +29,7 @@
 
 // clang-format on
 
-#include "lv2/urid/urid.h"
+#include <lv2/urid/urid.h>
 
 #include <stdarg.h>
 

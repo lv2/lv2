@@ -1,14 +1,14 @@
 // Copyright 2012-2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#include "lv2/atom/atom.h"
-#include "lv2/atom/util.h"
-#include "lv2/core/lv2.h"
-#include "lv2/core/lv2_util.h"
-#include "lv2/log/log.h"
-#include "lv2/log/logger.h"
-#include "lv2/time/time.h"
-#include "lv2/urid/urid.h"
+#include <lv2/atom/atom.h>
+#include <lv2/atom/util.h>
+#include <lv2/core/lv2.h>
+#include <lv2/core/lv2_util.h>
+#include <lv2/log/log.h>
+#include <lv2/log/logger.h>
+#include <lv2/time/time.h>
+#include <lv2/urid/urid.h>
 
 #include <math.h>
 #include <stdbool.h>

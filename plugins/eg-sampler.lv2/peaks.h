@@ -14,10 +14,10 @@
    requested, with reasonably sized incremental updates sent over plugin ports.
 */
 
-#include "lv2/atom/atom.h"
-#include "lv2/atom/forge.h"
-#include "lv2/atom/util.h"
-#include "lv2/urid/urid.h"
+#include <lv2/atom/atom.h>
+#include <lv2/atom/forge.h>
+#include <lv2/atom/util.h>
+#include <lv2/urid/urid.h>
 
 #include <math.h>
 #include <stdbool.h>

@@ -1,8 +1,8 @@
 // Copyright 2016 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#include "lv2/atom/atom.h"
-#include "lv2/urid/urid.h"
+#include <lv2/atom/atom.h>
+#include <lv2/urid/urid.h>
 
 #include <stdarg.h>
 #include <stdint.h>

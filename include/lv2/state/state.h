@@ -16,7 +16,7 @@
    @{
 */
 
-#include "lv2/core/lv2.h"
+#include <lv2/core/lv2.h>
 
 #include <stddef.h>
 #include <stdint.h>
