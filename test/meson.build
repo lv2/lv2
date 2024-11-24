@@ -157,6 +157,11 @@ test_names = [
   'forge_overflow',
 ]
 
+atom_test_suppressions = []
+if warning_level == 'everything' and cc.get_id() == 'gcc'
+  atom_test_suppressions += ['-Wno-stringop-overflow']
+endif
+
 # Build and run tests
 foreach test_name : test_names
   test(
@@ -164,7 +169,7 @@ foreach test_name : test_names
     executable(
       test_name,
       files('test_@0@.c'.format(test_name)),
-      c_args: c_suppressions,
+      c_args: c_suppressions + atom_test_suppressions,
       dependencies: [lv2_dep],
     ),
     suite: 'unit',
