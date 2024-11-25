@@ -100,6 +100,7 @@
 #define LV2_CORE__index              LV2_CORE_PREFIX "index"               ///< http://lv2plug.in/ns/lv2core#index
 #define LV2_CORE__integer            LV2_CORE_PREFIX "integer"             ///< http://lv2plug.in/ns/lv2core#integer
 #define LV2_CORE__isLive             LV2_CORE_PREFIX "isLive"              ///< http://lv2plug.in/ns/lv2core#isLive
+#define LV2_CORE__isSideChain        LV2_CORE_PREFIX "isSideChain"         ///< http://lv2plug.in/ns/lv2core#isSideChain
 #define LV2_CORE__latency            LV2_CORE_PREFIX "latency"             ///< http://lv2plug.in/ns/lv2core#latency
 #define LV2_CORE__maximum            LV2_CORE_PREFIX "maximum"             ///< http://lv2plug.in/ns/lv2core#maximum
 #define LV2_CORE__microVersion       LV2_CORE_PREFIX "microVersion"        ///< http://lv2plug.in/ns/lv2core#microVersion
