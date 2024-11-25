@@ -158,7 +158,7 @@ test_names = [
 ]
 
 atom_test_suppressions = []
-if warning_level == 'everything' and cc.get_id() == 'gcc'
+if cc.get_id() == 'gcc'
   atom_test_suppressions += ['-Wno-stringop-overflow']
 endif
 
