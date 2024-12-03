@@ -42,8 +42,8 @@ warning_level = get_option('warning_level')
 
 # C
 c_suppressions = []
-if warning_level == 'everything'
-  if cc.get_id() in ['clang', 'emscripten']
+if cc.get_id() in ['clang', 'emscripten']
+  if warning_level == 'everything'
     c_suppressions += [
       '-Wno-bad-function-cast',
       '-Wno-cast-align',
@@ -71,8 +71,14 @@ if warning_level == 'everything'
     if host_machine.system() == 'windows'
       c_suppressions += ['-Wno-format-nonliteral']
     endif
+  endif
 
-  elif cc.get_id() == 'gcc'
+  if warning_level in ['everything', '3', '2']
+    c_suppressions += ['-Wno-unused-parameter']
+  endif
+
+elif cc.get_id() == 'gcc'
+  if warning_level == 'everything'
     c_suppressions += [
       '-Wno-bad-function-cast',
       '-Wno-cast-align',
@@ -94,12 +100,17 @@ if warning_level == 'everything'
     if target_machine.system() == 'windows'
       c_suppressions += ['-Wno-suggest-attribute=format']
     endif
+  endif
 
-  elif cc.get_id() == 'msvc'
+  if warning_level in ['everything', '3', '2']
+    c_suppressions += ['-Wno-unused-parameter']
+  endif
+
+elif cc.get_id() == 'msvc'
+  if warning_level == 'everything'
     c_suppressions += [
       '/wd4061', # enumerator in switch is not explicitly handled
       '/wd4244', # conversion with possible loss of data
-      '/wd4267', # conversion from size_t to a smaller type
       '/wd4310', # cast truncates constant value
       '/wd4365', # signed/unsigned mismatch
       '/wd4464', # relative include path contains ".."
@@ -112,16 +123,18 @@ if warning_level == 'everything'
       '/wd5045', # will insert Spectre mitigation for memory load
     ]
   endif
-endif
 
-if cc.get_id() in ['clang', 'emscripten']
-  c_suppressions += ['-Wno-unused-parameter']
-elif cc.get_id() == 'gcc'
-  c_suppressions += ['-Wno-unused-parameter']
-elif cc.get_id() == 'msvc'
-  c_suppressions += [
-    '/wd4100', # unreferenced formal parameter
-  ]
+  if warning_level in ['everything', '3']
+    c_suppressions += [
+      '/wd4100', # unreferenced formal parameter
+    ]
+  endif
+
+  if warning_level in ['everything', '3', '2']
+    c_suppressions += [
+      '/wd4267', # conversion from size_t to a smaller type
+    ]
+  endif
 endif
 
 c_suppressions = cc.get_supported_arguments(c_suppressions)
@@ -180,7 +193,6 @@ if is_variable('cpp')
 
   cpp_suppressions = cpp.get_supported_arguments(cpp_suppressions)
 endif
-
 
 ##########################
 # LV2 Path Configuration #
