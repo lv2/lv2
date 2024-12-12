@@ -1,4 +1,4 @@
-// Copyright 2008-2015 David Robillard <d@drobilla.net>
+// Copyright 2008-2024 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
 #ifndef LV2_ATOM_UTIL_H
@@ -61,8 +61,7 @@ lv2_atom_is_null(const LV2_Atom* atom)
 static inline bool
 lv2_atom_equals(const LV2_Atom* a, const LV2_Atom* b)
 {
-  return (a == b) || ((a->type == b->type) && (a->size == b->size) &&
-                      !memcmp(a + 1, b + 1, a->size));
+  return (a == b) || !memcmp(a, b, sizeof(LV2_Atom) + a->size);
 }
 
 /**
