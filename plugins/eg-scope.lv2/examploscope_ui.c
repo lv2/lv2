@@ -206,6 +206,7 @@ on_expose_event(GtkWidget* widget, GdkEventExpose* ev, gpointer data)
   assert(start < DAWIDTH);
   assert(end <= DAWIDTH);
   assert(start < end);
+  assert(ui->n_channels <= 2U);
 
   for (uint32_t c = 0; c < ui->n_channels; ++c) {
     ScoChan* chn = &ui->chn[c];
