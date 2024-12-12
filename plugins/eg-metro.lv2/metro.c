@@ -199,6 +199,7 @@ play(Metro* self, uint32_t begin, uint32_t end)
 {
   float* const   output          = self->ports.output;
   const uint32_t frames_per_beat = (uint32_t)(60.0f / self->bpm * self->rate);
+  const float    attack_den = self->attack_len ? (float)self->attack_len : 1.0f;
 
   if (self->speed == 0.0f) {
     memset(output, 0, (end - begin) * sizeof(float));
@@ -209,8 +210,8 @@ play(Metro* self, uint32_t begin, uint32_t end)
     switch (self->state) {
     case STATE_ATTACK:
       // Amplitude increases from 0..1 until attack_len
-      output[i] = self->wave[self->wave_offset] * (float)self->elapsed_len /
-                  (float)self->attack_len;
+      output[i] =
+        self->wave[self->wave_offset] * (float)self->elapsed_len / attack_den;
       if (self->elapsed_len >= self->attack_len) {
         self->state = STATE_DECAY;
       }
