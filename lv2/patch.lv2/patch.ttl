@@ -4,6 +4,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix lv2: <http://lv2plug.in/ns/lv2core#> .
 
 <http://lv2plug.in/ns/ext/patch>
 	a owl:Ontology ;
@@ -185,6 +186,15 @@ patch:property
 	rdfs:domain patch:Message ;
 	rdfs:range rdf:Property ;
 	rdfs:comment "The property for a patch:Set or patch:Get message." .
+
+patch:portIndex
+	a rdf:Property ,
+		owl:ObjectProperty ,
+		owl:FunctionalProperty ;
+	rdfs:label "port index" ;
+	rdfs:domain patch:Set ;
+	rdfs:range xsd:unsignedInt ;
+	rdfs:comment "The index of a legacy lv2:port for modification by the patch:Set message." .
 
 patch:readable
 	a rdf:Property ,

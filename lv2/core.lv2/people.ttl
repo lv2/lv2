@@ -48,3 +48,11 @@ meta:bmwiedemann
 	a foaf:Person ;
 	foaf:name "Bernhard M. Wiedemann" ;
 	foaf:mbox <bwiedemann@suse.de> .
+
+<http://lsp-plug.in/developers/v_sadovnikov>
+	a foaf:Person ;
+	foaf:name "Vladimir Sadovnikov" ;
+	foaf:nick "SadKo" ;
+	foaf:mbox <mailto:sadko4u@gmail.com> ;
+	foaf:homepage <http://lsp-plug.in/#v_sadovnikov> ;
+	rdfs:seeAlso <http://lsp-plug.in/#v_sadovnikov> .
