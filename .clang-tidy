@@ -1,4 +1,4 @@
-# Copyright 2020-2024 David Robillard <d@drobilla.net>
+# Copyright 2020-2025 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
 Checks: >
@@ -11,7 +11,7 @@ Checks: >
   -bugprone-macro-parentheses,
   -clang-diagnostic-unused-function,
   -clang-diagnostic-unused-macros,
-  -llvmlibc-restrict-system-libc-headers,
+  -llvmlibc-*,
   -misc-include-cleaner,
   -performance-no-int-to-ptr,
   -readability-identifier-length,
