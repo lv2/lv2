@@ -8,12 +8,14 @@ data_filenames = ['manifest.ttl.in', 'sampler.ttl', 'click.wav']
 
 samplerate_dep = dependency(
   'samplerate',
+  include_type: 'system',
   required: get_option('plugins'),
   version: '>= 0.1.0',
 )
 
 sndfile_dep = dependency(
   'sndfile',
+  include_type: 'system',
   required: get_option('plugins'),
   version: '>= 1.0.0',
 )
