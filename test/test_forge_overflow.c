@@ -90,7 +90,7 @@ test_literal_overflow(void)
 static int
 test_sequence_overflow(void)
 {
-  static const size_t size = sizeof(LV2_Atom_Sequence) + 6 * sizeof(LV2_Atom);
+  static const size_t size = sizeof(LV2_Atom_Sequence) + (6 * sizeof(LV2_Atom));
   LV2_URID_Map        map  = {NULL, urid_map};
 
   // Test over a range that fails in the sequence header and event components
@@ -121,7 +121,7 @@ test_sequence_overflow(void)
 static int
 test_vector_head_overflow(void)
 {
-  static const size_t size = sizeof(LV2_Atom_Vector) + 3 * sizeof(LV2_Atom);
+  static const size_t size = sizeof(LV2_Atom_Vector) + (3 * sizeof(LV2_Atom));
   LV2_URID_Map        map  = {NULL, urid_map};
 
   // Test over a range that fails in the vector header and elements
@@ -154,7 +154,7 @@ test_vector_head_overflow(void)
 static int
 test_vector_overflow(void)
 {
-  static const size_t  size  = sizeof(LV2_Atom_Vector) + 3 * sizeof(LV2_Atom);
+  static const size_t  size  = sizeof(LV2_Atom_Vector) + (3 * sizeof(LV2_Atom));
   static const int32_t vec[] = {1, 2, 3};
   LV2_URID_Map         map   = {NULL, urid_map};
 
@@ -181,7 +181,7 @@ test_vector_overflow(void)
 static int
 test_tuple_overflow(void)
 {
-  static const size_t size = sizeof(LV2_Atom_Tuple) + 3 * sizeof(LV2_Atom);
+  static const size_t size = sizeof(LV2_Atom_Tuple) + (3 * sizeof(LV2_Atom));
   LV2_URID_Map        map  = {NULL, urid_map};
 
   // Test over a range that fails in the tuple header and elements

@@ -220,10 +220,10 @@ on_expose_event(GtkWidget* widget, GdkEventExpose* ev, gpointer data)
      *      - (DAHEIGHT / 2) * (VAL) * (GAIN)
      *    )
      */
-    const float chn_y_offset = DAHEIGHT * c + DAHEIGHT * 0.5f - 0.5f;
-    const float chn_y_scale  = DAHEIGHT * 0.5f * gain;
+    const float chn_y_offset = (DAHEIGHT * c) + (DAHEIGHT * 0.5f) - 0.5f;
+    const float chn_y_scale  = (DAHEIGHT * 0.5f) * gain;
 
-#define CYPOS(VAL) (chn_y_offset - (VAL) * chn_y_scale)
+#define CYPOS(VAL) (chn_y_offset - ((VAL) * chn_y_scale))
 
     cairo_save(cr);
 
@@ -293,15 +293,15 @@ on_expose_event(GtkWidget* widget, GdkEventExpose* ev, gpointer data)
     // Channel separator
     if (c > 0) {
       cairo_set_source_rgba(cr, .5, .5, .5, 1.0);
-      cairo_move_to(cr, 0, DAHEIGHT * c - .5);
-      cairo_line_to(cr, DAWIDTH, DAHEIGHT * c - .5);
+      cairo_move_to(cr, 0, (DAHEIGHT * c) - .5);
+      cairo_line_to(cr, DAWIDTH, (DAHEIGHT * c) - .5);
       cairo_stroke(cr);
     }
 
     // Zero scale line
     cairo_set_source_rgba(cr, .3, .3, .7, .5);
-    cairo_move_to(cr, 0, DAHEIGHT * (c + .5) - .5);
-    cairo_line_to(cr, DAWIDTH, DAHEIGHT * (c + .5) - .5);
+    cairo_move_to(cr, 0, (DAHEIGHT * (c + .5)) - .5);
+    cairo_line_to(cr, DAWIDTH, (DAHEIGHT * (c + .5)) - .5);
     cairo_stroke(cr);
   }
 

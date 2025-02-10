@@ -183,13 +183,13 @@ on_canvas_expose(GtkWidget* widget, GdkEventExpose* event, gpointer data)
     // Draw line through top peaks
     for (int i = 0; i < n_peaks; ++i) {
       const float peak = peaks[i];
-      cairo_line_to(cr, i * scale, mid_y + (peak / 2.0f) * size.height);
+      cairo_line_to(cr, i * scale, mid_y + ((peak / 2.0f) * size.height));
     }
 
     // Continue through bottom peaks
     for (int i = n_peaks - 1; i >= 0; --i) {
       const float peak = peaks[i];
-      cairo_line_to(cr, i * scale, mid_y - (peak / 2.0f) * size.height);
+      cairo_line_to(cr, i * scale, mid_y - ((peak / 2.0f) * size.height));
     }
 
     // Close shape

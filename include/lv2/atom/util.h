@@ -251,7 +251,7 @@ static inline LV2_Atom_Property_Body*
 lv2_atom_object_next(const LV2_Atom_Property_Body* i)
 {
   const LV2_Atom* const value =
-    (const LV2_Atom*)((const uint8_t*)i + 2 * sizeof(uint32_t));
+    (const LV2_Atom*)((const uint8_t*)i + (2 * sizeof(uint32_t)));
   return (LV2_Atom_Property_Body*)((const uint8_t*)i +
                                    lv2_atom_pad_size(
                                      (uint32_t)sizeof(LV2_Atom_Property_Body) +
