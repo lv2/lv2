@@ -216,7 +216,7 @@ endif
 # Package/Dependency #
 ######################
 
-# Generage pkg-config file for external dependants
+# Generate pkg-config file for external dependants
 pkg.generate(
   description: 'Plugin standard for audio systems',
   filebase: 'lv2',
