@@ -11,6 +11,7 @@ module = shared_library(
   c_args: c_suppressions,
   dependencies: [lv2_dep, m_dep],
   gnu_symbol_visibility: 'hidden',
+  implicit_include_directories: false,
   install: true,
   install_dir: lv2dir / bundle_name,
   name_prefix: '',

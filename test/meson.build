@@ -74,6 +74,7 @@ test(
     files('test_build.c'),
     c_args: c_suppressions,
     dependencies: [lv2_dep],
+    implicit_include_directories: false,
   ),
   suite: 'build',
 )
@@ -87,6 +88,7 @@ if is_variable('cpp')
       files('cpp/test_build.cpp'),
       cpp_args: cpp_suppressions,
       dependencies: [lv2_dep],
+      implicit_include_directories: false,
     ),
     suite: 'build',
   )
@@ -171,6 +173,7 @@ foreach test_name : test_names
       files('test_@0@.c'.format(test_name)),
       c_args: c_suppressions + atom_test_suppressions,
       dependencies: [lv2_dep],
+      implicit_include_directories: false,
     ),
     suite: 'unit',
   )
