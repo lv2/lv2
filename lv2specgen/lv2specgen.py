@@ -123,7 +123,6 @@ def isLiteral(n):
 
 
 def niceName(uri):
-    global spec_bundle
     if uri.startswith(spec_ns_str):
         return uri.replace(spec_ns_str, "")
     elif uri == str(rdfs.seeAlso):
@@ -382,8 +381,6 @@ def endProperties(first):
 
 def rdfsPropertyInfo(term, m):
     """Generate HTML for properties: Domain, range"""
-    global classranges
-    global classdomains
     doc = ""
 
     label = getLabel(m, term)
@@ -537,8 +534,6 @@ def owlRestrictionInfo(term, m):
 
 def rdfsClassInfo(term, m):
     """Generate rdfs-type information for Classes: ranges, and domains."""
-    global classranges
-    global classdomains
     doc = ""
 
     label = getLabel(m, term)
@@ -900,8 +895,6 @@ def specInformation(m, ns):
     and proplist. Global variables classranges and classdomains are also filled
     as appropriate.
     """
-    global classranges
-    global classdomains
 
     # Find the class information: Ranges, domains, and list of all names.
     classtypes = [rdfs.Class, owl.Class, rdfs.Datatype]
@@ -1151,8 +1144,6 @@ def specgen(
     global spec_ns_str
     global spec_ns
     global spec_pre
-    global ns_list
-    global specgendir
     global linkmap
 
     spec_bundle = "file://%s/" % os.path.abspath(os.path.dirname(specloc))
