@@ -110,6 +110,8 @@ send_ui_state(LV2UI_Handle handle)
             lv2_atom_total_size(msg),
             ui->uris.atom_eventTransfer,
             msg);
+
+  lv2_atom_forge_set_buffer(&ui->forge, NULL, 0);
 }
 
 /** Notify backend that UI is closed. */
@@ -134,6 +136,8 @@ send_ui_disable(LV2UI_Handle handle)
             lv2_atom_total_size(msg),
             ui->uris.atom_eventTransfer,
             msg);
+
+  lv2_atom_forge_set_buffer(&ui->forge, NULL, 0);
 }
 
 /**
