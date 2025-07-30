@@ -1,6 +1,7 @@
 lv2 (1.18.11) unstable; urgency=medium
 
   * Allow LV2_SYMBOL_EXPORT to be overridden
+  * Avoid over-use of yielding meson options
   * Fix pylint warning in test script
   * Override pkg-config dependency within meson
   * Remove troublesome lv2_atom_assert_double_fits_in_64_bits

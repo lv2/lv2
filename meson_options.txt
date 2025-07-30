@@ -1,25 +1,25 @@
-# Copyright 2021-2022 David Robillard <d@drobilla.net>
+# Copyright 2021-2025 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
-option('docs', type: 'feature', yield: true,
+option('docs', type: 'feature',
        description: 'Build documentation')
 
-option('lint', type: 'boolean', value: false, yield: true,
+option('lint', type: 'boolean', value: false,
        description: 'Run code quality checks')
 
-option('lv2dir', type: 'string', value: '', yield: true,
+option('lv2dir', type: 'string', value: '',
        description: 'LV2 bundle installation directory')
 
-option('old_headers', type: 'boolean', value: true, yield: true,
+option('old_headers', type: 'boolean', value: true,
        description: 'Install backwards compatible headers at URI-style paths')
 
-option('online_docs', type: 'boolean', value: false, yield: true,
+option('online_docs', type: 'boolean', value: false,
        description: 'Build documentation for online hosting')
 
-option('plugins', type: 'feature', yield: true,
+option('plugins', type: 'feature',
        description: 'Build example plugins')
 
-option('tests', type: 'feature', yield: true,
+option('tests', type: 'feature',
        description: 'Build tests')
 
 option('title', type: 'string', value: 'LV2',
