@@ -187,7 +187,9 @@ instantiate(const LV2_Descriptor*     descriptor,
 static void
 cleanup(LV2_Handle instance)
 {
-  free(instance);
+  Metro* self = (Metro*)instance;
+  free(self->wave);
+  free(self);
 }
 
 /**
