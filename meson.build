@@ -504,7 +504,9 @@ endif
 ############
 
 # Command-line utilities
-subdir('util')
+if not get_option('tools').disabled()
+  subdir('util')
+endif
 
 # Data and build tests
 if not get_option('tests').disabled()

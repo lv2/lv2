@@ -1,4 +1,4 @@
-# Copyright 2022 David Robillard <d@drobilla.net>
+# Copyright 2022-2025 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
 lv2specgen_py = files('lv2specgen.py')
@@ -11,8 +11,7 @@ lv2specgen_command_prefix = [
   '--list-email=' + lv2_list_email,
   '--list-page=' + lv2_list_page,
   '--style-dir=' + lv2_source_root / 'doc' / 'style',
-  '--template',
-  files('template.html'),
+  '--template', files('template.html'),
 ]
 
 if is_variable('lv2_tags')
@@ -21,24 +20,26 @@ if is_variable('lv2_tags')
   ]
 endif
 
-install_data(
-  files('lv2specgen.py'),
-  install_dir: get_option('bindir'),
-  install_mode: 'rwxr-xr-x',
-)
-
 meson.override_find_program('lv2specgen.py', lv2specgen_py)
 
-install_data(
-  files(
-    '../doc/style/pygments.css',
-    '../doc/style/style.css',
-    'template.html',
-  ),
-  install_dir: get_option('datadir') / 'lv2specgen',
-)
+if not get_option('tools').disabled()
+  install_data(
+    files('lv2specgen.py'),
+    install_dir: get_option('bindir'),
+    install_mode: 'rwxr-xr-x',
+  )
 
-install_subdir(
-  'DTD',
-  install_dir: get_option('datadir') / 'lv2specgen',
-)
+  install_data(
+    files(
+      '../doc/style/pygments.css',
+      '../doc/style/style.css',
+      'template.html',
+    ),
+    install_dir: get_option('datadir') / 'lv2specgen',
+  )
+
+  install_subdir(
+    'DTD',
+    install_dir: get_option('datadir') / 'lv2specgen',
+  )
+endif

@@ -22,5 +22,8 @@ option('plugins', type: 'feature',
 option('tests', type: 'feature',
        description: 'Build tests')
 
+option('tools', type: 'feature',
+       description: 'Build and install command-line utilities')
+
 option('title', type: 'string', value: 'LV2',
        description: 'Project title')
