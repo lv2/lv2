@@ -3,14 +3,12 @@
 # Copyright 2012 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: ISC
 
+"""LV2 plugin documentation generator."""
+
 # pylint: disable=consider-using-f-string
-# pylint: disable=invalid-name
 # pylint: disable=missing-function-docstring
-# pylint: disable=missing-module-docstring
-# pylint: disable=pointless-string-statement
 # pylint: disable=redefined-outer-name
-# pylint: disable=unspecified-encoding
-# pylint: disable=use-implicit-booleaness-not-len
+# pylint: disable=invalid-name
 
 import errno
 import os
@@ -102,10 +100,10 @@ def plugin_doc(model, plugin, style_uri):
     html += get_doc(model, plugin)
 
     ports_html = ""
-    for p in model.triples([plugin, lv2.port, None]):
-        ports_html += port_doc(model, p[2])
+    for link in model.triples([plugin, lv2.port, None]):
+        ports_html += port_doc(model, link[2])
 
-    if len(ports_html):
+    if ports_html:
         html += (
             """
   <h2 class="sec">Ports</h2>
@@ -120,8 +118,6 @@ def plugin_doc(model, plugin, style_uri):
 
 
 if __name__ == "__main__":
-    "LV2 plugin documentation generator"
-
     if len(sys.argv) < 2:
         print("Usage: %s OUTDIR FILE..." % sys.argv[0])
         sys.exit(1)
@@ -149,5 +145,5 @@ if __name__ == "__main__":
                 raise
 
             print("Writing <%s> documentation to %s" % (plugin, outpath))
-            with open(outpath, "w") as out:
+            with open(outpath, "w", encoding="utf-8") as out:
                 out.write(html)

@@ -9,23 +9,17 @@
 # Based on SpecGen:
 # <http://forge.morfeo-project.org/wiki_en/index.php/SpecGen>
 
+"""Ontology specification generator tool."""
+
 # pylint: disable=broad-exception-caught
-# pylint: disable=c-extension-no-member
 # pylint: disable=cell-var-from-loop
-# pylint: disable=consider-iterating-dictionary
 # pylint: disable=consider-using-f-string
 # pylint: disable=deprecated-module
 # pylint: disable=global-statement
 # pylint: disable=global-variable-not-assigned
 # pylint: disable=invalid-name
 # pylint: disable=missing-function-docstring
-# pylint: disable=missing-module-docstring
-# pylint: disable=no-else-return
 # pylint: disable=no-member
-# pylint: disable=pointless-string-statement
-# pylint: disable=possibly-used-before-assignment
-# pylint: disable=redefined-argument-from-local
-# pylint: disable=redefined-builtin
 # pylint: disable=redefined-outer-name
 # pylint: disable=too-many-arguments
 # pylint: disable=too-many-boolean-expressions
@@ -34,25 +28,20 @@
 # pylint: disable=too-many-locals
 # pylint: disable=too-many-positional-arguments
 # pylint: disable=too-many-statements
-# pylint: disable=unspecified-encoding
 # pylint: disable=unused-argument
-# pylint: disable=use-implicit-booleaness-not-comparison
-# pylint: disable=use-implicit-booleaness-not-len
-# pylint: disable=use-maxsplit-arg
-# pylint: disable=used-before-assignment
-# pylint: disable=wrong-import-order
 
 import datetime
-import markdown
-import markdown.extensions
 import optparse
 import os
 import re
 import sys
 import time
-import xml.sax.saxutils
 import xml.dom
 import xml.dom.minidom
+import xml.sax.saxutils
+
+import markdown
+import markdown.extensions
 
 __date__ = "2011-10-26"
 __version__ = __date__.replace("-", ".")
@@ -158,18 +147,20 @@ def isLiteral(n):
 def niceName(uri):
     if uri.startswith(spec_ns_str):
         return uri.replace(spec_ns_str, "")
-    elif uri == str(rdfs.seeAlso):
+
+    if uri == str(rdfs.seeAlso):
         return "See also"
 
     regexp = re.compile("^(.*[/#])([^/#]+)$")
     rez = regexp.search(uri)
     if not rez:
         return uri
+
     pref = rez.group(1)
     if pref in ns_list:
         return ns_list.get(pref, pref) + ":" + rez.group(2)
-    else:
-        return uri
+
+    return uri
 
 
 def termName(m, urinode):
@@ -181,17 +172,17 @@ def getLabel(m, urinode):
     statement = findOne(m, urinode, rdfs.label, None)
     if statement:
         return getLiteralString(getObject(statement))
-    else:
-        return ""
+
+    return ""
 
 
 def linkifyCodeIdentifiers(string):
     "Add links to code documentation for identifiers like LV2_Type"
 
-    if linkmap == {}:
+    if not linkmap:
         return string
 
-    if string in linkmap.keys():
+    if string in linkmap:
         # Exact match for complete string
         return linkmap[string]
 
@@ -226,13 +217,14 @@ def linkifyVocabIdentifiers(m, string, classlist, proplist, instalist):
             ):
                 print("warning: Link to undefined resource <%s>\n" % text)
             return '<a href="#%s">%s</a>' % (name, name)
-        elif prefix in namespaces:
+
+        if prefix in namespaces:
             return '<a href="%s">%s</a>' % (
                 namespaces[match.group(1)] + match.group(2),
                 match.group(0),
             )
-        else:
-            return text
+
+        return text
 
     return rgx.sub(translateLink, string)
 
@@ -288,15 +280,17 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
             or (proplist and uri in proplist)
         ):
             return '%s<a href="#%s">%s</a>' % (space, name, name)
-        else:
-            print("warning: Link to undefined resource <%s>\n" % name)
-            return text
+
+        print("warning: Link to undefined resource <%s>\n" % name)
+        return text
 
     markup = rgx.sub(translateLocalLink, markup)
 
     if not have_lxml:
         print("warning: No Python lxml module found, output may be invalid")
     else:
+        oldcwd = os.getcwd()
+
         try:
             # Parse and validate documentation as XHTML Basic 1.1
             doc = (
@@ -315,7 +309,6 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
 </html>"""
             )
 
-            oldcwd = os.getcwd()
             os.chdir(specgendir)
             parser = etree.XMLParser(dtd_validation=True, no_network=True)
             etree.fromstring(doc.encode("utf-8"), parser)
@@ -349,11 +342,11 @@ def formatDoc(m, urinode, literal, classlist, proplist, instalist):
             doc = doc.replace("</%s>\n" % tag, "")
 
         return prettifyHtml(m, doc, urinode, classlist, proplist, instalist)
-    else:
-        doc = xml.sax.saxutils.escape(string)
-        doc = linkifyCodeIdentifiers(doc)
-        doc = linkifyVocabIdentifiers(m, doc, classlist, proplist, instalist)
-        return "<p>%s</p>" % doc
+
+    doc = xml.sax.saxutils.escape(string)
+    doc = linkifyCodeIdentifiers(doc)
+    doc = linkifyVocabIdentifiers(m, doc, classlist, proplist, instalist)
+    return "<p>%s</p>" % doc
 
 
 def getComment(m, subject, classlist, proplist, instalist):
@@ -406,10 +399,7 @@ def getProperty(val, first=True):
 
 
 def endProperties(first):
-    if first:
-        return "</tr>"
-    else:
-        return ""
+    return "</tr>" if first else ""
 
 
 def rdfsPropertyInfo(term, m):
@@ -508,8 +498,8 @@ def getTermLink(uri, subject=None, predicate=None):
             extra,
             niceName(uri),
         )
-    else:
-        return '<a href="%s" %s>%s</a>' % (uri, extra, niceName(uri))
+
+    return '<a href="%s" %s>%s</a>' % (uri, extra, niceName(uri))
 
 
 def owlRestrictionInfo(term, m):
@@ -735,8 +725,8 @@ def owlInfo(term, m):
     def owlTypeInfo(term, propertyType, name):
         if findOne(m, term, rdf.type, propertyType):
             return "<tr><th>Type</th><td>%s</td></tr>\n" % name
-        else:
-            return ""
+
+        return ""
 
     res += owlTypeInfo(term, owl.DatatypeProperty, "Datatype Property")
     res += owlTypeInfo(term, owl.ObjectProperty, "Object Property")
@@ -754,14 +744,14 @@ def isDeprecated(m, subject):
     return deprecated and (str(deprecated[2]).find("true") >= 0)
 
 
-def docTerms(category, list, m, classlist, proplist, instalist):
+def docTerms(category, termlist, m, classlist, proplist, instalist):
     """
     A wrapper class for listing all the terms in a specific class (either
     Properties, or Classes. Category is 'Property' or 'Class', list is a
     list of term URI strings, return value is a chunk of HTML.
     """
     doc = ""
-    for term in list:
+    for term in termlist:
         if not term.startswith(spec_ns_str):
             continue
 
@@ -820,17 +810,17 @@ def docTerms(category, list, m, classlist, proplist, instalist):
 def getShortName(uri):
     uri = str(uri)
     if "#" in uri:
-        return uri.split("#")[-1]
-    else:
-        return uri.split("/")[-1]
+        return uri.split("#", maxsplit=1)[-1]
+
+    return uri.split("/", maxsplit=1)[-1]
 
 
 def getAnchor(uri):
     uri = str(uri)
     if uri.startswith(spec_ns_str):
         return uri.replace(spec_ns_str, "").replace("/", "_")
-    else:
-        return getShortName(uri)
+
+    return getShortName(uri)
 
 
 def buildIndex(m, classlist, proplist, instalist=None):
@@ -844,8 +834,8 @@ def buildIndex(m, classlist, proplist, instalist=None):
         if str(t).startswith(spec_ns_str):
             name = termName(m, t)
             return '<a href="#%s">%s</a>' % (name, name)
-        else:
-            return '<a href="%s">%s</a>' % (str(t), str(t))
+
+        return '<a href="%s">%s</a>' % (str(t), str(t))
 
     if len(classlist) > 0:
         head += '<th><a href="#ref-classes" />Classes</th>'
@@ -934,14 +924,14 @@ def specInformation(m, ns):
     classlist = []
     for onetype in classtypes:
         for classStatement in findStatements(m, None, rdf.type, onetype):
-            for range in findStatements(
+            for rangelink in findStatements(
                 m, None, rdfs.range, getSubject(classStatement)
             ):
                 if not isBlank(getSubject(classStatement)):
                     add(
                         classranges,
                         str(getSubject(classStatement)),
-                        str(getSubject(range)),
+                        str(getSubject(rangelink)),
                     )
             for domain in findStatements(
                 m, None, rdfs.domain, getSubject(classStatement)
@@ -1028,15 +1018,16 @@ def specAuthors(m, subject):
 
     maintdoc = ""
     first = True
-    for m in sorted(maint):
+    for name in sorted(maint):
         if not first:
             maintdoc += ", "
 
-        maintdoc += (
-            f'<span class="author" property="doap:maintainer">{m}</span>'
-        )
+        maintdoc += '<span class="author" property="doap:maintainer">'
+        maintdoc += name
+        maintdoc += "</span>"
         first = False
-    if len(maint):
+
+    if maint:
         label = "Maintainer" if len(maint) == 1 else "Maintainers"
         doc += f'<tr><th class="metahead">{label}</th><td>{maintdoc}</td></tr>'
 
@@ -1122,12 +1113,12 @@ def load_tags(path, docdir):
                 anchor,
                 sym,
             )
-        else:
-            return '<span><a href="%s/%s">%s</a></span>' % (
-                docdir,
-                filename,
-                sym,
-            )
+
+        return '<span><a href="%s/%s">%s</a></span>' % (
+            docdir,
+            filename,
+            sym,
+        )
 
     tagdoc = xml.dom.minidom.parse(path)
     root = tagdoc.documentElement
@@ -1182,7 +1173,7 @@ def specgen(
     spec_bundle = "file://%s/" % os.path.abspath(os.path.dirname(specloc))
 
     # Template
-    with open(template_path, "r") as f:
+    with open(template_path, "r", encoding="utf-8") as f:
         template = f.read()
 
     # Load code documentation link map from tags file
@@ -1267,6 +1258,7 @@ def specgen(
     proplist = docTerms(
         "Property", proplist, m, classlist, proplist, instalist
     )
+    instlist = ""
     if instances:
         instlist = docTerms(
             "Instance", instalist, m, classlist, proplist, instalist
@@ -1356,8 +1348,8 @@ def specgen(
     template = template.replace("@TIME@", build_date.strftime("%F %H:%M UTC"))
 
     # Validate complete output page
+    oldcwd = os.getcwd()
     try:
-        oldcwd = os.getcwd()
         os.chdir(specgendir)
         etree.fromstring(
             template.replace(
@@ -1378,7 +1370,7 @@ def specgen(
 
 def save(path, text):
     try:
-        with open(path, "w") as f:
+        with open(path, "w", encoding="utf-8") as f:
             f.write(text)
             f.flush()
     except Exception:
@@ -1437,8 +1429,6 @@ def _data_dirs():
 
 
 if __name__ == "__main__":
-    """Ontology specification generator tool"""
-
     data_dir = None
     for d in _data_dirs():
         path = os.path.join(d, "lv2specgen")
