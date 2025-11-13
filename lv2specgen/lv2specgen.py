@@ -9,6 +9,39 @@
 # Based on SpecGen:
 # <http://forge.morfeo-project.org/wiki_en/index.php/SpecGen>
 
+# pylint: disable=broad-exception-caught
+# pylint: disable=c-extension-no-member
+# pylint: disable=cell-var-from-loop
+# pylint: disable=consider-iterating-dictionary
+# pylint: disable=consider-using-f-string
+# pylint: disable=deprecated-module
+# pylint: disable=global-statement
+# pylint: disable=global-variable-not-assigned
+# pylint: disable=invalid-name
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-module-docstring
+# pylint: disable=no-else-return
+# pylint: disable=no-member
+# pylint: disable=pointless-string-statement
+# pylint: disable=possibly-used-before-assignment
+# pylint: disable=redefined-argument-from-local
+# pylint: disable=redefined-builtin
+# pylint: disable=redefined-outer-name
+# pylint: disable=too-many-arguments
+# pylint: disable=too-many-boolean-expressions
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-lines
+# pylint: disable=too-many-locals
+# pylint: disable=too-many-positional-arguments
+# pylint: disable=too-many-statements
+# pylint: disable=unspecified-encoding
+# pylint: disable=unused-argument
+# pylint: disable=use-implicit-booleaness-not-comparison
+# pylint: disable=use-implicit-booleaness-not-len
+# pylint: disable=use-maxsplit-arg
+# pylint: disable=used-before-assignment
+# pylint: disable=wrong-import-order
+
 import datetime
 import markdown
 import markdown.extensions

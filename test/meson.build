@@ -99,16 +99,11 @@ endif
 ##########
 
 if get_option('lint')
-  # Scripts that don't pass with pylint
-  lax_python_scripts = files(
+  python_scripts = lv2_scripts + files(
     '../lv2specgen/lv2docgen.py',
     '../lv2specgen/lv2specgen.py',
+    '../plugins/literasc.py',
   )
-
-  # Scripts that pass with everything including pylint
-  strict_python_scripts = lv2_scripts + files('../plugins/literasc.py')
-
-  all_python_scripts = lax_python_scripts + strict_python_scripts
 
   # Check script formatting
   black = find_program('black', required: get_option('tests'))
@@ -117,7 +112,7 @@ if get_option('lint')
     test(
       'black',
       black,
-      args: black_opts + all_python_scripts,
+      args: black_opts + python_scripts,
       suite: 'scripts',
     )
   endif
@@ -125,7 +120,7 @@ if get_option('lint')
   # Check scripts for errors with flake8
   flake8 = find_program('flake8', required: get_option('tests'))
   if flake8.found()
-    test('flake8', flake8, args: all_python_scripts, suite: 'scripts')
+    test('flake8', flake8, args: python_scripts, suite: 'scripts')
   endif
 
   # Check scripts for errors with pylint
@@ -139,7 +134,7 @@ if get_option('lint')
     )
 
     if lint_py.found()
-      test('pylint', pylint, args: strict_python_scripts, suite: 'scripts')
+      test('pylint', pylint, args: python_scripts, suite: 'scripts')
     endif
   endif
 endif

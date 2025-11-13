@@ -3,6 +3,15 @@
 # Copyright 2012 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: ISC
 
+# pylint: disable=consider-using-f-string
+# pylint: disable=invalid-name
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-module-docstring
+# pylint: disable=pointless-string-statement
+# pylint: disable=redefined-outer-name
+# pylint: disable=unspecified-encoding
+# pylint: disable=use-implicit-booleaness-not-len
+
 import errno
 import os
 import sys
