@@ -5,12 +5,13 @@ lv2 (1.18.11) unstable; urgency=medium
   * Allow LV2_SYMBOL_EXPORT to be overridden
   * Avoid over-use of yielding meson options
   * Fix pylint warning in test script
+  * Move example plugins to a separate project
   * Override pkg-config dependency within meson
   * Remove troublesome lv2_atom_assert_double_fits_in_64_bits
   * eg-metro: Fix memory leak
   * ui: Add types for Gtk4UI and Qt6UI
 
- -- David Robillard <d@drobilla.net>  Thu, 13 Nov 2025 22:51:44 +0000
+ -- David Robillard <d@drobilla.net>  Thu, 13 Nov 2025 22:54:05 +0000
 
 lv2 (1.18.10) stable; urgency=medium
 

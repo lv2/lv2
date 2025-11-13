@@ -32,7 +32,6 @@ if get_option('lint')
         lv2_source_root / 'doc',
         lv2_source_root / 'lv2',
         lv2_source_root / 'lv2specgen',
-        lv2_source_root / 'plugins',
         lv2_source_root / 'schemas.lv2',
       ],
       suite: 'data',
@@ -109,7 +108,6 @@ if get_option('lint')
   python_scripts = lv2_scripts + files(
     '../lv2specgen/lv2docgen.py',
     '../lv2specgen/lv2specgen.py',
-    '../plugins/literasc.py',
   )
 
   # Check script formatting

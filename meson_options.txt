@@ -22,9 +22,6 @@ option('old_headers', type: 'boolean',
 option('online_docs', type: 'boolean', value: false,
        description: 'Build documentation for online hosting')
 
-option('plugins', type: 'feature',
-       description: 'Build example plugins')
-
 option('tests', type: 'feature',
        description: 'Build tests')
 

@@ -86,7 +86,7 @@ mingw64:
 wasm:
   image: lv2plugin/debian-wasm
   script:
-    - meson setup build --cross-file=/usr/share/meson/cross/wasm.ini -Dbuildtype=debug -Dwarning_level=3 -Dwerror=true -Ddefault_library=static -Ddocs=disabled -Dplugins=disabled
+    - meson setup build --cross-file=/usr/share/meson/cross/wasm.ini -Dbuildtype=debug -Dwarning_level=3 -Dwerror=true -Ddefault_library=static -Ddocs=disabled
     - ninja -C build test
     - meson configure -Dbuildtype=release build
     - ninja -C build test

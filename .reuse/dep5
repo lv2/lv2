@@ -26,11 +26,7 @@ Files: **/README.txt doc/index.html.in doc/c/*.html lv2specgen/template.html res
 Copyright: Copyright 2010-2022 David Robillard <d@drobilla.net>
 License: ISC
 
-Files: plugins/eg-sampler.lv2/click.wav
-Copyright: Copyright 2012 David Robillard <d@drobilla.net>
-License: ISC
-
-Files: lv2/**/*.ttl plugins/**/*.ttl plugins/**/*.ttl.in schemas.lv2/xsd.ttl
+Files: lv2/**/*.ttl schemas.lv2/xsd.ttl
 Copyright: Copyright 2011-2022 David Robillard <d@drobilla.net>
            Copyright 2013 Robin Gareus <robin@gareus.org>
            Copyright 2006 Steve Harris <steve@plugin.org.uk>

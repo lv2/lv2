@@ -47,22 +47,15 @@ c_suppressions = []
 if cc.get_id() in ['clang', 'emscripten']
   if warning_level == 'everything'
     c_suppressions += [
-      '-Wno-bad-function-cast',
       '-Wno-cast-align',
-      '-Wno-cast-function-type-strict',
       '-Wno-cast-qual',
       '-Wno-declaration-after-statement',
       '-Wno-documentation-unknown-command',
       '-Wno-double-promotion',
-      '-Wno-float-conversion',
       '-Wno-float-equal',
-      '-Wno-implicit-float-conversion',
       '-Wno-padded',
       '-Wno-reserved-id-macro',
-      '-Wno-shorten-64-to-32',
       '-Wno-sign-conversion',
-      '-Wno-switch-default',
-      '-Wno-switch-enum',
       '-Wno-unsafe-buffer-usage',
     ]
 
@@ -82,10 +75,8 @@ if cc.get_id() in ['clang', 'emscripten']
 elif cc.get_id() == 'gcc'
   if warning_level == 'everything'
     c_suppressions += [
-      '-Wno-bad-function-cast',
       '-Wno-cast-align',
       '-Wno-cast-qual',
-      '-Wno-conversion',
       '-Wno-double-promotion',
       '-Wno-float-equal',
       '-Wno-inline',
@@ -93,14 +84,15 @@ elif cc.get_id() == 'gcc'
       '-Wno-suggest-attribute=const',
       '-Wno-suggest-attribute=malloc',
       '-Wno-suggest-attribute=pure',
-      '-Wno-switch-default',
-      '-Wno-switch-enum',
       '-Wno-unsuffixed-float-constants',
       '-Wno-unused-const-variable',
     ]
 
     if target_machine.system() == 'windows'
-      c_suppressions += ['-Wno-suggest-attribute=format']
+      c_suppressions += [
+        '-Wno-sign-conversion',
+        '-Wno-suggest-attribute=format',
+      ]
     endif
   endif
 
@@ -111,14 +103,7 @@ elif cc.get_id() == 'gcc'
 elif cc.get_id() == 'msvc'
   if warning_level == 'everything'
     c_suppressions += [
-      '/wd4061', # enumerator in switch is not explicitly handled
-      '/wd4244', # conversion with possible loss of data
-      '/wd4310', # cast truncates constant value
-      '/wd4365', # signed/unsigned mismatch
-      '/wd4464', # relative include path contains ".."
       '/wd4514', # unreferenced inline function has been removed
-      '/wd4514', # unreferenced inline function has been removed
-      '/wd4706', # assignment within conditional expression
       '/wd4710', # function not inlined
       '/wd4711', # function selected for automatic inline expansion
       '/wd4820', # padding added after construct
@@ -183,12 +168,10 @@ if is_variable('cpp')
     elif cpp.get_id() == 'msvc'
       cpp_suppressions += [
         '/wd4514', # unreferenced inline function has been removed
-        '/wd4706', # assignment within conditional expression
         '/wd4710', # function not inlined
         '/wd4711', # function selected for automatic inline expansion
         '/wd4820', # padding added after data member
         '/wd5045', # will insert Spectre mitigation
-        '/wd5264', # const variable is not used
       ]
     endif
   endif
@@ -227,7 +210,6 @@ if get_option('bundles') or get_option('headers') or get_option('old_headers')
     variables: [
       'lv2dir=' + lv2dir,
       'lv2specdatadir=' + lv2dir,
-      'plugindir=' + lv2dir,
     ],
     version: meson.project_version(),
   )
@@ -239,7 +221,6 @@ lv2_dep = declare_dependency(
   variables: [
     'lv2dir=' + lv2dir,
     'lv2specdatadir=' + lv2_source_root / 'lv2',
-    'plugindir=' + lv2_build_root / 'plugins',
   ],
   version: meson.project_version(),
 )
@@ -496,15 +477,6 @@ endif
 if build_docs
   subdir('doc/style')
   subdir('doc/ns')
-endif
-
-###########
-# Plugins #
-###########
-
-# Example plugins and "Programming LV2 Plugins" book
-if not get_option('plugins').disabled()
-  subdir('plugins')
 endif
 
 ############
