@@ -3,15 +3,6 @@
 
 config = configuration_data({'BASE': '/ns'})
 
-if get_option('online_docs')
-  htaccess = configure_file(
-    configuration: config,
-    input: files('..' / 'htaccess.in'),
-    install_dir: lv2_docdir / 'ns',
-    output: '.htaccess',
-  )
-endif
-
 ######################
 # Core Documentation #
 ######################
@@ -36,6 +27,13 @@ if build_docs
   )
 
   if get_option('online_docs')
+    htaccess = configure_file(
+      configuration: config,
+      input: files('..' / 'htaccess.in'),
+      install_dir: lv2_docdir / 'ns',
+      output: '.htaccess',
+    )
+
     configure_file(
       copy: true,
       input: spec_file,

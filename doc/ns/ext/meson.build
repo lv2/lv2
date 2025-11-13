@@ -1,16 +1,7 @@
-# Copyright 2022 David Robillard <d@drobilla.net>
+# Copyright 2022-2025 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
 config = configuration_data({'BASE': '/ns/ext'})
-
-if get_option('online_docs')
-  htaccess = configure_file(
-    configuration: config,
-    input: files('..' / '..' / 'htaccess.in'),
-    install_dir: lv2_docdir / 'ns' / 'ext',
-    output: '.htaccess',
-  )
-endif
 
 spec_names = [
   'atom',
@@ -37,6 +28,15 @@ spec_names = [
 ]
 
 if build_docs
+  if get_option('online_docs')
+    htaccess = configure_file(
+      configuration: config,
+      input: files('..' / '..' / 'htaccess.in'),
+      install_dir: lv2_docdir / 'ns' / 'ext',
+      output: '.htaccess',
+    )
+  endif
+
   foreach name : spec_names
     spec_file = files(lv2_source_root / 'lv2' / name + '.lv2' / name + '.ttl')
 
