@@ -12,4 +12,6 @@ schema_data = files(
   'xsd.ttl',
 )
 
-install_data(schema_data, install_dir: lv2dir / 'schemas.lv2')
+if get_option('bundles')
+  install_data(schema_data, install_dir: lv2dir / 'schemas.lv2')
+endif

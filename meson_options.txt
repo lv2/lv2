@@ -4,13 +4,19 @@
 option('docs', type: 'feature',
        description: 'Build documentation')
 
+option('bundles', type: 'boolean',
+       description: 'Install specification data bundles')
+
+option('headers', type: 'boolean',
+       description: 'Install new-style headers at simplified paths')
+
 option('lint', type: 'boolean', value: false,
        description: 'Run code quality checks')
 
 option('lv2dir', type: 'string', value: '',
        description: 'LV2 bundle installation directory')
 
-option('old_headers', type: 'boolean', value: true,
+option('old_headers', type: 'boolean',
        description: 'Install backwards compatible headers at URI-style paths')
 
 option('online_docs', type: 'boolean', value: false,

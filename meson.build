@@ -219,16 +219,18 @@ endif
 ######################
 
 # Generate pkg-config file for external dependants
-pkg.generate(
-  description: 'Plugin standard for audio systems',
-  filebase: 'lv2',
-  name: 'LV2',
-  variables: [
-    'lv2dir=' + lv2dir,
-    'plugindir=' + lv2dir,
-  ],
-  version: meson.project_version(),
-)
+if get_option('bundles') or get_option('headers') or get_option('old_headers')
+  pkg.generate(
+    description: 'Plugin standard for audio systems',
+    filebase: 'lv2',
+    name: 'LV2',
+    variables: [
+      'lv2dir=' + lv2dir,
+      'plugindir=' + lv2dir,
+    ],
+    version: meson.project_version(),
+  )
+endif
 
 # Declare dependency for internal meson dependants
 lv2_dep = declare_dependency(
@@ -291,7 +293,9 @@ all_spec_names = ['core'] + ext_names + extensions_names
 prefix = get_option('prefix')
 includedir = get_option('includedir')
 
-install_subdir('include/lv2', install_dir: includedir)
+if get_option('headers')
+  install_subdir('include/lv2', install_dir: includedir)
+endif
 
 if get_option('old_headers')
   uri_include_dir = prefix / includedir / 'lv2' / 'lv2plug.in' / 'ns'
@@ -369,7 +373,9 @@ foreach bundle_name : all_spec_names
   endif
 
   # Install specification bundle
-  install_subdir(bundle, install_dir: lv2dir)
+  if get_option('bundles')
+    install_subdir(bundle, install_dir: lv2dir)
+  endif
 endforeach
 
 spec_files = files(
