@@ -6,6 +6,13 @@
 ########
 
 if get_option('lint')
+  # Check licensing metadata
+  reuse = find_program('reuse', required: false)
+  if reuse.found()
+    reuse_args = ['--root', lv2_source_root, 'lint']
+    test('REUSE', reuse, args: reuse_args, suite: 'data')
+  endif
+
   # Check for spelling errors
   codespell = find_program('codespell', required: get_option('tests'))
   if codespell.found()

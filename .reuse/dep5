@@ -32,8 +32,8 @@ License: ISC
 
 Files: lv2/**/*.ttl plugins/**/*.ttl plugins/**/*.ttl.in schemas.lv2/xsd.ttl
 Copyright: Copyright 2011-2022 David Robillard <d@drobilla.net>
-Copyright: Copyright 2013 Robin Gareus <robin@gareus.org>
-Copyright: Copyright 2006 Steve Harris <steve@plugin.org.uk>
+           Copyright 2013 Robin Gareus <robin@gareus.org>
+           Copyright 2006 Steve Harris <steve@plugin.org.uk>
 License: ISC
 
 Files: lv2specgen/DTD/*
@@ -47,12 +47,12 @@ License: 0BSD OR ISC
 
 Files: schemas.lv2/doap.ttl
 Copyright: Copyright 2004-2016 Edd Dumbill <edd@usefulinc.com>
-Copyright: Copyright 2016-2017 Edd Wilder-James <edd@ewj.me>
+           Copyright 2016-2017 Edd Wilder-James <edd@ewj.me>
 License: Apache-2.0
 
 Files: schemas.lv2/foaf.ttl
-Copyright: Copyright 2000-2014 Dan Brickley <danbri@danbri.org>
-Copyright: Copyright 2000-2014 Libby Miller <libby@nicecupoftea.org>
+Copyright: 2000-2014 Dan Brickley <danbri@danbri.org>
+           2000-2014 Libby Miller <libby@nicecupoftea.org>
 License: CC-BY-1.0
 
 Files: schemas.lv2/rdf.ttl
