@@ -1,6 +1,7 @@
 lv2 (1.18.11) unstable; urgency=medium
 
   * Add configuration options to bundle, header, and tool installation
+  * Add lv2dir and lv2specdatadir package variables
   * Allow LV2_SYMBOL_EXPORT to be overridden
   * Avoid over-use of yielding meson options
   * Fix pylint warning in test script
@@ -9,7 +10,7 @@ lv2 (1.18.11) unstable; urgency=medium
   * eg-metro: Fix memory leak
   * ui: Add types for Gtk4UI and Qt6UI
 
- -- David Robillard <d@drobilla.net>  Thu, 13 Nov 2025 21:44:54 +0000
+ -- David Robillard <d@drobilla.net>  Thu, 13 Nov 2025 22:51:44 +0000
 
 lv2 (1.18.10) stable; urgency=medium
 

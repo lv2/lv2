@@ -226,6 +226,7 @@ if get_option('bundles') or get_option('headers') or get_option('old_headers')
     name: 'LV2',
     variables: [
       'lv2dir=' + lv2dir,
+      'lv2specdatadir=' + lv2dir,
       'plugindir=' + lv2dir,
     ],
     version: meson.project_version(),
@@ -236,7 +237,8 @@ endif
 lv2_dep = declare_dependency(
   include_directories: include_directories('include'),
   variables: [
-    'lv2dir=' + lv2_source_root / 'lv2',
+    'lv2dir=' + lv2dir,
+    'lv2specdatadir=' + lv2_source_root / 'lv2',
     'plugindir=' + lv2_build_root / 'plugins',
   ],
   version: meson.project_version(),
