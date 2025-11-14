@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2017-2020 David Robillard <d@drobilla.net>
+# Copyright 2017-2025 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: ISC
 
 LV2DIR="@LV2DIR@"
@@ -14,86 +14,61 @@ if [ "$#" -eq "0" ]; then
 fi
 
 sord_validate \
-    "$LV2DIR/patch.lv2/manifest.ttl" \
-    "$LV2DIR/patch.lv2/patch.meta.ttl" \
-    "$LV2DIR/patch.lv2/patch.ttl" \
-    "$LV2DIR/port-props.lv2/manifest.ttl" \
-    "$LV2DIR/port-props.lv2/port-props.meta.ttl" \
-    "$LV2DIR/port-props.lv2/port-props.ttl" \
-    "$LV2DIR/worker.lv2/worker.meta.ttl" \
-    "$LV2DIR/worker.lv2/manifest.ttl" \
-    "$LV2DIR/worker.lv2/worker.ttl" \
-    "$LV2DIR/buf-size.lv2/manifest.ttl" \
-    "$LV2DIR/buf-size.lv2/buf-size.meta.ttl" \
+    "$LV2DIR/atom.lv2/atom.ttl" \
+    "$LV2DIR/atom.lv2/manifest.ttl" \
     "$LV2DIR/buf-size.lv2/buf-size.ttl" \
-    "$LV2DIR/midi.lv2/midi.meta.ttl" \
+    "$LV2DIR/buf-size.lv2/manifest.ttl" \
+    "$LV2DIR/core.lv2/lv2core.ttl" \
+    "$LV2DIR/core.lv2/manifest.ttl" \
+    "$LV2DIR/core.lv2/people.ttl" \
+    "$LV2DIR/data-access.lv2/data-access.ttl" \
+    "$LV2DIR/data-access.lv2/manifest.ttl" \
+    "$LV2DIR/dynmanifest.lv2/dynmanifest.ttl" \
+    "$LV2DIR/dynmanifest.lv2/manifest.ttl" \
+    "$LV2DIR/event.lv2/event.ttl" \
+    "$LV2DIR/event.lv2/manifest.ttl" \
+    "$LV2DIR/instance-access.lv2/instance-access.ttl" \
+    "$LV2DIR/instance-access.lv2/manifest.ttl" \
+    "$LV2DIR/log.lv2/log.ttl" \
+    "$LV2DIR/log.lv2/manifest.ttl" \
     "$LV2DIR/midi.lv2/manifest.ttl" \
     "$LV2DIR/midi.lv2/midi.ttl" \
-    "$LV2DIR/atom.lv2/manifest.ttl" \
-    "$LV2DIR/atom.lv2/atom.ttl" \
-    "$LV2DIR/atom.lv2/atom.meta.ttl" \
-    "$LV2DIR/dynmanifest.lv2/dynmanifest.meta.ttl" \
-    "$LV2DIR/dynmanifest.lv2/manifest.ttl" \
-    "$LV2DIR/dynmanifest.lv2/dynmanifest.ttl" \
+    "$LV2DIR/morph.lv2/manifest.ttl" \
+    "$LV2DIR/morph.lv2/morph.ttl" \
     "$LV2DIR/options.lv2/manifest.ttl" \
-    "$LV2DIR/options.lv2/options.meta.ttl" \
     "$LV2DIR/options.lv2/options.ttl" \
     "$LV2DIR/parameters.lv2/manifest.ttl" \
     "$LV2DIR/parameters.lv2/parameters.ttl" \
-    "$LV2DIR/parameters.lv2/parameters.meta.ttl" \
-    "$LV2DIR/instance-access.lv2/instance-access.ttl" \
-    "$LV2DIR/instance-access.lv2/manifest.ttl" \
-    "$LV2DIR/instance-access.lv2/instance-access.meta.ttl" \
-    "$LV2DIR/state.lv2/manifest.ttl" \
-    "$LV2DIR/state.lv2/state.meta.ttl" \
-    "$LV2DIR/state.lv2/state.ttl" \
+    "$LV2DIR/patch.lv2/manifest.ttl" \
+    "$LV2DIR/patch.lv2/patch.ttl" \
     "$LV2DIR/port-groups.lv2/manifest.ttl" \
     "$LV2DIR/port-groups.lv2/port-groups.ttl" \
-    "$LV2DIR/port-groups.lv2/port-groups.meta.ttl" \
-    "$LV2DIR/ui.lv2/manifest.ttl" \
-    "$LV2DIR/ui.lv2/ui.ttl" \
-    "$LV2DIR/ui.lv2/ui.meta.ttl" \
-    "$LV2DIR/morph.lv2/manifest.ttl" \
-    "$LV2DIR/morph.lv2/morph.ttl" \
-    "$LV2DIR/morph.lv2/morph.meta.ttl" \
-    "$LV2DIR/event.lv2/manifest.ttl" \
-    "$LV2DIR/event.lv2/event.meta.ttl" \
-    "$LV2DIR/event.lv2/event.ttl" \
-    "$LV2DIR/resize-port.lv2/manifest.ttl" \
-    "$LV2DIR/resize-port.lv2/resize-port.ttl" \
-    "$LV2DIR/resize-port.lv2/resize-port.meta.ttl" \
-    "$LV2DIR/log.lv2/log.ttl" \
-    "$LV2DIR/log.lv2/manifest.ttl" \
-    "$LV2DIR/log.lv2/log.meta.ttl" \
-    "$LV2DIR/core.lv2/manifest.ttl" \
-    "$LV2DIR/core.lv2/lv2core.ttl" \
-    "$LV2DIR/core.lv2/lv2core.doap.ttl" \
-    "$LV2DIR/core.lv2/meta.ttl" \
-    "$LV2DIR/core.lv2/people.ttl" \
+    "$LV2DIR/port-props.lv2/manifest.ttl" \
+    "$LV2DIR/port-props.lv2/port-props.ttl" \
     "$LV2DIR/presets.lv2/manifest.ttl" \
     "$LV2DIR/presets.lv2/presets.ttl" \
-    "$LV2DIR/presets.lv2/presets.meta.ttl" \
-    "$LV2DIR/urid.lv2/manifest.ttl" \
-    "$LV2DIR/urid.lv2/urid.ttl" \
-    "$LV2DIR/urid.lv2/urid.meta.ttl" \
-    "$LV2DIR/time.lv2/time.meta.ttl" \
-    "$LV2DIR/time.lv2/manifest.ttl" \
-    "$LV2DIR/time.lv2/time.ttl" \
-    "$LV2DIR/data-access.lv2/manifest.ttl" \
-    "$LV2DIR/data-access.lv2/data-access.meta.ttl" \
-    "$LV2DIR/data-access.lv2/data-access.ttl" \
-    "$LV2DIR/units.lv2/manifest.ttl" \
-    "$LV2DIR/units.lv2/units.ttl" \
-    "$LV2DIR/units.lv2/units.meta.ttl" \
-    "$LV2DIR/schemas.lv2/xsd.ttl" \
-    "$LV2DIR/schemas.lv2/manifest.ttl" \
-    "$LV2DIR/schemas.lv2/rdf.ttl" \
+    "$LV2DIR/resize-port.lv2/manifest.ttl" \
+    "$LV2DIR/resize-port.lv2/resize-port.ttl" \
     "$LV2DIR/schemas.lv2/dcterms.ttl" \
     "$LV2DIR/schemas.lv2/doap.ttl" \
-    "$LV2DIR/schemas.lv2/rdfs.ttl" \
     "$LV2DIR/schemas.lv2/foaf.ttl" \
+    "$LV2DIR/schemas.lv2/manifest.ttl" \
     "$LV2DIR/schemas.lv2/owl.ttl" \
+    "$LV2DIR/schemas.lv2/rdf.ttl" \
+    "$LV2DIR/schemas.lv2/rdfs.ttl" \
+    "$LV2DIR/schemas.lv2/xsd.ttl" \
+    "$LV2DIR/state.lv2/manifest.ttl" \
+    "$LV2DIR/state.lv2/state.ttl" \
+    "$LV2DIR/time.lv2/manifest.ttl" \
+    "$LV2DIR/time.lv2/time.ttl" \
+    "$LV2DIR/ui.lv2/manifest.ttl" \
+    "$LV2DIR/ui.lv2/ui.ttl" \
+    "$LV2DIR/units.lv2/manifest.ttl" \
+    "$LV2DIR/units.lv2/units.ttl" \
     "$LV2DIR/uri-map.lv2/manifest.ttl" \
     "$LV2DIR/uri-map.lv2/uri-map.ttl" \
-    "$LV2DIR/uri-map.lv2/uri-map.meta.ttl" \
-    $@
+    "$LV2DIR/urid.lv2/manifest.ttl" \
+    "$LV2DIR/urid.lv2/urid.ttl" \
+    "$LV2DIR/worker.lv2/manifest.ttl" \
+    "$LV2DIR/worker.lv2/worker.ttl" \
+    "$@"
