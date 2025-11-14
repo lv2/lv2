@@ -1,8 +1,6 @@
 # Copyright 2022 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
-lv2_source_doc = meson.current_source_dir()
-
 if doxygen.found()
   reference_doxygen_in = files('reference.doxygen.in')
 

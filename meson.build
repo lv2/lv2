@@ -20,163 +20,23 @@ lv2_docdir = get_option('datadir') / 'doc' / 'lv2'
 lv2_source_root = meson.current_source_dir()
 lv2_build_root = meson.current_build_dir()
 
-#############################
-# Compilers and Build Tools #
-#############################
+installing_anything = (
+  get_option('bundles') or
+  get_option('headers') or
+  get_option('old_headers')
+)
 
-# Required tools
-pkg = import('pkgconfig')
-pymod = import('python')
-cc = meson.get_compiler('c')
+###############
+# Build Tools #
+###############
 
-# Optional C++ compiler and Python tools for tests
-if not get_option('tests').disabled()
-  if add_languages(['cpp'], native: false, required: get_option('tests'))
-    cpp = meson.get_compiler('cpp')
-  endif
-endif
-
-########################
-# Warning Suppressions #
-########################
-
-warning_level = get_option('warning_level')
-
-# C
-c_suppressions = []
-if cc.get_id() in ['clang', 'emscripten']
-  if warning_level == 'everything'
-    c_suppressions += [
-      '-Wno-cast-align',
-      '-Wno-cast-qual',
-      '-Wno-declaration-after-statement',
-      '-Wno-documentation-unknown-command',
-      '-Wno-double-promotion',
-      '-Wno-float-equal',
-      '-Wno-padded',
-      '-Wno-reserved-id-macro',
-      '-Wno-sign-conversion',
-      '-Wno-unsafe-buffer-usage',
-    ]
-
-    if not meson.is_cross_build()
-      c_suppressions += ['-Wno-poison-system-directories']
-    endif
-
-    if host_machine.system() == 'windows'
-      c_suppressions += ['-Wno-format-nonliteral']
-    endif
-  endif
-
-  if warning_level in ['everything', '3', '2']
-    c_suppressions += ['-Wno-unused-parameter']
-  endif
-
-elif cc.get_id() == 'gcc'
-  if warning_level == 'everything'
-    c_suppressions += [
-      '-Wno-cast-align',
-      '-Wno-cast-qual',
-      '-Wno-double-promotion',
-      '-Wno-float-equal',
-      '-Wno-inline',
-      '-Wno-padded',
-      '-Wno-suggest-attribute=const',
-      '-Wno-suggest-attribute=malloc',
-      '-Wno-suggest-attribute=pure',
-      '-Wno-unsuffixed-float-constants',
-      '-Wno-unused-const-variable',
-    ]
-
-    if target_machine.system() == 'windows'
-      c_suppressions += [
-        '-Wno-sign-conversion',
-        '-Wno-suggest-attribute=format',
-      ]
-    endif
-  endif
-
-  if warning_level in ['everything', '3', '2']
-    c_suppressions += ['-Wno-unused-parameter']
-  endif
-
-elif cc.get_id() == 'msvc'
-  if warning_level == 'everything'
-    c_suppressions += [
-      '/wd4514', # unreferenced inline function has been removed
-      '/wd4710', # function not inlined
-      '/wd4711', # function selected for automatic inline expansion
-      '/wd4820', # padding added after construct
-      '/wd5045', # will insert Spectre mitigation for memory load
-    ]
-  endif
-
-  if warning_level in ['everything', '3']
-    c_suppressions += [
-      '/wd4100', # unreferenced formal parameter
-    ]
-  endif
-
-  if warning_level in ['everything', '3', '2']
-    c_suppressions += [
-      '/wd4267', # conversion from size_t to a smaller type
-    ]
-  endif
-endif
-
-c_suppressions = cc.get_supported_arguments(c_suppressions)
-
-# C++
-if is_variable('cpp')
-  cpp_suppressions = []
-
-  if warning_level == 'everything'
-    if cpp.get_id() in ['clang', 'emscripten']
-      cpp_suppressions += [
-        '-Wno-c++98-compat',
-        '-Wno-cast-align',
-        '-Wno-cast-qual',
-        '-Wno-documentation-unknown-command',
-        '-Wno-nullability-extension',
-        '-Wno-padded',
-        '-Wno-reserved-id-macro',
-        '-Wno-unsafe-buffer-usage',
-      ]
-
-      if not meson.is_cross_build()
-        cpp_suppressions += ['-Wno-poison-system-directories']
-      endif
-
-      if host_machine.system() == 'windows'
-        cpp_suppressions += ['-Wno-format-nonliteral']
-      endif
-
-    elif cpp.get_id() == 'gcc'
-      cpp_suppressions += [
-        '-Wno-cast-align',
-        '-Wno-cast-qual',
-        '-Wno-inline',
-        '-Wno-padded',
-        '-Wno-unused-const-variable',
-        '-Wno-useless-cast',
-      ]
-
-      if target_machine.system() == 'windows'
-        cpp_suppressions += ['-Wno-suggest-attribute=format']
-      endif
-
-    elif cpp.get_id() == 'msvc'
-      cpp_suppressions += [
-        '/wd4514', # unreferenced inline function has been removed
-        '/wd4710', # function not inlined
-        '/wd4711', # function selected for automatic inline expansion
-        '/wd4820', # padding added after data member
-        '/wd5045', # will insert Spectre mitigation
-      ]
-    endif
-  endif
-
-  cpp_suppressions = cpp.get_supported_arguments(cpp_suppressions)
+pymod = disabler()
+if (
+  get_option('bundles')
+  or get_option('lint')
+  or not get_option('docs').disabled()
+)
+  pymod = import('python')
 endif
 
 ##########################
@@ -202,7 +62,8 @@ endif
 ######################
 
 # Generate pkg-config file for external dependants
-if get_option('bundles') or get_option('headers') or get_option('old_headers')
+if installing_anything
+  pkg = import('pkgconfig')
   pkg.generate(
     description: 'Plugin standard for audio systems',
     filebase: 'lv2',
@@ -328,38 +189,41 @@ subdir('schemas.lv2')
 
 lv2_check_specification = files('scripts' / 'lv2_check_specification.py')
 
-check_python = pymod.find_installation(
-  'python3',
-  modules: ['rdflib'],
-  required: get_option('tests'),
-)
-
-if (
-  check_python.found()
-  and check_python.language_version().version_compare('<3.7')
-)
-  warning('Python 3.7 is required for tests')
+if get_option('bundles')
   check_python = disabler()
-endif
-
-foreach bundle_name : all_spec_names
-  bundle = 'lv2' / bundle_name + '.lv2'
-
-  # Check specification
-  if check_python.found()
-    test(
-      bundle_name,
-      lv2_check_specification,
-      args: files(bundle / 'manifest.ttl'),
-      suite: ['spec'],
+  if not get_option('tests').disabled()
+    check_python = pymod.find_installation(
+      'python3',
+      modules: ['rdflib'],
+      required: get_option('tests'),
     )
+
+    if (
+      check_python.found()
+      and check_python.language_version().version_compare('<3.7')
+    )
+      warning('Python 3.7 is required for tests')
+      check_python = disabler()
+    endif
   endif
 
-  # Install specification bundle
-  if get_option('bundles')
+  foreach bundle_name : all_spec_names
+    bundle = 'lv2' / bundle_name + '.lv2'
+
+    # Check specification
+    if check_python.found()
+      test(
+        bundle_name,
+        lv2_check_specification,
+        args: files(bundle / 'manifest.ttl'),
+        suite: ['spec'],
+      )
+    endif
+
+    # Install specification bundle
     install_subdir(bundle, install_dir: lv2dir)
-  endif
-endforeach
+  endforeach
+endif
 
 spec_files = files(
   'lv2/atom.lv2/atom.meta.ttl',
@@ -443,40 +307,34 @@ spec_files = files(
 #################
 
 # Determine if all the dependencies for building documentation are present
-doxygen = find_program('doxygen', required: get_option('docs'))
 build_docs = false
-build_lv2specgen = false
-doc_deps = []
 if not get_option('docs').disabled()
-  doc_python_modules = ['lxml', 'markdown', 'pygments', 'rdflib']
-
-  python = pymod.find_installation(
+  doxygen = find_program('doxygen', required: get_option('docs'))
+  doc_python = pymod.find_installation(
     'python3',
-    modules: doc_python_modules,
+    modules: ['lxml', 'markdown', 'pygments', 'rdflib'],
     required: get_option('docs'),
   )
 
-  if python.found() and python.language_version().version_compare('<3.7')
+  build_docs = doxygen.found() and doc_python.found()
+  if doc_python.found() and doc_python.language_version().version_compare('<3.7')
     warning('Python 3.7 is required for documentation')
     build_docs = false
   endif
-
-  build_docs = doxygen.found() and python.found()
-  build_lv2specgen = python.found()
 endif
 
-# Run Doxygen first to generate tags
-subdir('doc/c')
-
-# Set up lv2specgen and lv2specgen_command_prefix (which references tags)
-if build_lv2specgen
-  subdir('lv2specgen')
-endif
-
-# Generate specification documentation
 if build_docs
-  subdir('doc/style')
-  subdir('doc/ns')
+  # Run Doxygen first to generate tags
+  subdir('doc/c')
+
+  # Set up lv2specgen and lv2specgen_command_prefix (which references tags)
+  subdir('lv2specgen')
+
+  # Generate specification documentation
+  if build_docs
+    subdir('doc/style')
+    subdir('doc/ns')
+  endif
 endif
 
 ############
