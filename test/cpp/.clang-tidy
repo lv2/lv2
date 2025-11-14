@@ -2,10 +2,9 @@
 # SPDX-License-Identifier: 0BSD OR ISC
 
 Checks: >
-  -*-avoid-c-arrays,
-  -*-deprecated-headers,
   -*-no-malloc,
   -*-use-auto,
+  -*-use-nullptr,
   -bugprone-reserved-identifier,
   -cert-dcl37-c,
   -cert-dcl50-cpp,
@@ -17,10 +16,7 @@ Checks: >
   -cppcoreguidelines-pro-type-cstyle-cast,
   -cppcoreguidelines-pro-type-vararg,
   -hicpp-no-array-decay,
-  -hicpp-use-nullptr,
   -hicpp-vararg,
-  -llvmlibc-callee-namespace,
-  -modernize-use-nullptr,
   -modernize-use-using,
   -performance-enum-size,
   -readability-implicit-bool-conversion,

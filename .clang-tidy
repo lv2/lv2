@@ -6,14 +6,8 @@ Checks: >
   -*-macro-to-enum,
   -*-magic-numbers,
   -altera-*,
-  -bugprone-assignment-in-if-condition,
   -bugprone-easily-swappable-parameters,
-  -bugprone-macro-parentheses,
-  -clang-diagnostic-unused-function,
-  -clang-diagnostic-unused-macros,
   -llvmlibc-*,
-  -misc-include-cleaner,
-  -performance-no-int-to-ptr,
   -readability-identifier-length,
 CheckOptions:
   - key: hicpp-uppercase-literal-suffix.NewSuffixes
@@ -21,5 +15,5 @@ CheckOptions:
   - key: readability-uppercase-literal-suffix.NewSuffixes
     value: L;U;f
 FormatStyle: file
-HeaderFilterRegex: 'lv2/.*\.h'
+HeaderFilterRegex: 'lv2/.*\.h$'
 WarningsAsErrors: '*'
