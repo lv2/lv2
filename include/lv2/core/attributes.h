@@ -19,7 +19,7 @@
 #  define LV2_DEPRECATED
 #endif
 
-#if defined(__clang__)
+#ifdef __clang__
 #  define LV2_DISABLE_DEPRECATION_WARNINGS \
     _Pragma("clang diagnostic push")       \
     _Pragma("clang diagnostic ignored \"-Wdeprecated-declarations\"")
@@ -31,7 +31,7 @@
 #  define LV2_DISABLE_DEPRECATION_WARNINGS
 #endif
 
-#if defined(__clang__)
+#ifdef __clang__
 #  define LV2_RESTORE_WARNINGS _Pragma("clang diagnostic pop")
 #elif defined(__GNUC__) && __GNUC__ > 4
 #  define LV2_RESTORE_WARNINGS _Pragma("GCC diagnostic pop")

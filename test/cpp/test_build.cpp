@@ -1,7 +1,7 @@
 // Copyright 2022 David Robillard <d@drobilla.net>
 // SPDX-License-Identifier: ISC
 
-#if defined(__clang__)
+#ifdef __clang__
 _Pragma("clang diagnostic push")
 _Pragma("clang diagnostic ignored \"-Wold-style-cast\"")
 _Pragma("clang diagnostic ignored \"-Wzero-as-null-pointer-constant\"")
@@ -47,7 +47,7 @@ main()
   return 0;
 }
 
-#if defined(__clang__)
+#ifdef __clang__
 _Pragma("clang diagnostic pop")
 #elif defined(__GNUC__)
 _Pragma("GCC diagnostic pop")
