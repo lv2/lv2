@@ -13,3 +13,6 @@ tags
 
 # cached files when used as a meson subproject
 .meson-subproject-wrap-hash.txt
+
+# .wraplock file added in meson 1.9.0
+/subprojects/.wraplock
