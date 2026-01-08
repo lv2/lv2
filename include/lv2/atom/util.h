@@ -333,7 +333,10 @@ lv2_atom_object_query(const LV2_Atom_Object* object,
     ++n_queries;
   }
 
-  LV2_ATOM_OBJECT_FOREACH (object, prop) {
+  for (const LV2_Atom_Property_Body* prop =
+         lv2_atom_object_begin(&object->body);
+       !lv2_atom_object_is_end(&object->body, object->atom.size, prop);
+       prop = lv2_atom_object_next(prop)) {
     for (const LV2_Atom_Object_Query* q = query; q->key; ++q) {
       if (q->key == prop->key && !*q->value) {
         *q->value = &prop->value;
@@ -367,7 +370,9 @@ lv2_atom_object_body_get(uint32_t size, const LV2_Atom_Object_Body* body, ...)
   }
   va_end(args);
 
-  LV2_ATOM_OBJECT_BODY_FOREACH (body, size, prop) {
+  for (const LV2_Atom_Property_Body* prop = lv2_atom_object_begin(body);
+       !lv2_atom_object_is_end(body, size, prop);
+       prop = lv2_atom_object_next(prop)) {
     va_start(args, body);
     for (int i = 0; i < n_queries; ++i) {
       const uint32_t   qkey = va_arg(args, uint32_t);
@@ -422,7 +427,10 @@ lv2_atom_object_get(const LV2_Atom_Object* object, ...)
   }
   va_end(args);
 
-  LV2_ATOM_OBJECT_FOREACH (object, prop) {
+  for (const LV2_Atom_Property_Body* prop =
+         lv2_atom_object_begin(&object->body);
+       !lv2_atom_object_is_end(&object->body, object->atom.size, prop);
+       prop = lv2_atom_object_next(prop)) {
     va_start(args, object);
     for (int i = 0; i < n_queries; ++i) {
       const uint32_t   qkey = va_arg(args, uint32_t);
@@ -478,7 +486,9 @@ lv2_atom_object_get_typed(const LV2_Atom_Object* object, ...)
   }
   va_end(args);
 
-  LV2_ATOM_OBJECT_FOREACH (object, prop) {
+  for (const LV2_Atom_Property_Body* prop = lv2_atom_object_begin(&object->body);
+       !lv2_atom_object_is_end(&object->body, object->atom.size, prop);
+       prop = lv2_atom_object_next(prop)) {
     va_start(args, object);
     for (int i = 0; i < n_queries; ++i) {
       const uint32_t   qkey  = va_arg(args, uint32_t);
