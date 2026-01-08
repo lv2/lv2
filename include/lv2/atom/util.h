@@ -329,12 +329,12 @@ lv2_atom_object_query(const LV2_Atom_Object* object,
   int n_queries = 0;
 
   /* Count number of query keys so we can short-circuit when done */
-  for (LV2_Atom_Object_Query* q = query; q->key; ++q) {
+  for (const LV2_Atom_Object_Query* q = query; q->key; ++q) {
     ++n_queries;
   }
 
   LV2_ATOM_OBJECT_FOREACH (object, prop) {
-    for (LV2_Atom_Object_Query* q = query; q->key; ++q) {
+    for (const LV2_Atom_Object_Query* q = query; q->key; ++q) {
       if (q->key == prop->key && !*q->value) {
         *q->value = &prop->value;
         if (++matches == n_queries) {

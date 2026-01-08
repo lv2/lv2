@@ -287,7 +287,7 @@ lv2_atom_forge_raw(LV2_Atom_Forge* forge, const void* data, uint32_t size)
     forge->offset += size;
     memcpy(mem, data, size);
   }
-  for (LV2_Atom_Forge_Frame* f = forge->stack; f; f = f->parent) {
+  for (const LV2_Atom_Forge_Frame* f = forge->stack; f; f = f->parent) {
     lv2_atom_forge_deref(forge, f->ref)->size += size;
   }
   return out;
