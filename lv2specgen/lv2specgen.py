@@ -29,7 +29,6 @@
 # pylint: disable=too-many-locals
 # pylint: disable=too-many-positional-arguments
 # pylint: disable=too-many-statements
-# pylint: disable=unused-argument
 
 import datetime
 import optparse
@@ -170,7 +169,7 @@ def niceName(uri):
     return uri
 
 
-def termName(m, urinode):
+def termName(urinode):
     "Trims the namespace out of a term to give a name to the term."
     return str(urinode).replace(spec_ns_str, "")
 
@@ -762,7 +761,7 @@ def docTerms(category, termlist, m, classlist, proplist, instalist):
         if not term.startswith(spec_ns_str):
             continue
 
-        t = termName(m, term)
+        t = termName(term)
         curie = term.split(spec_ns_str[-1])[1]
         if t:
             doc += '<div class="specterm" id="%s" about="%s">' % (t, term)
@@ -837,9 +836,9 @@ def buildIndex(m, classlist, proplist, instalist=None):
     head = ""
     body = ""
 
-    def termLink(m, t):
+    def termLink(t):
         if str(t).startswith(spec_ns_str):
-            name = termName(m, t)
+            name = termName(t)
             return '<a href="#%s">%s</a>' % (name, name)
 
         return '<a href="%s">%s</a>' % (str(t), str(t))
@@ -862,7 +861,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
                 continue
 
             shown[c] = True
-            body += "<li>" + termLink(m, c)
+            body += "<li>" + termLink(c)
 
             def class_tree(c):
                 tree = ""
@@ -873,7 +872,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
                     subclasses += [getSubject(s)]
 
                 for s in sorted(subclasses):
-                    tree += "<li>" + termLink(m, s)
+                    tree += "<li>" + termLink(s)
                     tree += class_tree(s)
                     tree += "</li>"
                 if tree != "":
@@ -888,7 +887,7 @@ def buildIndex(m, classlist, proplist, instalist=None):
         head += '<th><a href="#ref-properties" />Properties</th>'
         body += "<td><ul>"
         for p in sorted(proplist):
-            body += "<li>%s</li>" % termLink(m, p)
+            body += "<li>%s</li>" % termLink(p)
         body += "</ul></td>\n"
 
     if instalist is not None and len(instalist) > 0:
