@@ -218,7 +218,7 @@
 <![%xhtml-ruby.module;[
 <!ENTITY % xhtml-ruby.mod
      PUBLIC "-//W3C//ELEMENTS XHTML Ruby 1.0//EN"
-            "http://www.w3.org/TR/ruby/xhtml-ruby-1.mod" >
+            "xhtml-ruby-1.mod" >
 %xhtml-ruby.mod;]]>
 
 <!-- Presentation Module  ........................................ -->

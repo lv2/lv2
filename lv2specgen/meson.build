@@ -1,4 +1,4 @@
-# Copyright 2022-2025 David Robillard <d@drobilla.net>
+# Copyright 2022-2026 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
 lv2specgen_py = files('lv2specgen.py')
@@ -12,6 +12,7 @@ lv2specgen_command_prefix = [
   '--list-page=' + lv2_list_page,
   '--style-dir=' + lv2_source_root / 'doc' / 'style',
   '--template', files('template.html'),
+  '--validate',
 ]
 
 if is_variable('lv2_tags')

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright 2009-2022 David Robillard <d@drobilla.net>
+# Copyright 2009-2026 David Robillard <d@drobilla.net>
 # Copyright 2003-2008 Christopher Schmidt <crschmidt@crschmidt.net>
 # Copyright 2005-2008 Uldis Bojars <uldis.bojars@deri.org>
 # Copyright 2007-2008 Sergio Fernández <sergio.fernandez@fundacionctic.org>
@@ -18,9 +18,11 @@
 # pylint: disable=global-statement
 # pylint: disable=global-variable-not-assigned
 # pylint: disable=invalid-name
+# pylint: disable=missing-class-docstring
 # pylint: disable=missing-function-docstring
 # pylint: disable=no-member
 # pylint: disable=redefined-outer-name
+# pylint: disable=too-few-public-methods
 # pylint: disable=too-many-arguments
 # pylint: disable=too-many-boolean-expressions
 # pylint: disable=too-many-branches
@@ -43,7 +45,7 @@ import xml.sax.saxutils
 import markdown
 import markdown.extensions
 
-__date__ = "2011-10-26"
+__date__ = "2026-02-07"
 __version__ = __date__.replace("-", ".")
 __authors__ = """
 Christopher Schmidt,
@@ -102,6 +104,12 @@ owl = rdflib.Namespace("http://www.w3.org/2002/07/owl#")
 lv2 = rdflib.Namespace("http://lv2plug.in/ns/lv2core#")
 doap = rdflib.Namespace("http://usefulinc.com/ns/doap#")
 foaf = rdflib.Namespace("http://xmlns.com/foaf/0.1/")
+
+
+class DTDResolver(etree.Resolver):
+    def resolve(self, url, _pubid, context):
+        path = os.path.join(specgendir, url)
+        return self.resolve_filename(path, context)
 
 
 def findStatements(model, s, p, o):
@@ -1160,6 +1168,7 @@ def specgen(
     tags,
     opts,
     instances=False,
+    validate=False,
 ):
     """The meat and potatoes: Everything starts here."""
 
@@ -1346,17 +1355,22 @@ def specgen(
     build_date = datetime.datetime.fromtimestamp(now, datetime.timezone.utc)
     template = template.replace("@DATE@", build_date.strftime("%F"))
     template = template.replace("@TIME@", build_date.strftime("%F %H:%M UTC"))
+    if not validate:
+        return template
 
     # Validate complete output page
     oldcwd = os.getcwd()
     try:
         os.chdir(specgendir)
+        parser = etree.XMLParser(dtd_validation=True, no_network=True)
+        parser.resolvers.add(DTDResolver())
+
         etree.fromstring(
             template.replace(
                 '"http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"',
                 '"DTD/xhtml-rdfa-1.dtd"',
             ).encode("utf-8"),
-            etree.XMLParser(dtd_validation=True, no_network=True),
+            parser,
         )
     except Exception as e:
         sys.stderr.write(
@@ -1429,31 +1443,31 @@ def _data_dirs():
 
 
 if __name__ == "__main__":
-    data_dir = None
-    for d in _data_dirs():
-        path = os.path.join(d, "lv2specgen")
-        if (
-            os.path.exists(os.path.join(path, "template.html"))
-            and os.path.exists(os.path.join(path, "style.css"))
-            and os.path.exists(os.path.join(path, "pygments.css"))
-        ):
-            data_dir = path
-            break
-
-    if data_dir:
-        # Use installed files
-        specgendir = data_dir
-        default_template_path = os.path.join(data_dir, "template.html")
-        default_style_dir = data_dir
+    script_path = os.path.realpath(__file__)
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    if os.path.exists(os.path.join(script_dir, "template.html")):
+        # Run from source repository
+        specgendir = script_dir
+        lv2_source_root = os.path.dirname(script_dir)
+        default_template_path = os.path.join(script_dir, "template.html")
+        default_style_dir = os.path.join(lv2_source_root, "doc", "style")
     else:
-        script_path = os.path.realpath(__file__)
-        script_dir = os.path.dirname(os.path.realpath(__file__))
-        if os.path.exists(os.path.join(script_dir, "template.html")):
-            # Run from source repository
-            specgendir = script_dir
-            lv2_source_root = os.path.dirname(script_dir)
-            default_template_path = os.path.join(script_dir, "template.html")
-            default_style_dir = os.path.join(lv2_source_root, "doc", "style")
+        data_dir = None
+        for d in _data_dirs():
+            path = os.path.join(d, "lv2specgen")
+            files_exist = all(
+                os.path.exists(os.path.join(path, name))
+                for name in ["template.html", "style.css", "pygments.css"]
+            )
+            if files_exist:
+                data_dir = path
+                break
+
+        if data_dir:
+            # Use installed files
+            specgendir = data_dir
+            default_template_path = os.path.join(data_dir, "template.html")
+            default_style_dir = data_dir
         else:
             sys.stderr.write("error: Unable to find lv2specgen data\n")
             sys.exit(-2)
@@ -1529,6 +1543,12 @@ if __name__ == "__main__":
         dest="copy_style",
         help="Copy style from template directory to output directory",
     )
+    opt.add_option(
+        "--validate",
+        action="store_true",
+        dest="validate",
+        help="Validate against local XML DTDs",
+    )
 
     (options, args) = opt.parse_args()
     opts = vars(options)
@@ -1564,6 +1584,7 @@ if __name__ == "__main__":
         tags,
         opts,
         instances=True,
+        validate=opts["validate"],
     )
 
     # Save to HTML output file
