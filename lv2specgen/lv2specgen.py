@@ -16,14 +16,13 @@
 # pylint: disable=cell-var-from-loop
 # pylint: disable=consider-using-f-string
 # pylint: disable=global-statement
+# pylint: disable=import-outside-toplevel
 # pylint: disable=invalid-name
 # pylint: disable=missing-class-docstring
 # pylint: disable=missing-function-docstring
 # pylint: disable=no-member
-# pylint: disable=redefined-outer-name
 # pylint: disable=too-few-public-methods
 # pylint: disable=too-many-arguments
-# pylint: disable=too-many-boolean-expressions
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-lines
 # pylint: disable=too-many-locals
@@ -280,11 +279,12 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
         space = match.group(1)
         name = match.group(2)
         uri = rdflib.URIRef(spec_ns + name)
-        if (
+        known = (
             (classlist and uri in classlist)
             or (instalist and uri in instalist)
             or (proplist and uri in proplist)
-        ):
+        )
+        if known:
             return '%s<a href="#%s">%s</a>' % (space, name, name)
 
         print("warning: Link to undefined resource <%s>\n" % name)
@@ -1128,7 +1128,7 @@ def load_tags(path, docdir):
 
     tagdoc = xml.dom.minidom.parse(path)
     root = tagdoc.documentElement
-    linkmap = {}
+    result = {}
     for cn in root.childNodes:
         if (
             cn.nodeType == xml.dom.Node.ELEMENT_NODE
@@ -1142,7 +1142,7 @@ def load_tags(path, docdir):
                 filename += ".html"
 
             if cn.getAttribute("kind") != "group":
-                linkmap[name] = linkTo(filename, anchor, name)
+                result[name] = linkTo(filename, anchor, name)
 
             prefix = ""
             if cn.getAttribute("kind") == "struct":
@@ -1153,9 +1153,9 @@ def load_tags(path, docdir):
                 mname = prefix + getChildText(m, "name")
                 mafile = getChildText(m, "anchorfile")
                 manchor = getChildText(m, "anchor")
-                linkmap[mname] = linkTo(mafile, manchor, mname)
+                result[mname] = linkTo(mafile, manchor, mname)
 
-    return linkmap
+    return result
 
 
 def specgen(
@@ -1446,8 +1446,12 @@ def _data_dirs():
     )
 
 
-if __name__ == "__main__":
-    script_path = os.path.realpath(__file__)
+def main():
+    """Main program that parses the program arguments and runs"""
+
+    global spec_pre
+    global specgendir
+
     script_dir = os.path.dirname(os.path.realpath(__file__))
     if os.path.exists(os.path.join(script_dir, "template.html")):
         # Run from source repository
@@ -1602,3 +1606,7 @@ if __name__ == "__main__":
                 os.path.join(style_dir, stylesheet),
                 os.path.join(output_dir, stylesheet),
             )
+
+
+if __name__ == "__main__":
+    main()
