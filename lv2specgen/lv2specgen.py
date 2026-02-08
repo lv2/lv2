@@ -169,7 +169,7 @@ def niceName(uri):
 
 
 def termName(urinode):
-    "Trims the namespace out of a term to give a name to the term."
+    """Trims the namespace out of a term to give a name to the term."""
     return str(urinode).replace(spec_ns_str, "")
 
 
@@ -182,7 +182,7 @@ def getLabel(m, urinode):
 
 
 def linkifyCodeIdentifiers(string):
-    "Add links to code documentation for identifiers like LV2_Type"
+    """Add links to code documentation for identifiers like LV2_Type."""
 
     if not linkmap:
         return string
@@ -204,7 +204,7 @@ def linkifyCodeIdentifiers(string):
 
 
 def linkifyVocabIdentifiers(m, string, classlist, proplist, instalist):
-    "Add links to vocabulary documentation for prefixed names like eg:Thing"
+    """Add links to vocabulary documentation for prefixed names."""
 
     rgx = re.compile("([a-zA-Z0-9_-]+):([a-zA-Z0-9_-]+)")
     namespaces = getNamespaces(m)
@@ -396,7 +396,7 @@ def getFullDocumentation(m, subject, classlist, proplist, instalist):
 
 
 def getProperty(val, first=True):
-    "Return a string representing a property value in a property table"
+    """Return a string representing a property value in a property table."""
     doc = ""
     if not first:
         doc += "<tr><th></th>"  # Empty cell in header column
@@ -409,7 +409,7 @@ def endProperties(first):
 
 
 def rdfsPropertyInfo(term, m):
-    """Generate HTML for properties: Domain, range"""
+    """Generate HTML for properties: Domain, range."""
     doc = ""
 
     label = getLabel(m, term)
@@ -509,7 +509,8 @@ def getTermLink(uri, subject=None, predicate=None):
 
 
 def owlRestrictionInfo(term, m):
-    """Generate OWL restriction information for Classes"""
+    """Generate OWL restriction information for Classes."""
+
     restrictions = []
     for s in findStatements(m, term, rdfs.subClassOf, None):
         if findOne(m, getObject(s), rdf.type, owl.Restriction):
@@ -621,7 +622,8 @@ def rdfsClassInfo(term, m):
 
 
 def isSpecial(pred):
-    """Return True if `pred` shouldn't be documented generically"""
+    """Return True if `pred` shouldn't be documented generically."""
+
     return pred in [
         rdf.type,
         rdfs.range,
@@ -665,7 +667,7 @@ def blankNodeDesc(node, m):
 
 
 def extraInfo(term, m):
-    """Generate information about misc. properties of a term"""
+    """Generate information about misc. properties of a term."""
     doc = ""
     properties = findStatements(m, term, None, None)
     first = True
@@ -692,7 +694,7 @@ def extraInfo(term, m):
 
 
 def rdfsInstanceInfo(term, m):
-    """Generate rdfs-type information for instances"""
+    """Generate rdfs-type information for instances."""
     doc = ""
 
     label = getLabel(m, term)
@@ -919,10 +921,10 @@ def add(where, key, value):
 
 
 def specInformation(m, ns):
-    """
-    Read through the spec (provided as a Redland model) and return classlist
-    and proplist. Global variables classranges and classdomains are also filled
-    as appropriate.
+    """Read through the spec model and return classlist and proplist.
+
+    Global variables classranges and classdomains are also filled as
+    appropriate.
     """
 
     # Find the class information: Ranges, domains, and list of all names.
@@ -971,14 +973,14 @@ def specInformation(m, ns):
 
 
 def specProperty(m, subject, predicate):
-    "Return a property of the spec."
+    """Return a property of the spec."""
     for c in findStatements(m, subject, predicate, None):
         return getLiteralString(getObject(c))
     return ""
 
 
 def specProperties(m, subject, predicate):
-    "Return a property of the spec."
+    """Return a property of the spec."""
     properties = []
     for c in findStatements(m, subject, predicate, None):
         properties += [getObject(c)]
@@ -986,7 +988,7 @@ def specProperties(m, subject, predicate):
 
 
 def specAuthors(m, subject):
-    "Return an HTML description of the authors of the spec."
+    """Return an HTML description of the authors of the spec."""
 
     subjects = [subject]
     p = findOne(m, subject, lv2.project, None)
@@ -1041,9 +1043,8 @@ def specAuthors(m, subject):
 
 
 def specVersion(m, subject):
-    """
-    Return a (minorVersion, microVersion, date) tuple
-    """
+    """Return a (minorVersion, microVersion, date) tuple."""
+
     # Get the date from the latest doap release
     latest_doap_revision = ""
     latest_doap_release = None
@@ -1069,10 +1070,7 @@ def specVersion(m, subject):
 
 
 def getInstances(model, classes, properties):
-    """
-    Extract all resources instanced in the ontology
-    (aka "everything that is not a class or a property")
-    """
+    """Extract all non-class and non-property instances in the ontology."""
     instances = []
     for c in classes:
         for i in findStatements(model, None, rdf.type, c):
@@ -1096,7 +1094,7 @@ def getInstances(model, classes, properties):
 
 
 def load_tags(path, docdir):
-    "Build a (symbol => URI) map from a Doxygen tag file."
+    """Build a (symbol => URI) map from a Doxygen tag file."""
 
     if not path or not docdir:
         return {}
@@ -1397,7 +1395,7 @@ def save(path, text):
 
 
 def getNamespaces(m):
-    """Return a prefix:URI dictionary of all namespaces seen during parsing"""
+    """Return a prefix:URI dictionary of all namespaces seen during parsing."""
     nspaces = {}
     for prefix, uri in m.namespaces():
         if not re.match("default[0-9]*", prefix) and not prefix == "xml":
@@ -1447,7 +1445,7 @@ def _data_dirs():
 
 
 def main():
-    """Main program that parses the program arguments and runs"""
+    """Main program that parses the program arguments and runs."""
 
     global spec_pre
     global specgendir
