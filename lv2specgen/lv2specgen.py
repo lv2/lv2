@@ -67,7 +67,7 @@ try:
 
     have_pygments = True
 except ImportError:
-    print("Error importing pygments, syntax highlighting disabled")
+    sys.stderr.write("warning: Pygments syntax highlighting unavailable\n")
     have_pygments = False
 
 try:
@@ -107,6 +107,18 @@ class DTDResolver(etree.Resolver):
     def resolve(self, url, _pubid, context):
         path = os.path.join(specgendir, url)
         return self.resolve_filename(path, context)
+
+
+def log_error(msg):
+    sys.stderr.write("error: ")
+    sys.stderr.write(msg)
+    sys.stderr.write("\n")
+
+
+def log_warning(msg):
+    sys.stderr.write("warning: ")
+    sys.stderr.write(msg)
+    sys.stderr.write("\n")
 
 
 def findStatements(model, s, p, o):
@@ -220,7 +232,7 @@ def linkifyVocabIdentifiers(m, string, classlist, proplist, instalist):
                 or (instalist and uri in instalist)
                 or (proplist and uri in proplist)
             ):
-                print("warning: Link to undefined resource <%s>\n" % text)
+                log_warning("Link to undefined resource <%s>" % text)
             return '<a href="#%s">%s</a>' % (name, name)
 
         if prefix in namespaces:
@@ -287,13 +299,13 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
         if known:
             return '%s<a href="#%s">%s</a>' % (space, name, name)
 
-        print("warning: Link to undefined resource <%s>\n" % name)
+        log_warning("Link to undefined resource <%s>" % name)
         return text
 
     markup = rgx.sub(translateLocalLink, markup)
 
     if not have_lxml:
-        print("warning: No Python lxml module found, output may be invalid")
+        log_warning("No Python lxml module found, output may be invalid")
     else:
         oldcwd = os.getcwd()
 
@@ -319,10 +331,11 @@ def prettifyHtml(m, markup, subject, classlist, proplist, instalist):
             parser = etree.XMLParser(dtd_validation=True, no_network=True)
             etree.fromstring(doc.encode("utf-8"), parser)
         except Exception as e:
-            print("Invalid documentation for %s\n%s" % (subject, e))
+            log_error("Invalid documentation for %s:" % subject)
+            sys.stderr.write(str(e) + "\n")
             line_num = 1
             for line in doc.split("\n"):
-                print("%3d: %s" % (line_num, line))
+                sys.stderr.write("%3d: %s\n" % (line_num, line))
                 line_num += 1
         finally:
             os.chdir(oldcwd)
@@ -1246,7 +1259,7 @@ def specgen(
     prefixes_html += "</span>"
 
     if spec_pre is None:
-        print("No namespace prefix for %s defined" % specloc)
+        log_error("No namespace prefix for %s defined" % specloc)
         sys.exit(1)
 
     ns_list[spec_ns_str] = spec_pre
@@ -1375,9 +1388,7 @@ def specgen(
             parser,
         )
     except Exception as e:
-        sys.stderr.write(
-            "error: Validation failed for %s: %s\n" % (specloc, e)
-        )
+        log_error("Validation failed for %s: %s" % (specloc, e))
     finally:
         os.chdir(oldcwd)
 
@@ -1391,7 +1402,7 @@ def save(path, text):
             f.flush()
     except Exception:
         e = sys.exc_info()[1]
-        print('Error writing to file "' + path + '": ' + str(e))
+        log_error('Error writing to file "%s": %s' % (path, e))
 
 
 def getNamespaces(m):
@@ -1475,7 +1486,7 @@ def main():
             default_template_path = os.path.join(data_dir, "template.html")
             default_style_dir = data_dir
         else:
-            sys.stderr.write("error: Unable to find lv2specgen data\n")
+            log_error("Unable to find lv2specgen data")
             sys.exit(-2)
 
     opt = optparse.OptionParser(
@@ -1576,7 +1587,7 @@ def main():
     b = os.path.basename(outdir)
 
     if not os.access(os.path.abspath(spec), os.R_OK):
-        sys.stderr.write("error: extension %s has no %s.ttl file\n" % (b, b))
+        log_error("extension %s has no %s.ttl file" % (b, b))
         sys.exit(1)
 
     # Generate spec documentation
