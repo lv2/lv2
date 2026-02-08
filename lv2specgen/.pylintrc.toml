@@ -1,0 +1,5 @@
+# Copyright 2026 David Robillard <d@drobilla.net>
+# SPDX-License-Identifier: 0BSD OR ISC
+
+[tool.pylint."messages control"]
+enable = ["useless-suppression"]

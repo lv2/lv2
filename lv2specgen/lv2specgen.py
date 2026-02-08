@@ -12,11 +12,10 @@
 """Ontology specification generator tool."""
 
 # pylint: disable=broad-exception-caught
+# pylint: disable=c-extension-no-member
 # pylint: disable=cell-var-from-loop
 # pylint: disable=consider-using-f-string
-# pylint: disable=deprecated-module
 # pylint: disable=global-statement
-# pylint: disable=global-variable-not-assigned
 # pylint: disable=invalid-name
 # pylint: disable=missing-class-docstring
 # pylint: disable=missing-function-docstring
