@@ -1558,7 +1558,6 @@ if __name__ == "__main__":
         sys.exit(-1)
 
     spec_pre = options.prefix
-    ontology = "file:" + str(args[0])
     output = args[1]
     docdir = options.docdir
     tags = options.tags
@@ -1568,7 +1567,6 @@ if __name__ == "__main__":
     path = os.path.dirname(spec)
     outdir = os.path.abspath(os.path.join(out, path))
 
-    bundle = str(outdir)
     b = os.path.basename(outdir)
 
     if not os.access(os.path.abspath(spec), os.R_OK):
