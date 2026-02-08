@@ -1188,7 +1188,13 @@ def specgen(
     # Load code documentation link map from tags file
     linkmap = load_tags(tags, docdir)
 
-    m = rdflib.ConjunctiveGraph()
+    # Create a new empty dataset
+    rdflib_major = int(rdflib.__version__.split(".")[0])
+    rdflib_minor = int(rdflib.__version__.split(".")[1])
+    if rdflib_major > 7 or rdflib_major == 7 and rdflib_minor >= 5:
+        m = rdflib.Dataset()
+    else:
+        m = rdflib.ConjunctiveGraph()
 
     # RDFLib adds its own prefixes, so kludge around "time" prefix conflict
     m.namespace_manager.bind(
