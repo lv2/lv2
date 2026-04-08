@@ -1,4 +1,4 @@
-# Copyright 2020-2025 David Robillard <d@drobilla.net>
+# Copyright 2020-2026 David Robillard <d@drobilla.net>
 # SPDX-License-Identifier: 0BSD OR ISC
 
 Checks: >
@@ -10,6 +10,7 @@ Checks: >
   -bugprone-macro-parentheses,
   -llvmlibc-*,
   -readability-identifier-length,
+  -readability-implicit-bool-conversion,
 CheckOptions:
   - key: hicpp-uppercase-literal-suffix.NewSuffixes
     value: L;U;f

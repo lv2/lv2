@@ -38,7 +38,7 @@ extern "C" {
 static inline uint32_t
 lv2_atom_pad_size(uint32_t size)
 {
-  return (size + 7U) & ~(7U);
+  return (size + 7U) & ~7U;
 }
 
 /** Return the total size of `atom`, including the header. */
